@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module version="4" relativePaths="true" type="JAVA_MODULE">
+  <component name="ModuleRootManager" />
+  <component name="NewModuleRootManager">
+    <output url="file://$MODULE_DIR$/classes" />
+    <exclude-output />
+    <exclude-exploded />
+    <content url="file://$MODULE_DIR$" />
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="alignment" />
+    <orderEntry type="module" module-name="am" />
+    <orderEntry type="module" module-name="analysis" />
+    <orderEntry type="module" module-name="annotations" />
+    <orderEntry type="module" module-name="associationdiscovery" />
+    <orderEntry type="module" module-name="clustering" />
+    <orderEntry type="module" module-name="colormosaic" />
+    <orderEntry type="module" module-name="cytoscape" />
+    <orderEntry type="module" module-name="discovery" />
+    <orderEntry type="module" module-name="filtering" />
+    <orderEntry type="module" module-name="geworkbench" />
+    <orderEntry type="module" module-name="goterms" />
+    <orderEntry type="module" module-name="hierarchicalclustering" />
+    <orderEntry type="module" module-name="microarrays" />
+    <orderEntry type="module" module-name="normalization" />
+    <orderEntry type="module" module-name="pathwaydecoder" />
+    <orderEntry type="module" module-name="patterns" />
+    <orderEntry type="module" module-name="plots" />
+    <orderEntry type="module" module-name="poshistogram" />
+    <orderEntry type="module" module-name="promoter" />
+    <orderEntry type="module" module-name="selectors" />
+    <orderEntry type="module" module-name="sequenceretriever" />
+    <orderEntry type="module" module-name="sequences" />
+    <orderEntry type="module" module-name="versioninfo" />
+    <orderEntry type="module" module-name="viewers" />
+    <orderEntryProperties />
+  </component>
+</module>
+

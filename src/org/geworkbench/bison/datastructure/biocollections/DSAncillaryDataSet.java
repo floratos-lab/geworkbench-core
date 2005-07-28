@@ -1,0 +1,25 @@
+package org.geworkbench.bison.datastructure.biocollections;
+
+import java.io.File;
+
+/**
+ * Extends the notion of a data set by adding access to an ancillary data set file.
+ *
+ * @todo - watkin - What is the difference between these methods and {@link DSDataSet#getFile()} and {@link DSDataSet#setAbsPath(String)} Can they be merged?
+ */
+public interface DSAncillaryDataSet extends DSDataSet {
+
+    /**
+     * Gets the data set file.
+     *
+     * @return
+     */
+    public File getDataSetFile();
+
+    /**
+     * Sets the data set file.
+     *
+     * @param file the file to associate with this data set.
+     */
+    public void setDataSetFile(File file);
+}

@@ -1,0 +1,212 @@
+package org.geworkbench.util.sequences;
+
+import org.geworkbench.util.patterns.CSMatchedHMMSeqPattern;
+import org.geworkbench.util.patterns.CSMatchedSeqPattern;
+import org.geworkbench.util.patterns.FlexiblePattern;
+import org.geworkbench.util.patterns.PatternOperations;
+import org.geworkbench.util.sequences.SequenceDB;
+import org.geworkbench.bison.datastructure.biocollections.DSCollection;
+import org.geworkbench.bison.datastructure.bioobjects.sequence.CSSequence;
+import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
+import org.geworkbench.bison.datastructure.complex.pattern.DSMatchedPattern;
+import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeqPattern;
+import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSSeqRegistration;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.Iterator;
+
+/**
+ * <p>Title: </p>
+ * <p>Description: </p>
+ * <p>Copyright: Copyright (c) 2003</p>
+ * <p>Company: </p>
+ *
+ * @author not attributable
+ * @version 1.0
+ */
+
+public class SequenceViewWidgetPanel extends JPanel {
+    final int xOff = 60;
+    final int yOff = 20;
+    final int xStep = 5;
+    final int yStep = 12;
+    double scale = 1.0;
+    int maxLen = 1;
+    //ArrayList  selectedPatterns   = null;
+    DSCollection<DSMatchedPattern<DSSequence, DSSeqRegistration>> selectedPatterns = null;
+    SequenceDB sequenceDB = null;
+    boolean showAll = true;
+
+    public SequenceViewWidgetPanel() {
+        try {
+            jbInit();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    void jbInit() throws Exception {
+    }
+
+    private void setMaxLength() {
+        if (selectedPatterns != null) {
+            for (Iterator iter = selectedPatterns.iterator(); iter.hasNext();) {
+                DSMatchedSeqPattern item = (DSMatchedSeqPattern) iter.next();
+                maxLen = Math.max(maxLen, item.getMaxLength());
+            }
+        }
+    }
+
+    //public void initialize(ArrayList patterns, SequenceDB seqDB) {
+    public void initialize(DSCollection<DSMatchedPattern<DSSequence, DSSeqRegistration>> matches, SequenceDB seqDB) {
+        selectedPatterns = matches;
+        sequenceDB = seqDB;
+        repaint();
+    }
+
+    public void paintComponent(Graphics g) {
+        Font f = new Font("Courier New", Font.PLAIN, 10);
+
+        if (sequenceDB != null) {
+            int rowId = -1;
+            int[] rows = {};
+            int maxLn = sequenceDB.getMaxLength();
+            int seqNo = sequenceDB.getSequenceNo();
+            if (sequenceDB.getSequenceNo() == 0) {
+                if (selectedPatterns != null) {
+                    for (int row = 0; row < selectedPatterns.size(); row++) {
+                        DSMatchedSeqPattern pattern = (DSMatchedSeqPattern) selectedPatterns.get(row);
+                        if (pattern instanceof CSMatchedSeqPattern) {
+                            CSMatchedSeqPattern pat = (CSMatchedSeqPattern) pattern;
+                            if ((pat != null) && (pat.getSupport() > 0)) {
+                                seqNo = Math.max(seqNo, pat.getId(pat.getSupport() - 1));
+                            }
+                        }
+                    }
+                }
+            }
+            scale = Math.min(5.0, (double) (this.getWidth() - 20 - xOff) / (double) maxLn);
+            g.clearRect(0, 0, getWidth(), getHeight());
+            // draw the patterns
+            g.setFont(f);
+            JViewport scroller = (JViewport) this.getParent();
+            Rectangle r = new Rectangle();
+            r = scroller.getViewRect();
+            if ((rows.length == 1) && showAll && (selectedPatterns != null)) {
+                int patId = rows[0];
+                DSMatchedSeqPattern pattern = (DSMatchedSeqPattern) selectedPatterns.get(patId);
+                if (pattern instanceof CSMatchedSeqPattern || pattern instanceof org.geworkbench.util.patterns.CSMatchedHMMSeqPattern) {
+                    CSMatchedSeqPattern pat = (CSMatchedSeqPattern) pattern;
+                    int lastSeqId = -1;
+                    for (int locusId = 0; locusId < pat.getSupport(); locusId++) {
+                        int seqId = pat.getId(locusId);
+                        if (seqId > lastSeqId) {
+                            rowId++;
+                            drawSequence(g, rowId, seqId, maxLn);
+                            lastSeqId = seqId;
+                        }
+                        drawPattern(g, rowId, locusId, pat, r, org.geworkbench.util.patterns.PatternOperations.getPatternColor(pat.hashCode()));
+                    }
+                } else if (pattern instanceof org.geworkbench.util.patterns.FlexiblePattern) {
+                    org.geworkbench.util.patterns.FlexiblePattern fp = (org.geworkbench.util.patterns.FlexiblePattern) pattern;
+                    int lastSeqId = -1;
+                    Iterator it = fp.mLocus.iterator();
+                    while (it.hasNext()) {
+                        FlexiblePattern.TwoLocus tl = (FlexiblePattern.TwoLocus) it.next();
+                        int seqId = tl.seqId;
+                        rowId++;
+                        if (seqId > lastSeqId) {
+                            drawSequence(g, rowId, seqId, maxLn);
+                            lastSeqId = seqId;
+                        }
+                        org.geworkbench.util.patterns.CSMatchedSeqPattern p0 = (CSMatchedSeqPattern) fp.patterns.get(0);
+                        CSMatchedSeqPattern p1 = (CSMatchedSeqPattern) fp.patterns.get(1);
+                        drawFlexiPattern(g, rowId, tl.dx0, p0, r, org.geworkbench.util.patterns.PatternOperations.getPatternColor(p0.hashCode()));
+                        drawFlexiPattern(g, rowId, tl.dx1, p1, r, org.geworkbench.util.patterns.PatternOperations.getPatternColor(p1.hashCode()));
+                    }
+                }
+            } else {
+                for (int seqId = 0; seqId < seqNo; seqId++) {
+                    rowId++;
+                    drawSequence(g, seqId, seqId, maxLn);
+                }
+                if (selectedPatterns != null) {
+                    for (int row = 0; row < selectedPatterns.size(); row++) {
+                        DSMatchedSeqPattern pattern = (DSMatchedSeqPattern) selectedPatterns.get(row);
+                        if (pattern != null) {
+                            if (pattern.getClass().isAssignableFrom(CSMatchedSeqPattern.class) || pattern.getClass().isAssignableFrom(org.geworkbench.util.patterns.CSMatchedHMMSeqPattern.class)) {
+                                org.geworkbench.util.patterns.CSMatchedSeqPattern pat = (CSMatchedSeqPattern) pattern;
+                                if (pattern != null) {
+                                    for (int locusId = 0; locusId < pattern.getSupport(); locusId++) {
+                                        int seqId = pat.getId(locusId);
+                                        if (drawPattern(g, seqId, locusId, pat, r, org.geworkbench.util.patterns.PatternOperations.getPatternColor(pattern.hashCode()))) {
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            int maxY = (rowId + 1) * yStep + yOff;
+            setPreferredSize(new Dimension(this.getWidth() - yOff, maxY));
+            revalidate();
+        }
+    }
+
+    public void setShowAll(boolean all) {
+        showAll = all;
+    }
+
+    void drawSequence(Graphics g, int rowId, int seqId, double len) {
+        String lab = ">seq " + seqId;
+        if (sequenceDB.getSequenceNo() > 0) {
+            CSSequence theSequence = sequenceDB.getSequence(seqId);
+            len = (double) theSequence.length();
+            lab = theSequence.getLabel();
+
+        }
+        int y = yOff + rowId * yStep;
+        int x = xOff + (int) (len * scale);
+        g.setColor(Color.black);
+        if (lab.length() > 10) {
+            g.drawString(lab.substring(0, 10), 4, y + 3);
+        } else {
+            g.drawString(lab, 4, y + 3);
+        }
+        g.drawLine(xOff, y, x, y);
+    }
+
+    boolean drawPattern(Graphics g, int rowId, int locusId, CSMatchedSeqPattern pat, Rectangle r, Color color) {
+        int y = yOff + rowId * yStep;
+        if (y > r.y) {
+            if (y > r.y + r.height) {
+                return true;
+            }
+            double x0 = pat instanceof org.geworkbench.util.patterns.CSMatchedHMMSeqPattern ? ((org.geworkbench.util.patterns.CSMatchedHMMSeqPattern) pat).getStart(locusId) : (double) pat.getOffset(locusId);
+            double dx = pat instanceof org.geworkbench.util.patterns.CSMatchedHMMSeqPattern ? (((CSMatchedHMMSeqPattern) pat).getEnd(locusId) - x0) : pat.getExtent();
+            int xa = xOff + (int) (x0 * scale) + 1;
+            int xb = xa + (int) (dx * scale) - 1;
+            g.setColor(color);
+            g.draw3DRect(xa, y - 2, xb - xa, 4, false);
+        }
+        return false;
+    }
+
+    boolean drawFlexiPattern(Graphics g, int rowId, double x0, CSMatchedSeqPattern pat, Rectangle r, Color color) {
+        int y = yOff + rowId * yStep;
+        if (y > r.y) {
+            if (y > r.y + r.height) {
+                return true;
+            }
+            double dx = pat.getExtent();
+            int xa = xOff + (int) (x0 * scale) + 1;
+            int xb = xa + (int) (dx * scale) - 1;
+            g.setColor(color);
+            g.draw3DRect(xa, y - 2, xb - xa, 4, false);
+        }
+        return false;
+    }
+}
