@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library>
+    <!--JBuilder Library Definition File-->
+    <fullname>EnsJ</fullname>
+    <class>
+        <path>[lib/ensj-30.2.jar]</path>
+    </class>
+    <lastmodsaved>1115520200406</lastmodsaved>
+</library>

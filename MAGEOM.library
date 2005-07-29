@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library>
+    <!--JBuilder Library Definition File-->
+    <fullname>MAGEOM</fullname>
+    <class>
+        <path>[lib/mageom.jar]</path>
+        <path>[lib/mageom-support.jar]</path>
+    </class>
+    <lastmodsaved>1078336758552</lastmodsaved>
+</library>

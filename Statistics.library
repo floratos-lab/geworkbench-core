@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library>
+    <!--JBuilder Library Definition File-->
+    <fullname>Statistics</fullname>
+    <class>
+        <path>[../contrib/distributions/distributions.jar]</path>
+    </class>
+    <lastmodsaved>1077719451369</lastmodsaved>
+</library>

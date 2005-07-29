@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library>
+    <!--JBuilder Library Definition File-->
+    <fullname>Axis</fullname>
+    <class>
+        <path>[lib/axis.jar]</path>
+        <path>[lib/commons-beanutils.jar]</path>
+        <path>[lib/commons-collections.jar]</path>
+        <path>[lib/commons-digester.jar]</path>
+        <path>[lib/commons-discovery.jar]</path>
+        <path>[lib/commons-logging.jar]</path>
+        <path>[lib/commons-logging-api.jar]</path>
+        <path>[lib/jaxrpc.jar]</path>
+        <path>[lib/log4j-1.2.8.jar]</path>
+        <path>[lib/saaj.jar]</path>
+        <path>[lib/xml-apis.jar]</path>
+        <path>[lib/wsdl4j.jar]</path>
+        <path>[lib/activation.jar]</path>
+        <path>[lib/mail.jar]</path>
+    </class>
+    <lastmodsaved>1088540344043</lastmodsaved>
+</library>

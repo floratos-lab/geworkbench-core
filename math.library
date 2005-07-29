@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library>
+    <!--JBuilder Library Definition File-->
+    <fullname>math</fullname>
+    <class>
+        <path>[lib/commons-math-1.0.jar]</path>
+    </class>
+    <lastmodsaved>1113431323328</lastmodsaved>
+</library>

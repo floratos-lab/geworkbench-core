@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library>
+    <!--JBuilder Library Definition File-->
+    <fullname>BNJ_libs</fullname>
+    <class>
+        <path>[lib/BNJ_libs/jxl.jar]</path>
+        <path>[lib/BNJ_libs/log4j.jar]</path>
+        <path>[lib/BNJ_libs/log4j-core.jar]</path>
+        <path>[lib/BNJ_libs/metouia.jar]</path>
+        <path>[lib/BNJ_libs/mysql.jar]</path>
+        <path>[lib/BNJ_libs/ojdbc14_g.jar]</path>
+        <path>[lib/BNJ_libs/openjgraph.jar]</path>
+        <path>[lib/BNJ_libs/postgresql.jar]</path>
+        <path>[lib/BNJ_libs/skinlf.jar]</path>
+    </class>
+    <lastmodsaved>1089257866937</lastmodsaved>
+</library>

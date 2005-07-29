@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library>
+    <!--JBuilder Library Definition File-->
+    <fullname>docking</fullname>
+    <class>
+        <path>[lib/docking.jar]</path>
+    </class>
+    <lastmodsaved>1087220835878</lastmodsaved>
+</library>

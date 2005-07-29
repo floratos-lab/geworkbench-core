@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library>
+    <!--JBuilder Library Definition File-->
+    <fullname>gominer</fullname>
+    <class>
+        <path>[lib/gominer.jar]</path>
+    </class>
+    <lastmodsaved>1115150538375</lastmodsaved>
+</library>

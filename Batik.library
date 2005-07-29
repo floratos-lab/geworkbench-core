@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library>
+    <!--JBuilder Library Definition File-->
+    <fullname>Batik</fullname>
+    <class>
+        <path>[lib/batik.jar]</path>
+        <path>[lib/batik-awt-util.jar]</path>
+        <path>[lib/batik-bridge.jar]</path>
+        <path>[lib/batik-css.jar]</path>
+        <path>[lib/batik-dom.jar]</path>
+        <path>[lib/batik-ext.jar]</path>
+        <path>[lib/batik-extension.jar]</path>
+        <path>[lib/batik-gui-util.jar]</path>
+        <path>[lib/batik-gvt.jar]</path>
+        <path>[lib/batik-parser.jar]</path>
+        <path>[lib/batik-rasterizer.jar]</path>
+        <path>[lib/batik-rasterizer-ext.jar]</path>
+        <path>[lib/batik-script.jar]</path>
+        <path>[lib/batik-slideshow.jar]</path>
+        <path>[lib/batik-squiggle.jar]</path>
+        <path>[lib/batik-squiggle-ext.jar]</path>
+        <path>[lib/batik-svg-dom.jar]</path>
+        <path>[lib/batik-svggen.jar]</path>
+        <path>[lib/batik-svgpp.jar]</path>
+        <path>[lib/batik-swing.jar]</path>
+        <path>[lib/batik-transcoder.jar]</path>
+        <path>[lib/batik-ttf2svg.jar]</path>
+        <path>[lib/batik-util.jar]</path>
+        <path>[lib/batik-xml.jar]</path>
+        <path>[lib/js.jar]</path>
+        <path>[lib/xerces_2_3_0.jar]</path>
+        <path>[lib/xml-apis.jar]</path>
+        <path>[lib/pdf-transcoder.jar]</path>
+    </class>
+    <lastmodsaved>1078337286849</lastmodsaved>
+</library>

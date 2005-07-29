@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library>
+    <!--JBuilder Library Definition File-->
+    <fullname>util</fullname>
+    <class>
+        <path>[lib/ostermillerutils_1_04_03_for_kaffe.jar]</path>
+    </class>
+    <lastmodsaved>1100552895705</lastmodsaved>
+</library>

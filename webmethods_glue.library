@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library>
+    <!--JBuilder Library Definition File-->
+    <fullname>webmethods_glue</fullname>
+    <class>
+        <path>[lib/servlet.jar]</path>
+        <path>[lib/GLUE.jar]</path>
+    </class>
+    <lastmodsaved>1078845259668</lastmodsaved>
+</library>

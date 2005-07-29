@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library>
+    <!--JBuilder Library Definition File-->
+    <fullname>JFree</fullname>
+    <class>
+        <path>[lib/jcommon-1.0.0-rc1.jar]</path>
+        <path>[lib/jfreechart-1.0.0-rc1.jar]</path>
+    </class>
+    <lastmodsaved>1078336933178</lastmodsaved>
+</library>

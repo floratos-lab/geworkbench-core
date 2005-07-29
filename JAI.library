@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library>
+    <!--JBuilder Library Definition File-->
+    <fullname>JAI</fullname>
+    <class>
+        <path>[lib/jai_codec.jar]</path>
+        <path>[lib/jai_core.jar]</path>
+        <path>[lib/mlibwrapper_jai.jar]</path>
+    </class>
+    <lastmodsaved>1078336613349</lastmodsaved>
+</library>

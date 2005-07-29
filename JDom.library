@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library>
+    <!--JBuilder Library Definition File-->
+    <fullname>JDom</fullname>
+    <class>
+        <path>[lib/jdom.jar]</path>
+    </class>
+    <lastmodsaved>1078336726443</lastmodsaved>
+</library>

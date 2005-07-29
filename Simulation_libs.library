@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library>
+    <!--JBuilder Library Definition File-->
+    <fullname>Simulation_libs</fullname>
+    <class>
+        <path>[lib/Simulation_libs/colt.jar]</path>
+        <path>[lib/Simulation_libs/Jama.jar]</path>
+        <path>[lib/Simulation_libs/JClass.jar]</path>
+        <path>[lib/Simulation_libs/jcommon.jar]</path>
+        <path>[lib/Simulation_libs/jfreechart.jar]</path>
+        <path>[lib/Simulation_libs/jh.jar]</path>
+        <path>[lib/Simulation_libs/mpiJava.jar]</path>
+        <path>[lib/Simulation_libs/netx.jar]</path>
+        <path>[lib/Simulation_libs/odeToJava.jar]</path>
+        <path>[lib/Simulation_libs/SBMLReader.jar]</path>
+        <path>[lib/Simulation_libs/SBWCore.jar]</path>
+        <path>[lib/Simulation_libs/jahmm-0.2.6.jar]</path>
+    </class>
+    <lastmodsaved>1089181965699</lastmodsaved>
+</library>

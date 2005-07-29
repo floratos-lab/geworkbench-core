@@ -148,7 +148,7 @@ public class CSMicroarraySetView <T extends DSGeneMarker, Q extends DSMicroarray
     }
 
     public DSMicroarraySet<Q> getMicroarraySet() {
-        return (DSMicroarraySet<Q>) dataSet;
+        return (DSMicroarraySet<Q>) getDataSet();
     }
 
 }

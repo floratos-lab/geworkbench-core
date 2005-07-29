@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library>
+    <!--JBuilder Library Definition File-->
+    <fullname>JGraph</fullname>
+    <class>
+        <path>[lib/jgraph.jar]</path>
+        <path>[lib/jgraphpad.jar]</path>
+    </class>
+    <lastmodsaved>1078337135005</lastmodsaved>
+</library>

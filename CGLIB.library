@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library>
+    <!--JBuilder Library Definition File-->
+    <fullname>CGLIB</fullname>
+    <class>
+        <path>[lib/cglib-nodep-2.1.jar]</path>
+    </class>
+    <lastmodsaved>1078336933178</lastmodsaved>
+</library>
