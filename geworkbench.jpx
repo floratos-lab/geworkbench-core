@@ -46,26 +46,27 @@
   <property category="build" name="CopyExtensions.48" value="rmf"/>
   <property category="build" name="CopyExtensions.49" value="schxmi"/>
   <property category="build" name="CopyExtensions.5" value="au"/>
-  <property category="build" name="CopyExtensions.50" value="shtml"/>
-  <property category="build" name="CopyExtensions.51" value="snp"/>
-  <property category="build" name="CopyExtensions.52" value="sql"/>
-  <property category="build" name="CopyExtensions.53" value="tag"/>
-  <property category="build" name="CopyExtensions.54" value="tagf"/>
-  <property category="build" name="CopyExtensions.55" value="tagx"/>
-  <property category="build" name="CopyExtensions.56" value="tblxmi"/>
-  <property category="build" name="CopyExtensions.57" value="tld"/>
-  <property category="build" name="CopyExtensions.58" value="txt"/>
-  <property category="build" name="CopyExtensions.59" value="war"/>
+  <property category="build" name="CopyExtensions.50" value="script"/>
+  <property category="build" name="CopyExtensions.51" value="shtml"/>
+  <property category="build" name="CopyExtensions.52" value="snp"/>
+  <property category="build" name="CopyExtensions.53" value="sql"/>
+  <property category="build" name="CopyExtensions.54" value="tag"/>
+  <property category="build" name="CopyExtensions.55" value="tagf"/>
+  <property category="build" name="CopyExtensions.56" value="tagx"/>
+  <property category="build" name="CopyExtensions.57" value="tblxmi"/>
+  <property category="build" name="CopyExtensions.58" value="tld"/>
+  <property category="build" name="CopyExtensions.59" value="txt"/>
   <property category="build" name="CopyExtensions.6" value="bin"/>
-  <property category="build" name="CopyExtensions.60" value="wav"/>
-  <property category="build" name="CopyExtensions.61" value="wml"/>
-  <property category="build" name="CopyExtensions.62" value="xmi"/>
-  <property category="build" name="CopyExtensions.63" value="xml"/>
-  <property category="build" name="CopyExtensions.64" value="xsd"/>
-  <property category="build" name="CopyExtensions.65" value="xsl"/>
-  <property category="build" name="CopyExtensions.66" value="xsp"/>
-  <property category="build" name="CopyExtensions.67" value="xul"/>
-  <property category="build" name="CopyExtensions.68" value="zip"/>
+  <property category="build" name="CopyExtensions.60" value="war"/>
+  <property category="build" name="CopyExtensions.61" value="wav"/>
+  <property category="build" name="CopyExtensions.62" value="wml"/>
+  <property category="build" name="CopyExtensions.63" value="xmi"/>
+  <property category="build" name="CopyExtensions.64" value="xml"/>
+  <property category="build" name="CopyExtensions.65" value="xsd"/>
+  <property category="build" name="CopyExtensions.66" value="xsl"/>
+  <property category="build" name="CopyExtensions.67" value="xsp"/>
+  <property category="build" name="CopyExtensions.68" value="xul"/>
+  <property category="build" name="CopyExtensions.69" value="zip"/>
   <property category="build" name="CopyExtensions.7" value="c"/>
   <property category="build" name="CopyExtensions.8" value="chtml"/>
   <property category="build" name="CopyExtensions.9" value="codestyle"/>

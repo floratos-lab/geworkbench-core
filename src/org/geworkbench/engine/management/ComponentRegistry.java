@@ -323,7 +323,7 @@ public class ComponentRegistry {
                     }
                 };
                 SynchModel synchModel = getSynchModel(profile.getSynchModelType());
-                synchModel.addTask(task);
+                synchModel.addTask(task, subscriber, object, publisher);
             }
         }
     }

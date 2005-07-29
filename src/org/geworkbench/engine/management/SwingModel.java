@@ -15,7 +15,7 @@ public class SwingModel implements SynchModel {
         // no-op
     }
 
-    public void addTask(Runnable task) {
+    public void addTask(Runnable task, Object subscriber, Object object, Object publisher) {
         SwingUtilities.invokeLater(task);
     }
 }

@@ -20,7 +20,7 @@ public class Asynchronous implements SynchModel {
         executor.shutdownNow();
     }
 
-    public void addTask(Runnable task) {
+    public void addTask(Runnable task, Object subscriber, Object object, Object publisher) {
         executor.submit(task);
     }
 }

@@ -33,6 +33,7 @@
     <orderEntry type="module" module-name="sequences" />
     <orderEntry type="module" module-name="versioninfo" />
     <orderEntry type="module" module-name="viewers" />
+    <orderEntry type="module" module-name="cascript" />
     <orderEntryProperties />
   </component>
 </module>

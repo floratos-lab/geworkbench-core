@@ -15,7 +15,7 @@ public class Synchronous implements SynchModel {
         // no-op
     }
 
-    public void addTask(Runnable task) {
+    public void addTask(Runnable task, Object subscriber, Object object, Object publisher) {
         task.run();
     }
 }
