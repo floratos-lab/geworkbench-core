@@ -24,7 +24,13 @@ it's directory structure is as follows:
 </ul>
 Note that the components can depend on the core classes (those defined in <tt>./src</tt>) and the core libraries
 (those defined in <tt>./lib</tt>). However, components cannot depend on each other, and the core classes cannot
-depend on components. 
+depend on components.
+<h2>Creating a New Component</h2>
+A new component should be added as a new subdirectory of <tt>components</tt>. The subdirectory should be given a simple, descriptive,
+lower-case name. It should contain <tt>src</tt> and <tt>lib</tt> directories. Most importantly, the component must not depend
+on the classes or libraries of any other component, nor should another component depend on it. Also, the core geWorkbench classes
+should not depend on its classes or libraries. The <tt>build.xml</tt> will enforce this, as will the IDEA project. However,
+the JBuilder project currently does not enforce this constraint, so be careful when using JBuilder.
 <h2>Coding Style</h2>
 The coding standards outlined by Sun <a href="http://java.sun.com/docs/codeconv/html/CodeConvTOC.doc.html">here</a>
 are observed.

@@ -71,7 +71,7 @@
     <option name="PUT_FOCUS_INTO_COMMENT" value="false" />
     <option name="SHOW_CHECKIN_OPTIONS" value="true" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added JBuilder project and library files." />
+    <option name="LAST_COMMIT_MESSAGE" value="Cleaned up build.xml and added a readme.html." />
     <option name="SAVE_LAST_COMMIT_MESSAGE" value="true" />
     <option name="CHECKIN_DIALOG_SPLITTER_PROPORTION" value="0.8" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
@@ -159,14 +159,7 @@
     <option name="HIDE_WARNINGS" value="false" />
   </component>
   <component name="FileEditorManager" split-orientation="vertical" split-proportion="0.5">
-    <first-group selected-file="file://$PROJECT_DIR$/build.xml">
-      <entry file="file://$PROJECT_DIR$/src/org/geworkbench/engine/parsers/FileFormat.java" pinned="false">
-        <provider selected="true" editor-type-id="text-editor">
-          <state line="35" column="31" selection-start="1103" selection-end="1103" vertical-scroll-proportion="0.09930486">
-            <folding />
-          </state>
-        </provider>
-      </entry>
+    <first-group selected-file="file://$PROJECT_DIR$/src/org/geworkbench/engine/management/ComponentRegistry.java">
       <entry file="file://$PROJECT_DIR$/src/org/geworkbench/bison/datastructure/bioobjects/markers/genotype/GenotypeColorContext.java" pinned="false">
         <provider selected="true" editor-type-id="text-editor">
           <state line="3" column="30" selection-start="159" selection-end="159" vertical-scroll-proportion="0.05064548">
@@ -178,7 +171,7 @@
       </entry>
       <entry file="file://$PROJECT_DIR$/src/org/geworkbench/bison/datastructure/bioobjects/markers/CSExpressionMarker.java" pinned="false">
         <provider selected="true" editor-type-id="text-editor">
-          <state line="176" column="30" selection-start="5291" selection-end="5291" vertical-scroll-proportion="0.640121">
+          <state line="176" column="30" selection-start="5291" selection-end="5291" vertical-scroll-proportion="0.6552419">
             <folding />
           </state>
         </provider>
@@ -206,7 +199,7 @@
       </entry>
       <entry file="file://$PROJECT_DIR$/src/org/geworkbench/bison/datastructure/biocollections/views/CSMicroarraySetView.java" pinned="false">
         <provider selected="true" editor-type-id="text-editor">
-          <state line="149" column="0" selection-start="4844" selection-end="4844" vertical-scroll-proportion="0.8114919">
+          <state line="149" column="0" selection-start="4844" selection-end="4844" vertical-scroll-proportion="0.8266129">
             <folding />
           </state>
         </provider>
@@ -220,7 +213,14 @@
       </entry>
       <entry file="file://$PROJECT_DIR$/readme.html" pinned="false">
         <provider selected="true" editor-type-id="text-editor">
-          <state line="26" column="19" selection-start="1434" selection-end="1434" vertical-scroll-proportion="0.4455645">
+          <state line="32" column="99" selection-start="2084" selection-end="2084" vertical-scroll-proportion="0.5483871">
+            <folding />
+          </state>
+        </provider>
+      </entry>
+      <entry file="file://$PROJECT_DIR$/src/org/geworkbench/engine/management/ComponentRegistry.java" pinned="false">
+        <provider selected="true" editor-type-id="text-editor">
+          <state line="304" column="22" selection-start="11353" selection-end="11353" vertical-scroll-proportion="0.41834676">
             <folding />
           </state>
         </provider>
@@ -393,9 +393,9 @@
     <layout>
       <window_info id="CVS" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.32929105" order="8" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.32962963" order="7" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="docked" type="docked" visible="true" weight="0.31903115" order="0" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.31903115" order="0" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.44402984" order="1" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.261708" order="1" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="docked" type="docked" visible="true" weight="0.2615917" order="1" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.32929105" order="9" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.4" order="6" />
       <window_info id="Profile" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="11" />
@@ -480,13 +480,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/components/pathwaydecoder/src/org/geworkbench/components/pathwaydecoder/GeneProfiler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="93" column="43" selection-start="4342" selection-end="4342" vertical-scroll-proportion="0.42842743">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/components/promoter/src/org/geworkbench/components/promoter/MATRIX_ANNOTATION.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
@@ -533,7 +526,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/org/geworkbench/bison/datastructure/bioobjects/markers/CSExpressionMarker.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="176" column="30" selection-start="5291" selection-end="5291" vertical-scroll-proportion="0.640121">
+        <state line="176" column="30" selection-start="5291" selection-end="5291" vertical-scroll-proportion="0.6552419">
           <folding />
         </state>
       </provider>
@@ -568,7 +561,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/org/geworkbench/bison/datastructure/biocollections/views/CSMicroarraySetView.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="149" column="0" selection-start="4844" selection-end="4844" vertical-scroll-proportion="0.8114919">
+        <state line="149" column="0" selection-start="4844" selection-end="4844" vertical-scroll-proportion="0.8266129">
           <folding />
         </state>
       </provider>
@@ -580,9 +573,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/geworkbench/engine/management/ComponentRegistry.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="304" column="22" selection-start="11353" selection-end="11353" vertical-scroll-proportion="0.41834676">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/readme.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="19" selection-start="1434" selection-end="1434" vertical-scroll-proportion="0.4455645">
+        <state line="32" column="99" selection-start="2084" selection-end="2084" vertical-scroll-proportion="0.5483871">
           <folding />
         </state>
       </provider>
