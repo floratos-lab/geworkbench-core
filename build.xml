@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<project name="caWorkBench" default="compile">
+<project name="geWorkBench" default="compile">
 
     <!-- ===================================================================== -->
     <!-- INIT  -->
@@ -36,7 +36,7 @@
     <!-- ===================================================================== -->
     <!-- PREPARE  -->
     <!-- ===================================================================== -->
-    <target name="prepare" depends="init" description="Prepares for compilation">
+    <target name="prepare" depends="init" description="Prepares for compilation.">
         <mkdir dir="${classes}"/>
 
         <!-- Classpath for compiling -->
@@ -64,7 +64,7 @@
     <!-- COMPILE  -->
     <!-- ===================================================================== -->
 
-    <target name="compile" depends="prepare" description="Compiles .java source code.">
+    <target name="compile" depends="prepare" description="Compiles core and component .java source code.">
         <javac srcdir="${src}" destdir="${classes}" debug="${debug}" source="1.5" target="1.5" memorymaximumsize="256M" fork="true">
             <classpath>
                 <path refid="classpath"/>
@@ -96,7 +96,7 @@
     <!-- ====================================================================== -->
     <!-- JAVADOC -->
     <!-- ====================================================================== -->
-    <target name="javadoc" depends="prepare">
+    <target name="javadoc" depends="prepare" description="Creates javadocs for core only." >
         <javadoc maxmemory="256M" sourcepath="${src}" destdir="${docs}" packagenames="*">
             <classpath refid="classpath"/>
         </javadoc>
@@ -105,7 +105,7 @@
     <!-- ====================================================================== -->
     <!-- RUN -->
     <!-- ====================================================================== -->
-    <target name="run" depends="compile">
+    <target name="run" depends="compile" description="Runs geWorkbench.">
         <java fork="true" classname="org.geworkbench.engine.config.UILauncher">
             <jvmarg value="-Xmx512M"/>
             <jvmarg value="-Djava.library.path=lib"/>
@@ -116,7 +116,7 @@
     <!-- ====================================================================== -->
     <!-- TEST -->
     <!-- ====================================================================== -->
-    <target name="test" depends="compile">
+    <target name="test" depends="compile" description="Runs all tests with source of the form **/test/Test*.java">
         <mkdir dir="testResults"/>
         <junit printsummary="yes" haltonfailure="yes">
             <classpath refid="run.classpath"/>

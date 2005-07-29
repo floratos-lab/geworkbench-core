@@ -1,0 +1,125 @@
+<html>
+<head><title>geWorkbench Developer Guide</title>
+<body>
+<h1>geWorkbench Developer Guide</h1>
+This document provides a guide for developers of geWorkbench.
+<h2>Project Structure</h2>
+This section describes the directory structure of the project. The root directory structure contains the JBuilder
+and IDEA project and library files. It also contains this file, the <tt>java.policy</tt> file, and the <tt>build.xml</tt>
+ant build file.
+<ul>
+<li><tt>_all</tt> - A folder for a placeholder module required for the IDEA IDE.
+<li><tt>annotation</tt> - Marker annotations for various chip types.
+<li><tt>components</tt> - The top-level directory for geWorkbench components.
+<li><tt>data</tt> - Sample data files for the project.
+<li><tt>lib</tt> - Library files for core geWorkbench.
+<li><tt>plugins</tt> - Plugins for the Cytoscape package.
+<li><tt>src</tt> - Source code for core geWorkbench.
+</ul>
+Each component is in a subdirectory of the <tt>components</tt> directory. It contains an IDEA <tt>.iml</tt> module file and
+it's directory structure is as follows:
+<ul>
+<li><tt>lib</tt> - Library files depended on by this component.
+<li><tt>src</tt> - Source code for the component.
+</ul>
+Note that the components can depend on the core classes (those defined in <tt>./src</tt>) and the core libraries
+(those defined in <tt>./lib</tt>). However, components cannot depend on each other, and the core classes cannot
+depend on components. 
+<h2>Coding Style</h2>
+The coding standards outlined by Sun <a href="http://java.sun.com/docs/codeconv/html/CodeConvTOC.doc.html">here</a>
+are observed.
+Here are the coding standards that are particularly important to us:
+<ol>
+ <li><b>Capitalization</b> - Constants must be in all-capitals, with underscores between words:
+<pre>
+  public static final int MAXIMUM_FILES = 100;
+</pre>
+<b>No</b> other identifiers may contain underscores but constants.
+Class, interface, enum and annotation names must be capitalized, with all subsequent words also capitalized:
+<pre>
+  public class SampleClass extends AnotherSampleClass {
+</pre>
+Variable and member names must have their first letter lower-case, and subsequent words capitalized:
+<pre>
+  private String fieldName;
+
+  private abstract void processFile(File file);
+</pre>
+Some developers differentiate between method variables and class members by prepending <code>m_</code> or just <code>_</code> to member names.
+This is not a standard practice, so is not observed.
+Identifiers in property files are all lower-case with periods separating words:
+<pre>
+  maximum.files=100
+</pre>
+Type wildcards in generics must be a single capital letter:
+<pre>
+  public interface Generic&lt;T, S extends Serializable&gt; {
+</pre>
+<li><b>Annotations</b> - Annotations can either appear on the same line as their associated declaration, or on the line before it:
+<pre>
+  @Subscribe public void receive(Integer value) {
+
+  @Script(dependencies = {STATE_UNINITIALIZED, STATE_COMPLETE}, result = STATE_INITIALIZED)
+  public void initialize() {
+</pre>
+<li><b>Variable Naming</b> - Variables should be given verbose names, even if they are only used in relatively small code blocks. Using the auto-complete functionality of modern IDEs makes compliance with this rule painless. Exceptions are simple index variables, such as those introduced in <code>for(;;)</code> statements:
+<pre>
+  for (int i = 0; i < 100; i++) {
+</pre>
+<li><b>Braces</b> - All <code>if</code>, <code>while</code> and similar block structures must be surrounded by braces, even if the body of the block consists of only one statement:
+<pre>
+  if (index < 100) {
+      System.out.println("index= " + index);
+  }
+</pre>
+<li><b>No Shortcuts</b> - Java provides some C-style shortcuts, such as the <code>++</code>, <code>+=</code> and <code>?:</code> operators. The <code>++</code>, <code>+=</code> operators can be used by themselves (for example, <code>++</code> is often used in a <code>for</code> statement) but they should not be included in other statements. The <code>?:</code> operator should only be used very sparingly, usually in statements that construct strings. Here is an example of a <b>bad</b> use of <code>++</code>:
+<pre>
+  while (i < 100) {
+    System.out.println("i= " + i++);
+  }
+</pre>
+This is preferred:
+<pre>
+  while (i < 100) {
+    System.out.println("i= " + i);
+    i++;
+  }
+</pre>
+This is an acceptable use of <code>?:</code>:
+<pre>
+  boolean available;
+  ...
+  System.out.println("The file is " + (available ? "available" : "unavailable") + ".");
+</pre>
+However, it is a safe bet to never use <code>?:</code>.
+<li><b>Tabs</b> - A tab-width of 4 should be used.
+</ol>
+
+<h2>Code Documentation</h2>
+Code must be documented using the <a href="http://java.sun.com/j2se/javadoc/">Javadoc</a> standard.
+All classes, interfaces, enums and annotations must have an introductory Javadoc explaining its purpose.
+All public methods must also have explanatory Javadocs.
+Methods that perform non-trivial operations should have normal comments (not Javadoc) that explain the code.
+Such comments should precede the line (or lines) of code that they describe.
+For example:
+<pre>
+  /**
+   * Shuts down the componentRegistry (and terminates any pending aysnchronous dispatches).
+   */
+  public void shutdown() {
+      // Iterate through all active synch models
+      Collection&lt;SynchModel&gt; models = synchModels.values();
+      for (SynchModel synchModel : models) {
+          // Shut down the synch model
+          synchModel.shutdown();
+      }
+  }
+</pre>
+<h2>Packages</h2>
+Package names should follow the inverse-domain rule. If the domain of your organization is
+ <code>subdomain.domain.tld</code>, then the package structure should be rooted at <code>tld.domain.subdomain</code>.
+Capital letters or underscore characters should never appear in package names.
+<p>
+Otherwise, the organization of packages is left up to the developer.
+</body>
+</html>
