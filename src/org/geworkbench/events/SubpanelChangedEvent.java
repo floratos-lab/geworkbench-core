@@ -15,13 +15,12 @@ import org.geworkbench.engine.config.events.Event;
  */
 public class SubpanelChangedEvent <T extends DSNamed> extends Event {
 
-    public static final int APPEND = 1;
+    public static final int SET_CONTENTS = 1;
     public static final int NEW = 2;
     public static final int DELETE = 4;
-    public static final int EXCLUDE = 8;
 
     DSPanel<T> subpanel = null;
-    int mode = APPEND;
+    int mode = SET_CONTENTS;
 
     public SubpanelChangedEvent(DSPanel<T> subpan, int m) {
         super(null);
