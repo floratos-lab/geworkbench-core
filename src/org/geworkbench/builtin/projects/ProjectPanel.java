@@ -728,6 +728,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                     try {
                         mergedSet.mergeMicroarraySet(set);
                     } catch (Exception ex) {
+                        ex.printStackTrace();
                         JOptionPane.showMessageDialog(null, "Only microarray sets created" + " from the same chip set can be merged", "Merge Error", JOptionPane.ERROR_MESSAGE);
                         return;
                     }

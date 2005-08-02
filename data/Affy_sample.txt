@@ -1,0 +1,151 @@
+10F_031202_Av2
+Probe Array Lot: 
+Operator Name: 
+Sample Type: 
+Sample Description: 
+Project: 
+Comments: 
+Reagents: 
+Reagent Lot: 
+Algorithm: Statistical
+Corner+ Avg:113, Count:32
+Corner- Avg:11255, Count:32
+BF= Alpha1=0.04 Alpha2=0.06 Tau=0.015 Gamma1H=0.0025 Gamma1L=0.0025 Gamma2H=0.003 Gamma2L=0.003 Perturbation=1.1 TGT=500 NF=1.000000 SF=2.937771 SFGene=All 
+Background=Avg:66.32,Stdev:3.62,Max:75.5,Min:59.4 Noise=Avg:2.77,Stdev:0.28,Max:3.5,Min:2.3 RawQ=2.41 
+
+Probe Set Name	Stat Pairs	Stat Pairs Used	Signal	Detection	Detection p-value	Stat Common Pairs	Signal Log Ratio	Signal Log Ratio Low	Signal Log Ratio High	Change	Change p-value	Positive	Negative	Pairs	Pairs Used	Pairs InAvg	Pos Fraction	Log Avg	Pos/Neg	Avg Diff	Abs Call	Inc	Dec	Inc Ratio	Dec Ratio	Pos Change	Neg Change	Inc/Dec	DPos-DNeg Ratio	Log Avg Ratio Change	Diff Call	Avg Diff Change	B=A	Fold Change	Sort Score					
+															
+201_s_at	16	16	11681.4	P	0.000219								
+
+														
+160030_at	16	16	95.0	P	0.017001																															
+160029_at	16	16	539.3	P	0.006532																															
+AFFX-MurIL2_at	20	20	38.6	A	0.686277																															
+AFFX-MurIL10_at	20	20	77.1	A	0.411380																															
+AFFX-MurIL4_at	20	20	35.3	A	0.368438																															
+AFFX-MurFAS_at	20	20	9.8	A	0.749223																															
+AFFX-BioB-5_at	20	20	289.3	M	0.054213																															
+AFFX-BioB-M_at	20	20	386.1	P	0.001796																															
+AFFX-BioB-3_at	20	20	169.1	P	0.033677																															
+AFFX-BioC-5_at	20	20	873.2	P	0.000581																															
+AFFX-BioC-3_at	20	20	532.3	P	0.000390																															
+AFFX-BioDn-5_at	20	20	597.0	P	0.000258																															
+AFFX-BioDn-3_at	20	20	4508.3	P	0.000581																															
+AFFX-CreX-5_at	20	20	7627.5	P	0.000044																															
+AFFX-CreX-3_at	20	20	11329.7	P	0.000044																															
+AFFX-BioB-5_st	20	20	65.2	A	0.262827																															
+AFFX-BioB-M_st	20	20	173.8	A	0.287743																															
+AFFX-BioB-3_st	20	20	35.5	A	0.916408																															
+AFFX-BioC-5_st	20	20	12.9	A	0.860518																															
+AFFX-BioC-3_st	20	20	15.2	A	0.544587																															
+AFFX-BioDn-5_st	20	20	306.5	A	0.139482																															
+AFFX-BioDn-3_st	20	20	169.2	A	0.139482																															
+AFFX-CreX-5_st	20	20	111.8	A	0.227636																															
+AFFX-CreX-3_st	20	20	77.9	A	0.425962																															
+AFFX-hum_alu_at	69	69	33118.6	P	0.000000																															
+AFFX-DapX-5_at	20	20	2877.8	P	0.000044																															
+AFFX-DapX-M_at	20	20	5686.1	P	0.000169																															
+AFFX-DapX-3_at	20	20	7212.3	P	0.000044																															
+AFFX-LysX-5_at	20	20	706.5	P	0.000754																															
+AFFX-LysX-M_at	20	20	1525.6	P	0.000297																															
+AFFX-LysX-3_at	20	20	3138.9	P	0.000044																															
+AFFX-PheX-5_at	20	20	1070.2	P	0.000070																															
+AFFX-PheX-M_at	20	20	1582.8	P	0.000081																															
+AFFX-PheX-3_at	20	20	1537.2	P	0.000044																															
+AFFX-ThrX-5_at	20	20	26605.9	P	0.000044																															
+AFFX-ThrX-M_at	20	20	31901.0	P	0.000044																															
+AFFX-ThrX-3_at	20	20	38670.1	P	0.000044																															
+AFFX-TrpnX-5_at	20	20	19506.3	P	0.000044																															
+AFFX-TrpnX-M_at	20	20	12889.8	P	0.000044																															
+AFFX-TrpnX-3_at	20	20	15917.9	P	0.000044																															
+AFFX-HUMISGF3A/M97935_5_at	20	20	95.2	A	0.116113																															
+AFFX-HUMISGF3A/M97935_MA_at	20	20	420.7	A	0.102165																															
+AFFX-HUMISGF3A/M97935_MB_at	20	20	308.1	P	0.000662																															
+AFFX-HUMISGF3A/M97935_3_at	20	20	779.6	P	0.000225																															
+AFFX-HUMRGE/M10098_5_at	20	20	161.0	A	0.147939																															
+AFFX-HUMRGE/M10098_M_at	20	20	70.9	A	0.313723																															
+AFFX-HUMRGE/M10098_3_at	20	20	353.2	A	0.131361																															
+AFFX-HUMGAPDH/M33197_5_at	20	20	25222.4	P	0.000044																															
+AFFX-HUMGAPDH/M33197_M_at	20	20	26234.1	P	0.000044																															
+AFFX-HUMGAPDH/M33197_3_at	20	20	25579.7	P	0.000044																															
+AFFX-HSAC07/X00351_5_at	20	20	16946.7	P	0.000044																															
+AFFX-HSAC07/X00351_M_at	20	20	23334.4	P	0.000044																															
+AFFX-HSAC07/X00351_3_at	20	20	21959.3	P	0.000044																															
+AFFX-HUMTFRR/M11507_5_at	20	20	481.4	P	0.000052																															
+AFFX-HUMTFRR/M11507_M_at	20	20	314.9	P	0.000169																															
+AFFX-HUMTFRR/M11507_3_at	20	20	1296.9	P	0.000060																															
+AFFX-M27830_5_at	20	20	840.2	P	0.000297																															
+AFFX-M27830_M_at	20	20	1800.8	A	0.131361																															
+AFFX-M27830_3_at	20	20	369.4	A	0.440646																															
+AFFX-HSAC07/X00351_3_st	20	20	438.5	P	0.000509																															
+AFFX-HUMGAPDH/M33197_5_st	20	20	155.0	A	0.382599																															
+AFFX-HUMGAPDH/M33197_M_st	20	20	206.1	A	0.123572																															
+AFFX-HUMGAPDH/M33197_3_st	20	20	237.1	M	0.046482																															
+AFFX-HSAC07/X00351_5_st	20	20	34.0	A	0.712257																															
+AFFX-HSAC07/X00351_M_st	20	20	150.1	A	0.139482																															
+AFFX-YEL002c/WBP1_at	20	20	46.9	A	0.250796																															
+AFFX-YEL018w/_at	20	20	13.5	A	0.712257																															
+AFFX-YEL024w/RIP1_at	20	20	70.3	M	0.046482																															
+AFFX-YEL021w/URA3_at	20	20	60.0	A	0.108979																															
+31307_at	16	16	1.9	A	0.914736																															
+31308_at	16	16	58.9	A	0.320830																															
+31309_r_at	16	16	22.9	A	0.438361																															
+31310_at	16	16	11.3	A	0.939581																															
+31311_at	16	16	9.2	A	0.956032																															
+31312_at	16	16	34.9	A	0.641310																															
+31313_at	16	16	23.4	A	0.749276																															
+31314_at	16	16	23.8	A	0.458816																															
+31315_at	16	16	564.0	P	0.008689																															
+31316_at	16	16	5.3	A	0.910595																															
+31317_r_at	16	16	200.7	A	0.138765																															
+31318_at	16	16	25.1	A	0.679198																															
+31319_at	16	16	19.9	A	0.810313																															
+31320_at	16	16	577.8	A	0.438361																															
+31321_at	16	16	112.0	A	0.150527																															
+31322_at	16	16	21.3	A	0.320830																															
+31323_r_at	16	16	48.7	A	0.945530																															
+31324_at	16	16	219.9	P	0.035163																															
+31325_at	16	16	22.6	A	0.882840																															
+31326_at	16	16	104.1	A	0.837065																															
+31327_at	16	16	4.2	A	0.968664																															
+31328_at	16	16	153.8	A	0.162935																															
+31329_at	16	16	34.9	A	0.066865																															
+31330_at	16	16	12820.9	P	0.000219																															
+31331_at	16	16	10.3	A	0.541184																															
+31332_at	16	16	7.8	A	0.749276																															
+31333_at	16	16	17.5	A	0.660442																															
+31334_at	16	16	7.1	A	0.882840																															
+31335_at	16	16	221.1	A	0.175989																															
+31336_at	16	16	27.8	A	0.127645																															
+31337_at	16	16	209.7	A	0.397994																															
+31338_at	16	16	21.2	A	0.234557																															
+31339_at	16	16	4.5	A	0.988553																															
+31340_at	16	16	110.0	A	0.438361																															
+31341_at	16	16	220.3	A	0.458816																															
+31342_at	16	16	304.4	P	0.007543																															
+31343_at	16	16	2.4	A	0.978134																															
+31344_at	16	16	77.8	A	0.339558																															
+31345_at	16	16	43.0	A	0.204022																															
+31346_at	16	16	75.6	A	0.520620																															
+31347_at	16	16	21.3	A	0.715253																															
+sd31327_at	16	16	4.2	A	0.968664																															
+sd31328_at	16	16	153.8	A	0.162935																															
+sd31329_at	16	16	34.9	A	0.066865																															
+sd31330_at	16	16	12820.9	P	0.000219																															
+sd31331_at	16	16	10.3	A	0.541184																															
+sd31332_at	16	16	7.8	A	0.749276																															
+sd31333_at	16	16	17.5	A	0.660442																															
+sd31334_at	16	16	7.1	A	0.882840																															
+sd31335_at	16	16	221.1	A	0.175989																															
+sd31336_at	16	16	27.8	A	0.127645																															
+sd31337_at	16	16	209.7	A	0.397994																															
+sd31338_at	16	16	21.2	A	0.234557																															
+sd31339_at	16	16	4.5	A	0.988553																															
+sd31340_at	16	16	110.0	A	0.438361																															
+sd31341_at	16	16	220.3	A	0.458816																															
+sd31342_at	16	16	304.4	P	0.007543																															
+sd31343_at	16	16	2.4	A	0.978134																															
+sd31344_at	16	16	77.8	A	0.339558																															
+sd31345_at	16	16	43.0	A	0.204022																															
+sd31346_at	16	16	75.6	A	0.520620																															
+sd31347_at	16	16	21.3	A	0.715253																															

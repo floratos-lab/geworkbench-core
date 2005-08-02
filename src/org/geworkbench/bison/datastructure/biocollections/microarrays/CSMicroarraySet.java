@@ -1,6 +1,5 @@
 package org.geworkbench.bison.datastructure.biocollections.microarrays;
 
-import org.geworkbench.util.RandomNumberGenerator;
 import org.apache.commons.math.stat.StatUtils;
 import org.geworkbench.bison.annotation.DSCriteria;
 import org.geworkbench.bison.datastructure.biocollections.CSDataSet;
@@ -11,6 +10,7 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.*;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.util.CSCriterionManager;
+import org.geworkbench.util.RandomNumberGenerator;
 
 import java.io.*;
 import java.util.*;
@@ -29,7 +29,7 @@ import java.util.*;
  * @version 3.0
  */
 
-public abstract class CSMicroarraySet <T extends DSMicroarray> extends CSDataSet<T> implements DSMicroarraySet<T> {
+public abstract class CSMicroarraySet<T extends DSMicroarray> extends CSDataSet<T> implements DSMicroarraySet<T> {
     /**
      * Constant designating the Affymetrix platform. This is the value return by
      * calls to method <code>getPlatforType()</code>.
@@ -294,7 +294,9 @@ public abstract class CSMicroarraySet <T extends DSMicroarray> extends CSDataSet
                 Integer key = (Integer) markerInfoIndices.get(new Integer(i));
                 if (key != null) {
                     newIndex = key.intValue();
-                    microarray.setMarkerValue(newIndex, newValues[i]);
+                    if (newIndex < microarray.getMarkerNo()) {
+                        microarray.setMarkerValue(newIndex, newValues[i]);
+                    }
                 }
             }
             if (newValues.length != 0) {
