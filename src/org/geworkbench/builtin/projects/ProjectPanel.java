@@ -653,7 +653,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
     protected void jMergeDatasets_actionPerformed(ActionEvent e) {
         TreePath[] selections;
         DSMicroarraySet[] sets = null;
-        DSMicroarraySet mergedSet = null, set = null;
         MutableTreeNode node = null;
         Object parentProject = null;
         TreePath sibling = null;
@@ -696,6 +695,13 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                 return;
             }
         }
+        doMergeSets(sets);
+    }
+
+    private void doMergeSets(DSMicroarraySet[] sets) {
+        DSMicroarraySet mergedSet = null;
+        int i;
+        DSMicroarraySet set;
         if (sets != null) {
             String desc = "Merged DataSet: ";
             for (i = 0; i < sets.length; i++) {
@@ -776,40 +782,36 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                         // dataSets[0] = ((DataSetFileFormat)inputFormat).getDataFile(dataSetFiles);
                         // If the data sets are microarray sets, then merge them if "merge files" is checked
                         boolean cancelled = false;
-                        if (mergeFiles) {
-                            mergedName = JOptionPane.showInputDialog("Please enter the name of the merged Microarray Set");
-                            if (mergedName == null) {
-                                // Cancelled
-                                cancelled = true;
-                            }
-                        }
-                        if (!cancelled) {
+//                        if (mergeFiles) {
+//                            mergedName = JOptionPane.showInputDialog("Please enter the name of the merged Microarray Set");
+//                            if (mergedName == null) {
+//                                // Cancelled
+//                                cancelled = true;
+//                            }
+//                        }
+//                        if (!cancelled) {
                             for (int i = 0; i < dataSetFiles.length; i++) {
                                 File dataSetFile = dataSetFiles[i];
                                 dataSets[i] = ((DataSetFileFormat) inputFormat).getDataFile(dataSetFile);
-                                boolean merged = false;
-                                if (mergeFiles) {
-                                    if (dataSets[i] instanceof DSMicroarraySet) {
-                                        merged = true;
-                                        if (mergedSet == null) {
-                                            mergedSet = (DSMicroarraySet) dataSets[i];
-                                        } else {
-                                            try {
-                                                mergedSet.mergeMicroarraySet((DSMicroarraySet) dataSets[i]);
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    } else {
-                                        // no-op here
+                            }
+                            if (mergeFiles) {
+                                if (dataSets[0] instanceof DSMicroarraySet) {
+                                    DSMicroarraySet[] maSets = new DSMicroarraySet[dataSets.length];
+                                    for (int i = 0; i < dataSets.length; i++) {
+                                        maSets[i] = (DSMicroarraySet) dataSets[i];
                                     }
+                                    doMergeSets(maSets);
                                 }
                             }
-                        }
+//                        }
                     }
                     progressBar.setString("");
                     progressBar.setIndeterminate(false);
                     jDataSetPanel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                    if (mergeFiles) {
+                        // We're done
+                        return;
+                    }
 
                     if (mergedSet != null) {
                         mergedSet.setLabel(mergedName);
