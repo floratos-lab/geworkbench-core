@@ -280,7 +280,7 @@ public class CSGenepixMarkerValue extends CSMarkerValue implements DSGenepixMark
     }
 
     public void setConfidence(double confidence) {
-        setConfidence(confidence);
+        super.setConfidence(confidence);
     }
 
     public boolean isMissing() {

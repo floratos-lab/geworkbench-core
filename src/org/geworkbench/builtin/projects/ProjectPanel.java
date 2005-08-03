@@ -701,14 +701,14 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
     private void doMergeSets(DSMicroarraySet[] sets) {
         DSMicroarraySet mergedSet = null;
         int i;
-        DSMicroarraySet set;
+        DSMicroarraySet<DSMicroarray> set;
         if (sets != null) {
             String desc = "Merged DataSet: ";
             for (i = 0; i < sets.length; i++) {
                 set = sets[i];
                 if (mergedSet == null) {
                     try {
-                        mergedSet = (DSMicroarraySet) set.getClass().newInstance();
+                        mergedSet = set.getClass().newInstance();
                         mergedSet.addObject(ColorContext.class, set.getObject(ColorContext.class));
                         //mergedSet.setMarkerNo(set.size());
                         //mergedSet.setMicroarrayNo(set.size());
@@ -718,10 +718,10 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                         DSItemList<DSGeneMarker> markerList = set.getMarkers();
                         for (int j = 0; j < markerList.size(); j++) {
                             DSGeneMarker dsGeneMarker = markerList.get(j);
-                            ((DSMicroarraySet<DSMicroarray>) mergedSet).getMarkers().add((DSGeneMarker) dsGeneMarker.clone());
+                            ((DSMicroarraySet<DSMicroarray>) mergedSet).getMarkers().add(dsGeneMarker.deepCopy());
                         }
                         for (int k = 0; k < set.size(); k++) {
-                            mergedSet.add(set.get(k));
+                            mergedSet.add(set.get(k).deepCopy());
                         }
                         desc += set.getLabel() + " ";
                     } catch (InstantiationException ie) {

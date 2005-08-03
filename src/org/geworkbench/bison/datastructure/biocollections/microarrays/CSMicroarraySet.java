@@ -283,7 +283,7 @@ public abstract class CSMicroarraySet<T extends DSMicroarray> extends CSDataSet<
 
         count = newMaSet.size();
         for (int ac = 0; ac < count; ac++) {
-            microarray = newMaSet.get(ac);
+            microarray = (T)newMaSet.get(ac).deepCopy();
             int size = 0;
             DSMutableMarkerValue refValue = null;
             DSMutableMarkerValue missingValue = null;
