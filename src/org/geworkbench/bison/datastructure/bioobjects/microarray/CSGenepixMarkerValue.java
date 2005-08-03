@@ -292,8 +292,7 @@ public class CSGenepixMarkerValue extends CSMarkerValue implements DSGenepixMark
     }
 
     public DSMarkerValue deepCopy() {
-        CSGenepixMarkerValue copy = new CSGenepixMarkerValue(this);
-        return (DSMarkerValue) copy;
+        return new CSGenepixMarkerValue(this);
     }
 
     /**

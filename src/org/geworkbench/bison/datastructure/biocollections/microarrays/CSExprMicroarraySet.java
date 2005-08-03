@@ -515,8 +515,8 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
                         }
                         String pValue;
                         if (Boolean.parseBoolean(System.getProperty("expressionMA.usePValue"))) {
-                            pValue = st[j];
                             j++;
+                            pValue = st[j];
                         } else {
                             if (pValueExists) j++;
                             pValue = 1.0 + "";
