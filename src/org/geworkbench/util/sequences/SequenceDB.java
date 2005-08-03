@@ -61,6 +61,7 @@ public class SequenceDB extends CSDataSet<DSSequence> implements DSCollection<DS
         }
         this.add(sequence);
         sequence.setSerial(this.indexOf(sequence));
+        // @todo - watkin - This marker is not stored anywhere!? Why is it created?
         SequenceMarker marker = new org.geworkbench.bison.datastructure.bioobjects.markers.SequenceMarker();
         marker.parseLabel(sequence.getLabel());
         marker.setSerial(this.size());
