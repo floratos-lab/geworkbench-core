@@ -514,11 +514,10 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
                             value = st[++j];
                         }
                         String pValue;
-                        if (Boolean.parseBoolean(System.getProperty("expressionMA.usePValue"))) {
+                        if (Boolean.parseBoolean(System.getProperty("expressionMA.usePValue")) || pValueExists) {
                             j++;
                             pValue = st[j];
                         } else {
-                            if (pValueExists) j++;
                             pValue = 1.0 + "";
                         }
 

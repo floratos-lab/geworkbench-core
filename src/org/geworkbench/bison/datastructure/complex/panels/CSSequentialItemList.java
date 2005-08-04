@@ -50,9 +50,9 @@ public class CSSequentialItemList <T extends DSSequential> extends CSItemList<T>
         if (removedItem != null) {
             int removedSerial = removedItem.getSerial();
             super.remove(removedItem);
-            objectMap.remove(removedItem.getLabel());
+            // objectMap.remove(removedItem.getLabel());
             for (int i = removedSerial; i < size(); i++) {
-                get(i).setSerial(removedSerial);
+                get(i).setSerial(i);
             }
             return true;
         } else {
