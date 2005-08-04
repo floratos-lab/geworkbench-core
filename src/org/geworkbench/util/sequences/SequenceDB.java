@@ -143,7 +143,13 @@ public class SequenceDB extends CSDataSet<DSSequence> implements DSCollection<DS
         markerList = new CSSequentialItemList<SequenceMarker>();
         for (int markerId = 0; markerId < size(); markerId++) {
             SequenceMarker marker = new SequenceMarker();
-            marker.parseLabel(this.get(markerId).getLabel());
+            DSSequence sequence = this.get(markerId);
+            marker.parseLabel(sequence.getLabel());
+            sequence.addDescription(sequence.getLabel());
+            // Use the short label as the label for the sequence as well (bug #251)
+            if ((marker.getLabel() != null) && (marker.getLabel().length() > 0)) {
+                sequence.setLabel(marker.getLabel());
+            }
             marker.setSerial(markerId);
             markerList.add(markerId, marker);
         }

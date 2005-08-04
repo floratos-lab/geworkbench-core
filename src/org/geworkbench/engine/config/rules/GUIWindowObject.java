@@ -20,8 +20,8 @@ public class GUIWindowObject {
      */
     public void createGUI(String className) {
         GUIFramework newGui;
-        System.out.println(className);
-        System.out.flush();
+        // System.out.println(className);
+        // System.out.flush();
         try {
             newGui = (GUIFramework) Class.forName(className).newInstance();
             // There is no checking to see if a GUIFramework is already defined.
