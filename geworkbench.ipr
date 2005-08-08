@@ -32,6 +32,11 @@
       <entry name="?*.html" />
       <entry name="?*.dtd" />
       <entry name="?*.tld" />
+      <entry name="?*.script" />
+      <entry name="?*.txt" />
+      <entry name="?*.hs" />
+      <entry name="?*.jhm" />
+      <entry name="?*.htm" />
     </wildcardResourcePatterns>
   </component>
   <component name="DataSourceManagerImpl" />

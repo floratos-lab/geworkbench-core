@@ -16,7 +16,7 @@ public class SequenceMarker extends CSGeneMarker implements Serializable {
      * @param s String
      */
     public void parseLabel(String s) {
-        // Ignore leading '>'
+        // Ignore leading '>' and any other '<', '>' or characters enclosed by '</...>'.
         s = StringUtils.filter(s, "(</.*?>)|[<>]");
         String[] tokens = s.split("[|]");
         // String[] tokens = StringUtils.splitRemovingEmptyStrings(s, "[|><>]");
