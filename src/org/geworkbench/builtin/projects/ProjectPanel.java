@@ -779,7 +779,16 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                     DSMicroarraySet mergedSet = null;
                     String mergedName = null;
                     if (dataSetFiles.length == 1) {
-                        dataSets[0] = ((DataSetFileFormat) inputFormat).getDataFile(dataSetFiles[0]);
+                        try {
+                            dataSets[0] = ((DataSetFileFormat) inputFormat).
+                                          getDataFile(dataSetFiles[0]);
+                        }  catch (InputFileFormatException iffe) {
+                        // Let the user know that there was a problem parsing the file.
+                        JOptionPane.showMessageDialog(null,
+                            "The input file does not comply with the designated format.",
+                            "Parsing Error", JOptionPane.ERROR_MESSAGE);
+                    }
+
                     } else {
                         // watkin - none of the file filters implement the multiple getDataFile method.
                         // dataSets[0] = ((DataSetFileFormat)inputFormat).getDataFile(dataSetFiles);
@@ -795,7 +804,16 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 //                        if (!cancelled) {
                         for (int i = 0; i < dataSetFiles.length; i++) {
                             File dataSetFile = dataSetFiles[i];
-                            dataSets[i] = ((DataSetFileFormat) inputFormat).getDataFile(dataSetFile);
+                            try {
+                                dataSets[i] = ((DataSetFileFormat) inputFormat).
+                                              getDataFile(dataSetFile);
+                            }  catch (InputFileFormatException iffe) {
+                        // Let the user know that there was a problem parsing the file.
+                        JOptionPane.showMessageDialog(null,
+                            "The input file does not comply with the designated format.",
+                            "Parsing Error", JOptionPane.ERROR_MESSAGE);
+                    }
+
                         }
                         if (mergeFiles) {
                             if (dataSets[0] instanceof DSMicroarraySet) {
