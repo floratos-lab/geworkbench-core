@@ -4,6 +4,7 @@ import org.geworkbench.engine.parsers.FileFormat;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 
 import java.io.File;
+import org.geworkbench.engine.parsers.InputFileFormatException;
 
 /**
  * <p>Title: Sequence and Pattern Plugin</p>
@@ -15,11 +16,10 @@ import java.io.File;
  * @version 1.0
  */
 
-public abstract class DataSetFileFormat extends org.geworkbench.engine.parsers.FileFormat {
-    public DataSetFileFormat() {
-    }
 
-    abstract public DSDataSet getDataFile(File file);
-
-    abstract public DSDataSet getDataFile(File[] files);
+public abstract class DataSetFileFormat extends FileFormat {
+  public DataSetFileFormat() {
+  }
+  abstract public DSDataSet getDataFile(File file) throws InputFileFormatException;
+  abstract public DSDataSet getDataFile(File[] files) throws InputFileFormatException;
 }
