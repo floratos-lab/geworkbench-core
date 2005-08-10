@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="caWorkbench3.0" default="runCVS" basedir=".">
+  <property name="user.name" value="xiaoqing"/>
+  <property name="cvsPassword" value="wt2004D"/>
+  <property name="build.compiler" value="modern"/>
+  <property name="tempClass" value="tempClass"/>
+  <property name="temp" value="temp"/>
+  <property file="${temp}/version.txt"/>
+  <property name="cvs.src" value="${basedir}/geworkbench"/>
+  <property name="classes" value="${cvs.src}/classes"/>
+  <property name="cvsversion" value=""/>
+  <property name="package" value="geworkbench"/>
+  <property name="passfile" value="./passfile"/>
+  <property name="cvs.root" value=":ext:${user.name}@adcvs.cu-genome.org:/cvs/acallab"/>
+  <property name="cvs.update" value="update -A -d"/>
+  <property name="dest" value="${cvs.src}/classes"/>
+  <property name="cvs.dest" value="."/>
+  <property name="lib" value="${cvs.src}/lib"/>
+  <property name="caBIO.home" value="${cvs.src}/lib"/>
+  <property name="Batik.home" value="${caBIO.home}"/>
+  <property name="JAI.home" value="${caBIO.home}"/>
+  <property name="JConfig.home" value="${caBIO.home}"/>
+  <property name="JDom.home" value="${caBIO.home}"/>
+  <property name="MAGEOM.home" value="${caBIO.home}"/>
+  <property name="Axis.home" value="${caBIO.home}"/>
+  <property name="JFree.home" value="${caBIO.home}"/>
+  <property name="JHelp.home" value="${caBIO.home}"/>
+  <property name="jUnit.home" value="${caBIO.home}"/>
+  <property name="mySQL.home" value="${caBIO.home}"/>
+  <property name="Polgara.home" value="${caBIO.home}"/>
+  <property name="Distributions.home" value="${caBIO.home}"/>
+  <property name="JAMA.home" value="${caBIO.home}"/>
+  <property name="JGraph.home" value="${caBIO.home}"/>
+  <property name="JBCL.home" value="${caBIO.home}"/>
+  <property name="biojava.home" value="${caBIO.home}"/>
+  <property name="JAXB_2.0.home" value="${caBIO.home}"/>
+  <property name="gw.home" value="${caBIO.home}"/>
+  <property name="Simulation_libs.home" value="${caBIO.home}/Simulation_libs"/>
+  <property name="BNJ_libs.home" value="${caBIO.home}/BNJ_libs"/>
+  <property name="cytoscape.home" value="${caBIO.home}/cytoscape"/>
+  <property name="caArrayMageom.home" value="${caBIO.home}/caArrayMageom"/>
+  <property name="src" value="${cvs.src}/src"/>
+  <property name="version.src" value="${cvs.src}/components/versioninfo/src/org/geworkbench/components/versioninfo"/>
+
+
+
+<!--Set up the sequence of Jars for the classpath.-->
+<path id="project.class.path">
+
+    <pathelement location="${dest}"/>
+
+		<pathelement location="${caBIO.home}/caBIO.jar"/>
+
+
+		<pathelement location="${caBIO.home}/batik.jar"/>
+		<pathelement location="${caBIO.home}/batik-awt-util.jar"/>
+		<pathelement location="${caBIO.home}/batik-bridge.jar"/>
+		<pathelement location="${caBIO.home}/batik-css.jar"/>
+		<pathelement location="${caBIO.home}/batik-dom.jar"/>
+		<pathelement location="${caBIO.home}/batik-ext.jar"/>
+		<pathelement location="${caBIO.home}/batik-extension.jar"/>
+		<pathelement location="${caBIO.home}/batik-gui-util.jar"/>
+		<pathelement location="${caBIO.home}/batik-gvt.jar"/>
+		<pathelement location="${caBIO.home}/batik-parser.jar"/>
+		<pathelement location="${caBIO.home}/batik-rasterizer.jar"/>
+		<pathelement location="${caBIO.home}/batik-rasterizer-ext.jar"/>
+		<pathelement location="${caBIO.home}/batik-script.jar"/>
+		<pathelement location="${caBIO.home}/batik-slideshow.jar"/>
+		<pathelement location="${caBIO.home}/batik-squiggle.jar"/>
+		<pathelement location="${caBIO.home}/batik-squiggle-ext.jar"/>
+		<pathelement location="${caBIO.home}/batik-svg-dom.jar"/>
+		<pathelement location="${caBIO.home}/batik-svggen.jar"/>
+		<pathelement location="${caBIO.home}/batik-svgpp.jar"/>
+		<pathelement location="${caBIO.home}/batik-swing.jar"/>
+		<pathelement location="${caBIO.home}/batik-transcoder.jar"/>
+		<pathelement location="${caBIO.home}/batik-ttf2svg.jar"/>
+		<pathelement location="${caBIO.home}/batik-util.jar"/>
+		<pathelement location="${caBIO.home}/batik-xml.jar"/>
+		<pathelement location="${caBIO.home}/js.jar"/>
+		<pathelement location="${caBIO.home}/xerces_2_3_0.jar"/>
+		<pathelement location="${caBIO.home}/xml-apis.jar"/>
+		<pathelement location="${caBIO.home}/pdf-transcoder.jar"/>
+		<pathelement location="${caBIO.home}/jai_codec.jar"/>
+		<pathelement location="${caBIO.home}/jai_core.jar"/>
+		<pathelement location="${caBIO.home}/mlibwrapper_jai.jar"/>
+		<pathelement location="${caBIO.home}/JConfig.jar"/>
+		<pathelement location="${caBIO.home}/jdom.jar"/>
+
+		<pathelement location="${caBIO.home}/axis.jar"/>
+
+		<pathelement location="${caBIO.home}/commons-beanutils.jar"/>
+		<pathelement location="${caBIO.home}/commons-collections.jar"/>
+		<pathelement location="${caBIO.home}/commons-digester.jar"/>
+		<pathelement location="${caBIO.home}/commons-discovery.jar"/>
+		<pathelement location="${caBIO.home}/commons-logging.jar"/>
+		<pathelement location="${caBIO.home}/commons-logging-api.jar"/>
+		<pathelement location="${caBIO.home}/jaxrpc.jar"/>
+		<pathelement location="${caBIO.home}/log4j-1.2.8.jar"/>
+		<pathelement location="${caBIO.home}/saaj.jar"/>
+		<pathelement location="${caBIO.home}/wsdl4j.jar"/>
+		<pathelement location="${caBIO.home}/activation.jar"/>
+		<pathelement location="${caBIO.home}/mail.jar"/>
+		<pathelement location="${caBIO.home}/jcommon-1.0.0-rc1.jar"/>
+		<pathelement location="${caBIO.home}/jfreechart-1.0.0-rc1.jar"/>
+		<pathelement location="${caBIO.home}/jhall.jar"/>
+		<pathelement location="${caBIO.home}/jsearch.jar"/>
+		<pathelement location="${caBIO.home}/junit.jar"/>
+		<pathelement location="${caBIO.home}/mysql-connector-java-3.0.16-ga-bin.jar"/>
+		<pathelement location="${caBIO.home}/polgara.jar"/>
+		<pathelement location="${caBIO.home}/distributions.jar"/>
+		<pathelement location="${caBIO.home}/Jama-1.0.1.jar"/>
+		<pathelement location="${caBIO.home}/jgraph.jar"/>
+		<pathelement location="${caBIO.home}/jgraphpad.jar"/>
+		<pathelement location="${caBIO.home}/jbcl.jar"/>
+		<pathelement location="${caBIO.home}/biojava-1.3.1.jar"/>
+		<pathelement location="${caBIO.home}/servlet.jar"/>
+		<pathelement location="${caBIO.home}/jaxb-api.jar"/>
+		<pathelement location="${caBIO.home}/jaxb-impl.jar"/>
+		<pathelement location="${caBIO.home}/jaxb-libs.jar/"/>
+		<pathelement location="${caBIO.home}/jaxb-ri.jar"/>
+		<pathelement location="${caBIO.home}/jaxb-xjc.jar"/>
+		<pathelement location="${caBIO.home}/gw2.jar"/>
+
+	 	<pathelement location="${Simulation_libs.home}/systembiology.jar"/>
+		<pathelement location="${Simulation_libs.home}/colt.jar"/>
+		<pathelement location="${Simulation_libs.home}/ISBJava.jar"/>
+		<pathelement location="${Simulation_libs.home}/Jama.jar"/>
+		<pathelement location="${Simulation_libs.home}/JClass.jar"/>
+		<pathelement location="${Simulation_libs.home}/jcommon.jar"/>
+		<pathelement location="${Simulation_libs.home}/jfreechart.jar"/>
+		<pathelement location="${Simulation_libs.home}/jh.jar"/>
+		<pathelement location="${Simulation_libs.home}/mpiJava.jar"/>
+		<pathelement location="${Simulation_libs.home}/netx.jar"/>
+		<pathelement location="${Simulation_libs.home}/odeToJava.jar"/>
+		<pathelement location="${Simulation_libs.home}/SBMLReader.jar"/>
+		<pathelement location="${Simulation_libs.home}/SBWCore.jar"/>
+		<pathelement location="${Simulation_libs.home}/jahmm-0.2.6.jar"/>
+		<pathelement location="${caBIO.home}/docking.jar"/>
+		<pathelement location="${cytoscape.home}/cytoscape.jar"/>
+		<pathelement location="${BNJ_libs.home}/bnj.jar"/>
+		<pathelement location="${BNJ_libs.home}/jxl.jar"/>
+		<pathelement location="${BNJ_libs.home}/log4j-core.jar"/>
+		<pathelement location="${BNJ_libs.home}/log4j.jar"/>
+		<pathelement location="${BNJ_libs.home}/metouia.jar"/>
+		<pathelement location="${BNJ_libs.home}/mysql.jar"/>
+		<pathelement location="${BNJ_libs.home}/ojdbc14_g.jar"/>
+		<pathelement location="${BNJ_libs.home}/openjgraph.jar"/>
+		<pathelement location="${BNJ_libs.home}/postgresql.jar"/>
+		<pathelement location="${BNJ_libs.home}/skinlf.jar"/>
+		<pathelement location="${caBIO.home}/ArrayExpress.jar"/>
+
+		<pathelement location="${caBIO.home}/JSciCore.jar"/>
+		<pathelement location="${caBIO.home}/mutualinfo.jar"/>
+		<pathelement location="${caBIO.home}/poi-2.5.1-final-20040804.jar"/>
+		<pathelement location="${caBIO.home}/poi-contrib-2.5.1-final-20040804.jar"/>
+		<pathelement location="${caBIO.home}/poi-scratchpad-2.5.1-final-20040804.jar"/>
+		<pathelement location="${caBIO.home}/ogsa.jar"/>
+		<pathelement location="${caBIO.home}/ogsa-samples.jar"/>
+		<pathelement location="${caBIO.home}/progtutorial_BlastService-stub.jar"/>
+
+		<pathelement location="${caBIO.home}/progtutorial_BlastClient.jar"/>
+		<pathelement location="${caBIO.home}/cog-jglobus.jar"/>
+		<pathelement location="${caBIO.home}/xmlsec.jar"/>
+		<pathelement location="${caBIO.home}/cog-axis.jar"/>
+		<pathelement location="${caBIO.home}/xalan.jar"/>
+		<pathelement location="${caBIO.home}/ostermillerutils_1_04_03_for_kaffe.jar"/>
+		<pathelement location="${caBIO.home}/ncbiSoapUtils.jar"/>
+
+
+		<pathelement location="${caBIO.home}/weka.jar"/>
+		<pathelement location="${caBIO.home}/commons-math-1.0.jar"/>
+		<pathelement location="${caBIO.home}/cglib-nodep-2.1.jar"/>
+		<pathelement location="${caBIO.home}/globusSplash.jar"/>
+		<pathelement location="${caBIO.home}/gominer.jar"/>
+		<pathelement location="${caBIO.home}/ensj-30.2.jar"/>
+
+
+		<pathelement location="${caArrayMageom.home}/aspectjrt.jar"/>
+		<pathelement location="${caArrayMageom.home}/caarray-client.jar"/>
+
+		<pathelement location="${caArrayMageom.home}/commons-beanutils.jar"/>
+		<pathelement location="${caArrayMageom.home}/commons-collections.jar"/>
+		<pathelement location="${caArrayMageom.home}/commons-dbcp.jar"/>
+		<pathelement location="${caArrayMageom.home}/commons-digester.jar"/>
+		<pathelement location="${caArrayMageom.home}/commons-lang.jar"/>
+		<pathelement location="${caArrayMageom.home}/commons-logging.jar"/>
+		<pathelement location="${caArrayMageom.home}/commons-pool.jar"/>
+		<pathelement location="${caArrayMageom.home}/db-ojb-1.0.rc7.jar"/>
+		<pathelement location="${caArrayMageom.home}/j2ee.jar"/>
+		<pathelement location="${caArrayMageom.home}/jakarta-oro-2.0.2-dev-2.jar"/>
+		<pathelement location="${caArrayMageom.home}/jaxen-full.jar"/>
+		<pathelement location="${caArrayMageom.home}/jbossall-client.jar"/>
+		<pathelement location="${caArrayMageom.home}/jdom.jar"/>
+		<pathelement location="${caArrayMageom.home}/log4j-1.2.5.jar"/>
+		<pathelement location="${caArrayMageom.home}/mageom-client.jar"/>
+		<pathelement location="${caArrayMageom.home}/nciData.jar"/>
+		<pathelement location="${caArrayMageom.home}/netcdfAll.jar"/>
+		<pathelement location="${caArrayMageom.home}/servlet.jar"/>
+		<pathelement location="${caArrayMageom.home}/oracle.jar"/>
+		<pathelement location="${caArrayMageom.home}/soap.jar"/>
+		<pathelement location="${caArrayMageom.home}/xercesImpl.jar"/>
+		<pathelement location="${caArrayMageom.home}/xml-apis.jar"/>
+ 		<pathelement location="${caBIO.home}/mageom.jar"/>
+		<pathelement location="${caBIO.home}/mageom-support.jar"/>
+		<pathelement location="${caBIO.home}/ISBJava.jar"/>
+ 		<pathelement location="${caBIO.home}/looks-1.3.1.jar"/>
+                <pathelement location="${caBIO.home}/antlr-2.7.5.jar"/>
+
+  </path>
+
+
+
+<!--start the application.-->
+  <target depends="cvscheckout, compile, increasetag" name="runCVS">
+    <java classname="org.geworkbench.engine.config.UILauncher" fork="true" classpathref="project.class.path" maxmemory="512m">
+      <jvmarg value="-Djava.security.policy=java.policy"/>
+      <jvmarg value="-Djava.library.path=${cvs.src}/lib"/>
+      <arg value="all.xml"/>
+    </java>
+
+  </target>
+
+
+ <!--clean the previous build.-->
+  <target name="clean">
+    <delete failonerror="false" includeemptydirs="true">
+      <fileset dir="geworkbench"/>
+      <fileset dir="${temp}"/>
+      <fileset file="${passfile}"/>
+      <fileset file="java.policy"/>
+      <fileset file="*.log"/>
+      <fileset dir="${tempClass}"/>
+    </delete>
+  </target>
+
+    <!--compile the source code by subant.-->
+  <target name="compile" description="Compiles core and component .java source code.">
+      <echo message="Compiling, please wait..."/>
+    <subant target="compile">
+      <fileset dir="." includes="*/build.xml"/>
+
+
+    </subant>
+  </target>
+
+  <!--check the password.-->
+  <target name="cvspass">
+    <cvspass cvsroot=":ext:${user.name}@adcvs.cu-genome.org:/cvs/acallab" password="${cvsPassword}" passfile="${passfile}"/>
+  </target>
+
+  <!--Increase the build number-->
+  <target name="increasetag">
+    <java classname="org.geworkbench.components.versioninfo.VersionInfoDialog" fork="true" classpath="${classes}" maxmemory="256m">    </java>
+  </target>
+
+<!--Check out the source-->
+  <target depends="cvspass" name="cvscheckout">
+    <echo message="checking out..."/>
+    <cvs command="checkout" cvsroot="${cvs.root}" dest="${cvs.dest}" package="${package}" failonerror="yes" passfile="${passfile}"/>
+    <echo message="finish the process of check out."/>
+        <mkdir dir="${temp}"/>
+    <copy file="${version.src}/version.txt" todir="${temp}"/>
+    <echo message="copy the java.policy file from ${cvs.src} to."/>
+    <copy file="${cvs.src}/java.policy" todir="."/>
+  </target>
+
+  <!--Commit the new version.txt file to CVS-->
+  <target depends="cvspass, increasetag" name="cvsCommit">
+    <echo message="current Build: ${build}"/>
+    <echo message="update the version.txt"/>
+    <copy file="${temp}/version.txt" todir="${version.src}"/>
+    <cvs command="commit -m '${build}'" cvsroot=":ext:${user.name}@adcvs.cu-genome.org:/cvs/acallab" dest="${cvs.src}/src/org/bioworks/components/versioninfo" failonerror="yes" passfile="${passfile}"/>
+    <echo message="finish commit"/>
+  </target>
+
+  <!--Display the variables.-->
+  <target name="echovar">
+    <property file="${temp}/version.txt"/>
+    <echo message="Version: ${version}"/>
+    <echo message="Build: ${build}"/>
+    <echo message="Time:  ${buildTime}"/>
+  </target>
+
+   <!--add tag.-->
+  <target depends="cvspass, echovar, cvsCommit" name="addtag">
+    <echo message="tag: ${build}"/>
+    <cvs command="tag  -b ${build}" cvsroot=":ext:${user.name}@adcvs.cu-genome.org:/cvs/acallab" dest="${cvs.src}" failonerror="yes" passfile="${passfile}"/>
+    <echo message="finish tag"/>
+  </target>
+</project>
