@@ -5,19 +5,67 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
 import org.geworkbench.bison.datastructure.complex.panels.CSPanel;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
+import org.geworkbench.bison.testing.list.AbstractTestList;
+
+import java.util.List;
+import java.util.Collection;
 
 /**
  * Tests {@link CSPanel}.
  *
  * @author John Watkinson
  */
-public class TestCSPanel extends TestCase {
+public class TestCSPanel extends AbstractTestList {
+
+    // These are field variables for now so that some of the basic lists tests can test two collection's elements
+    // for equality
+    CSMicroarray m1 = new CSMicroarray(1);
+    CSMicroarray m2 = new CSMicroarray(2);
+    CSMicroarray m3 = new CSMicroarray(3);
+
+    CSMicroarray m4 = new CSMicroarray(4);
+    CSMicroarray m5 = new CSMicroarray(5);
 
     public TestCSPanel(String s) {
         super(s);
     }
 
-    public void testCSPanel() {
+    public List makeEmptyList() {
+        CSPanel<CSMicroarray> p1 = new CSPanel<CSMicroarray>("P1", "p1");
+//        CSMicroarray m1 = new CSMicroarray(1);
+//        CSMicroarray m2 = new CSMicroarray(2);
+//        CSMicroarray m3 = new CSMicroarray(3);
+//        p1.add(m1);
+//        p1.add(m2);
+//        p1.add(m3);
+        return p1;
+    }
+
+    public Object[] getFullElements() {
+        return new Object[]{m1,m2,m3};
+    }
+
+    public Object[] getOtherElements() {
+        return new Object[]{m4,m5};
+    }
+
+    public Object[] getFullNonNullElements() {
+        return getFullElements();
+    }
+
+    public Collection makeConfirmedCollection() {
+        return new CSPanel<CSMicroarray>("P1", "p1");
+    }
+
+    public Collection makeConfirmedFullCollection() {
+        CSPanel<CSMicroarray> p1 = new CSPanel<CSMicroarray>("P1", "p1");
+        p1.add(m1);
+        p1.add(m2);
+        p1.add(m3);
+        return p1;
+    }
+
+    public void xtestCSPanel() {
         // Create new panels
         CSPanel<CSMicroarray> p1 = new CSPanel<CSMicroarray>("P1", "p1");
         CSPanel<CSMicroarray> p2 = new CSPanel<CSMicroarray>("P2", "p2");
