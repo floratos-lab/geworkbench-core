@@ -442,7 +442,30 @@ public class ComponentRegistry {
      * @return an array of all public member methods.
      */
     public Method[] getMethodsForComponentType(Class componentType) {
-        return componentType.getMethods();
+        Method[] methods = componentType.getMethods();
+        List<Method> scriptMethods = new ArrayList<Method>();
+        for (int i = 0; i < methods.length; i++) {
+            Method method = methods[i];
+            if (method.isAnnotationPresent(Script.class)) {
+                scriptMethods.add(method);
+            }
+        }
+        return scriptMethods.toArray(new Method[0]);
+    }
+
+    public Method getScriptMethodByName(Class componentType, String methodName) {
+        Method[] methods = getMethodsForComponentType(componentType);
+        for (int i = 0; i < methods.length; i++) {
+            Method method = methods[i];
+            if (method.getName().equals(methodName)) {
+                return method;
+            }
+        }
+        return null;
+    }
+
+    public Method getScriptMethodByName(Object component, String methodName) {
+        return getScriptMethodByName(component.getClass(), methodName);
     }
 
     /**
@@ -457,6 +480,14 @@ public class ComponentRegistry {
     }
 
     public Collection<PluginDescriptor> getActivePluginDescriptors() {
+        return idToDescriptor.values();
+    }
+
+    public PluginDescriptor getPluginDescriptorByID(String id) {
+        return idToDescriptor.get(id);
+    }
+
+    public Collection<PluginDescriptor> getAllPluginDescriptors() {
         return idToDescriptor.values();
     }
 }

@@ -2,6 +2,7 @@ package org.geworkbench.engine.cascript;
 
 import org.geworkbench.engine.config.PluginDescriptor;
 import org.geworkbench.engine.config.PluginRegistry;
+import org.geworkbench.engine.management.ComponentRegistry;
 
 import java.io.PrintWriter;
 
@@ -26,7 +27,7 @@ class CasModule extends CasDataType {
     CasModule(String n, String t) {
         name = n;
         type = t;
-        pd = PluginRegistry.getPluginDescriptor(t);
+        pd = ComponentRegistry.getRegistry().getPluginDescriptorByID(t);
         var = pd.getPlugin();
     }
 

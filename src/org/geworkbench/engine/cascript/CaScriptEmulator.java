@@ -7,7 +7,9 @@ import org.geworkbench.engine.config.rules.GeawConfigRule;
 import org.geworkbench.engine.config.rules.PluginRule;
 import org.geworkbench.engine.config.PluginDescriptor;
 import org.geworkbench.engine.config.PluginRegistry;
+import org.geworkbench.engine.config.UILauncher;
 import org.geworkbench.engine.management.Script;
+import org.geworkbench.engine.management.ComponentRegistry;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -106,15 +108,13 @@ public class CaScriptEmulator {
     static void initProperties() {
         InputStream reader = null;
         try {
-            reader = Class.forName("core.config.UILauncher").
+            reader = UILauncher.class.
                     getResourceAsStream("application.properties");
             System.getProperties().load(reader);
             if (System.getSecurityManager() == null) {
                 System.setSecurityManager(new SecurityManager());
             }
             reader.close();
-        } catch (ClassNotFoundException cnfe) {
-            cnfe.printStackTrace();
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
@@ -169,17 +169,19 @@ public class CaScriptEmulator {
     }
 
     public static Method getNamedMethod(Object plugin, String value) {
-        Method m = null;
-        Method[] methods = plugin.getClass().getMethods();
-        for (int i = 0; i < methods.length; i++) {
-            Script annotation = null;
-            if ((annotation = methods[i].getAnnotation(Script.class)) != null) {
-                if (annotation.value().equalsIgnoreCase(value)) m = methods[i];
-            }
-        }
-        return m;
+        return ComponentRegistry.getRegistry().getScriptMethodByName(plugin, value);
+//        Method m = null;
+//        Method[] methods = plugin.getClass().getMethods();
+//        for (int i = 0; i < methods.length; i++) {
+//            Script annotation = null;
+//            if ((annotation = methods[i].getAnnotation(Script.class)) != null) {
+//                if (annotation.value().equalsIgnoreCase(value)) m = methods[i];
+//            }
+//        }
+//        return m;
     }
 
+    // @todo - get these components from the ComponentRegistry
     public static void main(String[] args) {
         emulateStartup();
         PluginDescriptor expFileFormat = PluginRegistry.getPluginDescriptor("expressionFileFilter");

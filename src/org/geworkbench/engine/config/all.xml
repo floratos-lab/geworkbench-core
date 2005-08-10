@@ -119,7 +119,7 @@
 	</plugin>
     -->
 	<!-- New Gene Panel implementation -->
-	<plugin id="genePanel2" name="Gene Panel" class="org.geworkbench.components.selectors.GenePanel">
+	<plugin id="genePanel" name="Gene Panel" class="org.geworkbench.components.selectors.GenePanel">
 		<gui-area name="SelectionArea"/>
 	</plugin>
 	<plugin id="hierarchicalClusteringPanel" name="Dendrogram" class="org.geworkbench.components.hierarchicalclustering.HierClusterViewAppComponent">

@@ -15,6 +15,7 @@ import org.geworkbench.util.PropertiesMonitor;
 import org.geworkbench.util.patterns.PatternDB;
 import org.geworkbench.engine.management.Publish;
 import org.geworkbench.engine.management.Subscribe;
+import org.geworkbench.engine.management.Script;
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
@@ -303,18 +304,18 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
     /**
      * Retrieve the associated descriptions
      * @return
-     public String getUserComments() {
-     ProjectTreeNode selectedNode = selection.getSelectedNode();
-     String text = "";
-     String[] descriptions = null;
-     if (selectedNode instanceof DataSetNode) {
-     descriptions = ( (DataSetNode) selectedNode).dataFile.getDescriptions();
-     for (int i = 0; i < descriptions.length; i++) {
-     text += descriptions[i];
-     }
-     }
-     return text;
-     }
+    public String getUserComments() {
+    ProjectTreeNode selectedNode = selection.getSelectedNode();
+    String text = "";
+    String[] descriptions = null;
+    if (selectedNode instanceof DataSetNode) {
+    descriptions = ( (DataSetNode) selectedNode).dataFile.getDescriptions();
+    for (int i = 0; i < descriptions.length; i++) {
+    text += descriptions[i];
+    }
+    }
+    return text;
+    }
      */
 
     /**
@@ -377,29 +378,29 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
     /**
      * Stores to a datafile
      * @param filename
-     void serialize(String filename) {
-     try {
-     for(int i = 0; i < projectTree.getRowCount(); i++) {
-     TreePath path = projectTree.getPathForRow(i);
-     ProjectTreeNode node = (ProjectTreeNode)path.getLastPathComponent();
-     if(node instanceof DataSetSubNode) {
-     DataSetSubNode dNode = (DataSetSubNode)node;
-     if(dNode._aDataSet instanceof PatternDB) {
-     PatternDB patternDB = (PatternDB)dNode._aDataSet;
-     if(patternDB.getFile() == null) {
-     patternDB.write();
-     }
-     }
-     }
-     }
-     FileOutputStream f = new FileOutputStream(filename);
-     ObjectOutput s = new ObjectOutputStream(f);
-     s.writeObject(root);
-     s.flush();
-     } catch (IOException ex) {
-     System.err.println("Error: " + ex);
-     }
-     }
+    void serialize(String filename) {
+    try {
+    for(int i = 0; i < projectTree.getRowCount(); i++) {
+    TreePath path = projectTree.getPathForRow(i);
+    ProjectTreeNode node = (ProjectTreeNode)path.getLastPathComponent();
+    if(node instanceof DataSetSubNode) {
+    DataSetSubNode dNode = (DataSetSubNode)node;
+    if(dNode._aDataSet instanceof PatternDB) {
+    PatternDB patternDB = (PatternDB)dNode._aDataSet;
+    if(patternDB.getFile() == null) {
+    patternDB.write();
+    }
+    }
+    }
+    }
+    FileOutputStream f = new FileOutputStream(filename);
+    ObjectOutput s = new ObjectOutputStream(f);
+    s.writeObject(root);
+    s.flush();
+    } catch (IOException ex) {
+    System.err.println("Error: " + ex);
+    }
+    }
      */
 
     /**
@@ -509,7 +510,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         }
     }
 
-    @Subscribe public void receive(org.geworkbench.events.ProjectNodeAddedEvent pnae, Object source) {
+    @Subscribe
+    public void receive(org.geworkbench.events.ProjectNodeAddedEvent pnae, Object source) {
         DSDataSet dataSet = pnae.getDataSet();
         DSAncillaryDataSet ancillaryDataSet = pnae.getAncillaryDataSet();
         if (dataSet != null) {
@@ -759,6 +761,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
      * @param dataSetFiles The file containing the data to be parsed.
      * @param inputFormat  The format that the file is expected to conform to.
      * @throws org.geworkbench.engine.parsers.InputFileFormatException
+     *
      */
     public void fileOpenAction(final File[] dataSetFiles, final org.geworkbench.engine.parsers.FileFormat inputFormat, final boolean mergeFiles) throws org.geworkbench.engine.parsers.InputFileFormatException {
 
@@ -790,19 +793,19 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 //                            }
 //                        }
 //                        if (!cancelled) {
-                            for (int i = 0; i < dataSetFiles.length; i++) {
-                                File dataSetFile = dataSetFiles[i];
-                                dataSets[i] = ((DataSetFileFormat) inputFormat).getDataFile(dataSetFile);
-                            }
-                            if (mergeFiles) {
-                                if (dataSets[0] instanceof DSMicroarraySet) {
-                                    DSMicroarraySet[] maSets = new DSMicroarraySet[dataSets.length];
-                                    for (int i = 0; i < dataSets.length; i++) {
-                                        maSets[i] = (DSMicroarraySet) dataSets[i];
-                                    }
-                                    doMergeSets(maSets);
+                        for (int i = 0; i < dataSetFiles.length; i++) {
+                            File dataSetFile = dataSetFiles[i];
+                            dataSets[i] = ((DataSetFileFormat) inputFormat).getDataFile(dataSetFile);
+                        }
+                        if (mergeFiles) {
+                            if (dataSets[0] instanceof DSMicroarraySet) {
+                                DSMicroarraySet[] maSets = new DSMicroarraySet[dataSets.length];
+                                for (int i = 0; i < dataSets.length; i++) {
+                                    maSets[i] = (DSMicroarraySet) dataSets[i];
                                 }
+                                doMergeSets(maSets);
                             }
+                        }
 //                        }
                     }
                     progressBar.setString("");
@@ -1095,7 +1098,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
     protected ProjectTreeNode selectedNode = null;
     protected MicroarraySetNode previousMANode = null;
 
-    @Publish public ProjectEvent publishProjectEvent(ProjectEvent event) {
+    @Publish
+    public ProjectEvent publishProjectEvent(ProjectEvent event) {
         return event;
     }
 
@@ -1138,7 +1142,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
      *
      * @param event <code>ImageSnapshotEvent</code>
      */
-    @Subscribe public void receive(ImageSnapshotEvent event, Object source) {
+    @Subscribe
+    public void receive(ImageSnapshotEvent event, Object source) {
         if (event.getAction() == ImageSnapshotEvent.Action.SAVE) {
             TreePath path = projectTree.getSelectionPath();
             if (path != null) {
@@ -1164,7 +1169,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
      *
      * @param ce <code>CommentsEventOld</code> thrown by <code>CommentsPane</code>
      */
-    @Subscribe public void receive(org.geworkbench.events.CommentsEventOld ce, Object source) {
+    @Subscribe
+    public void receive(org.geworkbench.events.CommentsEventOld ce, Object source) {
         // Do no bother if the comment change is not for currently selected
         // microarray set.
         if (ce == null || ce.getMicroarray() == null || !(selectedNode instanceof MicroarraySetNode) || prjRnd.microarraySetNodeSelection == null || prjRnd.microarraySetNodeSelection.getMicroarraySet() != ce.getMicroarray()) {
@@ -1186,7 +1192,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
      * @param tce <code>TableChangeEvent</code> from the <code>TabularView</code>
      *            widget
      */
-    @Subscribe public void receive(SingleValueEditEvent tce, Object source) {
+    @Subscribe
+    public void receive(SingleValueEditEvent tce, Object source) {
         DSDataSet changedMASet = tce.getReferenceMicroarraySet();
         // This component only handles changes to the currently selected
         // micorarray.
@@ -1207,7 +1214,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
      * @param mnce <code>MicroarrayNameChangeEvent</code> containing the
      *             micorarray that was renamed.
      */
-    @Subscribe public void receive(MicroarrayNameChangeEvent mnce, Object source) {
+    @Subscribe
+    public void receive(MicroarrayNameChangeEvent mnce, Object source) {
         //    DSMicroarraySet changedMASet = mnce.getMicroarray().getMicroarraySet();
         MicroarraySetNode selectedNode = prjRnd.microarraySetNodeSelection;
         // This component only handles changes to the currently selected
@@ -1231,7 +1239,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
      *
      * @param ne
      */
-    @Subscribe public void receive(NormalizationEvent ne, Object source) {
+    @Subscribe
+    public void receive(NormalizationEvent ne, Object source) {
         if (ne == null) {
             return;
         }
@@ -1260,7 +1269,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
      *
      * @param fe
      */
-    @Subscribe public void receive(org.geworkbench.events.FilteringEvent fe, Object source) {
+    @Subscribe
+    public void receive(org.geworkbench.events.FilteringEvent fe, Object source) {
         if (fe == null) {
             return;
         }
@@ -1312,7 +1322,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
      */
     protected final String COMMENTS_MODIFIED = "Comments modified";
 
-    @Publish public ImageSnapshotEvent publishImageSnapshot(ImageSnapshotEvent event) {
+    @Publish
+    public ImageSnapshotEvent publishImageSnapshot(ImageSnapshotEvent event) {
         return event;
     }
 
@@ -1726,5 +1737,46 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         publishImageSnapshot(new ImageSnapshotEvent("ImageSnapshot", null, ImageSnapshotEvent.Action.SHOW));
     }
 
+    @Script
+    public void loadDataSet(String filename, FileFormat inputFormat) throws Exception {
+        File[] dataSetFiles = new File[1];
+        dataSetFiles[0] = new File(filename);
+        if (inputFormat instanceof DataSetFileFormat) {
+            progressBar.setStringPainted(true);
+            progressBar.setString("Loading");
+            progressBar.setIndeterminate(true);
+            jDataSetPanel.setCursor(Cursor.getPredefinedCursor(Cursor.
+                    WAIT_CURSOR));
+            DSDataSet dataSet;
+            if (dataSetFiles.length == 1) {
+                dataSet = ((DataSetFileFormat) inputFormat).getDataFile(
+                        dataSetFiles[0]);
+            } else {
+                dataSet = ((DataSetFileFormat) inputFormat).getDataFile(
+                        dataSetFiles);
+            }
+            progressBar.setString("");
+            progressBar.setIndeterminate(false);
+            jDataSetPanel.setCursor(Cursor.getPredefinedCursor(Cursor.
+                    DEFAULT_CURSOR));
+
+            // If everything went OK, register the newly created microarray set.
+            if (dataSet != null) {
+                //String directory = dataSetFile.getPath();
+                System.out.println("data set parsed");
+                jNewProjectItem_actionPerformed(null);
+                addDataSetNode(dataSet, true);
+            } else {
+                System.out.println("Could not load file: " + dataSetFiles);
+            }
+        } else {
+            // super.fileOpenAction(dataSetFiles, inputFormat);
+        }
+    }
+
+    @Script
+    public DSDataSet getDataSet() {
+        return selection.getDataSet();
+    }
 
 }

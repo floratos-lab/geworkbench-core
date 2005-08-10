@@ -28,7 +28,7 @@ public class CASWalker extends antlr.TreeParser implements CASWalkerTokenTypes {
             AST tmp1_AST_in = (AST) _t;
             match(_t, PROG);
             _t = _t.getFirstChild();
-            CaScriptEmulator.emulateStartup();
+//            CaScriptEmulator.emulateStartup();
             {
                 _loop173:
                 do {
