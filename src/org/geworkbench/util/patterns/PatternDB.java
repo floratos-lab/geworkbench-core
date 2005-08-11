@@ -1,9 +1,7 @@
 package org.geworkbench.util.patterns;
 
-import org.geworkbench.util.RandomNumberGenerator;
-import org.geworkbench.util.patterns.*;
+import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.util.patterns.CSMatchedSeqPattern;
-import org.geworkbench.util.AlgorithmSelectionPanel;
 import org.geworkbench.bison.datastructure.biocollections.CSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeqPattern;

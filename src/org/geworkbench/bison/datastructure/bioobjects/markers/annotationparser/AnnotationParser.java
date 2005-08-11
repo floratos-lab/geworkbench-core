@@ -1,12 +1,11 @@
-package org.geworkbench.util.annotation;
+package org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser;
 
 import com.Ostermiller.util.CSVParse;
 import com.Ostermiller.util.CSVParser;
 import com.Ostermiller.util.ExcelCSVParser;
 import com.Ostermiller.util.LabeledCSVParser;
-import org.geworkbench.util.RandomNumberGenerator;
-import org.geworkbench.util.associationdiscovery.clusterlogic.ExampleFilter;
-import org.geworkbench.engine.config.UILauncher;
+import org.geworkbench.bison.util.RandomNumberGenerator;
+import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.ExampleFilter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,6 +56,12 @@ public class AnnotationParser {
     static File annoFile = null;
     static File indx = null;
     static Gotable goes = null;
+
+    private static AnnotationParserListener listener = null;
+
+    public static void setListener(AnnotationParserListener listener) {
+        AnnotationParser.listener = listener;
+    }
 
     public static HashMap chiptypeMap = new HashMap();
     public static HashMap indexfileMap = new HashMap();
@@ -175,11 +180,7 @@ public class AnnotationParser {
                     String ur =
 
                             "http://amdec-bioinfo.cu-genome.org/html/caWorkBench/data/" + chipType + "_annot.csv";
-                    if (UILauncher.splash.isVisible()) {
-                        UILauncher.splash.setProgressBarString("Downloading data file...");
-                    }
-                    ;
-
+                    parserUpdate("Downloading data file...");
                     URL url = new URL(ur);
                     InputStream is = url.openStream();
                     BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -281,14 +282,20 @@ public class AnnotationParser {
         br.close();
     }
 
+    private static boolean parserUpdate(String text) {
+        if (listener == null) {
+            return false;
+        } else {
+            return listener.annotationParserUpdate(text);
+        }
+    }
+
     static void parse() throws IOException {
 
         String line;
-        if (!UILauncher.splash.isVisible()) {
+        boolean backgroundMode = parserUpdate("Creating data index file...");
+        if (!backgroundMode) {
             JOptionPane.showMessageDialog(null, "<html>Chip type " + chipType + " recognized.<br> We are going to initialize related annotation files<br> </html>");
-
-        } else {
-            UILauncher.splash.setProgressBarString("Creating data index file...");
         }
         BufferedWriter br = new BufferedWriter(new FileWriter(indx));
         BufferedReader xin = new BufferedReader(new FileReader(annoFile));
@@ -307,7 +314,7 @@ public class AnnotationParser {
         }
         LabeledCSVParser parser = new LabeledCSVParser(parse);
 
-        if (UILauncher.splash.isVisible()) {
+        if (backgroundMode) {
 
             progressIn.getProgressMonitor().setMillisToDecideToPopup(10000000);
 
@@ -319,9 +326,7 @@ public class AnnotationParser {
         br.write(time);
         affyIDs.clear();
         while (parser.getLine() != null) {
-            if (UILauncher.splash.isVisible()) {
-                UILauncher.splash.setProgressBarString("probes parsed: " + count++);
-            }
+            parserUpdate("probes parsed: " + count++);
 
             String id = parser.getValueByLabel("Probe Set ID");
 
@@ -614,9 +619,7 @@ public class AnnotationParser {
             String[] info = getInfo(id, AnnotationParser.GOTERM);
             progressMonitor.setNote("Processing probe:" + count);
             progressMonitor.setProgress(count++);
-            if (UILauncher.splash.isVisible()) {
-                UILauncher.splash.setProgressBarString("Processing probe:" + count++);
-            }
+            parserUpdate("Processing probe:" + count++);
             for (int i = 0; i < info.length; i++) {
                 if (info[i] != null) {
                     String goid = info[i].split("::")[0];

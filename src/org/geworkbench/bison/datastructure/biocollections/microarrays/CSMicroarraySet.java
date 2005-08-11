@@ -10,7 +10,7 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.*;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.util.CSCriterionManager;
-import org.geworkbench.util.RandomNumberGenerator;
+import org.geworkbench.bison.util.RandomNumberGenerator;
 
 import java.io.*;
 import java.util.*;

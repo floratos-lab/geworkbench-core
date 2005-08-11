@@ -5,7 +5,7 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import org.geworkbench.util.associationdiscovery.clusterlogic.ExampleFilter;
+import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.ExampleFilter;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

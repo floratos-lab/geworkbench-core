@@ -1,6 +1,6 @@
 package org.geworkbench.builtin.projects;
 
-import org.geworkbench.util.RandomNumberGenerator;
+import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.bison.datastructure.biocollections.CSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 

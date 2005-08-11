@@ -2,7 +2,7 @@ package org.geworkbench.engine.parsers.bisonparsers;
 
 import DBInterface.DBInterface;
 import MAGE.*;
-import org.geworkbench.util.annotation.AnnotationParser;
+import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;

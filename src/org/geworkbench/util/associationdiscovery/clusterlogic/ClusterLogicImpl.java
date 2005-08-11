@@ -4,6 +4,7 @@ import org.geworkbench.util.associationdiscovery.PSSM.CSMatchedPSSMMatrixPattern
 import org.geworkbench.util.associationdiscovery.cluster.CSMatchedMatrixPattern;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
+import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.ExampleFilter;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSGenotypicMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMutableMarkerValue;

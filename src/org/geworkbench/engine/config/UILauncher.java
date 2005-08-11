@@ -2,11 +2,11 @@ package org.geworkbench.engine.config;
 
 import com.jgoodies.looks.plastic.PlasticLookAndFeel;
 import com.jgoodies.looks.plastic.theme.SkyBlue;
-import org.geworkbench.util.Debug;
 import org.apache.commons.digester.Digester;
 import org.geworkbench.util.SplashBitmap;
 import org.geworkbench.engine.config.rules.GeawConfigRule;
 import org.geworkbench.engine.config.rules.PluginRule;
+import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParserListener;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -25,7 +25,7 @@ import java.io.InputStream;
  * file.
  */
 
-public class UILauncher {
+public class UILauncher implements AnnotationParserListener {
     /**
      * The name of the string in the <code>application.properties</code> file
      * that contains the location of the application configuration file.
@@ -155,6 +155,8 @@ public class UILauncher {
             System.out.println("Problem applying look and feel:");
             e.printStackTrace();
         }
+        // Add hook for AnnotationParser listener
+
         splash.hideOnClick();
         splash.addAutoProgressBarIndeterminate();
         splash.setProgressBarString("loading...");
@@ -207,6 +209,15 @@ public class UILauncher {
         //            e.printStackTrace();
         //        }
         splash.hideSplash();
+    }
+
+    public boolean annotationParserUpdate(String text) {
+        if (splash.isVisible()) {
+            UILauncher.splash.setProgressBarString(text);
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

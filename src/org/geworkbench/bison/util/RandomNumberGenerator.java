@@ -1,4 +1,4 @@
-package org.geworkbench.util;
+package org.geworkbench.bison.util;
 
 import java.util.Random;
 

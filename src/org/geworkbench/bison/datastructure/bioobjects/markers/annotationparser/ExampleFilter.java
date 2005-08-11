@@ -1,4 +1,4 @@
-package org.geworkbench.util.associationdiscovery.clusterlogic;
+package org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser;
 
 import javax.swing.filechooser.FileFilter;
 import java.io.File;

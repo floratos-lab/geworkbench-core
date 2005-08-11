@@ -1,8 +1,7 @@
 package org.geworkbench.engine.parsers;
 
 import org.geworkbench.engine.parsers.microarray.DataSetFileFormat;
-import org.geworkbench.util.Range;
-import org.geworkbench.util.annotation.AnnotationParser;
+import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker;
 import org.geworkbench.bison.datastructure.biocollections.classification.phenotype.CSClassCriteria;
 import org.geworkbench.bison.annotation.CSCriteria;
@@ -17,7 +16,6 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMutableMarker
 import org.geworkbench.bison.datastructure.complex.panels.CSPanel;
 import org.geworkbench.bison.util.*;
 import org.geworkbench.engine.resource.Resource;
-import org.geworkbench.engine.parsers.*;
 import org.geworkbench.engine.parsers.ExpressionResource;
 
 import javax.swing.filechooser.FileFilter;

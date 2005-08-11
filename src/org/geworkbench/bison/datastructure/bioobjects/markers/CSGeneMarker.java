@@ -1,8 +1,8 @@
 package org.geworkbench.bison.datastructure.bioobjects.markers;
 
-import org.geworkbench.util.annotation.AnnotationParser;
 import org.geworkbench.bison.datastructure.properties.CSUnigene;
 import org.geworkbench.bison.datastructure.properties.DSUnigene;
+import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 
 import java.io.*;
 

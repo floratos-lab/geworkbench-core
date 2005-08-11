@@ -1,11 +1,9 @@
 package org.geworkbench.bison.datastructure.biocollections.microarrays;
 
-import org.geworkbench.util.colorcontext.ColorContext;
-import org.geworkbench.util.RandomNumberGenerator;
+import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.builtin.projects.TreeNodeRenderer;
 import org.geworkbench.bison.datastructure.bioobjects.markers.genotype.CSGenotypeMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.genotype.GenotypeColorContext;
-import org.geworkbench.engine.parsers.bisonparsers.DataParseContext;
 import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSGenotypicMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;

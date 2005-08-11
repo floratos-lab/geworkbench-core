@@ -1,8 +1,7 @@
 package org.geworkbench.bison.datastructure.bioobjects.microarray;
 
 import org.geworkbench.util.DefaultIdentifiable;
-import org.geworkbench.util.RandomNumberGenerator;
-import org.geworkbench.util.ArrayIterator;
+import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.properties.CSDescribable;

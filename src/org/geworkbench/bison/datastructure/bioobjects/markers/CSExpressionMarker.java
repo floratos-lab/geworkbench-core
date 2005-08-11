@@ -1,9 +1,8 @@
 package org.geworkbench.bison.datastructure.bioobjects.markers;
 
-import org.geworkbench.util.Normal;
 import org.geworkbench.util.Range;
-import org.geworkbench.util.annotation.AnnotationParser;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMutableMarkerValue;
+import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 
 import java.io.BufferedWriter;
 import java.io.IOException;

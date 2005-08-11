@@ -4,7 +4,7 @@ import org.geworkbench.engine.parsers.AffyParser;
 import org.geworkbench.engine.parsers.NCIParser;
 import org.geworkbench.engine.parsers.AffyResource;
 import org.geworkbench.engine.parsers.MAGEResourceOld;
-import org.geworkbench.util.RandomNumberGenerator;
+import org.geworkbench.bison.util.RandomNumberGenerator;
 import gov.nih.nci.mageom.bean.BioAssay.BioAssayImpl;
 import org.geworkbench.bison.datastructure.bioobjects.markers.CSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;

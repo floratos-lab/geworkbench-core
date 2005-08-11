@@ -1,6 +1,6 @@
 package org.geworkbench.util.sequences;
 
-import org.geworkbench.util.RandomNumberGenerator;
+import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.bison.datastructure.bioobjects.markers.SequenceMarker;
 import org.geworkbench.engine.parsers.sequences.SequenceResource;
 import org.geworkbench.bison.datastructure.biocollections.CSDataSet;
