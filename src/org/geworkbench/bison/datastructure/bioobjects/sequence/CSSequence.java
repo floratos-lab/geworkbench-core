@@ -5,6 +5,7 @@ import org.geworkbench.bison.datastructure.properties.CSExtendable;
 
 import java.io.ObjectStreamField;
 import java.util.regex.Matcher;
+import java.io.Serializable;
 
 /**
  * <p>Title: </p>
@@ -16,7 +17,7 @@ import java.util.regex.Matcher;
  * @version 1.0
  */
 
-public class CSSequence implements DSSequence {
+public class CSSequence implements DSSequence, Serializable {
 
     private final static ObjectStreamField[] serialPersistentFields = {new ObjectStreamField("isDNA", boolean.class), new ObjectStreamField("label", String.class), new ObjectStreamField("sequence", String.class)};
 

@@ -28,10 +28,20 @@ import java.util.HashMap;
  * @version 1.0
  */
 
-public class SequenceDB extends CSDataSet<DSSequence> implements DSCollection<DSSequence> {
-    private final static ObjectStreamField[] serialPersistentFields = {new ObjectStreamField("dirty", boolean.class), new ObjectStreamField("isDNA", boolean.class), new ObjectStreamField("label", String.class), new ObjectStreamField("sequenceNo", int.class), new ObjectStreamField("file", File.class), new ObjectStreamField("sequences", ArrayList.class), new ObjectStreamField("maxLength", int.class), new ObjectStreamField("genePanel", DSPanel.class)};
+public class SequenceDB extends CSDataSet<DSSequence> implements DSCollection<
+        DSSequence> {
+//    private final static ObjectStreamField[] serialPersistentFields = {new
+//            ObjectStreamField("dirty", boolean.class),
+//            new ObjectStreamField("isDNA", boolean.class),
+//                           new ObjectStreamField("label", String.class),
+//                           new ObjectStreamField("sequenceNo", int.class),
+//                           new ObjectStreamField("file", File.class),
+//                           new ObjectStreamField("sequences", ArrayList.class),
+//                           new ObjectStreamField("maxLength", int.class),
+//                           new ObjectStreamField("genePanel", DSPanel.class)};
 
-    static private ImageIcon icon = new ImageIcon(SequenceDB.class.getResource("dna.GIF"));
+    static private ImageIcon icon = new ImageIcon(SequenceDB.class.getResource(
+            "dna.GIF"));
     static private HashMap databases = new HashMap();
     private boolean dirty = false;
     private SequenceResource seqResource = null;
@@ -41,7 +51,8 @@ public class SequenceDB extends CSDataSet<DSSequence> implements DSCollection<DS
     private String label = "Undefined";
     private int sequenceNo = 0;
     private File file = null;
-    private DSItemList<org.geworkbench.bison.datastructure.bioobjects.markers.SequenceMarker> markerList = null;
+    private DSItemList<org.geworkbench.bison.datastructure.bioobjects.markers.
+            SequenceMarker> markerList = null;
     //added by xiaoqing for bug fix to create subsetSequenceDB. which matchs the old sequences index with new temp sub seqenceDB index.
     //Need rewrite to fit with caWorkbench3.
     private int[] matchIndex;
@@ -62,7 +73,8 @@ public class SequenceDB extends CSDataSet<DSSequence> implements DSCollection<DS
         this.add(sequence);
         sequence.setSerial(this.indexOf(sequence));
         // @todo - watkin - This marker is not stored anywhere!? Why is it created?
-        SequenceMarker marker = new org.geworkbench.bison.datastructure.bioobjects.markers.SequenceMarker();
+        SequenceMarker marker = new org.geworkbench.bison.datastructure.
+                                bioobjects.markers.SequenceMarker();
         marker.parseLabel(sequence.getLabel());
         marker.setSerial(this.size());
 
@@ -81,7 +93,7 @@ public class SequenceDB extends CSDataSet<DSSequence> implements DSCollection<DS
             readFASTAfile(file);
         }
         if (i < this.size() && i >= 0) {
-            return (CSSequence) this.get(i);
+            return (CSSequence)this.get(i);
         } else {
             return null;
         }
