@@ -1,6 +1,6 @@
 package org.geworkbench.engine.parsers.sequences;
 
-import org.geworkbench.engine.resource.AbstractResource;
+import org.geworkbench.bison.parsers.resources.AbstractResource;
 
 /**
  * <p>Title: SequenceResource</p>

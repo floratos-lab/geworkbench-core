@@ -4,7 +4,7 @@ import org.apache.commons.math.MathException;
 import org.apache.commons.math.stat.descriptive.StatisticalSummaryValues;
 import org.apache.commons.math.stat.inference.TTestImpl;
 import org.geworkbench.util.associationdiscovery.statistics.ClusterStatistics;
-import org.geworkbench.util.Normal;
+import org.geworkbench.bison.util.Normal;
 import org.geworkbench.bison.datastructure.biocollections.classification.phenotype.CSClassCriteria;
 import org.geworkbench.bison.datastructure.biocollections.classification.phenotype.DSClassCriteria;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
@@ -189,7 +189,7 @@ public class PatternOps {
                 int xxx = 1;
             }
             Normal fg = new Normal();
-            Normal bg = new org.geworkbench.util.Normal();
+            Normal bg = new org.geworkbench.bison.util.Normal();
             for (DSPatternMatch<DSMicroarray, DSPValue> pm : matches) {
                 fg.add(pm.getObject().getMarkerValue(m).getValue());
             }

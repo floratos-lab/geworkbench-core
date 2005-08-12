@@ -3,7 +3,6 @@ package org.geworkbench.util.pathwaydecoder.bayes;
 import edu.ksu.cis.bnj.bbn.BBNGraph;
 import edu.ksu.cis.kdd.data.Table;
 import org.geworkbench.util.pathwaydecoder.bayes.discretizers.LogDiscretizer;
-import org.geworkbench.util.FileUtil;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
 
 import java.io.File;
@@ -38,7 +37,7 @@ public class CustomGraphScorer {
         BBNGraph graph = custGraph.getInitializedGraph();
 
         File edgeFile = new File("/users/aam2110/Simulations/Results_new/AGN-century/SF/SF-001/SF-001_true_pairedEdgeList.txt");
-        Vector trueEdges = org.geworkbench.util.FileUtil.readFile(edgeFile);
+        Vector trueEdges = org.geworkbench.bison.util.FileUtil.readFile(edgeFile);
         Iterator trueEdgeIt = trueEdges.iterator();
         while (trueEdgeIt.hasNext()) {
             String[] edges = (String[]) trueEdgeIt.next();

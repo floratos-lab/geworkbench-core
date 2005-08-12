@@ -1,7 +1,5 @@
 package org.geworkbench.util.function.tp;
 
-import org.geworkbench.util.FileUtil;
-
 import java.io.File;
 import java.util.Vector;
 
@@ -24,7 +22,7 @@ public class ComparisonHistogram {
         int[][][] results = new int[histogramBins][2][numSigmas];
 
         File dataFile = new File("Z:/Adam/MI/BimodalGaussian/BimodalGaussianMIs/MpiTest/Accurate/MisForSigmas/EstimateCompare/Comparison.txt");
-        Vector fileData = org.geworkbench.util.FileUtil.readFile(dataFile);
+        Vector fileData = org.geworkbench.bison.util.FileUtil.readFile(dataFile);
 
         for (int dataCtr = 1; dataCtr < fileData.size() - 1; dataCtr++) {
             String[] lineData = (String[]) fileData.get(dataCtr);

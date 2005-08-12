@@ -1,7 +1,5 @@
 package org.geworkbench.util.function.unimodalGaussian;
 
-import org.geworkbench.util.FileUtil;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.util.Vector;
@@ -37,7 +35,7 @@ public class CalculateDifferenceErrors {
 
             System.out.println("Reading File");
             //            Vector allFileData = FileUtil.readFile(dataFile);
-            Vector allFileData = org.geworkbench.util.FileUtil.readFile(estimatesFile);
+            Vector allFileData = org.geworkbench.bison.util.FileUtil.readFile(estimatesFile);
             int dataSize = allFileData.size();
 
             int iterations = 100000;

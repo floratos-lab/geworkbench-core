@@ -1,6 +1,6 @@
 package org.geworkbench.engine.model.clusters;
 
-import org.geworkbench.util.DefaultIdentifiable;
+import org.geworkbench.bison.util.DefaultIdentifiable;
 
 import java.lang.reflect.Array;
 import java.util.Iterator;
@@ -33,7 +33,7 @@ public abstract class AbstractCluster implements Cluster {
     /**
      * Unique ID acting as a key for this <code>Cluster</code>
      */
-    protected org.geworkbench.util.DefaultIdentifiable clusterID = new DefaultIdentifiable();
+    protected org.geworkbench.bison.util.DefaultIdentifiable clusterID = new DefaultIdentifiable();
 
     /**
      * Gets the <code>Cluster</code> which contains this <code>Cluster</code> as

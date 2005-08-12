@@ -11,7 +11,7 @@ import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import org.geworkbench.bison.datastructure.complex.panels.CSSequentialItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
-import org.geworkbench.engine.resource.Resource;
+import org.geworkbench.bison.parsers.resources.Resource;
 
 import javax.swing.*;
 import java.io.*;

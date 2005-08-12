@@ -1,7 +1,5 @@
 package org.geworkbench.util.function.unimodalGaussian;
 
-import org.geworkbench.util.FileUtil;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.util.Vector;
@@ -38,7 +36,7 @@ public class ComparisonHistogram {
             //            File dataFile = new File(fileRoot + "/MI/UnimodalGaussian/DiffVar/UnimodalGaussianMIs/EstimateCompare/Comparison.txt");
             File dataFile = new File(args[0]);
             System.out.println("Reading file");
-            Vector fileData = org.geworkbench.util.FileUtil.readFile(dataFile, 1);
+            Vector fileData = org.geworkbench.bison.util.FileUtil.readFile(dataFile, 1);
 
             //            File writeFile = new File(fileRoot + "/MI/UnimodalGaussian/DiffVar/UnimodalGaussianMIs/ComparisonHistogram/ComparisonHistogram.txt");
             File writeFile = new File(args[1]);

@@ -1,12 +1,12 @@
 package org.geworkbench.engine.parsers;
 
-import org.geworkbench.engine.parsers.AffyResource;
 import org.geworkbench.engine.parsers.InputFileFormatException;
 import org.geworkbench.engine.parsers.microarray.DataSetFileFormat;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
-import org.geworkbench.engine.resource.Resource;
+import org.geworkbench.bison.parsers.resources.AffyResource;
+import org.geworkbench.bison.parsers.resources.Resource;
 
 import javax.swing.filechooser.FileFilter;
 import java.io.BufferedReader;
@@ -33,7 +33,7 @@ public class AffyFileFormat extends DataSetFileFormat {
      * The file extensions expected for Affy files.
      */
     String[] affyExtensions = {"affy", "txt", "TXT"};
-    org.geworkbench.engine.parsers.AffyResource resource = new org.geworkbench.engine.parsers.AffyResource();
+    AffyResource resource = new AffyResource();
     DSMicroarraySet microarraySet = null;
     /**
      * <code>FileFilter</code> for gating Affy files, based on their extension.
@@ -96,7 +96,7 @@ public class AffyFileFormat extends DataSetFileFormat {
         if (!checkFormat(file))
             throw new InputFileFormatException("AffyFileFormat::getMArraySet - " + "Attempting to open a file that does not comply with the " + "Affy format.");
         try {
-            microarraySet = new CSExprMicroarraySet((org.geworkbench.engine.parsers.AffyResource) getResource(file));
+            microarraySet = new CSExprMicroarraySet((AffyResource) getResource(file));
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,12 +1,12 @@
 package org.geworkbench.engine.parsers;
 
-import org.geworkbench.engine.parsers.GenepixResource;
 import org.geworkbench.engine.parsers.InputFileFormatException;
 import org.geworkbench.engine.parsers.microarray.DataSetFileFormat;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
-import org.geworkbench.engine.resource.Resource;
+import org.geworkbench.bison.parsers.resources.GenepixResource;
+import org.geworkbench.bison.parsers.resources.Resource;
 
 import javax.swing.filechooser.FileFilter;
 import java.io.BufferedReader;
@@ -34,7 +34,7 @@ public class GenePixFileFormat extends DataSetFileFormat {
      * The file extensions expected for Genepix files.
      */
     String[] genepixExtensions = {"gpr"};
-    org.geworkbench.engine.parsers.GenepixResource resource = new org.geworkbench.engine.parsers.GenepixResource();
+    GenepixResource resource = new GenepixResource();
     DSMicroarraySet microarraySet = null;
     /**
      * <code>FileFilter</code> for gating Genepix files, based on their extension.
@@ -97,7 +97,7 @@ public class GenePixFileFormat extends DataSetFileFormat {
         if (!checkFormat(file))
             throw new org.geworkbench.engine.parsers.InputFileFormatException("GenepixFileFormat::getMArraySet - " + "Attempting to open a file that does not comply with the " + "Genepix format.");
         try {
-            microarraySet = new CSExprMicroarraySet((org.geworkbench.engine.parsers.GenepixResource) getResource(file));
+            microarraySet = new CSExprMicroarraySet((GenepixResource) getResource(file));
         } catch (Exception e) {
             e.printStackTrace();
         }

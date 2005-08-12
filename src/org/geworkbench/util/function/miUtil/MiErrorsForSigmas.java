@@ -1,7 +1,5 @@
 package org.geworkbench.util.function.miUtil;
 
-import org.geworkbench.util.FileUtil;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.util.Iterator;
@@ -16,7 +14,7 @@ public class MiErrorsForSigmas {
 
     void doIt() {
         File dataFile = new File("Y:/MI/BimodalGaussian/BimodalGaussianMIs/SigmaResults/BimodalGaussianMiForSigmas.txt");
-        Vector fileData = org.geworkbench.util.FileUtil.readFile(dataFile);
+        Vector fileData = org.geworkbench.bison.util.FileUtil.readFile(dataFile);
 
         File mseFile = new File("Y:/MI/BimodalGaussian/BimodalGaussianMIs/SigmaErrors/Mse.txt");
         mseFile.getParentFile().mkdirs();

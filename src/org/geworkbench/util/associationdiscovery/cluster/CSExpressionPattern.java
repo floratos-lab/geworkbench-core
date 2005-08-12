@@ -1,6 +1,6 @@
 package org.geworkbench.util.associationdiscovery.cluster;
 
-import org.geworkbench.util.Normal;
+import org.geworkbench.bison.util.Normal;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.complex.pattern.matrix.CSPValued;
@@ -19,7 +19,7 @@ import org.geworkbench.bison.util.DSPValue;
  * @version 3.0
  */
 public class CSExpressionPattern extends CSMatrixPattern {
-    org.geworkbench.util.Normal[] normal = null;
+    org.geworkbench.bison.util.Normal[] normal = null;
 
     public CSExpressionPattern() {
     }
@@ -35,7 +35,7 @@ public class CSExpressionPattern extends CSMatrixPattern {
 
     public void init(int size) {
         markers = new DSGeneMarker[size];
-        normal = new org.geworkbench.util.Normal[size];
+        normal = new org.geworkbench.bison.util.Normal[size];
         for (int i = 0; i < size; i++) {
             normal[i] = new Normal();
         }

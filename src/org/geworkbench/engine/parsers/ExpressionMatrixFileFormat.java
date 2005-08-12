@@ -4,7 +4,7 @@ import org.geworkbench.engine.parsers.microarray.DataSetFileFormat;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
-import org.geworkbench.engine.resource.Resource;
+import org.geworkbench.bison.parsers.resources.Resource;
 
 import javax.swing.filechooser.FileFilter;
 import java.io.BufferedReader;

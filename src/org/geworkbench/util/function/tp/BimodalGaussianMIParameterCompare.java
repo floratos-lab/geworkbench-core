@@ -7,7 +7,6 @@ import org.geworkbench.util.function.functionParameters.bimodalGaussianParams.Bi
 import org.geworkbench.util.function.functionParameters.bimodalGaussianParams.BimodalGaussianParamsFactory;
 import org.geworkbench.util.pathwaydecoder.GeneGeneRelationship;
 import org.geworkbench.util.network.GeneNetworkEdgeImpl;
-import org.geworkbench.util.FileUtil;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -34,7 +33,7 @@ public class BimodalGaussianMIParameterCompare {
         this.writeFile = new File(dirBase + "/SigmaCompare/Sigma" + sigma + ".txt");
         writeFile.getParentFile().mkdirs();
 
-        Vector data = org.geworkbench.util.FileUtil.readFile(new File(dirBase + "/BimodalGaussianMI_goodData.txt"));
+        Vector data = org.geworkbench.bison.util.FileUtil.readFile(new File(dirBase + "/BimodalGaussianMI_goodData.txt"));
         try {
             writer = new BufferedWriter(new FileWriter(writeFile));
             Iterator it = data.iterator();

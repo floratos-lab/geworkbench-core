@@ -3,7 +3,7 @@ package org.geworkbench.util.function.unimodalGaussian;
 import org.geworkbench.util.function.MultivariateGaussian;
 import org.geworkbench.util.function.functionParameters.unimodalGaussianParams.UnimodalGaussianParamsDefault;
 import org.geworkbench.util.function.mi.FunctionMi;
-import org.geworkbench.util.FileUtil;
+import org.geworkbench.bison.util.FileUtil;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -49,7 +49,7 @@ public class CalculateMiForSigmas {
         File writeFile = new File(writeDir + "/UnimodalGaussianMiForSigmas.txt");
         writeFile.getParentFile().mkdirs();
 
-        Vector fileData = org.geworkbench.util.FileUtil.readFile(readFile, 0);
+        Vector fileData = org.geworkbench.bison.util.FileUtil.readFile(readFile, 0);
         calculateMis(fileData, writeFile, numSamples);
     }
 

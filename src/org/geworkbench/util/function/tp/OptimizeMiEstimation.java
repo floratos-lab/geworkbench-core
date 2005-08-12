@@ -5,7 +5,6 @@ import org.geworkbench.util.function.functionParameters.bimodalGaussianParams.Bi
 import org.geworkbench.util.function.functionParameters.bimodalGaussianParams.BimodalGaussianParamsFactory;
 import org.geworkbench.util.function.mi.MiEstimationError;
 import org.geworkbench.util.function.optimization.fortran.FminReturnResults;
-import org.geworkbench.util.FileUtil;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -39,7 +38,7 @@ public class OptimizeMiEstimation {
 
             writer = new FileWriter(writeFile);
 
-            Vector fileData = org.geworkbench.util.FileUtil.readFile(readFile);
+            Vector fileData = org.geworkbench.bison.util.FileUtil.readFile(readFile);
 
             String[] headers = (String[]) fileData.get(0);
             for (int i = 0; i < headers.length; i++) {

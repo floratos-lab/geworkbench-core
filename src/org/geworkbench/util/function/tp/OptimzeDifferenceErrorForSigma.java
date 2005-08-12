@@ -8,7 +8,6 @@ import org.geworkbench.util.function.functionParameters.bimodalGaussianParams.Bi
 import org.geworkbench.util.function.mi.MiDifferenceError;
 import org.geworkbench.util.function.mi.MiErrors;
 import org.geworkbench.util.function.optimization.fortran.FminReturnResults;
-import org.geworkbench.util.FileUtil;
 
 import java.io.File;
 import java.util.Vector;
@@ -26,7 +25,7 @@ public class OptimzeDifferenceErrorForSigma {
     void testSigmas() {
         File dataFile = new File("Z:\\MI\\BimodalGaussian\\BimodalGaussianMIs\\MpiTest\\Accurate\\Data125.txt");
 
-        Vector fileData = org.geworkbench.util.FileUtil.readFile(dataFile);
+        Vector fileData = org.geworkbench.bison.util.FileUtil.readFile(dataFile);
         //        for (int dataIndex = 4; dataIndex < fileData.size(); dataIndex++) {
         for (int dataIndex = 5; dataIndex < 6; dataIndex++) {
             String[] lineData = (String[]) fileData.get(dataIndex);
@@ -141,7 +140,7 @@ public class OptimzeDifferenceErrorForSigma {
 
         File dataFile = new File("Z:\\MI\\BimodalGaussian\\BimodalGaussianMIs\\MpiTest\\Accurate\\Data125.txt");
 
-        Vector fileData = org.geworkbench.util.FileUtil.readFile(dataFile);
+        Vector fileData = org.geworkbench.bison.util.FileUtil.readFile(dataFile);
         for (int dataIndex = 4; dataIndex < fileData.size(); dataIndex++) {
             //        for (int dataIndex = 4; dataIndex < 5; dataIndex++) {
             String[] lineData = (String[]) fileData.get(dataIndex);

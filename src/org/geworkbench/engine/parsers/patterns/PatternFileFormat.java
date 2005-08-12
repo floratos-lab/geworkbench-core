@@ -5,7 +5,7 @@ import org.geworkbench.engine.parsers.sequences.SequenceResource;
 import org.geworkbench.util.patterns.PatternDB;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
-import org.geworkbench.engine.resource.Resource;
+import org.geworkbench.bison.parsers.resources.Resource;
 
 import javax.swing.filechooser.FileFilter;
 import java.io.BufferedReader;

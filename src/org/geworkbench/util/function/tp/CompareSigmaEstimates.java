@@ -1,7 +1,5 @@
 package org.geworkbench.util.function.tp;
 
-import org.geworkbench.util.FileUtil;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.util.Vector;
@@ -31,7 +29,7 @@ public class CompareSigmaEstimates {
 
             Vector[] allFileDatas = new Vector[4];
             for (int i = 0; i < allFileDatas.length; i++) {
-                allFileDatas[i] = org.geworkbench.util.FileUtil.readFile(dataFiles[i]);
+                allFileDatas[i] = org.geworkbench.bison.util.FileUtil.readFile(dataFiles[i]);
             }
 
             for (int fileCtr1 = 0; fileCtr1 < allFileDatas.length; fileCtr1++) {

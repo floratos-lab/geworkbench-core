@@ -1,7 +1,6 @@
 package org.geworkbench.util.associationdiscovery.PSSM;
 
 import org.geworkbench.util.associationdiscovery.cluster.CSMatchedMatrixPattern;
-import org.geworkbench.util.Normal;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.complex.pattern.CSPatternMatch;
@@ -36,7 +35,7 @@ public class CSMatchedPSSMMatrixPattern extends CSMatchedMatrixPattern {
     double maNo = 0.0;
     double threshold = 0;
     //ArrayList Genes        = new ArrayList();
-    org.geworkbench.util.Normal distribution = new org.geworkbench.util.Normal();
+    org.geworkbench.bison.util.Normal distribution = new org.geworkbench.bison.util.Normal();
     static double sigmaX = 2.8;
 
 

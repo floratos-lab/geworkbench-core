@@ -15,7 +15,7 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMutableMarkerValue;
 import org.geworkbench.bison.datastructure.complex.panels.CSPanel;
 import org.geworkbench.bison.util.*;
-import org.geworkbench.engine.resource.Resource;
+import org.geworkbench.bison.parsers.resources.Resource;
 import org.geworkbench.engine.parsers.ExpressionResource;
 
 import javax.swing.filechooser.FileFilter;
@@ -289,7 +289,7 @@ public class StanfordExpressionFormat extends DataSetFileFormat {
                     marker.setConfidence(1);
                     try {
                         double v = Double.parseDouble(value);
-                        org.geworkbench.util.Range range = ((DSRangeMarker) mArraySet.getMarkers().get(geneId)).getRange();
+                        Range range = ((DSRangeMarker) mArraySet.getMarkers().get(geneId)).getRange();
                         marker.setValue(v);
                         range.max = Math.max(range.max, v);
                         range.min = Math.min(range.min, v);

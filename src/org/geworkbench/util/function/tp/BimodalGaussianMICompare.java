@@ -7,7 +7,6 @@ import org.geworkbench.util.function.functionParameters.bimodalGaussianParams.Bi
 import org.geworkbench.util.function.functionParameters.bimodalGaussianParams.BimodalGaussianParamsFactory;
 import org.geworkbench.util.pathwaydecoder.GeneGeneRelationship;
 import org.geworkbench.util.network.GeneNetworkEdgeImpl;
-import org.geworkbench.util.FileUtil;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -29,10 +28,10 @@ public class BimodalGaussianMICompare {
         //        this.writeFile = new File(dirBase + "/MpiTest/Fast/StartIndex" + firstDataCtr + ".txt");
         writeFile.getParentFile().mkdirs();
 
-        Vector params1Data = org.geworkbench.util.FileUtil.readFile(new File(dirBase + "/Params1.txt"));
-        Vector params2Data = org.geworkbench.util.FileUtil.readFile(new File(dirBase + "/Params2.txt"));
-        Vector params3Data = org.geworkbench.util.FileUtil.readFile(new File(dirBase + "/Params3.txt"));
-        Vector params4Data = org.geworkbench.util.FileUtil.readFile(new File(dirBase + "/Params4.txt"));
+        Vector params1Data = org.geworkbench.bison.util.FileUtil.readFile(new File(dirBase + "/Params1.txt"));
+        Vector params2Data = org.geworkbench.bison.util.FileUtil.readFile(new File(dirBase + "/Params2.txt"));
+        Vector params3Data = org.geworkbench.bison.util.FileUtil.readFile(new File(dirBase + "/Params3.txt"));
+        Vector params4Data = org.geworkbench.bison.util.FileUtil.readFile(new File(dirBase + "/Params4.txt"));
 
         Vector[] allData = {params1Data, params2Data, params3Data, params4Data};
 
@@ -64,10 +63,10 @@ public class BimodalGaussianMICompare {
         //        String dirBase = "Z:\\MI\\BimodalGaussian\\BimodalGaussianMIs";
         String dirBase = "/users/aam2110/MI/BimodalGaussian/BimodalGaussianMIs";
 
-        Vector params1Data = org.geworkbench.util.FileUtil.readFile(new File(dirBase + "/Params1.txt"));
-        Vector params2Data = org.geworkbench.util.FileUtil.readFile(new File(dirBase + "/Params2.txt"));
-        Vector params3Data = org.geworkbench.util.FileUtil.readFile(new File(dirBase + "/Params3.txt"));
-        Vector params4Data = org.geworkbench.util.FileUtil.readFile(new File(dirBase + "/Params4.txt"));
+        Vector params1Data = org.geworkbench.bison.util.FileUtil.readFile(new File(dirBase + "/Params1.txt"));
+        Vector params2Data = org.geworkbench.bison.util.FileUtil.readFile(new File(dirBase + "/Params2.txt"));
+        Vector params3Data = org.geworkbench.bison.util.FileUtil.readFile(new File(dirBase + "/Params3.txt"));
+        Vector params4Data = org.geworkbench.bison.util.FileUtil.readFile(new File(dirBase + "/Params4.txt"));
 
         Vector[] allData = {params1Data, params2Data, params3Data, params4Data};
 

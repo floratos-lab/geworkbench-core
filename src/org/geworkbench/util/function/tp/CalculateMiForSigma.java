@@ -4,7 +4,6 @@ import org.geworkbench.util.function.MultivariateGaussianBimodal;
 import org.geworkbench.util.function.functionParameters.bimodalGaussianParams.BimodalGaussianParamsBase;
 import org.geworkbench.util.function.functionParameters.bimodalGaussianParams.BimodalGaussianParamsFactory;
 import org.geworkbench.util.function.mi.FunctionMi;
-import org.geworkbench.util.FileUtil;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -39,7 +38,7 @@ public class CalculateMiForSigma {
 
             writer = new FileWriter(writeFile);
 
-            Vector fileData = org.geworkbench.util.FileUtil.readFile(readFile);
+            Vector fileData = org.geworkbench.bison.util.FileUtil.readFile(readFile);
 
             String[] headers = (String[]) fileData.get(0);
             for (int i = 0; i < headers.length; i++) {

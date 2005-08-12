@@ -1,6 +1,7 @@
 package org.geworkbench.engine.parsers;
 
-import org.geworkbench.engine.resource.AbstractResource;
+import org.geworkbench.bison.parsers.resources.AbstractResource;
+
 
 public class AffyExcelTXTResource extends AbstractResource {
     public AffyExcelTXTResource() {
