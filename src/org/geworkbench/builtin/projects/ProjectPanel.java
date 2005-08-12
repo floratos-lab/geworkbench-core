@@ -1,9 +1,9 @@
 package org.geworkbench.builtin.projects;
 
-import org.geworkbench.util.colorcontext.ColorContext;
+import org.geworkbench.bison.util.colorcontext.ColorContext;
 import org.geworkbench.engine.parsers.FileFormat;
 import org.geworkbench.engine.parsers.InputFileFormatException;
-import org.geworkbench.engine.parsers.MAGEResourceOld;
+import org.geworkbench.bison.parsers.resources.MAGEResource2;
 import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.util.SaveImage;
 import org.geworkbench.events.CommentsEvent;
@@ -75,9 +75,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         markerPanels.put(set, panel);
     }
 
-    // Instance variables related to the project
-    protected org.geworkbench.builtin.projects.TreeNodeRenderer projectRenderer = new org.geworkbench.builtin.projects.TreeNodeRenderer(selection);
-
     // The undo buffer
     ProjectTreeNode undoNode = null;
     ProjectTreeNode undoParent = null;
@@ -147,8 +144,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
      * @throws java.lang.Exception
      */
     protected void jbInit1() throws Exception {
-        // Change the renderer from the superclass to the current instance
-        projectTree.setCellRenderer(projectRenderer);
         //deserialize();
 
         jMenuItem1.setText("Load Patterns");
@@ -548,7 +543,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
      * @param mRes The <code>CaArrayResource</code> object encapsulating the
      *             BioAssayData data.
      */
-    public boolean remoteFileOpenAction(org.geworkbench.engine.parsers.CaArrayResource mRes) {
+    public boolean remoteFileOpenAction(org.geworkbench.bison.parsers.resources.CaArrayResource mRes) {
         if (mRes == null) {
             return false;
         }
@@ -567,7 +562,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
      * @param mRes The <code>MAGEResource</code> object encapsulating the
      *             BioAssayData data.
      */
-    public boolean remoteFileOpenAction(MAGEResourceOld mRes) {
+    public boolean remoteFileOpenAction(MAGEResource2 mRes) {
         if (mRes == null) {
             return false;
         }
@@ -583,14 +578,14 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         //      CSMicroarraySet maSet = new GenepixMicroarraySetImpl(mRes);
         //      // Set the experiment info using that found in the overall ExperimentImpl.
         //      maSet.setExperimentInformation(loadData.getExperimentInformation());
-        //      addMicroarrays(maSet, prjRnd.projectNodeSelection);
+        //      addMicroarrays(maSet, projectRenderer.projectNodeSelection);
         //      return true;
         //    }
         //    else if (arrayType == MAGEResource.AFFY_TYPE) {
         //      CSMicroarraySet maSet = new AffyMicroarraySetImpl(mRes);
         //      // Set the experiment info using that found in the overall ExperimentImpl.
         //      maSet.setExperimentInformation(loadData.getExperimentInformation());
-        //      addMicroarrays(maSet, prjRnd.projectNodeSelection);
+        //      addMicroarrays(maSet, projectRenderer.projectNodeSelection);
         //      return true;
         //    }
         //    else {
@@ -605,7 +600,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
      * @param mRes The <code>MAGEResource</code> object encapsulating the
      *             BioAssayData data.
      */
-    public boolean remoteFileOpenAction(org.geworkbench.engine.parsers.MAGEResource mRes) {
+    public boolean remoteFileOpenAction(org.geworkbench.bison.parsers.resources.MAGEResource mRes) {
         if (mRes == null) {
             return false;
         }
@@ -867,7 +862,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
             if (dataSetFiles.length == 1) {
                 DSMicroarraySet microarrays = inputFormat.getMArraySet(dataSetFiles[0]);
                 // If everything went OK, register the newly created microarray set.
-                addMicroarrays(microarrays, prjRnd.projectNodeSelection);
+                addMicroarrays(microarrays, projectRenderer.projectNodeSelection);
             } else {
                 String arrayName = JOptionPane.showInputDialog("Please enter the name of the Microarry Set");
                 DSMicroarraySet mic = inputFormat.getMArraySet(dataSetFiles[0]);
@@ -1125,7 +1120,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
      */
     protected void fireNodeSelectionEvent(ProjectTreeNode node) {
         if (node != null && node != root) {
-            publishProjectEvent(new ProjectEvent(node instanceof ProjectNode ? "Project Node Selected" : "Microarray Node Selected", prjRnd.microarraySetNodeSelection == null ? null : prjRnd.microarraySetNodeSelection.getMicroarraySet()));
+            publishProjectEvent(new ProjectEvent(node instanceof ProjectNode ? "Project Node Selected" : "Microarray Node Selected", projectRenderer.microarraySetNodeSelection == null ? null : projectRenderer.microarraySetNodeSelection.getMicroarraySet()));
         }
     }
 
@@ -1163,11 +1158,11 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
             if (path != null) {
                 ImageNode imageNode = new ImageNode(event.getImage());
                 ProjectTreeNode node = (ProjectTreeNode) path.getLastPathComponent();
-                prjRnd.imageNodeSelection = imageNode;
+                projectRenderer.imageNodeSelection = imageNode;
                 if (node instanceof DataSetNode) {
                     projectTreeModel.insertNodeInto(imageNode, node, node.getChildCount());
                 } else if (node instanceof ImageNode) {
-                    node = prjRnd.microarraySetNodeSelection;
+                    node = projectRenderer.microarraySetNodeSelection;
                     projectTreeModel.insertNodeInto(imageNode, node, node.getChildCount());
                 }
 
@@ -1187,14 +1182,14 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
     public void receive(org.geworkbench.events.CommentsEventOld ce, Object source) {
         // Do no bother if the comment change is not for currently selected
         // microarray set.
-        if (ce == null || ce.getMicroarray() == null || !(selectedNode instanceof MicroarraySetNode) || prjRnd.microarraySetNodeSelection == null || prjRnd.microarraySetNodeSelection.getMicroarraySet() != ce.getMicroarray()) {
+        if (ce == null || ce.getMicroarray() == null || !(selectedNode instanceof MicroarraySetNode) || projectRenderer.microarraySetNodeSelection == null || projectRenderer.microarraySetNodeSelection.getMicroarraySet() != ce.getMicroarray()) {
             return;
         }
 
         // Otherwise, mark that the selected node had its comments modified. This
         // information will be needed in the method checkModifiedMASet(), in order
         // to decide if the microarray set should be persisted.
-        DSMicroarraySet temp = prjRnd.microarraySetNodeSelection.getMicroarraySet();
+        DSMicroarraySet temp = projectRenderer.microarraySetNodeSelection.getMicroarraySet();
         temp.addNameValuePair(COMMENTS_MODIFIED, new Boolean(true));
     }
 
@@ -1211,7 +1206,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         DSDataSet changedMASet = tce.getReferenceMicroarraySet();
         // This component only handles changes to the currently selected
         // micorarray.
-        MicroarraySetNode selectedNode = prjRnd.microarraySetNodeSelection;
+        MicroarraySetNode selectedNode = projectRenderer.microarraySetNodeSelection;
         if (selectedNode != null && selectedNode.getMicroarraySet() == changedMASet) {
             // Update the "history" information to mirror the editing activity.
             Object[] prevHistory = changedMASet.getValuesForName(HISTORY);
@@ -1231,7 +1226,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
     @Subscribe
     public void receive(MicroarrayNameChangeEvent mnce, Object source) {
         //    DSMicroarraySet changedMASet = mnce.getMicroarray().getMicroarraySet();
-        MicroarraySetNode selectedNode = prjRnd.microarraySetNodeSelection;
+        MicroarraySetNode selectedNode = projectRenderer.microarraySetNodeSelection;
         // This component only handles changes to the currently selected
         // micorarray.
         if (selectedNode != null) { //&& selectedNode.getMicroarraySet() == changedMASet) {
@@ -1316,7 +1311,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         if (root != null) {
             root.removeAllChildren();
             projectTreeModel.reload(root);
-            prjRnd.clearNodeSelections();
+            projectRenderer.clearNodeSelections();
             selectedNode = null;
         }
 
@@ -1513,7 +1508,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
     protected ProjectTreeNode root = new ProjectTreeNode("Workspace");
     protected DefaultTreeModel projectTreeModel = new DefaultTreeModel(root);
     protected JTree projectTree = new JTree(projectTreeModel);
-    protected TreeNodeRendererOld prjRnd = new TreeNodeRendererOld();
+    protected TreeNodeRenderer projectRenderer = new TreeNodeRenderer(selection);
     protected JPopupMenu jRootMenu = new JPopupMenu();
     protected JPopupMenu jProjectMenu = new JPopupMenu();
     protected JPopupMenu jMArrayMenu = new JPopupMenu();
@@ -1542,7 +1537,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         jDataSetLabel.setHorizontalAlignment(SwingConstants.CENTER);
         jDataSetLabel.setText("Project Folders");
         ToolTipManager.sharedInstance().registerComponent(projectTree);
-        projectTree.setCellRenderer(prjRnd);
+        projectTree.setCellRenderer(projectRenderer);
         projectTree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
         jRenameProjectItem.setText("Rename Project");
         listener = new java.awt.event.ActionListener() {
@@ -1720,7 +1715,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                 // themselves up.
                 clear();
                 root = tempNode;
-                prjRnd.clearNodeSelections();
+                projectRenderer.clearNodeSelections();
                 projectTreeModel = new DefaultTreeModel(root);
                 projectTree.setModel(projectTreeModel);
             } catch (Exception exc) {

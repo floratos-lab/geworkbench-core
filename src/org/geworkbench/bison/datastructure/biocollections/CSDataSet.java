@@ -1,7 +1,6 @@
 package org.geworkbench.bison.datastructure.biocollections;
 
-import org.geworkbench.util.DefaultIdentifiable;
-import org.geworkbench.builtin.projects.TreeNodeRenderer;
+import org.geworkbench.bison.util.DefaultIdentifiable;
 import org.geworkbench.bison.datastructure.biocollections.classification.phenotype.DSClassCriteria;
 import org.geworkbench.bison.annotation.DSCriteria;
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
@@ -11,10 +10,8 @@ import org.geworkbench.bison.datastructure.complex.panels.CSSequentialItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.datastructure.properties.CSDescribable;
 import org.geworkbench.bison.datastructure.properties.CSExtendable;
-import org.geworkbench.bison.util.CSCriterionManager;
-import org.geworkbench.bison.util.DSAnnotLabel;
-import org.geworkbench.bison.util.DSAnnotValue;
-import org.geworkbench.engine.resource.Resource;
+import org.geworkbench.bison.util.*;
+import org.geworkbench.bison.parsers.resources.Resource;
 
 import javax.swing.*;
 import java.io.File;
@@ -34,7 +31,7 @@ public abstract class CSDataSet <T extends DSBioObject> extends CSSequentialItem
     /**
      * Used for the implementation of <code>Identifiable</code>.
      */
-    protected org.geworkbench.util.DefaultIdentifiable arraySetId = new DefaultIdentifiable();
+    protected org.geworkbench.bison.util.DefaultIdentifiable arraySetId = new DefaultIdentifiable();
 
     /**
      * Used in the implementation of the <code>Describable</code> interface.
@@ -207,7 +204,7 @@ public abstract class CSDataSet <T extends DSBioObject> extends CSSequentialItem
      * @todo - watkin - This is a very implementation-specific method. Should not be defined here.
      */
     public ImageIcon getIcon() {
-        return TreeNodeRenderer._dataSetIcon;
+        return Icons._dataSetIcon;
     }
 
     /**

@@ -15,7 +15,7 @@ import gov.nih.nci.mageom.domain.Experiment.impl.ExperimentImpl;
 import gov.nih.nci.mageom.search.Experiment.ExperimentSearchCriteria;
 import gov.nih.nci.mageom.search.SearchCriteriaFactory;
 import org.geworkbench.builtin.projects.LoadData;
-import org.geworkbench.engine.parsers.CaArrayResource;
+import org.geworkbench.bison.parsers.resources.CaArrayResource;
 
 import javax.swing.*;
 import javax.swing.border.Border;

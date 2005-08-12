@@ -1,8 +1,9 @@
 package org.geworkbench.bison.datastructure.biocollections.microarrays;
 
-import org.geworkbench.engine.parsers.NCIParser;
-import org.geworkbench.engine.parsers.GenepixResource;
-import org.geworkbench.engine.parsers.MAGEResourceOld;
+import org.geworkbench.bison.parsers.NCIParser2;
+import org.geworkbench.bison.parsers.GenepixParser2;
+import org.geworkbench.bison.parsers.resources.GenepixResource;
+import org.geworkbench.bison.parsers.resources.MAGEResource2;
 import org.geworkbench.bison.util.RandomNumberGenerator;
 import gov.nih.nci.mageom.bean.BioAssay.BioAssayImpl;
 import org.geworkbench.bison.datastructure.bioobjects.markers.CSGeneMarker;
@@ -58,7 +59,7 @@ public class CSGenepixMicroarraySet extends CSMicroarraySet<DSMicroarray> implem
         ctu.add("B532 Median");
         ctu.add("B532 Mean");
         ctu.add("Ratio of Means");
-        org.geworkbench.engine.parsers.GenepixParser parser = new org.geworkbench.engine.parsers.GenepixParser(ctu);
+        GenepixParser2 parser = new GenepixParser2(ctu);
         BufferedReader reader = new BufferedReader(new FileReader(gr.getInputFile()));
         String line = null;
         while ((line = reader.readLine()) != null) {
@@ -97,7 +98,7 @@ public class CSGenepixMicroarraySet extends CSMicroarraySet<DSMicroarray> implem
      *
      * @param ncir
      */
-    public CSGenepixMicroarraySet(MAGEResourceOld ncir) {
+    public CSGenepixMicroarraySet(MAGEResource2 ncir) {
         super(RandomNumberGenerator.getID(), "NCI Data Set");
         List ctu = new ArrayList();
         ctu.add("F635 Median");
@@ -109,7 +110,7 @@ public class CSGenepixMicroarraySet extends CSMicroarraySet<DSMicroarray> implem
         ctu.add("B532 Median");
         ctu.add("B532 Mean");
         ctu.add("Ratio of Means");
-        NCIParser parser = new NCIParser(ctu);
+        NCIParser2 parser = new NCIParser2(ctu);
         DSMicroarray ar = parser.getGenepixMicroarray((BioAssayImpl) ncir.getData()[0]);
         if (ar != null)
             this.add(ar);

@@ -1,6 +1,6 @@
 package org.geworkbench.bison.datastructure.bioobjects.microarray;
 
-import org.geworkbench.util.DefaultIdentifiable;
+import org.geworkbench.bison.util.DefaultIdentifiable;
 import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
@@ -39,7 +39,7 @@ public class CSMicroarray implements DSMicroarray, Serializable {
     /**
      * Used in the implementation of the <code>Identifiable</code> interface.
      */
-    protected org.geworkbench.util.DefaultIdentifiable arrayId = new DefaultIdentifiable();
+    protected org.geworkbench.bison.util.DefaultIdentifiable arrayId = new DefaultIdentifiable();
     /**
      * Used in the implementation of the <code>Extendable</code> interface.
      */
@@ -275,7 +275,7 @@ public class CSMicroarray implements DSMicroarray, Serializable {
     }
 
     public Iterator<DSMutableMarkerValue> iterator() {
-        return new org.geworkbench.util.ArrayIterator<DSMutableMarkerValue>(markerArray);
+        return new org.geworkbench.bison.util.ArrayIterator<DSMutableMarkerValue>(markerArray);
     }
 
     public void resize(int size) {

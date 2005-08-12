@@ -1,9 +1,8 @@
 package org.geworkbench.algorithms;
 
 import org.geworkbench.util.SwingWorker;
-import org.geworkbench.algorithms.*;
-import org.geworkbench.algorithms.AlgorithmEvent;
-import org.geworkbench.algorithms.AlgorithmEventListener;
+import org.geworkbench.bison.algorithm.AlgorithmEvent;
+import org.geworkbench.bison.algorithm.AlgorithmEventListener;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
@@ -176,6 +175,6 @@ public abstract class BWAbstractAlgorithm implements BWAlgorithm {
     }
 
     public void timeTick() {
-        fireAlgorithmEvent(new AlgorithmEvent(this, org.geworkbench.algorithms.AlgorithmEvent.algorithmTimeTick, this, true));
+        fireAlgorithmEvent(new AlgorithmEvent(this, org.geworkbench.bison.algorithm.AlgorithmEvent.algorithmTimeTick, this, true));
     }
 }

@@ -1,12 +1,11 @@
 package org.geworkbench.bison.datastructure.biocollections.microarrays;
 
-import org.geworkbench.builtin.projects.TreeNodeRenderer;
 import org.geworkbench.bison.datastructure.bioobjects.markers.genotype.CSGenotypeMarker;
-import org.geworkbench.engine.parsers.bisonparsers.DataParseContext;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSGenotypicMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMutableMarkerValue;
+import org.geworkbench.bison.util.Icons;
 
 import javax.swing.*;
 import java.io.*;
@@ -38,7 +37,7 @@ public class CSMicroarraySet1 extends CSMicroarraySet<DSMicroarray> implements S
     }
 
     public ImageIcon getIcon() {
-        return TreeNodeRenderer._dataSetIcon;
+        return Icons._dataSetIcon;
     }
 
     public File getFile() {
@@ -92,7 +91,7 @@ public class CSMicroarraySet1 extends CSMicroarraySet<DSMicroarray> implements S
     }
 
     public class CMicroarrayParser {
-        private org.geworkbench.engine.parsers.bisonparsers.DataParseContext dataContext = new org.geworkbench.engine.parsers.bisonparsers.DataParseContext();
+        private org.geworkbench.bison.parsers.DataParseContext dataContext = new org.geworkbench.bison.parsers.DataParseContext();
         private boolean parseByMicroarray = false;
         public int microarrayNo = 0;
         public int markerNo = 0;

@@ -1,6 +1,6 @@
 package org.geworkbench.analysis;
 
-import org.geworkbench.util.DefaultIdentifiable;
+import org.geworkbench.bison.util.DefaultIdentifiable;
 import org.geworkbench.bison.datastructure.properties.CSDescribable;
 import org.geworkbench.engine.model.analysis.Analysis;
 import org.geworkbench.engine.model.analysis.ParamValidationResults;

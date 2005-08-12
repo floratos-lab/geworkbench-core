@@ -1,6 +1,6 @@
 package org.geworkbench.bison.datastructure.bioobjects.markers;
 
-import org.geworkbench.util.Range;
+import org.geworkbench.bison.util.Range;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMutableMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 
@@ -21,12 +21,12 @@ import java.util.Comparator;
  */
 
 public class CSExpressionMarker extends CSGeneMarker implements org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker, Serializable {
-    private Range range = new org.geworkbench.util.Range();
+    private Range range = new org.geworkbench.bison.util.Range();
 
 
     @Override public Object clone() {
         CSExpressionMarker clone = (CSExpressionMarker) super.clone();
-        clone.range = new org.geworkbench.util.Range();
+        clone.range = new org.geworkbench.bison.util.Range();
         return clone;
     }
 
@@ -57,7 +57,7 @@ public class CSExpressionMarker extends CSGeneMarker implements org.geworkbench.
         //ready     = false;
         range.max = -999999;
         range.min = +999999;
-        range.norm = new org.geworkbench.util.Normal();
+        range.norm = new org.geworkbench.bison.util.Normal();
         markerId = id;
     }
 
@@ -123,12 +123,12 @@ public class CSExpressionMarker extends CSGeneMarker implements org.geworkbench.
 
     protected void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
         super.readObject(ois);
-        range = new org.geworkbench.util.Range();
+        range = new org.geworkbench.bison.util.Range();
     }
 
     public DSGeneMarker deepCopy() {
         CSExpressionMarker gi = new CSExpressionMarker(markerId);
-        gi.range = new org.geworkbench.util.Range();
+        gi.range = new org.geworkbench.bison.util.Range();
         gi.range.min = this.range.min;
         gi.range.max = this.range.max;
         gi.label = label;

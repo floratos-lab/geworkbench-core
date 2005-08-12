@@ -1,8 +1,7 @@
 package org.geworkbench.bison.datastructure.bioobjects.microarray;
 
-import org.geworkbench.util.Range;
+import org.geworkbench.bison.util.Range;
 import org.geworkbench.bison.datastructure.bioobjects.markers.genotype.CSGenotypeMarker;
-import org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker;
 
 import java.awt.*;
 import java.io.Serializable;
@@ -231,7 +230,7 @@ public class CSGenotypicMarkerValue extends CSMarkerValue implements Serializabl
 
     public Color getColor(org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker stats, float intensity) {
         CSGenotypeMarker gtStats = (CSGenotypeMarker) stats;
-        org.geworkbench.util.Range range = gtStats.getRange();
+        org.geworkbench.bison.util.Range range = gtStats.getRange();
         Color color = null;
         float v = (float) ((value - (range.max + range.min) / 2) / (range.max - range.min)) * intensity;
         if (v > 0) {

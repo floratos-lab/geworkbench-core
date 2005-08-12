@@ -1,6 +1,5 @@
 package org.geworkbench.bison.datastructure.biocollections.util;
 
-import org.geworkbench.util.Normal;
 import org.geworkbench.bison.datastructure.biocollections.views.DSMicroarraySetView;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
@@ -56,7 +55,7 @@ public class CSMarkerStatisticsVector {
     }
 
     private void compute(int i, DSMicroarraySetView<? extends DSGeneMarker, ? extends DSMicroarray> view) {
-        org.geworkbench.util.Normal normal = new org.geworkbench.util.Normal();
+        org.geworkbench.bison.util.Normal normal = new org.geworkbench.bison.util.Normal();
         for (DSGeneMarker m : view.markers()) {
             normal.add(view.items().get(i).getMarkerValue(m.getSerial()).getValue());
         }

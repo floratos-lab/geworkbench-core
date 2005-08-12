@@ -1,6 +1,6 @@
 package org.geworkbench.builtin.projects.util;
 
-import org.geworkbench.engine.parsers.MAGEResourceOld;
+import org.geworkbench.bison.parsers.resources.MAGEResource2;
 import gov.nih.nci.mageom.bean.BioAssay.BioAssayImpl;
 import gov.nih.nci.mageom.bean.BioAssay.DerivedBioAssayImpl;
 import gov.nih.nci.mageom.bean.BioAssay.MeasuredBioAssayImpl;
@@ -242,7 +242,7 @@ public class NCIPanel extends JPanel {
         BioAssayImpl[] assays = new BioAssayImpl[tempAssays.size()];
         assays = (BioAssayImpl[]) tempAssays.toArray(assays);
         if (exp != null && assays.length > 0)
-            parent.parentProjectPanel.remoteFileOpenAction(new MAGEResourceOld(assays, exp));
+            parent.parentProjectPanel.remoteFileOpenAction(new MAGEResource2(assays, exp));
         dispose();
         return;
     }

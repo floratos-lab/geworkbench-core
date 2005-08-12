@@ -1,6 +1,6 @@
 package org.geworkbench.bison.datastructure.complex.panels;
 
-import org.geworkbench.util.DefaultIdentifiable;
+import org.geworkbench.bison.util.DefaultIdentifiable;
 import org.geworkbench.bison.datastructure.properties.CSDescribable;
 import org.geworkbench.bison.datastructure.properties.DSNamed;
 
@@ -17,7 +17,7 @@ public class CSPanel <T extends DSNamed> extends CSItemList<T> implements DSPane
     /**
      * Used in the implementation of the <code>Identifiable</code> interface.
      */
-    private org.geworkbench.util.DefaultIdentifiable panelId = new DefaultIdentifiable();
+    private org.geworkbench.bison.util.DefaultIdentifiable panelId = new DefaultIdentifiable();
     /**
      * Used in the implementation of the <code>Describable</code> interface.
      */

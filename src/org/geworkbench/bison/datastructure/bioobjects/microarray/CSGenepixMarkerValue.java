@@ -1,7 +1,7 @@
 package org.geworkbench.bison.datastructure.bioobjects.microarray;
 
-import org.geworkbench.engine.parsers.GenepixParseContext;
-import org.geworkbench.engine.parsers.NCIParseContext;
+import org.geworkbench.bison.parsers.GenepixParseContext;
+import org.geworkbench.bison.parsers.NCIParseContext;
 
 import java.io.ObjectStreamField;
 import java.io.Serializable;
@@ -126,7 +126,7 @@ public class CSGenepixMarkerValue extends CSMarkerValue implements DSGenepixMark
      *
      * @param context The parse context used for the initialization.
      */
-    public CSGenepixMarkerValue(org.geworkbench.engine.parsers.NCIParseContext context) {
+    public CSGenepixMarkerValue(NCIParseContext context) {
         HashMap columns = context.getColumnsToUse();
         Object value = null;
         if (columns.containsKey("ID")) {

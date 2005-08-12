@@ -1,6 +1,6 @@
 package org.geworkbench.bison.datastructure.bioobjects.markers.genotype;
 
-import org.geworkbench.util.Range;
+import org.geworkbench.bison.util.Range;
 import org.geworkbench.bison.datastructure.bioobjects.markers.CSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSGenotypicMarkerValue;
@@ -21,7 +21,7 @@ import java.util.HashMap;
  */
 
 public class CSGenotypeMarker extends CSGeneMarker implements Serializable {
-    protected org.geworkbench.util.Range range = new org.geworkbench.util.Range();
+    protected org.geworkbench.bison.util.Range range = new org.geworkbench.bison.util.Range();
     protected boolean isSNP = true;
     protected boolean isGT = true;
     protected double phX = 0;
@@ -223,7 +223,7 @@ public class CSGenotypeMarker extends CSGeneMarker implements Serializable {
 
     public DSGeneMarker deepCopy() {
         CSGenotypeMarker gi = new CSGenotypeMarker(markerId);
-        gi.range = new org.geworkbench.util.Range();
+        gi.range = new org.geworkbench.bison.util.Range();
         gi.range.min = this.range.min;
         gi.range.max = this.range.max;
         gi.isSNP = isSNP;

@@ -7,7 +7,7 @@ import org.geworkbench.bison.datastructure.properties.DSExtendable;
 import org.geworkbench.bison.datastructure.properties.DSNamed;
 import org.geworkbench.bison.util.DSAnnotLabel;
 import org.geworkbench.bison.util.DSAnnotValue;
-import org.geworkbench.engine.resource.Resource;
+import org.geworkbench.bison.parsers.resources.Resource;
 
 import javax.swing.*;
 import java.io.File;

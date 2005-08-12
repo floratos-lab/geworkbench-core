@@ -1,4 +1,4 @@
-package org.geworkbench.algorithms;
+package org.geworkbench.bison.algorithm;
 
 import java.util.EventObject;
 

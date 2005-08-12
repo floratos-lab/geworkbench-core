@@ -3,7 +3,7 @@ package org.geworkbench.builtin.projects.util;
 import DBInterface.DBPool;
 import MAGE.*;
 import org.geworkbench.builtin.projects.LoadData;
-import org.geworkbench.engine.parsers.MAGEResource;
+import org.geworkbench.bison.parsers.resources.MAGEResource;
 
 import javax.swing.*;
 import javax.swing.border.Border;

@@ -1,7 +1,7 @@
 package org.geworkbench.bison.datastructure.bioobjects.microarray;
 
-import org.geworkbench.engine.parsers.AffyParseContext;
-import org.geworkbench.engine.parsers.NCIParseContext;
+import org.geworkbench.bison.parsers.AffyParseContext;
+import org.geworkbench.bison.parsers.NCIParseContext;
 
 import java.io.ObjectStreamField;
 import java.io.Serializable;

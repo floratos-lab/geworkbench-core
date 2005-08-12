@@ -1,7 +1,5 @@
 package org.geworkbench.bison.datastructure.biocollections.microarrays;
 
-import org.geworkbench.bison.util.RandomNumberGenerator;
-import org.geworkbench.builtin.projects.TreeNodeRenderer;
 import org.geworkbench.bison.datastructure.bioobjects.markers.genotype.CSGenotypeMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.genotype.GenotypeColorContext;
 import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
@@ -9,11 +7,8 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.CSGenotypicMark
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMutableMarkerValue;
-import org.geworkbench.bison.util.CSAnnotLabel;
-import org.geworkbench.bison.util.CSAnnotValue;
-import org.geworkbench.bison.util.DSAnnotLabel;
-import org.geworkbench.bison.util.DSAnnotValue;
-import org.geworkbench.engine.resource.Resource;
+import org.geworkbench.bison.util.*;
+import org.geworkbench.bison.parsers.resources.Resource;
 
 import javax.swing.*;
 import java.io.*;
@@ -38,12 +33,12 @@ public class CSGenotypeMicroarraySet extends CSMicroarraySet<DSMicroarray> imple
     private ArrayList descriptions = new ArrayList();
     private String label = "Undefined";
     private Resource maResource = null;
-    private org.geworkbench.engine.parsers.bisonparsers.DataParseContext dataContext = new org.geworkbench.engine.parsers.bisonparsers.DataParseContext();
+    private org.geworkbench.bison.parsers.DataParseContext dataContext = new org.geworkbench.bison.parsers.DataParseContext();
     private boolean initialized = false;
 
     public CSGenotypeMicroarraySet() {
         super(RandomNumberGenerator.getID(), "");
-        addObject(org.geworkbench.util.colorcontext.ColorContext.class, new GenotypeColorContext());
+        addObject(org.geworkbench.bison.util.colorcontext.ColorContext.class, new GenotypeColorContext());
         /** @todo Remove if not used */
         //        addObject(DSRangeMarker.class, CSGenotypeMarker.class);
         addDescription("Genotype data");
@@ -51,7 +46,7 @@ public class CSGenotypeMicroarraySet extends CSMicroarraySet<DSMicroarray> imple
     }
 
     public ImageIcon getIcon() {
-        return TreeNodeRenderer._dataSetIcon;
+        return Icons._dataSetIcon;
     }
 
     public File getFile() {

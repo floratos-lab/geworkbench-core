@@ -3,17 +3,16 @@ package org.geworkbench.bison.datastructure.biocollections.microarrays;
 import MAGE.BioAssay;
 import MAGE.DerivedBioAssay;
 import MAGE.MeasuredBioAssay;
-import org.geworkbench.util.colorcontext.ColorContext;
-import org.geworkbench.engine.parsers.AffyResource;
+import org.geworkbench.bison.util.colorcontext.ColorContext;
+import org.geworkbench.bison.parsers.resources.AffyResource;
+import org.geworkbench.bison.parsers.resources.CaArrayResource;
+import org.geworkbench.bison.parsers.*;
 import org.geworkbench.bison.util.RandomNumberGenerator;
 import gov.nih.nci.mageom.bean.BioAssay.BioAssayImpl;
-import org.geworkbench.builtin.projects.TreeNodeRenderer;
-import org.geworkbench.engine.parsers.CaArrayResource;
-import org.geworkbench.util.Range;
+import org.geworkbench.bison.util.Range;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
-import org.geworkbench.util.colorcontext.ExpressionColorContext;
-import org.geworkbench.util.colorcontext.ExpressionPValueColorContext;
-import org.geworkbench.engine.parsers.bisonparsers.*;
+import org.geworkbench.bison.util.colorcontext.ExpressionColorContext;
+import org.geworkbench.bison.util.colorcontext.ExpressionPValueColorContext;
 import org.geworkbench.bison.datastructure.biocollections.classification.phenotype.CSClassCriteria;
 import org.geworkbench.bison.annotation.CSCriteria;
 import org.geworkbench.bison.annotation.DSCriteria;
@@ -26,7 +25,7 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.*;
 import org.geworkbench.bison.datastructure.complex.panels.CSPanel;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.util.*;
-import org.geworkbench.engine.resource.Resource;
+import org.geworkbench.bison.parsers.resources.Resource;
 
 import javax.swing.*;
 import java.io.*;
@@ -48,11 +47,11 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
     private boolean dirty = true;
     private File file = null;
     private Resource maResource = null;
-    private org.geworkbench.engine.parsers.bisonparsers.DataParseContext dataContext = new org.geworkbench.engine.parsers.bisonparsers.DataParseContext();
+    private org.geworkbench.bison.parsers.DataParseContext dataContext = new org.geworkbench.bison.parsers.DataParseContext();
 
-    public CSExprMicroarraySet(org.geworkbench.engine.parsers.MAGEResource res) {
+    public CSExprMicroarraySet(org.geworkbench.bison.parsers.resources.MAGEResource res) {
         this();
-        addObject(org.geworkbench.util.colorcontext.ColorContext.class, new org.geworkbench.util.colorcontext.ExpressionPValueColorContext());
+        addObject(org.geworkbench.bison.util.colorcontext.ColorContext.class, new org.geworkbench.bison.util.colorcontext.ExpressionPValueColorContext());
         addDescription(res.getExperiment().getName());
         setLabel(res.getExperiment().getName());
         this.label = new String(res.getExperiment().getName());
@@ -114,9 +113,9 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
     }
 
 
-    public CSExprMicroarraySet(org.geworkbench.engine.parsers.MAGEResourceOld res) {
+    public CSExprMicroarraySet(org.geworkbench.bison.parsers.resources.MAGEResource2 res) {
         this();
-        addObject(org.geworkbench.util.colorcontext.ColorContext.class, new org.geworkbench.util.colorcontext.ExpressionPValueColorContext());
+        addObject(org.geworkbench.bison.util.colorcontext.ColorContext.class, new org.geworkbench.bison.util.colorcontext.ExpressionPValueColorContext());
         addDescription(res.getExperiment().toString());
         setLabel(res.getExperiment().getIdentifier().toString());
         this.label = new String(res.getExperiment().getIdentifier().toString());
@@ -144,7 +143,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
 
     public CSExprMicroarraySet(AffyResource ar) throws Exception {
         this();
-        addObject(org.geworkbench.util.colorcontext.ColorContext.class, new ExpressionPValueColorContext());
+        addObject(org.geworkbench.bison.util.colorcontext.ColorContext.class, new ExpressionPValueColorContext());
         List ctu = new ArrayList();
         ctu.add("Probe Set Name");
         ctu.add("Avg Diff");
@@ -190,9 +189,9 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
         add(0, parser.getMicroarray());
     }
 
-    public CSExprMicroarraySet(org.geworkbench.engine.parsers.GenepixResource gr) throws Exception {
+    public CSExprMicroarraySet(org.geworkbench.bison.parsers.resources.GenepixResource gr) throws Exception {
         this();
-        addObject(org.geworkbench.util.colorcontext.ColorContext.class, new ExpressionColorContext());
+        addObject(org.geworkbench.bison.util.colorcontext.ColorContext.class, new ExpressionColorContext());
         List ctu = new ArrayList();
         ctu.add("Block");
         ctu.add("Column");
@@ -262,14 +261,14 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
     public CSExprMicroarraySet() {
         super(RandomNumberGenerator.getID(), "");
         super.type = DSMicroarraySet.expPvalueType;
-        addObject(org.geworkbench.util.colorcontext.ColorContext.class, new org.geworkbench.util.colorcontext.ExpressionPValueColorContext());
+        addObject(org.geworkbench.bison.util.colorcontext.ColorContext.class, new org.geworkbench.bison.util.colorcontext.ExpressionPValueColorContext());
         /** @todo Remove if not used */
         //        addObject(DSRangeMarker.class, CSExpressionMarker.class);
         addDescription("Microarray experiment");
     }
 
     public ImageIcon getIcon() {
-        return TreeNodeRenderer._dataSetIcon;
+        return Icons._dataSetIcon;
     }
 
     public File getFile() {
@@ -637,7 +636,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
             String expression = parseableValue[parseableValue.length - 1];
             try {
                 double v = Double.parseDouble(expression);
-                org.geworkbench.util.Range range = ((org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker) markerVector.get(currGeneId)).getRange();
+                org.geworkbench.bison.util.Range range = ((org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker) markerVector.get(currGeneId)).getRange();
                 if (dataContext.isLog) {
                     double y = Math.log(Math.max(dataContext.minValue, dataContext.addValue + v));
                     marker.setValue(y);
@@ -810,7 +809,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
         if (view.items().size() == 1) {
             // @todo - watkin - move this range calculation in to a different ColorContext, maybe?
             DSMicroarray ma = view.items().get(0);
-            Range range = new org.geworkbench.util.Range();
+            Range range = new org.geworkbench.bison.util.Range();
             for (DSGeneMarker marker : getMarkers()) {
                 DSMutableMarkerValue mValue = (DSMutableMarkerValue) ma.getMarkerValue(marker.getSerial());
                 range.min = Math.min(range.min, mValue.getValue());

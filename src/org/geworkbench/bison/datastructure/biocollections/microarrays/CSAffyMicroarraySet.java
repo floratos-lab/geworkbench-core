@@ -1,9 +1,9 @@
 package org.geworkbench.bison.datastructure.biocollections.microarrays;
 
-import org.geworkbench.engine.parsers.AffyParser;
-import org.geworkbench.engine.parsers.NCIParser;
-import org.geworkbench.engine.parsers.AffyResource;
-import org.geworkbench.engine.parsers.MAGEResourceOld;
+import org.geworkbench.bison.parsers.AffyParser;
+import org.geworkbench.bison.parsers.NCIParser2;
+import org.geworkbench.bison.parsers.resources.AffyResource;
+import org.geworkbench.bison.parsers.resources.MAGEResource2;
 import org.geworkbench.bison.util.RandomNumberGenerator;
 import gov.nih.nci.mageom.bean.BioAssay.BioAssayImpl;
 import org.geworkbench.bison.datastructure.bioobjects.markers.CSGeneMarker;
@@ -51,7 +51,7 @@ public class CSAffyMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
         ctu.add("Detection");
         ctu.add("Detection p-value");
         ctu.add("Abs Call");
-        AffyParser parser = new org.geworkbench.engine.parsers.AffyParser(ctu);
+        AffyParser parser = new org.geworkbench.bison.parsers.AffyParser(ctu);
         BufferedReader reader = new BufferedReader(new FileReader(ar.getInputFile()));
         String line = null;
         while ((line = reader.readLine()) != null) {
@@ -89,7 +89,7 @@ public class CSAffyMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
      *
      * @param ncir
      */
-    public CSAffyMicroarraySet(MAGEResourceOld ncir) {
+    public CSAffyMicroarraySet(MAGEResource2 ncir) {
         super(RandomNumberGenerator.getID(), "NCI Data Set");
         List ctu = new ArrayList();
         ctu.add("Avg Diff");
@@ -98,7 +98,7 @@ public class CSAffyMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
         ctu.add("Detection");
         ctu.add("Detection p-value");
         ctu.add("Abs Call");
-        NCIParser parser = new NCIParser(ctu);
+        NCIParser2 parser = new NCIParser2(ctu);
         DSMicroarray ar = parser.getAffyMicroarray((BioAssayImpl) ncir.getData()[0]);
         if (ar != null) {
             this.add(ar);

@@ -1,6 +1,5 @@
 package org.geworkbench.bison.algorithm.discovery;
 
-import org.geworkbench.algorithms.AlgorithmEventListener;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.complex.pattern.DSMatchedPattern;
@@ -27,7 +26,7 @@ public interface DSPatternDiscovery {
 
     public DSDiscoveryStatus status();
 
-    public void addAlgorithmEventListener(org.geworkbench.algorithms.AlgorithmEventListener ael);
+    public void addAlgorithmEventListener(org.geworkbench.bison.algorithm.AlgorithmEventListener ael);
 
     public void notifyService();
 

@@ -1,6 +1,4 @@
-package org.geworkbench.algorithms;
-
-import org.geworkbench.algorithms.*;
+package org.geworkbench.bison.algorithm;
 
 import java.util.EventListener;
 
@@ -22,5 +20,5 @@ public interface AlgorithmEventListener extends EventListener {
      *
      * @param event <code>AlgorithmEvent</code>
      */
-    public void receiveAlgorithmEvent(org.geworkbench.algorithms.AlgorithmEvent event);
+    public void receiveAlgorithmEvent(org.geworkbench.bison.algorithm.AlgorithmEvent event);
 }

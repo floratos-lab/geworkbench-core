@@ -1,7 +1,6 @@
 package org.geworkbench.bison.datastructure.bioobjects.markers.genotype;
 
-import org.geworkbench.util.colorcontext.ColorContext;
-import org.geworkbench.util.Range;
+import org.geworkbench.bison.util.colorcontext.ColorContext;
 import org.geworkbench.bison.datastructure.biocollections.views.DSMicroarraySetView;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSGenotypicMarkerValue;
@@ -18,7 +17,7 @@ public class GenotypeColorContext implements ColorContext {
         if (mv == null || mInfo == null)
             return Color.black;
         CSGenotypeMarker gtStats = (CSGenotypeMarker) mInfo;
-        org.geworkbench.util.Range range = gtStats.getRange();
+        org.geworkbench.bison.util.Range range = gtStats.getRange();
         int allele1 = ((CSGenotypicMarkerValue) mv).getAllele(0);
         int allele2 = ((CSGenotypicMarkerValue) mv).getAllele(1);
         if (allele1 == allele2) {

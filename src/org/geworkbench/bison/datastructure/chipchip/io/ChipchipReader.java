@@ -4,7 +4,7 @@ import gov.nih.nci.caBIO.bean.Gene;
 import gov.nih.nci.caBIO.bean.GeneSearchCriteria;
 import gov.nih.nci.caBIO.bean.SearchResult;
 import gov.nih.nci.caBIO.search.*;
-import org.geworkbench.util.FileUtil;
+import org.geworkbench.bison.util.FileUtil;
 import org.geworkbench.bison.datastructure.bioobjects.markers.CSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSExpressionMarkerValue;
