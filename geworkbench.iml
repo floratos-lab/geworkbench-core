@@ -13,6 +13,15 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/caBIO.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/caArrayMageom/jakarta-oro-2.0.2-dev-2.jar!/" />
         </CLASSES>
         <JAVADOC />
@@ -122,15 +131,6 @@
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/caArrayMageom/servlet.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/caArrayMageom/caCOREClasses.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -590,15 +590,6 @@
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/mageom-support.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/caBIO.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
