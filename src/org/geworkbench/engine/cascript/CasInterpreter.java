@@ -8,8 +8,8 @@ import java.util.Vector;
 /**
  * Interpreter routines that is called directly from the tree walker.
  *
- * @author Hanhua Feng - hf2048@columbia.edu
- * @version $Id: CasInterpreter.java,v 1.3 2005-08-15 21:08:25 bb2122 Exp $
+ * @author Behrooz Badii - badiib@gmail.com
+ * @version $Id: CasInterpreter.java,v 1.4 2005-08-15 21:09:14 bb2122 Exp $
  * @modified by Behrooz Badii to CasInterpreter.java
  */
 class CasInterpreter {
