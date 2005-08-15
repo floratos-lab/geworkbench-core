@@ -9,7 +9,7 @@ import java.util.Vector;
  * Interpreter routines that is called directly from the tree walker.
  *
  * @author Hanhua Feng - hf2048@columbia.edu
- * @version $Id: CasInterpreter.java,v 1.2 2005-08-15 21:00:56 bb2122 Exp $
+ * @version $Id: CasInterpreter.java,v 1.3 2005-08-15 21:08:25 bb2122 Exp $
  * @modified by Behrooz Badii to CasInterpreter.java
  */
 class CasInterpreter {
@@ -422,9 +422,59 @@ class CasInterpreter {
     }
 
     //fix this stuff
+    //i feel this code can be written much better than what is here now
+    //maybe we can make checkreturntype based on the ret data, and instead of
+    //passing in func, we can pass in it's returntype and its dimensions
+    //then there is a possibility of recursion with arrays and matrices
     public boolean checkreturntype(CasDataType ret, CasFunction func) {
         String[] returntype = func.getReturnType();
         int dimensions = func.getBrackets();
-        return true;
+        if (dimensions == 0) {
+            if (returntype[0].equals("int")) {
+                if (ret instanceof CasInt) {
+                    return true;
+                }
+            }
+            if (returntype[0].equals("boolean")) {
+                if (ret instanceof CasBool) {
+                    return true;
+                }
+            }
+            if (returntype[0].equals("float")) {
+                if (ret instanceof CasDouble) {
+                    return true;
+                }
+            }
+            if (returntype[0].equals("string")) {
+                if (ret instanceof CasString) {
+                    return true;
+                }
+            }
+            if (returntype[0].equals("module")) {
+                if (ret instanceof CasModule) {
+                    String t = ((CasModule) ret).getType();
+                    if (returntype[1].equals(t)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        if (dimensions == 1) {
+            if (ret instanceof CasArray) {
+                String[] r = ((CasArray) ret).getelementType();
+                if (r == returntype) {
+                    return true;
+                }
+            }
+        }
+        if (dimensions == 2) {
+            if (ret instanceof CasMatrix) {
+                String[] r = ((CasMatrix)ret).getelementType();
+                if (r == returntype) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

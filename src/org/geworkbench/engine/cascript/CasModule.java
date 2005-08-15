@@ -35,6 +35,10 @@ class CasModule extends CasDataType {
         return "module with type " + type;
     }
 
+    public String getType() {
+        return type;
+    }
+
     public Object getPlugin() {
         return pd.getPlugin();
     }
