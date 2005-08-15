@@ -8,7 +8,7 @@ import java.io.PrintWriter;
  * Error messages are generated here.
  *
  * @author Hanhua Feng - hf2048@columbia.edu MxDataType.java
- * @version $Id: CasDataType.java,v 1.1 2005-08-08 15:57:48 watkin Exp $
+ * @version $Id: CasDataType.java,v 1.2 2005-08-15 21:00:55 bb2122 Exp $
  * @modified by Behrooz Badii to CasDataType.java
  */
 public class CasDataType {
@@ -27,6 +27,10 @@ public class CasDataType {
     }
 
     public String typename() {
+        return "unknown";
+    }
+
+    public String getType() {
         return "unknown";
     }
 

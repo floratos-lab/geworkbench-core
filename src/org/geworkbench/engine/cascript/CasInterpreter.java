@@ -9,7 +9,7 @@ import java.util.Vector;
  * Interpreter routines that is called directly from the tree walker.
  *
  * @author Hanhua Feng - hf2048@columbia.edu
- * @version $Id: CasInterpreter.java,v 1.1 2005-08-08 15:57:49 watkin Exp $
+ * @version $Id: CasInterpreter.java,v 1.2 2005-08-15 21:00:56 bb2122 Exp $
  * @modified by Behrooz Badii to CasInterpreter.java
  */
 class CasInterpreter {
@@ -190,6 +190,7 @@ class CasInterpreter {
         return a.error("=");
     }
 
+    //you have to test for array out of bounds exceptions here!
     public CasDataType dimensionAccess(String id, Vector<CasDataType> indices) {
         System.out.println("in dimensionAccess() call");
         CasDataType a = symt.findVar(id);
@@ -413,6 +414,17 @@ class CasInterpreter {
         symt = temp;
         //check the return type before passing it back, if it's not the same return type, throw an error
         //you still have to do this!
-        return ret;
+        if (checkreturntype(ret, (CasFunction)whatthefunc)){
+            return ret;
+        }
+        else
+            throw new CasException("bad return type for function " + id);
+    }
+
+    //fix this stuff
+    public boolean checkreturntype(CasDataType ret, CasFunction func) {
+        String[] returntype = func.getReturnType();
+        int dimensions = func.getBrackets();
+        return true;
     }
 }

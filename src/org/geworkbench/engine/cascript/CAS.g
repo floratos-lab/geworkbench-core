@@ -589,7 +589,7 @@ Vector<CasDataType> arglist = null;
 if (arglist == null)
   r = ipt.getVariable( id );  //identifier, AKA a variable
 else
-  r = ipt.dimensionAccess(id, arglist);
+  r = ipt.dimensionAccess(id, arglist); //array access
 }
 | str:String                  { r = new CasString( str.getText().toString() ); } //literal string value
 | variable                    { r = new CasBool(true);} //variable declaration ex. int a = 5;
