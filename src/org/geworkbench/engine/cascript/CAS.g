@@ -1,5 +1,7 @@
-header {package org.bioworks.cascript;}
-
+header {package org.geworkbench.engine.cascript;}
+//the above header must be changed accordingly when moving this file around and compiling it
+//this file MUST be compiled using the antlr.jar file from geworkbench\lib
+//java antlr.Tool CAS.g
 class CASLexer extends Lexer;
 options
 {
@@ -430,28 +432,13 @@ argDeclarationList
 
 //for some help - ":." means don't execute, just hold the reference of it
 {
-import java.util.*;
-import java.io.*;
-import antlr.CommonAST;
-import antlr.collections.AST;
+import antlr.MismatchedTokenException;
+import antlr.NoViableAltException;
 import antlr.RecognitionException;
-import antlr.TokenStreamException;
-import antlr.TokenStreamIOException;
-import java.io.InputStream;
-import core.config.PluginRegistry;
-import javax.swing.UIManager;
-import core.util.Debug;
-import org.bioworks.util.SplashBitmap;
-import java.io.IOException;
-import javax.swing.JOptionPane;
-import javax.swing.ToolTipManager;
-import core.config.rules.GeawConfigRule;
-import org.apache.commons.digester.Digester;
-import core.config.rules.PluginRule;
-import core.config.PluginDescriptor;
-import java.lang.reflect.Method;
-import org.bioworks.management.Script;
-import java.lang.reflect.InvocationTargetException;
+import antlr.collections.AST;
+import antlr.collections.impl.BitSet;
+
+import java.util.Vector;
 }
 
 class CASWalker extends TreeParser;
@@ -466,7 +453,7 @@ importVocab = CAStokens;
 
 //start here!
 walkme
-: #(PROG {CaScriptEmulator.emulateStartup();}(publicvar)* (function)+)
+: #(PROG (publicvar)* (function)+)
   {
     System.out.println("got here");
     //make new symboltable for main
