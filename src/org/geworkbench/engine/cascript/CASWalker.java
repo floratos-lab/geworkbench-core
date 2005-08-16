@@ -116,7 +116,7 @@ public CASWalker() {
 		AST fbody = null;
 		int brackets = 0;
 		String id = "";
-		String[] typereturn = new String[2];
+		CasDataType typereturn = null;
 		Vector<CasArgument> argList = null;
 		CasArgument temp = null;
 		
@@ -179,7 +179,7 @@ public CASWalker() {
 		AST variable_AST_in = (_t == ASTNULL) ? null : (AST)_t;
 		String id = "";
 		CasDataType value = null;
-		String[] typereturn = new String[2];
+		CasDataType typereturn;
 		Vector<CasDataType> indices = null;
 		
 		try {      // for error handling
@@ -278,13 +278,13 @@ public CASWalker() {
 		_retTree = _t;
 	}
 	
-	public final String[]  type(AST _t) throws RecognitionException {
-		String[] typereturn;
+	public final CasDataType  type(AST _t) throws RecognitionException {
+		CasDataType typereturn;
 		
 		AST type_AST_in = (_t == ASTNULL) ? null : (AST)_t;
 		AST n = null;
 		
-		typereturn = new String[2];
+		typereturn = null;
 		boolean ismod = false;
 		String id = "";
 		
@@ -330,12 +330,20 @@ public CASWalker() {
 			
 			if (ismod) {
 			System.out.println("We got ourselves a type of module with type of " + id);
-			typereturn[0] = "module";
-			typereturn[1] = id;
+			typereturn = new CasModule(id);
 			}
 			else {
-			typereturn[0] = n.getText();
-			System.out.println(typereturn[0]);
+			String temp = n.getText();
+			if (temp.equals("void"))
+			typereturn = new CasVoid();
+			else if (temp.equals("int"))
+			typereturn = new CasInt(0);
+			else if (temp.equals("float"))
+			typereturn = new CasDouble(0);
+			else if (temp.equals("boolean"))
+			typereturn = new CasBool(false);
+			else if (temp.equals("string"))
+			typereturn = new CasString("");
 			}
 		}
 		catch (RecognitionException ex) {
@@ -354,7 +362,7 @@ public CASWalker() {
 		CasArgument temp = null;
 		String id = "";
 		int brackets = 0;
-		String[] typereturn = null;
+		CasDataType typereturn = null;
 		
 		try {      // for error handling
 			AST __t184 = _t;
@@ -556,7 +564,7 @@ public CASWalker() {
 				if (arglist == null)
 				r = ipt.getVariable( id );  //identifier, AKA a variable
 				else
-				r = ipt.dimensionAccess(id, arglist);
+				r = ipt.dimensionAccess(id, arglist); //array access
 				
 				break;
 			}

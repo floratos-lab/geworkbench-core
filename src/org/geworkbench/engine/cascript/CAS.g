@@ -476,7 +476,7 @@ publicvar
 function
 { int brackets = 0;
   String id = "";
-  String[] typereturn = new String[2];
+  CasDataType typereturn = null;
   Vector<CasArgument> argList = null;
   CasArgument temp = null;}
 : #(FUNCTION (typereturn = type (LEFTBRACKET RIGHTBRACKET {brackets++;})*) ID {id = #ID.getText();} argList = args fbody:.)
@@ -495,7 +495,7 @@ args returns [Vector<CasArgument> argList]
 CasArgument temp = null;
 String id = "";
 int brackets = 0;
-String[] typereturn = null;}
+CasDataType typereturn = null;}
 : #(ARGDEC ((typereturn = type) ID {id = #ID.getText();} (LEFTBRACKET RIGHTBRACKET {brackets++;})?
 {temp = new CasArgument(typereturn, id, brackets);
 argList.add(temp);
@@ -505,13 +505,12 @@ typereturn = null;
 temp = null;}
 )*);//notice the kleene closure.  We can keep finding more parameters and we want all of them
 
-//arrays are still not supported rooz
 //this is a variable declaration, like int a = 5;
 //fix this up, put these actions into CasInterpreter Class
 variable
 { String id = "";
   CasDataType value = null;
-  String[] typereturn = new String[2];
+  CasDataType typereturn;
   Vector<CasDataType> indices = null;}
 : #(VARIABLE typereturn = type (#(IDENTIFIER ID {id = #ID.getText();} (indices = index)?) (#(EQUAL value = expr))?
 {System.out.println("we're in a variable declaration for variable " + id);
@@ -539,10 +538,10 @@ CasDataType aindex = null;}
 //the type of a function or variable returns one, possibly two strings
 //if the type is module, there is a secondary string that defines the type of module
 //if not, then the type is an ordinary primitive
-//type is used for variables and functions and formal parameter lists
-type returns [String[] typereturn]
+//type is used for variables, functions, formal parameter lists, arrays, and matrices
+type returns [CasDataType typereturn]
 {
-typereturn = new String[2];
+typereturn = null;
 boolean ismod = false;
 String id = "";
 }
@@ -550,12 +549,20 @@ String id = "";
 {
 if (ismod) {
   System.out.println("We got ourselves a type of module with type of " + id);
-  typereturn[0] = "module";
-  typereturn[1] = id;
+  typereturn = new CasModule(id);
 }
 else {
-  typereturn[0] = n.getText();
-  System.out.println(typereturn[0]);
+  String temp = n.getText();
+  if (temp.equals("void"))
+    typereturn = new CasVoid();
+  else if (temp.equals("int"))
+    typereturn = new CasInt(0);
+  else if (temp.equals("float"))
+    typereturn = new CasDouble(0);
+  else if (temp.equals("boolean"))
+    typereturn = new CasBool(false);
+  else if (temp.equals("string"))
+    typereturn = new CasString("");
 }}
 ;
 

@@ -4,9 +4,9 @@ import java.io.PrintWriter;
 
 class CasMatrix extends CasDataType {
     CasDataType [][] var;
-    String type[];
+    CasDataType type;
 
-    public CasMatrix(int length1, int length2, String typereturn[]) {
+    public CasMatrix(int length1, int length2, CasDataType typereturn) {
         var = new CasDataType[length1][length2];
         type = typereturn;
     }
@@ -19,7 +19,7 @@ class CasMatrix extends CasDataType {
         return var;
     }
 
-    public String[] getelementType() {
+    public CasDataType getelementType() {
         return type;
     }
 
@@ -39,9 +39,11 @@ class CasMatrix extends CasDataType {
         return var[i][j];
     }
 
+    //for CasModule support, you have to check that the modules both have the same type
     public void setsubArrayofMatrixValue(CasDataType a, int i) {
         if (a instanceof CasArray) {
-            if (((CasArray) a).getelementType()[0].equals(type[0]) && ((CasArray) a).getelementType()[1].equals(type[1])) var[i] = ((CasArray) a).getvar();
+            if (((CasArray) a).getelementType().getClass().equals(type.getClass()))
+                var[i] = ((CasArray) a).getvar();
             else throw new CasException("you have the wrong type for assigning an array to a subMatrix");
         } else throw new CasException("you are assigning something other than an array to part of the matrix");
     }
@@ -54,10 +56,7 @@ class CasMatrix extends CasDataType {
     public void initializeMatrix() {
         for (int i = 0; i < var.length; i++) {
             for (int j = 0; j < var[i].length; j++) {
-                if (type[0].equals("string")) var[i][j] = new CasString("");
-                else if (type[0].equals("float")) var[i][j] = new CasDouble(0);
-                else if (type[0].equals("int")) var[i][j] = new CasInt(0);
-                else if (type[0].equals("boolean")) var[i][j] = new CasBool(false);
+                var[i][j] = type.copy();
                 var[i][j].setPartOf(this.getName());
                 var[i][j].setPositions(i, j);
             }

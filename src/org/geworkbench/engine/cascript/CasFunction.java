@@ -9,7 +9,7 @@ import java.util.Vector;
  * The function data type
  *
  * @author Hanhua Feng - hf2048@columbia.edu
- * @version $Id: CasFunction.java,v 1.1 2005-08-08 15:57:48 watkin Exp $
+ * @version $Id: CasFunction.java,v 1.2 2005-08-16 21:28:26 bb2122 Exp $
  *          modified by Behrooz Badii into CasFunction.java
  */
 class CasFunction extends CasDataType {
@@ -17,15 +17,15 @@ class CasFunction extends CasDataType {
     Vector<CasArgument> args;
     AST body;            // body = null means an internal function.
     CasSymbolTable pst;   // the symbol table of static parent
-    String[] returntype;
+    CasDataType type;
     int brackets;
 
-    public CasFunction(String name, Vector<CasArgument> args, AST body, CasSymbolTable pst, String[] r, int b) {
+    public CasFunction(String name, Vector<CasArgument> args, AST body, CasSymbolTable pst, CasDataType r, int b) {
         super(name);
         this.args = args;
         this.body = body;
         this.pst = pst;
-        returntype = r;
+        type = r;
         brackets = b;
     }
 
@@ -34,7 +34,7 @@ class CasFunction extends CasDataType {
     }
 
     public CasDataType copy() {
-        return new CasFunction(name, args, body, pst, returntype, brackets);
+        return new CasFunction(name, args, body, pst, type, brackets);
     }
 
     public void print(PrintWriter w) {
@@ -55,8 +55,8 @@ class CasFunction extends CasDataType {
         return args;
     }
 
-    public String[] getReturnType() {
-        return returntype;
+    public CasDataType getReturnType() {
+        return type;
     }
 
     public int getBrackets() {

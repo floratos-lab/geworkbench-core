@@ -24,6 +24,12 @@ class CasModule extends CasDataType {
     String type;
     Object var;
 
+    CasModule(String t) {
+        name = null;
+        type = t;
+        pd = null;
+        var = null;
+    }
     CasModule(String n, String t) {
         name = n;
         type = t;

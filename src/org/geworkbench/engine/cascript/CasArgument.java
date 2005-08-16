@@ -8,17 +8,17 @@ package org.geworkbench.engine.cascript;
 
 class CasArgument {
     int brackets;
-    String[] typeReturn;
+    CasDataType type;
     String id;
 
-    CasArgument(String[] t, String i, int b) {
-        typeReturn = t;
+    CasArgument(CasDataType t, String i, int b) {
+        type = t;
         id = i;
         brackets = b;
     }
 
-    public String[] getTypeReturn() {
-        return typeReturn;
+    public CasDataType getType() {
+        return type;
     }
 
     public int getBrackets() {

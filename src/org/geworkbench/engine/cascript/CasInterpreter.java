@@ -9,8 +9,7 @@ import java.util.Vector;
  * Interpreter routines that is called directly from the tree walker.
  *
  * @author Behrooz Badii - badiib@gmail.com
- * @version $Id: CasInterpreter.java,v 1.4 2005-08-15 21:09:14 bb2122 Exp $
- * @modified by Behrooz Badii to CasInterpreter.java
+ * @version $Id: CasInterpreter.java,v 1.5 2005-08-16 21:28:26 bb2122 Exp $
  */
 class CasInterpreter {
     CasSymbolTable symt;
@@ -30,22 +29,22 @@ class CasInterpreter {
     }
 
     //used for variable initialization in the symbol table
-    public void putvar(String id, String[] typereturn, Vector<CasDataType> indices, CasDataType value) {
+    public void putvar(String id, CasDataType type, Vector<CasDataType> indices, CasDataType value) {
         if (indices == null) {
-            if (typereturn[0] == "module") {
-                symt.put(id, new CasModule(id, typereturn[1]));
+            if (type instanceof CasModule) {
+                symt.put(id, new CasModule(id, ((CasModule)type).getType()));
                 System.out.println("put in casModule");
                 System.out.println("Name: " + symt.findVar(id).name);
                 System.out.println("Type: " + ((CasModule) symt.findVar(id)).type);
             } else {
-                if (typereturn[0].equals("string")) {
-                    symt.put(id, new CasString(""));
-                } else if (typereturn[0].equals("float")) {
-                    symt.put(id, new CasDouble(0));
-                } else if (typereturn[0].equals("int")) {
-                    symt.put(id, new CasInt(0));
-                } else if (typereturn[0].equals("boolean")) {
-                    symt.put(id, new CasBool(false));
+                if (type instanceof CasString) {
+                    symt.put(id, type.copy());
+                } else if (type instanceof CasDouble) {
+                    symt.put(id, type.copy());
+                } else if (type instanceof CasInt) {
+                    symt.put(id, type.copy());
+                } else if (type instanceof CasBool) {
+                    symt.put(id, type.copy());
                 }
                 symt.findVar(id).setName(id);
                 System.out.println("Name: " + symt.findVar(id).name);
@@ -55,7 +54,7 @@ class CasInterpreter {
         else if (indices.size() == 1) {
             System.out.println("we are dealing with an array here, with dimensionality of one in assign() call");
             if (indices.elementAt(0) instanceof CasInt) {
-                symt.put(id, new CasArray(((CasInt) indices.elementAt(0)).getvar(), typereturn));
+                symt.put(id, new CasArray(((CasInt) indices.elementAt(0)).getvar(), type));
                 symt.findVar(id).setName(id);
                 (symt.findVar(id)).initializeArray(); //this is dependent on setName occurring first
                 System.out.println("Name: " + symt.findVar(id).name);
@@ -63,7 +62,7 @@ class CasInterpreter {
         } else if (indices.size() == 2) {
             System.out.println("we are dealing with an array here, with dimensionality of two in assign() call");
             if ((indices.elementAt(0) instanceof CasInt) && (indices.elementAt(1) instanceof CasInt)) {
-                symt.put(id, new CasMatrix(((CasInt) indices.elementAt(0)).getvar(), ((CasInt) indices.elementAt(0)).getvar(), typereturn));
+                symt.put(id, new CasMatrix(((CasInt) indices.elementAt(0)).getvar(), ((CasInt) indices.elementAt(0)).getvar(), type));
                 symt.findVar(id).setName(id);
                 (symt.findVar(id)).initializeMatrix(); //this is dependent on setName occurring first
                 System.out.println("Name: " + symt.findVar(id).name);
@@ -362,7 +361,7 @@ class CasInterpreter {
     }
 
     //creating a user-defined function that can be called by the user later on
-    public void makeFunction(String id, Vector<CasArgument> args, AST body, CasSymbolTable s, String[] typereturn, int brackets) {
+    public void makeFunction(String id, Vector<CasArgument> args, AST body, CasSymbolTable s, CasDataType typereturn, int brackets) {
         //if we take the symboltable that was passed in, it is static
         CasFunction a = new CasFunction(id, args, body, s, typereturn, brackets);
         System.out.println("we're in function " + a.getName() + " with this many brackets:" + a.brackets);
@@ -370,8 +369,8 @@ class CasInterpreter {
         for (int i = 0; i < a.args.size(); i++) {
             temp = a.args.elementAt(i);
             System.out.println("Reading arguments: id = " + temp.getId());
-            if (temp.getTypeReturn()[0].equals("module")) System.out.println("we have a module of type: " + temp.getTypeReturn()[1]);
-            else System.out.println("the type is: " + temp.getTypeReturn()[0]);
+            if (temp.getType() instanceof CasModule ) System.out.println("we have a module of type: " + ((CasModule)temp.getType()).getType());
+            else System.out.println("the type is: " + temp.getType().getType());
             System.out.println("Number of brackets: " + temp.getBrackets());
         }
         if (symt.notexists(a.getName())) {
@@ -427,52 +426,33 @@ class CasInterpreter {
     //passing in func, we can pass in it's returntype and its dimensions
     //then there is a possibility of recursion with arrays and matrices
     public boolean checkreturntype(CasDataType ret, CasFunction func) {
-        String[] returntype = func.getReturnType();
+        CasDataType type = func.getReturnType();
         int dimensions = func.getBrackets();
         if (dimensions == 0) {
-            if (returntype[0].equals("int")) {
-                if (ret instanceof CasInt) {
-                    return true;
-                }
-            }
-            if (returntype[0].equals("boolean")) {
-                if (ret instanceof CasBool) {
-                    return true;
-                }
-            }
-            if (returntype[0].equals("float")) {
-                if (ret instanceof CasDouble) {
-                    return true;
-                }
-            }
-            if (returntype[0].equals("string")) {
-                if (ret instanceof CasString) {
-                    return true;
-                }
-            }
-            if (returntype[0].equals("module")) {
+            if (type instanceof CasModule) {
                 if (ret instanceof CasModule) {
                     String t = ((CasModule) ret).getType();
-                    if (returntype[1].equals(t)) {
+                    if (((CasModule)type).getType().equals(t)) {
                         return true;
                     }
                 }
             }
+
+            if (type.getClass().equals(ret.getClass()))
+                return true;
         }
         if (dimensions == 1) {
             if (ret instanceof CasArray) {
-                String[] r = ((CasArray) ret).getelementType();
-                if (r == returntype) {
+                CasDataType r = ((CasArray) ret).getelementType();
+                if (type.getClass().equals(r.getClass()))
                     return true;
-                }
             }
         }
         if (dimensions == 2) {
             if (ret instanceof CasMatrix) {
-                String[] r = ((CasMatrix)ret).getelementType();
-                if (r == returntype) {
+                CasDataType r = ((CasMatrix)ret).getelementType();
+                if (type.getClass().equals(r.getClass()))
                     return true;
-                }
             }
         }
         return false;
