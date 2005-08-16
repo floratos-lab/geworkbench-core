@@ -1,6 +1,7 @@
 package org.geworkbench.bison.testing;
 
 import junit.framework.TestCase;
+import junit.framework.Test;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
 import org.geworkbench.bison.datastructure.complex.panels.CSPanel;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
@@ -28,6 +29,10 @@ public class TestCSPanel extends AbstractTestList {
 
     public TestCSPanel(String s) {
         super(s);
+    }
+
+    public static Test suite() {
+        return BulkTest.makeSuite(TestCSPanel.class);
     }
 
     public List makeEmptyList() {

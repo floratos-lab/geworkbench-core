@@ -30,7 +30,8 @@
         <property name="components" value="components"/>
         <!-- Release info -->
         <property name="release.file" value="${dist}/${app}-${version}"/>
-
+        <!-- Location to write reports -->
+        <property name="reports" value="reports"/>
     </target>
 
     <!-- ===================================================================== -->
@@ -116,19 +117,44 @@
     <!-- ====================================================================== -->
     <!-- TEST -->
     <!-- ====================================================================== -->
+
     <target name="test" depends="compile" description="Runs all tests with source of the form **/test/Test*.java">
+        <!--<taskdef name="junit" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask">-->
+            <!--<classpath>-->
+                <!--<pathelement location="lib/junit.jar"/>-->
+            <!--</classpath>-->
+        <!--</taskdef>-->
+        <delete dir="testResults"/>
         <mkdir dir="testResults"/>
-        <junit printsummary="yes" haltonfailure="yes">
+        <junit printsummary="yes" haltonfailure="false">
             <classpath refid="run.classpath"/>
 
-            <formatter type="plain"/>
+            <formatter type="xml"/>
+
+<!--
+            <test name="org.geworkbench.bison.testing.TestAll" haltonfailure="no" todir="testResults">
+                <formatter type="xml"/>
+            </test>
+-->
 
             <batchtest fork="yes" todir="testResults">
+                <formatter type="xml"/>
                 <fileset dir="${src}">
-                    <include name="**/test/Test*.java"/>
+                    <include name="org/geworkbench/**/test/Test*.java"/>
+                    <include name="org/geworkbench/bison/testing/TestCSPanel.java"/>
                 </fileset>
             </batchtest>
         </junit>
+
+        <property name="junitreport" value="${reports}/junitreport"/>
+        <delete dir="${junitreport}"/>
+        <mkdir dir="${junitreport}"/>
+        <junitreport todir="${reports}">
+            <fileset dir="testResults">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${junitreport}"/>
+        </junitreport>
     </target>
 
 </project>

@@ -32,7 +32,7 @@ import java.io.*;
  * @author Rodney Waldhoff
  * @author Stephen Colebourne
  * @author Matt Hall, John Watkinson, Anonymous
- * @version $Revision: 1.1 $ $Date: 2005-08-10 22:20:31 $
+ * @version $Revision: 1.2 $ $Date: 2005-08-16 21:59:02 $
  */
 public abstract class AbstractTestObject extends BulkTest {
 
@@ -161,6 +161,7 @@ public abstract class AbstractTestObject extends BulkTest {
      * Tests serialization by comparing against a previously stored version in CVS.
      * If the test object is serializable, confirm that a canonical form exists.
      */
+/*
     public void testCanonicalEmptyCollectionExists() {
         if (supportsEmptyCollections() && isTestSerialization() && !skipSerializedCanonicalTests()) {
             Object object = makeObject();
@@ -170,11 +171,13 @@ public abstract class AbstractTestObject extends BulkTest {
             }
         }
     }
+*/
 
     /**
      * Tests serialization by comparing against a previously stored version in CVS.
      * If the test object is serializable, confirm that a canonical form exists.
      */
+/*
     public void testCanonicalFullCollectionExists() {
         if (supportsFullCollections() && isTestSerialization() && !skipSerializedCanonicalTests()) {
             Object object = makeObject();
@@ -184,6 +187,7 @@ public abstract class AbstractTestObject extends BulkTest {
             }
         }
     }
+*/
 
     // protected implementation
     //-----------------------------------------------------------------------
