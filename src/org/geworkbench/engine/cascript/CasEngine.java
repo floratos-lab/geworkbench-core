@@ -9,6 +9,7 @@ import java.io.DataInputStream;
 import java.io.StringBufferInputStream;
 
 /**
+ * @author Behrooz Badii
  * @author John Watkinson
  */
 public class CasEngine {
