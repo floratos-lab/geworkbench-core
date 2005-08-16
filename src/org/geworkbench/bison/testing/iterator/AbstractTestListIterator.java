@@ -13,9 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.apache.commons.collections.iterators;
-
-import org.geworkbench.bison.testing.iterator.AbstractTestIterator;
+package org.geworkbench.bison.testing.iterator;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -32,7 +30,7 @@ import java.util.NoSuchElementException;
  *
  * @author Rodney Waldhoff
  * @author Matt Hall, John Watkinson, Stephen Colebourne
- * @version $Revision: 1.1 $ $Date: 2005-08-10 22:20:31 $
+ * @version $Revision: 1.2 $ $Date: 2005-08-16 15:03:49 $
  * @since Commons Collections 3.0
  */
 public abstract class AbstractTestListIterator extends AbstractTestIterator {
@@ -122,14 +120,14 @@ public abstract class AbstractTestListIterator extends AbstractTestIterator {
         assertEquals(0, it.nextIndex());
         assertEquals(false, it.hasPrevious());
         assertEquals(-1, it.previousIndex());
-        
+
         // next() should throw a NoSuchElementException
         try {
             it.next();
             fail("NoSuchElementException must be thrown from empty ListIterator");
         } catch (NoSuchElementException e) {
         }
-        
+
         // previous() should throw a NoSuchElementException
         try {
             it.previous();
@@ -147,7 +145,7 @@ public abstract class AbstractTestListIterator extends AbstractTestIterator {
         while (it.hasNext()) {
             list.add(it.next());
         }
-        
+
         // check state at end
         assertEquals(false, it.hasNext());
         assertEquals(true, it.hasPrevious());
@@ -156,7 +154,7 @@ public abstract class AbstractTestListIterator extends AbstractTestIterator {
             fail("NoSuchElementException must be thrown from next at end of ListIterator");
         } catch (NoSuchElementException e) {
         }
-        
+
         // loop back through comparing
         for (int i = list.size() - 1; i >= 0; i--) {
             assertEquals(i + 1, it.nextIndex());
@@ -165,7 +163,7 @@ public abstract class AbstractTestListIterator extends AbstractTestIterator {
             Object obj = list.get(i);
             assertEquals(obj, it.previous());
         }
-        
+
         // check state at start
         assertEquals(true, it.hasNext());
         assertEquals(false, it.hasPrevious());
@@ -191,7 +189,7 @@ public abstract class AbstractTestListIterator extends AbstractTestIterator {
             }
             return;
         }
-        
+
         // add at start should be OK, added should be previous
         it = makeFullListIterator();
         it.add(addValue);
@@ -227,18 +225,18 @@ public abstract class AbstractTestListIterator extends AbstractTestIterator {
             }
             return;
         }
-        
+
         // should throw IllegalStateException before next() called
         try {
             it.set(addSetValue());
             fail();
         } catch (IllegalStateException ex) {
         }
-        
+
         // set after next should be fine
         it.next();
         it.set(addSetValue());
-        
+
         // repeated set calls should be fine
         it.set(addSetValue());
 
@@ -258,7 +256,7 @@ public abstract class AbstractTestListIterator extends AbstractTestIterator {
     }
 
     public void testAddThenSet() {
-        ListIterator it = makeFullListIterator();        
+        ListIterator it = makeFullListIterator();
         // add then set
         if (supportsAdd() && supportsSet()) {
             it.next();
@@ -276,7 +274,7 @@ public abstract class AbstractTestListIterator extends AbstractTestIterator {
      */
     public void testAddThenRemove() {
         ListIterator it = makeFullListIterator();
-        
+
         // add then remove
         if (supportsAdd() && supportsRemove()) {
             it.next();

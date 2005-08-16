@@ -17,13 +17,13 @@ package org.geworkbench.bison.testing.list;
 
 import org.geworkbench.bison.testing.collection.AbstractTestCollection;
 import org.geworkbench.bison.testing.BulkTest;
-import org.apache.commons.collections.iterators.AbstractTestListIterator;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import org.geworkbench.bison.testing.iterator.AbstractTestListIterator;
 
 /**
  * Abstract test class for {@link java.util.List} methods and contracts.
@@ -40,7 +40,7 @@ import java.util.*;
  * @author Paul Jack
  * @author Stephen Colebourne
  * @author Matt Hall, John Watkinson, Neil O'Toole
- * @version $Revision: 1.1 $ $Date: 2005-08-10 22:20:31 $
+ * @version $Revision: 1.2 $ $Date: 2005-08-16 15:03:49 $
  */
 public abstract class AbstractTestList extends AbstractTestCollection {
 
@@ -136,7 +136,7 @@ public abstract class AbstractTestList extends AbstractTestCollection {
      * @return a full list for testing
      */
     public List makeFullList() {
-        // only works if list supports optional "addAll(Collection)" 
+        // only works if list supports optional "addAll(Collection)"
         List list = makeEmptyList();
         list.addAll(Arrays.asList(getFullElements()));
         return list;
