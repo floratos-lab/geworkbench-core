@@ -37,7 +37,17 @@ tokens {
     NUM_INT;
     NUM_FLOAT;
 }
-
+{
+    int nr_error = 0;
+    public void reportError( String s ) {
+        super.reportError( s );
+        nr_error++;
+    }
+    public void reportError( RecognitionException e ) {
+        super.reportError( e );
+        nr_error++;
+    }
+}
 PERIOD : '.' ;
 COMMA : ',' ;
 COLON : ':' ;
@@ -179,6 +189,17 @@ tokens {
  ARGDEC;
  STATEMENTS;
  IDENTIFIER;
+}
+{
+    int nr_error = 0;
+    public void reportError( String s ) {
+        super.reportError( s );
+        nr_error++;
+    }
+    public void reportError( RecognitionException e ) {
+        super.reportError( e );
+        nr_error++;
+    }
 }
 
 program :
@@ -668,7 +689,8 @@ else
 | #(STATEMENTS (statement:. { if ( ipt.canProceed() ) r = expr(#statement); } )*) //set of statements
 | BREAK                       { r = new CasBreak(); ipt.setBreak();} //break statement, changes control flow
 | CONTINUE                    { r = new CasContinue(); ipt.setContinue();} //continue statement, changes control flow
-| #(RETURNSTR a = expr)    { r = ipt.rvalue( a ); ipt.setReturn();} //return statement, changes control flow
+//should the returnstatement have its own DataType? like CasReturn? and you can check that it is that type in functioncall in the interpreter
+| #(RETURNSTR a = expr)    { r = new CasReturn(ipt.rvalue( a )); ipt.setReturn();} //return statement, changes control flow
 | #(WAIT a = expr)         { r = ipt.stopme(a);} //pauses the program for a given number of seconds
 | #(FUNCTION_CALL ID {id = #ID.getText();} arglist = param)
   { r = ipt.funcCall(this, id, arglist);}

@@ -5,9 +5,9 @@ import java.io.PrintWriter;
 /**
  * The wrapper class for double
  *
- * @author Hanhua Feng - hf2048@columbia.edu
- * @version $Id: CasDouble.java,v 1.1 2005-08-08 15:57:48 watkin Exp $
- * @modified by Behrooz Badii to CasDouble.java
+ * @author Behrooz Badii - badiib@gmail.com
+ * @version $Id: CasDouble.java,v 1.2 2005-08-18 20:43:53 bb2122 Exp $
+ * @modified Hanhua Feng - hf2048@columbia.edu
  */
 class CasDouble extends CasDataType {
     double var;

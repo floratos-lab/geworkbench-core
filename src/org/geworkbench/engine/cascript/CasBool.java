@@ -5,9 +5,9 @@ import java.io.PrintWriter;
 /**
  * the wrapper class for boolean
  *
- * @author Hanhua Feng - hf2048@columbia.edu
- * @version $Id: CasBool.java,v 1.1 2005-08-08 15:57:48 watkin Exp $
- * @modified by Behrooz Badii to CasBool.java
+ * @author Behrooz Badii -  badiib@gmail.com
+ * @version $Id: CasBool.java,v 1.2 2005-08-18 20:43:53 bb2122 Exp $
+ * @modified from Hanhua Feng - hf2048@columbia.edu
  */
 class CasBool extends CasDataType {
     boolean var;

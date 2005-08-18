@@ -1,6 +1,6 @@
 package org.geworkbench.engine.cascript;
 
-/* the wrapper class for Module
+/*CasArgument Class, facilitates argument handling
 *
 * @author Behrooz Badii - badiib@gmail.com
 * argument type facilitates argument checking for function calls

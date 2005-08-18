@@ -5,9 +5,9 @@ import java.io.PrintWriter;
 /**
  * The wrapper class for unsigned variables
  *
- * @author Hanhua Feng - hf2048@columbia.edu
- * @version $Id: CasVariable.java,v 1.1 2005-08-08 15:57:49 watkin Exp $
- * @modified by Behrooz Badii to CasVariable.java
+ * @author Behrooz Badii - badiib@gmail.com
+ * @version $Id: CasVariable.java,v 1.2 2005-08-18 20:44:02 bb2122 Exp $
+ * @modified from Hanhua Feng - hf2048@columbia.edu
  */
 class CasVariable extends CasDataType {
     public CasVariable(String name) {

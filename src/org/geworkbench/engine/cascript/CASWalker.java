@@ -873,7 +873,7 @@ public CASWalker() {
 				_t = _retTree;
 				_t = __t230;
 				_t = _t.getNextSibling();
-				r = ipt.rvalue( a ); ipt.setReturn();
+				r = new CasReturn(ipt.rvalue( a )); ipt.setReturn();
 				break;
 			}
 			case WAIT:

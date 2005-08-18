@@ -7,9 +7,9 @@ import java.io.PrintWriter;
  * <p/>
  * Error messages are generated here.
  *
- * @author Hanhua Feng - hf2048@columbia.edu MxDataType.java
- * @version $Id: CasDataType.java,v 1.2 2005-08-15 21:00:55 bb2122 Exp $
- * @modified by Behrooz Badii to CasDataType.java
+ * @author Behrooz Badii to CasDataType.java
+ * @version $Id: CasDataType.java,v 1.3 2005-08-18 20:43:53 bb2122 Exp $
+ * @modified from Hanhua Feng - hf2048@columbia.edu MxDataType.java
  */
 public class CasDataType {
     String name;   // used in hash table

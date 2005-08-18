@@ -5,9 +5,9 @@ import java.io.PrintWriter;
 /**
  * the wrapper class for string
  *
- * @author Hanhua Feng - hf2048@columbia.edu
- * @version $Id: CasString.java,v 1.1 2005-08-08 15:57:49 watkin Exp $
- * @modified by Behrooz Badii to CasString.java
+ * @author Behrooz Badii - badiib@gmail.com
+ * @version $Id: CasString.java,v 1.2 2005-08-18 20:43:58 bb2122 Exp $
+ * @modified from Hanhua Feng - hf2048@columbia.edu
  */
 class CasString extends CasDataType {
     String var;

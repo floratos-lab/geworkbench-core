@@ -26,6 +26,16 @@ import antlr.SemanticException;
 
 public class CASLexer extends antlr.CharScanner implements CAStokensTokenTypes, TokenStream
  {
+
+    int nr_error = 0;
+    public void reportError( String s ) {
+        super.reportError( s );
+        nr_error++;
+    }
+    public void reportError( RecognitionException e ) {
+        super.reportError( e );
+        nr_error++;
+    }
 public CASLexer(InputStream in) {
 	this(new ByteBuffer(in));
 }

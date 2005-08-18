@@ -9,7 +9,7 @@ import java.util.Vector;
  * Interpreter routines that is called directly from the tree walker.
  *
  * @author Behrooz Badii - badiib@gmail.com
- * @version $Id: CasInterpreter.java,v 1.5 2005-08-16 21:28:26 bb2122 Exp $
+ * @version $Id: CasInterpreter.java,v 1.6 2005-08-18 20:43:53 bb2122 Exp $
  */
 class CasInterpreter {
     CasSymbolTable symt;
@@ -77,6 +77,7 @@ class CasInterpreter {
     //this is used in the assignment token in the walker and when you have to initialize a variable
     //REMEMBER TO PUT MORE STUFF IN HERE!!!!
     //YOU REALLY GOTTA FIX THIS METHOD
+    //should you be throwing a CasException if something goes wrong at CasValue? how should we be doing that?
     public CasDataType assign(CasDataType a, CasDataType b) {
         System.out.println("in assignment");
         if (a.getPartOf() != null) {
@@ -128,8 +129,8 @@ class CasInterpreter {
                 Object data = get.getm().invoke(get.getPlugin());
                 set.getm().invoke(set.getPlugin(), data);
             } catch (Exception e) {
-                System.out.println("error in assign for two CasValues");
                 e.printStackTrace();
+                throw new CasException("error in assign for two CasValues");
             }
             return new CasBool(true);
         }
@@ -224,8 +225,8 @@ class CasInterpreter {
                 Thread.sleep(((CasInt) a).getvar() * 1000);
                 return new CasBool(true);
             } catch (Exception e) {
-                System.out.println("problem making thread sleep in ipt.stopme() call");
                 e.printStackTrace();
+                throw new CasException ("problem making thread sleep in ipt.stopme() call");
             }
         }
         throw new CasException("wait call needs an integer");
@@ -236,6 +237,7 @@ class CasInterpreter {
         Object [] args = vectortoargs(v);
         if (symt.exists(casname + " " + casmethod)) {
             //do something here
+            //this needs to be filled in to make sure that you can call a method twice
         } else {
             symt.put(casname + " " + casmethod, new CasMethod(casname, casmethod, (CasModule) symt.findVar(casname)));
             System.out.println("made new method " + casmethod + " for " + casname);
@@ -243,8 +245,8 @@ class CasInterpreter {
             try {
                 callme.m.invoke(callme.getPlugin(), args);
             } catch (Exception e) {
-                System.out.println("Error occurred in MethodCall in interpreter for non-pre-existing method");
                 e.printStackTrace();
+                throw new CasException("Error occurred in MethodCall in interpreter for non-pre-existing method");
             }
         }
     }
@@ -400,8 +402,8 @@ class CasInterpreter {
         try {
             ret = walker.fbody(((CasFunction) whatthefunc).getBody());
         } catch (antlr.RecognitionException e) {
-            System.out.println("we have a problem in funcCall");
             e.printStackTrace();
+            throw new CasException("we have a problem in funcCall");
         }
         // no break or continue can go through the function
         if (control == fc_break || control == fc_continue) throw new CasException("nowhere to break or continue");
@@ -413,8 +415,16 @@ class CasInterpreter {
         symt = temp;
         //check the return type before passing it back, if it's not the same return type, throw an error
         //you still have to do this!
-        if (checkreturntype(ret, (CasFunction)whatthefunc)){
-            return ret;
+        if (((CasFunction)whatthefunc).getReturnType() instanceof CasVoid && ret instanceof CasReturn)
+            throw new CasException("you're not supposed to return anything with the function " + id + " + because its return type is void");
+        else if (((CasFunction)whatthefunc).getReturnType() instanceof CasVoid && !(ret instanceof CasReturn))
+            return new CasVariable("return statement");
+        else if (ret instanceof CasReturn) {
+            if (checkreturntype(((CasReturn)ret).getRetValue(), (CasFunction) whatthefunc)) {
+                return ((CasReturn)ret).getRetValue();
+            }
+            else
+                throw new CasException("bad return type for function " + id + ", you are returning the wrong thing");
         }
         else
             throw new CasException("bad return type for function " + id);
@@ -437,8 +447,7 @@ class CasInterpreter {
                     }
                 }
             }
-
-            if (type.getClass().equals(ret.getClass()))
+            else if (type.getClass().equals(ret.getClass()))
                 return true;
         }
         if (dimensions == 1) {

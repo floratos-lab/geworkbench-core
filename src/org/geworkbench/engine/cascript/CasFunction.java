@@ -8,9 +8,9 @@ import java.util.Vector;
 /**
  * The function data type
  *
- * @author Hanhua Feng - hf2048@columbia.edu
- * @version $Id: CasFunction.java,v 1.2 2005-08-16 21:28:26 bb2122 Exp $
- *          modified by Behrooz Badii into CasFunction.java
+ * @author Behrooz Badii - badiib@gmail.comHanhua Feng - hf2048@columbia.edu
+ * @version $Id: CasFunction.java,v 1.3 2005-08-18 20:43:53 bb2122 Exp $
+ * @modified from Hanhua Feng - hf2048@columbia.edu
  */
 class CasFunction extends CasDataType {
     // we need a reference to the AST for the function entry

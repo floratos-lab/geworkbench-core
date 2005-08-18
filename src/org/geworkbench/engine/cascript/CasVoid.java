@@ -3,11 +3,10 @@ package org.geworkbench.engine.cascript;
 import java.io.PrintWriter;
 
 /**
- * The wrapper class for double
+ * The wrapper class for void returntype
  *
  * @author Behrooz Badii - badiib@gmail.com
- * @version $Id: CasVoid.java,v 1.1 2005-08-16 21:28:59 bb2122 Exp $
- * @modified by Behrooz Badii to CasDouble.java
+ * @version $Id: CasVoid.java,v 1.2 2005-08-18 20:44:04 bb2122 Exp $
  */
 class CasVoid extends CasDataType {
     Object var;

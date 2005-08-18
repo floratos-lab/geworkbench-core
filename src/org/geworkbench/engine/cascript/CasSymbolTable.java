@@ -3,11 +3,11 @@ package org.geworkbench.engine.cascript;
 import java.util.HashMap;
 
 /**
- * Symbol table class: dual parent supported: static and dynamic
+ * Symbol table class
  *
- * @author Hanhua Feng - hf2048@columbia.edu
- * @version $Id: CasSymbolTable.java,v 1.1 2005-08-08 15:57:49 watkin Exp $
- * @modified by Behrooz Badii to CasSymbolTable.java
+ * @author Behrooz Badii - badiib@gmail.com
+ * @version $Id: CasSymbolTable.java,v 1.2 2005-08-18 20:44:00 bb2122 Exp $
+ * @modified from Hanhua Feng - hf2048@columbia.edu
  */
 class CasSymbolTable extends HashMap {
     CasSymbolTable parent;

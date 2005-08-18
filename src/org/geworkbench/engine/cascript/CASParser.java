@@ -22,6 +22,16 @@ import antlr.collections.impl.ASTArray;
 public class CASParser extends antlr.LLkParser       implements CAStokensTokenTypes
  {
 
+    int nr_error = 0;
+    public void reportError( String s ) {
+        super.reportError( s );
+        nr_error++;
+    }
+    public void reportError( RecognitionException e ) {
+        super.reportError( e );
+        nr_error++;
+    }
+
 protected CASParser(TokenBuffer tokenBuf, int k) {
   super(tokenBuf,k);
   tokenNames = _tokenNames;
