@@ -20,7 +20,10 @@ public class CasEngine {
         CASLexer lexer = new CASLexer(input);
         CASParser parser = new CASParser(lexer);
         parser.program(); // "file" is the main rule in the parser
-
+        //if there are parsing errors, do not interpret
+        if ( lexer.nr_error > 0 || parser.nr_error > 0 ) {
+            throw new CasException( "Parsing errors found. Stop." );
+        }
         // Get the AST from the parser
         CommonAST parseTree = (CommonAST) parser.getAST();
 
