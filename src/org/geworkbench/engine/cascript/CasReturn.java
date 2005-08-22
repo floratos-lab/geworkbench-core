@@ -1,20 +1,23 @@
 package org.geworkbench.engine.cascript;
 
 /**
- * This is a stub, to be filled in by Behrooz.
+ * This holds the return value for a function
+ * A new CasDataType (aka CasReturn) to make sure that the
+ * statement that is return the CasDataType is from a return statement,
+ * so the CasDataType is wrapped inside CasReturn
  *
- * @author John Watkinson
+ * @author Behrooz Badii
  */
 public class CasReturn extends CasDataType {
 
-    CasDataType dataType;
+    CasDataType retValue;
 
     public CasReturn(CasDataType dataType) {
-        this.dataType = dataType;
+        retValue = dataType;
     }
 
     public CasDataType getRetValue() {
-        return dataType;
+        return retValue;
     }
 
 }
