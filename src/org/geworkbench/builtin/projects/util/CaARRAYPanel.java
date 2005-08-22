@@ -370,13 +370,14 @@ public class CaARRAYPanel extends JPanel {
                 CaArrayExperiment exp = (CaArrayExperiment) node.getUserObject();
                 // Add in the tree the measured bioassays
                 if (!exp.hasBeenPopulated()) {
-                    CaArrayBioassay[] measured = exp.getMeasuredAssays();
-                    if (measured != null && measured.length > 0) {
-                        for (int i = 0; i < measured.length; ++i) {
-                            assayNode = new DefaultMutableTreeNode(measured[i]);
-                            remoteTreeModel.insertNodeInto(assayNode, node, node.getChildCount());
-                        }
-                    }
+//                  Supressing display of Measured assays
+//                    CaArrayBioassay[] measured = exp.getMeasuredAssays();
+//                    if (measured != null && measured.length > 0) {
+//                        for (int i = 0; i < measured.length; ++i) {
+//                            assayNode = new DefaultMutableTreeNode(measured[i]);
+//                            remoteTreeModel.insertNodeInto(assayNode, node, node.getChildCount());
+//                        }
+//                    }
                     // Add in the tree the derived bioassays
                     CaArrayBioassay[] derived = exp.getDerivedAssays();
                     if (derived != null && derived.length > 0) {
