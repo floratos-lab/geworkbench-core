@@ -26,6 +26,7 @@ public class TestCSPanel extends AbstractTestList {
 
     CSMicroarray m4 = new CSMicroarray(4);
     CSMicroarray m5 = new CSMicroarray(5);
+    CSMicroarray m6 = new CSMicroarray(6);
 
     public TestCSPanel(String s) {
         super(s);
@@ -51,7 +52,7 @@ public class TestCSPanel extends AbstractTestList {
     }
 
     public Object[] getOtherElements() {
-        return new Object[]{m4,m5};
+        return new Object[]{m4,m5,m6};
     }
 
     public Object[] getFullNonNullElements() {
