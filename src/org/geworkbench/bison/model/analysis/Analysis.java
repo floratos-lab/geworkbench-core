@@ -1,4 +1,4 @@
-package org.geworkbench.engine.model.analysis;
+package org.geworkbench.bison.model.analysis;
 
 import org.geworkbench.bison.datastructure.properties.DSDescribable;
 import org.geworkbench.bison.datastructure.properties.DSIdentifiable;

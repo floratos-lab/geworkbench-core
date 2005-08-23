@@ -3,9 +3,9 @@ package org.geworkbench.util;
 import org.geworkbench.bison.datastructure.bioobjects.markers.CSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
-import org.geworkbench.engine.model.clusters.HierCluster;
-import org.geworkbench.engine.model.clusters.MarkerHierCluster;
-import org.geworkbench.engine.model.clusters.MicroarrayHierCluster;
+import org.geworkbench.bison.model.clusters.HierCluster;
+import org.geworkbench.bison.model.clusters.MarkerHierCluster;
+import org.geworkbench.bison.model.clusters.MicroarrayHierCluster;
 
 /**
  * @author John Watkinson

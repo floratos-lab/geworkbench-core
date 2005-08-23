@@ -1,4 +1,4 @@
-package org.geworkbench.engine.model.clusters;
+package org.geworkbench.bison.model.clusters;
 
 import org.geworkbench.bison.datastructure.properties.DSIdentifiable;
 

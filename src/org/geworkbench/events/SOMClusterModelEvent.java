@@ -1,7 +1,7 @@
 package org.geworkbench.events;
 
 import org.geworkbench.bison.datastructure.biocollections.views.DSMicroarraySetView;
-import org.geworkbench.engine.model.clusters.SOMCluster;
+import org.geworkbench.bison.model.clusters.SOMCluster;
 
 import java.util.EventObject;
 

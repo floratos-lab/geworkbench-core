@@ -1,4 +1,4 @@
-package org.geworkbench.engine.model.clusters;
+package org.geworkbench.bison.model.clusters;
 
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 
@@ -7,8 +7,8 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
  * <p>Company: First Genetic Trust Inc.</p>
  * <p/>
  * Generalization of <code>DefaultHierCluster</code> that contains a
- * {@link org.geworkbench.engine.model.microarray.DSMarker} that contains a reference to a
- * Genetic Marker defined by {@link org.geworkbench.engine.model.microarray.MarkerValue}. Clusters
+ * {@link org.geworkbench.bison.model.microarray.DSMarker} that contains a reference to a
+ * Genetic Marker defined by {@link org.geworkbench.bison.model.microarray.MarkerValue}. Clusters
  * of this type are used to create a Marker Dendrogram representing Genetic
  * Marker Clustering as obtained from the Hierachical Clustering Analysis
  *

@@ -754,8 +754,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
      * @throws org.geworkbench.engine.parsers.InputFileFormatException
      *
      */
-    public void fileOpenAction(final File[] dataSetFiles, final org.geworkbench.engine.parsers.FileFormat inputFormat, final boolean mergeFiles) throws org.geworkbench.engine.parsers.InputFileFormatException {
+    public void fileOpenAction(final File[] dataSetFiles, final org.geworkbench.engine.parsers.FileFormat inputFormat, boolean merge) throws org.geworkbench.engine.parsers.InputFileFormatException {
 
+        final boolean mergeFiles = dataSetFiles.length == 1 ? false : merge; 
         if (inputFormat instanceof DataSetFileFormat) {
 
             //       super.fileOpenAction(dataSetFiles, inputFormat);

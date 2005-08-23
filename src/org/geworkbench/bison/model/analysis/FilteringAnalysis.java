@@ -1,4 +1,4 @@
-package org.geworkbench.engine.model.analysis;
+package org.geworkbench.bison.model.analysis;
 
 /**
  * Tagging interface for filtering analysis algorithms.
@@ -6,5 +6,5 @@ package org.geworkbench.engine.model.analysis;
  * @author John Watkinson
  * @todo Fill in common methods for filtering here.
  */
-public interface NormalizingAnalysis extends Analysis {
+public interface FilteringAnalysis extends Analysis {
 }

@@ -16,7 +16,7 @@ import java.util.Map;
  */
 
 /**
- * Implementation of {@link org.geworkbench.engine.model.microarray.AffyMarkerValue
+ * Implementation of {@link org.geworkbench.bison.model.microarray.AffyMarkerValue
  * AffyMarkerValue}.
  */
 public class CSAffyMarkerValue extends CSMarkerValue implements DSAffyMarkerValue, Serializable {

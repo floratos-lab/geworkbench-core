@@ -233,7 +233,7 @@ public abstract class CSMicroarraySet<T extends DSMicroarray> extends CSDataSet<
     public void mergeMicroarraySet(DSMicroarraySet<T> newMaSet) {
         /**
          * Stores the markers of the microarray set (the same markers that are also
-         * found in {@link org.geworkbench.engine.model.microarray.AbstractMicroarraySet#markerInfoVector}).
+         * found in {@link org.geworkbench.bison.model.microarray.AbstractMicroarraySet#markerInfoVector}).
          * The efficient searching afforded by using <code>TreeMap</code> enhances
          * a number of operations that require searching for markers.
          */

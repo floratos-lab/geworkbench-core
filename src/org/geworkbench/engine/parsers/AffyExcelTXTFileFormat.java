@@ -85,12 +85,12 @@ public class AffyExcelTXTFileFormat
         if (files[0].getName().endsWith(".xls")) {
             option = JOptionPane.showConfirmDialog(null, "Excel file input will be very slow and requires more resource.\n" + "It is highly recommanded that you use tab delimated text format.\n"
 
-                    + "Continue anyway?", "Recommandation", JOptionPane.CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+                    + "Continue anyway?", "Recommendation", JOptionPane.CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 
         }
         if (option == 0) {
 
-            String filename = JOptionPane.showInputDialog(null, "Please enter the name of the dataset:");
+            String filename = files[0].getName();// JOptionPane.showInputDialog(null, "Please enter the name of the dataset:");
             if (filename != null) {
                 File datafile = new File(filename);
                 org.geworkbench.util.microarrayutils.MatrixCreater.readFile(files, datafile);

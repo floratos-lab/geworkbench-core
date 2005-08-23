@@ -1,4 +1,4 @@
-package org.geworkbench.engine.model.clusters;
+package org.geworkbench.bison.model.clusters;
 
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 
@@ -16,7 +16,7 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 public class LeafSOMCluster extends DefaultSOMCluster {
     /**
      * {@link DSMarker} that contains a reference to a
-     * Genetic Marker defined by {@link org.geworkbench.engine.model.microarray.MarkerValue} and
+     * Genetic Marker defined by {@link org.geworkbench.bison.model.microarray.MarkerValue} and
      * referred to by this <code>LeafSOMCluster</code>
      */
     private DSGeneMarker mInfo = null;

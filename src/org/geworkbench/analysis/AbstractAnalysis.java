@@ -2,9 +2,9 @@ package org.geworkbench.analysis;
 
 import org.geworkbench.bison.util.DefaultIdentifiable;
 import org.geworkbench.bison.datastructure.properties.CSDescribable;
-import org.geworkbench.engine.model.analysis.Analysis;
-import org.geworkbench.engine.model.analysis.ParamValidationResults;
-import org.geworkbench.engine.model.analysis.ParameterPanel;
+import org.geworkbench.bison.model.analysis.Analysis;
+import org.geworkbench.bison.model.analysis.ParamValidationResults;
+import org.geworkbench.bison.model.analysis.ParameterPanel;
 
 import java.io.*;
 import java.util.Enumeration;

@@ -3,8 +3,8 @@ package org.geworkbench.events;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.engine.config.events.Event;
 import org.geworkbench.engine.config.events.EventSource;
-import org.geworkbench.engine.model.clusters.MarkerHierCluster;
-import org.geworkbench.engine.model.clusters.MicroarrayHierCluster;
+import org.geworkbench.bison.model.clusters.MarkerHierCluster;
+import org.geworkbench.bison.model.clusters.MicroarrayHierCluster;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>

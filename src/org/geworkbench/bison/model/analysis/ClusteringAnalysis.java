@@ -1,4 +1,4 @@
-package org.geworkbench.engine.model.analysis;
+package org.geworkbench.bison.model.analysis;
 
 /**
  * Tagging interface for clustering analysis algorithms.

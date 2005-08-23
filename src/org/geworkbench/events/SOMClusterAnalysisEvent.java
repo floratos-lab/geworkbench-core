@@ -3,7 +3,7 @@ package org.geworkbench.events;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.engine.config.events.Event;
 import org.geworkbench.engine.config.events.EventSource;
-import org.geworkbench.engine.model.clusters.SOMCluster;
+import org.geworkbench.bison.model.clusters.SOMCluster;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>

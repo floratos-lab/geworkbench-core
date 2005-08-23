@@ -15,7 +15,7 @@ import java.util.HashMap;
  */
 
 /**
- * Implementation of {@link org.geworkbench.engine.model.microarray.GenepixMarkerValue
+ * Implementation of {@link org.geworkbench.bison.model.microarray.GenepixMarkerValue
  * GenepixMarkerValue}.
  */
 public class CSGenepixMarkerValue extends CSMarkerValue implements DSGenepixMarkerValue, Serializable {

@@ -1,4 +1,4 @@
-package org.geworkbench.engine.model.clusters;
+package org.geworkbench.bison.model.clusters;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>

@@ -1,4 +1,4 @@
-package org.geworkbench.engine.model.analysis;
+package org.geworkbench.bison.model.analysis;
 
 import javax.swing.*;
 

@@ -1,7 +1,7 @@
 package org.geworkbench.analysis;
 
-import org.geworkbench.engine.model.analysis.ParamValidationResults;
-import org.geworkbench.engine.model.analysis.ParameterPanel;
+import org.geworkbench.bison.model.analysis.ParamValidationResults;
+import org.geworkbench.bison.model.analysis.ParameterPanel;
 
 import java.io.IOException;
 

@@ -9,8 +9,8 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.
         DSMutableMarkerValue;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
-import org.geworkbench.engine.model.analysis.AlgorithmExecutionResults;
-import org.geworkbench.engine.model.analysis.NormalizingAnalysis;
+import org.geworkbench.bison.model.analysis.AlgorithmExecutionResults;
+import org.geworkbench.bison.model.analysis.NormalizingAnalysis;
 
 /**
  * <p>Copyright: Copyright (c) 2005</p>
@@ -120,23 +120,18 @@ public class HouseKeepingGeneNormalizer extends AbstractAnalysis implements
         int markerCount = markerPanel.size();
 
         double baseTotal = 0d;
-       // DSMicroarray mArray = null;
+        DSMicroarray mArray = null;
         int arrayCount = maSet.size();
         DSMutableMarkerValue markerValue = null;
         double [][] arrays = new double[markerCount][arrayCount];
 
         double ratio[] = new double[arrayCount];
-
-        //Because of a bug in CSMicroarray, getMarkerValue(DSGeneMarker mInfo)
-        //does not return correct value, it always return the first marker when the CSGeneMarker
-        // does not have a serial number >0. so instead, CSMicroarraySet.getRow(DSGeneMakrer)
-        //is used here.
         for (int j = 0; j < markerCount; j++) {
             CSGeneMarker csgMarker = (CSGeneMarker) markerPanel.get(j);
             double[] expressProfile = maSet.getRow(csgMarker);
             for(int k=0; k<arrayCount; k++){
                 arrays[j][k] = maSet.getValue(csgMarker, k);
-               // System.out.println(arrays[j][k]+" array" + csgMarker.getLabel());
+                System.out.println(arrays[j][k]+" array");
             }
             //arrays[j] =  maSet.getRow(csgMarker);
         }
@@ -161,7 +156,7 @@ public class HouseKeepingGeneNormalizer extends AbstractAnalysis implements
             for (int j = 0; j < markerCount; j++) {
 
                     ratio[i] += arrays[j][i];
-
+                    System.out.println(arrays[j][i]+"csgMarker.getLabel()" + ratio[i]);
                 }
 
             }

@@ -1,8 +1,8 @@
 package org.geworkbench.events;
 
 import org.geworkbench.bison.datastructure.biocollections.views.DSMicroarraySetView;
-import org.geworkbench.engine.model.clusters.MarkerHierCluster;
-import org.geworkbench.engine.model.clusters.MicroarrayHierCluster;
+import org.geworkbench.bison.model.clusters.MarkerHierCluster;
+import org.geworkbench.bison.model.clusters.MicroarrayHierCluster;
 
 import java.util.EventObject;
 

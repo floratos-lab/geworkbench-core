@@ -6,7 +6,7 @@ package org.geworkbench.bison.datastructure.bioobjects.microarray;
  * <p>Company: First Genetic Trust Inc.</p>
  * <p/>
  * Defines a Genepix Gene Marker generalization of
- * {@link org.geworkbench.engine.model.microarray.MarkerValue}
+ * {@link org.geworkbench.bison.model.microarray.MarkerValue}
  *
  * @author First Genetic Trust
  * @version 1.0

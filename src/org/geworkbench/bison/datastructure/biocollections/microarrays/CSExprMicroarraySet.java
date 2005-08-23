@@ -500,7 +500,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
                         System.out.println("error parsing " + token);
                         e.printStackTrace();
                     }
-                    markerVector.add(currGeneId, mi);
+                    // markerVector.add(currGeneId, mi);
                     boolean pValueExists = ((st.length - 2) > microarrayNo);
                     for (int j = 2; j < st.length; j++) {
                         DSMutableMarkerValue marker = (DSMutableMarkerValue) get(i).getMarkerValue(currGeneId);

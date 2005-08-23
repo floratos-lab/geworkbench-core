@@ -1,4 +1,4 @@
-package org.geworkbench.engine.model.analysis;
+package org.geworkbench.bison.model.analysis;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>

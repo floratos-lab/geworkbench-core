@@ -15,7 +15,7 @@
 		<gui-area name="VisualArea"/>
 	</plugin>
 	<plugin id="associationPanel" name="Associations" class="org.geworkbench.components.associationdiscovery.PatternDiscoveryPanel">
-		<gui-area name="SelectionArea"/>
+		<gui-area name="CommandArea"/>
 		<use-module name="patternDiscoveryAlgorithm" id="patternDiscoveryAlgorithm"/>
 	</plugin>
 	<plugin id="patternDiscoveryAlgorithm" name="Pattern Discovery Algorithm" class="org.geworkbench.components.associationdiscovery.PatternDiscovery"/>
@@ -52,9 +52,9 @@
 	<plugin id="phenotypePanel" name="Phenotype Panel" class="org.geworkbench.components.selectors.PropertyTagSelectorPanel">
 		<gui-area name="SelectionArea"/>
 	</plugin>
-	<plugin id="hierarchicalClusteringAnalysis" name="Hierachical Clustering Analysis" class="org.geworkbench.components.clustering.HierClustAnalysis"/>
+	<!-- plugin id="hierarchicalClusteringAnalysis" name="Hierachical Clustering Analysis" class="org.geworkbench.components.clustering.HierClustAnalysis"/ -->
 	<plugin id="fastHierarchicalClusteringAnalysis" name="Fast Hierachical Clustering Analysis" class="org.geworkbench.components.clustering.FastHierClustAnalysis"/>
-	<plugin id="jniHierarchicalClusteringAnalysis" name="JNI Hierachical Clustering Analysis" class="org.geworkbench.components.clustering.JniHierClustAnalysis"/>
+	<!-- plugin id="jniHierarchicalClusteringAnalysis" name="JNI Hierachical Clustering Analysis" class="org.geworkbench.components.clustering.JniHierClustAnalysis"/-->
 	<plugin id="somAnalysis" name="SOM Analysis" class="org.geworkbench.components.clustering.SOMAnalysis"/>
 	<plugin id="tTestAnalysis" name="T Test Analysis" class="org.geworkbench.components.analysis.clustering.TtestAnalysis"/>
 	<plugin id="missingValueNorm" name="Missing Values" class="org.geworkbench.components.normalization.MissingValueNormalizer"/>
@@ -88,12 +88,12 @@
 	</plugin>
 	<plugin id="visualBuilder" name="visualBuilder" class="org.geworkbench.engine.config.VisualMenu"/>
 	<plugin id="sequenceAlignment" name="Sequence Alignment" class="org.geworkbench.components.alignment.panels.BlastAppComponent">
-		<gui-area name="SelectionArea"/>
+		<gui-area name="CommandArea"/>
 	</plugin>
 	<plugin id="sessionManager" name="Session Mgr" class="org.geworkbench.util.session.SessionAppComponent"/>
 	<plugin id="versioninfo" name="Version Infomation" class="org.geworkbench.components.versioninfo.VersionInfoComponent"/>
 	<plugin id="splash" name="Pattern Discovery" class="org.geworkbench.components.discovery.SequenceDiscoveryViewAppComponent">
-		<gui-area name="SelectionArea"/>
+		<gui-area name="CommandArea"/>
 	</plugin>
 	<plugin id="sequencePanel" name="Sequence Panel" class="org.geworkbench.components.sequences.SequenceViewAppComponent">
 		<gui-area name="VisualArea"/>
@@ -114,7 +114,7 @@
 		<gui-area name="VisualArea"/>
 	</plugin>
 	<plugin id="syntenyParameters" name="Synteny" class="org.geworkbench.components.alignment.panels.SyntenyAppComponent">
-		<gui-area name="SelectionArea"/>
+		<gui-area name="CommandArea"/>
 	</plugin>
 	<!--
 	<plugin id="genePanel" name="Gene Panel" class="org.geworkbench.components.selectors.GenericMarkerSelectorPanel">

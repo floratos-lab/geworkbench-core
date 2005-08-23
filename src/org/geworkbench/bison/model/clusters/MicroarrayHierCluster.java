@@ -1,4 +1,4 @@
-package org.geworkbench.engine.model.clusters;
+package org.geworkbench.bison.model.clusters;
 
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 
@@ -7,7 +7,7 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
  * <p>Company: First Genetic Trust Inc.</p>
  * <p/>
  * Generalization of <code>DefaultHierCluster</code> that contains a
- * {@link org.geworkbench.engine.model.microarray.Microarray} that defines an individual
+ * {@link org.geworkbench.bison.model.microarray.Microarray} that defines an individual
  * Experiment in the dataset being analysed. Clusters
  * of this type are used to create a Microarray Dendrogram representing
  * Phenotype Clustering as obtained from the Hierachical Clustering Analysis

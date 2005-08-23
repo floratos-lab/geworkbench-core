@@ -1,4 +1,4 @@
-package org.geworkbench.engine.model.clusters;
+package org.geworkbench.bison.model.clusters;
 
 import org.geworkbench.bison.util.DefaultIdentifiable;
 
@@ -165,7 +165,7 @@ public abstract class AbstractCluster implements Cluster {
     }
 
     /**
-     * {@link org.geworkbench.engine.model.Microarray} method to walk thorugh all the children of
+     * {@link org.geworkbench.bison.model.Microarray} method to walk thorugh all the children of
      * this <code>Cluster</code>
      *
      * @return if more children can be accessed
@@ -175,7 +175,7 @@ public abstract class AbstractCluster implements Cluster {
     }
 
     /**
-     * {@link org.geworkbench.engine.model.Microarray} method to walk thorugh all the children of
+     * {@link org.geworkbench.bison.model.Microarray} method to walk thorugh all the children of
      * this <code>Cluster</code>
      *
      * @return next child
@@ -185,7 +185,7 @@ public abstract class AbstractCluster implements Cluster {
     }
 
     /**
-     * {@link org.geworkbench.engine.model.Microarray} method to remove the last <code>Cluster
+     * {@link org.geworkbench.bison.model.Microarray} method to remove the last <code>Cluster
      * </code> accessed by the {@link AbstractCluster#next} method
      */
     public void remove() {
