@@ -48,6 +48,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable, java.u
     public static final int MEDIAN_TYPE = 18;
     public static final int TWO_CHANNEL_THRESHOLD_FILTER_TYPE = 19;
     public static final int TTEST_TYPE = 20;
+    public static final int HOUSEKEEPINGGENES_VALUE_NORMALIZER_TYPE = 21;
     /**
      * The parameters panel to be use from within the AnalysisPane in order
      * to collect the analysis parameters from the user.

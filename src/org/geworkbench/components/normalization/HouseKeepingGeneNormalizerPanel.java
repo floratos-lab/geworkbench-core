@@ -16,6 +16,7 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.CSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.complex.panels.*;
 import org.geworkbench.events.GeneSelectorEvent;
+import java.util.Enumeration;
 
 /**
  * <p>Title: </p>
@@ -29,7 +30,7 @@ import org.geworkbench.events.GeneSelectorEvent;
  * @author not attributable
  * @version 1.0
  */
-// public class HouseKeepingGeneNormalizerPanel extends JPanel implements    Serializable {
+  // public class HouseKeepingGeneNormalizerPanel extends JPanel implements    Serializable {
   public class HouseKeepingGeneNormalizerPanel extends AbstractSaveableParameterPanel implements Serializable {
     public HouseKeepingGeneNormalizerPanel() {
         try {
@@ -173,9 +174,7 @@ import org.geworkbench.events.GeneSelectorEvent;
             }
             break;
         }
-        if (event != null) {
-            //publishGeneSelectorEvent(event);
-        }
+
     }
 
     private void markerDoubleClicked(int index, MouseEvent e) {
@@ -371,16 +370,18 @@ import org.geworkbench.events.GeneSelectorEvent;
 
         HashMap factors = new HashMap();
         String line = null;
-        //DefaultListModel ls = (DefaultListModel)jList1.getModel();
+
+
         while ((line = br.readLine()) != null) {
 
             String[] cols = line.split(",");
 
-           // ls.addElement(cols[0]);
+             markerModel.addElement(cols[0]);
             factors.put(cols[0], cols[1]);
             markerList.add(new CSGeneMarker(cols[0]));
         }
-
+        //jList1.setModel(ls);
+        System.out.println(markerModel.size() + " " + markerList.size());
         br.close();
         revalidate();
         repaint();
@@ -447,9 +448,21 @@ import org.geworkbench.events.GeneSelectorEvent;
         jPanel1.add(jButton5);
         this.add(jPanel4, new XYConstraints(2, 0, 277, 31));
         jPanel3.add(jScrollPane1, new XYConstraints(2, 3, 86, 128));
-        jPanel3.add(jScrollPane2, new XYConstraints(164, 3, 123, 128));
         jPanel3.add(jPanel1, new XYConstraints(90, 3, 76, 128));
-        jList2.setModel(selectedModel);
+        //jList2.setModel(selectedModel);
+        jList1 = new JList(samples);
+       jList1.setToolTipText("HouseKeeping genes list");
+       markerModel =  new DefaultListModel();
+       jList1 = new JList(markerModel);//(DefaultListModel) jList1.getListModel();
+
+      jList1.addMouseListener(new java.awt.event.
+                              MouseAdapter() {
+          public void mouseClicked(MouseEvent e) {
+              markerList_mouseClicked(e);
+          }
+
+      });
+
         jScrollPane2.getViewport().add(jList2);
         jScrollPane1.getViewport().add(jList1);
 
@@ -458,20 +471,11 @@ import org.geworkbench.events.GeneSelectorEvent;
         this.add(jPanel2, new XYConstraints(0, 168, 277, 36));
         jPanel2.add(loadButton);
         this.add(jPanel3, new XYConstraints(0, 29, 277, 140));
+        jPanel3.add(jScrollPane2, new XYConstraints(164, 3, 81, 128));
         InputStream input = HouseKeepingGeneNormalizer.class.
                             getResourceAsStream(
                                     "DEFAULT_HOUSEKEEPING_GENES.txt");
-        jList1 = new JList(samples);
-        jList1.setToolTipText("HouseKeeping genes list");
-        //markerModel = (DefaultListModel) jList1.getModel();
-       //jList1.setModel(markerModel);
-       jList1.addMouseListener(new java.awt.event.
-                               MouseAdapter() {
-           public void mouseClicked(MouseEvent e) {
-               markerList_mouseClicked(e);
-           }
 
-       });
 
 
         populateList(input);
@@ -486,7 +490,7 @@ import org.geworkbench.events.GeneSelectorEvent;
     JButton jButton1 = new JButton();
     JButton jButton2 = new JButton();
     JPanel jPanel2 = new JPanel();
-    JList jList2 = new JList(samples);
+
     JPanel jPanel3 = new JPanel();
     XYLayout xYLayout2 = new XYLayout();
     JPanel jPanel4 = new JPanel();
@@ -502,6 +506,7 @@ import org.geworkbench.events.GeneSelectorEvent;
     DefaultListModel markerModel = new DefaultListModel();
     JPanel mainPanel = new JPanel();
     JButton loadButton = new JButton();
+    JList jList2 = new JList(selectedModel);
 
 
     public void jButton3_actionPerformed(ActionEvent e) {
@@ -513,8 +518,22 @@ import org.geworkbench.events.GeneSelectorEvent;
     }
 
     public DSPanel getPanel() {
+        updatePanel();
 
         return panel;
+    }
+
+    /**
+     * updatePanel
+     */
+    private void updatePanel() {
+
+        for (Enumeration en = selectedModel.elements(); en.hasMoreElements();) {
+
+                        CSGeneMarker csg = new CSGeneMarker((String) en.nextElement());
+                        panel.add(csg);
+
+        }
     }
 
     public void setMarkerPanel(DSPanel markerPanel) {
