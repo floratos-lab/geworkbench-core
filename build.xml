@@ -142,7 +142,7 @@
             <batchtest fork="yes" todir="testResults">
                 <formatter type="xml"/>
                 <fileset dir="${src}">
-                    <include name="org/geworkbench/**/test/Test*.java"/>
+                    <!--<include name="org/geworkbench/**/test/Test*.java"/>-->
                     <include name="org/geworkbench/bison/testing/TestCSPanel.java"/>
                 </fileset>
             </batchtest>
