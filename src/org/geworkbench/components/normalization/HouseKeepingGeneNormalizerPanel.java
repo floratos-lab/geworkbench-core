@@ -30,7 +30,7 @@ import java.util.Enumeration;
  * @author not attributable
  * @version 1.0
  */
-  // public class HouseKeepingGeneNormalizerPanel extends JPanel implements    Serializable {
+   //public class HouseKeepingGeneNormalizerPanel extends JPanel implements    Serializable {
   public class HouseKeepingGeneNormalizerPanel extends AbstractSaveableParameterPanel implements Serializable {
     public HouseKeepingGeneNormalizerPanel() {
         try {
@@ -431,8 +431,8 @@ import java.util.Enumeration;
         this.setLayout(xYLayout1);
         markerList = new CSItemList<DSGeneMarker>();
         panel = new CSPanel<DSGeneMarker>();
-        jButton1.setText(">>");
-        jButton2.setText("<<");
+        jButton1.setText(">");
+        jButton2.setText("<");
         jPanel3.setLayout(xYLayout2);
         jLabel1.setText("Selected genes");
         jLabel2.setText("HouseKeeping Genes List");
@@ -440,15 +440,19 @@ import java.util.Enumeration;
         jButton5.addActionListener(new
                 HouseKeepingGeneNormalizerPanel_jButton5_actionAdapter(this));
         jPanel4.setLayout(borderLayout1);
-        loadButton.setText("Load from file");
+        loadButton.setToolTipText("Load housekeeping genes from a file.");
+        loadButton.setText("Load");
         loadButton.addActionListener(new
                                      HouseKeepingGeneNormalizerPanel_loadButton_actionAdapter(this));
+        jButton3.setToolTipText("Save the housekeeping genes into a file.");
+        jButton3.setText("Save");
         jPanel1.add(jButton1);
         jPanel1.add(jButton2);
         jPanel1.add(jButton5);
+        jPanel1.add(loadButton);
+        jPanel1.add(jButton3);
         this.add(jPanel4, new XYConstraints(2, 0, 277, 31));
         jPanel3.add(jScrollPane1, new XYConstraints(2, 3, 86, 128));
-        jPanel3.add(jPanel1, new XYConstraints(90, 3, 76, 128));
         //jList2.setModel(selectedModel);
         jList1 = new JList(samples);
        jList1.setToolTipText("HouseKeeping genes list");
@@ -469,9 +473,9 @@ import java.util.Enumeration;
         jPanel4.add(jLabel2, java.awt.BorderLayout.CENTER);
         jPanel4.add(jLabel1, java.awt.BorderLayout.EAST);
         this.add(jPanel2, new XYConstraints(0, 168, 277, 36));
-        jPanel2.add(loadButton);
         this.add(jPanel3, new XYConstraints(0, 29, 277, 140));
-        jPanel3.add(jScrollPane2, new XYConstraints(164, 3, 81, 128));
+        jPanel3.add(jScrollPane2, new XYConstraints(170, 3, 75, -1));
+        jPanel3.add(jPanel1, new XYConstraints(90, 3, 71, 128));
         InputStream input = HouseKeepingGeneNormalizer.class.
                             getResourceAsStream(
                                     "DEFAULT_HOUSEKEEPING_GENES.txt");
@@ -507,6 +511,7 @@ import java.util.Enumeration;
     JPanel mainPanel = new JPanel();
     JButton loadButton = new JButton();
     JList jList2 = new JList(selectedModel);
+    JButton jButton3 = new JButton();
 
 
     public void jButton3_actionPerformed(ActionEvent e) {
@@ -527,12 +532,11 @@ import java.util.Enumeration;
      * updatePanel
      */
     private void updatePanel() {
-
+        panel = new CSPanel<DSGeneMarker>();
         for (Enumeration en = selectedModel.elements(); en.hasMoreElements();) {
 
                         CSGeneMarker csg = new CSGeneMarker((String) en.nextElement());
                         panel.add(csg);
-
         }
     }
 
