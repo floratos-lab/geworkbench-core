@@ -209,6 +209,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
         ctu.add("B532 Median");
         ctu.add("B532 Mean");
         ctu.add("Ratio of Means");
+        ctu.add("Flags");
         // ctu.add("Log Ratio");
         GenePixParser parser = new GenePixParser(ctu);
         ReaderMonitor rm = createProgressReader("Processing file ", gr.getInputFile());

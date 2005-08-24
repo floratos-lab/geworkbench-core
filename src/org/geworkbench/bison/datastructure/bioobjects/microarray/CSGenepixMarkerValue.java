@@ -1,11 +1,11 @@
 package org.geworkbench.bison.datastructure.bioobjects.microarray;
 
-import org.geworkbench.bison.parsers.GenepixParseContext;
-import org.geworkbench.bison.parsers.NCIParseContext;
-
 import java.io.ObjectStreamField;
 import java.io.Serializable;
 import java.util.HashMap;
+
+import org.geworkbench.bison.parsers.GenepixParseContext;
+import org.geworkbench.bison.parsers.NCIParseContext;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
@@ -25,6 +25,7 @@ public class CSGenepixMarkerValue extends CSMarkerValue implements DSGenepixMark
     double ch2b = 0d;
     double ratio = 0d;
     boolean missing = false;
+    int flag = 0;
     /**
      * Serializable fields.
      */
@@ -43,6 +44,7 @@ public class CSGenepixMarkerValue extends CSMarkerValue implements DSGenepixMark
         setValue(gmvi.value);
         setConfidence(gmvi.confidence);
         setMissing(gmvi.isMissing());
+        setFlag(gmvi.getFlag());
     }
 
     /**
@@ -287,8 +289,16 @@ public class CSGenepixMarkerValue extends CSMarkerValue implements DSGenepixMark
         return missing;
     }
 
+    public int getFlag() {
+        return flag;
+    }
+
     public void setMissing(boolean isMissing) {
         missing = isMissing;
+    }
+
+    public void setFlag(int flag) {
+        this.flag = flag;
     }
 
     public DSMarkerValue deepCopy() {

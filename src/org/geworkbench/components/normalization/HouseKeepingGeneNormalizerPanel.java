@@ -3,6 +3,7 @@ package org.geworkbench.components.normalization;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.util.Enumeration;
 import java.util.HashMap;
 
 import javax.swing.*;
@@ -16,7 +17,6 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.CSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.complex.panels.*;
 import org.geworkbench.events.GeneSelectorEvent;
-import java.util.Enumeration;
 
 /**
  * <p>Title: </p>
@@ -30,8 +30,8 @@ import java.util.Enumeration;
  * @author not attributable
  * @version 1.0
  */
-   //public class HouseKeepingGeneNormalizerPanel extends JPanel implements    Serializable {
-  public class HouseKeepingGeneNormalizerPanel extends AbstractSaveableParameterPanel implements Serializable {
+ //public class HouseKeepingGeneNormalizerPanel extends JPanel implements Serializable {
+   public class HouseKeepingGeneNormalizerPanel extends AbstractSaveableParameterPanel implements Serializable {
     public HouseKeepingGeneNormalizerPanel() {
         try {
             jbInit();
@@ -40,6 +40,34 @@ import java.util.Enumeration;
         }
 
     }
+    XYLayout xYLayout1 = new XYLayout();
+String[] samples = {"AFFX-BioB-M_at", "31463_s_at"};
+JScrollPane jScrollPane1 = new JScrollPane();
+JScrollPane jScrollPane2 = new JScrollPane();
+JList jList1;
+JPanel jPanel1 = new JPanel();
+JButton jButton1 = new JButton();
+JButton jButton2 = new JButton();
+JPanel jPanel2 = new JPanel();
+
+JPanel jPanel3 = new JPanel();
+XYLayout xYLayout2 = new XYLayout();
+JPanel jPanel4 = new JPanel();
+JLabel jLabel1 = new JLabel();
+JLabel jLabel2 = new JLabel();
+JButton jButton5 = new JButton();
+BorderLayout borderLayout1 = new BorderLayout();
+// Data models
+private DSItemList<DSGeneMarker> markerList;
+private DSPanel<DSGeneMarker> panel;
+private DSPanel<DSGeneMarker> markerPanel;
+DefaultListModel selectedModel = new DefaultListModel();
+DefaultListModel markerModel = new DefaultListModel();
+JPanel mainPanel = new JPanel();
+JButton loadButton = new JButton();
+JList jList2 = new JList(selectedModel);
+JButton jButton3 = new JButton();
+
 
     private void saveButtonPressed(TreePath path) {
 
@@ -47,7 +75,7 @@ import java.util.Enumeration;
             JFileChooser fc = new JFileChooser(".");
             FileFilter filter = new MarkerPanelSetFileFilter();
             fc.setFileFilter(filter);
-            fc.setDialogTitle("Save Marker Panel");
+            fc.setDialogTitle("Save Housekeeping Genes Panel");
             String extension = ((MarkerPanelSetFileFilter) filter).getExtension();
             int choice = fc.showSaveDialog(null);
             if (choice == JFileChooser.APPROVE_OPTION) {
@@ -80,59 +108,26 @@ import java.util.Enumeration;
             BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
                     filename)));
             String line = null;
-            if(selectedModel.size()==0){
+            if (selectedModel.size() == 0) {
                 reportError("No gene is selected", null);
                 return;
             }
 
-            for(int i=0; i<selectedModel.size(); i++){
-                line = (String)selectedModel.getElementAt(i);
-                    writer.write(line);
-                    writer.newLine();
-                }
-
-            writer.flush();
-            writer.close();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
-
-    }
-
-    /**
-     * Utility to save a panel to the filesystem.
-     *
-     * @param filename filename to which the current panel is to be saved.
-     */
-    private void serializePanel(String filename, DSPanel<DSGeneMarker> panel) {
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
-                    filename)));
-            String line = null;
-            if (panel != null && panel.size() > 0) {
-                line = "Label\t" + panel.getLabel();
+            for (int i = 0; i < selectedModel.size(); i++) {
+                line = (String) selectedModel.getElementAt(i);
                 writer.write(line);
                 writer.newLine();
-                line = "MinorLabel\t" + panel.getSubLabel();
-                writer.write(line);
-                writer.newLine();
-                line = "MarkerType\t" + panel.get(0).getClass().getName();
-                writer.write(line);
-                writer.newLine();
-                for (int i = 0; i < panel.size(); i++) {
-                    DSGeneMarker marker = (DSGeneMarker) panel.get(i);
-                    line = marker.getSerial() + "\t" + marker.getLabel() + "\t" +
-                           marker.getDescription();
-                    writer.write(line);
-                    writer.newLine();
-                }
             }
+
             writer.flush();
             writer.close();
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
+
     }
+
+
 
     private void loadButtonPressed() {
         JFileChooser fc = new JFileChooser(".");
@@ -148,46 +143,14 @@ import java.util.Enumeration;
                 populateList(input2);
 
             } catch (Exception ex) {
-                reportError(ex.getMessage(), null);
+                 ex.printStackTrace();
+                reportError(ex.toString(), null);
             }
 
         }
-            System.out.println("one");
-    }
-
-    private void markerClicked(int index, MouseEvent e) {
-        throwEvent(GeneSelectorEvent.MARKER_SELECTION);
-    }
-
-    private void throwEvent(int type) {
-        org.geworkbench.events.GeneSelectorEvent event = null;
-        switch (type) {
-        case GeneSelectorEvent.PANEL_SELECTION:
-            event = new GeneSelectorEvent(markerPanel);
-            break;
-        case org.geworkbench.events.GeneSelectorEvent.MARKER_SELECTION:
-            int index = -1;
-            if (index != -1) {
-                if (markerList != null) {
-                    event = new GeneSelectorEvent(markerList.get(index));
-                }
-            }
-            break;
-        }
 
     }
 
-    private void markerDoubleClicked(int index, MouseEvent e) {
-        // Get double-clicked marker
-        DSGeneMarker marker = markerList.get(index);
-        if (markerPanel.getSelection().contains(marker)) {
-            markerPanel.getSelection().remove(marker);
-        } else {
-            markerPanel.getSelection().add(marker);
-        }
-        // treeModel.firePanelChildrenChanged(markerPanel.getSelection());
-        throwEvent(GeneSelectorEvent.PANEL_SELECTION);
-    }
 
     private void markerRightClicked(int index, final MouseEvent e) {
         //ensureItemIsSelected(index);
@@ -199,55 +162,6 @@ import java.util.Enumeration;
     }
 
 
-    /**
-     * Utility to obtain the stored panel sets from the filesystem
-     *
-     * @param filename filename which contains the stored panel set
-     */
-    private DSPanel<DSGeneMarker> deserializePanel(final String filename) {
-        BufferedReader stream = null;
-        try {
-            //stream = new BufferedReader(new InputStreamReader(new ProgressMonitorInputStream(getComponent(), "Loading probes " + filename, new FileInputStream(filename))));
-            String line = null;
-            DSPanel<DSGeneMarker> panel = new CSPanel<DSGeneMarker>();
-            Class type = null;
-            while ((line = stream.readLine()) != null) {
-                String[] tokens = line.split("\t");
-                if (tokens != null && tokens.length == 2) {
-                    if (tokens[0].trim().equalsIgnoreCase("Label")) {
-                        panel.setLabel(new String(tokens[1].trim()));
-                    } else if (tokens[0].trim().equalsIgnoreCase("MinorLabel")) {
-                        panel.setSubLabel(new String(tokens[1].trim()));
-                    } else if (tokens[0].trim().equalsIgnoreCase("MarkerType")) {
-                        type = Class.forName(tokens[1].trim());
-                    } else {
-                    }
-                }
-                if (tokens != null && tokens.length == 3) {
-                    if (type != null) {
-                        DSGeneMarker marker = (DSGeneMarker) type.newInstance();
-                        if (marker != null) {
-                            marker.setSerial(Integer.parseInt(tokens[0].trim()));
-                            marker.setLabel(new String(tokens[1].trim()));
-                            marker.setDescription(new String(tokens[2].trim()));
-                            panel.add(marker);
-                        }
-                    }
-                }
-            }
-            return panel;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (stream != null) {
-                try {
-                    stream.close();
-                } catch (IOException e) {
-                    // Ignore
-                }
-            }
-        }
-    }
 
     /**
      * <code>FileFilter</code> that is used by the <code>JFileChoose</code> to
@@ -316,46 +230,6 @@ import java.util.Enumeration;
     }
 
 
-    /**
-     * Auto-scrolling list for markers that customizes the double-click and right-click behavior.
-     */
-    private class MarkerList extends org.geworkbench.util.JAutoList {
-
-        public MarkerList(ListModel model) {
-            super(model);
-        }
-
-        @Override protected void elementDoubleClicked(int index, MouseEvent e) {
-            markerDoubleClicked(index, e);
-        }
-
-        @Override protected void elementRightClicked(int index, MouseEvent e) {
-            markerRightClicked(index, e);
-        }
-
-        @Override protected void elementClicked(int index, MouseEvent e) {
-            markerClicked(index, e);
-        }
-
-    }
-
-
-    private class ListCellRenderer extends DefaultListCellRenderer {
-        @Override public Component getListCellRendererComponent(JList list,
-                Object value, int index, boolean isSelected,
-                boolean cellHasFocus) {
-            Component component = super.getListCellRendererComponent(list,
-                    value, index, isSelected, cellHasFocus);
-            if (!isSelected) {
-                if (markerPanel.getSelection().contains(markerList.get(index))) {
-                    component.setBackground(Color.YELLOW);
-                }
-            }
-            return component;
-        }
-    }
-
-
     public void reportError(String message, String title) {
         JOptionPane.showMessageDialog(null, message, title,
                                       JOptionPane.ERROR_MESSAGE);
@@ -371,32 +245,20 @@ import java.util.Enumeration;
         HashMap factors = new HashMap();
         String line = null;
 
-
         while ((line = br.readLine()) != null) {
 
             String[] cols = line.split(",");
 
-             markerModel.addElement(cols[0]);
-            factors.put(cols[0], cols[1]);
+            for (String s : cols) {
+                selectedModel.addElement(s);
+            }
+
             markerList.add(new CSGeneMarker(cols[0]));
         }
         //jList1.setModel(ls);
-        System.out.println(markerModel.size() + " " + markerList.size());
+
         br.close();
-        revalidate();
-        repaint();
-
-//        jList1.setToolTipText("HouseKeeping genes list");
-//        jList1.setModel(ls);
-//        jList1.addMouseListener(new java.awt.event.
-//                                MouseAdapter() {
-//            public void mouseClicked(MouseEvent e) {
-//                markerList_mouseClicked(e);
-//            }
-//
-//        });
-
-    }
+      }
 
     public void markerList_mouseClicked(MouseEvent e) {
         int index = jList1.locationToIndex(e.getPoint());
@@ -406,14 +268,37 @@ import java.util.Enumeration;
         }
     }
 
+
+    public void List_mouseClicked(MouseEvent e) {
+        int index = jList2.locationToIndex(e.getPoint());
+        if (e.getClickCount() == 2) {
+            String value = (String) selectedModel.getElementAt(index);
+            moveMarkers(value);
+        }
+    }
+
+    /**
+     * moveMarkers
+     *
+     * @param value String
+     */
+    public void moveMarkers(String value) {
+        if (!markerModel.contains(value)) {
+            markerModel.addElement(value);
+        }
+        selectedModel.removeElement(value);
+
+    }
+
     /**
      * Add one marker into the selected list.
      * @param markerName String
      */
     public void addMarkers(String markerName) {
-        if(!selectedModel.contains(markerName)){
+        if (!selectedModel.contains(markerName)) {
             selectedModel.addElement(markerName);
         }
+        markerModel.removeElement(markerName);
     }
 
     /**
@@ -432,13 +317,23 @@ import java.util.Enumeration;
         markerList = new CSItemList<DSGeneMarker>();
         panel = new CSPanel<DSGeneMarker>();
         jButton1.setText(">");
+        jButton1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                jButton1_actionPerformed(e);
+            }
+        });
         jButton2.setText("<");
+        jButton2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                jButton2_actionPerformed(e);
+            }
+        });
         jPanel3.setLayout(xYLayout2);
-        jLabel1.setText("Selected genes");
-        jLabel2.setText("HouseKeeping Genes List");
+        jLabel1.setText("Current Selected Genes");
+        jLabel2.setText("Excluded HouseKeeping Genes");
         jButton5.setText("Clear all");
         jButton5.addActionListener(new
-                HouseKeepingGeneNormalizerPanel_jButton5_actionAdapter(this));
+                                   HouseKeepingGeneNormalizerPanel_jButton5_actionAdapter(this));
         jPanel4.setLayout(borderLayout1);
         loadButton.setToolTipText("Load housekeeping genes from a file.");
         loadButton.setText("Load");
@@ -446,6 +341,11 @@ import java.util.Enumeration;
                                      HouseKeepingGeneNormalizerPanel_loadButton_actionAdapter(this));
         jButton3.setToolTipText("Save the housekeeping genes into a file.");
         jButton3.setText("Save");
+        jButton3.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                jButton3_actionPerformed(e);
+            }
+        });
         jPanel1.add(jButton1);
         jPanel1.add(jButton2);
         jPanel1.add(jButton5);
@@ -455,17 +355,24 @@ import java.util.Enumeration;
         jPanel3.add(jScrollPane1, new XYConstraints(2, 3, 86, 128));
         //jList2.setModel(selectedModel);
         jList1 = new JList(samples);
-       jList1.setToolTipText("HouseKeeping genes list");
-       markerModel =  new DefaultListModel();
-       jList1 = new JList(markerModel);//(DefaultListModel) jList1.getListModel();
+        jList1.setToolTipText("HouseKeeping genes list");
+        markerModel = new DefaultListModel();
+        jList1 = new JList(markerModel); //(DefaultListModel) jList1.getListModel();
 
-      jList1.addMouseListener(new java.awt.event.
-                              MouseAdapter() {
-          public void mouseClicked(MouseEvent e) {
-              markerList_mouseClicked(e);
-          }
+        jList1.addMouseListener(new java.awt.event.
+                                MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                markerList_mouseClicked(e);
+            }
 
-      });
+        });
+        jList2.addMouseListener(new java.awt.event.
+                                MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                List_mouseClicked(e);
+            }
+
+        });
 
         jScrollPane2.getViewport().add(jList2);
         jScrollPane1.getViewport().add(jList1);
@@ -480,38 +387,9 @@ import java.util.Enumeration;
                             getResourceAsStream(
                                     "DEFAULT_HOUSEKEEPING_GENES.txt");
 
-
-
         populateList(input);
     }
 
-    XYLayout xYLayout1 = new XYLayout();
-    String[] samples = {"AFFX-BioB-M_at", "31463_s_at"};
-    JScrollPane jScrollPane1 = new JScrollPane();
-    JScrollPane jScrollPane2 = new JScrollPane();
-    JList jList1;
-    JPanel jPanel1 = new JPanel();
-    JButton jButton1 = new JButton();
-    JButton jButton2 = new JButton();
-    JPanel jPanel2 = new JPanel();
-
-    JPanel jPanel3 = new JPanel();
-    XYLayout xYLayout2 = new XYLayout();
-    JPanel jPanel4 = new JPanel();
-    JLabel jLabel1 = new JLabel();
-    JLabel jLabel2 = new JLabel();
-    JButton jButton5 = new JButton();
-    BorderLayout borderLayout1 = new BorderLayout();
-    // Data models
-    private DSItemList<DSGeneMarker> markerList;
-    private DSPanel<DSGeneMarker> panel;
-    private DSPanel<DSGeneMarker> markerPanel;
-    DefaultListModel selectedModel = new DefaultListModel();
-    DefaultListModel markerModel = new DefaultListModel();
-    JPanel mainPanel = new JPanel();
-    JButton loadButton = new JButton();
-    JList jList2 = new JList(selectedModel);
-    JButton jButton3 = new JButton();
 
 
     public void jButton3_actionPerformed(ActionEvent e) {
@@ -533,10 +411,10 @@ import java.util.Enumeration;
      */
     private void updatePanel() {
         panel = new CSPanel<DSGeneMarker>();
-        for (Enumeration en = selectedModel.elements(); en.hasMoreElements();) {
+        for (Enumeration en = selectedModel.elements(); en.hasMoreElements(); ) {
 
-                        CSGeneMarker csg = new CSGeneMarker((String) en.nextElement());
-                        panel.add(csg);
+            CSGeneMarker csg = new CSGeneMarker((String) en.nextElement());
+            panel.add(csg);
         }
     }
 
@@ -554,6 +432,32 @@ import java.util.Enumeration;
 
     public void jButton5_actionPerformed(ActionEvent e) {
         selectedModel.clear();
+        markerModel.clear();
+    }
+
+    public void jButton1_actionPerformed(ActionEvent e) {
+        Object[] selectedGenes =  jList1.getSelectedValues();
+        if (selectedGenes != null) {
+            for (Object selected : selectedGenes) {
+                markerModel.removeElement(selected);
+                selectedModel.addElement(selected);
+            }
+        } else {
+            reportError("No gene is selected", "No selection");
+        }
+    }
+
+    public void jButton2_actionPerformed(ActionEvent e) {
+        Object[] selectedGenes =   jList2.getSelectedValues();
+        if (selectedGenes != null) {
+            for (Object selected : selectedGenes) {
+                selectedModel.removeElement(selected);
+                markerModel.addElement(selected);
+            }
+        } else {
+            reportError("No gene is selected", "No selection");
+        }
+
     }
 }
 

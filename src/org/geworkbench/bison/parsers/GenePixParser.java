@@ -19,6 +19,13 @@ import java.util.*;
  */
 
 public class GenePixParser {
+    public GenePixParser() {
+        try {
+            jbInit();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 
     /**
      * List of the column names (among those available in the Geenpix gpr file format and
@@ -243,6 +250,7 @@ public class GenePixParser {
     private void populateValues(Map columns, DSGenepixMarkerValue gmv) {
         Object value = null;
         double ch1f = 0d, ch2f = 0d, ch1b = 0d, ch2b = 0d, ratio = 0d;
+        int flag = 0;
 
         // Notice that the order in which we treat median and mean values implies
         // that if both median and mean measurements are available, only the
@@ -275,6 +283,13 @@ public class GenePixParser {
                 gmv.setCh2Bg(ch2b);
             }
         }
+        if (columns.containsKey("Flags")) {
+          value = columns.get("Flags");
+          if (value instanceof Integer)
+              flag = ((Integer)value).intValue();
+          gmv.setFlag(flag);
+      }
+
         if (columns.containsKey("F532 Mean")) {
             value = columns.get("F532 Mean");
             if (value instanceof Double)
@@ -300,6 +315,7 @@ public class GenePixParser {
             if (value instanceof Double)
                 ratio = ((Double) value).doubleValue();
         }
+
         double val = 0d;
         if (ch2f != ch2b)
             val = (ch1f - ch1b) / (ch2f - ch2b);
@@ -307,5 +323,8 @@ public class GenePixParser {
             val = (ch1f - ch1b);
         gmv.setValue(val);
         gmv.setMissing(false);
+    }
+
+    private void jbInit() throws Exception {
     }
 }

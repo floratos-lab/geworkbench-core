@@ -41,6 +41,19 @@ public interface DSGenepixMarkerValue extends DSMutableMarkerValue {
     void setCh2Bg(double ch2bg);
 
     /**
+     * Sets the flag value
+     *
+     * @param flag
+     */
+    void setFlag(int flag);
+
+    /**
+     * Gets the flag value
+     */
+
+    int getFlag();
+
+    /**
      * Gets the Channel 1 foreground value
      *
      * @return channel 1 foreground value

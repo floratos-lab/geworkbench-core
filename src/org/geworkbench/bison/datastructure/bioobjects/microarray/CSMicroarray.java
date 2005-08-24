@@ -251,12 +251,16 @@ public class CSMicroarray implements DSMicroarray, Serializable {
         // If the current microarray belongs to a microarray set, then we
         // should be able find the requested value fast.
         //        if ( (mSet = getMicroarraySet()) != null) {
+        // @todo - xiaoqing - for every new CSGeneMarker, the default markerId =0
+        // so it always return the first marker to the query. Need change soon...
         if (mInfo != null) {
             if ((markerIndex = mInfo.getSerial()) >= 0) {
                 return markerArray[markerIndex];
-            } else {
-                return null;
-            }
+            } else{
+            return null;
+        }
+
+
         }
         return null;
     }
