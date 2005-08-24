@@ -13,6 +13,9 @@ import org.geworkbench.bison.model.analysis.AlgorithmExecutionResults;
 import org.geworkbench.bison.model.analysis.NormalizingAnalysis;
 import org.geworkbench.bison.datastructure.complex.panels.CSPanel;
 import javax.swing.JOptionPane;
+import org.geworkbench.bison.datastructure.biocollections.CSMarkerVector;
+import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
 
 /**
  * <p>Copyright: Copyright (c) 2005</p>
@@ -142,10 +145,35 @@ public class HouseKeepingGeneNormalizer extends AbstractAnalysis implements
 
         for (int j = 0; j < markerCount; j++) {
             ExistedMarkers[j] = true;
-            CSGeneMarker csgMarker = (CSGeneMarker) markerPanel.get(j);
+            //CSGeneMarker csgMarker = (CSGeneMarker) markerPanel.get(j);
+
+
+
+
+
+
+            int originIndex =0;
+            CSGeneMarker cgMarker = (CSGeneMarker)maSet.getMarkers().get(0);
+            System.out.println(maSet.getValue(cgMarker, 0) + " " + maSet.getValue(originIndex, 0));
+            System.out.println(cgMarker.getLabel() + "|" + cgMarker.getGeneId() + "|" + cgMarker.getSerial());
+            CSMicroarray csmicroarray = (CSMicroarray)maSet.get(0);
+
+            System.out.println(csmicroarray.getMarkerValue(cgMarker) + " " + csmicroarray.getMarkerValue(originIndex));
+
+             DSItemList csm = maSet.getMarkers();
+            for (Object obj:csm){
+                CSGeneMarker csgMarker = (CSGeneMarker)obj;
+                System.out.println(csgMarker.getLabel() + "|" + csgMarker.getGeneId() + csgMarker.getSerial());
+                System.out.println(maSet.getValue(csgMarker, 0) + " " + maSet.getValue(originIndex++, 0));
+            }
+            CSGeneMarker csgMarker = (CSGeneMarker)maSet.getMarkers().get(0);
+
             double[] expressProfile = maSet.getRow(csgMarker);
+
+            System.out.println(csgMarker.getLabel() + "|" + expressProfile[0] + csgMarker.getGeneId() + csgMarker.getSerial());
             for (int k = 0; k < arrayCount; k++) {
                 arrays[j][k] = maSet.getValue(csgMarker, k);
+
                 if (Double.isNaN(arrays[j][k])) {
                     errorMessage.append(csgMarker.getLabel() + " ");
                     ExistedMarkers[j] = false;
