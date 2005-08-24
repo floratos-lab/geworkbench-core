@@ -380,6 +380,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
             return;
         } catch (Exception ioe) {
             System.out.println("Error while parsing line: " + line);
+            System.out.println("Error: " + ioe);
             return;
         } finally {
             //            setPhenotype();
@@ -394,11 +395,13 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
         for (int microarrayId = 0; microarrayId < maNo; microarrayId++) {
             add(microarrayId, new CSMicroarray(microarrayId, mrkNo, "Test", null, null, false, type));
         }
+        /*
         for (int i = 0; i < mrkNo; i++) {
             CSExpressionMarker mi = new CSExpressionMarker();
             mi.reset(i, maNo, mrkNo);
             markerVector.add(i, mi);
         }
+        */
         initialized = true;
     }
 
@@ -468,7 +471,10 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
                 } else if (line.charAt(0) != '\t') {
                     // This handles individual gene lines with (value, pvalue) pairs separated by tabs
                     int i = 0;
-                    DSGeneMarker mi = markerVector.get(currGeneId);
+                    DSGeneMarker mi = null;
+                    if (markerVector.size() > currGeneId) {
+                        mi = markerVector.get(currGeneId);
+                    }
                     if (mi == null) {
                         mi = new CSExpressionMarker();
                         ((org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker) mi).reset(currGeneId, microarrayNo, microarrayNo);
@@ -479,6 +485,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
                     //set the annotation field of current marker
                     mi.setDescription(label);
 
+                    markerVector.add(currGeneId, mi);
                     try {
                         String[] result = AnnotationParser.getInfo(token, AnnotationParser.LOCUSLINK);
                         String locus = " ";
@@ -501,7 +508,6 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
                         System.out.println("error parsing " + token);
                         e.printStackTrace();
                     }
-                    // markerVector.add(currGeneId, mi);
                     boolean pValueExists = ((st.length - 2) > microarrayNo);
                     for (int j = 2; j < st.length; j++) {
                         DSMutableMarkerValue marker = (DSMutableMarkerValue) get(i).getMarkerValue(currGeneId);
