@@ -226,6 +226,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
         setCompatibilityLabel("Genepix");
         this.label = gr.getInputFile().getName();
         initialize(1, v.size());
+        initializeMarkers(1, v.size());
         int count = 0;
         for (Iterator it = v.iterator(); it.hasNext();) {
             String acc = ((String) it.next()).toString();
@@ -405,6 +406,13 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
         initialized = true;
     }
 
+    public void initializeMarkers(int maNo, int mrkNo) {
+        for (int i = 0; i < mrkNo; i++) {
+            CSExpressionMarker mi = new CSExpressionMarker();
+            mi.reset(i, maNo, mrkNo);
+            markerVector.add(i, mi);
+        }
+    }
     int currGeneId = 0;
 
     private class CMicroarrayParser {
