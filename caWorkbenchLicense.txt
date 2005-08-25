@@ -72,13 +72,14 @@ http://www.gnu.org/copyleft/gpl.html
 
 This product includes following softwares: 
 ArrayExpress by the European Bioinformatics Institute.
-Ogsa from Globus Alliance
+Ogsa from Globus Alliance.
 JDOM by Jason Hunter and Brett McLaughlin.
-Looks by Karsten Lentzsch
+Looks by Karsten Lentzsch.
 PureTLS by Eric Rescorla.
 SkinLF by Frédéric Lavigne.
 Jaxen by The Werken Company.
-
+Dom4J by MetaStuff, Ltd.
+Piccolo by the University of Maryland.
  
 Those software are licensing under BSD or BSD style License. For more information, 
 visit:
