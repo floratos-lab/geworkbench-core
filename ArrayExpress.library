@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<library>
-    <!--JBuilder Library Definition File-->
-    <fullname>ArrayExpress</fullname>
-    <class>
-        <path>[lib/ArrayExpress.jar]</path>
-    </class>
-    <lastmodsaved>1089842812596</lastmodsaved>
-</library>

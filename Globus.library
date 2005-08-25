@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<library>
-    <!--JBuilder Library Definition File-->
-    <fullname>Globus</fullname>
-    <class>
-        <path>[lib/globusSplash.jar]</path>
-    </class>
-    <lastmodsaved>1114611173828</lastmodsaved>
-</library>

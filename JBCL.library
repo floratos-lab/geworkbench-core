@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<library>
-    <!--JBuilder Library Definition File-->
-    <fullname>JBCL</fullname>
-    <class>
-        <path>[lib/jbcl.jar]</path>
-    </class>
-    <lastmodsaved>1078337200177</lastmodsaved>
-</library>

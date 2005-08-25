@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<library>
-    <!--JBuilder Library Definition File-->
-    <fullname>Looks</fullname>
-    <class>
-        <path>[lib/looks-1.3.1.jar]</path>
-    </class>
-    <lastmodsaved>1121356839841</lastmodsaved>
-</library>

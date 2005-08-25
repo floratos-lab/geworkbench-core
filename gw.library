@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<library>
-    <!--JBuilder Library Definition File-->
-    <fullname>gw</fullname>
-    <class>
-        <path>[lib/gw2.jar]</path>
-    </class>
-    <lastmodsaved>1082475785134</lastmodsaved>
-</library>

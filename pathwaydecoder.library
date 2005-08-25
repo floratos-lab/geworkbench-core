@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library>
+  <!--JBuilder Library Definition File-->
+  <fullname>pathwaydecoder</fullname>
+  <class>
+    <path>[components/pathwaydecoder/lib/mutualinfo.jar]</path>
+    <path>[components/pathwaydecoder/lib/jgraphpad.jar]</path>
+  </class>
+  <lastmodsaved>1125001114408</lastmodsaved>
+</library>

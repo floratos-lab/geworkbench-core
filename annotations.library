@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library>
+  <!--JBuilder Library Definition File-->
+  <fullname>annotations</fullname>
+  <class>
+    <path>[components/annotations/lib/batik-awt-util.jar]</path>
+    <path>[components/annotations/lib/batik-bridge.jar]</path>
+    <path>[components/annotations/lib/batik-css.jar]</path>
+    <path>[components/annotations/lib/batik-dom.jar]</path>
+    <path>[components/annotations/lib/batik-ext.jar]</path>
+    <path>[components/annotations/lib/batik-extension.jar]</path>
+    <path>[components/annotations/lib/batik-gui-util.jar]</path>
+    <path>[components/annotations/lib/batik-gvt.jar]</path>
+    <path>[components/annotations/lib/batik-parser.jar]</path>
+    <path>[components/annotations/lib/batik-rasterizer.jar]</path>
+    <path>[components/annotations/lib/batik-script.jar]</path>
+    <path>[components/annotations/lib/batik-slideshow.jar]</path>
+    <path>[components/annotations/lib/batik-squiggle.jar]</path>
+    <path>[components/annotations/lib/batik-svg-dom.jar]</path>
+    <path>[components/annotations/lib/batik-svggen.jar]</path>
+    <path>[components/annotations/lib/batik-svgpp.jar]</path>
+    <path>[components/annotations/lib/batik-swing.jar]</path>
+    <path>[components/annotations/lib/batik-transcoder.jar]</path>
+    <path>[components/annotations/lib/batik-ttf2svg.jar]</path>
+    <path>[components/annotations/lib/batik-util.jar]</path>
+    <path>[components/annotations/lib/batik-xml.jar]</path>
+  </class>
+  <lastmodsaved>1124999230658</lastmodsaved>
+</library>
