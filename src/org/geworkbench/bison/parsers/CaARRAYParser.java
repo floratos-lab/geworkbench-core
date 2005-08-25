@@ -121,7 +121,7 @@ public class CaARRAYParser {
                     }
                 }
                 if (!maSet.initialized) {
-                    maSet.initializeMarkers(0, markerNo);
+                    maSet.initialize(0, markerNo);
                     maSet.setCompatibilityLabel(bioAssayImpl.getIdentifier());
                     for (int z = 0; z < markerNo; z++) {
                         maSet.getMarkers().get(z).setGeneName(de[z].getName());

@@ -226,7 +226,6 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
         setCompatibilityLabel("Genepix");
         this.label = gr.getInputFile().getName();
         initialize(1, v.size());
-        initializeMarkers(1, v.size());
         int count = 0;
         for (Iterator it = v.iterator(); it.hasNext();) {
             String acc = ((String) it.next()).toString();
@@ -396,23 +395,16 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
         for (int microarrayId = 0; microarrayId < maNo; microarrayId++) {
             add(microarrayId, new CSMicroarray(microarrayId, mrkNo, "Test", null, null, false, type));
         }
-        /*
+
         for (int i = 0; i < mrkNo; i++) {
             CSExpressionMarker mi = new CSExpressionMarker();
             mi.reset(i, maNo, mrkNo);
             markerVector.add(i, mi);
         }
-        */
+
         initialized = true;
     }
 
-    public void initializeMarkers(int maNo, int mrkNo) {
-        for (int i = 0; i < mrkNo; i++) {
-            CSExpressionMarker mi = new CSExpressionMarker();
-            mi.reset(i, maNo, mrkNo);
-            markerVector.add(i, mi);
-        }
-    }
     int currGeneId = 0;
 
     private class CMicroarrayParser {
@@ -479,14 +471,15 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
                 } else if (line.charAt(0) != '\t') {
                     // This handles individual gene lines with (value, pvalue) pairs separated by tabs
                     int i = 0;
-                    DSGeneMarker mi = null;
+                    DSGeneMarker mi = (DSGeneMarker)mArraySet.getMarkers().get(currGeneId);
                     if (markerVector.size() > currGeneId) {
                         mi = markerVector.get(currGeneId);
                     }
-                    if (mi == null) {
-                        mi = new CSExpressionMarker();
-                        ((org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker) mi).reset(currGeneId, microarrayNo, microarrayNo);
-                    }
+                    ((org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker) mi).reset(currGeneId, microarrayNo, microarrayNo);
+//                    if (mi == null) {
+//                        mi = new CSExpressionMarker();
+//                        ((org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker) mi).reset(currGeneId, microarrayNo, microarrayNo);
+//                    }
                     //set the affyid field of current marker.
                     mi.setLabel(token);
                     String label = new String(st[1]);
