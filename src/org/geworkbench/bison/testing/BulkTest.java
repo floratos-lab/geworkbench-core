@@ -133,18 +133,18 @@ import java.util.List;
  * interpret bulk test methods.
  *
  * @author Matt Hall, John Watkinson, Paul Jack
- * @version $Id: BulkTest.java,v 1.1 2005-08-10 22:20:31 mhall Exp $
+ * @version $Id: BulkTest.java,v 1.2 2005-08-25 20:47:44 manju Exp $
  */
 public class BulkTest extends TestCase implements Cloneable {
 
 
-    // Note:  BulkTest is Cloneable to make it easier to construct 
-    // BulkTest instances for simple test methods that are defined in 
+    // Note:  BulkTest is Cloneable to make it easier to construct
+    // BulkTest instances for simple test methods that are defined in
     // anonymous inner classes.  Basically we don't have to worry about
     // finding weird constructors.  (And even if we found them, technically
-    // it'd be illegal for anyone but the outer class to invoke them).  
-    // Given one BulkTest instance, we can just clone it and reset the 
-    // method name for every simple test it defines.  
+    // it'd be illegal for anyone but the outer class to invoke them).
+    // Given one BulkTest instance, we can just clone it and reset the
+    // method name for every simple test it defines.
 
 
     /**
@@ -361,7 +361,7 @@ class BulkTestSuiteMaker {
 
         BulkTest bulk2;
         try {
-            bulk2 = (BulkTest) m.invoke(bulk, null);
+            bulk2 = (BulkTest) m.invoke(new Object[]{bulk, null});
             if (bulk2 == null) return;
         } catch (InvocationTargetException ex) {
             ex.getTargetException().printStackTrace();
