@@ -35,11 +35,12 @@ public class PluginClass extends IdentifiableImpl {
         return pluginClass;
     }
 
-    public void createInstance(String id) {
-        PluginObject po = new PluginObject();
-        po.createPlugin(id, name, this.getID()); //one should be URI
-        po.finish();
-    }
+    // watkin - unused
+//    public void createInstance(String id) {
+//        PluginObject po = new PluginObject();
+//        po.createPlugin(id, name, this.getID()); //one should be URI
+//        po.finish();
+//    }
 
     public boolean isVisualPlugin() {
         try {

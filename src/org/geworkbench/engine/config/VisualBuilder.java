@@ -127,6 +127,7 @@ public class VisualBuilder extends JFrame {
         protected Class anInterface;
         protected String description;
         protected String className;
+        protected String resourceName = null;
 
         public EGTreeNode(String Name, Object object) {
 
@@ -147,6 +148,10 @@ public class VisualBuilder extends JFrame {
                 className = (String) object;
 
             }
+        }
+
+        public String getResourceName() {
+            return resourceName;
         }
 
         public Object getComponent() {
@@ -386,7 +391,7 @@ public class VisualBuilder extends JFrame {
         if (componentClass.getParent() == rootNode) {
             // System.out.println("before:"+PluginRegistry.getPlugins().length);
             PluginObject comp = new PluginObject();
-            comp.createPlugin(("[" + (componentClass.getChildCount() + 1) + "]" + componentClass.getDescription()), componentClass.getDescription(), componentClass.getClassName());
+            comp.createPlugin(("[" + (componentClass.getChildCount() + 1) + "]" + componentClass.getDescription()), componentClass.getDescription(), componentClass.getClassName(), componentClass.getResourceName());
             //add extensionpoints
             // ArrayList extensions = ( (PluginClass) componentClass.getComponent()).
             //     getExtensions();

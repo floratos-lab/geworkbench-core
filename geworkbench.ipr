@@ -190,7 +190,6 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/_all/_all.iml" filepath="$PROJECT_DIR$/_all/_all.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/alignment/alignment.iml" filepath="$PROJECT_DIR$/components/alignment/alignment.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/am/am.iml" filepath="$PROJECT_DIR$/components/am/am.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/analysis/analysis.iml" filepath="$PROJECT_DIR$/components/analysis/analysis.iml" />
@@ -227,7 +226,82 @@
     <option name="GENERATE_IIOP_STUBS" value="false" />
     <option name="ADDITIONAL_OPTIONS_STRING" value="" />
   </component>
-  <component name="libraryTable" />
+  <component name="libraryTable">
+    <library name="base">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/ArrayExpress.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/caBIO.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/xml-apis.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/jai_core.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/jdom.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/axis.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/activation.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/mail.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/commons-beanutils.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/commons-collections.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/commons-digester.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/commons-discovery.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/commons-logging.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/jaxrpc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/log4j-1.2.8.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/saaj.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/wsdl4j.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/jcommon-1.0.0-rc1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/jfreechart-1.0.0-rc1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/jhall.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/junit.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/polgara.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/distributions.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/Jama-1.0.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/jgraph.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/jbcl.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/docking.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/poi-2.5.1-final-20040804.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/ogsa.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/cog-jglobus.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/cog-axis.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/ostermillerutils_1_04_03_for_kaffe.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/Simulation_libs/colt.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/Simulation_libs/JClass.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/Simulation_libs/jcommon.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/Simulation_libs/jfreechart.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/Simulation_libs/mpiJava.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/Simulation_libs/netx.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/Simulation_libs/odeToJava.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/Simulation_libs/SBMLReader.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/Simulation_libs/SBWCore.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/Simulation_libs/jahmm-0.2.6.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/BNJ_libs/jxl.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/BNJ_libs/openjgraph.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/BNJ_libs/skinlf.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/cytoscape/cytoscape.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/caArrayMageom/aspectjrt.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/caArrayMageom/caarray-client.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/caArrayMageom/commons-dbcp.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/caArrayMageom/commons-lang.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/caArrayMageom/commons-pool.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/caArrayMageom/db-ojb-1.0.rc7.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/caArrayMageom/j2ee.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/caArrayMageom/jaxen-full.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/caArrayMageom/mageom-client.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/mageom.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/globusSplash.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/puretls.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/commons-math-1.0.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/weka.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/cglib-nodep-2.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/gominer.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/ensj-30.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/looks-1.3.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/antlr-2.7.5.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/jaxb-rt-1.0-ea.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/NetComponents.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/bcel-5.1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+  </component>
   <component name="uidesigner-configuration">
     <option name="INSTRUMENT_CLASSES" value="true" />
     <option name="COPY_FORMS_RUNTIME_TO_OUTPUT" value="true" />

@@ -38,8 +38,6 @@
             <pathelement location="${parentClasses}"/>
             <fileset dir="${parentLibs}">
                 <include name="**/*.jar"/>
-                <exclude name="BNJ_libs/log4j*.jar"/>
-                <exclude name="caArrayMageom/commons-digester.jar"/>
             </fileset>
         </path>
 

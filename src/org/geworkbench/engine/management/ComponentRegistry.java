@@ -6,6 +6,8 @@ import org.geworkbench.engine.config.PluginDescriptor;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Component registry implementation.
@@ -207,12 +209,15 @@ public class ComponentRegistry {
     private List components;
     // Map from component ID to PluginDescriptor.
     private Map<String, PluginDescriptor> idToDescriptor;
+    // Map from component source name to ComponentReSource.
+    private Map<String, ComponentResource> nameToComponentResource;
 
     private ComponentRegistry() {
         listeners = new TypeMap<Set>();
         synchModels = new HashMap<Class, SynchModel>();
         components = new ArrayList();
         idToDescriptor = new HashMap<String, PluginDescriptor>();
+        nameToComponentResource = new HashMap<String, ComponentResource>();
     }
 
     /**
@@ -489,5 +494,29 @@ public class ComponentRegistry {
 
     public Collection<PluginDescriptor> getAllPluginDescriptors() {
         return idToDescriptor.values();
+    }
+
+    public void initializeComponentResources(String path) {
+        File dir = new File(path);
+        if (!dir.isDirectory()) {
+            System.out.println("Component resource path is not a directory: " + path);
+            return;
+        }
+        File[] files = dir.listFiles();
+        for (int i = 0; i < files.length; i++) {
+            File file = files[i];
+            if (file.isDirectory()) {
+                try {
+                    ComponentResource resource = new ComponentResource(file.getPath());
+                    nameToComponentResource.put(file.getName(), resource);
+                } catch (IOException e) {
+                    System.out.println("Warning: could not initialize component resource '" + file.getName() + "'.");
+                }
+            }
+        }
+    }
+
+    public ComponentResource getComponentResourceByName(String name) {
+        return nameToComponentResource.get(name);
     }
 }

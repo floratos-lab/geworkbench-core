@@ -6,6 +6,7 @@ import org.apache.commons.digester.Digester;
 import org.geworkbench.util.SplashBitmap;
 import org.geworkbench.engine.config.rules.GeawConfigRule;
 import org.geworkbench.engine.config.rules.PluginRule;
+import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParserListener;
 
 import javax.swing.*;
@@ -164,6 +165,11 @@ public class UILauncher implements AnnotationParserListener {
 
         // Read the properties file
         initProperties();
+
+        // Initialize component classloaders
+        System.out.println("Scanning plugins...");
+        ComponentRegistry.getRegistry().initializeComponentResources("components");
+        System.out.println("... scan complete.");
 
         // Redirecting System.out and System.err to a log file
         //        System.setErr(new PrintStream(new LoggingOutputStream(Category.getRoot(), Priority.WARN), true));

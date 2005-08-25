@@ -55,7 +55,7 @@ public class PluginRule extends ObjectCreateRule {
         pluginObjects.add(pginObj);
         // We need to instantiate the plugin descriptor before the various
         // CallMethod rules are called.
-        pginObj.createPlugin(attributes.getValue("id"), attributes.getValue("name"), attributes.getValue("class"));
+        pginObj.createPlugin(attributes.getValue("id"), attributes.getValue("name"), attributes.getValue("class"), attributes.getValue("source"));
     }
 
     /**

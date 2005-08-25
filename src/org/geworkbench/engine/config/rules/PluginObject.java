@@ -120,10 +120,11 @@ public class PluginObject {
      * @param id        Id to be used for the new plugin.
      * @param name      Name to be used for the new plugin.
      * @param className Class name for the new plugin.
+     * @param resourceName Resource from which to load the plugin.
      */
-    public void createPlugin(String id, String name, String className) {
-        compDes = new PluginDescriptor(className, id, name);
-        Debug.debug("PluginObject::createPlugIn --> Creating id = " + id + " name = " + name + " className = " + className);
+    public void createPlugin(String id, String name, String className, String resourceName) {
+        compDes = new PluginDescriptor(className, id, name, resourceName);
+        Debug.debug("PluginObject::createPlugIn --> Creating id = " + id + " name = " + name + " className = " + className + " resourceName = " + resourceName);
         PluginRegistry.addPlugin(compDes);
         // Digest component descriptor
         try {

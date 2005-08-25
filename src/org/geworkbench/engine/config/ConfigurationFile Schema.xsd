@@ -32,6 +32,11 @@
                 <xs:documentation>Display name for the component.</xs:documentation>
             </xs:annotation>
         </xs:attribute>
+        <xs:attribute name="source" type="xs:string" use="optional">
+            <xs:annotation>
+                <xs:documentation>Package source for the component.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
         <xs:attribute name="class" type="xs:anyURI" use="required">
             <xs:annotation>
                 <xs:documentation>Pointer to the .class file for the visual compoent at hand.</xs:documentation>

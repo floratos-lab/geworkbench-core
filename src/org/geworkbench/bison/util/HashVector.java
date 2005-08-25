@@ -18,10 +18,20 @@ import java.util.Vector;
  */
 public class HashVector <K,V> extends HashMap<K, Vector<V>> {
     /**
+     * AM -
+     *
      * This will enforce that we don't put in duplicate items for a key. Would be more elegant
      * to use the HashHashSet but I think creating so many HashSets is too heavy weight since we
      * create so many of them. We lose a little bit of speed here but I don't think it's too bad
      * because the Vectors here contain very few objects.
+     *
+     * watkin -
+     *
+     * I find this to be prohibitively slow. Linear search is unacceptable for an 'add' operation.
+     * Adding 50,000 markers to a CSMarkerVector takes many minutes.
+     * I think there are two potentital solutions for this:
+     * 1) Do a full, proper map implementation backed by a Set rather than by a Vector.
+     * 2) Don't enforce uniqueness at this low level.
      */
     boolean uniqueItems = false;
 

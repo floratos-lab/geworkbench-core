@@ -1,8 +1,8 @@
 package org.geworkbench.engine.config;
 
-import org.geworkbench.util.BaseRuntimeException;
 import org.geworkbench.util.Debug;
 import org.geworkbench.engine.management.ComponentRegistry;
+import org.geworkbench.engine.management.ComponentResource;
 import org.geworkbench.engine.config.rules.MalformedMenuItemException;
 
 import javax.help.HelpSet;
@@ -94,19 +94,29 @@ public class PluginDescriptor extends IdentifiableImpl {
      * and assignes to it the
      * designated id and name.
      *
-     * @param pluginClassPath A string containing the fully qualified class file
-     *                        path name.
+     * @param className A string containing the fully qualified class name.
      * @param someID          Assigned id.
      * @param someName        Assigned name.
      */
-    public PluginDescriptor(String pluginClassPath, String someID, String someName) {
+    public PluginDescriptor(String className, String someID, String someName, String resourceName) {
         super(someID, someName);
-        this.pluginClassPath = pluginClassPath;
+        this.pluginClassPath = className;
+        ComponentResource resource = null;
+        if (resourceName != null) {
+            resource = ComponentRegistry.getRegistry().getComponentResourceByName(resourceName);
+            if (resource == null) {
+                System.out.println("Warning: Resource '" + resourceName + "' for component '" + someName + "' not found.");
+            }
+        }
         try {
-            pluginClass = Class.forName(pluginClassPath);
+            if (resource == null) {
+                pluginClass = Class.forName(className);
+            } else {
+                pluginClass = resource.getClassLoader().loadClass(className);
+            }
             instantiate();
         } catch (ClassNotFoundException e) {
-            throw new org.geworkbench.util.BaseRuntimeException("Could not instantiate plugin: " + pluginClassPath, e);
+            throw new org.geworkbench.util.BaseRuntimeException("Could not instantiate plugin: " + className, e);
         }
     }
 
