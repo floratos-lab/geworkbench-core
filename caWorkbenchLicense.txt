@@ -2,25 +2,33 @@ caWorkBench2.0
  
  
 SOFTWARE LICENSE AGREEMENT
+
 Copyright 2004-2005 COLUMBIA University. 
+
 This software was developed by Columbia University in conjunction with First Genetic 
 Trust and the National Cancer Institute, and so to the extent government employees are 
 co-authors, any rights in such works shall be subject to Title 17 of the United States Code, 
 section 105.
+
 Redistribution and use in source and binary forms, with or without modification, are 
 permitted provided that the following conditions are met: 
+
 1. Redistributions of source code must retain the above copyright notice. Redistributions in 
 binary form must reproduce the above copyright notice, this list of conditions and the 
 following disclaimer in the documentation and/or other materials provided with the 
 distribution. 
+
 2. The end-user documentation included with the redistribution, if any, must include the 
 following acknowledgment: 
-"This product includes software developed by the Columbia University, First 
-Genetic Trust and the National Cancer Institute." 
+
+"This product includes software developed by the Columbia University, First Genetic Trust 
+and the National Cancer Institute." 
+
 If no such end-user documentation is to be included, this acknowledgment shall appear in 
 the software itself, wherever such third-party acknowledgments normally appear. 
 3. This license does not authorize the incorporation of this software into any proprietary 
 programs. 
+
 
 4. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED  WARRANTIES, (INCLUDING, BUT
 NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE) 
@@ -31,19 +39,25 @@ WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  OTHERWI
 IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-5.Below is the list of all third party softwares used in caWorkbench and their license information.
+5.Below is the list of all third party software used in caWorkbench and their license information.
 
-This product includes software developed by the Apache Software Foundation 
-(http://www.apache.org/). Batik, Xerces, and Xalan are part of Apache XML project. Byte Code 
-Engineering Library, POI, Jakarta Commons are part of Jakarta project, Axis is part of 
-Apache Web Services project. Log4J is part of Apache Logging Services project. 
-ObJectRelationalBridge is part of the Apache DB project.   
+
+This product includes software developed by the Apache Software Foundation. Batik, Xerces,
+and Xalan are part of Apache XML project. Byte Code Engineering Library, POI, Jakarta Commons 
+are part of Jakarta project, Axis is part of Apache Web Services project. Log4J is part of 
+Apache Logging Services project. ObJectRelationalBridge is part of the Apache DB project.   
 All aforementioned Apache projects are trademarks of The Apache Software Foundation. For 
 further open source licensing issues pertaining to Apache Software Foundation, visit:
--	http://www.apache.org/LICENSE 
+	http://www.apache.org/LICENSE 
 
 
-This product includes following softwares: 
+This product includes software developed by NCI Center for Bioinformatics (NCICB). caBIO is part of
+caCORE project. caArrary is cancer array informatics project. For further information, visit:
+http://ncicb.nci.nih.gov/core/caBIO/technical_resources/core_jar/license
+http://ncicb.nci.nih.gov/download/caarraylicense.jsp  
+
+
+This product includes following software: 
 Cytoscape by the Institute for Systems Biology, University of California at San Diego, Memorial 
 Sloan-Kettering Cancer Center and Institut Pasteur.
 NetX by J. Maxwell, ODE For Java by Tim Schmidt.
@@ -53,14 +67,12 @@ BioJava by BioJava.org.
 JSCi by Mark Hale. 
 Ensemble for Java by the Sanger Institute and the European Bioinformatics Institute. 
 JGraph by JGraph Ltd. 
-
-Those softwares are licencsed under Lesser General Public License. For more information, 
+Those software is licencsed under Lesser General Public License. For more information, 
 visit:
-
 http://www.gnu.org/copyleft/lesser.html
 
-	
-This product includes following softwares: 
+
+This product includes following software: 
 Bayesian Network tools in Java by Kansas State University.
 Java Hidden Markov Models (JAHMM) by Jean-Marc François.
 JFreeChart by David Gilbert.
@@ -70,7 +82,7 @@ Those software are licensing under  General Public License. For more information
 http://www.gnu.org/copyleft/gpl.html
 
 
-This product includes following softwares: 
+This product includes following software: 
 ArrayExpress by the European Bioinformatics Institute.
 Ogsa from Globus Alliance.
 JDOM by Jason Hunter and Brett McLaughlin.
@@ -79,22 +91,20 @@ PureTLS by Eric Rescorla.
 SkinLF by Frédéric Lavigne.
 Jaxen by The Werken Company.
 Dom4J by MetaStuff, Ltd.
-Piccolo by the University of Maryland.
- 
+Piccolo by the University of Maryland. 
 Those software are licensing under BSD or BSD style License. For more information, 
 visit:
- http://www.gnu.org/philosophy/license-list.html#OriginalBSD
+http://www.gnu.org/philosophy/license-list.html#OriginalBSD
 
 
 This product includes following public domain softwares: 
-
 AntLR by Terence Parr.
 Distributions by the University of Edinburgh
 Java Matrix Package by MathWorks and NIST.
+SplashBitmap by  Kai Blankenhorn
+
  
-
-This product includes following softwares: 
-
+This product includes following software: 
 AspectJ by the Eclipse Foundation.
 JUnit by Erich Gamma and Kent Beck.
 AntLR by Terence Parr.
@@ -103,12 +113,13 @@ Java Matrix Package by MathWorks and NIST.
 WSDL4j by IBM, Inc.
 
 Those software are licensing under Common Public License. For more information, visit:
- http://www.eclipse.org/legal/cpl-v10.html
+http://www.eclipse.org/legal/cpl-v10.html
 
 
 This product includes following software: 
 Eleritec Docking Framework by Marius. This software is under MIT license. For more information, 
 visit: http://www.eleritec.net/
+
 
 This product includes following software: 
 NetComponents by Original Reusable Objects, which is under it own license.  For more information, 
