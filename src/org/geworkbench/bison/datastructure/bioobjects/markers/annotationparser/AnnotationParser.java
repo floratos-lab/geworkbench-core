@@ -13,6 +13,8 @@ import java.io.*;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
+import org.geworkbench.engine.config.UILauncher;
+import java.util.Vector;
 
 public class AnnotationParser {
 
@@ -20,15 +22,14 @@ public class AnnotationParser {
      * <p>Title: Sequence and Pattern Plugin</p>
      * <p>Description:This Class is for retrive Information from affy annotation file and CABIO server </p>
      * <p>This program used CABIO server therefore requires  a security policy file for the vertual machine when runing.
-     * eg. "-Djava.security.policy= java.policy" as a virtual machine parameter </p>
+     *  eg. "-Djava.security.policy= java.policy" as a virtual machine parameter </p>
      * <p> requires CABIO.jar.</p>
      * <p>download "HG_U95Av2_annot.csv" from affymatrix website to the root folder. or when you create this class,
-     * use the file name as the parametor for the constructer.</p>
+     *  use the file name as the parametor for the constructer.</p>
      * <p>When you first run this program it will be slow because it will parse the datafile and generate
      * some indx data into another file</p>
      * <p>Copyright: Copyright (c) 2003</p>
      * <p>Company: Califano lab</p>
-     *
      * @author Xuegong Wang
      * @version 1.5
      */
@@ -46,10 +47,11 @@ public class AnnotationParser {
 
     public static HashMap affyIDs = new HashMap(); // the genes or the array
 
-    //    static ArrayList cols = new ArrayList(); //the place to store column names about a gene
+//    static ArrayList cols = new ArrayList(); //the place to store column names about a gene
     static String chipType = ""; //default;
     final static String chiptyemapfilename = "chiptypeMap.txt";
-    private static String systempDir = System.getProperty("temporary.files.directory");
+    private static String systempDir = System.getProperty(
+        "temporary.files.directory");
     public final static String tmpDir;
 
     //static String fname = "HG_U95Av2_annot.csv";
@@ -57,15 +59,8 @@ public class AnnotationParser {
     static File indx = null;
     static Gotable goes = null;
 
-    private static AnnotationParserListener listener = null;
-
-    public static void setListener(AnnotationParserListener listener) {
-        AnnotationParser.listener = listener;
-    }
-
     public static HashMap chiptypeMap = new HashMap();
     public static HashMap indexfileMap = new HashMap();
-
     public static String getChipType() {
         return chipType;
     }
@@ -74,7 +69,8 @@ public class AnnotationParser {
         if (systempDir == null) {
             systempDir = "temp" + File.separator + "GEAW";
         }
-        tmpDir = systempDir + File.separator + "annotationParser/";
+        tmpDir = systempDir + File.separator +
+            "annotationParser/";
 
         File dir = new File(tmpDir);
         if (!dir.exists()) {
@@ -82,7 +78,9 @@ public class AnnotationParser {
 
         }
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(AnnotationParser.class.getResourceAsStream(chiptyemapfilename))); //predefined
+        BufferedReader br = new BufferedReader(new InputStreamReader(
+
+            AnnotationParser.class.getResourceAsStream(chiptyemapfilename))); //predefined
         try {
             String str = br.readLine();
             while (str != null) {
@@ -92,9 +90,12 @@ public class AnnotationParser {
                 str = br.readLine();
             }
             br.close();
-            File temp = new File(tmpDir + chiptyemapfilename);
+            File temp = new File(tmpDir +
+                                 chiptyemapfilename);
             if (temp.exists()) {
-                BufferedReader br2 = new BufferedReader(new FileReader(temp)); //learned chiptype
+                BufferedReader br2 = new BufferedReader(new
+                    FileReader(temp
+                    )); //learned chiptype
                 str = br2.readLine();
                 while (str != null) {
                     String[] data = str.split(",");
@@ -104,7 +105,8 @@ public class AnnotationParser {
                 br2.close();
             }
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
         setChipType("HG_U95Av2");
@@ -114,8 +116,10 @@ public class AnnotationParser {
     public static void setChipType(String chiptype) {
         if (chiptypeMap.containsValue(chiptype)) {
             setType(chiptype);
-        } else {
-            JOptionPane.showMessageDialog(null, "No such format found in database");
+        }
+        else {
+            JOptionPane.showMessageDialog(null,
+                                          "No such format found in database");
 
         }
 
@@ -123,16 +127,20 @@ public class AnnotationParser {
 
     public static void clearAll() throws IOException {
 
-        File temp = new File(tmpDir + chiptyemapfilename);
+        File temp = new File(tmpDir +
+                             chiptyemapfilename);
 
-        for (Iterator it = indexfileMap.entrySet().iterator(); it.hasNext();) {
+        for (Iterator it = indexfileMap.entrySet().iterator();
+             it.hasNext(); ) {
             String file = (String) it.next();
-            File idex = new File(tmpDir + file);
+            File idex = new File(tmpDir +
+                                 file);
             if (idex.exists()) {
                 idex.delete();
             }
             if (file != null) {
-                file = file.substring(0, file.indexOf('.'));
+                file = file.substring(0,
+                                      file.indexOf('.'));
             }
             File path = new File(tmpDir + file + ".go");
             if (path.exists()) {
@@ -149,7 +157,8 @@ public class AnnotationParser {
 
     private static void setType(String chiptype) {
         chipType = chiptype;
-        File datafile = new File(chipType + "_annot.csv");
+        File datafile = new File(chipType +
+                                "_annot.csv");
 
         if (datafile.exists()) { //data file is found
             annoFile = datafile;
@@ -166,26 +175,38 @@ public class AnnotationParser {
                                               " to " + datafile.getAbsolutePath() +
                                               "</html>");
             }*/
-        } else { //data file is not found, search temp folder first.
+        }
+        else { //data file is not found, search temp folder first.
 
 
-            datafile = new File(tmpDir + chipType + "_annot.csv");
+            datafile = new File(tmpDir + chipType +
+                                 "_annot.csv");
 
             if (datafile.exists()) { //data file is found
                 annoFile = datafile;
 
-            } else {
+            }
+            else {
                 try {
 
                     String ur =
 
-                            "http://amdec-bioinfo.cu-genome.org/html/caWorkBench/data/" + chipType + "_annot.csv";
-                    parserUpdate("Downloading data file...");
+                        "http://amdec-bioinfo.cu-genome.org/html/caWorkBench/data/" +
+                        chipType + "_annot.csv";
+                    if (UILauncher.splash.isVisible()) {
+                        UILauncher.splash.setProgressBarString(
+                            "Downloading data file...");
+                    }
+                    ;
+
                     URL url = new URL(ur);
                     InputStream is = url.openStream();
-                    BufferedReader br = new BufferedReader(new InputStreamReader(is));
-                    datafile = new File(tmpDir + chipType + "_annot.csv");
-                    BufferedWriter bwr = new BufferedWriter(new FileWriter(datafile));
+                    BufferedReader br = new BufferedReader(new
+                        InputStreamReader(is));
+                    datafile = new File(tmpDir + chipType +
+                                        "_annot.csv");
+                    BufferedWriter bwr = new BufferedWriter(new
+                        FileWriter(datafile));
                     String s = br.readLine();
                     while (s != null) {
                         bwr.write(s);
@@ -195,13 +216,20 @@ public class AnnotationParser {
                     bwr.close();
                     br.close();
                     setType(chipType);
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
 
                     File d = new File(tmpDir);
                     if (!d.exists()) {
                         d.mkdir();
                     }
-                    JOptionPane.showMessageDialog(null, "<html>Can't find file " + datafile.getName() + "<br>Please download " + datafile.getName() + " to " + d.getAbsolutePath() + "</html>");
+                    JOptionPane.showMessageDialog(null,
+                                                  "<html>Can't find file " +
+                                                  datafile.getName() +
+                                                  "<br>Please download " +
+                                                  datafile.getName() +
+                                                  " to " + d.getAbsolutePath() +
+                                                  "</html>");
                     return;
 
                 }
@@ -212,29 +240,39 @@ public class AnnotationParser {
         if (!chiptype.equals("Other") && !chiptype.equals("Genepix")) {
             try {
 
-                String indexfilename = (String) indexfileMap.get(chiptypeMap.get(chiptype));
+                String indexfilename = (String)
+                    indexfileMap.get(chiptypeMap.
+                                     get(chiptype));
 
                 if (indexfilename == null) { //no such file in record
                     indx = createFilewithID();
 
-                } else {
+                }
+                else {
                     indx = new File(tmpDir + indexfilename);
                 }
                 if (indx.exists() && indx.length() > 1) { //if indx file exist and valid
-                    BufferedReader br = new BufferedReader(new FileReader(indx));
+                    BufferedReader br = new BufferedReader(new
+                        FileReader(
+                            indx));
                     if (datafile.exists()) { //datafile is found
                         annoFile = datafile;
 
                         String ver = br.readLine();
                         String lastModified = br.readLine();
-                        //                        File data = new File(chipType + "_annot.csv");
-                        if ((ver == null) || (!ver.equalsIgnoreCase(version)) || (lastModified == null) || (datafile.lastModified() != Long.parseLong(lastModified))) {
+//                        File data = new File(chipType + "_annot.csv");
+                        if ( (ver == null) ||
+                            (!ver.equalsIgnoreCase(version)) ||
+                            (lastModified == null) ||
+                            (datafile.lastModified() !=
+                             Long.parseLong(lastModified))) {
                             br.close();
-                            //                            indx.delete();
-                            //                            indx = new File(tmpDir + chipType + "IndexFile");
+//                            indx.delete();
+//                            indx = new File(tmpDir + chipType + "IndexFile");
                             parse();
 
-                        } else {
+                        }
+                        else {
                             br.close();
                             loadIndx();
                         }
@@ -243,12 +281,13 @@ public class AnnotationParser {
 
                     createGoAffytable();
 
-                } else {
+                }else{
                     parse();
                     createGoAffytable();
                 }
 
-            } catch (Exception ioe) {
+            }
+            catch (Exception ioe) {
                 ioe.printStackTrace();
             }
 
@@ -257,13 +296,18 @@ public class AnnotationParser {
 
     private static File createFilewithID() {
 
-        String tempString = "annotationParser" + RandomNumberGenerator.getID() + ".idx";
+        String tempString = "annotationParser" +
+            RandomNumberGenerator.getID() +
+            ".idx";
         return new File(tmpDir + tempString);
 
     }
 
-    private static void loadIndx() throws HeadlessException, IOException {
-        BufferedReader br = new BufferedReader(new FileReader(indx));
+    private static void loadIndx() throws HeadlessException,
+        IOException {
+        BufferedReader br = new BufferedReader(new
+                                               FileReader(
+            indx));
 
         affyIDs.clear();
         //skip first two lines
@@ -274,47 +318,52 @@ public class AnnotationParser {
             String rows[] = oneline.split("\t\t");
             if (rows.length == 2) {
                 affyIDs.put(rows[0], rows[1]);
-            } else {
-                JOptionPane.showMessageDialog(null, "error in line" + oneline);
+            }
+            else {
+                JOptionPane.showMessageDialog(null,
+                                              "error in line" +
+                                              oneline);
             }
             oneline = br.readLine();
         }
         br.close();
     }
 
-    private static boolean parserUpdate(String text) {
-        if (listener == null) {
-            return false;
-        } else {
-            return listener.annotationParserUpdate(text);
-        }
-    }
-
     static void parse() throws IOException {
 
         String line;
-        boolean backgroundMode = parserUpdate("Creating data index file...");
-        if (!backgroundMode) {
-            JOptionPane.showMessageDialog(null, "<html>Chip type " + chipType + " recognized.<br> We are going to initialize related annotation files<br> </html>");
+        if (!UILauncher.splash.isVisible()) {
+            JOptionPane.showMessageDialog(null, "<html>Chip type "
+                                          + chipType
+                                          + " recognized.<br> We are going to initialize related annotation files<br> </html>");
+
+        }
+        else {
+            UILauncher.splash.setProgressBarString(
+                "Creating data index file...");
         }
         BufferedWriter br = new BufferedWriter(new FileWriter(indx));
-        BufferedReader xin = new BufferedReader(new FileReader(annoFile));
+        BufferedReader xin = new BufferedReader(new FileReader(
+            annoFile));
         line = xin.readLine();
         xin.close();
         System.out.println(indx.getAbsolutePath());
         FileInputStream fileIn = new FileInputStream(annoFile);
-        ProgressMonitorInputStream progressIn = new ProgressMonitorInputStream(null, "Creating index file", fileIn);
+        ProgressMonitorInputStream progressIn = new
+            ProgressMonitorInputStream(null, "Creating index file",
+                                       fileIn);
         InputStreamReader reader = new InputStreamReader(progressIn);
         CSVParse parse = null;
         if (line.startsWith("\"")) {
             parse = new CSVParser(reader);
-        } else {
+        }
+        else {
             parse = new ExcelCSVParser(reader);
 
         }
         LabeledCSVParser parser = new LabeledCSVParser(parse);
 
-        if (backgroundMode) {
+        if (UILauncher.splash.isVisible()) {
 
             progressIn.getProgressMonitor().setMillisToDecideToPopup(10000000);
 
@@ -326,7 +375,10 @@ public class AnnotationParser {
         br.write(time);
         affyIDs.clear();
         while (parser.getLine() != null) {
-            parserUpdate("probes parsed: " + count++);
+            if (UILauncher.splash.isVisible()) {
+                UILauncher.splash.setProgressBarString("probes parsed: " +
+                    count++);
+            }
 
             String id = parser.getValueByLabel("Probe Set ID");
 
@@ -338,7 +390,9 @@ public class AnnotationParser {
         }
         br.close();
 
-        BufferedWriter bw = new BufferedWriter(new FileWriter(new File(tmpDir + chiptyemapfilename), true));
+        BufferedWriter bw = new BufferedWriter(new FileWriter(new
+            File(tmpDir +
+                 chiptyemapfilename), true));
         String pair = (String) chiptypeMap.get(chipType);
         if (pair == null) {
             pair = (String) affyIDs.keySet().iterator().next(); //use the first one as identifyer for the chiptype
@@ -349,6 +403,17 @@ public class AnnotationParser {
         bw.close();
 
         createNewGoTable();
+    }
+
+    public static String getGeneName(String id){
+        String data = (String)affyIDs.get(id);
+        if (data != null){
+            String[] tokens = data.split("/////");
+            if (tokens.length >= 2){
+                return tokens[1];
+            }
+        }
+        return null;
     }
 
     /**
@@ -412,8 +477,9 @@ public class AnnotationParser {
         }
         if (x.length() < 1) {
             x = " ";
-        } else {
-            //            System.out.println(counter++);
+        }
+        else {
+//            System.out.println(counter++);
         }
         data.append(delim).append(x);
 
@@ -429,12 +495,13 @@ public class AnnotationParser {
         data = data.append(delim).append(unigene);
 
         String locus = parser.getValueByLabel("LocusLink");
-        if (locus == null) {
+        if(locus == null){
             locus = parser.getValueByLabel("Entrez Gene");
         }
         if (locus.equalsIgnoreCase("---")) {
             locus = " ";
-        } else {
+        }
+        else {
             locus = locus.replaceAll(" /// ", "\t");
             locus = locus.replaceAll("---\t", "");
         }
@@ -443,7 +510,8 @@ public class AnnotationParser {
         String protids = parser.getValueByLabel("SwissProt");
         if (protids.equalsIgnoreCase("---")) {
             protids = " ";
-        } else {
+        }
+        else {
             protids = protids.replaceAll(" /// ", "\t");
             protids = protids.replaceAll("---\t", "");
         }
@@ -462,19 +530,19 @@ public class AnnotationParser {
      * @return String
      */
 
-    //    private static String getData(String[] columns, String fieldName)
-    //{
-    //        String result = "";
-    //        int field = cols.indexOf(fieldName);
-    //        if ( (field >= 0) && (field < columns.length)) {
-    //            result = columns[field].replaceAll("\"", "");
-    //        }
-    //        if (result.trim().equalsIgnoreCase("---") || result.equalsIgnoreCase("")) {
-    //            result = " ";
-    //        }
-    //        return result;
-    //
-    //    }
+//    private static String getData(String[] columns, String fieldName)
+//{
+//        String result = "";
+//        int field = cols.indexOf(fieldName);
+//        if ( (field >= 0) && (field < columns.length)) {
+//            result = columns[field].replaceAll("\"", "");
+//        }
+//        if (result.trim().equalsIgnoreCase("---") || result.equalsIgnoreCase("")) {
+//            result = " ";
+//        }
+//        return result;
+//
+//    }
 
     static public String getInfoAsString(String affyID, int fieldID) {
         String[] result = getInfo(affyID, fieldID);
@@ -495,22 +563,24 @@ public class AnnotationParser {
     }
 
     /**
-     * This method returns required information in different format.
+     *This method returns required information in different format.
      * And it can look for information both  local file.
-     *
-     * @param affyid  affyID as string
+     * @param affyid
+     * affyID as string
      * @param fieldID //defined at FieldName.java
-     *                0 : name(full name)
-     *                1 : title(short name)
-     *                2 : pathway
-     *                3 : Goterms
-     *                4: unigene
-     *                5:LocusLink
-     *                6:swissprotids
-     * @return 0: String[]
-     *         1: String[]
-     *         2: String[]  pathway or null
-     *         3: string[]  Goterms//tab delimited or null
+     *   0 : name(full name)
+     *   1 : title(short name)
+     *   2 : pathway
+     *   3 : Goterms
+     *   4: unigene
+     *   5:LocusLink
+     *   6:swissprotids
+     * @return
+     *   0: String[]
+     *   1: String[]
+     *   2: String[]  pathway or null
+     *   3: string[]  Goterms//tab delimited or null
+     *
      * @author Xuegong Wang
      * @version 1.0
      */
@@ -518,13 +588,14 @@ public class AnnotationParser {
         String data = (String) affyIDs.get(affyID);
         if (data != null) {
             String[] info = null;
-            //            System.out.println(data);
-            //            System.out.println(data.split("/////").length);
+//            System.out.println(data);
+//            System.out.println(data.split("/////").length);
             String inf = data.split("/////")[fieldID];
 
             info = inf.split("\t");
             return info;
-        } else {
+        }
+        else {
             return null;
         }
     }
@@ -540,9 +611,10 @@ public class AnnotationParser {
             String[] gocat = onego.split("//");
             if (gocat.length > 1) {
                 int k = Integer.parseInt(gocat[0].trim()) + 10000000;
-                //                System.out.println(k);
+//                System.out.println(k);
                 gocat[0] = Integer.toString(k).substring(1);
-                result = new String(result + "GO:" + gocat[0] + "::" + gocat[1].trim() + "\t");
+                result = new String(result + "GO:" + gocat[0] + "::" +
+                                    gocat[1].trim() + "\t");
             }
         }
         return result;
@@ -550,7 +622,6 @@ public class AnnotationParser {
 
     /**
      * Get AffyIDs related to Goterm
-     *
      * @param Unigene
      * @return AffyIDs
      */
@@ -560,11 +631,12 @@ public class AnnotationParser {
             createGoAffytable();
         }
         if (goes != null) {
-            String ids = (String) goes.get(goName);
+            Vector<String> ids = (Vector<String>) goes.get(goName);
             if (ids == null) {
                 return null;
-            } else {
-                return ids.split("\t");
+            }
+            else {
+                return (String[])ids.toArray();
             }
         }
         return null;
@@ -585,21 +657,27 @@ public class AnnotationParser {
             String indexfilename = indx.getName();
             if (indexfilename != null) {
 
-                indexfilename = indexfilename.substring(0, indexfilename.indexOf('.'));
+                indexfilename = indexfilename.substring(0,
+                    indexfilename.indexOf('.'));
             }
             File path = new File(tmpDir + indexfilename + ".go");
 
             if (path.exists()) {
                 try {
-                    ObjectInputStream ob = new ObjectInputStream(new FileInputStream(path));
+                    ObjectInputStream ob = new ObjectInputStream(new
+                        FileInputStream(
+                            path));
                     goes = (Gotable) ob.readObject();
                     ob.close();
-                } catch (ClassNotFoundException ex) {
-                    ex.printStackTrace();
-                } catch (IOException ex) {
+                }
+                catch (ClassNotFoundException ex) {
                     ex.printStackTrace();
                 }
-            } else {
+                catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            else {
 
                 createNewGoTable();
 
@@ -610,27 +688,29 @@ public class AnnotationParser {
 
     private static void createNewGoTable() {
         goes = new Gotable();
-        ProgressMonitor progressMonitor = new ProgressMonitor(null, "Processing Go Term index file...", "", 0, affyIDs.keySet().size());
+        ProgressMonitor progressMonitor = new ProgressMonitor(null,
+                "Processing Go Term index file...",
+                "", 0, affyIDs.keySet().size());
         progressMonitor.setProgress(0);
 
         int count = 0;
-        for (Iterator ids = affyIDs.keySet().iterator(); ids.hasNext();) {
+        for (Iterator ids = affyIDs.keySet().iterator(); ids.hasNext();
+                ) {
             String id = (String) ids.next();
             String[] info = getInfo(id, AnnotationParser.GOTERM);
             progressMonitor.setNote("Processing probe:" + count);
             progressMonitor.setProgress(count++);
-            parserUpdate("Processing probe:" + count++);
+            if (UILauncher.splash.isVisible()) {
+                UILauncher.splash.setProgressBarString(
+                        "Processing probe:" + count++);
+            }
             for (int i = 0; i < info.length; i++) {
                 if (info[i] != null) {
                     String goid = info[i].split("::")[0];
-                    //                        String hs = (String) goes.get(info[i]);
-                    String hs = (String) goes.get(goid);
-
-                    if (hs == null) {
-                        hs = "";
-                    }
-                    hs = hs + id + "\t";
-                    //                        goes.put(info[i], hs);
+    //                        String hs = (String) goes.get(info[i]);
+                    Vector<String> hs = ((Vector<String>) goes.get(goid) == null) ? new Vector<String>() : (Vector<String>) goes.get(goid);
+                    hs.add(id);
+    //                        goes.put(info[i], hs);
                     goes.put(goid, hs);
                 }
             }
@@ -643,7 +723,8 @@ public class AnnotationParser {
         String indexfilename = indx.getName();
         if (indexfilename != null) {
 
-            indexfilename = indexfilename.substring(0, indexfilename.indexOf('.'));
+            indexfilename = indexfilename.substring(0,
+                indexfilename.indexOf('.'));
         }
         File path = new File(tmpDir + indexfilename + ".go");
         if (path.exists()) {
@@ -653,21 +734,24 @@ public class AnnotationParser {
         try {
             ObjectOutputStream oj = null;
 
-            oj = new ObjectOutputStream(new FileOutputStream(path));
+            oj = new ObjectOutputStream(new FileOutputStream(
+                path));
             oj.writeObject(goes);
             oj.flush();
             oj.close();
-        } catch (IOException ex1) {
+        }
+        catch (IOException ex1) {
             ex1.printStackTrace();
         }
     }
 
-    static class Gotable extends HashMap implements Serializable {
+    static class Gotable
+        extends HashMap implements Serializable {
     }
 
     public static String matchChipType(String id) {
         String chip = (String) chiptypeMap.get(id);
-        if ((chip != null) && (!chip.equalsIgnoreCase(chipType))) {
+        if ( (chip != null) && (!chip.equalsIgnoreCase(chipType))) {
             setChipType(chip);
         }
         if (indexfileMap.get(id) != null) {
@@ -676,9 +760,11 @@ public class AnnotationParser {
             try {
                 loadIndx();
                 createGoAffytable();
-            } catch (IOException ex) {
+            }
+            catch (IOException ex) {
                 ex.printStackTrace();
-            } catch (HeadlessException ex) {
+            }
+            catch (HeadlessException ex) {
                 ex.printStackTrace();
             }
         }
@@ -687,7 +773,8 @@ public class AnnotationParser {
 
     public static void callUserDefinedAnnotation() throws IOException {
         JFileChooser chooser = new JFileChooser();
-        ExampleFilter filter = new ExampleFilter();
+        ExampleFilter filter = new ExampleFilter
+            ();
         filter.addExtension("csv");
         filter.setDescription("CSV files");
         chooser.setFileFilter(filter);
@@ -699,7 +786,8 @@ public class AnnotationParser {
             indx = createFilewithID();
             parse();
             createGoAffytable();
-        } else {
+        }
+        else {
             return;
         }
     }
