@@ -2,6 +2,7 @@ package org.geworkbench.engine.management;
 
 import java.net.URLClassLoader;
 import java.net.URL;
+import java.net.MalformedURLException;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -55,7 +56,7 @@ public class ComponentResource {
         File classesDir = new File(dir + '/' + CLASSES_DIR);
         List<URL> urls = new ArrayList<URL>();
         if (classesDir.exists()) {
-            URL baseURL = classesDir.toURL();            
+            URL baseURL = classesDir.toURI().toURL();
             urls.add(baseURL);
             // Create ClassSearcher based on classes path
             classSearcher = new ClassSearcher(new URL[] {baseURL});
