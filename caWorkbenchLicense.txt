@@ -52,7 +52,7 @@ further open source licensing issues pertaining to Apache Software Foundation, v
 
 
 This product includes software developed by NCI Center for Bioinformatics (NCICB). caBIO is part of
-caCORE project. caArrary is cancer array informatics project. For further information, visit:
+caCORE project. caArrary is cancer array informatics project. For more information, visit:
 http://ncicb.nci.nih.gov/core/caBIO/technical_resources/core_jar/license
 http://ncicb.nci.nih.gov/download/caarraylicense.jsp  
 
