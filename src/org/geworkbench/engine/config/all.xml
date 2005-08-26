@@ -65,9 +65,8 @@
 	<plugin id="MeanVarianceNormalizer" name="Mean Variance Normalizer" class="org.geworkbench.components.normalization.MarkerMeanVarianceNormalizer" source="normalization"/>
 	<plugin id="QuantileNormalizer" name="Quantile Normalizer" class="org.geworkbench.components.normalization.QuantileNormalizer" source="normalization"/>
 	<plugin id="HouseKeepingGeneNormalizer" name="HouseKeeping Genes Normalizer" class="org.geworkbench.components.normalization.HouseKeepingGeneNormalizer" source="normalization"/>
- <plugin id="GenepixFlagsFilter" name="Genepix Flag Filter" class="org.geworkbench.components.filtering.GenepixFlagsFilter"/>
-
-        <plugin id="missingValuesFilter" name="Missing Values Filter" class="org.geworkbench.components.filtering.MissingValuesFilter" source="filtering"/>
+	<plugin id="GenepixFlagsFilter" name="Genepix Flag Filter" class="org.geworkbench.components.filtering.GenepixFlagsFilter" source="filtering"/>
+	<plugin id="missingValuesFilter" name="Missing Values Filter" class="org.geworkbench.components.filtering.MissingValuesFilter" source="filtering"/>
 	<plugin id="deviationFilter" name="Deviation Filter" class="org.geworkbench.components.filtering.DeviationBasedFilter" source="filtering"/>
 	<plugin id="expressionThreshold" name="Expression Threshold Filter" class="org.geworkbench.components.filtering.ExpressionThresholdFilter" source="filtering"/>
 	<plugin id="detectionCall" name="Affy Detection Call Filter" class="org.geworkbench.components.filtering.AffyDetectionCallFilter" source="filtering"/>
