@@ -45,7 +45,7 @@ public class AnnotationParser {
     public static final int LOCUSLINK = 5; // LocusLink
     public static final int SWISSPROT = 6; // swissprot
 
-    public static HashMap affyIDs = new HashMap(); // the genes or the array
+    public static HashMap<String, String> affyIDs = new HashMap<String, String>(); // the genes or the array
 
 //    static ArrayList cols = new ArrayList(); //the place to store column names about a gene
     static String chipType = ""; //default;
