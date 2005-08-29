@@ -5,6 +5,7 @@ import org.geworkbench.engine.config.PluginRegistry;
 import org.geworkbench.engine.management.ComponentRegistry;
 
 import java.io.PrintWriter;
+import org.geworkbench.bison.util.RandomNumberGenerator;
 
 /**
  * the wrapper class for Module
@@ -34,6 +35,13 @@ class CasModule extends CasDataType {
         name = n;
         type = t;
         pd = ComponentRegistry.getRegistry().getPluginDescriptorByID(t);
+        /*if it is null, that means it didn't exist before we wanted it.
+        It will NOT show up in the application.
+        */
+//        if (pd == null) {
+//            ComponentRegistry.getRegistry().getAllPluginDescriptors()
+//            pd = new PluginDescriptor(type, RandomNumberGenerator.getID(), name);
+//        }
         var = pd.getPlugin();
     }
 
