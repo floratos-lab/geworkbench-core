@@ -154,7 +154,7 @@
                 <include name="plugins/**/*"/>
                 <include name="caWorkbenchLicense.txt"/>
                 <include name="java.policy"/>
-                <!-- include name="*annot.csv"/ -->
+                <include name="*annot.csv"/>
             </fileset>
             <fileset dir="bin">
                 <include name="build.xml"/>
