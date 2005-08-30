@@ -21,12 +21,15 @@ import java.util.Vector;
  * @author Adam Margolin
  * @version 3.0
  */
-public class CSMarkerVector extends CSSequentialItemList<DSGeneMarker> implements DSItemList<DSGeneMarker> {
+public class CSMarkerVector extends CSSequentialItemList<DSGeneMarker> implements
+        DSItemList<DSGeneMarker> {
 
     // watkin -- changed these hashvectors to not enforce uniqueness. They were slow to the point of unusability.
     // Uniqueness is not a requirement of these data structures anyways.
-    HashVector<Integer, DSGeneMarker> geneIdMap = new HashVector<Integer, DSGeneMarker>(false);
-    HashVector<String, DSGeneMarker> geneNameMap = new HashVector<String, DSGeneMarker>(false);
+    HashVector<Integer,
+            DSGeneMarker> geneIdMap = new HashVector<Integer, DSGeneMarker>(false);
+    HashVector<String,
+            DSGeneMarker> geneNameMap = new HashVector<String, DSGeneMarker>(false);
     boolean mapGeneNames = true;
 
     public CSMarkerVector() {
@@ -41,6 +44,38 @@ public class CSMarkerVector extends CSSequentialItemList<DSGeneMarker> implement
         return super.get(label);
     }
 
+    /**
+     *
+     */
+    //There is a bug related to CSMarkerVector,  similar to the bug listed above.
+    //geneNameMap and geneIDMap in CSMarkerVector always are empty (size =1 or 0)
+    //add a new correctMaps() method in CSMarkerVector to temp fix the probelm.
+    //geneIdMap still is empty.
+
+    public void correctMaps() {
+        geneIdMap.clear();
+        geneNameMap.clear();
+        for (DSGeneMarker item : this) {
+            Integer geneId = new Integer(item.getGeneId());
+            if (geneId != null && geneId.intValue() != -1) {
+                geneIdMap.addItem(geneId, item);
+            }
+
+            if (mapGeneNames) {
+                String geneName = item.getGeneName();
+                String label = item.getLabel();
+                if (geneName != null && (!"---".equals(geneName))) {
+                    if (label != null && geneName.equals("")) {
+                        geneNameMap.addItem(label, item);
+                    } else {
+                        geneNameMap.addItem(geneName, item);
+                    }
+                }
+            }
+
+        }
+    }
+
     public Vector<DSGeneMarker> getMatchingMarkers(String aString) {
         Vector<DSGeneMarker> matchingMarkers = new Vector<DSGeneMarker>();
         DSGeneMarker uniqueKeyMarker = super.get(aString);
@@ -51,6 +86,7 @@ public class CSMarkerVector extends CSSequentialItemList<DSGeneMarker> implement
             Vector<DSGeneMarker> markersSet;
             if (mapGeneNames) {
                 markersSet = geneNameMap.get(aString);
+                int size = geneNameMap.size();
                 if (markersSet != null && markersSet.size() > 0) {
                     for (DSGeneMarker marker : markersSet) {
                         if (!matchingMarkers.contains(marker)) {
@@ -68,7 +104,6 @@ public class CSMarkerVector extends CSSequentialItemList<DSGeneMarker> implement
                         }
                     }
                 }
-
 
             }
         } catch (Exception e) {
@@ -118,9 +153,12 @@ public class CSMarkerVector extends CSSequentialItemList<DSGeneMarker> implement
 
                     if (mapGeneNames) {
                         String geneName = item.getGeneName();
+                        String label = item.getLabel();
                         if (geneName != null && (!"---".equals(geneName))) {
                             geneNameMap.addItem(geneName, item);
+
                         }
+
                     }
                 }
             }
@@ -160,7 +198,8 @@ public class CSMarkerVector extends CSSequentialItemList<DSGeneMarker> implement
     }
 
     public Vector<DSGeneMarker> getMatchingMarkers(DSGeneMarker item) {
-        if (mapGeneNames && (item.getGeneName() != null) && (item.getGeneName().length() > 0)) {
+        if (mapGeneNames && (item.getGeneName() != null) &&
+            (item.getGeneName().length() > 0)) {
             return geneNameMap.get(item.getGeneName());
         } else {
             return geneIdMap.get(new Integer(item.getGeneId()));
