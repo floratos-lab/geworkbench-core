@@ -45,13 +45,13 @@ public interface DSGenepixMarkerValue extends DSMutableMarkerValue {
      *
      * @param flag
      */
-    void setFlag(int flag);
+    void setFlag(String flag);
 
     /**
      * Gets the flag value
      */
 
-    int getFlag();
+    String getFlag();
 
     /**
      * Gets the Channel 1 foreground value

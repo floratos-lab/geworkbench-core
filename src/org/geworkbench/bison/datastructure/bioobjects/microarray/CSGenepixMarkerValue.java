@@ -18,18 +18,24 @@ import org.geworkbench.bison.parsers.NCIParseContext;
  * Implementation of {@link org.geworkbench.bison.model.microarray.GenepixMarkerValue
  * GenepixMarkerValue}.
  */
-public class CSGenepixMarkerValue extends CSMarkerValue implements DSGenepixMarkerValue, Serializable {
+public class CSGenepixMarkerValue extends CSMarkerValue implements
+        DSGenepixMarkerValue, Serializable {
     double ch1f = 0d;
     double ch2f = 0d;
     double ch1b = 0d;
     double ch2b = 0d;
     double ratio = 0d;
     boolean missing = false;
-    int flag = 0;
+    String flag = "0";
     /**
      * Serializable fields.
      */
-    private final static ObjectStreamField[] serialPersistentFields = {new ObjectStreamField("ch1f", double.class), new ObjectStreamField("ch2f", double.class), new ObjectStreamField("ch1b", double.class), new ObjectStreamField("ch2b", double.class), new ObjectStreamField("ratio", double.class)};
+    private final static ObjectStreamField[] serialPersistentFields = {new
+            ObjectStreamField("ch1f", double.class),
+            new ObjectStreamField("ch2f", double.class),
+                             new ObjectStreamField("ch1b", double.class),
+                             new ObjectStreamField("ch2b", double.class),
+                             new ObjectStreamField("ratio", double.class)};
 
     public CSGenepixMarkerValue(double val) {
 
@@ -67,56 +73,65 @@ public class CSGenepixMarkerValue extends CSMarkerValue implements DSGenepixMark
         // latter will be used.
         if (columns.containsKey("F532 Median")) {
             value = columns.get("F532 Median");
-            if (value instanceof Double)
+            if (value instanceof Double) {
                 this.ch1f = ((Double) value).doubleValue();
+            }
         }
 
         if (columns.containsKey("B532 Median")) {
             value = columns.get("B532 Median");
-            if (value instanceof Double)
+            if (value instanceof Double) {
                 this.ch1b = ((Double) value).doubleValue();
+            }
         }
 
         if (columns.containsKey("F635 Median")) {
             value = columns.get("F635 Median");
-            if (value instanceof Double)
+            if (value instanceof Double) {
                 this.ch2f = ((Double) value).doubleValue();
+            }
         }
 
         if (columns.containsKey("B635 Median")) {
             value = columns.get("B635 Median");
-            if (value instanceof Double)
+            if (value instanceof Double) {
                 this.ch2b = ((Double) value).doubleValue();
+            }
         }
 
         if (columns.containsKey("F532 Mean")) {
             value = columns.get("F532 Mean");
-            if (value instanceof Double)
+            if (value instanceof Double) {
                 this.ch1f = ((Double) value).doubleValue();
+            }
         }
 
         if (columns.containsKey("B532 Mean")) {
             value = columns.get("B532 Mean");
-            if (value instanceof Double)
+            if (value instanceof Double) {
                 this.ch1b = ((Double) value).doubleValue();
+            }
         }
 
         if (columns.containsKey("F635 Mean")) {
             value = columns.get("F635 Mean");
-            if (value instanceof Double)
+            if (value instanceof Double) {
                 this.ch2f = ((Double) value).doubleValue();
+            }
         }
 
         if (columns.containsKey("B635 Mean")) {
             value = columns.get("B635 Mean");
-            if (value instanceof Double)
+            if (value instanceof Double) {
                 this.ch2b = ((Double) value).doubleValue();
+            }
         }
 
         if (columns.containsKey("Ratio of Means")) {
             value = columns.get("Ratio of Means");
-            if (value instanceof Double)
+            if (value instanceof Double) {
                 this.ratio = ((Double) value).doubleValue();
+            }
         }
 
         computeSignal();
@@ -142,56 +157,65 @@ public class CSGenepixMarkerValue extends CSMarkerValue implements DSGenepixMark
         // latter will be used.
         if (columns.containsKey("F532 Median")) {
             value = columns.get("F532 Median");
-            if (value instanceof Double)
+            if (value instanceof Double) {
                 this.ch1f = ((Double) value).doubleValue();
+            }
         }
 
         if (columns.containsKey("B532 Median")) {
             value = columns.get("B532 Median");
-            if (value instanceof Double)
+            if (value instanceof Double) {
                 this.ch1b = ((Double) value).doubleValue();
+            }
         }
 
         if (columns.containsKey("F635 Median")) {
             value = columns.get("F635 Median");
-            if (value instanceof Double)
+            if (value instanceof Double) {
                 this.ch2f = ((Double) value).doubleValue();
+            }
         }
 
         if (columns.containsKey("B635 Median")) {
             value = columns.get("B635 Median");
-            if (value instanceof Double)
+            if (value instanceof Double) {
                 this.ch2b = ((Double) value).doubleValue();
+            }
         }
 
         if (columns.containsKey("F532 Mean")) {
             value = columns.get("F532 Mean");
-            if (value instanceof Double)
+            if (value instanceof Double) {
                 this.ch1f = ((Double) value).doubleValue();
+            }
         }
 
         if (columns.containsKey("B532 Mean")) {
             value = columns.get("B532 Mean");
-            if (value instanceof Double)
+            if (value instanceof Double) {
                 this.ch1b = ((Double) value).doubleValue();
+            }
         }
 
         if (columns.containsKey("F635 Mean")) {
             value = columns.get("F635 Mean");
-            if (value instanceof Double)
+            if (value instanceof Double) {
                 this.ch2f = ((Double) value).doubleValue();
+            }
         }
 
         if (columns.containsKey("B635 Mean")) {
             value = columns.get("B635 Mean");
-            if (value instanceof Double)
+            if (value instanceof Double) {
                 this.ch2b = ((Double) value).doubleValue();
+            }
         }
 
         if (columns.containsKey("Ratio of Means")) {
             value = columns.get("Ratio of Means");
-            if (value instanceof Double)
+            if (value instanceof Double) {
                 this.ratio = ((Double) value).doubleValue();
+            }
         }
 
         computeSignal();
@@ -289,7 +313,7 @@ public class CSGenepixMarkerValue extends CSMarkerValue implements DSGenepixMark
         return missing;
     }
 
-    public int getFlag() {
+    public String getFlag() {
         return flag;
     }
 
@@ -297,7 +321,7 @@ public class CSGenepixMarkerValue extends CSMarkerValue implements DSGenepixMark
         missing = isMissing;
     }
 
-    public void setFlag(int flag) {
+    public void setFlag(String flag) {
         this.flag = flag;
     }
 
@@ -309,12 +333,46 @@ public class CSGenepixMarkerValue extends CSMarkerValue implements DSGenepixMark
      * Calculate the signal value from the channel values.
      */
     private void computeSignal() {
-        if (ch2f != ch2b)
+        if (ch2f != ch2b) {
             this.setValue((ch1f - ch1b) / (ch2f - ch2b));
-        else
+        } else {
             this.setValue(ch1f - ch1b);
+        }
         setMissing(false);
     }
+
+    /**
+     *
+     * @return
+     */
+    public void adjustForHousekeepingGenes(double newRatio) {
+        ch1f *= newRatio;
+        ch1b *= newRatio;
+        computeSignal();
+
+
+    }
+
+    /**
+     *
+     * @param csgArray CSGenepixMarkerValue[]
+     */
+    public void adjustForHousekeepingGenes(CSGenepixMarkerValue[] csgArray) {
+            double newch1f = 0d;
+            double newch2f = 0d;
+            double newch1b = 0d;
+            double newch2b = 0d;
+
+            for (CSGenepixMarkerValue csgMarkerValue : csgArray) {
+                newch1f += csgMarkerValue.ch1f;
+                newch2f += csgMarkerValue.ch2f;
+                newch1b += csgMarkerValue.ch1b;
+                newch2b += csgMarkerValue.ch2b;
+            }
+
+
+        }
+
 
     /**
      * This method returns the dimensionality of the marker. E.g., Genotype markers are 2-dimensional

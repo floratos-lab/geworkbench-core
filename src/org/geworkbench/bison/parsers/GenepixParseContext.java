@@ -23,7 +23,9 @@ public class GenepixParseContext implements Serializable {
      * Column datatypes for the columns listed in <code>columnNames</code>
      * in the same order
      */
-    static final String[] columnTypes = {"Integer", "Integer", "Integer", "String", "String", "Integer", "Integer", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Integer", "Integer", "Double", "Double", "Double", "Integer"};
+    //Change Flags Values as String, following the request of Aris.
+
+    static final String[] columnTypes = {"Integer", "Integer", "Integer", "String", "String", "Integer", "Integer", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Integer", "Integer", "Double", "Double", "Double", "String"};
     /**
      * List of the column names (among those available in the Genepix file format and
      * listed in {@link org.geworkbench.bison.parsers.GenepixParseContext#columnNames

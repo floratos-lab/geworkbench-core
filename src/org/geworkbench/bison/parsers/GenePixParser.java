@@ -1,6 +1,7 @@
 package org.geworkbench.bison.parsers;
 
-import org.geworkbench.bison.datastructure.bioobjects.microarray.DSGenepixMarkerValue;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.
+        DSGenepixMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 
 import java.util.*;
@@ -76,6 +77,11 @@ public class GenePixParser {
         columnsToUse = ctu;
     }
 
+    //added for Genepix flags filter.
+    private boolean isFlagged = false;
+    private TreeSet<String> flagsValue= new TreeSet<String>();
+
+
     /**
      * Calculates the number of markers in the dataset
      *
@@ -83,18 +89,21 @@ public class GenePixParser {
      */
     public void process(String line) {
         String token = null;
-        if (line == null)
+        if (line == null) {
             return;
+        }
         if (line.indexOf("F635 Median") < 0) {
-            if (!headerFound)
+            if (!headerFound) {
                 return;
+            }
         } else {
             headerFound = true;
             StringTokenizer st = new StringTokenizer(line, "\t\n");
             while (st.hasMoreTokens()) {
                 token = st.nextToken().trim();
-                if (token.equals("ID") || token.equals("\"ID\""))
+                if (token.equals("ID") || token.equals("\"ID\"")) {
                     accessionIndex = columnOrderIndex;
+                }
                 columnOrderIndex++;
             }
             return;
@@ -111,8 +120,9 @@ public class GenePixParser {
                     return;
                 }
 
-                if (!st.hasMoreTokens())
+                if (!st.hasMoreTokens()) {
                     break;
+                }
             } while (true);
         }
     }
@@ -132,6 +142,8 @@ public class GenePixParser {
     public void reset() {
         headerFound = false;
         columnOrderIndex = 0;
+        isFlagged = false;
+        flagsValue = new TreeSet<String>();
     }
 
     /**
@@ -181,16 +193,18 @@ public class GenePixParser {
      */
     public void parseLine(String line) {
         String token = null;
-        if (line == null)
+        if (line == null) {
             return;
+        }
         // If this is not a column header or a data line, just add it to the
         // experiment info.
         if (line.indexOf("F635 Median") < 0) {
             if (!headerFound) {
                 experimentInfo = experimentInfo.concat("\n" + line);
                 String[] propval = line.split(":");
-                if (propval.length >= 2)
+                if (propval.length >= 2) {
                     props.put(propval[0].toString(), propval[1].toString());
+                }
                 return;
             }
 
@@ -200,8 +214,9 @@ public class GenePixParser {
             StringTokenizer st = new StringTokenizer(line, "\t\n");
             while (st.hasMoreTokens()) {
                 token = st.nextToken().trim();
-                if (token.startsWith("\"") && token.endsWith("\""))
+                if (token.startsWith("\"") && token.endsWith("\"")) {
                     token = token.split("\"")[1];
+                }
                 columnOrderIndex++;
                 if (columnsToUse.contains(token)) {
                     columnOrder.put(new Integer(columnOrderIndex), token);
@@ -214,7 +229,8 @@ public class GenePixParser {
         if (st.hasMoreTokens()) {
             token = st.nextToken().trim();
             int tokenIndex = 1;
-            GenepixParseContext context = new org.geworkbench.bison.parsers.GenepixParseContext(columnsToUse);
+            GenepixParseContext context = new org.geworkbench.bison.parsers.
+                                          GenepixParseContext(columnsToUse);
             Map ctu = context.getColumnsToUse();
             String type = null;
             Object value = null;
@@ -223,24 +239,30 @@ public class GenePixParser {
                 column = (String) columnOrder.get(new Integer(tokenIndex));
                 if (column != null) {
                     type = (String) ctu.get(column);
-                    if (type.equals("String"))
+                    if (type.equals("String")) {
                         value = new String(token.toCharArray());
-                    else if (type.equals("Integer"))
+                    } else if (type.equals("Integer")) {
                         value = Integer.valueOf(token);
-                    else if (type.equals("Double"))
+
+                    } else if (type.equals("Double")) {
                         value = Double.valueOf(token);
-                    else if (type.equals("Character"))
+                    } else if (type.equals("Character")) {
                         value = new Character(token.charAt(0));
-                    if (value != null)
+                    }
+                    if (value != null) {
                         ctu.put(column, value);
+                    }
                 }
 
-                if (!st.hasMoreTokens())
+                if (!st.hasMoreTokens()) {
                     break;
+                }
                 token = st.nextToken().trim();
                 tokenIndex++;
             } while (true);
-            populateValues(ctu, (DSGenepixMarkerValue) microarray.getMarkerValue(markerIndex++));
+            populateValues(ctu,
+                           (DSGenepixMarkerValue) microarray.
+                           getMarkerValue(markerIndex++));
         }
     }
 
@@ -284,43 +306,55 @@ public class GenePixParser {
             }
         }
         if (columns.containsKey("Flags")) {
-          value = columns.get("Flags");
-          if (value instanceof Integer)
-              flag = ((Integer)value).intValue();
-          gmv.setFlag(flag);
-      }
+            value = columns.get("Flags");
+            if (value instanceof String) {
+
+                if(!value.equals("0")){
+                           isFlagged = true;
+                           flagsValue.add((String)value);
+                       }
+
+            }
+            gmv.setFlag((String)value);
+        }
 
         if (columns.containsKey("F532 Mean")) {
             value = columns.get("F532 Mean");
-            if (value instanceof Double)
+            if (value instanceof Double) {
                 ch1f = ((Double) value).doubleValue();
+            }
         }
         if (columns.containsKey("B532 Mean")) {
             value = columns.get("B532 Mean");
-            if (value instanceof Double)
+            if (value instanceof Double) {
                 ch1b = ((Double) value).doubleValue();
+            }
         }
         if (columns.containsKey("F635 Mean")) {
             value = columns.get("F635 Mean");
-            if (value instanceof Double)
+            if (value instanceof Double) {
                 ch2f = ((Double) value).doubleValue();
+            }
         }
         if (columns.containsKey("B635 Mean")) {
             value = columns.get("B635 Mean");
-            if (value instanceof Double)
+            if (value instanceof Double) {
                 ch2b = ((Double) value).doubleValue();
+            }
         }
         if (columns.containsKey("Ratio of Means")) {
             value = columns.get("Ratio of Means");
-            if (value instanceof Double)
+            if (value instanceof Double) {
                 ratio = ((Double) value).doubleValue();
+            }
         }
 
         double val = 0d;
-        if (ch2f != ch2b)
+        if (ch2f != ch2b) {
             val = (ch1f - ch1b) / (ch2f - ch2b);
-        else
+        } else {
             val = (ch1f - ch1b);
+        }
         gmv.setValue(val);
         gmv.setMissing(false);
     }
