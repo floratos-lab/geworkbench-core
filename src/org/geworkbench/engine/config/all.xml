@@ -87,6 +87,7 @@
 		<gui-area name="VisualArea"/>
 	</plugin>
 	<plugin id="visualBuilder" name="visualBuilder" class="org.geworkbench.engine.config.VisualMenu"/>
+    <plugin id="preferences" name="preferences" class="org.geworkbench.engine.config.PreferencesMenu"/>
 	<plugin id="sequenceAlignment" name="Sequence Alignment" class="org.geworkbench.components.alignment.panels.BlastAppComponent" source="alignment">
 		<gui-area name="CommandArea"/>
 	</plugin>

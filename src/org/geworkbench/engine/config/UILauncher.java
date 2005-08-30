@@ -50,6 +50,8 @@ public class UILauncher implements AnnotationParserListener {
 
     public static SplashBitmap splash = null;
     public static final String LOOK_AND_FEEL_FLAG = "-lookandfeel";
+    private static final String DEFAULT_COMPONENTS_DIR = "components";
+    private static final String COMPONENTS_DIR_PROPERTY = "components.dir";
 
     static {
         splash = new org.geworkbench.util.SplashBitmap(SplashBitmap.class.getResource("splashscreen.png"));
@@ -167,8 +169,13 @@ public class UILauncher implements AnnotationParserListener {
         initProperties();
 
         // Initialize component classloaders
+
         System.out.println("Scanning plugins...");
-        ComponentRegistry.getRegistry().initializeComponentResources("components");
+        String componentsDir = System.getProperty(COMPONENTS_DIR_PROPERTY);
+        if (componentsDir == null) {
+            componentsDir = DEFAULT_COMPONENTS_DIR;
+        }
+        ComponentRegistry.getRegistry().initializeComponentResources(componentsDir);
         System.out.println("... scan complete.");
 
         // Redirecting System.out and System.err to a log file

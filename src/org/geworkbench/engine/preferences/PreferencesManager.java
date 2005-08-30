@@ -43,11 +43,16 @@ public class PreferencesManager {
      * if there are any. Also persists the resulting preferences. Only field included in the passed preferences
      * will be filled in. Old fields in the saved preferences that do not appear in the new object supplied here
      * will be dropped.
-     * @param component the component class for these preferences.
+     * @param component the component class for these preferences, or null for global preferences.
      * @param preferences the preferences with all appropriate fields added.
      */
     public void fillPreferences(Class component, Preferences preferences) {
-        String fileName = component.getName() + PREFERENCES_EXTENSION;
+        String fileName;
+        if (component == null) {
+            fileName = GLOBAL_PREFERENCES + PREFERENCES_EXTENSION;
+        } else {
+            fileName = component.getName() + PREFERENCES_EXTENSION;
+        }
         File prefFile = new File(prefDir, fileName);
         if (prefFile.exists()) {
             Preferences oldPreferences = readPreferences(prefFile);
@@ -74,7 +79,12 @@ public class PreferencesManager {
     }
 
     public void savePreferences(Class component, Preferences preferences) {
-        String fileName = component.getName() + PREFERENCES_EXTENSION;
+        String fileName;
+        if (component == null) {
+            fileName = GLOBAL_PREFERENCES + PREFERENCES_EXTENSION;
+        } else {
+            fileName = component.getName() + PREFERENCES_EXTENSION;
+        }
         File prefFile = new File(prefDir, fileName);
         try {
             FileOutputStream fos = new FileOutputStream(prefFile);

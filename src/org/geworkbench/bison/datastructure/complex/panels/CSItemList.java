@@ -73,6 +73,7 @@ public class CSItemList <T extends DSNamed> extends ArrayList<T> implements DSIt
 
     /**
      * Inserts the item at the specified index.
+     * watkin - note: this violates the contract for List-- it does not add if index < size(), but replaces!
      *
      * @param index the index at which to insert the item.
      * @param item  the item to insert.

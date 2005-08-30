@@ -218,7 +218,7 @@
       <module fileurl="file://$PROJECT_DIR$/components/viewers/viewers.iml" filepath="$PROJECT_DIR$/components/viewers/viewers.iml" />
     </modules>
   </component>
-  <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.5" />
+  <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.5 (1)" />
   <component name="RmicSettings">
     <option name="IS_EANABLED" value="false" />
     <option name="DEBUGGING_INFO" value="true" />
