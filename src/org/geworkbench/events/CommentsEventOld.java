@@ -1,6 +1,7 @@
 package org.geworkbench.events;
 
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
+import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.engine.config.events.Event;
 
 /**
@@ -17,12 +18,12 @@ import org.geworkbench.engine.config.events.Event;
 public class CommentsEventOld extends Event {
 
     private String userComments = null;
-    private DSMicroarraySet maSet = null;
+    private DSDataSet dataSet = null;
 
-    public CommentsEventOld(DSMicroarraySet ma, String text) {
+    public CommentsEventOld(DSDataSet ma, String text) {
         super(null);
         userComments = text;
-        maSet = ma;
+        dataSet = ma;
     }
 
     /**
@@ -39,8 +40,8 @@ public class CommentsEventOld extends Event {
      *
      * @return data set on which comments were made
      */
-    public DSMicroarraySet getMicroarray() {
-        return maSet;
+    public DSDataSet getMicroarray() {
+        return dataSet;
     }
 
 }

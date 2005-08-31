@@ -1,7 +1,7 @@
 package org.geworkbench.builtin.projects.comments;
 
-import org.geworkbench.events.CommentsEventOld;
 import org.geworkbench.events.ProjectEvent;
+import org.geworkbench.events.ImageSnapshotEvent;
 import org.geworkbench.engine.management.Publish;
 import org.geworkbench.engine.management.Subscribe;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
@@ -37,7 +37,8 @@ public class CommentsPanel implements VisualPlugin {
     /**
      * The currently selected microarray set.
      */
-    protected DSMicroarraySet maSet = null;
+    protected DSDataSet dataSet = null;
+    protected ImageIcon image = null;
     protected String userComments = DEFAULT_MESSAGE;
     private BorderLayout borderLayout1 = new BorderLayout();
     protected JScrollPane jScrollPane1 = new JScrollPane();
@@ -84,18 +85,25 @@ public class CommentsPanel implements VisualPlugin {
     }
 
     private void commentModified_actionPerformed(DocumentEvent e) {
-        if (e == null || e.getDocument() != commentsTextArea.getDocument() || maSet == null)
+        if (e == null || e.getDocument() != commentsTextArea.getDocument()) {
             return;
+        }
         // No action required if nothing changed.
-        if (commentsTextArea.getText().trim().equals(userComments.trim()))
+        if (commentsTextArea.getText().trim().equals(userComments.trim())) {
             return;
-        maSet.clearName(COMMENTS_ID_STRING);
+        }
         userComments = commentsTextArea.getText();
-        maSet.addNameValuePair(COMMENTS_ID_STRING, userComments);
-        publishCommentsEvent(new org.geworkbench.events.CommentsEventOld(maSet, userComments));
+        if (dataSet != null) {
+            dataSet.clearName(COMMENTS_ID_STRING);
+            dataSet.addNameValuePair(COMMENTS_ID_STRING, userComments);
+            publishCommentsEvent(new org.geworkbench.events.CommentsEventOld(dataSet, userComments));
+        } else if (image != null) {
+            image.setDescription(userComments);
+        }
     }
 
-    @Publish public org.geworkbench.events.CommentsEventOld publishCommentsEvent(org.geworkbench.events.CommentsEventOld event) {
+    @Publish
+    public org.geworkbench.events.CommentsEventOld publishCommentsEvent(org.geworkbench.events.CommentsEventOld event) {
         return event;
     }
 
@@ -105,15 +113,17 @@ public class CommentsPanel implements VisualPlugin {
      *
      * @param e
      */
-    @Subscribe public void receive(ProjectEvent e, Object source) {
+    @Subscribe
+    public void receive(ProjectEvent e, Object source) {
         DSDataSet dataSet = e.getDataSet();
         if (e.getMessage().equals(ProjectEvent.CLEARED)) {
-            maSet = null;
+            this.dataSet = null;
             userComments = DEFAULT_MESSAGE;
-        } else if (dataSet instanceof DSMicroarraySet && dataSet != maSet) {
-            maSet = (DSMicroarraySet) dataSet;
+        } else if (dataSet != this.dataSet) {
+            this.dataSet = dataSet;
+            image = null;
             userComments = DEFAULT_MESSAGE;
-            Object[] values = maSet.getValuesForName(COMMENTS_ID_STRING);
+            Object[] values = this.dataSet.getValuesForName(COMMENTS_ID_STRING);
             if (values != null && values.length > 0) {
                 userComments = (String) values[0];
                 if (userComments.trim().equals(""))
@@ -122,5 +132,12 @@ public class CommentsPanel implements VisualPlugin {
         }
         commentsTextArea.setText(userComments);
         commentsTextArea.setCaretPosition(0);   // For long text.
+    }
+
+    @Subscribe
+    public void receive(ImageSnapshotEvent event, Object source) {
+        image = event.getImage();
+        dataSet = null;
+        commentsTextArea.setText(image.getDescription());
     }
 }

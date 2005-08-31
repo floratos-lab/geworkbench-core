@@ -422,19 +422,20 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
     protected void jProjectTree_mouseClicked(MouseEvent e) {
 
         TreePath path = projectTree.getSelectionPath();
+        path.getLastPathComponent();
         selectedNode = selection.getSelectedNode();
+        ProjectTreeNode clickedNode = (ProjectTreeNode) path.getLastPathComponent();
         // Take action only if a new node is selected.
-        if (path != null && selectedNode != (ProjectTreeNode) path.getLastPathComponent()) {
-            ProjectTreeNode node = (ProjectTreeNode) path.getLastPathComponent();
-            setNodeSelection(node);
+        if (path != null && selectedNode != clickedNode) {
+            setNodeSelection(clickedNode);
         }
-        if ((selectedNode != null) && selectedNode instanceof DataSetSubNode) {
-            DSAncillaryDataSet ds = ((DataSetSubNode) selectedNode)._aDataSet;
-            publishProjectEvent(new ProjectEvent("ProjectNodeOld", null));
+        if ((clickedNode != null) && clickedNode instanceof DataSetSubNode) {
+            DSAncillaryDataSet ds = ((DataSetSubNode) clickedNode)._aDataSet;
+            publishProjectEvent(new ProjectEvent("ProjectNode", null));
         }
-        if ((selectedNode != null) && selectedNode instanceof ImageNode) {
+        if ((clickedNode != null) && clickedNode instanceof ImageNode) {
             if (e.getClickCount() == 1) {
-                publishImageSnapshot(new ImageSnapshotEvent("Image Node Selected", ((ImageNode) selectedNode).image, ImageSnapshotEvent.Action.SHOW));
+                publishImageSnapshot(new ImageSnapshotEvent("Image Node Selected", ((ImageNode) clickedNode).image, ImageSnapshotEvent.Action.SHOW));
             }
         }
     }
