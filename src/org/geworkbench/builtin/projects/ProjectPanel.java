@@ -23,6 +23,7 @@ import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.engine.config.MenuListener;
 import org.geworkbench.engine.config.VisualPlugin;
+import org.geworkbench.engine.preferences.GlobalPreferences;
 import org.geworkbench.events.ImageSnapshotEvent;
 import org.geworkbench.events.MicroarrayNameChangeEvent;
 import org.geworkbench.events.NormalizationEvent;
@@ -99,6 +100,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
     private JMenuItem jRemoveDatasetItem = new JMenuItem();
     private JMenuItem jRemoveSubItem = new JMenuItem();
     private JMenuItem jRenameSubItem = new JMenuItem();
+    private JMenuItem jEditItem = new JMenuItem();
 
     /**
      * added by XQ 4/7/04
@@ -193,11 +195,34 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                 fileRemove_actionPerformed(e);
             }
         });
+        jEditItem.setText("Edit");
+        jEditItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (selection.getSelectedNode() instanceof DataSetNode) {
+                    DSDataSet ds = selection.getDataSet();
+
+                    GlobalPreferences prefs = GlobalPreferences.getInstance();
+                    String editor = prefs.getTextEditor();
+                    if (editor == null) {
+                        System.out.println("No editor configured.");
+                    } else {
+                        String[] args = {editor,  ds.getFile().getAbsolutePath()};
+                        try {
+                            Runtime.getRuntime().exec(args);
+                        } catch (IOException e1) {
+                            System.out.println("Error opening editor:");
+                            e1.printStackTrace();
+                        }
+                    }
+                }
+            }
+        });
 
         dataSetMenu.add(jSaveMenuItem);
         dataSetMenu.addSeparator();
         dataSetMenu.add(jRenameMenuItem);
         dataSetMenu.add(jRemoveDatasetItem);
+        dataSetMenu.add(jEditItem);
 
         dataSetSubMenu.add(jRenameSubItem);
         dataSetSubMenu.add(jRemoveSubItem);
@@ -757,7 +782,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
      */
     public void fileOpenAction(final File[] dataSetFiles, final org.geworkbench.engine.parsers.FileFormat inputFormat, boolean merge) throws org.geworkbench.engine.parsers.InputFileFormatException {
 
-        final boolean mergeFiles = dataSetFiles.length == 1 ? false : merge; 
+        final boolean mergeFiles = dataSetFiles.length == 1 ? false : merge;
         if (inputFormat instanceof DataSetFileFormat) {
 
             //       super.fileOpenAction(dataSetFiles, inputFormat);
@@ -774,13 +799,13 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                     if (dataSetFiles.length == 1) {
                         try {
                             dataSets[0] = ((DataSetFileFormat) inputFormat).
-                                          getDataFile(dataSetFiles[0]);
-                        }  catch (InputFileFormatException iffe) {
-                        // Let the user know that there was a problem parsing the file.
-                        JOptionPane.showMessageDialog(null,
-                            "The input file does not comply with the designated format.",
-                            "Parsing Error", JOptionPane.ERROR_MESSAGE);
-                    }
+                                    getDataFile(dataSetFiles[0]);
+                        } catch (InputFileFormatException iffe) {
+                            // Let the user know that there was a problem parsing the file.
+                            JOptionPane.showMessageDialog(null,
+                                    "The input file does not comply with the designated format.",
+                                    "Parsing Error", JOptionPane.ERROR_MESSAGE);
+                        }
 
                     } else {
                         // watkin - none of the file filters implement the multiple getDataFile method.
@@ -799,13 +824,13 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                             File dataSetFile = dataSetFiles[i];
                             try {
                                 dataSets[i] = ((DataSetFileFormat) inputFormat).
-                                              getDataFile(dataSetFile);
-                            }  catch (InputFileFormatException iffe) {
-                        // Let the user know that there was a problem parsing the file.
-                        JOptionPane.showMessageDialog(null,
-                            "The input file does not comply with the designated format.",
-                            "Parsing Error", JOptionPane.ERROR_MESSAGE);
-                    }
+                                        getDataFile(dataSetFile);
+                            } catch (InputFileFormatException iffe) {
+                                // Let the user know that there was a problem parsing the file.
+                                JOptionPane.showMessageDialog(null,
+                                        "The input file does not comply with the designated format.",
+                                        "Parsing Error", JOptionPane.ERROR_MESSAGE);
+                            }
 
                         }
                         if (mergeFiles) {
