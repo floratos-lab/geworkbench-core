@@ -41,4 +41,15 @@ public class ArrayUtil {
         return col;
     }
 
+    public static <T> void reverse(T[] array) {
+        int n = array.length;
+        int m = n/2;
+        n -= 1;
+        for (int i = 0; i < m; i++) {
+            T t = array[i];
+            array[i] = array[n - i];
+            array[n - i] = t;
+        }
+    }
+
 }
