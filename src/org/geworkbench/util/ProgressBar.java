@@ -12,10 +12,12 @@ import java.util.Observer;
  * Implements an generic progress bar to show status of progress of
  * application components.
  *
- * @author First Genetic Trust
- * @version 1.0
+ * @author manjunath at genomecenter dot columbia dot edu
+ * @version 2.0
  */
-public class ProgressBar extends JDialog {
+
+public class ProgressBar
+    extends JDialog {
     /**
      * Defines a ProgressBar that has bounds and values shown increment from a
      * minimum to a maximum
@@ -65,12 +67,14 @@ public class ProgressBar extends JDialog {
      * Singleton representing a <code>ProgressBar</code> with a specified range
      * This needs to set before using the instance
      */
-    private static ProgressBar boundedProgressBar = new ProgressBar(BOUNDED_TYPE);
+    private static ProgressBar boundedProgressBar = new ProgressBar(
+        BOUNDED_TYPE);
 
     /**
      * Observable class used to track when this progress bar is disposed
      */
-    private class BarObservable extends Observable {
+    private class BarObservable
+        extends Observable {
         public void setChanged() {
             super.setChanged();
         }
@@ -78,7 +82,8 @@ public class ProgressBar extends JDialog {
 
     private BarObservable winDisposed = null;
 
-    private class BarWindowAdapter extends java.awt.event.WindowAdapter {
+    private class BarWindowAdapter
+        extends java.awt.event.WindowAdapter {
         public void windowClosing(java.awt.event.WindowEvent e) {
             winDisposed.setChanged();
             winDisposed.notifyObservers();
@@ -90,13 +95,12 @@ public class ProgressBar extends JDialog {
      * Singleton representing a <code>ProgressBar</code> without a range
      * This needs to set before using the instance
      */
-    private static ProgressBar indeterminateProgressBar = new ProgressBar(INDETERMINATE_TYPE);
+    private static ProgressBar indeterminateProgressBar =
+        new ProgressBar(INDETERMINATE_TYPE);
     JLabel jLabel1 = new JLabel();
     GridLayout gridLayout1 = new GridLayout();
-
     /**
      * Factory method to create one of the two above defined ProgressBar types
-     *
      * @param type type of the <code>ProgressBar</code>
      * @return <code>ProgressBar</code> instance
      */
@@ -106,7 +110,9 @@ public class ProgressBar extends JDialog {
                 boundedProgressBar = new ProgressBar(BOUNDED_TYPE);
             }
             return boundedProgressBar;
-        } else if (type == INDETERMINATE_TYPE) {
+        }
+
+        else if (type == INDETERMINATE_TYPE) {
             if (indeterminateProgressBar.isShowing()) {
                 indeterminateProgressBar = new ProgressBar(INDETERMINATE_TYPE);
             }
@@ -118,9 +124,8 @@ public class ProgressBar extends JDialog {
 
     /**
      * Sets the bounds if type == BOUNDED_TYPE
-     *
      * @param brm <code>BoundedRangeModel</code> encapsulating range and extent
-     *            of values to be used for animation
+     * of values to be used for animation
      */
     public void setBounds(BoundedRangeModel brm) {
         if (type == BOUNDED_TYPE) {
@@ -131,44 +136,48 @@ public class ProgressBar extends JDialog {
     /**
      * Updates the ProgressBar by an amount specified in the <code>
      * BoundedRangeModel</code>
-     *
      * @return status of updation
      */
     public boolean update() {
         if (type == BOUNDED_TYPE) {
-            int inc = ((IncrementModel) jProgressBar.getModel()).getIncrement();
+            int inc = ( (IncrementModel) jProgressBar.getModel()).getIncrement();
             int value = jProgressBar.getValue();
             int nv = value + inc;
             if (nv <= jProgressBar.getMaximum()) {
                 jProgressBar.setValue(value + inc);
                 jProgressBar.setString(Integer.toString(value + inc));
+                ((JPanel)this.getContentPane())
+                        .paintImmediately(((JPanel)this
+                                           .getContentPane()).getVisibleRect());
                 return true;
             }
-
         }
-
-        contentPane.paintImmediately(contentPane.getVisibleRect());
+        ((JPanel)this.getContentPane())
+                .paintImmediately(((JPanel)this
+                                   .getContentPane()).getVisibleRect());
         return false;
     }
 
     /**
      * Updates the ProgressBar to an amount specified
-     *
      * @param value value that the <code>ProgressBar</code> has to be set to
      * @return status of updation if <code>value</code> is
-     *         outside the range in the <code> BoundedRangeModel</code>
+     * outside the range in the <code> BoundedRangeModel</code>
      */
     public boolean updateTo(float value) {
         if (type == BOUNDED_TYPE) {
             if ((int) value <= jProgressBar.getMaximum()) {
                 jProgressBar.setValue((int) value);
                 jProgressBar.setString(Integer.toString((int) value));
+                ((JPanel)this.getContentPane())
+                        .paintImmediately(((JPanel)this
+                                           .getContentPane()).getVisibleRect());
                 return true;
             }
-
         }
-
-        contentPane.paintImmediately(contentPane.getVisibleRect());
+        ((JPanel)this.getContentPane())
+                .paintImmediately(((JPanel)this
+                                   .getContentPane()).getVisibleRect());
         return false;
     }
 
@@ -177,7 +186,9 @@ public class ProgressBar extends JDialog {
      */
     public void start() {
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        this.setLocation((dim.width - this.getWidth()) / 2, (dim.height - this.getHeight()) / 2);
+        this.setLocation(
+            (dim.width - this.getWidth()) / 2,
+            (dim.height - this.getHeight()) / 2);
         this.setVisible(true);
         updateTo(jProgressBar.getMinimum());
     }
@@ -198,7 +209,6 @@ public class ProgressBar extends JDialog {
 
     /**
      * Gets time period of animation
-     *
      * @return time period of animation in milli seconds
      */
     public double getDuration() {
@@ -216,7 +226,6 @@ public class ProgressBar extends JDialog {
 
     /**
      * Sets the title
-     *
      * @param title title of the <code>ProgressBar</code>
      */
     public void setTitle(String title) {
@@ -225,7 +234,6 @@ public class ProgressBar extends JDialog {
 
     /**
      * Sets the message
-     *
      * @param message to be shown on the <code>ProgressBar</code>
      */
     public void setMessage(String message) {
@@ -236,7 +244,6 @@ public class ProgressBar extends JDialog {
     /**
      * Bit to specify if the current value of the <code>ProgressBar</code> has
      * to be printed on the widget. Default is true.
-     *
      * @param show if current value and bounds have to printed
      */
     public void showValues(boolean show) {
@@ -248,7 +255,6 @@ public class ProgressBar extends JDialog {
     /**
      * Constructor for internal creation of instances. Objects of this type can
      * only be obtained by using the <code>create</code> method
-     *
      * @param t type of the <code>ProgressBar</code>
      */
     private ProgressBar(int t) {
@@ -257,7 +263,9 @@ public class ProgressBar extends JDialog {
             type = t;
             jProgressBar.setIndeterminate(false);
             jProgressBar.setStringPainted(true);
-        } else if (t == INDETERMINATE_TYPE) {
+        }
+
+        else if (t == INDETERMINATE_TYPE) {
             type = t;
             jProgressBar.setIndeterminate(true);
             jProgressBar.setStringPainted(false);
@@ -265,7 +273,9 @@ public class ProgressBar extends JDialog {
 
         try {
             jbInit();
-        } catch (Exception e) {
+        }
+
+        catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -273,7 +283,6 @@ public class ProgressBar extends JDialog {
 
     /**
      * Utility method for constructing GUI
-     *
      * @throws Exception exception encountered while GUI construction
      */
     private void jbInit() throws Exception {
@@ -325,9 +334,9 @@ public class ProgressBar extends JDialog {
      * Utility class that encapsulates a step size for the
      * <code>ProgressBar</code> display
      */
-    public static class IncrementModel extends DefaultBoundedRangeModel {
+    public static class IncrementModel
+        extends DefaultBoundedRangeModel {
         private int increment = 0;
-
         public IncrementModel(int value, int extent, int min, int max, int inc) {
             super(value, extent, min, max);
             increment = inc;
