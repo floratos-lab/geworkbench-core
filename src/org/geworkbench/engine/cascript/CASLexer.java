@@ -50,27 +50,28 @@ public CASLexer(LexerSharedInputState state) {
 	caseSensitiveLiterals = true;
 	setCaseSensitive(true);
 	literals = new Hashtable();
-	literals.put(new ANTLRHashString("for", this), new Integer(12));
-	literals.put(new ANTLRHashString("wait", this), new Integer(22));
-	literals.put(new ANTLRHashString("false", this), new Integer(15));
-	literals.put(new ANTLRHashString("print", this), new Integer(24));
-	literals.put(new ANTLRHashString("true", this), new Integer(14));
-	literals.put(new ANTLRHashString("let", this), new Integer(20));
-	literals.put(new ANTLRHashString("void", this), new Integer(21));
+	literals.put(new ANTLRHashString("for", this), new Integer(13));
+	literals.put(new ANTLRHashString("wait", this), new Integer(23));
+	literals.put(new ANTLRHashString("false", this), new Integer(16));
+	literals.put(new ANTLRHashString("print", this), new Integer(25));
+	literals.put(new ANTLRHashString("true", this), new Integer(15));
+	literals.put(new ANTLRHashString("let", this), new Integer(21));
+	literals.put(new ANTLRHashString("void", this), new Integer(22));
 	literals.put(new ANTLRHashString("float", this), new Integer(5));
 	literals.put(new ANTLRHashString("string", this), new Integer(7));
-	literals.put(new ANTLRHashString("continue", this), new Integer(19));
+	literals.put(new ANTLRHashString("continue", this), new Integer(20));
 	literals.put(new ANTLRHashString("bool", this), new Integer(6));
-	literals.put(new ANTLRHashString("function", this), new Integer(17));
-	literals.put(new ANTLRHashString("while", this), new Integer(11));
-	literals.put(new ANTLRHashString("break", this), new Integer(18));
-	literals.put(new ANTLRHashString("new", this), new Integer(23));
-	literals.put(new ANTLRHashString("return", this), new Integer(13));
-	literals.put(new ANTLRHashString("if", this), new Integer(9));
+	literals.put(new ANTLRHashString("function", this), new Integer(18));
+	literals.put(new ANTLRHashString("while", this), new Integer(12));
+	literals.put(new ANTLRHashString("break", this), new Integer(19));
+	literals.put(new ANTLRHashString("datatype", this), new Integer(9));
+	literals.put(new ANTLRHashString("new", this), new Integer(24));
+	literals.put(new ANTLRHashString("return", this), new Integer(14));
+	literals.put(new ANTLRHashString("if", this), new Integer(10));
 	literals.put(new ANTLRHashString("int", this), new Integer(4));
-	literals.put(new ANTLRHashString("public", this), new Integer(16));
+	literals.put(new ANTLRHashString("public", this), new Integer(17));
 	literals.put(new ANTLRHashString("module", this), new Integer(8));
-	literals.put(new ANTLRHashString("else", this), new Integer(10));
+	literals.put(new ANTLRHashString("else", this), new Integer(11));
 }
 
 public Token nextToken() throws TokenStreamException {

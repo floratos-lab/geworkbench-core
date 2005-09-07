@@ -9,7 +9,7 @@ import java.util.Vector;
  * Interpreter routines that is called directly from the tree walker.
  *
  * @author Behrooz Badii - badiib@gmail.com
- * @version $Id: CasInterpreter.java,v 1.6 2005-08-18 20:43:53 bb2122 Exp $
+ * @version $Id: CasInterpreter.java,v 1.7 2005-09-07 19:56:51 bb2122 Exp $
  */
 class CasInterpreter {
     CasSymbolTable symt;
@@ -29,6 +29,7 @@ class CasInterpreter {
     }
 
     //used for variable initialization in the symbol table
+    //modify this for CasDataPlug
     public void putvar(String id, CasDataType type, Vector<CasDataType> indices, CasDataType value) {
         if (indices == null) {
             if (type instanceof CasModule) {
@@ -36,7 +37,14 @@ class CasInterpreter {
                 System.out.println("put in casModule");
                 System.out.println("Name: " + symt.findVar(id).name);
                 System.out.println("Type: " + ((CasModule) symt.findVar(id)).type);
-            } else {
+            }
+            if (type instanceof CasDataPlug) {
+                symt.put(id, new CasDataPlug(id, ((CasDataPlug)type).getType()));
+                System.out.println("put in casDataPlug");
+                System.out.println("Name: " + symt.findVar(id).name);
+                System.out.println("Type: " + ((CasDataPlug) symt.findVar(id)).type);
+            }
+            else {
                 if (type instanceof CasString) {
                     symt.put(id, type.copy());
                 } else if (type instanceof CasDouble) {

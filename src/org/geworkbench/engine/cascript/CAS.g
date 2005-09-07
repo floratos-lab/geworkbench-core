@@ -18,6 +18,7 @@ tokens {
     BOOLSTR = "bool";
     STRING = "string";
     MODULE = "module";
+    DATATYPE = "datatype";
     IFSTR = "if";
     ELSE = "else";
     WHILESTR = "while";
@@ -366,7 +367,7 @@ assignValue
     ;
 
 type:
-    (INT|FLOAT|BOOLSTR|STRING|(MODULE ID)) //you should have dynamic types based on the parsing of the registry here.
+    (INT|FLOAT|BOOLSTR|STRING|(MODULE ID)| (DATATYPE ID)) //you should have dynamic types based on the parsing of the registry here.
     { #type = #([TYPE, "TYPE"], type); }
     ;
 
@@ -563,14 +564,18 @@ CasDataType aindex = null;}
 type returns [CasDataType typereturn]
 {
 typereturn = null;
-boolean ismod = false;
+int isdiff = 0;
 String id = "";
 }
-: #(TYPE (n:primitives | MODULE ID {ismod = true; id = #ID.getText();}))
+: #(TYPE (n:primitives | (MODULE ID {isdiff = 1; id = #ID.getText();}) | (DATATYPE ID {isdiff = 2; id = #ID.getText();})))
 {
-if (ismod) {
+if (isdiff == 1) {
   System.out.println("We got ourselves a type of module with type of " + id);
   typereturn = new CasModule(id);
+}
+else if (isdiff == 2) {
+  System.out.println("We got ourselves a type of datatype with type of " + id);
+  typereturn = new CasDataPlug(id);
 }
 else {
   String temp = n.getText();
@@ -623,13 +628,13 @@ else
 | variable                    { r = new CasBool(true);} //variable declaration ex. int a = 5;
 | #(ASSIGNMENT a=expr b=expr) //remember to extend ipt.assign(a,b) //assignment operation, more complex than it seems
   {r = ipt.assign(a,b);}
-| #(OBJECT_VALUE ID {id = #ID.getText();} ID21:ID)
+| #(OBJECT_VALUE ID {id = #ID.getText();} ID21:ID) //modify all this for CasDataPlug, bring this into the interpreter
   { id2 = ID21.getText();
     r = new CasValue(id, id2, ((CasModule)ipt.symt.findVar(id)));
     System.out.println("we're in object_value");
   }
   //object_value, like a public variable in JAVA ex. genePanel.DataSet
-| #(OBJECT_CALL ID {id = #ID.getText();} ID22:ID arglist = param)
+| #(OBJECT_CALL ID {id = #ID.getText();} ID22:ID arglist = param) //modify all this for CasDataPlug, bring this into the interpreter
   { id2 = ID22.getText();
     r = new CasString("objectcall " + id + "." + id2 + " with arguments ");
     System.out.println("we're in object_call");

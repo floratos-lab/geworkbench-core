@@ -151,6 +151,7 @@ public CASParser(ParserSharedInputState state) {
 			case BOOLSTR:
 			case STRING:
 			case MODULE:
+			case DATATYPE:
 			{
 				type();
 				astFactory.addASTChild(currentAST, returnAST);
@@ -158,13 +159,13 @@ public CASParser(ParserSharedInputState state) {
 				_loop79:
 				do {
 					if ((LA(1)==LEFTBRACKET)) {
-						AST tmp77_AST = null;
-						tmp77_AST = astFactory.create(LT(1));
-						astFactory.addASTChild(currentAST, tmp77_AST);
+						AST tmp79_AST = null;
+						tmp79_AST = astFactory.create(LT(1));
+						astFactory.addASTChild(currentAST, tmp79_AST);
 						match(LEFTBRACKET);
-						AST tmp78_AST = null;
-						tmp78_AST = astFactory.create(LT(1));
-						astFactory.addASTChild(currentAST, tmp78_AST);
+						AST tmp80_AST = null;
+						tmp80_AST = astFactory.create(LT(1));
+						astFactory.addASTChild(currentAST, tmp80_AST);
 						match(RIGHTBRACKET);
 					}
 					else {
@@ -187,9 +188,9 @@ public CASParser(ParserSharedInputState state) {
 			}
 			}
 			}
-			AST tmp79_AST = null;
-			tmp79_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp79_AST);
+			AST tmp81_AST = null;
+			tmp81_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp81_AST);
 			match(ID);
 			argDeclarationList();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -240,46 +241,60 @@ public CASParser(ParserSharedInputState state) {
 			switch ( LA(1)) {
 			case INT:
 			{
-				AST tmp81_AST = null;
-				tmp81_AST = astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp81_AST);
+				AST tmp83_AST = null;
+				tmp83_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp83_AST);
 				match(INT);
 				break;
 			}
 			case FLOAT:
 			{
-				AST tmp82_AST = null;
-				tmp82_AST = astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp82_AST);
+				AST tmp84_AST = null;
+				tmp84_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp84_AST);
 				match(FLOAT);
 				break;
 			}
 			case BOOLSTR:
 			{
-				AST tmp83_AST = null;
-				tmp83_AST = astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp83_AST);
+				AST tmp85_AST = null;
+				tmp85_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp85_AST);
 				match(BOOLSTR);
 				break;
 			}
 			case STRING:
 			{
-				AST tmp84_AST = null;
-				tmp84_AST = astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp84_AST);
+				AST tmp86_AST = null;
+				tmp86_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp86_AST);
 				match(STRING);
 				break;
 			}
 			case MODULE:
 			{
 				{
-				AST tmp85_AST = null;
-				tmp85_AST = astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp85_AST);
+				AST tmp87_AST = null;
+				tmp87_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp87_AST);
 				match(MODULE);
-				AST tmp86_AST = null;
-				tmp86_AST = astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp86_AST);
+				AST tmp88_AST = null;
+				tmp88_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp88_AST);
+				match(ID);
+				}
+				break;
+			}
+			case DATATYPE:
+			{
+				{
+				AST tmp89_AST = null;
+				tmp89_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp89_AST);
+				match(DATATYPE);
+				AST tmp90_AST = null;
+				tmp90_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp90_AST);
 				match(ID);
 				}
 				break;
@@ -312,9 +327,9 @@ public CASParser(ParserSharedInputState state) {
 		AST isvoid_AST = null;
 		
 		try {      // for error handling
-			AST tmp87_AST = null;
-			tmp87_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp87_AST);
+			AST tmp91_AST = null;
+			tmp91_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp91_AST);
 			match(VOID);
 			isvoid_AST = (AST)currentAST.root;
 			isvoid_AST = (AST)astFactory.make( (new ASTArray(2)).add(astFactory.create(TYPE,"TYPE")).add(isvoid_AST));
@@ -346,65 +361,66 @@ public CASParser(ParserSharedInputState state) {
 			case BOOLSTR:
 			case STRING:
 			case MODULE:
+			case DATATYPE:
 			{
 				type();
 				astFactory.addASTChild(currentAST, returnAST);
-				AST tmp89_AST = null;
-				tmp89_AST = astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp89_AST);
+				AST tmp93_AST = null;
+				tmp93_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp93_AST);
 				match(ID);
 				{
-				_loop165:
+				_loop166:
 				do {
 					if ((LA(1)==LEFTBRACKET)) {
-						AST tmp90_AST = null;
-						tmp90_AST = astFactory.create(LT(1));
-						astFactory.addASTChild(currentAST, tmp90_AST);
+						AST tmp94_AST = null;
+						tmp94_AST = astFactory.create(LT(1));
+						astFactory.addASTChild(currentAST, tmp94_AST);
 						match(LEFTBRACKET);
-						AST tmp91_AST = null;
-						tmp91_AST = astFactory.create(LT(1));
-						astFactory.addASTChild(currentAST, tmp91_AST);
+						AST tmp95_AST = null;
+						tmp95_AST = astFactory.create(LT(1));
+						astFactory.addASTChild(currentAST, tmp95_AST);
 						match(RIGHTBRACKET);
 					}
 					else {
-						break _loop165;
+						break _loop166;
 					}
 					
 				} while (true);
 				}
 				{
-				_loop169:
+				_loop170:
 				do {
 					if ((LA(1)==COMMA)) {
 						match(COMMA);
 						type();
 						astFactory.addASTChild(currentAST, returnAST);
-						AST tmp93_AST = null;
-						tmp93_AST = astFactory.create(LT(1));
-						astFactory.addASTChild(currentAST, tmp93_AST);
+						AST tmp97_AST = null;
+						tmp97_AST = astFactory.create(LT(1));
+						astFactory.addASTChild(currentAST, tmp97_AST);
 						match(ID);
 						{
-						_loop168:
+						_loop169:
 						do {
 							if ((LA(1)==LEFTBRACKET)) {
-								AST tmp94_AST = null;
-								tmp94_AST = astFactory.create(LT(1));
-								astFactory.addASTChild(currentAST, tmp94_AST);
+								AST tmp98_AST = null;
+								tmp98_AST = astFactory.create(LT(1));
+								astFactory.addASTChild(currentAST, tmp98_AST);
 								match(LEFTBRACKET);
-								AST tmp95_AST = null;
-								tmp95_AST = astFactory.create(LT(1));
-								astFactory.addASTChild(currentAST, tmp95_AST);
+								AST tmp99_AST = null;
+								tmp99_AST = astFactory.create(LT(1));
+								astFactory.addASTChild(currentAST, tmp99_AST);
 								match(RIGHTBRACKET);
 							}
 							else {
-								break _loop168;
+								break _loop169;
 							}
 							
 						} while (true);
 						}
 					}
 					else {
-						break _loop169;
+						break _loop170;
 					}
 					
 				} while (true);
@@ -504,6 +520,7 @@ public CASParser(ParserSharedInputState state) {
 			case BOOLSTR:
 			case STRING:
 			case MODULE:
+			case DATATYPE:
 			case IFSTR:
 			case WHILESTR:
 			case FORSTR:
@@ -604,6 +621,7 @@ public CASParser(ParserSharedInputState state) {
 			case BOOLSTR:
 			case STRING:
 			case MODULE:
+			case DATATYPE:
 			{
 				declareStmt();
 				astFactory.addASTChild(currentAST, returnAST);
@@ -677,9 +695,9 @@ public CASParser(ParserSharedInputState state) {
 		AST breakStmt_AST = null;
 		
 		try {      // for error handling
-			AST tmp100_AST = null;
-			tmp100_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp100_AST);
+			AST tmp104_AST = null;
+			tmp104_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp104_AST);
 			match(BREAK);
 			match(SEMICOLON);
 			breakStmt_AST = (AST)currentAST.root;
@@ -698,9 +716,9 @@ public CASParser(ParserSharedInputState state) {
 		AST continueStmt_AST = null;
 		
 		try {      // for error handling
-			AST tmp102_AST = null;
-			tmp102_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp102_AST);
+			AST tmp106_AST = null;
+			tmp106_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp106_AST);
 			match(CONTINUE);
 			match(SEMICOLON);
 			continueStmt_AST = (AST)currentAST.root;
@@ -719,9 +737,9 @@ public CASParser(ParserSharedInputState state) {
 		AST whileStmt_AST = null;
 		
 		try {      // for error handling
-			AST tmp104_AST = null;
-			tmp104_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp104_AST);
+			AST tmp108_AST = null;
+			tmp108_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp108_AST);
 			match(WHILESTR);
 			expressionStmt();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -743,9 +761,9 @@ public CASParser(ParserSharedInputState state) {
 		AST ifStmt_AST = null;
 		
 		try {      // for error handling
-			AST tmp105_AST = null;
-			tmp105_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp105_AST);
+			AST tmp109_AST = null;
+			tmp109_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp109_AST);
 			match(IFSTR);
 			expressionStmt();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -769,9 +787,9 @@ public CASParser(ParserSharedInputState state) {
 		AST returnStmt_AST = null;
 		
 		try {      // for error handling
-			AST tmp106_AST = null;
-			tmp106_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp106_AST);
+			AST tmp110_AST = null;
+			tmp110_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp110_AST);
 			match(RETURNSTR);
 			evaluate();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -792,9 +810,9 @@ public CASParser(ParserSharedInputState state) {
 		AST forstatement_AST = null;
 		
 		try {      // for error handling
-			AST tmp108_AST = null;
-			tmp108_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp108_AST);
+			AST tmp112_AST = null;
+			tmp112_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp112_AST);
 			match(FORSTR);
 			forLeft();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -820,9 +838,9 @@ public CASParser(ParserSharedInputState state) {
 		AST waitStmt_AST = null;
 		
 		try {      // for error handling
-			AST tmp109_AST = null;
-			tmp109_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp109_AST);
+			AST tmp113_AST = null;
+			tmp113_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp113_AST);
 			match(WAIT);
 			eval();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -843,9 +861,9 @@ public CASParser(ParserSharedInputState state) {
 		AST printStmt_AST = null;
 		
 		try {      // for error handling
-			AST tmp111_AST = null;
-			tmp111_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp111_AST);
+			AST tmp115_AST = null;
+			tmp115_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp115_AST);
 			match(PRINT);
 			eval();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -869,7 +887,7 @@ public CASParser(ParserSharedInputState state) {
 			evalTerm();
 			astFactory.addASTChild(currentAST, returnAST);
 			{
-			_loop143:
+			_loop144:
 			do {
 				if ((LA(1)==PLUS||LA(1)==MINUS)) {
 					{
@@ -877,17 +895,17 @@ public CASParser(ParserSharedInputState state) {
 					switch ( LA(1)) {
 					case PLUS:
 					{
-						AST tmp113_AST = null;
-						tmp113_AST = astFactory.create(LT(1));
-						astFactory.makeASTRoot(currentAST, tmp113_AST);
+						AST tmp117_AST = null;
+						tmp117_AST = astFactory.create(LT(1));
+						astFactory.makeASTRoot(currentAST, tmp117_AST);
 						match(PLUS);
 						break;
 					}
 					case MINUS:
 					{
-						AST tmp114_AST = null;
-						tmp114_AST = astFactory.create(LT(1));
-						astFactory.makeASTRoot(currentAST, tmp114_AST);
+						AST tmp118_AST = null;
+						tmp118_AST = astFactory.create(LT(1));
+						astFactory.makeASTRoot(currentAST, tmp118_AST);
 						match(MINUS);
 						break;
 					}
@@ -902,7 +920,7 @@ public CASParser(ParserSharedInputState state) {
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					break _loop143;
+					break _loop144;
 				}
 				
 			} while (true);
@@ -931,6 +949,7 @@ public CASParser(ParserSharedInputState state) {
 			case BOOLSTR:
 			case STRING:
 			case MODULE:
+			case DATATYPE:
 			{
 				declaration();
 				astFactory.addASTChild(currentAST, returnAST);
@@ -1181,9 +1200,9 @@ public CASParser(ParserSharedInputState state) {
 		try {      // for error handling
 			{
 			if ((LA(1)==ELSE) && (_tokenSet_7.member(LA(2)))) {
-				AST tmp122_AST = null;
-				tmp122_AST = astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp122_AST);
+				AST tmp126_AST = null;
+				tmp126_AST = astFactory.create(LT(1));
+				astFactory.makeASTRoot(currentAST, tmp126_AST);
 				match(ELSE);
 				bracestatement();
 				astFactory.addASTChild(currentAST, returnAST);
@@ -1214,18 +1233,18 @@ public CASParser(ParserSharedInputState state) {
 			compare();
 			astFactory.addASTChild(currentAST, returnAST);
 			{
-			_loop129:
+			_loop130:
 			do {
 				if ((LA(1)==OR)) {
-					AST tmp123_AST = null;
-					tmp123_AST = astFactory.create(LT(1));
-					astFactory.makeASTRoot(currentAST, tmp123_AST);
+					AST tmp127_AST = null;
+					tmp127_AST = astFactory.create(LT(1));
+					astFactory.makeASTRoot(currentAST, tmp127_AST);
 					match(OR);
 					compare();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					break _loop129;
+					break _loop130;
 				}
 				
 			} while (true);
@@ -1246,9 +1265,9 @@ public CASParser(ParserSharedInputState state) {
 		AST id_AST = null;
 		
 		try {      // for error handling
-			AST tmp124_AST = null;
-			tmp124_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp124_AST);
+			AST tmp128_AST = null;
+			tmp128_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp128_AST);
 			match(ID);
 			index();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -1342,14 +1361,14 @@ public CASParser(ParserSharedInputState state) {
 		AST caObj_AST = null;
 		
 		try {      // for error handling
-			AST tmp126_AST = null;
-			tmp126_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp126_AST);
+			AST tmp130_AST = null;
+			tmp130_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp130_AST);
 			match(ID);
 			match(PERIOD);
-			AST tmp128_AST = null;
-			tmp128_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp128_AST);
+			AST tmp132_AST = null;
+			tmp132_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp132_AST);
 			match(ID);
 			{
 			switch ( LA(1)) {
@@ -1438,7 +1457,7 @@ public CASParser(ParserSharedInputState state) {
 				astFactory.addASTChild(currentAST, returnAST);
 				}
 				{
-				_loop160:
+				_loop161:
 				do {
 					if ((LA(1)==COMMA)) {
 						match(COMMA);
@@ -1446,7 +1465,7 @@ public CASParser(ParserSharedInputState state) {
 						astFactory.addASTChild(currentAST, returnAST);
 					}
 					else {
-						break _loop160;
+						break _loop161;
 					}
 					
 				} while (true);
@@ -1486,14 +1505,14 @@ public CASParser(ParserSharedInputState state) {
 		AST caValue_AST = null;
 		
 		try {      // for error handling
-			AST tmp132_AST = null;
-			tmp132_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp132_AST);
+			AST tmp136_AST = null;
+			tmp136_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp136_AST);
 			match(ID);
 			match(PERIOD);
-			AST tmp134_AST = null;
-			tmp134_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp134_AST);
+			AST tmp138_AST = null;
+			tmp138_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp138_AST);
 			match(ID);
 			caValue_AST = (AST)currentAST.root;
 			caValue_AST = (AST)astFactory.make( (new ASTArray(2)).add(astFactory.create(OBJECT_VALUE,"OBJECT_VALUE")).add(caValue_AST));
@@ -1517,14 +1536,14 @@ public CASParser(ParserSharedInputState state) {
 		AST caCall_AST = null;
 		
 		try {      // for error handling
-			AST tmp135_AST = null;
-			tmp135_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp135_AST);
+			AST tmp139_AST = null;
+			tmp139_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp139_AST);
 			match(ID);
 			match(PERIOD);
-			AST tmp137_AST = null;
-			tmp137_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp137_AST);
+			AST tmp141_AST = null;
+			tmp141_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp141_AST);
 			match(ID);
 			argList();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -1685,9 +1704,9 @@ public CASParser(ParserSharedInputState state) {
 		AST assignValue_AST = null;
 		
 		try {      // for error handling
-			AST tmp142_AST = null;
-			tmp142_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp142_AST);
+			AST tmp146_AST = null;
+			tmp146_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp146_AST);
 			match(EQUAL);
 			expression();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -1710,18 +1729,18 @@ public CASParser(ParserSharedInputState state) {
 			inverse();
 			astFactory.addASTChild(currentAST, returnAST);
 			{
-			_loop132:
+			_loop133:
 			do {
 				if ((LA(1)==AND)) {
-					AST tmp143_AST = null;
-					tmp143_AST = astFactory.create(LT(1));
-					astFactory.makeASTRoot(currentAST, tmp143_AST);
+					AST tmp147_AST = null;
+					tmp147_AST = astFactory.create(LT(1));
+					astFactory.makeASTRoot(currentAST, tmp147_AST);
 					match(AND);
 					inverse();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					break _loop132;
+					break _loop133;
 				}
 				
 			} while (true);
@@ -1746,9 +1765,9 @@ public CASParser(ParserSharedInputState state) {
 			switch ( LA(1)) {
 			case NOT:
 			{
-				AST tmp144_AST = null;
-				tmp144_AST = astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp144_AST);
+				AST tmp148_AST = null;
+				tmp148_AST = astFactory.create(LT(1));
+				astFactory.makeASTRoot(currentAST, tmp148_AST);
 				match(NOT);
 				break;
 			}
@@ -1794,56 +1813,56 @@ public CASParser(ParserSharedInputState state) {
 			eval();
 			astFactory.addASTChild(currentAST, returnAST);
 			{
-			_loop138:
+			_loop139:
 			do {
 				if ((_tokenSet_21.member(LA(1)))) {
 					{
 					switch ( LA(1)) {
 					case LESS:
 					{
-						AST tmp145_AST = null;
-						tmp145_AST = astFactory.create(LT(1));
-						astFactory.makeASTRoot(currentAST, tmp145_AST);
+						AST tmp149_AST = null;
+						tmp149_AST = astFactory.create(LT(1));
+						astFactory.makeASTRoot(currentAST, tmp149_AST);
 						match(LESS);
 						break;
 					}
 					case LESSEQUAL:
 					{
-						AST tmp146_AST = null;
-						tmp146_AST = astFactory.create(LT(1));
-						astFactory.makeASTRoot(currentAST, tmp146_AST);
+						AST tmp150_AST = null;
+						tmp150_AST = astFactory.create(LT(1));
+						astFactory.makeASTRoot(currentAST, tmp150_AST);
 						match(LESSEQUAL);
 						break;
 					}
 					case MORE:
 					{
-						AST tmp147_AST = null;
-						tmp147_AST = astFactory.create(LT(1));
-						astFactory.makeASTRoot(currentAST, tmp147_AST);
+						AST tmp151_AST = null;
+						tmp151_AST = astFactory.create(LT(1));
+						astFactory.makeASTRoot(currentAST, tmp151_AST);
 						match(MORE);
 						break;
 					}
 					case MOREEQUAL:
 					{
-						AST tmp148_AST = null;
-						tmp148_AST = astFactory.create(LT(1));
-						astFactory.makeASTRoot(currentAST, tmp148_AST);
+						AST tmp152_AST = null;
+						tmp152_AST = astFactory.create(LT(1));
+						astFactory.makeASTRoot(currentAST, tmp152_AST);
 						match(MOREEQUAL);
 						break;
 					}
 					case EQUALTO:
 					{
-						AST tmp149_AST = null;
-						tmp149_AST = astFactory.create(LT(1));
-						astFactory.makeASTRoot(currentAST, tmp149_AST);
+						AST tmp153_AST = null;
+						tmp153_AST = astFactory.create(LT(1));
+						astFactory.makeASTRoot(currentAST, tmp153_AST);
 						match(EQUALTO);
 						break;
 					}
 					case NOTEQUAL:
 					{
-						AST tmp150_AST = null;
-						tmp150_AST = astFactory.create(LT(1));
-						astFactory.makeASTRoot(currentAST, tmp150_AST);
+						AST tmp154_AST = null;
+						tmp154_AST = astFactory.create(LT(1));
+						astFactory.makeASTRoot(currentAST, tmp154_AST);
 						match(NOTEQUAL);
 						break;
 					}
@@ -1857,7 +1876,7 @@ public CASParser(ParserSharedInputState state) {
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					break _loop138;
+					break _loop139;
 				}
 				
 			} while (true);
@@ -1894,32 +1913,32 @@ public CASParser(ParserSharedInputState state) {
 				negate();
 				astFactory.addASTChild(currentAST, returnAST);
 				{
-				_loop147:
+				_loop148:
 				do {
 					if (((LA(1) >= SLASH && LA(1) <= TIMES))) {
 						{
 						switch ( LA(1)) {
 						case TIMES:
 						{
-							AST tmp151_AST = null;
-							tmp151_AST = astFactory.create(LT(1));
-							astFactory.makeASTRoot(currentAST, tmp151_AST);
+							AST tmp155_AST = null;
+							tmp155_AST = astFactory.create(LT(1));
+							astFactory.makeASTRoot(currentAST, tmp155_AST);
 							match(TIMES);
 							break;
 						}
 						case SLASH:
 						{
-							AST tmp152_AST = null;
-							tmp152_AST = astFactory.create(LT(1));
-							astFactory.makeASTRoot(currentAST, tmp152_AST);
+							AST tmp156_AST = null;
+							tmp156_AST = astFactory.create(LT(1));
+							astFactory.makeASTRoot(currentAST, tmp156_AST);
 							match(SLASH);
 							break;
 						}
 						case MODULO:
 						{
-							AST tmp153_AST = null;
-							tmp153_AST = astFactory.create(LT(1));
-							astFactory.makeASTRoot(currentAST, tmp153_AST);
+							AST tmp157_AST = null;
+							tmp157_AST = astFactory.create(LT(1));
+							astFactory.makeASTRoot(currentAST, tmp157_AST);
 							match(MODULO);
 							break;
 						}
@@ -1933,7 +1952,7 @@ public CASParser(ParserSharedInputState state) {
 						astFactory.addASTChild(currentAST, returnAST);
 					}
 					else {
-						break _loop147;
+						break _loop148;
 					}
 					
 				} while (true);
@@ -2166,27 +2185,27 @@ public CASParser(ParserSharedInputState state) {
 			}
 			case String:
 			{
-				AST tmp161_AST = null;
-				tmp161_AST = astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp161_AST);
+				AST tmp165_AST = null;
+				tmp165_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp165_AST);
 				match(String);
 				atom_AST = (AST)currentAST.root;
 				break;
 			}
 			case TRUE:
 			{
-				AST tmp162_AST = null;
-				tmp162_AST = astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp162_AST);
+				AST tmp166_AST = null;
+				tmp166_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp166_AST);
 				match(TRUE);
 				atom_AST = (AST)currentAST.root;
 				break;
 			}
 			case FALSE:
 			{
-				AST tmp163_AST = null;
-				tmp163_AST = astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp163_AST);
+				AST tmp167_AST = null;
+				tmp167_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp167_AST);
 				match(FALSE);
 				atom_AST = (AST)currentAST.root;
 				break;
@@ -2242,9 +2261,9 @@ public CASParser(ParserSharedInputState state) {
 		AST callFunction_AST = null;
 		
 		try {      // for error handling
-			AST tmp166_AST = null;
-			tmp166_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp166_AST);
+			AST tmp170_AST = null;
+			tmp170_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp170_AST);
 			match(ID);
 			argList();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -2273,18 +2292,18 @@ public CASParser(ParserSharedInputState state) {
 			switch ( LA(1)) {
 			case NUM_INT:
 			{
-				AST tmp167_AST = null;
-				tmp167_AST = astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp167_AST);
+				AST tmp171_AST = null;
+				tmp171_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp171_AST);
 				match(NUM_INT);
 				numberValue_AST = (AST)currentAST.root;
 				break;
 			}
 			case NUM_FLOAT:
 			{
-				AST tmp168_AST = null;
-				tmp168_AST = astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp168_AST);
+				AST tmp172_AST = null;
+				tmp172_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp172_AST);
 				match(NUM_FLOAT);
 				numberValue_AST = (AST)currentAST.root;
 				break;
@@ -2309,13 +2328,13 @@ public CASParser(ParserSharedInputState state) {
 		AST newatom_AST = null;
 		
 		try {      // for error handling
-			AST tmp169_AST = null;
-			tmp169_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp169_AST);
+			AST tmp173_AST = null;
+			tmp173_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp173_AST);
 			match(NEW);
-			AST tmp170_AST = null;
-			tmp170_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp170_AST);
+			AST tmp174_AST = null;
+			tmp174_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp174_AST);
 			match(ID);
 			argList();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -2339,6 +2358,7 @@ public CASParser(ParserSharedInputState state) {
 		"\"bool\"",
 		"\"string\"",
 		"\"module\"",
+		"\"datatype\"",
 		"\"if\"",
 		"\"else\"",
 		"\"while\"",
@@ -2434,7 +2454,7 @@ public CASParser(ParserSharedInputState state) {
 	};
 	
 	private static final long[] mk_tokenSet_0() {
-		long[] data = { 2097648L, 0L};
+		long[] data = { 4195312L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_0 = new BitSet(mk_tokenSet_0());
@@ -2444,117 +2464,117 @@ public CASParser(ParserSharedInputState state) {
 	}
 	public static final BitSet _tokenSet_1 = new BitSet(mk_tokenSet_1());
 	private static final long[] mk_tokenSet_2() {
-		long[] data = { 2163184L, 0L};
+		long[] data = { 4326384L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_2 = new BitSet(mk_tokenSet_2());
 	private static final long[] mk_tokenSet_3() {
-		long[] data = { 2097650L, 0L};
+		long[] data = { 4195314L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_3 = new BitSet(mk_tokenSet_3());
 	private static final long[] mk_tokenSet_4() {
-		long[] data = { 2471218362847199218L, 0L};
+		long[] data = { 4942436725694398450L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_4 = new BitSet(mk_tokenSet_4());
 	private static final long[] mk_tokenSet_5() {
-		long[] data = { 146366987889541120L, 0L};
+		long[] data = { 292733975779082240L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_5 = new BitSet(mk_tokenSet_5());
 	private static final long[] mk_tokenSet_6() {
-		long[] data = { 144115188075855872L, 0L};
+		long[] data = { 288230376151711744L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_6 = new BitSet(mk_tokenSet_6());
 	private static final long[] mk_tokenSet_7() {
-		long[] data = { 2462211163590294512L, 0L};
+		long[] data = { 4924422327180589040L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_7 = new BitSet(mk_tokenSet_7());
 	private static final long[] mk_tokenSet_8() {
-		long[] data = { 2453203964335553520L, 0L};
+		long[] data = { 4906407928671107056L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_8 = new BitSet(mk_tokenSet_8());
 	private static final long[] mk_tokenSet_9() {
-		long[] data = { 2471218362847133682L, 0L};
+		long[] data = { 4942436725694267378L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_9 = new BitSet(mk_tokenSet_9());
 	private static final long[] mk_tokenSet_10() {
-		long[] data = { 5761304832770048L, 0L};
+		long[] data = { 11522609665540096L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_10 = new BitSet(mk_tokenSet_10());
 	private static final long[] mk_tokenSet_11() {
-		long[] data = { 1073741824L, 0L};
+		long[] data = { 2147483648L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_11 = new BitSet(mk_tokenSet_11());
 	private static final long[] mk_tokenSet_12() {
-		long[] data = { 1125900980584448L, 0L};
+		long[] data = { 2251801961168896L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_12 = new BitSet(mk_tokenSet_12());
 	private static final long[] mk_tokenSet_13() {
-		long[] data = { 2480357491820265458L, 0L};
+		long[] data = { 4960714983640530930L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_13 = new BitSet(mk_tokenSet_13());
 	private static final long[] mk_tokenSet_14() {
-		long[] data = { 1128100272275456L, 0L};
+		long[] data = { 2256200544550912L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_14 = new BitSet(mk_tokenSet_14());
 	private static final long[] mk_tokenSet_15() {
-		long[] data = { 6183650441822208L, 0L};
+		long[] data = { 12367300883644416L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_15 = new BitSet(mk_tokenSet_15());
 	private static final long[] mk_tokenSet_16() {
-		long[] data = { 6183650441822210L, 0L};
+		long[] data = { 12367300883644418L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_16 = new BitSet(mk_tokenSet_16());
 	private static final long[] mk_tokenSet_17() {
-		long[] data = { 4503599627370496L, 0L};
+		long[] data = { 9007199254740992L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_17 = new BitSet(mk_tokenSet_17());
 	private static final long[] mk_tokenSet_18() {
-		long[] data = { 1342177280L, 0L};
+		long[] data = { 2684354560L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_18 = new BitSet(mk_tokenSet_18());
 	private static final long[] mk_tokenSet_19() {
-		long[] data = { 1145692458319872L, 0L};
+		long[] data = { 2291384916639744L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_19 = new BitSet(mk_tokenSet_19());
 	private static final long[] mk_tokenSet_20() {
-		long[] data = { 1180876830408704L, 0L};
+		long[] data = { 2361753660817408L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_20 = new BitSet(mk_tokenSet_20());
 	private static final long[] mk_tokenSet_21() {
-		long[] data = { 76828374990848L, 0L};
+		long[] data = { 153656749981696L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_21 = new BitSet(mk_tokenSet_21());
 	private static final long[] mk_tokenSet_22() {
-		long[] data = { 5761317717671936L, 0L};
+		long[] data = { 11522635435343872L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_22 = new BitSet(mk_tokenSet_22());
 	private static final long[] mk_tokenSet_23() {
-		long[] data = { 5761437976756224L, 0L};
+		long[] data = { 11522875953512448L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_23 = new BitSet(mk_tokenSet_23());
 	private static final long[] mk_tokenSet_24() {
-		long[] data = { 8435450255507456L, 0L};
+		long[] data = { 16870900511014912L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_24 = new BitSet(mk_tokenSet_24());
