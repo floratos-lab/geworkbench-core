@@ -657,6 +657,7 @@ public CASWalker() {
 				_t = _t.getNextSibling();
 				id2 = ID22.getText();
 				r = new CasString("objectcall " + id + "." + id2 + " with arguments ");
+				//r has to be something different, it has to come from MethodCall
 				System.out.println("we're in object_call");
 				ipt.MethodCall(id, id2, arglist);
 				

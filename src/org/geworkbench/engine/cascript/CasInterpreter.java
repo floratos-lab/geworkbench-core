@@ -9,10 +9,11 @@ import java.util.Vector;
  * Interpreter routines that is called directly from the tree walker.
  *
  * @author Behrooz Badii - badiib@gmail.com
- * @version $Id: CasInterpreter.java,v 1.7 2005-09-07 19:56:51 bb2122 Exp $
+ * @version $Id: CasInterpreter.java,v 1.8 2005-09-08 22:15:00 bb2122 Exp $
  */
 class CasInterpreter {
     CasSymbolTable symt;
+    CasDataTypeImport CDTI;
 
     final static int fc_none = 0;
     final static int fc_break = 1;
@@ -26,6 +27,7 @@ class CasInterpreter {
 
     public CasInterpreter() {
         symt = new CasSymbolTable(null, -1); //-1 means that we're in a global scope
+        CDTI = new CasDataTypeImport();
     }
 
     //used for variable initialization in the symbol table
@@ -39,10 +41,17 @@ class CasInterpreter {
                 System.out.println("Type: " + ((CasModule) symt.findVar(id)).type);
             }
             if (type instanceof CasDataPlug) {
-                symt.put(id, new CasDataPlug(id, ((CasDataPlug)type).getType()));
-                System.out.println("put in casDataPlug");
-                System.out.println("Name: " + symt.findVar(id).name);
-                System.out.println("Type: " + ((CasDataPlug) symt.findVar(id)).type);
+                //fix this, you should be sending the value for the key of getType to the CasDataPlug, in both constructors!!
+                if (CDTI.containsKey(((CasDataPlug)type).getType())) {
+                    symt.put(id,
+                             new CasDataPlug(id, ((CasDataPlug) type).getType()));
+                    System.out.println("put in casDataPlug");
+                    System.out.println("Name: " + symt.findVar(id).name);
+                    System.out.println("Type: " +
+                                       ((CasDataPlug) symt.findVar(id)).type);
+                }
+                else
+                    throw new CasException("The datatype type " + ((CasDataPlug) type).getType() + " for the variable " + id + " is not supported.");
             }
             else {
                 if (type instanceof CasString) {
@@ -86,6 +95,7 @@ class CasInterpreter {
     //REMEMBER TO PUT MORE STUFF IN HERE!!!!
     //YOU REALLY GOTTA FIX THIS METHOD
     //should you be throwing a CasException if something goes wrong at CasValue? how should we be doing that?
+    //make the return type different for each one.  If it is successful, return a, if not, throw an exception.
     public CasDataType assign(CasDataType a, CasDataType b) {
         System.out.println("in assignment");
         if (a.getPartOf() != null) {
@@ -187,10 +197,16 @@ class CasInterpreter {
             //should this be allowed?
             if (a instanceof CasModule && b instanceof CasModule) {
                 System.out.println("in Casmodule part of ipt.assign(a,b)");
+                //you have make sure the types are the same!
                 CasDataType x = rvalue(b);
                 x.setName(a.name);
                 symt.setVar(a.name, (CasModule) x);
                 return new CasBool(true);
+            }
+            if (a instanceof CasDataPlug) {
+                //make sure that the CasDataPlug type is equal to what is either being called using
+                //make sure it's the right DataPlug! object var has to be assignable
+                //a CasValue, CasMethod, or another CasDataPlug
             }
             if (null != b.getName()) return a.error(b, "=");
             else return a.error("=");
@@ -241,11 +257,17 @@ class CasInterpreter {
     }
 
     //methodcall occurs when the CasMethod is used, so we will find it in OBJECT_CALL
+    //MethodCall is going to have to be public Object.
     public void MethodCall(String casname, String casmethod, Vector<CasDataType> v) {
         Object [] args = vectortoargs(v);
         if (symt.exists(casname + " " + casmethod)) {
-            //do something here
-            //this needs to be filled in to make sure that you can call a method twice
+            CasMethod callme = (CasMethod) symt.findVar(casname + " " + casmethod);
+            try {
+                callme.m.invoke(callme.getPlugin(), args);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new CasException("Error occurred in MethodCall in interpreter for non-pre-existing method");
+            }
         } else {
             symt.put(casname + " " + casmethod, new CasMethod(casname, casmethod, (CasModule) symt.findVar(casname)));
             System.out.println("made new method " + casmethod + " for " + casname);
@@ -275,9 +297,12 @@ class CasInterpreter {
             } else if (args[i] instanceof CasString) {
                 System.out.println("String" + ((CasString) args[i]).getvar());
                 args[i] = ((CasString) args[i]).getvar();
-            } else {
+            } else if (args[i] instanceof CasModule) {
                 args[i] = ((CasModule) args[i]).getPlugin();
                 System.out.println("This should be an object");
+            } else {
+                args[i] = ((CasDataPlug) args[i]).getVar();
+                System.out.println("Dataplug in argument to MethodCall");
             }
         }
         return args;
@@ -446,6 +471,7 @@ class CasInterpreter {
     public boolean checkreturntype(CasDataType ret, CasFunction func) {
         CasDataType type = func.getReturnType();
         int dimensions = func.getBrackets();
+        //check that if it's a datatype, you make sure it's the right dataplug.var!!
         if (dimensions == 0) {
             if (type instanceof CasModule) {
                 if (ret instanceof CasModule) {

@@ -628,8 +628,9 @@ else
 | variable                    { r = new CasBool(true);} //variable declaration ex. int a = 5;
 | #(ASSIGNMENT a=expr b=expr) //remember to extend ipt.assign(a,b) //assignment operation, more complex than it seems
   {r = ipt.assign(a,b);}
-| #(OBJECT_VALUE ID {id = #ID.getText();} ID21:ID) //modify all this for CasDataPlug, bring this into the interpreter
+| #(OBJECT_VALUE ID {id = #ID.getText();} ID21:ID)
   { id2 = ID21.getText();
+    //should you be checking if id a CasModule in the firstplace?
     r = new CasValue(id, id2, ((CasModule)ipt.symt.findVar(id)));
     System.out.println("we're in object_value");
   }
@@ -637,6 +638,8 @@ else
 | #(OBJECT_CALL ID {id = #ID.getText();} ID22:ID arglist = param) //modify all this for CasDataPlug, bring this into the interpreter
   { id2 = ID22.getText();
     r = new CasString("objectcall " + id + "." + id2 + " with arguments ");
+    //r has to be something different, it has to come from MethodCall
+    //MethodCall should tell the difference between a CasModule and a CasDataPlug
     System.out.println("we're in object_call");
     ipt.MethodCall(id, id2, arglist);
   }

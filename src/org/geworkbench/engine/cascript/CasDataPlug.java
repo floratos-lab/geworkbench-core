@@ -1,8 +1,12 @@
 package org.geworkbench.engine.cascript;
 
 import java.io.PrintWriter;
-import java.net.URLClassLoader;
-import org.geworkbench.engine.management.ClassSearcher;
+
+/**
+ * CasDataPlug is a rudimentary way of holding datastructures
+ *
+ * @author Behrooz Badii - badiib@gmail.com
+ */
 
 class CasDataPlug extends CasDataType {
     public CasDataPlug() {
@@ -25,6 +29,7 @@ class CasDataPlug extends CasDataType {
         name = n;
         type = t;
         var = null;
+        //fix this, you should be sending in CDTI into the constructor and working with it here.
         try {
             var = Class.forName(type);
             Package p = var.getClass().getPackage();
@@ -34,13 +39,6 @@ class CasDataPlug extends CasDataType {
             e.printStackTrace();
             throw new CasException("Class " + type + " not found for datatype " + name);
         }
-        //URLClassLoader c = ((URLClassLoader)ClassLoader.getSystemClassLoader());
-        //ClassSearcher cs = new ClassSearcher(c.getURLs());
-        //cs.getAllClassesAssignableTo(type, true);
-        //figure out what you gotta do from here on in.
-        //find the class that EQUALS this class. make a new instance, give it to var
-        //System.out.println(c.toString());
-
     }
 
     public String typename() {
@@ -51,9 +49,9 @@ class CasDataPlug extends CasDataType {
         return type;
     }
 
-    //public Object getDataType() {
-    //    return pd.getPlugin();
-    //}
+    public Object getVar() {
+        return var;
+    }
 
     public CasDataType copy() {
         return new CasDataPlug(name, type);
