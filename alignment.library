@@ -7,6 +7,7 @@
     <path>[components/alignment/lib/ogsa-samples.jar]</path>
     <path>[components/alignment/lib/progtutorial_BlastClient.jar]</path>
     <path>[components/alignment/lib/progtutorial_BlastService-stub.jar]</path>
+    <path>[lib/xmlsec.jar]</path>
   </class>
-  <lastmodsaved>1124999157940</lastmodsaved>
+  <lastmodsaved>1126207601781</lastmodsaved>
 </library>
