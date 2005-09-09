@@ -108,14 +108,8 @@
 	<plugin id="positionHistogram" name="Position Histogram" class="org.geworkbench.components.poshistogram.PositionHistogramAppComponent" source="poshistogram">
 		<gui-area name="VisualArea"/>
 	</plugin>
-	<plugin id="dotmatrixPanel" name="Dot Matrix Panel" class="org.geworkbench.components.alignment.synteny.DotMatrixViewAppComponent" source="alignment">
-		<gui-area name="VisualArea"/>
-	</plugin>
 	<plugin id="patternPanel" name="Patterns" class="org.geworkbench.components.patterns.PatternViewAppComponent" source="patterns">
 		<gui-area name="VisualArea"/>
-	</plugin>
-	<plugin id="syntenyParameters" name="Synteny" class="org.geworkbench.components.alignment.panels.SyntenyAppComponent" source="alignment">
-		<gui-area name="CommandArea"/>
 	</plugin>
 	<!--
 	<plugin id="genePanel" name="Gene Panel" class="org.geworkbench.components.selectors.GenericMarkerSelectorPanel">
@@ -143,6 +137,18 @@
 	<plugin id="analysisPanel" name="Analysis" class="org.geworkbench.components.analysis.AnalysisPanel" source="analysis">
 		<gui-area name="CommandArea"/>
 	</plugin>
+
+	<plugin id="dotmatrixPanel" name="Dot Matrix Panel" class="org.geworkbench.components.alignment.synteny.DotMatrixViewAppComponent" source="synteny">
+		<gui-area name="VisualArea"/>
+	</plugin>
+
+	<plugin id="syntenyMapPanel" name="Synteny Map Panel" class="org.geworkbench.components.alignment.synteny.SyntenyMapViewAppComponent" source="synteny">
+		<gui-area name="VisualArea"/>
+	</plugin>
+	<plugin id="syntenyParameters" name="Synteny" class="org.geworkbench.components.alignment.panels.SyntenyParameters" source="panels">
+		<gui-area name="CommandArea"/>
+	</plugin>
+
 	<plugin id="cascriptPanel" name="caSCRIPT" class="org.geworkbench.components.cascript.CaSCRIPTEditor" source="cascript">
 		<gui-area name="CommandArea"/>
 	</plugin>
