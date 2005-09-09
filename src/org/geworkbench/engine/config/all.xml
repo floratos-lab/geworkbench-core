@@ -138,7 +138,7 @@
 		<gui-area name="CommandArea"/>
 	</plugin>
 
-	<plugin id="dotmatrixPanel" name="Dot Matrix Panel" class="org.geworkbench.components.alignment.synteny.DotMatrixViewAppComponent" source="synteny">
+	<plugin id="dotmatrixPanel" name="Dot Matrix Panel" class="org.geworkbench.components.alignment.synteny.DotMatrixViewAppComponent" source="alignment">
 		<gui-area name="VisualArea"/>
 	</plugin>
 
