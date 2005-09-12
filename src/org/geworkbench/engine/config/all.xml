@@ -2,15 +2,8 @@
 	<!--<gui-window name="Main GUI" class="geaw.GUIApp"/>-->
 	<gui-window name="Main GUI" class="org.geworkbench.engine.skin.Skin"/>
 
-	<plugin id="analysisPanel" name="Analysis" class="org.geworkbench.components.analysis.AnalysisPanel" source="analysis">
-		<gui-area name="CommandArea"/>
-	</plugin>
 	<plugin id="AffyExcelTXTFilter" name="Exp1. Format" class="org.geworkbench.engine.parsers.AffyExcelTXTFileFormat"/>
 	<plugin id="affyFilter" name="Affy File Format" class="org.geworkbench.engine.parsers.AffyFileFormat"/>
-	<plugin id="associationPanel" name="Associations" class="org.geworkbench.components.associationdiscovery.PatternDiscoveryPanel" source="associationdiscovery">
-		<gui-area name="CommandArea"/>
-		<use-module name="patternDiscoveryAlgorithm" id="patternDiscoveryAlgorithm"/>
-	</plugin>
 	<plugin id="annotationsPanel" name="Marker Annotations" class="org.geworkbench.components.annotations.AnnotationsPanel" source="annotations">
 		<gui-area name="VisualArea"/>
 	</plugin>
@@ -19,14 +12,8 @@
 		<gui-area name="VisualArea"/>
 	</plugin>
 
-	<plugin id="cascriptPanel" name="caSCRIPT" class="org.geworkbench.components.cascript.CaSCRIPTEditor" source="cascript">
-		<gui-area name="CommandArea"/>
-	</plugin>
 	<plugin id="colorMosaicPanel" name="Color Mosaic" class="org.geworkbench.components.colormosaic.ColorMosaicPanel" source="colormosaic">
 		<gui-area name="VisualArea"/>
-	</plugin>
-	<plugin id="commentsPanel" name="Dataset Annotation" class="org.geworkbench.builtin.projects.comments.CommentsPanel">
-		<gui-area name="CommandArea"/>
 	</plugin>
 	<plugin id="cytoscapePanel" name="Cytoscape" class="org.geworkbench.components.cytoscape.CytoscapeWidget" source="cytoscape">
 		<gui-area name="VisualArea"/>
@@ -42,10 +29,6 @@
 	<plugin id="expressionThreshold" name="Expression Threshold Filter" class="org.geworkbench.components.filtering.ExpressionThresholdFilter" source="filtering"/>
 	<plugin id="EVDPanel" name="Expression Value Distribution" class="org.geworkbench.components.microarrays.EVDPanel" source="microarrays">
 		<gui-area name="VisualArea"/>
-	</plugin>
-
-	<plugin id="filteringPanel" name="Filtering Panel" class="org.geworkbench.components.analysis.FilteringPanel" source="analysis">
-		<gui-area name="CommandArea"/>
 	</plugin>
 
 	<plugin id="genepixFilter" name="Genepix File Format" class="org.geworkbench.engine.parsers.GenePixFileFormat"/>
@@ -64,17 +47,11 @@
 		<gui-area name="SelectionArea"/>
 	</plugin>
 
-	<plugin id="historyPanel" name="Dataset History" class="org.geworkbench.builtin.projects.history.HistoryPanel">
-		<gui-area name="CommandArea"/>
-	</plugin>
 	<plugin id="hierarchicalClusteringPanel" name="Dendrogram" class="org.geworkbench.components.hierarchicalclustering.HierClusterViewAppComponent" source="hierarchicalclustering">
 		<gui-area name="VisualArea"/>
 	</plugin>
 	<plugin id="HouseKeepingGeneNormalizer" name="HouseKeeping Genes Normalizer" class="org.geworkbench.components.normalization.HouseKeepingGeneNormalizer" source="normalization"/>
 
-	<plugin id="infoPanel" name="Experiment Info" class="org.geworkbench.builtin.projects.experimentinformation.ExperimentInformationPanel">
-		<gui-area name="CommandArea"/>
-	</plugin>
 	<plugin id="imageViewer" name="Image Viewer" class="org.geworkbench.components.viewers.ImageViewer" source="viewers">
 		<gui-area name="VisualArea"/>
 	</plugin>
@@ -112,7 +89,7 @@
 	<plugin id="phenotypePanel" name="Phenotype Panel" class="org.geworkbench.components.selectors.PropertyTagSelectorPanel" source="selectors">
 		<gui-area name="SelectionArea"/>
 	</plugin>
-	<!-- plugin id="hierarchicalClusteringAnalysis" name="Hierachical Clustering Analysis" class="org.geworkbench.components.clustering.HierClustAnalysis"/ -->
+	<!-- plugin id="hierarchicalClusteringAnalysis" name="Hierachical Clustering Analysis" class="org.geworkbench.components.clustering.HierClustAnalysis" source="clustering"/ -->
 	<plugin id="fastHierarchicalClusteringAnalysis" name="Fast Hierachical Clustering Analysis" class="org.geworkbench.components.clustering.FastHierClustAnalysis" source="clustering"/>
 	<!-- plugin id="jniHierarchicalClusteringAnalysis" name="JNI Hierachical Clustering Analysis" class="org.geworkbench.components.clustering.JniHierClustAnalysis"/-->
 	<plugin id="somAnalysis" name="SOM Analysis" class="org.geworkbench.components.clustering.SOMAnalysis" source="clustering"/>
@@ -122,14 +99,8 @@
 	<plugin id="TwoChannelFilter" name="Genepix Filter" class="org.geworkbench.components.filtering.GenepixExpressionThresholdFilter" source="filtering"/>
 	<plugin id="visualBuilder" name="visualBuilder" class="org.geworkbench.engine.config.VisualMenu"/>
     	<plugin id="preferences" name="preferences" class="org.geworkbench.engine.config.PreferencesMenu"/>
-	<plugin id="sequenceAlignment" name="Sequence Alignment" class="org.geworkbench.components.alignment.panels.BlastAppComponent" source="alignment">
-		<gui-area name="CommandArea"/>
-	</plugin>
 	<plugin id="sessionManager" name="Session Mgr" class="org.geworkbench.util.session.SessionAppComponent"/>
 	<plugin id="versioninfo" name="Version Infomation" class="org.geworkbench.components.versioninfo.VersionInfoComponent" source="versioninfo"/>
-	<plugin id="splash" name="Pattern Discovery" class="org.geworkbench.components.discovery.SequenceDiscoveryViewAppComponent" source="discovery">
-		<gui-area name="CommandArea"/>
-	</plugin>
 	<plugin id="sequencePanel" name="Sequence Panel" class="org.geworkbench.components.sequences.SequenceViewAppComponent" source="sequences">
 		<gui-area name="VisualArea"/>
 	</plugin>
@@ -150,6 +121,34 @@
 		<!-- An example 'subscription' directive: Set enabled to 'No' to prevent subscription for certain type. -->
 		<subscription type="org.geworkbench.events.ProjectEvent" enabled="Yes"/>
 	</plugin>
+    <plugin id="analysisPanel" name="Analysis" class="org.geworkbench.components.analysis.AnalysisPanel" source="analysis">
+        <gui-area name="CommandArea"/>
+    </plugin>
+    <plugin id="associationPanel" name="Associations" class="org.geworkbench.components.associationdiscovery.PatternDiscoveryPanel" source="associationdiscovery">
+        <gui-area name="CommandArea"/>
+        <use-module name="patternDiscoveryAlgorithm" id="patternDiscoveryAlgorithm"/>
+    </plugin>
+    <plugin id="cascriptPanel" name="caSCRIPT" class="org.geworkbench.components.cascript.CaSCRIPTEditor" source="cascript">
+        <gui-area name="CommandArea"/>
+    </plugin>
+    <plugin id="commentsPanel" name="Dataset Annotation" class="org.geworkbench.builtin.projects.comments.CommentsPanel">
+        <gui-area name="CommandArea"/>
+    </plugin>
+    <plugin id="filteringPanel" name="Filtering Panel" class="org.geworkbench.components.analysis.FilteringPanel" source="analysis">
+        <gui-area name="CommandArea"/>
+    </plugin>
+    <plugin id="historyPanel" name="Dataset History" class="org.geworkbench.builtin.projects.history.HistoryPanel">
+        <gui-area name="CommandArea"/>
+    </plugin>
+    <plugin id="infoPanel" name="Experiment Info" class="org.geworkbench.builtin.projects.experimentinformation.ExperimentInformationPanel">
+        <gui-area name="CommandArea"/>
+    </plugin>
+    <plugin id="sequenceAlignment" name="Sequence Alignment" class="org.geworkbench.components.alignment.panels.BlastAppComponent" source="alignment">
+        <gui-area name="CommandArea"/>
+    </plugin>
+    <plugin id="splash" name="Pattern Discovery" class="org.geworkbench.components.discovery.SequenceDiscoveryViewAppComponent" source="discovery">
+        <gui-area name="CommandArea"/>
+    </plugin>
 	<plugin id="normalizationPanel" name="Normalization Panel" class="org.geworkbench.components.analysis.NormalizationPanel" source="analysis">
 		<gui-area name="CommandArea"/>
 	</plugin>
