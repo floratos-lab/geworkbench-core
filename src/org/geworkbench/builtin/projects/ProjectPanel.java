@@ -195,7 +195,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                 fileRemove_actionPerformed(e);
             }
         });
-        jEditItem.setText("Edit");
+        jEditItem.setText("View in Editor");
         jEditItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (selection.getSelectedNode() instanceof DataSetNode) {
