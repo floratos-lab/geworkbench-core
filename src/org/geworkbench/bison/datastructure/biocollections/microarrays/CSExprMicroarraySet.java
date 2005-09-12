@@ -143,6 +143,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
 
     public CSExprMicroarraySet(AffyResource ar) throws Exception {
         this();
+        file = ar.getInputFile();
         addObject(org.geworkbench.bison.util.colorcontext.ColorContext.class, new ExpressionPValueColorContext());
         List ctu = new ArrayList();
         ctu.add("Probe Set Name");
@@ -191,6 +192,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
 
     public CSExprMicroarraySet(org.geworkbench.bison.parsers.resources.GenepixResource gr) throws Exception {
         this();
+        file = gr.getInputFile();        
         addObject(org.geworkbench.bison.util.colorcontext.ColorContext.class, new ExpressionColorContext());
         List ctu = new ArrayList();
         ctu.add("Block");

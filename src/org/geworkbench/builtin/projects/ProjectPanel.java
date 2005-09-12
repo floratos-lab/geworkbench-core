@@ -206,12 +206,16 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                     if (editor == null) {
                         System.out.println("No editor configured.");
                     } else {
-                        String[] args = {editor,  ds.getFile().getAbsolutePath()};
-                        try {
-                            Runtime.getRuntime().exec(args);
-                        } catch (IOException e1) {
-                            System.out.println("Error opening editor:");
-                            e1.printStackTrace();
+                        if (ds.getFile() == null) {
+                            JOptionPane.showMessageDialog(null, "There is no local file for this data set.", "Unable to Edit", JOptionPane.INFORMATION_MESSAGE);
+                        } else {
+                            String[] args = {editor, ds.getFile().getAbsolutePath()};
+                            try {
+                                Runtime.getRuntime().exec(args);
+                            } catch (IOException e1) {
+                                System.out.println("Error opening editor:");
+                                e1.printStackTrace();
+                            }
                         }
                     }
                 }
