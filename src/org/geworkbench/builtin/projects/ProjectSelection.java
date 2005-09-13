@@ -179,9 +179,13 @@ public class ProjectSelection {
     public void throwEvent(String method, String message) {
         // Notify all listeners of the change in selection
         DSMicroarraySet maSet = null;
-        if ((selectedDataSetNode != null) && (selectedDataSetNode.dataFile instanceof DSMicroarraySet)) {
-            maSet = (DSMicroarraySet) selectedDataSetNode.dataFile;
+        if (selectedDataSetNode != null) {
+            if (selectedDataSetNode.dataFile instanceof DSMicroarraySet) {
+                maSet = (DSMicroarraySet) selectedDataSetNode.dataFile;
+                panel.publishProjectEvent(new ProjectEvent(message, maSet));
+            } else {
+                panel.publishProjectEvent(new ProjectEvent(message, selectedDataSetNode.dataFile));
+            }
         }
-        panel.publishProjectEvent(new ProjectEvent(message, maSet));
     }
 }
