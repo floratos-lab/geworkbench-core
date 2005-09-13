@@ -26,7 +26,7 @@ public class TestCSPanel extends AbstractTestList {
 
     CSMicroarray m4 = new CSMicroarray(4);
     CSMicroarray m5 = new CSMicroarray(5);
-    CSMicroarray m6 = new CSMicroarray(x6);
+    CSMicroarray m6 = new CSMicroarray(6);
 
     public TestCSPanel(String s) {
         super(s);
