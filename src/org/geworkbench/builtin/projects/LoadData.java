@@ -12,6 +12,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import com.borland.jbcl.layout.BoxLayout2;
+import org.geworkbench.builtin.projects.remoteresources.RemoteResourceDialog;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
@@ -61,6 +63,10 @@ public class LoadData extends JDialog {
     private NCIPanel jPanel6 = new NCIPanel(this);
     private CaARRAYPanel jPanel8 = new CaARRAYPanel(this);
     private JCheckBox mergeCheckBox;
+    private JPanel lowerPanel;
+    private JPanel mergePanel;
+    private RemoteResourceDialog remoteResourceDialog;
+    private JPanel remoteControlPanel;
 
     /**
      * The project panel that manages the dialog box.
@@ -75,6 +81,19 @@ public class LoadData extends JDialog {
     BorderLayout borderLayout7 = new BorderLayout();
     JPanel jPanel7 = new JPanel();
     JRadioButton jRadioButton7 = new JRadioButton();
+    JRadioButton jRadioButton8 = new JRadioButton();
+    JPanel jPanel10 = new JPanel();
+
+    String[] DEFAULTRESOUCES = new String[] {"caARRAY", "GEDP"};
+    DefaultComboBoxModel resourceModel = new DefaultComboBoxModel(
+            DEFAULTRESOUCES);
+    JComboBox jComboBox1 = new JComboBox(resourceModel);
+
+    JButton addButton = new JButton();
+    JButton editButton = new JButton();
+    JButton deleteButton = new JButton();
+    BoxLayout2 boxLayout21 = new BoxLayout2();
+    JButton openRemoteResourceButton = new JButton();
 
     public LoadData(ProjectPanel parent) {
         parentProjectPanel = parent;
@@ -94,7 +113,7 @@ public class LoadData extends JDialog {
     }
 
     private void jbInit() throws Exception {
-        format = getLastDataFormat();
+        // format = getLastDataFormat();
         this.setModal(true);
         this.getContentPane().setLayout(borderLayout1);
         jPanel1.setLayout(gridLayout1);
@@ -138,36 +157,105 @@ public class LoadData extends JDialog {
         gridLayout2.setColumns(1);
         this.setResizable(false);
         jRadioButton7.setText("caARRAY");
-        JPanel lowerPanel = new JPanel();
+        lowerPanel = new JPanel();
         lowerPanel.setLayout(new BoxLayout(lowerPanel, BoxLayout.Y_AXIS));
+        remoteResourceDialog = new RemoteResourceDialog();
+        addButton.setToolTipText("Add a new resource");
+        addButton.setText("Add A New Resource");
+        addButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                displayRemoteResourceDiolog(RemoteResourceDialog.ADD);
+
+            }
+
+        });
+        editButton.setToolTipText("Edit an existed source");
+        editButton.setText("Edit");
+        editButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                displayRemoteResourceDiolog(jComboBox1.getSelectedItem(),
+                                            RemoteResourceDialog.EDIT);
+
+            }
+        });
+
+        deleteButton.setToolTipText("Delete an existed resource");
+        deleteButton.setText("Delete");
+        deleteButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                //  displayRemoteResourceDiolog(jComboBox1.getSelectedItem(), RemoteResourceDialog.DELETE);
+                deleteButton_actionPerformed(e);
+            }
+
+        });
+
+        jPanel10.setLayout(boxLayout21);
+        openRemoteResourceButton.setText("Go");
+        openRemoteResourceButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                openRemoteResourceButton_actionPerformed(e);
+            }
+        });
+        jComboBox1.setPreferredSize(new Dimension(50, 19));
         this.getContentPane().add(lowerPanel, BorderLayout.SOUTH);
-        JPanel mergePanel = new JPanel();
+        mergePanel = new JPanel();
         mergePanel.setLayout(new BoxLayout(mergePanel, BoxLayout.X_AXIS));
         mergeCheckBox = new JCheckBox("Merge Files", false);
+
+        //jComboBox1 = new JComboBox(remoteResourceDialog.getResourceNames());
+        //jComboBox1 = new JComboBox(new String[]{"TEST"});
+
+        jPanel10.add(jComboBox1);
+        jPanel10.add(openRemoteResourceButton);
+        jPanel10.add(addButton);
+        jPanel10.add(editButton);
+        jPanel10.add(deleteButton);
+        remoteControlPanel = new JPanel();
+        lowerPanel.add(mergePanel);
         mergePanel.add(mergeCheckBox);
         mergePanel.add(Box.createGlue());
-        lowerPanel.add(mergePanel);
         lowerPanel.add(jPanel1);
+        //lowerPanel.add(jPanel10);
+
         jPanel1.add(jPanel2, null);
         jPanel2.add(jRadioButton1, null);
+        //removed by XQ
+//        jPanel1.add(jPanel7, null);
+//       jPanel7.add(jRadioButton7, null);
+//        jPanel1.add(jPanel3, null);
+//        jPanel3.add(jRadioButton2, null);
+        //deletion ends here.
         jPanel1.add(jPanel7, null);
-        jPanel7.add(jRadioButton7, null);
-        jPanel1.add(jPanel3, null);
-        jPanel3.add(jRadioButton2, null);
+        jRadioButton8.setText("Remote");
+        jPanel7.add(jRadioButton8, null);
+        //XQ modification ends here.
         this.getContentPane().add(jPanel4, BorderLayout.CENTER);
         jPanel4.add(jFileChooser1, BorderLayout.CENTER);
-        jPanel5.add(jLabel3, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 17));
-        jPanel5.add(jPanel12, new GridBagConstraints(0, 1, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 23, 0), 27, 30));
+        jPanel5.add(jLabel3,
+                    new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+                                           GridBagConstraints.WEST,
+                                           GridBagConstraints.NONE,
+                                           new Insets(0, 0, 0, 0), 0, 17));
+        jPanel5.add(jPanel12,
+                    new GridBagConstraints(0, 1, 1, 1, 1.0, 1.0,
+                                           GridBagConstraints.CENTER,
+                                           GridBagConstraints.HORIZONTAL,
+                                           new Insets(0, 0, 23, 0), 27, 30));
         jPanel12.add(jLabel2, null);
         jPanel12.add(jRadioButton6, null);
         jPanel12.add(jRadioButton5, null);
-        jPanel5.add(jPanel11, new GridBagConstraints(0, 2, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 86, 0), 27, 30));
+        jPanel5.add(jPanel11,
+                    new GridBagConstraints(0, 2, 1, 1, 1.0, 1.0,
+                                           GridBagConstraints.CENTER,
+                                           GridBagConstraints.HORIZONTAL,
+                                           new Insets(0, 0, 86, 0), 27, 30));
         jPanel11.add(jLabel1, null);
         jPanel11.add(jRadioButton4, null);
         jPanel11.add(jRadioButton3, null);
         buttonGroup1.add(jRadioButton1);
         buttonGroup1.add(jRadioButton2);
         buttonGroup1.add(jRadioButton7);
+        buttonGroup1.add(jRadioButton8);
         buttonGroup2.add(jRadioButton5);
         buttonGroup2.add(jRadioButton6);
         buttonGroup3.add(jRadioButton3);
@@ -189,6 +277,12 @@ public class LoadData extends JDialog {
                 mageButtonSelection_actionPerformed(e);
             }
         });
+        jRadioButton8.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                addRemotePanel_actionPerformed(e);
+            }
+        });
+
         jFileChooser1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 jFileChooser1_actionPerformed(e);
@@ -215,19 +309,99 @@ public class LoadData extends JDialog {
          }
          }
          **/
-        supportedInputFormats = ComponentRegistry.getRegistry().getModules(org.geworkbench.engine.parsers.FileFormat.class);
+        supportedInputFormats = ComponentRegistry.getRegistry().getModules(org.
+                geworkbench.engine.parsers.FileFormat.class);
 
         // Setup the file chooser options.
         jFileChooser1.resetChoosableFileFilters();
         jFileChooser1.setAcceptAllFileFilterUsed(false);
         jFileChooser1.setMultiSelectionEnabled(true);
         for (i = 0; i < supportedInputFormats.length; ++i) {
-            jFileChooser1.addChoosableFileFilter(supportedInputFormats[i].getFileFilter());
+            jFileChooser1.addChoosableFileFilter(supportedInputFormats[i].
+                                                 getFileFilter());
         }
 
         int idx = 0;
-        if ((format != null) && (!format.equals("")) && ((idx = Integer.parseInt(format)) < supportedInputFormats.length))
-            jFileChooser1.setFileFilter(supportedInputFormats[idx].getFileFilter());
+        if ((format != null) && (!format.equals("")) &&
+            ((idx = Integer.parseInt(format)) <
+             supportedInputFormats.length)) {
+            jFileChooser1.setFileFilter(supportedInputFormats[idx].
+                                        getFileFilter());
+        }
+    }
+
+    /**
+     * displayRemoteResourceDiolog for add a new resouce.
+     *
+     * @param option int
+     */
+    void displayRemoteResourceDiolog(int option) {
+        RemoteResourceDialog.showDialog(this, null, option, null);
+        updateExistedResources();
+    }
+
+    /**
+     * displayRemoteResourceDiolog for edit/delete an existed resource.
+     *
+     * @param shortname Object
+     * @param option int
+     */
+    void displayRemoteResourceDiolog(Object shortname, int option) {
+        if (shortname != null) {
+            RemoteResourceDialog.showDialog(this, null, option,
+                                            shortname.toString());
+        } else {
+            RemoteResourceDialog.showDialog(this, null, option, null);
+        }
+        updateExistedResources();
+    }
+
+    /**
+     * updateExistedResources, should be called after any button related to
+     * remoteresource is clicked.
+     */
+    private void updateExistedResources() {
+        String[] resources = remoteResourceDialog.getResourceNames();
+        if (resources != null) {
+            resourceModel.removeAllElements();
+            for (String s : resources) {
+                if (resourceModel.getIndexOf(s) == -1) {
+                    resourceModel.addElement(s);
+                }
+            }
+            if (remoteResourceDialog.getCurrentResourceName() != null &&
+                !remoteResourceDialog.getCurrentResourceName().equals("")) {
+                jComboBox1.setSelectedItem(remoteResourceDialog.
+                                           getCurrentResourceName());
+            }
+            repaint();
+
+        }
+
+    }
+
+
+    /**
+     * deleteButton_actionPerformed, remove the selected resource after
+     * confirmation.
+     *
+     * @param e ActionEvent
+     */
+    public void deleteButton_actionPerformed(ActionEvent e) {
+        String deleteResourceStr = (String) jComboBox1.getSelectedItem();
+        if (deleteResourceStr != null) {
+            int choice = JOptionPane.showConfirmDialog(null,
+                    "Do you really want to remove the remote source: " +
+                    deleteResourceStr + "?", "Warning",
+                    JOptionPane.OK_CANCEL_OPTION);
+            if (choice != 2) {
+                resourceModel.removeElement(deleteResourceStr);
+                remoteResourceDialog.removeResourceByName(deleteResourceStr);
+                repaint();
+            }
+
+        }
+
     }
 
     /**
@@ -251,15 +425,21 @@ public class LoadData extends JDialog {
                     try {
                         String format = i + "\n";
                         String filepath = null;
-                        filepath = jFileChooser1.getCurrentDirectory().getCanonicalPath();
+                        filepath = jFileChooser1.getCurrentDirectory().
+                                   getCanonicalPath();
                         setLastDataInfo(filepath, format);
                         // Delegates the actual file loading to the project panel
-                        parentProjectPanel.fileOpenAction(files, supportedInputFormats[i], mergeCheckBox.isSelected());
+                        parentProjectPanel.fileOpenAction(files,
+                                supportedInputFormats[i],
+                                mergeCheckBox.isSelected());
                         dispose();
                         return;
-                    } catch (org.geworkbench.engine.parsers.InputFileFormatException iffe) {
+                    } catch (org.geworkbench.engine.parsers.
+                             InputFileFormatException iffe) {
                         // Let the user know that there was a problem parsing the file.
-                        JOptionPane.showMessageDialog(null, "The input file does not comply with the designated format.", "Parsing Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null,
+                                "The input file does not comply with the designated format.",
+                                "Parsing Error", JOptionPane.ERROR_MESSAGE);
                     } catch (IOException ex) {
                     }
                 }
@@ -292,10 +472,18 @@ public class LoadData extends JDialog {
         this.repaint();
     }
 
+    private void addRemotePanel_actionPerformed(ActionEvent e) {
+        lowerPanel.add(jPanel10);
+        this.validate();
+        this.repaint();
+    }
+
+
     private void jRadioButton2_actionPerformed(ActionEvent e) {
         this.getContentPane().remove(jPanel8);
         this.getContentPane().remove(jPanel6);
         this.getContentPane().add(jPanel4, BorderLayout.CENTER);
+        lowerPanel.remove(jPanel10);
         this.validate();
         this.repaint();
     }
@@ -350,13 +538,19 @@ public class LoadData extends JDialog {
     }
 
     static public void setLastDataInfo(String dir, String format) {
-        try {//save current settings.
-            BufferedWriter br = new BufferedWriter(new FileWriter(System.getProperty("userSettings")));
+        try { //save current settings.
+            BufferedWriter br = new BufferedWriter(new FileWriter(System.
+                    getProperty("userSettings")));
             br.write(format);
             br.write(dir);
             br.close();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+
+    public void openRemoteResourceButton_actionPerformed(ActionEvent e) {
+        mageButtonSelection_actionPerformed(e);
+
     }
 }
