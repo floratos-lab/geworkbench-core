@@ -50,6 +50,7 @@ public class UILauncher implements AnnotationParserListener {
 
     public static SplashBitmap splash = null;
     public static final String LOOK_AND_FEEL_FLAG = "-lookandfeel";
+    public static final String DEVELOPMENT_FLAG = "-dev";
     private static final String DEFAULT_COMPONENTS_DIR = "components";
     private static final String COMPONENTS_DIR_PROPERTY = "components.dir";
 
@@ -127,6 +128,7 @@ public class UILauncher implements AnnotationParserListener {
         // Sort out arguments
         String configFileArg = null;
         String lookAndFeelArg = null;
+        boolean devMode = false;
         for (int i = 0; i < args.length; i++) {
             if (LOOK_AND_FEEL_FLAG.equals(args[i])) {
                 if (args.length == (i + 1)) {
@@ -135,6 +137,8 @@ public class UILauncher implements AnnotationParserListener {
                     i++;
                     lookAndFeelArg = args[i];
                 }
+            } else if (DEVELOPMENT_FLAG.equals(args[i])) {
+                devMode = true;
             } else {
                 configFileArg = args[i];
             }
@@ -170,13 +174,17 @@ public class UILauncher implements AnnotationParserListener {
 
         // Initialize component classloaders
 
-        System.out.println("Scanning plugins...");
-        String componentsDir = System.getProperty(COMPONENTS_DIR_PROPERTY);
-        if (componentsDir == null) {
-            componentsDir = DEFAULT_COMPONENTS_DIR;
+        if (!devMode) {
+            System.out.println("Scanning plugins...");
+            String componentsDir = System.getProperty(COMPONENTS_DIR_PROPERTY);
+            if (componentsDir == null) {
+                componentsDir = DEFAULT_COMPONENTS_DIR;
+            }
+            ComponentRegistry.getRegistry().initializeComponentResources(componentsDir);
+            System.out.println("... scan complete.");
+        } else {
+            System.out.println("Development mode-- skipping plugin scan.");
         }
-        ComponentRegistry.getRegistry().initializeComponentResources(componentsDir);
-        System.out.println("... scan complete.");
 
         // Redirecting System.out and System.err to a log file
         //        System.setErr(new PrintStream(new LoggingOutputStream(Category.getRoot(), Priority.WARN), true));
