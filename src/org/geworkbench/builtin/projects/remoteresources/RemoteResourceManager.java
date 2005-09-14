@@ -1,6 +1,6 @@
 package org.geworkbench.builtin.projects.remoteresources;
 
-import java.io.File;
+import java.io.*;
 import java.util.ArrayList;
 
 /**
@@ -17,14 +17,20 @@ import java.util.ArrayList;
  */
 public class RemoteResourceManager {
     private ArrayList<RemoteResource> existedResources;
+    private static final String DEFAULTRESOURCEFILE = "defaultResources.csv";
+    private String filename;
+    private String cloumnseparator = ",";
 
     public RemoteResourceManager() {
         existedResources = new ArrayList<RemoteResource>();
         String propertyfilename = System.getProperty("remotepropertyfile");
-        if (propertyfilename != null && new File(propertyfilename).canRead()) {
+        propertyfilename = System.getProperty("temporary.files.directory") +
+                           File.separator + DEFAULTRESOURCEFILE;
+        filename = new File(propertyfilename).getAbsolutePath();
+        if (filename != null && new File(filename).canRead()) {
 
-            init(new File(propertyfilename));
-        }else{
+            init(new File(filename));
+        } else {
             init();
         }
 
@@ -35,7 +41,9 @@ public class RemoteResourceManager {
      * init
      */
     protected void init() {
-        RemoteResource rr = new RemoteResource("NCI_CaArray", "nci.cabio.nih.gov", "http:", "manju", "test");
+        RemoteResource rr = new RemoteResource("caARRAY",
+                                               "nci.cabio.nih.gov", "http:",
+                                               "manju", "test");
         existedResources.add(rr);
     }
 
@@ -44,22 +52,62 @@ public class RemoteResourceManager {
      * @param propertyfilename File
      */
     private void init(File propertyfilename) {
+        try {
+
+            InputStream input = new FileInputStream(propertyfilename);
+            BufferedReader br = new BufferedReader(new InputStreamReader(input));
+            String line = null;
+
+            while ((line = br.readLine()) != null) {
+
+                String[] cols = line.split(",");
+                if (cols.length > 0) {
+                    RemoteResource rr = RemoteResource.createNewInstance(cols);
+                    if (rr != null) {
+                        existedResources.add(rr);
+
+                    }
+                }
+            }
+            br.close();
+            input.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+
+        }
 
     }
 
-    public String getItems(){
-       return existedResources.get(0).getShortname();
+    /**
+     * getFristItem
+     */
+    public String getFristItemName() {
+        if (existedResources != null && existedResources.size() > 0) {
+            return existedResources.get(0).getShortname();
+        }
+        return null;
+
     }
 
-   public RemoteResource getSelectedResouceByName(String name){
-       for(RemoteResource rr: existedResources){
-           if(rr.getShortname().equals(name)){
-               return rr;
-           }
-       }
-       return null;
+    public String[] getItems() {
+        int size = existedResources.size();
+        String[] shortnames = new String[size];
+        for (int i = 0; i < size; i++) {
+            shortnames[i] = existedResources.get(i).getShortname();
+        }
+        return shortnames;
+    }
 
-   }
+    public RemoteResource getSelectedResouceByName(String name) {
+        for (RemoteResource rr : existedResources) {
+            if (rr.getShortname().equals(name)) {
+                return rr;
+            }
+        }
+        return null;
+
+    }
+
     /**
      * Edit the properties of a romoteResource
      */
@@ -91,6 +139,19 @@ public class RemoteResourceManager {
     }
 
     /**
+     * Delete one resource based on its shortname.
+     * @param name String
+     * @return boolean
+     */
+    public boolean deleteRemoteResource(String name) {
+        if (getSelectedResouceByName(name) != null) {
+            existedResources.remove(getSelectedResouceByName(name));
+        }
+        return false;
+    }
+
+
+    /**
      * Add one new resource.
      * @param newResource RemoteResource
      * @return boolean
@@ -103,5 +164,35 @@ public class RemoteResourceManager {
         }
     }
 
+    /**
+     * saveToFile
+     */
+    public void saveToFile() {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
+                    filename)));
+            String line = null;
+            if (existedResources.size() == 0) {
+
+                return;
+            }
+
+            for (RemoteResource s : existedResources) {
+
+                writer.write(s.getShortname()
+                             + cloumnseparator + s.getUri()
+                             + cloumnseparator + s.getConnectProtocal()
+                             + cloumnseparator + s.getUsername()
+                             + cloumnseparator + s.getPassword());
+                writer.newLine();
+            }
+
+            writer.flush();
+            writer.close();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+
+    }
 
 }

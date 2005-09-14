@@ -1,7 +1,5 @@
 package org.geworkbench.builtin.projects.remoteresources;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * <p>Title: </p>
@@ -25,22 +23,52 @@ public class RemoteResource {
     private String DEFAULTPROTOCAL = "http";
     private String shortname;
     private String uri;
+    private int portnumber = 8;
     public RemoteResource() {
     }
-    public RemoteResource(String url, String protocal, String user, String passwd){
-        this("Default",  url, protocal, user,  passwd);
-    }
-    public RemoteResource(String shortname, String url, String protocal, String user, String passwd){
-//       try{
-//           uri = url;
-//       }catch(MalformedURLException e){e.printStackTrace();}
-       uri = url;
-       connectProtocol = protocal;
-       username = user;
-       password = passwd;
-       this.shortname = shortname;
-   }
 
+    public RemoteResource(String url, String protocal, String user,
+                          String passwd) {
+        this("Default", url, protocal, user, passwd);
+    }
+
+    public RemoteResource(String shortname, String url, String protocal,
+                          String user, String passwd) {
+        uri = url;
+        connectProtocol = protocal;
+        username = user;
+        password = passwd;
+        this.shortname = shortname;
+    }
+
+    public RemoteResource(String shortname, String url, String port,
+                          String protocal,
+                          String user, String passwd) {
+        uri = url;
+        connectProtocol = protocal;
+        username = user;
+        password = passwd;
+        this.shortname = shortname;
+        try {
+            if (new Integer(port).intValue() != 0) {
+                portnumber = new Integer(port).intValue();
+            }
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            portnumber = 80;
+        }
+        ;
+    }
+
+
+    public static RemoteResource createNewInstance(String[] columns) {
+        if (columns.length == 6) {
+            return new RemoteResource(columns[0], columns[1], columns[2],
+                                      columns[3], columns[4], columns[5]);
+        } else {
+            return null;
+        }
+    }
 
     public void setUsername(String username) {
         this.username = username;
@@ -60,6 +88,10 @@ public class RemoteResource {
 
     public void setUri(String uri) {
         this.uri = uri;
+    }
+
+    public void setPortnumber(int portnumber) {
+        this.portnumber = portnumber;
     }
 
     public String getUsername() {
@@ -82,6 +114,10 @@ public class RemoteResource {
         return uri;
     }
 
+    public int getPortnumber() {
+        return portnumber;
+    }
+
     /**
      * update
      *
@@ -95,5 +131,16 @@ public class RemoteResource {
         connectProtocol = rResource.connectProtocol;
     }
 
-
+    /**
+     * Use shortname as the Key for every object.
+     * @param obj Object
+     * @return boolean
+     */
+    public boolean equals(Object obj) {
+        if (obj instanceof RemoteResource) {
+            return shortname.equals(((RemoteResource) obj).shortname);
+        } else {
+            return false;
+        }
+    }
 }
