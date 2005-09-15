@@ -298,6 +298,7 @@
         <root url="jar://$PROJECT_DIR$/lib/dom4j-1.6.1.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/piccolox.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/piccolo.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/xmlsec.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
