@@ -172,7 +172,7 @@ public class SessionsViewDialog extends JDialog {
     }
 
     public void sessionTable_mouseReleased(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON3) {
+        if (e.isMetaDown()) {
             sessionMenu.show(sessionTable, e.getX(), e.getY());
         }
     }

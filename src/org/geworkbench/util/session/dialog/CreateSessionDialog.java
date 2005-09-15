@@ -1,6 +1,5 @@
 package org.geworkbench.util.session.dialog;
 
-import com.borland.jbcl.layout.VerticalFlowLayout;
 import org.geworkbench.util.session.LoginPanelModel;
 
 import javax.swing.*;
@@ -34,11 +33,9 @@ class CreateSessionDialog extends JDialog {
     JPanel jPanel1 = new JPanel();
     JButton cancelButton = new JButton();
     JButton connectButton = new JButton();
-    VerticalFlowLayout verticalFlowLayout1 = new VerticalFlowLayout();
     JPanel jPanel2 = new JPanel();
     Border border4;
     JPanel jPanel3 = new JPanel();
-    VerticalFlowLayout verticalFlowLayout2 = new VerticalFlowLayout();
     Border border5;
     TitledBorder titledBorder2;
     Border border6;
@@ -60,6 +57,7 @@ class CreateSessionDialog extends JDialog {
     Border border8;
     TitledBorder titledBorder3;
     Border border9;
+    FlowLayout flowLayout1 = new FlowLayout();
 
     public CreateSessionDialog(Frame frame, String title, LoginPanelModel model, boolean modal) {
         super(frame, title, modal);
@@ -114,21 +112,11 @@ class CreateSessionDialog extends JDialog {
         connectButton.addActionListener(new CreateSessionDialog_connectButton_actionAdapter(this));
         connectButton.addKeyListener(keyAdapter);
         connectButton.addActionListener(new CreateSessionDialog_connectButton_actionAdapter(this));
-        jPanel2.setLayout(verticalFlowLayout1);
-        jPanel3.setLayout(verticalFlowLayout2);
+        jPanel2.setLayout(flowLayout1);
         jPanel2.setBackground(UIManager.getColor("Menu.background"));
         jPanel2.setBorder(border7);
         jPanel3.setMinimumSize(new Dimension(600, 230));
         jPanel3.setPreferredSize(new Dimension(600, 230));
-        verticalFlowLayout1.setAlignment(VerticalFlowLayout.BOTTOM);
-        verticalFlowLayout1.setVgap(0);
-        verticalFlowLayout1.setHorizontalFill(true);
-        verticalFlowLayout1.setVerticalFill(false);
-        verticalFlowLayout2.setAlignment(VerticalFlowLayout.TOP);
-        verticalFlowLayout2.setHgap(5);
-        verticalFlowLayout2.setVgap(5);
-        verticalFlowLayout2.setHorizontalFill(true);
-        verticalFlowLayout2.setVerticalFill(true);
         jPanel5.setLayout(borderLayout1);
         jPanel4.setEnabled(true);
         jPanel4.setFont(new java.awt.Font("MS Sans Serif", 0, 11));
