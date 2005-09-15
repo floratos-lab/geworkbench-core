@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library>
+  <!--JBuilder Library Definition File-->
+  <fullname>sequenceretriever</fullname>
+  <class>
+    <path>[components/sequenceretriever/lib/ensj-30.2.jar]</path>
+    <path>[components/sequenceretriever/lib/mysql-connector-java-3.0.8-stable-bin.jar]</path>
+    <path>[components/sequenceretriever/lib/mysql-connector-java-3.0.16-ga-bin.jar]</path>
+  </class>
+  <lastmodsaved>1126800934298</lastmodsaved>
+</library>
