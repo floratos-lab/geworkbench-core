@@ -451,20 +451,22 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
     protected void jProjectTree_mouseClicked(MouseEvent e) {
 
         TreePath path = projectTree.getSelectionPath();
-        path.getLastPathComponent();
-        selectedNode = selection.getSelectedNode();
-        ProjectTreeNode clickedNode = (ProjectTreeNode) path.getLastPathComponent();
-        // Take action only if a new node is selected.
-        if (path != null && selectedNode != clickedNode) {
-            setNodeSelection(clickedNode);
-        }
-        if ((clickedNode != null) && clickedNode instanceof DataSetSubNode) {
-            DSAncillaryDataSet ds = ((DataSetSubNode) clickedNode)._aDataSet;
-            publishProjectEvent(new ProjectEvent("ProjectNode", ds));
-        }
-        if ((clickedNode != null) && clickedNode instanceof ImageNode) {
-            if (e.getClickCount() == 1) {
-                publishImageSnapshot(new ImageSnapshotEvent("Image Node Selected", ((ImageNode) clickedNode).image, ImageSnapshotEvent.Action.SHOW));
+        if (path != null) {
+            path.getLastPathComponent();
+            selectedNode = selection.getSelectedNode();
+            ProjectTreeNode clickedNode = (ProjectTreeNode) path.getLastPathComponent();
+            // Take action only if a new node is selected.
+            if (path != null && selectedNode != clickedNode) {
+                setNodeSelection(clickedNode);
+            }
+            if ((clickedNode != null) && clickedNode instanceof DataSetSubNode) {
+                DSAncillaryDataSet ds = ((DataSetSubNode) clickedNode)._aDataSet;
+                publishProjectEvent(new ProjectEvent("ProjectNode", ds));
+            }
+            if ((clickedNode != null) && clickedNode instanceof ImageNode) {
+                if (e.getClickCount() == 1) {
+                    publishImageSnapshot(new ImageSnapshotEvent("Image Node Selected", ((ImageNode) clickedNode).image, ImageSnapshotEvent.Action.SHOW));
+                }
             }
         }
     }
