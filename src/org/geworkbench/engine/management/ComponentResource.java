@@ -79,7 +79,7 @@ public class ComponentResource {
         for (int i = 0; i < urls.size(); i++) {
             classpath[i] = (URL) urls.get(i);
         }
-        return new URLClassLoader(classpath);
+        return new ComponentClassLoader(classpath);
     }
 
     public ClassLoader getClassLoader() {

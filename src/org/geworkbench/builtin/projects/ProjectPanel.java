@@ -1750,6 +1750,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                 projectTreeModel = new DefaultTreeModel(root);
                 projectTree.setModel(projectTreeModel);
             } catch (Exception exc) {
+                exc.printStackTrace();
                 JOptionPane.showMessageDialog(null, "Check that the file contains a valid workspace.", "Open Workspace Error", JOptionPane.ERROR_MESSAGE);
             }
 
