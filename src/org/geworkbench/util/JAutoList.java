@@ -78,7 +78,7 @@ public class JAutoList extends JPanel {
     private void handleMouseEvent(MouseEvent event) {
         int index = list.locationToIndex(event.getPoint());
         if (index != -1) {
-            if (event.getButton() == MouseEvent.BUTTON3) {
+            if (event.isMetaDown()) {
                 elementRightClicked(index, event);
             } else if (event.getButton() == MouseEvent.BUTTON1) {
                 if (event.getClickCount() > 1) {

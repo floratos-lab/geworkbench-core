@@ -478,7 +478,7 @@ public class VisualBuilder extends JFrame {
             }
         }
 
-        if (e.getButton() == e.BUTTON3) {
+        if (e.isMetaDown()) {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) jComponentTree.getLastSelectedPathComponent();
 
             if (node.getParent() == rootNode) { //class
