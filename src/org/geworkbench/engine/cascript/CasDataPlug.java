@@ -18,6 +18,7 @@ class CasDataPlug extends CasDataType {
     }
 
     String type;
+    CasDataTypeImport CDTI;
     Object var;
 
     CasDataPlug(String t) {
@@ -25,7 +26,8 @@ class CasDataPlug extends CasDataType {
         type = t;
         var = null;
     }
-    CasDataPlug(String n, String t) {
+    CasDataPlug(String n, String t, CasDataTypeImport C) {
+        CDTI = C;
         name = n;
         type = t;
         var = null;
@@ -53,8 +55,11 @@ class CasDataPlug extends CasDataType {
         return var;
     }
 
+    public void setVar(Object a) {
+        var = a;
+    }
     public CasDataType copy() {
-        return new CasDataPlug(name, type);
+        return new CasDataPlug(name, type, CDTI);
     }
 
     public void print(PrintWriter w) {

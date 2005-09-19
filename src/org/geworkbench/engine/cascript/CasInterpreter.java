@@ -9,7 +9,7 @@ import java.util.Vector;
  * Interpreter routines that is called directly from the tree walker.
  *
  * @author Behrooz Badii - badiib@gmail.com
- * @version $Id: CasInterpreter.java,v 1.8 2005-09-08 22:15:00 bb2122 Exp $
+ * @version $Id: CasInterpreter.java,v 1.9 2005-09-19 19:13:14 bb2122 Exp $
  */
 class CasInterpreter {
     CasSymbolTable symt;
@@ -41,10 +41,9 @@ class CasInterpreter {
                 System.out.println("Type: " + ((CasModule) symt.findVar(id)).type);
             }
             if (type instanceof CasDataPlug) {
-                //fix this, you should be sending the value for the key of getType to the CasDataPlug, in both constructors!!
                 if (CDTI.containsKey(((CasDataPlug)type).getType())) {
                     symt.put(id,
-                             new CasDataPlug(id, ((CasDataPlug) type).getType()));
+                             new CasDataPlug(id, ((CasDataPlug) type).getType(), CDTI));
                     System.out.println("put in casDataPlug");
                     System.out.println("Name: " + symt.findVar(id).name);
                     System.out.println("Type: " +
@@ -197,13 +196,42 @@ class CasInterpreter {
             //should this be allowed?
             if (a instanceof CasModule && b instanceof CasModule) {
                 System.out.println("in Casmodule part of ipt.assign(a,b)");
-                //you have make sure the types are the same!
-                CasDataType x = rvalue(b);
-                x.setName(a.name);
-                symt.setVar(a.name, (CasModule) x);
-                return new CasBool(true);
+                if (((CasModule)a).getType().equals(((CasModule)b).getType())) {
+                    //you have make sure the types are the same!
+                    CasDataType x = rvalue(b);
+                    x.setName(a.name);
+                    symt.setVar(a.name, (CasModule) x);
+                    return new CasBool(true);
+                }
+                else
+                    throw new CasException("Assignment for modules " + a.getName() + " and " + b.getName() + "is invalid; they are not of the same type");
             }
             if (a instanceof CasDataPlug) {
+                System.out.println("in CasDataPlug part of ipt.assign(a,b)");
+                //if b is also a CasDataPlug
+                //remember to check that anything being assigned to a CasDataPlug has to be assignable to the original interface
+                if (b instanceof CasDataPlug) {
+                    if (((CasDataPlug) a).getType().equals(((CasDataPlug) b).
+                            getType())) {
+                        //you have make sure the types are the same!
+                        CasDataType x = rvalue(b);
+                        x.setName(a.name);
+                        symt.setVar(a.name, (CasDataPlug) x);
+                        return new CasBool(true);
+                    }
+                }
+                //else if (b instanceof CasMethod) {
+                //    Object a = MethodCall((CasMethod)b).getformodule(), (CasMethod)b).getothername(),
+                //}
+                //else if (b instanceof CasDataMethod) {
+                //
+                //}
+                else if (b instanceof CasValue) {
+                    CasValue get = new CasValue(((CasValue) b).formodule, "get" + ((CasValue) b).othername, ((CasValue) b).association);
+
+                }
+                else
+                    throw new CasException ("A datatype ("+a.getName()+") can only be assigned values from another datatype, a module's methods, or a module's variables");
                 //make sure that the CasDataPlug type is equal to what is either being called using
                 //make sure it's the right DataPlug! object var has to be assignable
                 //a CasValue, CasMethod, or another CasDataPlug
@@ -214,7 +242,7 @@ class CasInterpreter {
         return a.error("=");
     }
 
-    //you have to test for array out of bounds exceptions here!
+    //you have to test for array out of bounds exceptions here!, would it be a null pointer exception?
     public CasDataType dimensionAccess(String id, Vector<CasDataType> indices) {
         System.out.println("in dimensionAccess() call");
         CasDataType a = symt.findVar(id);
@@ -222,19 +250,16 @@ class CasInterpreter {
         if (indices.size() == 1 && a instanceof CasArray) {
             if (indices.elementAt(0) instanceof CasInt) {
                 ret = ((CasArray) a).accessArray(((CasInt) indices.elementAt(0)).getvar());
-                //ret.setName("from."+id);
                 return ret;
             } else throw new CasException("index of array access for " + a.getName() + " must be an integer");
         } else if (indices.size() == 1 && a instanceof CasMatrix) {
             if (indices.elementAt(0) instanceof CasInt) {
                 ret = ((CasMatrix) a).subArrayofMatrix(((CasInt) indices.elementAt(0)).getvar());
-                //ret.setName("from."+id);
                 return ret;
             } else throw new CasException("index of array access for " + a.getName() + " must be an integer");
         } else if (indices.size() == 2 && a instanceof CasMatrix) {
             if ((indices.elementAt(0) instanceof CasInt) && (indices.elementAt(1) instanceof CasInt)) {
                 ret = ((CasMatrix) a).accessMatrix(((CasInt) indices.elementAt(0)).getvar(), ((CasInt) indices.elementAt(1)).getvar());
-                //ret.setName("from."+id);
                 return ret;
             } else throw new CasException("indices of two-dimensional array declaration (matrix declaration) for " + a.getName() + " must be integers");
         } else throw new CasException("there are too many indices, only two dimensional arrays are supported");
@@ -258,27 +283,103 @@ class CasInterpreter {
 
     //methodcall occurs when the CasMethod is used, so we will find it in OBJECT_CALL
     //MethodCall is going to have to be public Object.
-    public void MethodCall(String casname, String casmethod, Vector<CasDataType> v) {
+    //we need to have return types here!
+    public Object MethodCall(String casname, String casmethod, Vector<CasDataType> v) {
+        Object ret = null;
         Object [] args = vectortoargs(v);
-        if (symt.exists(casname + " " + casmethod)) {
-            CasMethod callme = (CasMethod) symt.findVar(casname + " " + casmethod);
-            try {
-                callme.m.invoke(callme.getPlugin(), args);
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new CasException("Error occurred in MethodCall in interpreter for non-pre-existing method");
-            }
-        } else {
-            symt.put(casname + " " + casmethod, new CasMethod(casname, casmethod, (CasModule) symt.findVar(casname)));
-            System.out.println("made new method " + casmethod + " for " + casname);
-            CasMethod callme = (CasMethod) symt.findVar(casname + " " + casmethod);
-            try {
-                callme.m.invoke(callme.getPlugin(), args);
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new CasException("Error occurred in MethodCall in interpreter for non-pre-existing method");
+        if (symt.exists(casname) && symt.findVar(casname) instanceof CasDataPlug) {
+            //deal with it in another method
+            ret = OtherMethodCall(casname, casmethod, args);
+            return ret;
+        }
+        else {
+            if (symt.exists(casname + " " + casmethod) &&
+                symt.findVar(casname + " " + casmethod) instanceof CasMethod) {
+                CasMethod callme = (CasMethod) symt.findVar(casname + " " +
+                        casmethod);
+                try {
+                    ret = callme.m.invoke(callme.getPlugin(), args);
+                    return ret;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    throw new CasException(
+                            "Error occurred in MethodCall in interpreter for pre-existing method");
+                }
+            } else {
+                if (symt.findVar(casname) instanceof CasModule) {
+                    symt.put(casname + " " + casmethod,
+                             new CasMethod(casname, casmethod,
+                                           (CasModule) symt.findVar(casname)));
+                    System.out.println("made new method " + casmethod + " for " +
+                                       casname);
+                    CasMethod callme = (CasMethod) symt.findVar(casname + " " +
+                            casmethod);
+                    try {
+                        ret = callme.m.invoke(callme.getPlugin(), args);
+                        return ret;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        throw new CasException(
+                                "Error occurred in MethodCall in interpreter for non-pre-existing method");
+                    }
+                } else {
+                    throw new CasException(casname + " is not a module, " +
+                                           casname + "." +
+                                           casmethod + " cannot be called");
+                }
             }
         }
+    }
+
+    //this is called by MethodCall if what we're dealing with is a DataPlug and not a Module
+    public Object OtherMethodCall(String casname, String casmethod, Object[] args) {
+        Object ret = null;
+        if (symt.exists(casname + " " + casmethod) &&
+            symt.findVar(casname + " " + casmethod) instanceof CasDataMethod) {
+            CasDataMethod callme = (CasDataMethod) symt.findVar(casname + " " +
+                    casmethod);
+            try {
+                ret = callme.m.invoke(callme.geta().getVar(), args);
+                return ret;
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new CasException(
+                        "Error occurred in MethodCall in interpreter for pre-existing method for a datatype");
+            }
+        } else {
+            if (symt.findVar(casname) instanceof CasDataPlug) {
+                //you have to change args to the classtypes for that method!
+                Class[] p = argstoclasses(args);
+                symt.put(casname + " " + casmethod,
+                         new CasDataMethod(casname, casmethod,
+                                       (CasDataPlug) symt.findVar(casname), p));
+                System.out.println("made new method " + casmethod + " for " +
+                                   casname);
+                CasDataMethod callme = (CasDataMethod) symt.findVar(casname + " " +
+                        casmethod);
+                try {
+                    ret = callme.m.invoke(callme.geta().getVar(), args);
+                    return ret;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    throw new CasException(
+                            "Error occurred in MethodCall in interpreter for non-pre-existing method");
+                }
+            } else {
+                throw new CasException(casname + " is not a module, " +
+                                       casname + "." +
+                                       casmethod + " cannot be called");
+            }
+        }
+    }
+
+    //helper function for CasInterpreter.OtherMethodCall
+    static Class[] argstoclasses(Object[] args) {
+        Class[] p = new Class[args.length];
+        for (int i = 0; i < p.length; i++) {
+            p[i] = args[i].getClass();
+        }
+        return p;
     }
 
     //helper function for CasInterpreter.MethodCall
@@ -471,12 +572,19 @@ class CasInterpreter {
     public boolean checkreturntype(CasDataType ret, CasFunction func) {
         CasDataType type = func.getReturnType();
         int dimensions = func.getBrackets();
-        //check that if it's a datatype, you make sure it's the right dataplug.var!!
         if (dimensions == 0) {
             if (type instanceof CasModule) {
                 if (ret instanceof CasModule) {
                     String t = ((CasModule) ret).getType();
                     if (((CasModule)type).getType().equals(t)) {
+                        return true;
+                    }
+                }
+            }
+            if (type instanceof CasDataPlug) {
+                if (ret instanceof CasDataPlug) {
+                    String t = ((CasDataPlug) ret).getType();
+                    if (((CasDataPlug)type).getType().equals(t)) {
                         return true;
                     }
                 }

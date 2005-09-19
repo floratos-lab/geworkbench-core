@@ -25,6 +25,14 @@ class CasMethod extends CasDataType {
         return new CasMethod(formodule, othername, association);
     }
 
+    public String getformodule() {
+        return formodule;
+    }
+
+    public String getothername() {
+        return othername;
+    }
+
     public Method getm() {
         return m;
     }
