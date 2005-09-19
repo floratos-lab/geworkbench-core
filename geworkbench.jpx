@@ -152,13 +152,13 @@
   <property category="sys" name="ExcludeClassEnabled" value="0"/>
   <property category="sys" name="IncludeTestPath" value="1"/>
   <property category="sys" name="InstanceVisibility" value="2"/>
-  <property category="sys" name="JDK" value="java version 1.5.0-4"/>
+  <property category="sys" name="JDK" value="java version 1.5.0-b64"/>
   <property category="sys" name="JvmVersion" value="1.5"/>
   <property category="sys" name="LastTag" value="0"/>
-  <property category="sys" name="Libraries" value="geworkbench;alignment;analysis;annotations;associationdiscovery;promoter;cytoscape;discovery;sequenceretriever"/>
+  <property category="sys" name="Libraries" value="geworkbench;alignment;analysis;annotations;associationdiscovery;promoter;cytoscape;discovery;sequenceretriever;gsea"/>
   <property category="sys" name="MakeStable" value="0"/>
   <property category="sys" name="OutPath" value="classes"/>
-  <property category="sys" name="SourcePath" value="src;test;components/alignment/src;components/am/src;components/analysis/src;components/annotations/src;components/associationdiscovery/src;components/cascript/src;components/clustering/src;components/colormosaic/src;components/cytoscape/src;components/discovery/src;components/filtering/src;components/goterms/src;components/hierarchicalclustering/src;components/microarrays/src;components/normalization/src;components/pathwaydecoder/src;components/patterns/src;components/plots/src;components/poshistogram/src;components/promoter/src;components/selectors/src;components/sequenceretriever/src;components/sequences/src;components/versioninfo/src;components/viewers/src"/>
+  <property category="sys" name="SourcePath" value="src;test;components/alignment/src;components/am/src;components/analysis/src;components/annotations/src;components/associationdiscovery/src;components/cascript/src;components/clustering/src;components/colormosaic/src;components/cytoscape/src;components/discovery/src;components/filtering/src;components/goterms/src;components/hierarchicalclustering/src;components/microarrays/src;components/normalization/src;components/pathwaydecoder/src;components/patterns/src;components/plots/src;components/poshistogram/src;components/promoter/src;components/selectors/src;components/sequenceretriever/src;components/sequences/src;components/versioninfo/src;components/viewers/src;components/gsea/src"/>
   <property category="sys" name="SourceVersion" value="1.5"/>
   <property category="sys" name="TestPath" value="test"/>
   <property category="sys" name="Title" value=""/>
