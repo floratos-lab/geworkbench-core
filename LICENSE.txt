@@ -40,6 +40,7 @@
 - Contains JSCi by Mark Hale. (LGPL)
 - Contains Batik by the Apache Foundation. (Apache)
 * Contains JClass by Quest Software. (Non-Free: http://www.quest.com/jclass/)
+- Contains GSEA by Broad Institute, MIT. (MIT License: http://www.broad.mit.edu/gsea/)
 
 (mpiJava - GPL - but unknown attribution)
 (polgara.jar - source unknown)
