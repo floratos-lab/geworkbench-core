@@ -13,6 +13,9 @@ import java.util.ArrayList;
  *
  * @author not attributable
  * @version 1.0
+ *
+ * This class represents a data set over which to run algorithms.
+ * @todo - watkin - The name of this class conflicts with {@link DSDataSet}, resulting in confusion.
  */
 public class DataSet <T> extends ArrayList<T> {
     public DataSet() {

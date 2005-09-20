@@ -5,7 +5,8 @@ import java.io.File;
 /**
  * Extends the notion of a data set by adding access to an ancillary data set file.
  *
- * @todo - watkin - What is the difference between these methods and {@link DSDataSet#getFile()} and {@link DSDataSet#setAbsPath(String)} Can they be merged?
+ * @todo - watkin - What is the difference between these methods and {@link DSDataSet#getFile()} and {@link DSDataSet#setAbsPath(String)}? Can they be merged?
+ * Also, do ancillary data sets have to be files or can the be resources of other types (such as a URL).
  */
 public interface DSAncillaryDataSet extends DSDataSet {
 

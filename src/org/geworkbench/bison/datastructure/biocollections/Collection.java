@@ -13,6 +13,8 @@ import java.util.ArrayList;
  *
  * @author not attributable
  * @version 1.0
+ *
+ * @todo - watkin - This is redundant. Developers should just use ArrayList<T> instead.
  */
 public class Collection <T> extends ArrayList<T> implements DSCollection<T> {
     public Collection() {

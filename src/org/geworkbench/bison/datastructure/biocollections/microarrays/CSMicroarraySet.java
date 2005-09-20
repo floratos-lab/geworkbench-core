@@ -154,6 +154,11 @@ public abstract class CSMicroarraySet<T extends DSMicroarray> extends CSDataSet<
         return value;
     }
 
+    /**
+     * Note-- changes to the returned row will not have any effect on the underlying MicroarraySet.
+     * @param markerIndex
+     * @return
+     */
     public double[] getRow(int markerIndex) {
         double[] expressionProfile = new double[size()];
         for (int i = 0; i < expressionProfile.length; i++) {

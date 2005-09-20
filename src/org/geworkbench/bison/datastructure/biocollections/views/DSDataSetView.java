@@ -16,6 +16,9 @@ import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
  * <p/>
  * <p>Company: Columbia University</p>
  *
+ * Provides a view in to a {@link DSDataSet} and its associated {@link DSPanel DSPanels}.
+ * The view can be optionally limited to exposing only those elements in active panels.
+ *
  * @author Adam Margolin
  * @version 3.0
  */
@@ -34,37 +37,32 @@ public interface DSDataSetView <Q extends DSBioObject> {
     public DSItemList<Q> items();
 
     /**
-     * Set/reset microarray subselection based on activated phenotypes.
-     *
-     * @param status
+     * Set/reset item subselection based on activated panels.
      */
     public void useItemPanel(boolean status);
 
     /**
-     * Gets the statuc of Phenotype Activation
+     * Gets the status of item activation.
      *
-     * @return
      */
     public boolean useItemPanel();
 
     /**
-     * Allows to assign a specific microarray panel selection
-     *
-     * @param mArrayPanel DSPanel
+     * Assigns a specific item panel selection.
      */
     public void setItemPanel(DSPanel<Q> mArrayPanel);
 
     /**
-     * Allows to assign a specific microarray panel selection
+     * Assigns a specific item panel selection.
      */
     public DSPanel<Q> getItemPanel();
 
     /**
-     * Sets the reference microarray set for this <code>DSDataSetView</code>.
+     * Sets the reference {@link DSDataSet} for this <code>DSDataSetView</code>.
      *
-     * @param ma The new reference microarray set.
+     * @param dataSet The new reference dataset.
      */
-    public void setDataSet(DSDataSet<Q> ma);
+    public void setDataSet(DSDataSet<Q> dataSet);
 
     /**
      * Get the <code>DSDataSet</code> object underlying this is view

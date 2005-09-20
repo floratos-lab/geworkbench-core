@@ -13,6 +13,9 @@ import java.util.Vector;
  * <p/>
  * <p>Company: Columbia University</p>
  *
+ * @todo - watkin - This class extends {@link HashMap}, but it does not override many of the required methods. This
+ * class is therefore incomplete.
+ *
  * @author Adam Margolin
  * @version 3.0
  */
@@ -27,7 +30,8 @@ public class HashVector <K,V> extends HashMap<K, Vector<V>> {
      *
      * watkin -
      *
-     * I find this to be prohibitively slow. Linear search is unacceptable for an 'add' operation.
+     * Why is a Vector "lightweight" and a HashSet "heavyweight"?
+     * I find this implementation to be prohibitively slow. Linear search is unacceptable for an 'add' operation.
      * Adding 50,000 markers to a CSMarkerVector takes many minutes.
      * I think there are two potentital solutions for this:
      * 1) Do a full, proper map implementation backed by a Set rather than by a Vector.

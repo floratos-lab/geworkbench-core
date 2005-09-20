@@ -13,6 +13,8 @@ import java.util.List;
  *
  * @author not attributable
  * @version 1.0
+ *
+ * @todo - watkin - This is redundant. Developers should just use List<T> instead.
  */
 public interface DSCollection <T> extends List<T> {
 }

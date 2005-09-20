@@ -28,5 +28,11 @@ public interface DSMatrixDataSet <T extends DSBioObject> {
      */
     public double getValue(int row, int col);
 
+    /**
+     * Returns a row of the matrix data set.
+     * Changing the values in the array has no effect on the underlying data of this data set.
+     * @param index the row number.
+     * @return an of array of the values for that row.
+     */
     public double[] getRow(int index);
 }
