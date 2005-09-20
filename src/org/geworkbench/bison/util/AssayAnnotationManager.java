@@ -1,6 +1,6 @@
 package org.geworkbench.bison.util;
 
-import org.geworkbench.bison.datastructure.biocollections.classification.phenotype.ClassificationCriteria;
+import org.geworkbench.bison.datastructure.biocollections.classification.phenotype.CSClassCriteria;
 
 import javax.swing.*;
 
@@ -24,10 +24,10 @@ public class AssayAnnotationManager extends CSAnnotationManager {
     public static final int TEST = -100;
     public static final int IGNORE = -99;
 
-    public final static ImageIcon redPinIcon = new ImageIcon(ClassificationCriteria.class.getResource("redpin.gif"));
-    public final static ImageIcon whitePinIcon = new ImageIcon(ClassificationCriteria.class.getResource("whitepin.gif"));
-    public final static ImageIcon eraserIcon = new ImageIcon(ClassificationCriteria.class.getResource("eraser.gif"));
-    public final static ImageIcon markerIcon = new ImageIcon(ClassificationCriteria.class.getResource("marker.gif"));
+    public final static ImageIcon redPinIcon = new ImageIcon(CSClassCriteria.class.getResource("redpin.gif"));
+    public final static ImageIcon whitePinIcon = new ImageIcon(CSClassCriteria.class.getResource("whitepin.gif"));
+    public final static ImageIcon eraserIcon = new ImageIcon(CSClassCriteria.class.getResource("eraser.gif"));
+    public final static ImageIcon markerIcon = new ImageIcon(CSClassCriteria.class.getResource("marker.gif"));
 
     public AssayAnnotationManager() {
         addLabelValue(new CSAnnotLabel("Selection"), new CSAnnotValue("Case", CASE));

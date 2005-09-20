@@ -3,6 +3,7 @@ package org.geworkbench.bison.parsers;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.
         DSGenepixMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.CSGenepixMarkerValue;
 
 import java.util.*;
 
@@ -79,7 +80,7 @@ public class GenePixParser {
 
     //added for Genepix flags filter.
     private boolean isFlagged = false;
-    private TreeSet<String> flagsValue= new TreeSet<String>();
+    private TreeSet<String> flagsValue = new TreeSet<String>();
 
 
     /**
@@ -230,7 +231,7 @@ public class GenePixParser {
             token = st.nextToken().trim();
             int tokenIndex = 1;
             GenepixParseContext context = new org.geworkbench.bison.parsers.
-                                          GenepixParseContext(columnsToUse);
+                    GenepixParseContext(columnsToUse);
             Map ctu = context.getColumnsToUse();
             String type = null;
             Object value = null;
@@ -261,8 +262,8 @@ public class GenePixParser {
                 tokenIndex++;
             } while (true);
             populateValues(ctu,
-                           (DSGenepixMarkerValue) microarray.
-                           getMarkerValue(markerIndex++));
+                    (DSGenepixMarkerValue) microarray.
+                            getMarkerValue(markerIndex++));
         }
     }
 
@@ -274,72 +275,78 @@ public class GenePixParser {
         double ch1f = 0d, ch2f = 0d, ch1b = 0d, ch2b = 0d, ratio = 0d;
         int flag = 0;
 
-        // Notice that the order in which we treat median and mean values implies
-        // that if both median and mean measurements are available, only the
-        // latter will be used.
-        if (columns.containsKey("F532 Median")) {
-            value = columns.get("F532 Median");
-            if (value instanceof Double) {
-                ch1f = ((Double) value).doubleValue();
-                gmv.setCh1Fg(ch1f);
+        boolean medianMissing = false;
+        if (!CSGenepixMarkerValue.getComputeSignalMethod().usesMean()) {
+            if (columns.containsKey("F532 Median")) {
+                value = columns.get("F532 Median");
+                if (value instanceof Double) {
+                    ch1f = ((Double) value).doubleValue();
+                }
+            } else {
+                medianMissing = true;
             }
-        }
-        if (columns.containsKey("B532 Median")) {
-            value = columns.get("B532 Median");
-            if (value instanceof Double) {
-                ch1b = ((Double) value).doubleValue();
-                gmv.setCh1Bg(ch1b);
+            if (columns.containsKey("B532 Median")) {
+                value = columns.get("B532 Median");
+                if (value instanceof Double) {
+                    ch1b = ((Double) value).doubleValue();
+                }
+            } else {
+                medianMissing = true;
             }
-        }
-        if (columns.containsKey("F635 Median")) {
-            value = columns.get("F635 Median");
-            if (value instanceof Double) {
-                ch2f = ((Double) value).doubleValue();
-                gmv.setCh2Fg(ch2f);
+            if (columns.containsKey("F635 Median")) {
+                value = columns.get("F635 Median");
+                if (value instanceof Double) {
+                    ch2f = ((Double) value).doubleValue();
+                }
+            } else {
+                medianMissing = true;
             }
-        }
-        if (columns.containsKey("B635 Median")) {
-            value = columns.get("B635 Median");
-            if (value instanceof Double) {
-                ch2b = ((Double) value).doubleValue();
-                gmv.setCh2Bg(ch2b);
+            if (columns.containsKey("B635 Median")) {
+                value = columns.get("B635 Median");
+                if (value instanceof Double) {
+                    ch2b = ((Double) value).doubleValue();
+                }
+            } else {
+                medianMissing = true;
             }
         }
         if (columns.containsKey("Flags")) {
             value = columns.get("Flags");
             if (value instanceof String) {
 
-                if(!value.equals("0")){
-                           isFlagged = true;
-                           flagsValue.add((String)value);
-                       }
+                if (!value.equals("0")) {
+                    isFlagged = true;
+                    flagsValue.add((String) value);
+                }
 
             }
-            gmv.setFlag((String)value);
+            gmv.setFlag((String) value);
         }
 
-        if (columns.containsKey("F532 Mean")) {
-            value = columns.get("F532 Mean");
-            if (value instanceof Double) {
-                ch1f = ((Double) value).doubleValue();
+        if (CSGenepixMarkerValue.getComputeSignalMethod().usesMean() || medianMissing) {
+            if (columns.containsKey("F532 Mean")) {
+                value = columns.get("F532 Mean");
+                if (value instanceof Double) {
+                    ch1f = ((Double) value).doubleValue();
+                }
             }
-        }
-        if (columns.containsKey("B532 Mean")) {
-            value = columns.get("B532 Mean");
-            if (value instanceof Double) {
-                ch1b = ((Double) value).doubleValue();
+            if (columns.containsKey("B532 Mean")) {
+                value = columns.get("B532 Mean");
+                if (value instanceof Double) {
+                    ch1b = ((Double) value).doubleValue();
+                }
             }
-        }
-        if (columns.containsKey("F635 Mean")) {
-            value = columns.get("F635 Mean");
-            if (value instanceof Double) {
-                ch2f = ((Double) value).doubleValue();
+            if (columns.containsKey("F635 Mean")) {
+                value = columns.get("F635 Mean");
+                if (value instanceof Double) {
+                    ch2f = ((Double) value).doubleValue();
+                }
             }
-        }
-        if (columns.containsKey("B635 Mean")) {
-            value = columns.get("B635 Mean");
-            if (value instanceof Double) {
-                ch2b = ((Double) value).doubleValue();
+            if (columns.containsKey("B635 Mean")) {
+                value = columns.get("B635 Mean");
+                if (value instanceof Double) {
+                    ch2b = ((Double) value).doubleValue();
+                }
             }
         }
         if (columns.containsKey("Ratio of Means")) {
@@ -349,14 +356,20 @@ public class GenePixParser {
             }
         }
 
-        double val = 0d;
-        if (ch2f != ch2b) {
-            val = (ch1f - ch1b) / (ch2f - ch2b);
-        } else {
-            val = (ch1f - ch1b);
-        }
-        gmv.setValue(val);
-        gmv.setMissing(false);
+        gmv.setCh1Fg(ch1f);
+        gmv.setCh1Bg(ch1b);
+        gmv.setCh2Fg(ch2f);
+        gmv.setCh2Bg(ch2b);
+        
+//        double val = 0d;
+//        if (ch2f != ch2b) {
+//            val = (ch1f - ch1b) / (ch2f - ch2b);
+//        } else {
+//            val = (ch1f - ch1b);
+//        }
+//        gmv.setValue(val);
+//        gmv.setMissing(false);
+        gmv.computeSignal();
     }
 
     private void jbInit() throws Exception {

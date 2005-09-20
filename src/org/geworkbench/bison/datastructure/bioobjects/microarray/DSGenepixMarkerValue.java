@@ -80,4 +80,6 @@ public interface DSGenepixMarkerValue extends DSMutableMarkerValue {
      * @return channel 2 background value
      */
     double getCh2Bg();
+
+    void computeSignal();
 }

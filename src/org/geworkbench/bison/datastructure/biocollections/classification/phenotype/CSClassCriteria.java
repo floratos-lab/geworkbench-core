@@ -23,6 +23,10 @@ import java.util.Map;
  * <p/>
  * <p>Company: Columbia University</p>
  *
+ * This keeps track of the <i>class</i> of panels and its members. The most common classes are Case and Control.
+ * <p>
+ * @todo - watkin - Eliminate icons from Bison and move in to caWorkbench.
+ *
  * @author not attributable
  * @version 1.0
  */
@@ -116,7 +120,7 @@ public class CSClassCriteria extends CSPanel<DSBioObject> implements DSClassCrit
 
 
     /**
-     * Given a possibly annotated microarray, return its annotation value (class)
+     * Given a possibly annotated bio object, return its annotation value (class)
      * E.g. case, control, test, etc.
      *
      * @param item Microarray

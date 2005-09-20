@@ -64,4 +64,8 @@ public class GlobalPreferences {
         return prefs.getField(PREF_TEXT_EDITOR).toString();
     }
 
+    public int getGenepixComputationMethod() {
+        return ((ChoiceField)prefs.getField(PREF_GENEPIX_COMPUTATION)).getSelection();
+    }
+
 }

@@ -8,6 +8,9 @@ import org.geworkbench.bison.util.DSAnnotValue;
 
 import javax.swing.*;
 
+/**
+ * This keeps track of the <i>class</i> of panels and its members. The most common classes are Case and Control.
+ */
 public interface DSClassCriteria {
     /**
      * Associate a given item (e.g. microarray) with a value (class)
