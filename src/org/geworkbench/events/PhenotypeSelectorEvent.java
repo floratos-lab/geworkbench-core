@@ -2,6 +2,7 @@ package org.geworkbench.events;
 
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
+import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.engine.config.events.Event;
 
 /**
@@ -11,18 +12,24 @@ import org.geworkbench.engine.config.events.Event;
  * <p>Company: Columbia Genomics Center</p>
  *
  * @author not attributable
- * @version $Id: PhenotypeSelectorEvent.java,v 1.1.1.1 2005-07-28 22:36:26 watkin Exp $
+ * @version $Id: PhenotypeSelectorEvent.java,v 1.2 2005-09-21 20:19:44 watkin Exp $
  */
 
 public class PhenotypeSelectorEvent <Q extends DSMicroarray> extends Event {
     private DSPanel<Q> panel;
+    private DSDataSet<Q> dataSet;
 
-    public PhenotypeSelectorEvent(DSPanel<Q> p) {
+    public PhenotypeSelectorEvent(DSPanel<Q> p, DSDataSet<Q> d) {
         super(null);
         panel = p;
+        dataSet = d;
     }
 
     public DSPanel<Q> getTaggedItemSetTree() {
         return panel;
+    }
+
+    public DSDataSet<Q> getDataSet() {
+        return dataSet;
     }
 }

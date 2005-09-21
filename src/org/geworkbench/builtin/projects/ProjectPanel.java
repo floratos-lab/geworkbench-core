@@ -15,6 +15,7 @@ import org.geworkbench.engine.management.Subscribe;
 import org.geworkbench.engine.management.Script;
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.biocollections.views.CSMicroarraySetView;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
@@ -870,6 +871,10 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                         DSDataSet set = dataSets[i];
 
                         if (set != null) {
+                            // Do intial color context update if it is a microarray
+                            if (set instanceof DSMicroarraySet) {
+                                updateColorContext((DSMicroarraySet) set);
+                            }
                             //String directory = dataSetFile.getPath();
                             //System.setProperty("data.files.dir", directory);
                             if (!selected) {
@@ -1169,11 +1174,19 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         if (projectTree == null || parent == null) {
             return;
         }
-
         MicroarraySetNode node = new MicroarraySetNode(maSet);
         projectTreeModel.insertNodeInto(node, parent, parent.getChildCount());
         setNodeSelection(node);
         fireNodeSelectionEvent(node);
+    }
+
+    private void updateColorContext(DSMicroarraySet maSet) {
+        ColorContext colorContext = (ColorContext) maSet.getObject(ColorContext.class);
+        if (colorContext != null) {
+            CSMicroarraySetView view = new CSMicroarraySetView(maSet);
+            System.out.println("INITIAL CONTEXT UPDATE: " + colorContext.getClass());
+            colorContext.updateContext(view);
+        }
     }
 
     /**
@@ -1202,6 +1215,24 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
             }
         } else {
             // Ignore all other actions.
+        }
+    }
+
+    @Subscribe
+    public void receive(org.geworkbench.events.PhenotypeSelectorEvent e, Object source) {
+        if (e.getDataSet() instanceof DSMicroarraySet) {
+            DSMicroarraySet microarraySet = (DSMicroarraySet) e.getDataSet();
+            ColorContext colorContext = (ColorContext) microarraySet.getObject(ColorContext.class);
+            if (colorContext != null) {
+                CSMicroarraySetView view = new CSMicroarraySetView(microarraySet);
+                view.useItemPanel(true);
+                if (e.getTaggedItemSetTree() != null && e.getTaggedItemSetTree().size() > 0) {
+                    DSPanel activatedArrays = e.getTaggedItemSetTree().activeSubset();
+                    view.setItemPanel(activatedArrays);
+                    System.out.println("UPDATING CONTEXT: " + colorContext.getClass());
+                }
+                colorContext.updateContext(view);
+            }
         }
     }
 

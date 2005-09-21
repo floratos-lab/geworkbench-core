@@ -1,6 +1,9 @@
 <geaw-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ConfigurationFile Schema.xsd">
 	<!--<gui-window name="Main GUI" class="geaw.GUIApp"/>-->
 	<gui-window name="Main GUI" class="org.geworkbench.engine.skin.Skin"/>
+    <plugin id="projectWindow" name="Project Panel" class="org.geworkbench.builtin.projects.ProjectPanel">
+        <gui-area name="ProjectArea"/>
+    </plugin>
 	<plugin id="AffyExcelTXTFilter" name="Exp1. Format" class="org.geworkbench.engine.parsers.AffyExcelTXTFileFormat"/>
 	<plugin id="affyFilter" name="Affy File Format" class="org.geworkbench.engine.parsers.AffyFileFormat"/>
 	<plugin id="annotationsPanel" name="Marker Annotations" class="org.geworkbench.components.annotations.AnnotationsPanel" source="annotations">
@@ -58,9 +61,6 @@
 	<plugin id="missingValuesFilter" name="Missing Values Filter" class="org.geworkbench.components.filtering.MissingValuesFilter" source="filtering"/>
 	<plugin id="sequenceFileFilter" name="FASTA Format" class="org.geworkbench.engine.parsers.sequences.SequenceFileFormat"/>
 	<plugin id="patternFilter" name="SPLASH Patterns" class="org.geworkbench.engine.parsers.patterns.PatternFileFormat"/>
-	<plugin id="projectWindow" name="Project Panel" class="org.geworkbench.builtin.projects.ProjectPanel">
-		<gui-area name="ProjectArea"/>
-	</plugin>
 	<plugin id="patternDiscoveryAlgorithm" name="Pattern Discovery Algorithm" class="org.geworkbench.components.associationdiscovery.PatternDiscovery" source="associationdiscovery"/>
 	<plugin id="reverseEngineering" name="Reverse Engineering" class="org.geworkbench.components.pathwaydecoder.GeneProfiler" source="pathwaydecoder">
 		<gui-area name="VisualArea"/>

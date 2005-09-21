@@ -49,4 +49,8 @@ public class DefaultColorContext implements org.geworkbench.bison.util.colorcont
     public Color getMarkerValueColor(DSMicroarraySetView maSet, DSMarkerValue mv, DSGeneMarker mInfo, float intensity) {
         return null;
     }
+
+    public void updateContext(DSMicroarraySetView view) {
+        // No-op
+    }
 }

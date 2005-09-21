@@ -44,4 +44,8 @@ public class GenotypeColorContext implements ColorContext {
     public Color getMarkerValueColor(DSMicroarraySetView maSet, DSMarkerValue mv, DSGeneMarker mInfo, float intensity) {
         return null;
     }
+
+    public void updateContext(DSMicroarraySetView view) {
+        // no-op
+    }
 }

@@ -202,7 +202,7 @@ public class ComponentRegistry {
     }
 
     // Holds the listener componentRegistry.
-    private TypeMap<Set> listeners;
+    private TypeMap<List> listeners;
     // Executor Service for asynchronous event dispatching.
     private Map<Class, SynchModel> synchModels;
     // List of the components themselves.
@@ -213,7 +213,7 @@ public class ComponentRegistry {
     private Map<String, ComponentResource> nameToComponentResource;
 
     private ComponentRegistry() {
-        listeners = new TypeMap<Set>();
+        listeners = new TypeMap<List>();
         synchModels = new HashMap<Class, SynchModel>();
         components = new ArrayList();
         idToDescriptor = new HashMap<String, PluginDescriptor>();
@@ -227,17 +227,17 @@ public class ComponentRegistry {
      * @param subscriber the listening subscriber.
      */
     private synchronized void addListener(Class type, Object subscriber) {
-        Set set = listeners.get(type);
-        if (set == null) {
-            set = new HashSet();
-            listeners.put(type, set);
+        List list = listeners.get(type);
+        if (list == null) {
+            list = new ArrayList();
+            listeners.put(type, list);
         }
-        set.add(subscriber);
+        list.add(subscriber);
     }
 
     private synchronized void removeListener(Class type, Object subscriber) {
-        Set set = listeners.get(type);
-        if (set != null) {
+        List list = listeners.get(type);
+        if (list != null) {
             listeners.remove(subscriber);
         }
     }

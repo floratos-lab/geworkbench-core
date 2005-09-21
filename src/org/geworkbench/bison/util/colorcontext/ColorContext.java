@@ -29,4 +29,9 @@ public interface ColorContext {
      * @return The <code>Color</code> to use for drawing.
      */
     public Color getMarkerValueColor(DSMarkerValue mv, DSGeneMarker mInfo, float intensity);
+
+    /**
+     * Called whenever the view changes so that the ColorContext can (optionally) update itself.
+     */
+    public void updateContext(DSMicroarraySetView view);
 }

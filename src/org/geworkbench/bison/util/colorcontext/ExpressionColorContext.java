@@ -23,9 +23,6 @@ public class ExpressionColorContext implements ColorContext {
         if (mv == null || mInfo == null)
             return Color.black;
         double value = mv.getValue();
-        if (((CSExpressionMarker) mInfo).getDisPlayType() == DSGeneMarker.GENEPIX_TYPE) {
-            value *= 1000;
-        }
         Range range = ((CSExpressionMarker) mInfo).getRange();
         double avg = Math.abs(range.max + range.min) / 2.0;
         double norm = Math.abs(range.max - range.min) / 2.0;
@@ -41,5 +38,9 @@ public class ExpressionColorContext implements ColorContext {
 
     public Color getMarkerValueColor(DSMicroarraySetView maSet, DSMarkerValue mv, DSGeneMarker mInfo, float intensity) {
         return null;
+    }
+
+    public void updateContext(DSMicroarraySetView view) {
+        ColorContextUtils.computeRange(view);
     }
 }
