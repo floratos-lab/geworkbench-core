@@ -35,12 +35,12 @@ public class DefaultColorContext implements org.geworkbench.bison.util.colorcont
             return MISSING_VALUE_COLOR;
         double value = mv.getValue();
         Color color = null;
-        float v = (float) (value / magnitude);
+        float v = (float) (value * intensity / magnitude);
         if (v > 0) {
-            color = new Color(v, 0F, 0F);
+            color = new Color((float)Math.min(1.0, v), 0F, 0F);
         } else {
             v = -v;
-            color = new Color(0F, v, 0F);
+            color = new Color(0F, (float)Math.min(1.0, v), 0F);
         }
         return color;
     }
