@@ -1,9 +1,11 @@
 package org.geworkbench.bison.util.colorcontext;
 
 import org.geworkbench.bison.datastructure.biocollections.views.DSMicroarraySetView;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSGenepixMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMarkerValue;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 
 import java.awt.*;
 
@@ -23,6 +25,8 @@ public class DefaultColorContext implements org.geworkbench.bison.util.colorcont
 
     private final Color MISSING_VALUE_COLOR = Color.GRAY;
 
+    private double magnitude;
+
     public DefaultColorContext() {
     }
 
@@ -30,17 +34,12 @@ public class DefaultColorContext implements org.geworkbench.bison.util.colorcont
         if (mv == null || mv.isMissing())
             return MISSING_VALUE_COLOR;
         double value = mv.getValue();
-        intensity *= 1000f;
-        if (mv instanceof DSGenepixMarkerValue)
-            value *= 1000f;
-        int max = 999999;
         Color color = null;
-        float v = (float) ((value) / (2 * max)) * intensity;
+        float v = (float) (value / magnitude);
         if (v > 0) {
-            v = Math.min(1.0F, v);
             color = new Color(v, 0F, 0F);
         } else {
-            v = Math.min(1.0F, -v);
+            v = -v;
             color = new Color(0F, v, 0F);
         }
         return color;
@@ -51,6 +50,16 @@ public class DefaultColorContext implements org.geworkbench.bison.util.colorcont
     }
 
     public void updateContext(DSMicroarraySetView view) {
-        // No-op
+        // Use entire set
+        DSMicroarraySet set = view.getMicroarraySet();
+        magnitude = 0.0;
+        for (int i = 0; i < set.size(); i++) {
+            for (int j = 0; j < set.getMarkers().size(); j++) {
+                double value = Math.abs(set.getValue(j, i));
+                if (value > magnitude) {
+                    magnitude = value;
+                }
+            }
+        }
     }
 }
