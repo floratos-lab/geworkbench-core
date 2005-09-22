@@ -1,5 +1,9 @@
 package org.geworkbench.engine.preferences;
 
+import org.geworkbench.bison.util.colorcontext.ColorContext;
+import org.geworkbench.bison.util.colorcontext.DefaultColorContext;
+import org.geworkbench.bison.util.colorcontext.ExpressionPValueColorContext;
+
 import java.io.File;
 
 /**
@@ -7,7 +11,13 @@ import java.io.File;
  */
 public class GlobalPreferences {
 
-    public static final String[] VISUALIZATION_VALUES = new String[]{"Absolute", "Variance"};
+    public static final String PREF_VISUALIZATION = "Visualization";
+    public static final String PREF_GENEPIX_COMPUTATION = "Genepix Value Computation";
+    public static final String PREF_TEXT_EDITOR = "Text Editor";
+
+    public static final String[] VISUALIZATION_VALUES = new String[]{"Absolute", "Relative"};
+    public static final Class<? extends ColorContext>[] VISUALIZATON_COLOR_CONTEXTS = new Class[]{DefaultColorContext.class, ExpressionPValueColorContext.class};
+
     public static final String[] GENEPIX_VALUES = new String[]
             {
                     "Option 1: (Mean F635 - Mean B635) / (Mean F532 - Mean B532)",
@@ -15,9 +25,6 @@ public class GlobalPreferences {
                     "Option 3: (Mean F532 - Mean B532) / (Mean F635 - Mean B635)",
                     "Option 4: (Median F532 - Median B532) / (Median F635 - Median B635)"
             };
-    public static final String PREF_VISUALIZATION = "Visualization";
-    public static final String PREF_GENEPIX_COMPUTATION = "Genepix Value Computation";
-    public static final String PREF_TEXT_EDITOR = "Text Editor";
     public static final String DEFAULT_TEXT_EDITOR = "c:/windows/system32/notepad.exe";
 
     private static GlobalPreferences instance;
@@ -47,6 +54,9 @@ public class GlobalPreferences {
         ChoiceField field3 = new ChoiceField(GlobalPreferences.PREF_GENEPIX_COMPUTATION, GlobalPreferences.GENEPIX_VALUES);
         field3.setSelection(0);
 
+        // Color Context
+
+
         prefs.addField(field1);
         prefs.addField(field2);
         prefs.addField(field3);
@@ -66,6 +76,11 @@ public class GlobalPreferences {
 
     public int getGenepixComputationMethod() {
         return ((ChoiceField)prefs.getField(PREF_GENEPIX_COMPUTATION)).getSelection();
+    }
+
+    public Class<? extends ColorContext> getColorContextClass() {
+        int pref = ((ChoiceField) prefs.getField(PREF_VISUALIZATION)).getSelection();
+        return VISUALIZATON_COLOR_CONTEXTS[pref];
     }
 
 }

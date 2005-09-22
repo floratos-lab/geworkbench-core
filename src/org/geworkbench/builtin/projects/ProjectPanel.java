@@ -873,7 +873,19 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                         if (set != null) {
                             // Do intial color context update if it is a microarray
                             if (set instanceof DSMicroarraySet) {
-                                updateColorContext((DSMicroarraySet) set);
+                                DSMicroarraySet maSet = (DSMicroarraySet) set;
+                                // Add color context
+                                GlobalPreferences prefs = GlobalPreferences.getInstance();
+                                Class<? extends ColorContext> type = prefs.getColorContextClass();
+                                try {
+                                    ColorContext context = type.newInstance();
+                                    maSet.addObject(ColorContext.class, context);
+                                    updateColorContext(maSet);
+                                } catch (IllegalAccessException e) {
+                                    e.printStackTrace();
+                                } catch (InstantiationException e) {
+                                    e.printStackTrace();
+                                }
                             }
                             //String directory = dataSetFile.getPath();
                             //System.setProperty("data.files.dir", directory);

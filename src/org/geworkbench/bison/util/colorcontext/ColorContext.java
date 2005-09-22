@@ -16,6 +16,8 @@ import java.awt.*;
 /**
  * Decides what color should be used when dispaying a color mosaic representation
  * of a marker value.
+ *
+ * Extending classes must be provide a no-arg constructor.
  */
 public interface ColorContext {
 

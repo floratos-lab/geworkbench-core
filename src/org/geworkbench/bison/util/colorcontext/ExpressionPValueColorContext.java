@@ -14,6 +14,8 @@ public class ExpressionPValueColorContext implements org.geworkbench.bison.util.
     public ExpressionPValueColorContext() {
     }
 
+    // @todo - watkin - This is not used, but if it is was it would be horribly efficient.
+    // Stats should be calculated in updateContext.
     public Color getMarkerValueColor(DSMicroarraySetView maSet, DSMarkerValue mv, DSGeneMarker mInfo, float intensity) {
         if (mv == null || mInfo == null) {
             int i = 0;

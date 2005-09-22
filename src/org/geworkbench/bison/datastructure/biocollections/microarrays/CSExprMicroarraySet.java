@@ -51,7 +51,6 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
 
     public CSExprMicroarraySet(org.geworkbench.bison.parsers.resources.MAGEResource res) {
         this();
-        addObject(org.geworkbench.bison.util.colorcontext.ColorContext.class, new org.geworkbench.bison.util.colorcontext.ExpressionPValueColorContext());
         addDescription(res.getExperiment().getName());
         setLabel(res.getExperiment().getName());
         this.label = new String(res.getExperiment().getName());
@@ -86,7 +85,6 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
 
     public CSExprMicroarraySet(CaArrayResource res) {
         this();
-        addObject(ColorContext.class, new ExpressionPValueColorContext());
         addDescription(res.getExperiment().toString());
         setLabel(res.getExperiment().getIdentifier());
         this.label = new String(res.getExperiment().getIdentifier());
@@ -115,7 +113,6 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
 
     public CSExprMicroarraySet(org.geworkbench.bison.parsers.resources.MAGEResource2 res) {
         this();
-        addObject(org.geworkbench.bison.util.colorcontext.ColorContext.class, new org.geworkbench.bison.util.colorcontext.ExpressionPValueColorContext());
         addDescription(res.getExperiment().toString());
         setLabel(res.getExperiment().getIdentifier().toString());
         this.label = new String(res.getExperiment().getIdentifier().toString());
@@ -144,7 +141,6 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
     public CSExprMicroarraySet(AffyResource ar) throws Exception {
         this();
         file = ar.getInputFile();
-        addObject(org.geworkbench.bison.util.colorcontext.ColorContext.class, new ExpressionPValueColorContext());
         List ctu = new ArrayList();
         ctu.add("Probe Set Name");
         ctu.add("Avg Diff");
@@ -193,7 +189,6 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
     public CSExprMicroarraySet(org.geworkbench.bison.parsers.resources.GenepixResource gr) throws Exception {
         this();
         file = gr.getInputFile();        
-        addObject(org.geworkbench.bison.util.colorcontext.ColorContext.class, new ExpressionColorContext());
         List ctu = new ArrayList();
         ctu.add("Block");
         ctu.add("Column");
@@ -264,7 +259,6 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
     public CSExprMicroarraySet() {
         super(RandomNumberGenerator.getID(), "");
         super.type = DSMicroarraySet.expPvalueType;
-        addObject(org.geworkbench.bison.util.colorcontext.ColorContext.class, new org.geworkbench.bison.util.colorcontext.ExpressionPValueColorContext());
         /** @todo Remove if not used */
         //        addObject(DSRangeMarker.class, CSExpressionMarker.class);
         addDescription("Microarray experiment");
