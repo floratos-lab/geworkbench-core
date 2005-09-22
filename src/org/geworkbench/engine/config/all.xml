@@ -107,6 +107,12 @@
 	<plugin id="patternPanel" name="Patterns" class="org.geworkbench.components.patterns.PatternViewAppComponent" source="patterns">
 		<gui-area name="VisualArea"/>
 	</plugin>
+	<plugin id="dotmatrixPanel" name="Dot Matrix Panel" class="org.geworkbench.components.alignment.synteny.DotMatrixViewAppComponent" source="synteny">
+		<gui-area name="VisualArea"/>
+	</plugin>
+	<plugin id="syntenyMapPanel" name="Synteny Map Panel" class="org.geworkbench.components.alignment.synteny.SyntenyMapViewAppComponent" source="synteny">
+		<gui-area name="VisualArea"/>
+	</plugin>
 	<plugin id="microarrayPanel" name="Microarray Panel" class="org.geworkbench.components.microarrays.MicroarrayPanel" source="microarrays">
 		<gui-area name="VisualArea"/>
 		<!-- An example 'subscription' directive: Set enabled to 'No' to prevent subscription for certain type. -->
@@ -140,6 +146,10 @@
 	<plugin id="splash" name="Pattern Discovery" class="org.geworkbench.components.discovery.SequenceDiscoveryViewAppComponent" source="discovery">
 		<gui-area name="CommandArea"/>
 	</plugin>
+	<plugin id="syntenyParameters" name="Synteny" class="org.geworkbench.components.alignment.panels.SyntenyParameters" source="panels">
+		<gui-area name="CommandArea"/>
+	</plugin>
+
 	<plugin id="normalizationPanel" name="Normalization Panel" class="org.geworkbench.components.analysis.NormalizationPanel" source="analysis">
 		<gui-area name="CommandArea"/>
 	</plugin>
