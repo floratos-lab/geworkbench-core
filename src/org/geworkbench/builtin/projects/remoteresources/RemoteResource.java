@@ -25,6 +25,11 @@ public class RemoteResource {
     private String uri;
     private int portnumber = 8;
     public RemoteResource() {
+        try {
+            jbInit();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public RemoteResource(String url, String protocal, String user,
@@ -142,5 +147,8 @@ public class RemoteResource {
         } else {
             return false;
         }
+    }
+
+    private void jbInit() throws Exception {
     }
 }

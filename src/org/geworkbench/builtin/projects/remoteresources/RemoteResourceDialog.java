@@ -8,7 +8,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 
-import com.borland.jbcl.layout.*;
+
 
 /**
  * <p>Title: </p>
@@ -73,12 +73,15 @@ public class RemoteResourceDialog extends JDialog {
         jLabel1.setText("Details:");
         jLabel2.setText("Port:");
         jLabel3.setText("User Name:");
+        boxLayout21 = new BoxLayout(jPanel2, BoxLayout.Y_AXIS);
+
         jPanel2.setLayout(boxLayout21);
-        boxLayout21.setAxis(BoxLayout.Y_AXIS);
-        jTextField1.setPreferredSize(new Dimension(50, 20));
+
+        jTextField1.setPreferredSize(new Dimension(60, 20));
         jTextField1.setToolTipText("");
         jTextField1.setText("Manju");
         jLabel4.setText("URL:");
+        jPasswordField1.setPreferredSize(new Dimension(60, 22));
         jPasswordField1.setText("jPasswordField1");
         this.getContentPane().setLayout(xYLayout1);
         jPanel1.setLayout(borderLayout1);
@@ -107,8 +110,9 @@ public class RemoteResourceDialog extends JDialog {
         shortnameTextField.setPreferredSize(new Dimension(90, 20));
         shortnameTextField.setText("NCI_CaArray");
         jPanel7.setBorder(BorderFactory.createLineBorder(Color.black));
+          boxLayout22 = new BoxLayout(jPanel7, BoxLayout.Y_AXIS);
         jPanel7.setLayout(boxLayout22);
-        boxLayout22.setAxis(BoxLayout.Y_AXIS);
+
         jPanel3.add(jLabel3);
         jPanel3.add(jTextField1);
         jPanel2.add(jPanel3);
@@ -132,9 +136,9 @@ public class RemoteResourceDialog extends JDialog {
         jPanel6.add(jButton4);
         jPanel6.add(jButton1);
         jPanel6.add(jButton6);
-        this.getContentPane().add(jPanel1, new XYConstraints(0, 0, -1, -1));
-        this.getContentPane().add(jPanel7, new XYConstraints(1, 17, 277, 189));
-        this.getContentPane().add(jPanel6, new XYConstraints(1, 205, 277, 67));
+        this.getContentPane().add(jPanel1, BorderLayout.NORTH);
+        this.getContentPane().add(jPanel7, BorderLayout.CENTER);
+        this.getContentPane().add(jPanel6, BorderLayout.SOUTH);
 
         pack();
     }
@@ -147,11 +151,11 @@ public class RemoteResourceDialog extends JDialog {
     JLabel jLabel3 = new JLabel();
     JPanel jPanel3 = new JPanel();
     JPanel jPanel4 = new JPanel();
-    BoxLayout2 boxLayout21 = new BoxLayout2();
+    BoxLayout boxLayout21;
     JTextField jTextField1 = new JTextField();
     JLabel jLabel4 = new JLabel();
     JPasswordField jPasswordField1 = new JPasswordField();
-    XYLayout xYLayout1 = new XYLayout();
+    BorderLayout xYLayout1 = new BorderLayout();
     JPanel jPanel6 = new JPanel();
     JButton jButton4 = new JButton();
     JLabel jLabel5 = new JLabel();
@@ -169,7 +173,7 @@ public class RemoteResourceDialog extends JDialog {
     JPanel jPanel5 = new JPanel();
     JPanel jPanel8 = new JPanel();
     JPanel jPanel9 = new JPanel();
-    BoxLayout2 boxLayout22 = new BoxLayout2();
+    BoxLayout boxLayout22;
     /**
      * setOption
      *

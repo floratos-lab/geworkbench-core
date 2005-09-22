@@ -12,7 +12,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-import com.borland.jbcl.layout.BoxLayout2;
+
 import org.geworkbench.builtin.projects.remoteresources.RemoteResourceDialog;
 
 /**
@@ -92,7 +92,7 @@ public class LoadData extends JDialog {
     JButton addButton = new JButton();
     JButton editButton = new JButton();
     JButton deleteButton = new JButton();
-    BoxLayout2 boxLayout21 = new BoxLayout2();
+    BoxLayout  boxLayout21;
     JButton openRemoteResourceButton = new JButton();
 
     public LoadData(ProjectPanel parent) {
@@ -188,7 +188,7 @@ public class LoadData extends JDialog {
             }
 
         });
-
+        boxLayout21 = new BoxLayout(jPanel10, BoxLayout.X_AXIS);
         jPanel10.setLayout(boxLayout21);
         openRemoteResourceButton.setText("Go");
         openRemoteResourceButton.addActionListener(new ActionListener() {
