@@ -1196,7 +1196,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         ColorContext colorContext = (ColorContext) maSet.getObject(ColorContext.class);
         if (colorContext != null) {
             CSMicroarraySetView view = new CSMicroarraySetView(maSet);
-            System.out.println("INITIAL CONTEXT UPDATE: " + colorContext.getClass());
             colorContext.updateContext(view);
         }
     }
@@ -1246,7 +1245,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
             if (e.getTaggedItemSetTree() != null && e.getTaggedItemSetTree().size() > 0) {
                 DSPanel activatedArrays = e.getTaggedItemSetTree().activeSubset();
                 view.setItemPanel(activatedArrays);
-                System.out.println("UPDATING CONTEXT: " + colorContext.getClass());
             }
             colorContext.updateContext(view);
         }
