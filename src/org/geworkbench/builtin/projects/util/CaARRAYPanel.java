@@ -31,6 +31,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.Collections;
 import java.util.Vector;
+import gov.nih.nci.common.search.Directable;
 
 /**
  * <p>Title: Bioworks</p>
@@ -77,7 +78,8 @@ public class CaARRAYPanel extends JPanel {
     private JButton openButton = new JButton();
     private JButton cancelButton = new JButton();
     private LoadData parent = null;
-    private DefaultMutableTreeNode root = new DefaultMutableTreeNode("caARRAY experiments");
+    private DefaultMutableTreeNode root = new DefaultMutableTreeNode(
+            "caARRAY experiments");
     private DefaultTreeModel remoteTreeModel = new DefaultTreeModel(root);
     private JTree remoteFileTree = new JTree(remoteTreeModel);
     private JPopupMenu jRemoteDataPopup = new JPopupMenu();
@@ -178,7 +180,8 @@ public class CaARRAYPanel extends JPanel {
         jPanel6.add(jPanel7);
 
         remoteFileTree.setToolTipText("");
-        remoteFileTree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
+        remoteFileTree.getSelectionModel().setSelectionMode(TreeSelectionModel.
+                DISCONTIGUOUS_TREE_SELECTION);
         remoteFileTree.addTreeSelectionListener(new TreeSelectionListener() {
             public void valueChanged(TreeSelectionEvent tse) {
                 remoteFileSelection_action(tse);
@@ -214,19 +217,30 @@ public class CaARRAYPanel extends JPanel {
     private void openRemoteFile_action(ActionEvent e) {
         TreePath[] paths = remoteFileTree.getSelectionPaths();
         ExperimentImpl exp = null;
-        if (paths.length > 0)
-            exp = ((CaArrayExperiment) ((DefaultMutableTreeNode) paths[0].getPath()[1]).getUserObject()).getExperiment();
+        if (paths.length > 0) {
+            exp = ((CaArrayExperiment) ((DefaultMutableTreeNode) paths[0].
+                                        getPath()[1]).getUserObject()).
+                  getExperiment();
+        }
         Vector tempAssays = new Vector();
         boolean multipleAssays = false;
         for (int i = 0; i < paths.length; i++) {
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode) paths[i].getLastPathComponent();
-            if (node != null && (node.getUserObject() instanceof CaArrayBioassay)) {
-                if (exp == ((CaArrayExperiment) ((DefaultMutableTreeNode) node.getPath()[1]).getUserObject()).getExperiment()) {
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) paths[i].
+                                          getLastPathComponent();
+            if (node != null &&
+                (node.getUserObject() instanceof CaArrayBioassay)) {
+                if (exp ==
+                    ((CaArrayExperiment) ((DefaultMutableTreeNode) node.getPath()[
+                                          1]).getUserObject()).getExperiment()) {
                     CaArrayBioassay ba = (CaArrayBioassay) node.getUserObject();
                     if (ba != null) {
                         tempAssays.add(ba.getBioAssayImpl());
                     } else {
-                        JOptionPane.showMessageDialog(null, "No data in selected experiment " + ba.getBioAssayImpl().getName(), "Remote Open File Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null,
+                                "No data in selected experiment " +
+                                ba.getBioAssayImpl().getName(),
+                                "Remote Open File Error",
+                                JOptionPane.ERROR_MESSAGE);
                         return;
                     }
                 } else {
@@ -234,13 +248,20 @@ public class CaARRAYPanel extends JPanel {
                 }
             }
         }
-        if (multipleAssays)
-            JOptionPane.showMessageDialog(null, "BioAssay selections only from " + exp.getName() + " will be used", "Multiple Experiment Selections", JOptionPane.WARNING_MESSAGE);
+        if (multipleAssays) {
+            JOptionPane.showMessageDialog(null,
+                                          "BioAssay selections only from " +
+                                          exp.getName() + " will be used",
+                                          "Multiple Experiment Selections",
+                                          JOptionPane.WARNING_MESSAGE);
+        }
 
         BioAssayImpl[] assays = new BioAssayImpl[tempAssays.size()];
         assays = (BioAssayImpl[]) tempAssays.toArray(assays);
-        if (exp != null && assays.length > 0)
-            parent.parentProjectPanel.remoteFileOpenAction(new CaArrayResource(assays, exp));
+        if (exp != null && assays.length > 0) {
+            parent.parentProjectPanel.remoteFileOpenAction(new CaArrayResource(
+                    assays, exp));
+        }
         dispose();
         return;
     }
@@ -258,12 +279,16 @@ public class CaARRAYPanel extends JPanel {
         if (!experimentsLoaded) {
             experiments = getExperiments();
             if (experiments == null) {
-                JOptionPane.showMessageDialog(null, "Unable to connect to server.", "Open File Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null,
+                                              "Unable to connect to server.",
+                                              "Open File Error",
+                                              JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             for (int i = 0; i < experiments.length; ++i) {
-                DefaultMutableTreeNode node = new DefaultMutableTreeNode(experiments[i]);
+                DefaultMutableTreeNode node = new DefaultMutableTreeNode(
+                        experiments[i]);
                 remoteTreeModel.insertNodeInto(node, root, root.getChildCount());
             }
             remoteFileTree.expandRow(0);
@@ -282,7 +307,8 @@ public class CaARRAYPanel extends JPanel {
     private void jRemoteFileTree_mouseReleased(MouseEvent e) {
         TreePath path = remoteFileTree.getPathForLocation(e.getX(), e.getY());
         if (path != null) {
-            Object selectedNode = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
+            Object selectedNode = ((DefaultMutableTreeNode) path.
+                                   getLastPathComponent()).getUserObject();
             if (e.isMetaDown() && (selectedNode instanceof CaArrayExperiment)) {
                 jRemoteDataPopup.show(remoteFileTree, e.getX(), e.getY());
                 if (((CaArrayExperiment) selectedNode).hasBeenPopulated()) {
@@ -336,14 +362,17 @@ public class CaARRAYPanel extends JPanel {
      * selected node.
      */
     private void updateTextArea() {
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode) remoteFileTree.getLastSelectedPathComponent();
-        if (node == null || node == root || experiments == null || experiments.length == 0) {
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) remoteFileTree.
+                                      getLastSelectedPathComponent();
+        if (node == null || node == root || experiments == null ||
+            experiments.length == 0) {
             experimentInfoArea.setText("");
             measuredField.setText("");
             derivedField.setText("");
         } else {
             // get the parent experiment.
-            CaArrayExperiment exp = (CaArrayExperiment) ((DefaultMutableTreeNode) node.getPath()[1]).getUserObject();
+            CaArrayExperiment exp = (CaArrayExperiment) ((
+                    DefaultMutableTreeNode) node.getPath()[1]).getUserObject();
             experimentInfoArea.setText(exp.getExperimentInformation());
             measuredField.setText(String.valueOf(exp.getMeasuredBioassaysCount()));
             derivedField.setText(String.valueOf(exp.getDerivedBioassaysCount()));
@@ -361,8 +390,10 @@ public class CaARRAYPanel extends JPanel {
         if (e == null) {
             return;
         }
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode) remoteFileTree.getLastSelectedPathComponent();
-        if (node != null && node != root && experiments != null && experiments.length != 0) {
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) remoteFileTree.
+                                      getLastSelectedPathComponent();
+        if (node != null && node != root && experiments != null &&
+            experiments.length != 0) {
             // Lazy computation of the children on an experiment.
             DefaultMutableTreeNode assayNode = null;
             DefaultMutableTreeNode dataNode = null;
@@ -383,7 +414,8 @@ public class CaARRAYPanel extends JPanel {
                     if (derived != null && derived.length > 0) {
                         for (int i = 0; i < derived.length; ++i) {
                             assayNode = new DefaultMutableTreeNode(derived[i]);
-                            remoteTreeModel.insertNodeInto(assayNode, node, node.getChildCount());
+                            remoteTreeModel.insertNodeInto(assayNode, node,
+                                    node.getChildCount());
                         }
                     }
                     exp.setPopulated();
@@ -400,29 +432,51 @@ public class CaARRAYPanel extends JPanel {
         CaArrayExperiment[] exps = new CaArrayExperiment[0];
         Vector temp = new Vector();
         try {
+//             String serverLoc =
+//                     "//caarray-mageom-server.nci.nih.gov:8080/SecureSessionManager";
+
+             System.setProperty("RMIServerURL",  "//caarray-mageom-server.nci.nih.gov:8080/SearchCriteriaHandler");
+             System.setProperty("SecureSessionManagerURL",  "//caarray-mageom-server.nci.nih.gov:8080/SecureSessionManager");
+//            System.setProperty("RMIServerURL",
+//                               "//165.124.152.12:8999/SearchCriteriaHandler");
+//            System.setProperty("SecureSessionManagerURL",
+//                               "//165.124.152.12:8999/SecureSessionManager");
+//            System.setProperty("caarray.mage.user", "columbia");
+//            System.setProperty("caarray.mage.password", "mageomapi");
+            String user = System.getProperty("caarray.mage.user");
+            String passwd = System.getProperty("caarray.mage.password");
+            String url = System.getProperty(
+                    "SecureSessionManagerURL");
+
             SecureSession sess = SecureSessionFactory.defaultSecureSession();
-            sess.start(System.getProperty("caarray.mage.user"), System.getProperty("caarray.mage.password"));
-            ExperimentSearchCriteria esc = SearchCriteriaFactory.new_EXPERIMENT_EXPERIMENT_SC();
+
+            ((Directable) sess).direct(url);
+
+            sess.start(user, passwd);
+
+            ExperimentSearchCriteria esc = SearchCriteriaFactory.
+                                           new_EXPERIMENT_EXPERIMENT_SC();
             esc.setSessionId(sess.getSessionId());
             SearchResult results = esc.search();
 
             Experiment[] result = (Experiment[]) results.getResultSet();
             for (int x = 0; x < result.length; x++) {
                 if (result[x] instanceof ExperimentImpl) {
-                    CaArrayExperiment exp = new CaArrayExperiment((ExperimentImpl) result[x]);
+                    CaArrayExperiment exp = new CaArrayExperiment((
+                            ExperimentImpl) result[x]);
                     // This needs to be handled
                     //                    if (exp.isPlatformTypeUsable()) {
                     temp.add(exp);
                     //                    }
                 }
-            }
-            while (results.hasMore()) {
+            } while (results.hasMore()) {
                 SearchCriteria nextcrit = results.getNextCriteria();
                 results = nextcrit.search();
                 Object[] objects2 = results.getResultSet();
                 for (int x = 0; x < objects2.length; x++) {
                     if (objects2[x] instanceof ExperimentImpl) {
-                        CaArrayExperiment exp = new CaArrayExperiment((ExperimentImpl) objects2[x]);
+                        CaArrayExperiment exp = new CaArrayExperiment((
+                                ExperimentImpl) objects2[x]);
                         // This needs to be handled
                         //                        if (exp.isPlatformTypeUsable()) {
                         temp.add(exp);
@@ -431,6 +485,7 @@ public class CaARRAYPanel extends JPanel {
                 }
             }
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
         Collections.sort(temp);
@@ -462,7 +517,8 @@ public class CaARRAYPanel extends JPanel {
             try {
                 m_id = b.getIdentifier();
             } catch (Exception e) {
-                System.out.println("Error getting id for bioasay: " + e.toString());
+                System.out.println("Error getting id for bioasay: " +
+                                   e.toString());
                 e.printStackTrace();
             }
         }
@@ -488,9 +544,11 @@ public class CaARRAYPanel extends JPanel {
             }
             try {
                 if (ba instanceof MeasuredBioAssayImpl) {
-                    dataCount = ((MeasuredBioAssayImpl) ba).getMeasuredBioAssayDataCount();
+                    dataCount = ((MeasuredBioAssayImpl) ba).
+                                getMeasuredBioAssayDataCount();
                 } else if (ba instanceof DerivedBioAssayImpl) {
-                    dataCount = ((DerivedBioAssayImpl) ba).getDerivedBioAssayDataCount();
+                    dataCount = ((DerivedBioAssayImpl) ba).
+                                getDerivedBioAssayDataCount();
                 } else {
                     dataCount = 0;
                 }
@@ -510,7 +568,8 @@ public class CaARRAYPanel extends JPanel {
             }
             try {
                 if (ba instanceof MeasuredBioAssayImpl) {
-                    baData = ((MeasuredBioAssayImpl) ba).getMeasuredBioAssayData();
+                    baData = ((MeasuredBioAssayImpl) ba).
+                             getMeasuredBioAssayData();
                 } else if (ba instanceof DerivedBioAssayImpl) {
                     baData = ((DerivedBioAssayImpl) ba).getDerivedBioAssayData();
                 } else {
@@ -550,6 +609,7 @@ public class CaARRAYPanel extends JPanel {
             }
         }
     }
+
 
     /**
      * This class represents an experiment in the load data JTree.
@@ -617,7 +677,8 @@ public class CaARRAYPanel extends JPanel {
                 m_name = e.getName();
                 //m_platform = e.getPlatformType;
             } catch (Exception ex) {
-                System.out.println("Error getting experiment information: " + ex.toString());
+                System.out.println("Error getting experiment information: " +
+                                   ex.toString());
                 ex.printStackTrace();
             }
         }
@@ -661,7 +722,8 @@ public class CaARRAYPanel extends JPanel {
          */
         public boolean isAffymetrix() {
             boolean ret = false;
-            if (m_platform.equalsIgnoreCase("Affymetrix") || m_platform.equalsIgnoreCase("Affy-MAS 5.0")) {
+            if (m_platform.equalsIgnoreCase("Affymetrix") ||
+                m_platform.equalsIgnoreCase("Affy-MAS 5.0")) {
                 ret = true;
             }
             return ret;
@@ -675,7 +737,8 @@ public class CaARRAYPanel extends JPanel {
          */
         public boolean isGenepix() {
             boolean ret = false;
-            if (m_platform.equalsIgnoreCase("Long Oligo - Spotted") || m_platform.equalsIgnoreCase("cDNA - Spotted")) {
+            if (m_platform.equalsIgnoreCase("Long Oligo - Spotted") ||
+                m_platform.equalsIgnoreCase("cDNA - Spotted")) {
                 ret = true;
             }
             return ret;
@@ -821,9 +884,11 @@ public class CaARRAYPanel extends JPanel {
                     int k = 0, l = 0;
                     for (int j = 0; j < bioassays.length; ++j) {
                         if (bioassays[j] instanceof MeasuredBioAssayImpl) {
-                            measuredAssays[k++] = new CaArrayBioassay(bioassays[j]);
+                            measuredAssays[k++] = new CaArrayBioassay(bioassays[
+                                    j]);
                         } else if (bioassays[j] instanceof DerivedBioAssayImpl) {
-                            derivedAssays[l++] = new CaArrayBioassay(bioassays[j]);
+                            derivedAssays[l++] = new CaArrayBioassay(bioassays[
+                                    j]);
                         }
                     }
                 }
