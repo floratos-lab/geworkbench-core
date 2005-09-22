@@ -167,7 +167,7 @@ public class CSGeneMarker implements DSGeneMarker, Serializable {
     }
 
     public String toString() {
-        return label;
+        return getCanonicalLabel();
     }
 
     public String getShortName() {
