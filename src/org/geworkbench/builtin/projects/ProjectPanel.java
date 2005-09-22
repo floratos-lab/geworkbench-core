@@ -1234,17 +1234,21 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
     public void receive(org.geworkbench.events.PhenotypeSelectorEvent e, Object source) {
         if (e.getDataSet() instanceof DSMicroarraySet) {
             DSMicroarraySet microarraySet = (DSMicroarraySet) e.getDataSet();
-            ColorContext colorContext = (ColorContext) microarraySet.getObject(ColorContext.class);
-            if (colorContext != null) {
-                CSMicroarraySetView view = new CSMicroarraySetView(microarraySet);
-                view.useItemPanel(true);
-                if (e.getTaggedItemSetTree() != null && e.getTaggedItemSetTree().size() > 0) {
-                    DSPanel activatedArrays = e.getTaggedItemSetTree().activeSubset();
-                    view.setItemPanel(activatedArrays);
-                    System.out.println("UPDATING CONTEXT: " + colorContext.getClass());
-                }
-                colorContext.updateContext(view);
+            updateColorContext(microarraySet, e);
+        }
+    }
+
+    private void updateColorContext(DSMicroarraySet microarraySet, org.geworkbench.events.PhenotypeSelectorEvent e) {
+        ColorContext colorContext = (ColorContext) microarraySet.getObject(ColorContext.class);
+        if (colorContext != null) {
+            CSMicroarraySetView view = new CSMicroarraySetView(microarraySet);
+            view.useItemPanel(true);
+            if (e.getTaggedItemSetTree() != null && e.getTaggedItemSetTree().size() > 0) {
+                DSPanel activatedArrays = e.getTaggedItemSetTree().activeSubset();
+                view.setItemPanel(activatedArrays);
+                System.out.println("UPDATING CONTEXT: " + colorContext.getClass());
             }
+            colorContext.updateContext(view);
         }
     }
 
@@ -1333,6 +1337,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         if (sourceMA == null) {
             return;
         }
+        DSMicroarraySet resultMA = ne.getNormalizedMASet();
+        updateColorContext(resultMA);
         // Set up the "history" information for the new dataset.
         Object[] prevHistory = sourceMA.getValuesForName(HISTORY);
         if (prevHistory != null) {
