@@ -1,9 +1,9 @@
 <geaw-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ConfigurationFile Schema.xsd">
 	<!--<gui-window name="Main GUI" class="geaw.GUIApp"/>-->
 	<gui-window name="Main GUI" class="org.geworkbench.engine.skin.Skin"/>
-    <plugin id="projectWindow" name="Project Panel" class="org.geworkbench.builtin.projects.ProjectPanel">
-        <gui-area name="ProjectArea"/>
-    </plugin>
+	<plugin id="projectWindow" name="Project Panel" class="org.geworkbench.builtin.projects.ProjectPanel">
+		<gui-area name="ProjectArea"/>
+	</plugin>
 	<plugin id="AffyExcelTXTFilter" name="Exp1. Format" class="org.geworkbench.engine.parsers.AffyExcelTXTFileFormat"/>
 	<plugin id="affyFilter" name="Affy File Format" class="org.geworkbench.engine.parsers.AffyFileFormat"/>
 	<plugin id="annotationsPanel" name="Marker Annotations" class="org.geworkbench.components.annotations.AnnotationsPanel" source="annotations">
@@ -107,10 +107,10 @@
 	<plugin id="patternPanel" name="Patterns" class="org.geworkbench.components.patterns.PatternViewAppComponent" source="patterns">
 		<gui-area name="VisualArea"/>
 	</plugin>
-	<plugin id="dotmatrixPanel" name="Dot Matrix Panel" class="org.geworkbench.components.alignment.synteny.DotMatrixViewAppComponent" source="synteny">
+	<plugin id="dotmatrixPanel" name="Dot Matrix Panel" class="org.geworkbench.components.alignment.synteny.DotMatrixViewAppComponent" source="alignment">
 		<gui-area name="VisualArea"/>
 	</plugin>
-	<plugin id="syntenyMapPanel" name="Synteny Map Panel" class="org.geworkbench.components.alignment.synteny.SyntenyMapViewAppComponent" source="synteny">
+	<plugin id="syntenyMapPanel" name="Synteny Map Panel" class="org.geworkbench.components.alignment.synteny.SyntenyMapViewAppComponent" source="alignment">
 		<gui-area name="VisualArea"/>
 	</plugin>
 	<plugin id="microarrayPanel" name="Microarray Panel" class="org.geworkbench.components.microarrays.MicroarrayPanel" source="microarrays">
@@ -146,10 +146,9 @@
 	<plugin id="splash" name="Pattern Discovery" class="org.geworkbench.components.discovery.SequenceDiscoveryViewAppComponent" source="discovery">
 		<gui-area name="CommandArea"/>
 	</plugin>
-	<plugin id="syntenyParameters" name="Synteny" class="org.geworkbench.components.alignment.panels.SyntenyParameters" source="panels">
+	<plugin id="syntenyParameters" name="Synteny" class="org.geworkbench.components.alignment.panels.SyntenyParameters" source="alignment">
 		<gui-area name="CommandArea"/>
 	</plugin>
-
 	<plugin id="normalizationPanel" name="Normalization Panel" class="org.geworkbench.components.analysis.NormalizationPanel" source="analysis">
 		<gui-area name="CommandArea"/>
 	</plugin>
