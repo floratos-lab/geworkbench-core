@@ -40,6 +40,7 @@ public class AnnotationParser {
     public static final int SWISSPROT = 6; // swissprot
 
     public static HashMap<String, String> affyIDs = new HashMap<String, String>();
+    public static HashMap<String, Vector<String>> geneNameMap = new HashMap<String,Vector<String>>();
 
     static String chipType = ""; //default;
     final static String chiptyemapfilename = "chiptypeMap.txt";
@@ -264,6 +265,18 @@ public class AnnotationParser {
             oneline = br.readLine();
         }
         br.close();
+        populateGeneNameMap();
+    }
+
+    static void populateGeneNameMap(){
+        for (String affyid : affyIDs.keySet()){
+            String geneName = getGeneName(affyid);
+            Vector<String> ids = geneNameMap.get(geneName);
+            if (ids == null)
+                ids = new Vector<String>();
+            ids.add(affyid);
+            geneNameMap.put(geneName, ids);
+        }
     }
 
     static void parse() throws IOException {
@@ -344,6 +357,8 @@ public class AnnotationParser {
         bw.write(pair);
         bw.close();
         pb.stop();
+
+        populateGeneNameMap();
         createNewGoTable();
     }
 
