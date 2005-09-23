@@ -32,7 +32,7 @@ public class CasEngine {
 
         // Open a window in which the AST is displayed graphically
         ASTFrame frame = new ASTFrame("AST from the CAS parser", parseTree);
-        frame.setVisible(true);
+        frame.setVisible(false);
 
         //walk this tree for interpretation
         CASWalker walk = new CASWalker();
