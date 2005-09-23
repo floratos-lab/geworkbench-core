@@ -92,7 +92,7 @@ public class LoadData extends JDialog {
     JButton addButton = new JButton();
     JButton editButton = new JButton();
     JButton deleteButton = new JButton();
-    BoxLayout  boxLayout21;
+    BoxLayout boxLayout21;
     JButton openRemoteResourceButton = new JButton();
 
     public LoadData(ProjectPanel parent) {
@@ -228,6 +228,7 @@ public class LoadData extends JDialog {
         jPanel1.add(jPanel7, null);
         jRadioButton8.setText("Remote");
         jPanel7.add(jRadioButton8, null);
+
         //XQ modification ends here.
         this.getContentPane().add(jPanel4, BorderLayout.CENTER);
         jPanel4.add(jFileChooser1, BorderLayout.CENTER);
@@ -288,8 +289,9 @@ public class LoadData extends JDialog {
                 jFileChooser1_actionPerformed(e);
             }
         });
-        this.getContentPane().setSize(new Dimension(683, 399));
+        this.getContentPane().setSize(new Dimension(683, 422));
         this.setTitle("Open File");
+        this.updateExistedResources();
         pack();
     }
 
@@ -374,8 +376,6 @@ public class LoadData extends JDialog {
                 jComboBox1.setSelectedItem(remoteResourceDialog.
                                            getCurrentResourceName());
             }
-            repaint();
-
         }
 
     }
@@ -464,12 +464,23 @@ public class LoadData extends JDialog {
     }
 
     private void mageButtonSelection_actionPerformed(ActionEvent e) {
-        jPanel8.getExperiments(e);
-        this.getContentPane().remove(jPanel6);
-        this.getContentPane().remove(jPanel4);
-        this.getContentPane().add(jPanel8, BorderLayout.CENTER);
-        this.validate();
-        this.repaint();
+
+        remoteResourceDialog.setupSystemPropertyForCurrentResource(
+                resourceModel.getSelectedItem().toString());
+
+
+        jPanel8.setUrl(remoteResourceDialog.getCurrentURL());
+        jPanel8.setUser(remoteResourceDialog.getCurrentUser());
+        jPanel8.setPasswd(remoteResourceDialog.getCurrentPassword());
+          jPanel8.getExperiments(e);
+
+        if (jPanel8.isConnectionSuccess()) {
+            this.getContentPane().remove(jPanel6);
+            this.getContentPane().remove(jPanel4);
+            this.getContentPane().add(jPanel8, BorderLayout.CENTER);
+            this.validate();
+            this.repaint();
+        }
     }
 
     private void addRemotePanel_actionPerformed(ActionEvent e) {

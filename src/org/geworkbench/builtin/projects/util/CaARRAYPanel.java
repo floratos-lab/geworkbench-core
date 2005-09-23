@@ -1,37 +1,31 @@
 package org.geworkbench.builtin.projects.util;
 
-import gov.nih.nci.common.search.SearchCriteria;
-import gov.nih.nci.common.search.SearchResult;
-import gov.nih.nci.common.search.session.SecureSession;
-import gov.nih.nci.common.search.session.SecureSessionFactory;
-import gov.nih.nci.mageom.domain.BioAssay.BioAssay;
-import gov.nih.nci.mageom.domain.BioAssay.impl.BioAssayImpl;
-import gov.nih.nci.mageom.domain.BioAssay.impl.DerivedBioAssayImpl;
-import gov.nih.nci.mageom.domain.BioAssay.impl.MeasuredBioAssayImpl;
-import gov.nih.nci.mageom.domain.BioAssayData.BioAssayData;
-import gov.nih.nci.mageom.domain.Description.Description;
-import gov.nih.nci.mageom.domain.Experiment.Experiment;
-import gov.nih.nci.mageom.domain.Experiment.impl.ExperimentImpl;
-import gov.nih.nci.mageom.search.Experiment.ExperimentSearchCriteria;
-import gov.nih.nci.mageom.search.SearchCriteriaFactory;
-import org.geworkbench.builtin.projects.LoadData;
-import org.geworkbench.bison.parsers.resources.CaArrayResource;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.Collections;
+import java.util.Vector;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeSelectionModel;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.util.Collections;
-import java.util.Vector;
-import gov.nih.nci.common.search.Directable;
+import javax.swing.tree.*;
+
+import gov.nih.nci.common.search.*;
+import gov.nih.nci.common.search.SearchCriteria;
+import gov.nih.nci.common.search.SearchResult;
+import gov.nih.nci.common.search.session.SecureSession;
+import gov.nih.nci.common.search.session.SecureSessionFactory;
+import gov.nih.nci.mageom.domain.BioAssay.BioAssay;
+import gov.nih.nci.mageom.domain.BioAssay.impl.*;
+import gov.nih.nci.mageom.domain.BioAssayData.BioAssayData;
+import gov.nih.nci.mageom.domain.Description.Description;
+import gov.nih.nci.mageom.domain.Experiment.Experiment;
+import gov.nih.nci.mageom.domain.Experiment.impl.ExperimentImpl;
+import gov.nih.nci.mageom.search.SearchCriteriaFactory;
+import gov.nih.nci.mageom.search.Experiment.ExperimentSearchCriteria;
+import org.geworkbench.bison.parsers.resources.CaArrayResource;
+import org.geworkbench.builtin.projects.LoadData;
 
 /**
  * <p>Title: Bioworks</p>
@@ -84,6 +78,11 @@ public class CaARRAYPanel extends JPanel {
     private JTree remoteFileTree = new JTree(remoteTreeModel);
     private JPopupMenu jRemoteDataPopup = new JPopupMenu();
     private JMenuItem jGetRemoteDataMenu = new JMenuItem();
+    private boolean connectionSuccess = true;
+    private String user;
+    private String passwd;
+    private String url;
+
 
     public CaARRAYPanel(LoadData p) {
         parent = p;
@@ -278,7 +277,9 @@ public class CaARRAYPanel extends JPanel {
     public void getExperiments(ActionEvent e) {
         if (!experimentsLoaded) {
             experiments = getExperiments();
+            connectionSuccess = true;
             if (experiments == null) {
+                connectionSuccess = false;
                 JOptionPane.showMessageDialog(null,
                                               "Unable to connect to server.",
                                               "Open File Error",
@@ -432,24 +433,30 @@ public class CaARRAYPanel extends JPanel {
         CaArrayExperiment[] exps = new CaArrayExperiment[0];
         Vector temp = new Vector();
         try {
-//             String serverLoc =
-//                     "//caarray-mageom-server.nci.nih.gov:8080/SecureSessionManager";
 
-             System.setProperty("RMIServerURL",  "//caarray-mageom-server.nci.nih.gov:8080/SearchCriteriaHandler");
-             System.setProperty("SecureSessionManagerURL",  "//caarray-mageom-server.nci.nih.gov:8080/SecureSessionManager");
+//             System.setProperty("RMIServerURL",  "//caarray-mageom-server.nci.nih.gov:8080/SearchCriteriaHandler");
+//             System.setProperty("SecureSessionManagerURL",  "//caarray-mageom-server.nci.nih.gov:8080/SecureSessionManager");
 //            System.setProperty("RMIServerURL",
 //                               "//165.124.152.12:8999/SearchCriteriaHandler");
 //            System.setProperty("SecureSessionManagerURL",
 //                               "//165.124.152.12:8999/SecureSessionManager");
 //            System.setProperty("caarray.mage.user", "columbia");
 //            System.setProperty("caarray.mage.password", "mageomapi");
-            String user = System.getProperty("caarray.mage.user");
-            String passwd = System.getProperty("caarray.mage.password");
-            String url = System.getProperty(
-                    "SecureSessionManagerURL");
+
+            if (url == null) {
+                user = System.getProperty("caarray.mage.user");
+                passwd = System.getProperty("caarray.mage.password");
+                url = System.getProperty(
+                        "SecureSessionManagerURL");
+            }
+                     System.setProperty("RMIServerURL", url + "/SearchCriteriaHandler");
+             System.setProperty("SecureSessionManagerURL",
+                              url + "/SecureSessionManager");
+//            System.setProperty("caarray.mage.user", user);
+//            System.setProperty("caarray.mage.password", password);
 
             SecureSession sess = SecureSessionFactory.defaultSecureSession();
-
+            url = url + "/SecureSessionManager";
             ((Directable) sess).direct(url);
 
             sess.start(user, passwd);
@@ -898,5 +905,38 @@ public class CaARRAYPanel extends JPanel {
                 measuredAssays = derivedAssays = null;
             }
         }
+    }
+
+
+    public boolean isConnectionSuccess() {
+        return connectionSuccess;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public String getPasswd() {
+        return passwd;
+    }
+
+    public void setConnectionSuccess(boolean isConnectionSuccess) {
+        this.connectionSuccess = isConnectionSuccess;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public void setPasswd(String passwd) {
+        this.passwd = passwd;
     }
 }

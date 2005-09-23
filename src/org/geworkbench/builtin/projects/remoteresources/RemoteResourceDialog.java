@@ -9,7 +9,6 @@ import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 
 
-
 /**
  * <p>Title: </p>
  *
@@ -30,7 +29,10 @@ public class RemoteResourceDialog extends JDialog {
     public static final int DELETE = 1;
     public static final int EDIT = 2;
     public static int currentOption = 0;
-    private static String currentResourceName;
+    private String currentResourceName;
+    private String currentURL;
+    private String currentUser;
+    private String currentPassword;
     public RemoteResourceDialog() {
         try {
             jbInit();
@@ -85,16 +87,14 @@ public class RemoteResourceDialog extends JDialog {
         jPasswordField1.setText("jPasswordField1");
         this.getContentPane().setLayout(xYLayout1);
         jPanel1.setLayout(borderLayout1);
-        jButton4.setText("Add");
-        jButton4.addActionListener(new
-                                   RemoteResourceDialog_jButton4_actionAdapter(this));
+
         jLabel5.setText("Password: ");
         jTextField2.setPreferredSize(new Dimension(122, 20));
         jTextField2.setText("www.columbia.edu");
         jTextField3.setMinimumSize(new Dimension(45, 20));
         jTextField3.setPreferredSize(new Dimension(40, 20));
         jTextField3.setText("80");
-        jButton1.setText("Update");
+        jButton1.setText("OK");
         jButton1.addActionListener(new
                                    RemoteResourceDialog_jButton1_actionAdapter(this));
         jButton6.setText("Cancel");
@@ -110,7 +110,7 @@ public class RemoteResourceDialog extends JDialog {
         shortnameTextField.setPreferredSize(new Dimension(90, 20));
         shortnameTextField.setText("NCI_CaArray");
         jPanel7.setBorder(BorderFactory.createLineBorder(Color.black));
-          boxLayout22 = new BoxLayout(jPanel7, BoxLayout.Y_AXIS);
+        boxLayout22 = new BoxLayout(jPanel7, BoxLayout.Y_AXIS);
         jPanel7.setLayout(boxLayout22);
 
         jPanel3.add(jLabel3);
@@ -132,8 +132,6 @@ public class RemoteResourceDialog extends JDialog {
         jPanel9.add(jTextField2);
         jPanel9.add(jLabel2);
         jPanel9.add(jTextField3);
-
-        jPanel6.add(jButton4);
         jPanel6.add(jButton1);
         jPanel6.add(jButton6);
         this.getContentPane().add(jPanel1, BorderLayout.NORTH);
@@ -157,7 +155,7 @@ public class RemoteResourceDialog extends JDialog {
     JPasswordField jPasswordField1 = new JPasswordField();
     BorderLayout xYLayout1 = new BorderLayout();
     JPanel jPanel6 = new JPanel();
-    JButton jButton4 = new JButton();
+
     JLabel jLabel5 = new JLabel();
     JTextField jTextField2 = new JTextField();
     JTextField jTextField3 = new JTextField();
@@ -190,6 +188,22 @@ public class RemoteResourceDialog extends JDialog {
         }
     }
 
+    public void setCurrentURL(String currentURL) {
+        this.currentURL = currentURL;
+    }
+
+    public void setCurrentUser(String currentUser) {
+        this.currentUser = currentUser;
+    }
+
+    public void setCurrentPassword(String currentPassword) {
+        this.currentPassword = currentPassword;
+    }
+
+    public void setUser(String user) {
+        this.currentUser = user;
+    }
+
     public void jComboBox1_actionPerformed(ActionEvent e) {
 
     }
@@ -201,12 +215,38 @@ public class RemoteResourceDialog extends JDialog {
 
     public RemoteResource collectResourceInfo() {
         RemoteResource rr = new RemoteResource();
+
+        String shortname = shortnameTextField.getText().trim();
+        String url = jTextField2.getText().trim();
+
+        if (shortname.length() == 0) {
+            JOptionPane.showMessageDialog(null, "Shortname can not be empty.",
+                                          "Error",
+                                          JOptionPane.INFORMATION_MESSAGE);
+            return null;
+        }
+        if (url.length() == 0) {
+            JOptionPane.showMessageDialog(null, "URL can not be empty.",
+                                          "Error",
+                                          JOptionPane.INFORMATION_MESSAGE);
+            return null;
+        }
+
         rr.setConnectProtocal(jComboBox1.getSelectedItem().toString().trim());
         rr.setPassword(new String(jPasswordField1.getPassword()).trim());
         rr.setUsername(jTextField1.getText().trim());
-        rr.setUri(jTextField2.getText().trim());
-        rr.setShortname(shortnameTextField.getText().trim());
-        currentResourceName = shortnameTextField.getText().trim();
+        rr.setUri(url);
+        try {
+            int portnum = new Integer(jTextField3.getText().trim()).intValue();
+            rr.setPortnumber(portnum);
+
+        } catch (NumberFormatException e) {
+            rr.setPortnumber(80);
+        }
+
+        rr.setShortname(shortname);
+        currentResourceName = shortname;
+
         return rr;
     }
 
@@ -215,6 +255,7 @@ public class RemoteResourceDialog extends JDialog {
         jTextField1.setText("");
         jTextField2.setText("");
         shortnameTextField.setText("");
+        jTextField3.setText("80");
 
     }
 
@@ -225,12 +266,19 @@ public class RemoteResourceDialog extends JDialog {
             jTextField2.setText(rr.getUri().toString());
             jComboBox1.setSelectedItem(rr.getConnectProtocal());
             shortnameTextField.setText(rr.getShortname());
+            jTextField3.setText(new Integer(rr.getPortnumber()).toString());
         }
     }
 
     public void jButton1_actionPerformed(ActionEvent e) {
-        remoteResourceManager.addRemoteResource(collectResourceInfo());
-        dispose();
+        RemoteResource rr = collectResourceInfo();
+        if (rr != null) {
+            remoteResourceManager.addRemoteResource(rr);
+            remoteResourceManager.saveToFile();
+
+            dispose();
+        }
+
     }
 
     /**
@@ -254,6 +302,39 @@ public class RemoteResourceDialog extends JDialog {
     public String getCurrentResourceName() {
         return currentResourceName;
     }
+
+    public String getCurrentURL() {
+        return currentURL;
+    }
+
+    public String getCurrentPassword() {
+        return currentPassword;
+    }
+
+    public String getCurrentUser() {
+        return currentUser;
+    }
+
+    /**Set up system.property
+     * setupCurrentResource
+     */
+    public void setupSystemPropertyForCurrentResource(String resourceName) {
+        RemoteResource rr = remoteResourceManager.getSelectedResouceByName(
+                resourceName);
+        if (rr != null) {
+            currentURL = "//" + rr.getUri() + ":" + rr.getPortnumber();
+            currentUser = rr.getUsername();
+            currentPassword = rr.getPassword();
+//            System.setProperty("RMIServerURL", url + "/SearchCriteriaHandler");
+//            System.setProperty("SecureSessionManagerURL",
+//                               url + "/SecureSessionManager");
+//            System.setProperty("caarray.mage.user", user);
+//            System.setProperty("caarray.mage.password", password);
+
+
+        }
+    }
+
 
     public void jButton6_actionPerformed(ActionEvent e) {
         dispose();

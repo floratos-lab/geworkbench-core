@@ -42,8 +42,13 @@ public class RemoteResourceManager {
      */
     protected void init() {
         RemoteResource rr = new RemoteResource("caARRAY",
-                                               "nci.cabio.nih.gov", "http:",
-                                               "manju", "test");
+                                               "caarray-mageom-server.nci.nih.gov", "8080", "http:",
+                                               "manju", "Tbf38!a");
+
+//        # caARRAY username/password
+//caarray.mage.user=KustagiM
+//caarray.mage.password=Tbf38!a
+
         existedResources.add(rr);
     }
 
@@ -157,11 +162,10 @@ public class RemoteResourceManager {
      * @return boolean
      */
     public boolean addRemoteResource(RemoteResource newResource) {
-        if (!existedResources.contains(newResource)) {
-            return existedResources.add(newResource);
-        } else {
-            return false;
+        if (existedResources.contains(newResource)) {
+           deleteRemoteResource(newResource);
         }
+         return existedResources.add(newResource);
     }
 
     /**
@@ -181,6 +185,7 @@ public class RemoteResourceManager {
 
                 writer.write(s.getShortname()
                              + cloumnseparator + s.getUri()
+                             + cloumnseparator + s.getPortnumber()
                              + cloumnseparator + s.getConnectProtocal()
                              + cloumnseparator + s.getUsername()
                              + cloumnseparator + s.getPassword());
