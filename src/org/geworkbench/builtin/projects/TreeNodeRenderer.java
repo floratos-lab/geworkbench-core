@@ -10,6 +10,7 @@ import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import java.awt.*;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
@@ -113,7 +114,13 @@ public class TreeNodeRenderer extends DefaultTreeCellRenderer {
                     setIcon(Icons._dataSetIcon);
                 }
                 String[] descriptions = df.getDescriptions();
-                if (descriptions.length > 0) {
+                if (df != null && (df instanceof DSMicroarraySet)){
+                    setToolTipText("# of microarrays: " +
+                            ((DSMicroarraySet) df).size() + ",   " +
+                            "# of markers: " +
+                            ((DSMicroarraySet) df).getMarkers().size() + "\n");
+                }
+                else if (descriptions.length > 0) {
                     setToolTipText(descriptions[0]);
                 } else {
                     setToolTipText("This is an undefined Data set");
