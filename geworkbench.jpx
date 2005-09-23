@@ -146,6 +146,7 @@
   <property category="sys" name="Copyright" value="Copyright (c) 2005"/>
   <property category="sys" name="CopyrightLabel" value="Copyright:"/>
   <property category="sys" name="DefaultPath" value="src"/>
+  <property category="sys" name="Deprecations" value="0"/>
   <property category="sys" name="Description" value=""/>
   <property category="sys" name="DescriptionLabel" value="Description:"/>
   <property category="sys" name="DocPath" value="doc"/>
