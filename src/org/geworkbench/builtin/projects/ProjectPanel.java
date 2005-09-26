@@ -772,6 +772,18 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                 mergedSet.setLabel(desc);
                 mergedSet.addDescription(desc);
             }
+            // Add color context
+            GlobalPreferences prefs = GlobalPreferences.getInstance();
+            Class<? extends ColorContext> type = prefs.getColorContextClass();
+            try {
+                ColorContext context = type.newInstance();
+                mergedSet.addObject(ColorContext.class, context);
+                updateColorContext(mergedSet);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            }
 
             // Add the new dataset to the project tree.
             addDataSetNode((DSDataSet) mergedSet, true);
