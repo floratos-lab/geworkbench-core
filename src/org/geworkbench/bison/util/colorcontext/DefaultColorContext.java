@@ -38,11 +38,13 @@ public class DefaultColorContext implements org.geworkbench.bison.util.colorcont
         float v = (float) (value * intensity / magnitude);
         if (v > 0) {
             v = (float)Math.min(1.0, v);
-            color = new Color(1.0f, (1 - v), (1 - v));
+            // color = new Color(1.0f, (1 - v), (1 - v));
+            color = new Color(v, 0, 0);
         } else {
             v = -v;
             v = (float)Math.min(1.0, v);
-            color = new Color((1- v), (1 - v), 1.0f);
+            // color = new Color((1- v), (1 - v), 1.0f);
+            color = new Color(0, v, 0);
         }
         return color;
     }
