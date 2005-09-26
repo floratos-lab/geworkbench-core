@@ -54,7 +54,8 @@ public class ExpressionPValueColorContext implements org.geworkbench.bison.util.
      */
     public Color getMarkerValueColor(DSMarkerValue mv, DSGeneMarker mInfo, float intensity) {
 
-        intensity *= 2;
+//        intensity *= 2;
+        intensity = 2 / intensity; 
         double value = mv.getValue();
         org.geworkbench.bison.util.Range range = ((CSExpressionMarker) mInfo).getRange();
         double mean = range.norm.getMean(); //(range.max + range.min) / 2.0;
