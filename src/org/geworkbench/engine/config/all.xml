@@ -107,7 +107,7 @@
 	<plugin id="patternPanel" name="Patterns" class="org.geworkbench.components.patterns.PatternViewAppComponent" source="patterns">
 		<gui-area name="VisualArea"/>
 	</plugin>
-	<plugin id="SyntenyVisualization" name="Synteny" class="org.geworkbench.components.alignment.synteny.SyntenyViewAppComponent" source="synteny">
+	<plugin id="SyntenyVisualization" name="Synteny" class="org.geworkbench.components.alignment.synteny.SyntenyViewAppComponent" source="alignment">
 		<gui-area name="VisualArea"/>
 	</plugin>
 	<plugin id="microarrayPanel" name="Microarray Panel" class="org.geworkbench.components.microarrays.MicroarrayPanel" source="microarrays">

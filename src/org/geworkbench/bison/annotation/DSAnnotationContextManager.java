@@ -4,6 +4,12 @@ import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 
 /**
+ * This defines the contract for a manager of contexts for the annotation, labelling and classification of the items
+ * of a {@link DSDataSet}.
+ * <p>
+ * For each data set, there can be one or more {@link DSAnnotationContext DSAnnotationContexts}. Additionally, there
+ * is a <i>default</i> context associated with each data set.
+ *
  * @author John Watkinson
  */
 public interface DSAnnotationContextManager {
