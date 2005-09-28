@@ -199,6 +199,11 @@ public interface DSAnnotationContext<T extends DSBioObject> extends DSAnnotation
     public DSPanel<T> getItemsWithLabel(Object label);
 
     /**
+     * Returns <tt>true</tt> if the item has the specified label, <tt>false</tt> otherwise.
+     */
+    public boolean hasLabel(T item, Object label);
+
+    /**
      * Retrieves all items that hold at least one of the specified labels.
      * @param labels the labels for which to retrieve items.
      * @return an anonymous panel consisting of a subpanel for each specified label. Each subpanel contains the items
