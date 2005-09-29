@@ -48,7 +48,8 @@ public class CaARRAYPanel extends JPanel {
      * Used to avoid querying the server for all experiments all the time.
      */
     protected boolean experimentsLoaded = false;
-
+    private String currentResourceName = null;
+    private String previousResourceName = null;
     private JPanel jPanel6 = new JPanel();
     private GridLayout grid4 = new GridLayout();
     private JPanel jPanel7 = new JPanel();
@@ -109,6 +110,11 @@ public class CaARRAYPanel extends JPanel {
         jPanel13.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
         derivedField.setMinimumSize(new Dimension(8, 20));
         derivedField.setPreferredSize(new Dimension(8, 20));
+        jPanel8.setPreferredSize(new Dimension(137, 280));
+        jPanel7.setPreferredSize(new Dimension(372, 300));
+        jPanel10.setPreferredSize(new Dimension(370, 280));
+        this.setMinimumSize(new Dimension(510, 200));
+        this.setPreferredSize(new Dimension(510, 200));
         jPanel13.add(Box.createHorizontalGlue());
         jPanel13.add(openButton);
         jPanel13.add(Box.createRigidArea(new Dimension(10, 0)));
@@ -167,15 +173,15 @@ public class CaARRAYPanel extends JPanel {
 
         jPanel7.setBorder(border1);
         jPanel8.setBorder(border2);
-        jScrollPane1.getViewport().add(remoteFileTree, null);
         jScrollPane1.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        jPanel8.add(jScrollPane1, BorderLayout.CENTER);
         jPanel7.add(jPanel10, BorderLayout.CENTER);
         jPanel7.add(jPanel13, BorderLayout.SOUTH);
         jPanel6.setMaximumSize(new Dimension(675, 339));
         jPanel6.setMinimumSize(new Dimension(675, 339));
         jPanel6.setPreferredSize(new Dimension(675, 339));
         jPanel6.add(jPanel8);
+        jPanel8.add(jScrollPane1, BorderLayout.CENTER);
+        jScrollPane1.getViewport().add(remoteFileTree, null);
         jPanel6.add(jPanel7);
 
         remoteFileTree.setToolTipText("");
@@ -200,8 +206,8 @@ public class CaARRAYPanel extends JPanel {
         jGetRemoteDataMenu.addActionListener(listener);
         jRemoteDataPopup.add(jGetRemoteDataMenu);
         jPanel6.setMaximumSize(new Dimension(500, 300));
-        jPanel6.setMinimumSize(new Dimension(500, 300));
-        jPanel6.setPreferredSize(new Dimension(500, 300));
+        jPanel6.setMinimumSize(new Dimension(500, 285));
+        jPanel6.setPreferredSize(new Dimension(500, 285));
         this.add(jPanel6, BorderLayout.CENTER);
     }
 
@@ -275,12 +281,13 @@ public class CaARRAYPanel extends JPanel {
     }
 
     public void getExperiments(ActionEvent e) {
-        if (!experimentsLoaded) {
+        if (!experimentsLoaded || !currentResourceName.equals(previousResourceName)) {
             experiments = getExperiments();
+            previousResourceName = currentResourceName;
             connectionSuccess = true;
             if (experiments == null) {
                 connectionSuccess = false;
-                JOptionPane.showMessageDialog(null,
+                JOptionPane.showMessageDialog(this,
                                               "Unable to connect to server.",
                                               "Open File Error",
                                               JOptionPane.ERROR_MESSAGE);
@@ -294,6 +301,7 @@ public class CaARRAYPanel extends JPanel {
             }
             remoteFileTree.expandRow(0);
             experimentsLoaded = true;
+
         }
         this.validate();
         this.repaint();
@@ -924,6 +932,10 @@ public class CaARRAYPanel extends JPanel {
         return passwd;
     }
 
+    public String getCurrentResourceName() {
+        return currentResourceName;
+    }
+
     public void setConnectionSuccess(boolean isConnectionSuccess) {
         this.connectionSuccess = isConnectionSuccess;
     }
@@ -938,5 +950,9 @@ public class CaARRAYPanel extends JPanel {
 
     public void setPasswd(String passwd) {
         this.passwd = passwd;
+    }
+
+    public void setCurrentResourceName(String currentResourceName) {
+        this.currentResourceName = currentResourceName;
     }
 }
