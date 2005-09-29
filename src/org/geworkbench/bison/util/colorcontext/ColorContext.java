@@ -5,6 +5,7 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMarkerValue;
 
 import java.awt.*;
+import java.io.Serializable;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
@@ -19,7 +20,7 @@ import java.awt.*;
  *
  * Extending classes must be provide a no-arg constructor.
  */
-public interface ColorContext {
+public interface ColorContext extends Serializable {
 
     public Color getMarkerValueColor(DSMicroarraySetView maSet, DSMarkerValue mv, DSGeneMarker mInfo, float intensity);
 
