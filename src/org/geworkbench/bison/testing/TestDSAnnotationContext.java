@@ -267,6 +267,99 @@ public abstract class TestDSAnnotationContext extends TestCase {
         // Use a specific context
         DSAnnotationContext<DSMicroarray> context = manager.createContext(dataSet, "Class Test");
         assertNotNull(context);
-        // todo - finish classification test
+        // Create some labels and label items
+        String labelA = "A";
+        String labelB = "B";
+        String labelC = "C";
+        context.labelItem(item1, labelA);
+        context.labelItem(item2, labelB);
+        context.labelItem(item3, labelB);
+        context.labelItem(item3, labelC);
+        String classCase = "Case";
+        String classControl = "Control";
+        String classIgnore = "Ignore";
+        // Add class "Case"
+        assertTrue(context.addClass(classCase));
+        // Adding again should return false
+        assertFalse(context.addClass(classCase));
+        // As the only class, it should be the default automatically
+        assertSame(context.getDefaultClass(), classCase);
+        // All labels and items should be in the default class
+        assertSame(context.getClassForLabel(labelA), classCase);
+        assertSame(context.getClassForLabel(labelB), classCase);
+        assertSame(context.getClassForLabel(labelC), classCase);
+        assertSame(context.getClassForItem(item1), classCase);
+        assertSame(context.getClassForItem(item2), classCase);
+        assertSame(context.getClassForItem(item3), classCase);
+        // Add "Control" next -- it should take over as the default
+        assertTrue(context.addClass(classControl));
+        assertSame(context.getDefaultClass(), classControl);
+        assertSame(context.getClassForLabel(labelA), classControl);
+        assertSame(context.getClassForItem(item1), classControl);
+        // Add "Ignore" by implicitly classifying
+        assertTrue(context.assignClassToLabel(labelA, classIgnore));
+        assertSame(context.getClassForLabel(labelA), classIgnore);
+        assertSame(context.getClassForItem(item1), classIgnore);
+        // Set "Control" as default class explicitly
+        assertTrue(context.setDefaultClass(classControl));
+        assertSame(context.getDefaultClass(), classControl);
+        assertSame(context.getClassForLabel(labelB), classControl);
+        // Ensure that there are three classes, and they are in order
+        assertEquals(context.getNumberOfClasses(), 3);
+        assertSame(context.getClass(0), classCase);
+        assertSame(context.getClass(1), classControl);
+        assertSame(context.getClass(2), classIgnore);
+        // Assign "Case" to "B"
+        assertTrue(context.assignClassToLabel(labelB, classCase));
+        // Reassigning the same label should return false
+        assertFalse(context.assignClassToLabel(labelB, classCase));
+        assertSame(context.getClassForLabel(labelB), classCase);
+        assertSame(context.getClassForItem(item2), classCase);
+        assertSame(context.getClassForItem(item3), classCase);
+        // Assign "Control" to "C"
+        assertTrue(context.assignClassToLabel(labelC, classControl));
+        // The priority rules dictate that item3 should still be "Case"
+        assertSame(context.getClassForItem(item3), classCase);
+        // Change labelling and ensure that classes update appropriately
+        context.removeLabelFromItem(item3, labelB);
+        // Now item3 should be "Control"
+        assertSame(context.getClassForItem(item3), classControl);
+        // Remove label "A" entirely -- item1 should become "Control" (the default)
+        context.removeLabel(labelA);
+        assertSame(context.getClassForItem(item1), classControl);
+        // Remove class "Control" -- new default is ignore
+        assertTrue(context.removeClass(classControl));
+        // Removing it again returns false
+        assertFalse(context.removeClass(classControl));
+        // Ensure there are only the 2 classes remaining and that the labels and items were properly reassigned
+        assertEquals(context.getNumberOfClasses(), 2);
+        assertSame(context.getClass(0), classCase);
+        assertSame(context.getClass(1), classIgnore);
+        assertSame(context.getClassForLabel(labelC), classIgnore);
+        assertSame(context.getClassForLabel(labelB), classCase);
+        assertSame(context.getClassForItem(item1), classIgnore);
+        assertSame(context.getClassForItem(item2), classCase);
+        assertSame(context.getClassForItem(item3), classIgnore);
+        // Assign "Case" to label "C"
+        assertTrue(context.assignClassToLabel(labelC, classCase));
+        // Get all labels for "Case"
+        Object[] caseLabels = context.getLabelsForClass(classCase);
+        assertEquals(caseLabels.length, 2);
+        assertTrue(((caseLabels[0] == labelB) && (caseLabels[1] == labelC)) || ((caseLabels[0] == labelC) && (caseLabels[1] == labelB)));
+        // Relabel item3 with labelB
+        context.labelItem(item3, labelB);
+        // Get all items for "Case"
+        DSPanel<DSMicroarray> caseItems = context.getItemsForClass(classCase);
+        // Ensure that thes structure of the panel is correct-- note that each item should appear only once
+        assertEquals(caseItems.panels().size(), 0);
+        assertEquals(caseItems.size(), 2);
+        assertTrue(caseItems.contains(item2));
+        assertTrue(caseItems.contains(item3));
+        // Remove "Case" from label "B"
+        assertSame(context.removeClassFromLabel(labelB), classCase);
+        // Should now be the default "Ignore"
+        assertSame(context.getClassForLabel(labelB), classIgnore);
+        // Removing again should return null
+        assertNull(context.removeClassFromLabel(labelB));
     }
 }

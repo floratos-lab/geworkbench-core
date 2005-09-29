@@ -256,7 +256,7 @@ public interface DSAnnotationContext<T extends DSBioObject> extends DSAnnotation
      * @param clazz the class to remove.
      * @return <tt>true</tt> if the class existed before removal, false otherwise.
      */
-    public boolean removeclass(Object clazz);
+    public boolean removeClass(Object clazz);
 
     /**
      * Retrieves the number of classes in this context.
@@ -288,8 +288,9 @@ public interface DSAnnotationContext<T extends DSBioObject> extends DSAnnotation
      * All items in that label are assigned to this clazz unless the items are already in a higher-priority class.
      * @param label the label to classify.
      * @param clazz the class.
+     * @return <tt>true</tt> if the label was not already assigned to this label, <tt>false</tt> otherwise.
      */
-    public void assignClassToLabel(Object label, Object clazz);
+    public boolean assignClassToLabel(Object label, Object clazz);
 
     /**
      * Retrieves the class assigned to a label.
@@ -316,7 +317,8 @@ public interface DSAnnotationContext<T extends DSBioObject> extends DSAnnotation
     /**
      * Removes a class from a label, restoring its classification to the default class.
      * @param label the label from which the class should be removed.
-     * @return the old classification held by this label.
+     * @return the old classification held by this label, or <tt>null</tt> if no explicit class was assigned to this
+     * label.
      */
     public Object removeClassFromLabel(Object label);
 
