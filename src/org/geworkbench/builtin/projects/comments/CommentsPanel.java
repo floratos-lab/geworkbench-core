@@ -2,6 +2,7 @@ package org.geworkbench.builtin.projects.comments;
 
 import org.geworkbench.events.ProjectEvent;
 import org.geworkbench.events.ImageSnapshotEvent;
+import org.geworkbench.events.CommentsEvent;
 import org.geworkbench.engine.management.Publish;
 import org.geworkbench.engine.management.Subscribe;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
@@ -44,6 +45,7 @@ public class CommentsPanel implements VisualPlugin {
     protected JScrollPane jScrollPane1 = new JScrollPane();
     protected JTextArea commentsTextArea = new JTextArea(userComments);
     protected JPanel commentsPanel = new JPanel();
+    private boolean liveMode = true;
 
     public String getName() {
         return "Comments Pane";
@@ -93,18 +95,27 @@ public class CommentsPanel implements VisualPlugin {
             return;
         }
         userComments = commentsTextArea.getText();
-        if (dataSet != null) {
-            dataSet.clearName(COMMENTS_ID_STRING);
-            dataSet.addNameValuePair(COMMENTS_ID_STRING, userComments);
-            publishCommentsEvent(new org.geworkbench.events.CommentsEventOld(dataSet, userComments));
-        } else if (image != null) {
-            image.setDescription(userComments);
+        if (liveMode) {
+            publishCommentsEvent(new CommentsEvent(userComments));
         }
+//        if (dataSet != null) {
+//            dataSet.clearName(COMMENTS_ID_STRING);
+//            dataSet.addNameValuePair(COMMENTS_ID_STRING, userComments);
+//            publishCommentsEvent(new org.geworkbench.events.CommentsEventOld(dataSet, userComments));
+//        } else if (image != null) {
+//            image.setDescription(userComments);
+//        }
     }
 
-    @Publish
-    public org.geworkbench.events.CommentsEventOld publishCommentsEvent(org.geworkbench.events.CommentsEventOld event) {
+    @Publish public CommentsEvent publishCommentsEvent(CommentsEvent event) {
         return event;
+    }
+
+    @Subscribe public void receive(CommentsEvent event, Object source) {
+        liveMode = false;
+        commentsTextArea.setText(event.getText());
+        commentsTextArea.setCaretPosition(0);
+        liveMode = true;
     }
 
     /**
@@ -113,31 +124,31 @@ public class CommentsPanel implements VisualPlugin {
      *
      * @param e
      */
-    @Subscribe
-    public void receive(ProjectEvent e, Object source) {
-        DSDataSet dataSet = e.getDataSet();
-        if (e.getMessage().equals(ProjectEvent.CLEARED)) {
-            this.dataSet = null;
-            userComments = DEFAULT_MESSAGE;
-        } else if (dataSet != this.dataSet) {
-            this.dataSet = dataSet;
-            image = null;
-            userComments = DEFAULT_MESSAGE;
-            Object[] values = this.dataSet.getValuesForName(COMMENTS_ID_STRING);
-            if (values != null && values.length > 0) {
-                userComments = (String) values[0];
-                if (userComments.trim().equals(""))
-                    userComments = DEFAULT_MESSAGE;
-            }
-        }
-        commentsTextArea.setText(userComments);
-        commentsTextArea.setCaretPosition(0);   // For long text.
-    }
-
-    @Subscribe
-    public void receive(ImageSnapshotEvent event, Object source) {
-        image = event.getImage();
-        dataSet = null;
-        commentsTextArea.setText(image.getDescription());
-    }
+//    @Subscribe
+//    public void receive(ProjectEvent e, Object source) {
+//        DSDataSet dataSet = e.getDataSet();
+//        if (e.getMessage().equals(ProjectEvent.CLEARED)) {
+//            this.dataSet = null;
+//            userComments = DEFAULT_MESSAGE;
+//        } else if (dataSet != this.dataSet) {
+//            this.dataSet = dataSet;
+//            image = null;
+//            userComments = DEFAULT_MESSAGE;
+//            Object[] values = this.dataSet.getValuesForName(COMMENTS_ID_STRING);
+//            if (values != null && values.length > 0) {
+//                userComments = (String) values[0];
+//                if (userComments.trim().equals(""))
+//                    userComments = DEFAULT_MESSAGE;
+//            }
+//        }
+//        commentsTextArea.setText(userComments);
+//        commentsTextArea.setCaretPosition(0);   // For long text.
+//    }
+//
+//    @Subscribe
+//    public void receive(ImageSnapshotEvent event, Object source) {
+//        image = event.getImage();
+//        dataSet = null;
+//        commentsTextArea.setText(image.getDescription());
+//    }
 }

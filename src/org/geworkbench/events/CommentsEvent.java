@@ -10,14 +10,14 @@ import org.geworkbench.engine.config.events.EventSource;
  * <p>Company: First Genetic Trust Inc.</p>
  *
  * @author First Genetic Trust
- * @version $Id: CommentsEvent.java,v 1.1.1.1 2005-07-28 22:36:26 watkin Exp $
+ * @version $Id: CommentsEvent.java,v 1.2 2005-09-30 21:55:32 watkin Exp $
  */
 
 public class CommentsEvent extends Event {
     String _text = null;
 
-    public CommentsEvent(EventSource source, String text) {
-        super(source);
+    public CommentsEvent(String text) {
+        super(null);
         _text = text;
     }
 

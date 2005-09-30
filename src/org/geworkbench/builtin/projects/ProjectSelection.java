@@ -186,6 +186,7 @@ public class ProjectSelection {
             } else {
                 panel.publishProjectEvent(new ProjectEvent(message, selectedDataSetNode.dataFile));
             }
+            panel.sendCommentsEvent(selectedDataSetNode);
         }
     }
 }

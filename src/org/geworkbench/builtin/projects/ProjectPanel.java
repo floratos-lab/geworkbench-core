@@ -312,14 +312,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
      *
      * @param ce
      */
-    public void commentsTextChanged(CommentsEvent ce) {
+    @Subscribe public void receive(CommentsEvent ce, Object source) {
         ProjectTreeNode selectedNode = selection.getSelectedNode();
-        String oldDescription = null;
-        if (selectedNode instanceof DataSetNode) {
-            oldDescription = ((DataSetNode) selectedNode).dataFile.getDescriptions()[0];
-            ((DataSetNode) selectedNode).dataFile.removeDescription(oldDescription);
-            ((DataSetNode) selectedNode).dataFile.addDescription(ce.getText());
-        }
+        selectedNode.setDescription(ce.getText());
     }
 
     /**
@@ -467,8 +462,10 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
             if ((clickedNode != null) && clickedNode instanceof ImageNode) {
                 if (e.getClickCount() == 1) {
                     publishImageSnapshot(new ImageSnapshotEvent("Image Node Selected", ((ImageNode) clickedNode).image, ImageSnapshotEvent.Action.SHOW));
+                    sendCommentsEvent(clickedNode);
                 }
             }
+            sendCommentsEvent(clickedNode);
         }
     }
 
@@ -583,6 +580,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         //to do
 
         DSMicroarraySet maSet = new CSExprMicroarraySet(mRes);
+        addColorContext(maSet);
         addDataSetNode((DSDataSet) maSet, true);
         return true;
     }
@@ -601,6 +599,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         }
 
         DSMicroarraySet maSet = new CSExprMicroarraySet(mRes);
+        addColorContext(maSet);
         addDataSetNode((DSDataSet) maSet, true);
         return true;
 
@@ -640,6 +639,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         //to do
 
         DSMicroarraySet maSet = new CSExprMicroarraySet(mRes);
+        addColorContext(maSet);
         addDataSetNode((DSDataSet) maSet, true);
         return true;
     }
@@ -773,17 +773,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                 mergedSet.addDescription(desc);
             }
             // Add color context
-            GlobalPreferences prefs = GlobalPreferences.getInstance();
-            Class<? extends ColorContext> type = prefs.getColorContextClass();
-            try {
-                ColorContext context = type.newInstance();
-                mergedSet.addObject(ColorContext.class, context);
-                updateColorContext(mergedSet);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            }
+            addColorContext(mergedSet);
 
             // Add the new dataset to the project tree.
             addDataSetNode((DSDataSet) mergedSet, true);
@@ -887,17 +877,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                             if (set instanceof DSMicroarraySet) {
                                 DSMicroarraySet maSet = (DSMicroarraySet) set;
                                 // Add color context
-                                GlobalPreferences prefs = GlobalPreferences.getInstance();
-                                Class<? extends ColorContext> type = prefs.getColorContextClass();
-                                try {
-                                    ColorContext context = type.newInstance();
-                                    maSet.addObject(ColorContext.class, context);
-                                    updateColorContext(maSet);
-                                } catch (IllegalAccessException e) {
-                                    e.printStackTrace();
-                                } catch (InstantiationException e) {
-                                    e.printStackTrace();
-                                }
+                                addColorContext(maSet);
                             }
                             //String directory = dataSetFile.getPath();
                             //System.setProperty("data.files.dir", directory);
@@ -937,6 +917,20 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                 }
                 mic.setLabel(arrayName);
             }
+        }
+    }
+
+    private void addColorContext(DSMicroarraySet maSet) {
+        GlobalPreferences prefs = GlobalPreferences.getInstance();
+        Class<? extends ColorContext> type = prefs.getColorContextClass();
+        try {
+            ColorContext context = type.newInstance();
+            maSet.addObject(ColorContext.class, context);
+            updateColorContext(maSet);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
         }
     }
 
@@ -1169,8 +1163,11 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
     protected ProjectTreeNode selectedNode = null;
     protected MicroarraySetNode previousMANode = null;
 
-    @Publish
-    public ProjectEvent publishProjectEvent(ProjectEvent event) {
+    @Publish public ProjectEvent publishProjectEvent(ProjectEvent event) {
+        return event;
+    }
+
+    @Publish public CommentsEvent publishCommentsEvent(CommentsEvent event) {
         return event;
     }
 
@@ -1183,7 +1180,16 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
     protected void fireNodeSelectionEvent(ProjectTreeNode node) {
         if (node != null && node != root) {
             publishProjectEvent(new ProjectEvent(node instanceof ProjectNode ? "Project Node Selected" : "Microarray Node Selected", projectRenderer.microarraySetNodeSelection == null ? null : projectRenderer.microarraySetNodeSelection.getMicroarraySet()));
+            sendCommentsEvent(node);
         }
+    }
+
+    public void sendCommentsEvent(ProjectTreeNode forNode) {
+        String description = forNode.getDescription();
+        if (description == null) {
+            description = "";
+        }
+        publishCommentsEvent(new CommentsEvent(description));
     }
 
     /**
@@ -1268,20 +1274,20 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
      *
      * @param ce <code>CommentsEventOld</code> thrown by <code>CommentsPane</code>
      */
-    @Subscribe
-    public void receive(org.geworkbench.events.CommentsEventOld ce, Object source) {
-        // Do no bother if the comment change is not for currently selected
-        // microarray set.
-        if (ce == null || ce.getMicroarray() == null || !(selectedNode instanceof MicroarraySetNode) || projectRenderer.microarraySetNodeSelection == null || projectRenderer.microarraySetNodeSelection.getMicroarraySet() != ce.getMicroarray()) {
-            return;
-        }
-
-        // Otherwise, mark that the selected node had its comments modified. This
-        // information will be needed in the method checkModifiedMASet(), in order
-        // to decide if the microarray set should be persisted.
-        DSMicroarraySet temp = projectRenderer.microarraySetNodeSelection.getMicroarraySet();
-        temp.addNameValuePair(COMMENTS_MODIFIED, new Boolean(true));
-    }
+//    @Subscribe
+//    public void receive(org.geworkbench.events.CommentsEventOld ce, Object source) {
+//        // Do no bother if the comment change is not for currently selected
+//        // microarray set.
+//        if (ce == null || ce.getMicroarray() == null || !(selectedNode instanceof MicroarraySetNode) || projectRenderer.microarraySetNodeSelection == null || projectRenderer.microarraySetNodeSelection.getMicroarraySet() != ce.getMicroarray()) {
+//            return;
+//        }
+//
+//        // Otherwise, mark that the selected node had its comments modified. This
+//        // information will be needed in the method checkModifiedMASet(), in order
+//        // to decide if the microarray set should be persisted.
+//        DSMicroarraySet temp = projectRenderer.microarraySetNodeSelection.getMicroarraySet();
+//        temp.addNameValuePair(COMMENTS_MODIFIED, new Boolean(true));
+//    }
 
     /**
      * Method for receiving

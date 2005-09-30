@@ -14,6 +14,9 @@ import java.io.Serializable;
  * @version 1.0
  */
 public class ProjectTreeNode extends DefaultMutableTreeNode implements Serializable {
+
+    private String description = "";
+
     /**
      * Default Constructor
      */
@@ -27,6 +30,14 @@ public class ProjectTreeNode extends DefaultMutableTreeNode implements Serializa
      */
     public ProjectTreeNode(Object nodeName) {
         setUserObject(nodeName);
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
 }
