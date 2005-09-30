@@ -16,7 +16,7 @@ public class Genome {
     public static int num = 4;
     public static String[] fullName = {"human (GoldenPath)", "mouse (GoldenPath)", "rat (GoldenPath)", "chimpanzee (GoldenPath)"};
 
-    public static String[] shortName = {"hg16", "mm4", "rn3", "panTro1"};
+    public static String[] shortName = {"hg16", "mm6", "rn3", "panTro1"};
 
     public static int[] numConventionalChromosomes = {22, // hg16
                                                       19, // mm4
