@@ -266,6 +266,7 @@ public class AnnotationParser {
         }
         br.close();
         populateGeneNameMap();
+        System.gc();
     }
 
     static void populateGeneNameMap(){
