@@ -15,44 +15,44 @@ public class BayesUtil {
 
     public Table convertToTable(DSMicroarraySet<DSMicroarray> mArraySet) {
         Table data = new Table(false);
-
-        DSItemList<DSGeneMarker> markerInfos = mArraySet.getMarkers();
-        for (DSGeneMarker m : markerInfos) {
-            Attribute attr = new Attribute(m.getDescription());
-            data.addAttribute(attr);
-        }
-
-        for (DSMicroarray ma : mArraySet) {
-            Tuple tup = new Tuple();
-            DSMarkerValue[] markerValues = ma.getMarkerValues();
-            for (int mvCtr = 0; mvCtr < markerValues.length; mvCtr++) {
-                tup.addValue(new Double(markerValues[mvCtr].getValue()));
+        if (mArraySet != null){
+            DSItemList<DSGeneMarker> markerInfos = mArraySet.getMarkers();
+            for (DSGeneMarker m : markerInfos) {
+                Attribute attr = new Attribute(m.getDescription());
+                data.addAttribute(attr);
             }
-            data.addTuple(tup);
+
+            for (DSMicroarray ma : mArraySet) {
+                Tuple tup = new Tuple();
+                DSMarkerValue[] markerValues = ma.getMarkerValues();
+                for (int mvCtr = 0; mvCtr < markerValues.length; mvCtr++) {
+                    tup.addValue(new Double(markerValues[mvCtr].getValue()));
+                }
+                data.addTuple(tup);
+            }
         }
         return data;
     }
 
     public Table convertToTable(DSMicroarraySet mArraySet, DSItemList<DSMicroarray> mArrays) {
         Table data = new Table(false);
-
-        DSItemList<DSGeneMarker> markerInfos = mArraySet.getMarkers();
-        for (DSGeneMarker m : markerInfos) {
-            Attribute attr = new Attribute(m.getDescription());
-            data.addAttribute(attr);
-        }
-
-        for (DSMicroarray ma : mArrays) {
-            Tuple tup = new Tuple();
-            DSMarkerValue[] markerValues = ma.getMarkerValues();
-            for (int mvCtr = 0; mvCtr < markerValues.length; mvCtr++) {
-                tup.addValue(new Double(markerValues[mvCtr].getValue()));
+        if (mArraySet != null && mArrays != null){
+            DSItemList<DSGeneMarker> markerInfos = mArraySet.getMarkers();
+            for (DSGeneMarker m : markerInfos) {
+                Attribute attr = new Attribute(m.getDescription());
+                data.addAttribute(attr);
             }
-            data.addTuple(tup);
+
+            for (DSMicroarray ma : mArrays) {
+                Tuple tup = new Tuple();
+                DSMarkerValue[] markerValues = ma.getMarkerValues();
+                for (int mvCtr = 0; mvCtr < markerValues.length; mvCtr++) {
+                    tup.addValue(new Double(markerValues[mvCtr].getValue()));
+                }
+                data.addTuple(tup);
+            }
         }
 
         return data;
     }
-
-
 }
