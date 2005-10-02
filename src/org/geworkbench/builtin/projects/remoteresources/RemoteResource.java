@@ -59,7 +59,7 @@ public class RemoteResource {
                 portnumber = new Integer(port).intValue();
             }
         } catch (NumberFormatException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             portnumber = 80;
         }
         ;

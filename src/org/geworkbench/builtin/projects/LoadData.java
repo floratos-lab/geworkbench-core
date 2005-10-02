@@ -289,7 +289,7 @@ public class LoadData extends JDialog {
                 jFileChooser1_actionPerformed(e);
             }
         });
-        this.getContentPane().setSize(new Dimension(683, 422));
+        this.getContentPane().setSize(new Dimension(683, 450));
         this.setTitle("Open File");
         this.updateExistedResources();
         pack();
@@ -464,17 +464,14 @@ public class LoadData extends JDialog {
     }
 
     private void mageButtonSelection_actionPerformed(ActionEvent e) {
-
-        remoteResourceDialog.setupSystemPropertyForCurrentResource(
-                resourceModel.getSelectedItem().toString());
-
-
+        String currentResourceName = resourceModel.getSelectedItem().toString().trim();
+        remoteResourceDialog.setupSystemPropertyForCurrentResource(currentResourceName);
         jPanel8.setUrl(remoteResourceDialog.getCurrentURL());
         jPanel8.setUser(remoteResourceDialog.getCurrentUser());
         jPanel8.setPasswd(remoteResourceDialog.getCurrentPassword());
-          jPanel8.getExperiments(e);
-
-        if (jPanel8.isConnectionSuccess()) {
+        jPanel8.setCurrentResourceName(currentResourceName);
+        jPanel8.getExperiments(e);
+       if (jPanel8.isConnectionSuccess()) {
             this.getContentPane().remove(jPanel6);
             this.getContentPane().remove(jPanel4);
             this.getContentPane().add(jPanel8, BorderLayout.CENTER);
