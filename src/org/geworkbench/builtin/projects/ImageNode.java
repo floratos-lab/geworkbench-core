@@ -12,7 +12,8 @@ import javax.swing.*;
  * @author First Genetic Trust
  * @version 1.0
  */
-public class ImageNode extends ProjectTreeNode {
+//ProjectTreeNode
+public class ImageNode extends  DataSetSubNode {
     /**
      * <code>ImageIcon</code> that this <code>ImageNode</code> refers to
      */
@@ -24,8 +25,15 @@ public class ImageNode extends ProjectTreeNode {
      * @param im <code>ImageIcon</code> that this <code>ImageNode</code> refers to
      */
     public ImageNode(ImageIcon im) {
-        image = im;
+        super(null);
+                image = im;
         super.setUserObject(image.getDescription());
+        ImageData node = new ImageData(null);
+        node.setImageIcon(image);
+        node.addDescription(image.getDescription());
+        _aDataSet = node;
+
+
     }
 
 }
