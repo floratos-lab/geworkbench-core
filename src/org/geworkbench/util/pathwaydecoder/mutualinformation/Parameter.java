@@ -20,7 +20,7 @@ public class Parameter {
     public int type = BOTH;
     public double mean = 50; // Mminimum Variance
     public double variance = 0.3; // Minimum Standard DeviationString
-
+    public String method = "gaussian"; // gaussian ? fast
     public void setMatrixName(String _theMatrix) {
         dataMatrixName = _theMatrix;
     }

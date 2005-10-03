@@ -1,11 +1,11 @@
 package org.geworkbench.bison.datastructure.graph.adjacencyMatrix;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.StringTokenizer;
+import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
+import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
+
+import java.io.*;
+import java.util.*;
 
 /**
  * <p>Title: caWorkbench</p>
@@ -23,9 +23,86 @@ import java.util.StringTokenizer;
  */
 public class AdjacencyMatrix {
     protected HashMap geneRows = new HashMap();
+    protected DSMicroarraySet maSet = null;
+    protected HashMap idToGeneMapper = new HashMap();
+    protected HashMap snToGeneMapper = new HashMap();
 
     public AdjacencyMatrix() {
     }
+    public int getMappedId(int geneId) {
+        if (geneId >= 0) {
+            try {
+                DSGeneMarker gm = (DSGeneMarker) maSet.getMarkers().get(geneId);
+                String sn = gm.getShortName();
+            if(sn == null){
+                return geneId;
+            }
+            if (sn.compareToIgnoreCase("ExoBCL6") == 0) {
+                geneId = -1;
+            }
+            else if (gm.getLabel().compareToIgnoreCase("1827_s_at") == 0) {
+                geneId = gm.getSerial();
+            }
+            else if (gm.getLabel().compareToIgnoreCase("1936_s_at") == 0) {
+                geneId = gm.getSerial();
+            }
+            else {
+                if (sn.compareToIgnoreCase("MYC") == 0) {
+                    int xxx = 1;
+                }
+                if (gm.getLabel().compareToIgnoreCase("1936_s_at") == 0) {
+                    sn = "MYC";
+                    gm = (DSGeneMarker) maSet.get("1973_s_at");
+                }
+                // Test if a gene with the same name was mapped before.
+                Integer prevId = (Integer) idToGeneMapper.get(gm.getLabel());
+                if (prevId != null) {
+                    // This gene was mapped before. Replace with mapped one
+                    geneId = prevId.intValue();
+                }
+                else {
+                    // Test if a gene with the same name was reported before.
+                    prevId = (Integer) snToGeneMapper.get(sn);
+                    if (prevId != null) {
+                        // There was a previous gene with the same name. Hence:
+                        // replace the id, and add a new mapping to both idToGeneMapper
+                        // and geneToIdMapper
+                        snToGeneMapper.put(sn, prevId);
+                        idToGeneMapper.put(gm.getLabel(), prevId);
+                        geneId = prevId.intValue();
+                    }
+                    else {
+                        snToGeneMapper.put(sn, new Integer(geneId));
+                        idToGeneMapper.put(gm.getLabel(), new Integer(geneId));
+                    }
+                }
+            }
+        } catch (Exception exp) {
+           return geneId;
+       }
+       }
+        return geneId;
+    }
+    // read a line of Adjacency Matrix output, MIThreshold=0
+     public void read(int geneId1, String line) {
+         if (geneId1 >= 0 && line.length() > 0) {
+             StringTokenizer tr = new StringTokenizer(line);
+             while (tr.hasMoreTokens()) {
+                 String strGeneId2 = new String(tr.nextToken());
+                 int geneId2 = getMappedId(Integer.parseInt(strGeneId2));
+                 if (geneId2 >= 0) {
+                     String strMi = new String(tr.nextToken());
+                     float mi = Float.parseFloat(strMi);
+                     if (mi > 0) {
+                         if (geneId1 != geneId2) {
+                             add(geneId1, geneId2, mi);
+                             // this.addInteractionType2(geneId1, geneId2, mi);
+                         }
+                     }
+                 }
+             }
+         }
+     }
 
     public void read(String name, float miThresh) {
         int connectionsInstantiated = 0;
@@ -125,5 +202,185 @@ public class AdjacencyMatrix {
             row.put(new Integer(geneId1), new Float(edge));
         }
     }
+    public void print(DSMicroarraySet mArraySet, File writeFile) {
+//        print(mArraySet, writeFile, geneRows);
+        print(mArraySet, writeFile, 0.0);
+    }
+
+    public void print(DSMicroarraySet mArraySet, File writeFile, double miThresh) {
+        print(mArraySet, writeFile, geneRows, miThresh);
+    }
+
+    public void print(DSMicroarraySet mArraySet, File writeFile, double miThresh,
+                      int startIndex, int endIndex) {
+        print(mArraySet, writeFile, geneRows, miThresh, startIndex, endIndex);
+    }
+    public void printGene(DSMicroarraySet mArraySet, File writeFile, Map map,
+                           double miThresh, int markerIndex) {
+         try {
+             FileWriter writer = new FileWriter(writeFile);
+
+             HashMap geneRow = (HashMap) map.get(new Integer(markerIndex));
+//            String markerName = mArraySet.getMarkerLabel(markerIndex);
+
+             DSGeneMarker dsGeneMarker = (DSGeneMarker) mArraySet.getMarkers().get(markerIndex);
+             String markerName = dsGeneMarker.getLabel();
+             writer.write(markerName + ":" + markerIndex + "\t");
+
+             Set miSet = geneRow.entrySet();
+             Iterator miSetIt = miSet.iterator();
+             while (miSetIt.hasNext()) {
+                 Map.Entry miEntry = (Map.Entry) miSetIt.next();
+                 double miVal = Double.parseDouble(miEntry.getValue().
+                                                   toString());
+//                    if (miVal >= 0.0) {
+                 if (miVal > miThresh) {
+                     writer.write(miEntry.getKey().toString() + "\t" +
+                                  miEntry.getValue().toString() + "\t");
+                 }
+
+             }
+             writer.close();
+         }
+         catch (Exception e) {
+             e.printStackTrace();
+         }
+     }
+
+     public void print(DSMicroarraySet mArraySet, File writeFile, Map map,
+                       double miThresh, int startIndex, int endIndex) {
+         try {
+             FileWriter writer = new FileWriter(writeFile);
+
+//                Set entrySet = map.entrySet();
+//                Iterator entrySetIt = entrySet.iterator();
+//                int keyIndex = 0;
+//                while (entrySetIt.hasNext()) {
+//                    Map.Entry curEntry = (Map.Entry) entrySetIt.next();
+             for (int geneRowCtr = startIndex; geneRowCtr < endIndex; geneRowCtr++) {
+
+//                    int markerIndex = Integer.parseInt(curEntry.getKey().toString());
+                 int markerIndex = geneRowCtr;
+//                    if(markerIndex >= size()){
+//                        continue;
+//                    }
+
+                 String markerName = null;
+//                    String markerName = mArraySet.getMarkerLabel(markerIndex);
+                 if (markerIndex < mArraySet.getMarkers().size()) {
+                     markerName = ((DSGeneMarker) mArraySet.getMarkers().get(markerIndex)).getLabel();
+                 }
+                 else {
+                     continue;
+                 }
+
+                 if (markerName == null) {
+//                        writer.write("\n");
+                     continue;
+                 }
+
+                 writer.write(markerName + ":" + markerIndex + "\t");
+//                    keyIndex++;
+//                    HashMap entryMap = (HashMap) curEntry.getValue();
+                 HashMap entryMap = (HashMap) map.get(new Integer(markerIndex));
+                 if (entryMap == null) {
+                     writer.write("\n");
+                     continue;
+                 }
+                 Set miSet = entryMap.entrySet();
+                 Iterator miSetIt = miSet.iterator();
+                 while (miSetIt.hasNext()) {
+                     Map.Entry miEntry = (Map.Entry) miSetIt.next();
+                     double miVal = Double.parseDouble(miEntry.getValue().
+                         toString());
+//                    if (miVal >= 0.0) {
+                     if (miVal > miThresh) {
+                         writer.write(miEntry.getKey().toString() + "\t" +
+                                      miEntry.getValue().toString() + "\t");
+                     }
+                 }
+                 writer.write("\n");
+             }
+             writer.close();
+         }
+         catch (Exception e) {
+             e.printStackTrace();
+         }
+
+     }
+
+     public void print(DSMicroarraySet mArraySet, File writeFile, Map map,
+                       double miThresh) {
+         try {
+             FileWriter writer = new FileWriter(writeFile);
+
+             Set entrySet = map.entrySet();
+             Iterator entrySetIt = entrySet.iterator();
+             int keyIndex = 0;
+             while (entrySetIt.hasNext()) {
+                 Map.Entry curEntry = (Map.Entry) entrySetIt.next();
+                 int markerIndex = Integer.parseInt(curEntry.getKey().toString());
+//                String markerName = mArraySet.getMarkerLabel(markerIndex);
+                 String markerAccession = ((DSGeneMarker) mArraySet.getMarkers().get(markerIndex)).getLabel();
+                 writer.write(markerAccession + ":" + markerIndex + "\t");
+                 keyIndex++;
+                 HashMap entryMap = (HashMap) curEntry.getValue();
+                 Set miSet = entryMap.entrySet();
+                 Iterator miSetIt = miSet.iterator();
+                 while (miSetIt.hasNext()) {
+                     Map.Entry miEntry = (Map.Entry) miSetIt.next();
+                     double miVal = Double.parseDouble(miEntry.getValue().
+                         toString());
+//                    if (miVal >= 0.0) {
+                     if (miVal > miThresh) {
+                         writer.write(miEntry.getKey().toString() + "\t" +
+                                      miEntry.getValue().toString() + "\t");
+                     }
+                 }
+                 writer.write("\n");
+             }
+             writer.close();
+         }
+         catch (Exception e) {
+             e.printStackTrace();
+         }
+
+     }
+
+     public void print(HashMap geneIdMap, File writeFile) {
+         try {
+             FileWriter writer = new FileWriter(writeFile);
+
+             Set entrySet = geneRows.entrySet();
+             Iterator entrySetIt = entrySet.iterator();
+             int keyIndex = 0;
+             while (entrySetIt.hasNext()) {
+                 Map.Entry curEntry = (Map.Entry) entrySetIt.next();
+                 int markerIndex = Integer.parseInt(curEntry.getKey().toString());
+                 String markerName = (String) geneIdMap.get(new Integer(
+                     markerIndex));
+                 writer.write(markerName + ":" + markerIndex + "\t");
+                 keyIndex++;
+                 HashMap entryMap = (HashMap) curEntry.getValue();
+                 Set miSet = entryMap.entrySet();
+                 Iterator miSetIt = miSet.iterator();
+                 while (miSetIt.hasNext()) {
+                     Map.Entry miEntry = (Map.Entry) miSetIt.next();
+                     double miVal = Double.parseDouble(miEntry.getValue().
+                         toString());
+                     if (miVal > 0.0) {
+                         writer.write(miEntry.getKey().toString() + "\t" +
+                                      miEntry.getValue().toString() + "\t");
+                     }
+                 }
+                 writer.write("\n");
+             }
+             writer.close();
+         }
+         catch (Exception e) {
+             e.printStackTrace();
+         }
+
+     }
 
 }

@@ -1,8 +1,6 @@
 package org.geworkbench.util.pathwaydecoder;
 
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
-import org.geworkbench.util.pathwaydecoder.*;
-import org.geworkbench.util.pathwaydecoder.GenericMarkerNode;
 import org.jgraph.graph.*;
 
 import java.awt.*;
