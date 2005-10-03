@@ -2,10 +2,10 @@ package org.geworkbench.builtin.projects.util;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Collections;
-import java.util.Vector;
+import java.util.*;
 
 import javax.swing.*;
+import javax.swing.Timer;
 import javax.swing.border.Border;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -27,6 +27,7 @@ import gov.nih.nci.mageom.search.Experiment.ExperimentSearchCriteria;
 import org.geworkbench.bison.parsers.resources.CaArrayResource;
 import org.geworkbench.builtin.projects.LoadData;
 
+
 /**
  * <p>Title: Bioworks</p>
  * <p>Description: Modular Application Framework for Gene Expession, Sequence and Genotype Analysis</p>
@@ -37,7 +38,7 @@ import org.geworkbench.builtin.projects.LoadData;
  * @version 1.0
  */
 
-public class CaARRAYPanel extends JPanel {
+public class CaARRAYPanel extends JPanel implements Observer {
 
     /**
      * Stores experiments from the remote server.
@@ -48,6 +49,7 @@ public class CaARRAYPanel extends JPanel {
      * Used to avoid querying the server for all experiments all the time.
      */
     protected boolean experimentsLoaded = false;
+    private boolean stopConnection = false;
     private String currentResourceName = null;
     private String previousResourceName = null;
     private JPanel jPanel6 = new JPanel();
@@ -281,7 +283,8 @@ public class CaARRAYPanel extends JPanel {
     }
 
     public void getExperiments(ActionEvent e) {
-        if (!experimentsLoaded || !currentResourceName.equals(previousResourceName)) {
+        if (!experimentsLoaded ||
+            !currentResourceName.equals(previousResourceName)) {
             experiments = getExperiments();
             previousResourceName = currentResourceName;
             connectionSuccess = true;
@@ -440,16 +443,17 @@ public class CaARRAYPanel extends JPanel {
     public CaArrayExperiment[] getExperiments() {
         CaArrayExperiment[] exps = new CaArrayExperiment[0];
         Vector temp = new Vector();
+//        final ProgressBar pb = ProgressBar.create(ProgressBar.
+//                                                  INDETERMINATE_TYPE);
+//        pb.addObserver(this);
+        final ProgressMonitor progressMonitor = new ProgressMonitor(this,
+                                  "Connecting..",
+                                  "", 0, 10000);
+        progressMonitor.setProgress(0);
+        progressMonitor.setMillisToDecideToPopup(100);
+
         try {
 
-//             System.setProperty("RMIServerURL",  "//caarray-mageom-server.nci.nih.gov:8080/SearchCriteriaHandler");
-//             System.setProperty("SecureSessionManagerURL",  "//caarray-mageom-server.nci.nih.gov:8080/SecureSessionManager");
-//            System.setProperty("RMIServerURL",
-//                               "//165.124.152.12:8999/SearchCriteriaHandler");
-//            System.setProperty("SecureSessionManagerURL",
-//                               "//165.124.152.12:8999/SecureSessionManager");
-//            System.setProperty("caarray.mage.user", "columbia");
-//            System.setProperty("caarray.mage.password", "mageomapi");
 
             if (url == null) {
                 user = System.getProperty("caarray.mage.user");
@@ -457,32 +461,155 @@ public class CaARRAYPanel extends JPanel {
                 url = System.getProperty(
                         "SecureSessionManagerURL");
             }
-                     System.setProperty("RMIServerURL", url + "/SearchCriteriaHandler");
-             System.setProperty("SecureSessionManagerURL",
-                              url + "/SecureSessionManager");
+
+//            pb.setTitle("Connectiong to remote server..");
+//            pb.setMessage("Connectiong to remote server.. ");
+//            DefaultBoundedRangeModel model = new ProgressBar.IncrementModel(0,
+//                    10000, 0, 10000, 1);
+//            pb.setBounds(model);
+//            pb.start();
+//
+//            pb.updateTo(0f);
+//            pb.setFocusable(true);
+
+            System.setProperty("RMIServerURL", url + "/SearchCriteriaHandler");
+            System.setProperty("SecureSessionManagerURL",
+                               url + "/SecureSessionManager");
 //            System.setProperty("caarray.mage.user", user);
 //            System.setProperty("caarray.mage.password", password);
+            final SecureSession sess = SecureSessionFactory.
+                                       defaultSecureSession();
+            class ConnectionTask extends Thread{
+                private int status = 0;
+                private boolean done = false;
+               public void run() {
+                  try {
+                      url = url + "/SecureSessionManager";
+                      ((Directable) sess).direct(url);
 
-            SecureSession sess = SecureSessionFactory.defaultSecureSession();
-            url = url + "/SecureSessionManager";
-            ((Directable) sess).direct(url);
+                      sess.start(user, passwd);
+                      done = true;
+                  } catch (RuntimeException une) {
+                      une.printStackTrace();
+                      stopConnection = true;
+                      done = true;
 
-            sess.start(user, passwd);
+                  }
+              }
+              public int getStatus(){
+                  status++;
+                  return status;
+              }
+              public boolean isDone(){
+                  return done;
+              }
 
+            }
+           final ConnectionTask task = new ConnectionTask(){
+
+            };
+//            Runnable dataLoader = new Runnable() {
+//                public void run() {
+//                    try {
+//                        url = url + "/SecureSessionManager";
+//                        ((Directable) sess).direct(url);
+//
+//                        sess.start(user, passwd);
+//                        pb.setName("finished");
+//                    } catch (RuntimeException une) {
+//                        une.printStackTrace();
+//                        stopConnection = true;
+//                        pb.stop();
+//
+//                    }
+//                }
+//            };
+
+            /**
+  * The actionPerformed method in this class
+  * is called each time the Timer "goes off".
+  */
+ class TimerListener implements ActionListener {
+     public void actionPerformed(ActionEvent evt) {
+         progressMonitor.setProgress(task.getStatus()*100);
+
+         if (progressMonitor.isCanceled() || task.isDone()) {
+             progressMonitor.close();
+
+             Toolkit.getDefaultToolkit().beep();
+             //timer.stop();
+             if (task.isDone()) {
+
+             } else {
+                // taskOutput.append("Task canceled." + newline);
+
+             }
+
+         }
+     }
+ }
+ Timer timer = new Timer(1000, new TimerListener());
+  timer.start();
+ task.start();
+
+//            Thread t = new Thread(dataLoader);
+//            t.setPriority(Thread.MAX_PRIORITY);
+//            t.start();
+            if (stopConnection) {
+                               return null;
+                }
+
+                progressMonitor.setProgress(task.getStatus()*100);
+
+       while (!progressMonitor.isCanceled() && ! task.isDone()) {
+           if (stopConnection) {
+                              return null;
+               }
+
+
+           Thread.sleep(1000);
+
+       }
+           progressMonitor.close();
+           timer.stop();
+
+         Toolkit.getDefaultToolkit().beep();
+         //timer.stop();
+         if (!task.isDone()) {
+             return null;
+         } else {
+
+
+         }
+
+
+//            while (!pb.getName().equals("finished")) {
+//                if (stopConnection) {
+//                    return null;
+//                }
+//
+//                Thread.sleep(1000);
+//            }
+//            pb.setMessage("Getting expriments information.. ");
             ExperimentSearchCriteria esc = SearchCriteriaFactory.
                                            new_EXPERIMENT_EXPERIMENT_SC();
             esc.setSessionId(sess.getSessionId());
             SearchResult results = esc.search();
 
             Experiment[] result = (Experiment[]) results.getResultSet();
+            float totalexpNum = 0;
+            if (result != null) {
+                totalexpNum = result.length;
+
+            }
             for (int x = 0; x < result.length; x++) {
                 if (result[x] instanceof ExperimentImpl) {
                     CaArrayExperiment exp = new CaArrayExperiment((
                             ExperimentImpl) result[x]);
-                    // This needs to be handled
-                    //                    if (exp.isPlatformTypeUsable()) {
+                  //  pb.updateTo(x / totalexpNum * model.getMaximum());
+
                     temp.add(exp);
-                    //                    }
+
                 }
             } while (results.hasMore()) {
                 SearchCriteria nextcrit = results.getNextCriteria();
@@ -492,25 +619,37 @@ public class CaARRAYPanel extends JPanel {
                     if (objects2[x] instanceof ExperimentImpl) {
                         CaArrayExperiment exp = new CaArrayExperiment((
                                 ExperimentImpl) objects2[x]);
-                        // This needs to be handled
-                        //                        if (exp.isPlatformTypeUsable()) {
+
                         temp.add(exp);
-                        //                        }
+
                     }
                 }
             }
-        } catch (Exception e) {
+
+            stopConnection = false;
+            Collections.sort(temp);
+            //dump the experiment objects into the return array.
+            exps = (CaArrayExperiment[]) temp.toArray(exps);
+            return exps;
+
+        }
+
+        catch (Exception e) {
             e.printStackTrace();
+            stopConnection = false;
+            //pb.stop();
             return null;
         }
-        Collections.sort(temp);
-        //dump the experiment objects into the return array.
-        exps = (CaArrayExperiment[]) temp.toArray(exps);
-        return exps;
+
     }
+
 
     private void dispose() {
         parent.dispose();
+    }
+
+    public void update(java.util.Observable ob, Object o) {
+        stopConnection = true;
     }
 
     /**
@@ -586,7 +725,8 @@ public class CaARRAYPanel extends JPanel {
                     baData = ((MeasuredBioAssayImpl) ba).
                              getMeasuredBioAssayData();
                 } else if (ba instanceof DerivedBioAssayImpl) {
-                    baData = ((DerivedBioAssayImpl) ba).getDerivedBioAssayData();
+                    baData = ((DerivedBioAssayImpl) ba).
+                             getDerivedBioAssayData();
                 } else {
                     baData = null;
                 }
@@ -692,8 +832,9 @@ public class CaARRAYPanel extends JPanel {
                 m_name = e.getName();
                 //m_platform = e.getPlatformType;
             } catch (Exception ex) {
-                System.out.println("Error getting experiment information: " +
-                                   ex.toString());
+                System.out.println(
+                        "Error getting experiment information: " +
+                        ex.toString());
                 ex.printStackTrace();
             }
         }
@@ -884,9 +1025,11 @@ public class CaARRAYPanel extends JPanel {
                 BioAssay[] bioassays = exp.getBioAssays();
                 if (bioassays.length > 0) {
                     for (int j = 0; j < bioassays.length; ++j) {
-                        if (bioassays[j] instanceof MeasuredBioAssayImpl) {
+                        if (bioassays[j] instanceof
+                            MeasuredBioAssayImpl) {
                             measuredNum++;
-                        } else if (bioassays[j] instanceof DerivedBioAssayImpl) {
+                        } else if (bioassays[j] instanceof
+                                   DerivedBioAssayImpl) {
                             derivedNum++;
                         }
                     }
@@ -898,11 +1041,15 @@ public class CaARRAYPanel extends JPanel {
                     derivedAssays = new CaArrayBioassay[derivedNum];
                     int k = 0, l = 0;
                     for (int j = 0; j < bioassays.length; ++j) {
-                        if (bioassays[j] instanceof MeasuredBioAssayImpl) {
-                            measuredAssays[k++] = new CaArrayBioassay(bioassays[
+                        if (bioassays[j] instanceof
+                            MeasuredBioAssayImpl) {
+                            measuredAssays[k++] = new CaArrayBioassay(
+                                    bioassays[
                                     j]);
-                        } else if (bioassays[j] instanceof DerivedBioAssayImpl) {
-                            derivedAssays[l++] = new CaArrayBioassay(bioassays[
+                        } else if (bioassays[j] instanceof
+                                   DerivedBioAssayImpl) {
+                            derivedAssays[l++] = new CaArrayBioassay(
+                                    bioassays[
                                     j]);
                         }
                     }
@@ -954,5 +1101,10 @@ public class CaARRAYPanel extends JPanel {
 
     public void setCurrentResourceName(String currentResourceName) {
         this.currentResourceName = currentResourceName;
+    }
+
+    public void setExperiments(org.geworkbench.builtin.projects.util.
+                               CaARRAYPanel.CaArrayExperiment[] experiments) {
+        this.experiments = experiments;
     }
 }
