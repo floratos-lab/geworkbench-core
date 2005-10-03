@@ -13,6 +13,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.io.Serializable;
 
 /**
  * <p>Title: Bioworks</p>
@@ -32,7 +33,7 @@ import java.util.Map;
  */
 public class CSClassCriteria extends CSPanel<DSBioObject> implements DSClassCriteria {
 
-    private static class ClassCriterion {
+    private static class ClassCriterion implements Serializable {
         // This map is used to store the available annotation values. Note that this
         // allows new values to be registered and assigned on the fly
         public HashMap<DSAnnotValue, ImageIcon> annotValues = new HashMap<DSAnnotValue, ImageIcon>();

@@ -2,8 +2,10 @@ package org.geworkbench.bison.datastructure.biocollections.microarrays;
 
 import org.apache.commons.math.stat.StatUtils;
 import org.geworkbench.bison.annotation.DSCriteria;
+import org.geworkbench.bison.annotation.CSCriteria;
 import org.geworkbench.bison.datastructure.biocollections.CSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.CSMarkerVector;
+import org.geworkbench.bison.datastructure.biocollections.classification.phenotype.DSClassCriteria;
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.*;
@@ -421,4 +423,5 @@ public abstract class CSMicroarraySet<T extends DSMicroarray> extends CSDataSet<
 
     public void initialize(int maNo, int mrkNo) {
     }
+
 }
