@@ -29,7 +29,7 @@ public class RemoteResourceDialog extends JDialog {
     public static final int DELETE = 1;
     public static final int EDIT = 2;
     public static int currentOption = 0;
-    private String currentResourceName;
+    private static String currentResourceName;
     private String currentURL;
     private String currentUser;
     private String currentPassword;
