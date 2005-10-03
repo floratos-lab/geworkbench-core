@@ -633,8 +633,14 @@ public CASWalker() {
 				_t = __t215;
 				_t = _t.getNextSibling();
 				id2 = ID21.getText();
+				if (ipt.symt.findVar(id) instanceof CasModule) {
+				//should you be checking if id a CasModule in the firstplace?
 				r = new CasValue(id, id2, ((CasModule)ipt.symt.findVar(id)));
 				System.out.println("we're in object_value");
+				}
+				else {
+				throw new CasException(id + "is not a module, so it can't have any variables");
+				}
 				
 				break;
 			}
@@ -656,10 +662,10 @@ public CASWalker() {
 				_t = __t216;
 				_t = _t.getNextSibling();
 				id2 = ID22.getText();
-				r = new CasString("objectcall " + id + "." + id2 + " with arguments ");
 				//r has to be something different, it has to come from MethodCall
+				//MethodCall should tell the difference between a CasModule and a CasDataPlug
 				System.out.println("we're in object_call");
-				ipt.MethodCall(id, id2, arglist);
+				r = new CasCallReturn(ipt.MethodCall(id, id2, arglist));
 				
 				break;
 			}

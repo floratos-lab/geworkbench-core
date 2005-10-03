@@ -9,7 +9,7 @@ import java.util.Vector;
  * Interpreter routines that is called directly from the tree walker.
  *
  * @author Behrooz Badii - badiib@gmail.com
- * @version $Id: CasInterpreter.java,v 1.9 2005-09-19 19:13:14 bb2122 Exp $
+ * @version $Id: CasInterpreter.java,v 1.10 2005-10-03 21:56:16 bb2122 Exp $
  */
 class CasInterpreter {
     CasSymbolTable symt;
@@ -95,6 +95,7 @@ class CasInterpreter {
     //YOU REALLY GOTTA FIX THIS METHOD
     //should you be throwing a CasException if something goes wrong at CasValue? how should we be doing that?
     //make the return type different for each one.  If it is successful, return a, if not, throw an exception.
+    //to do - you have to check if B is a CasCallReturn, if it is, it can be assigned to a CasInt, CasDouble, CasString, CasBool, or CasModule
     public CasDataType assign(CasDataType a, CasDataType b) {
         System.out.println("in assignment");
         if (a.getPartOf() != null) {
@@ -220,15 +221,38 @@ class CasInterpreter {
                         return new CasBool(true);
                     }
                 }
-                //else if (b instanceof CasMethod) {
-                //    Object a = MethodCall((CasMethod)b).getformodule(), (CasMethod)b).getothername(),
-                //}
-                //else if (b instanceof CasDataMethod) {
-                //
-                //}
+                //fix this, this is both for a CasMethod and a CasDataMethod
+                else if (b instanceof CasCallReturn) {
+                    Object data = ((CasCallReturn) b).getRetValue();
+                    try {
+                        if (((CasDataPlug) a).getVar().getClass().isAssignableFrom(data.getClass())) {
+                            CasDataType x = ((CasDataPlug) a).copy();
+                            ((CasDataPlug) x).setVar(data);
+                            symt.setVar(x.name, (CasDataPlug) x);
+                            return new CasBool(true);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        throw new CasException("The geWorkBench return value cannot be assigned to " + ((CasDataPlug) a).getName() +
+                                               "; it is not compatible with " + ((CasDataPlug) a).getName() + ".");
+                    }
+                }
                 else if (b instanceof CasValue) {
                     CasValue get = new CasValue(((CasValue) b).formodule, "get" + ((CasValue) b).othername, ((CasValue) b).association);
-
+                    try {
+                        Object data = get.getm().invoke(get.getPlugin());
+                        if (((CasDataPlug)a).getVar().getClass().isAssignableFrom(data.getClass())) {
+                            CasDataType x = ((CasDataPlug)a).copy();
+                            ((CasDataPlug)x).setVar(data);
+                            symt.setVar(x.name, (CasDataPlug) x);
+                            return new CasBool(true);
+                        }
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                        throw new CasException(((CasValue) b).formodule + "." + ((CasValue) b).othername + " cannot be assigned to " + ((CasDataPlug)a).getName() + " since the datatypes are not compatible.");
+                    }
+                    //fix this as well, make sure the object from get when invoked is good for the CasDataPlug
                 }
                 else
                     throw new CasException ("A datatype ("+a.getName()+") can only be assigned values from another datatype, a module's methods, or a module's variables");
@@ -278,7 +302,9 @@ class CasInterpreter {
                 throw new CasException ("problem making thread sleep in ipt.stopme() call");
             }
         }
-        throw new CasException("wait call needs an integer");
+        else {
+            throw new CasException("wait call needs an integer");
+        }
     }
 
     //methodcall occurs when the CasMethod is used, so we will find it in OBJECT_CALL
