@@ -26,7 +26,7 @@ import java.util.List;
 
 public class ExpressionFileFormat extends DataSetFileFormat {
 
-    String[] maExtensions = {"exp", "res"};
+    String[] maExtensions = {"exp"};
     ExpressionResource resource = new ExpressionResource();
     AffyFilter maFilter = null;
 
