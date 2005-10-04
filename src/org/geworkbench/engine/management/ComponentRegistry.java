@@ -180,6 +180,7 @@ public class ComponentRegistry {
 
         public T getExtension() {
             Enhancer enhancer = new Enhancer();
+            enhancer.setClassLoader(descriptor.getClassLoader());
             enhancer.setSuperclass(base);
             // Indicates that no callback should be used for this method
             Callback noOp = NoOp.INSTANCE;

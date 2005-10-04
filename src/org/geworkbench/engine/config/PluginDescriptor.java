@@ -86,6 +86,8 @@ public class PluginDescriptor extends IdentifiableImpl {
 
     private String pluginClassPath;
 
+    private ClassLoader loader;
+
     // ---------------------------------------------------------------------------
     // --------------- Constructors
     // ---------------------------------------------------------------------------
@@ -111,8 +113,10 @@ public class PluginDescriptor extends IdentifiableImpl {
         try {
             if (resource == null) {
                 pluginClass = Class.forName(className);
+                loader = pluginClass.getClassLoader();
             } else {
-                pluginClass = resource.getClassLoader().loadClass(className);
+                loader = resource.getClassLoader();
+                pluginClass = loader.loadClass(className);
             }
             instantiate();
         } catch (ClassNotFoundException e) {
@@ -179,6 +183,10 @@ public class PluginDescriptor extends IdentifiableImpl {
 
     public void setPluginClass(Class pluginClass) {
         this.pluginClass = pluginClass;
+    }
+
+    public ClassLoader getClassLoader(){
+        return loader;
     }
 
     /**
