@@ -1864,6 +1864,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                 dataSet = ((DataSetFileFormat) inputFormat).getDataFile(
                         dataSetFiles);
             }
+            if (dataSet instanceof DSMicroarraySet)
+                addColorContext((DSMicroarraySet)dataSet);
             progressBar.setString("");
             progressBar.setIndeterminate(false);
             jDataSetPanel.setCursor(Cursor.getPredefinedCursor(Cursor.
