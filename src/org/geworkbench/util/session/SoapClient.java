@@ -30,7 +30,8 @@ public class SoapClient {
 
     private final String DEFAULT_OUTPUTFILE = "testout.txt";
     private String outputfile;
-    static final String stringURL = "http://adparacel.cu-genome.org/axis/servlet/AxisServlet";
+    static final String stringURL =
+            "http://adparacel.cu-genome.org/axis/servlet/AxisServlet";
     private String url = stringURL;
 
     Options opts = null;
@@ -50,21 +51,27 @@ public class SoapClient {
             Call call = (Call) service.createCall();
 
             call.setTargetEndpointAddress(new URL(serverURL));
-            call.setOperationName(new QName("urn:downloadfileService", "download")); //This is the target services method to invoke.
+            call.setOperationName(new QName("urn:downloadfileService",
+                                            "download")); //This is the target services method to invoke.
 
-            QName qnameAttachment = new QName("urn:downloadfileService", "DataHandler");
+            QName qnameAttachment = new QName("urn:downloadfileService",
+                                              "DataHandler");
             String s = "http://amdec-bioinfo.cu-genome.org/html/index.html";
             call.registerTypeMapping((new DataHandler(new URL(s))).getClass(), //Add serializer for attachment.
-                    qnameAttachment, JAFDataHandlerSerializerFactory.class, JAFDataHandlerDeserializerFactory.class);
-            call.addParameter("testParam", org.apache.axis.Constants.XSD_STRING, javax.xml.rpc.ParameterMode.IN);
+                                     qnameAttachment,
+                                     JAFDataHandlerSerializerFactory.class,
+                                     JAFDataHandlerDeserializerFactory.class);
+            call.addParameter("testParam", org.apache.axis.Constants.XSD_STRING,
+                              javax.xml.rpc.ParameterMode.IN);
 
             call.setReturnType(qnameAttachment);
             //System.out.println("In download is the result: " + filename);
-            Object result = call.invoke(new Object[]{filename.trim()});
+            Object result = call.invoke(new Object[] {filename.trim()});
             // System.out.println("In download is the result: " + result.toString());
             //s = "c:/axis/downloaded.txt";
 
-            ((DataHandler) result).writeTo(new java.io.FileOutputStream(getLocalFileName(filename)));
+            ((DataHandler) result).writeTo(new java.io.FileOutputStream(
+                    getLocalFileName(filename)));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -91,12 +98,14 @@ public class SoapClient {
             Call call = (Call) service.createCall();
 
             call.setTargetEndpointAddress(new URL(serverURL));
-            call.setOperationName(new QName("urn:downloadfileService", "getServerInfo")); //This is the target services method to invoke.
+            call.setOperationName(new QName("urn:downloadfileService",
+                                            "getServerInfo")); //This is the target services method to invoke.
 
-            call.addParameter("testParam", org.apache.axis.Constants.XSD_STRING, javax.xml.rpc.ParameterMode.IN);
+            call.addParameter("testParam", org.apache.axis.Constants.XSD_STRING,
+                              javax.xml.rpc.ParameterMode.IN);
 
             call.setReturnType(org.apache.axis.Constants.XSD_STRING);
-            Object result = call.invoke(new Object[]{checkstatus});
+            Object result = call.invoke(new Object[] {checkstatus});
             // System.out.println("New In checkJobStatus is the result: " +
             //                  result.toString());
             return result.toString();
@@ -118,17 +127,23 @@ public class SoapClient {
             call.setTargetEndpointAddress(new URL(serverURL));
             call.setOperationName(new QName("urn:downloadfileService", "submit")); //This is the target services method to invoke.
 
-            call.addParameter("testParam", org.apache.axis.Constants.XSD_STRING, javax.xml.rpc.ParameterMode.IN);
-            call.addParameter("testParam2", org.apache.axis.Constants.XSD_STRING, javax.xml.rpc.ParameterMode.IN);
-            call.addParameter("testParam3", org.apache.axis.Constants.XSD_STRING, javax.xml.rpc.ParameterMode.IN);
+            call.addParameter("testParam", org.apache.axis.Constants.XSD_STRING,
+                              javax.xml.rpc.ParameterMode.IN);
+            call.addParameter("testParam2",
+                              org.apache.axis.Constants.XSD_STRING,
+                              javax.xml.rpc.ParameterMode.IN);
+            call.addParameter("testParam3",
+                              org.apache.axis.Constants.XSD_STRING,
+                              javax.xml.rpc.ParameterMode.IN);
 
             call.setReturnType(org.apache.axis.Constants.XSD_STRING);
 
             //get the  filename only.
             String destinationFile = getDesFileName(outputFile);
-            System.out.println(new Date() + "In submit is before invoke: " + destinationFile);
-            Object result = call.invoke(new Object[]{cmd, inputFile, destinationFile});
-            System.out.println(new Date() + "In submit is the result: " + result.toString());
+
+            Object result = call.invoke(new Object[] {cmd, inputFile,
+                                        destinationFile});
+
             return result.toString();
         } catch (Exception e) {
             System.out.println(e);
@@ -160,13 +175,18 @@ public class SoapClient {
 
         call.setTargetEndpointAddress(new URL(serverURL)); //Set the target service host and service location,
 
-        call.setOperationName(new QName("urn:SequenceAlignmentService", "upload")); //This is the target services method to invoke.
+        call.setOperationName(new QName("urn:SequenceAlignmentService",
+                                        "upload")); //This is the target services method to invoke.
 
-        QName qnameAttachment = new QName("urn:SequenceAlignmentService", "DataHandler");
-        QName qnamereturntype = new QName("urn:SequenceAlignmentService", "String");
+        QName qnameAttachment = new QName("urn:SequenceAlignmentService",
+                                          "DataHandler");
+        QName qnamereturntype = new QName("urn:SequenceAlignmentService",
+                                          "String");
 
         call.registerTypeMapping(dhSource.getClass(), //Add serializer for attachment.
-                qnameAttachment, JAFDataHandlerSerializerFactory.class, JAFDataHandlerDeserializerFactory.class);
+                                 qnameAttachment,
+                                 JAFDataHandlerSerializerFactory.class,
+                                 JAFDataHandlerDeserializerFactory.class);
 
         call.addParameter("source", qnameAttachment, ParameterMode.IN); //Add the file.
 
@@ -178,10 +198,11 @@ public class SoapClient {
         // call.setPassword(opts.getPassword());
 
         if (doTheDIME) {
-            call.setProperty(call.ATTACHMENT_ENCAPSULATION_FORMAT, call.ATTACHMENT_ENCAPSULATION_FORMAT_DIME);
+            call.setProperty(call.ATTACHMENT_ENCAPSULATION_FORMAT,
+                             call.ATTACHMENT_ENCAPSULATION_FORMAT_DIME);
 
         }
-        Object result = call.invoke(new Object[]{dhSource});
+        Object result = call.invoke(new Object[] {dhSource});
 
         return (String) result;
         // return ((BooleanHolder)result).value;// booleanValue() ;
@@ -240,7 +261,8 @@ public class SoapClient {
      * @param aString String
      */
     public SoapClient() {
-        serverURL = System.getProperties().getProperty("sequence.server.endpoint");
+        serverURL = System.getProperties().getProperty(
+                "sequence.server.endpoint");
 
         if (serverURL == null) {
             serverURL = stringURL;
@@ -336,15 +358,20 @@ public class SoapClient {
             Call call = (Call) service.createCall();
 
             call.setTargetEndpointAddress(new URL(serverURL));
-            call.setOperationName(new QName("urn:downloadfileService", "getSession")); //This is the target services method to invoke.
+            call.setOperationName(new QName("urn:downloadfileService",
+                                            "getSession")); //This is the target services method to invoke.
 
-            call.addParameter("testParam", org.apache.axis.Constants.XSD_STRING, javax.xml.rpc.ParameterMode.IN);
-            call.addParameter("testParam2", org.apache.axis.Constants.XSD_STRING, javax.xml.rpc.ParameterMode.IN);
+            call.addParameter("testParam", org.apache.axis.Constants.XSD_STRING,
+                              javax.xml.rpc.ParameterMode.IN);
+            call.addParameter("testParam2",
+                              org.apache.axis.Constants.XSD_STRING,
+                              javax.xml.rpc.ParameterMode.IN);
 
             call.setReturnType(org.apache.axis.Constants.XSD_STRING);
 
-            Object result = call.invoke(new Object[]{s, s});
-            System.out.println("Session: the array result is " + result.toString());
+            Object result = call.invoke(new Object[] {s, s});
+            System.out.println("Session: the array result is " +
+                               result.toString());
             return result.toString();
         } catch (Exception e) {
             System.out.println(e);
@@ -368,12 +395,14 @@ public class SoapClient {
             Call call = (Call) service.createCall();
 
             call.setTargetEndpointAddress(new URL(serverURL));
-            call.setOperationName(new QName("urn:downloadfileService", "isFinished")); //This is the target services method to invoke.
+            call.setOperationName(new QName("urn:downloadfileService",
+                                            "isFinished")); //This is the target services method to invoke.
 
-            call.addParameter("testParam", org.apache.axis.Constants.XSD_STRING, javax.xml.rpc.ParameterMode.IN);
+            call.addParameter("testParam", org.apache.axis.Constants.XSD_STRING,
+                              javax.xml.rpc.ParameterMode.IN);
 
             call.setReturnType(org.apache.axis.Constants.XSD_BOOLEAN);
-            Object result = call.invoke(new Object[]{getDesFileName(jobNumber)});
+            Object result = call.invoke(new Object[] {getDesFileName(jobNumber)});
             // System.out.println("New In checkJobStatus is the result: " +
             //                    result.toString());
             return new Boolean(result.toString()).booleanValue();
@@ -399,7 +428,8 @@ public class SoapClient {
     }
 
     public static void mainOld(String[] args) throws Exception {
-        SoapClient sc = new SoapClient("blastn", "ncbi/nt", "C:/cvsProject/test.fasta");
+        SoapClient sc = new SoapClient("blastn", "ncbi/nt",
+                                       "C:/cvsProject/test.fasta");
         if (args.length < 4) {
             System.out.println("Please check the number of your arguments.\n" + "The correct usage:\n java SoapClient UserName \"yourFirstPartOfQuery\" inputFile outputFile");
             //System.exit(1);
@@ -453,14 +483,12 @@ public class SoapClient {
 
             //e.printStackTrace();
 
-        }
-        while (!isJobFinished(getFileName(outputfile))) {
+        } while (!isJobFinished(getFileName(outputfile))) {
             try {
                 Thread.sleep(TIMEGAP);
             } catch (InterruptedException ie) {
                 ie.printStackTrace();
             }
-
 
         }
         //System.out.println("Your query is ended at " + new Date() + outputfile);
@@ -482,22 +510,21 @@ public class SoapClient {
         String uploadedFile = submitFile(inputfile);
         try {
 
-            System.out.println(cmd + "  before submitJob " + uploadedFile + " output" + outputfile);
+            System.out.println(cmd + "  before submitJob " + uploadedFile +
+                               " output" + outputfile);
             submitJob(cmd, uploadedFile, outputfile);
 
         } catch (Exception e) {
 
             e.printStackTrace();
 
-        }
-        while (!isJobFinished(getFileName(outputfile))) {
+        } while (!isJobFinished(getFileName(outputfile))) {
             System.out.println("wait for finish " + outputfile);
             try {
                 Thread.sleep(TIMEGAP);
             } catch (InterruptedException ie) {
                 ie.printStackTrace();
             }
-
 
         }
 
@@ -529,17 +556,20 @@ public class SoapClient {
         outputfile = DEFAULT_OUTPUTFILE;
     }
 
-    public SoapClient(String program, String dbName, String input, String output) {
+    public SoapClient(String program, String dbName, String input,
+                      String output) {
         this();
         cmd = "pb blastall -p " + program + "   -d   " + dbName;
         inputfile = input;
         outputfile = output;
     }
 
-    public SoapClient(String program, String dbName, String matrix, String input, String output) {
+    public SoapClient(String program, String dbName, String matrix,
+                      String input, String output) {
         this();
         if (program.startsWith("sw")) {
-            cmd = "btk search  " + program + "   dbset=" + dbName + " matrix=" + matrix;
+            cmd = "btk search  " + program + "   dbset=" + dbName + " matrix=" +
+                  matrix;
         } else if (program.startsWith("hmm")) {
             cmd = "btk " + program + " ";
         }
@@ -579,7 +609,8 @@ public class SoapClient {
     }
 
     public String getLocalFileName(String path) {
-        String tempFolder = System.getProperties().getProperty("temporary.files.directory");
+        String tempFolder = System.getProperties().getProperty(
+                "temporary.files.directory");
         if (tempFolder == null) {
             tempFolder = "./";
 
