@@ -85,6 +85,9 @@ public class CaARRAYPanel extends JPanel implements Observer {
     private String user;
     private String passwd;
     private String url;
+    private ProgressMonitor progressMonitor;
+    private ConnectionTask task;
+    private Timer timer;
 
 
     public CaARRAYPanel(LoadData p) {
@@ -211,6 +214,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
         jPanel6.setMinimumSize(new Dimension(500, 285));
         jPanel6.setPreferredSize(new Dimension(500, 285));
         this.add(jPanel6, BorderLayout.CENTER);
+
     }
 
     /**
@@ -283,27 +287,31 @@ public class CaARRAYPanel extends JPanel implements Observer {
     }
 
     public void getExperiments(ActionEvent e) {
-        if (!experimentsLoaded ||
-            !currentResourceName.equals(previousResourceName)) {
-            experiments = getExperiments();
-            previousResourceName = currentResourceName;
-            connectionSuccess = true;
-            if (experiments == null) {
-                connectionSuccess = false;
-                JOptionPane.showMessageDialog(this,
-                                              "Unable to connect to server.",
-                                              "Open File Error",
-                                              JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            for (int i = 0; i < experiments.length; ++i) {
-                DefaultMutableTreeNode node = new DefaultMutableTreeNode(
-                        experiments[i]);
-                remoteTreeModel.insertNodeInto(node, root, root.getChildCount());
-            }
-            remoteFileTree.expandRow(0);
-            experimentsLoaded = true;
+//        if (!experimentsLoaded ||
+//            !currentResourceName.equals(previousResourceName)) {
+           if(true){
+               getExperiments();
+              try{
+               Thread.sleep(2000);
+              }catch(Exception er){er.printStackTrace();}
+//            previousResourceName = currentResourceName;
+//            connectionSuccess = true;
+//            if (experiments == null) {
+//                connectionSuccess = false;
+//                JOptionPane.showMessageDialog(this,
+//                                              "Unable to connect to server.",
+//                                              "Open File Error",
+//                                              JOptionPane.ERROR_MESSAGE);
+//                return;
+//            }
+//
+//            for (int i = 0; i < experiments.length; ++i) {
+//                DefaultMutableTreeNode node = new DefaultMutableTreeNode(
+//                        experiments[i]);
+//                remoteTreeModel.insertNodeInto(node, root, root.getChildCount());
+//            }
+//            remoteFileTree.expandRow(0);
+//            experimentsLoaded = true;
 
         }
         this.validate();
@@ -438,22 +446,174 @@ public class CaARRAYPanel extends JPanel implements Observer {
     }
 
     /**
+     * The actionPerformed method in this class
+     * is called each time the Timer "goes off".
+     */
+    class TimerListener implements ActionListener {
+        public void actionPerformed(ActionEvent evt) {
+            int taskStatus = task.getStatus()* 10;
+            System.out.println("taskStatus" + taskStatus + new Date());
+            progressMonitor.setProgress(taskStatus);
+
+            if (progressMonitor.isCanceled() || task.isDone()) {
+                progressMonitor.close();
+
+                Toolkit.getDefaultToolkit().beep();
+                timer.stop();
+                if (task.isDone()) {
+
+                } else {
+                    // taskOutput.append("Task canceled." + newline);
+
+                }
+
+            }
+        }
+    }
+
+
+    /**
+     * For connection to remote resource
+     */
+    class ConnectionTask {
+        CaArrayExperiment[] exps = new CaArrayExperiment[0];
+        Vector temp = new Vector();
+        private int status = 0;
+        private boolean done = false;
+        SecureSession sess;
+
+        public ConnectionTask(){
+
+        }
+        public ConnectionTask(String _url, String _user, String _passwd) {
+
+        }
+
+        public ConnectionTask(SecureSession _sess) {
+            sess = _sess;
+        }
+
+        public void go() {
+            Runnable dataLoader = new Runnable() {
+                public void run() {
+                    connect();
+                }
+            };
+                      Thread t = new Thread(dataLoader);
+            t.setPriority(Thread.MAX_PRIORITY);
+             t.start();
+
+
+        }
+
+        public void connect() {
+            try {
+                url = url + "/SecureSessionManager";
+
+                SecureSession sess = SecureSessionFactory.
+                                       defaultSecureSession();
+                ((Directable) sess).direct(url);
+                sess.start(user, passwd);
+                ExperimentSearchCriteria esc = SearchCriteriaFactory.
+                                               new_EXPERIMENT_EXPERIMENT_SC();
+                esc.setSessionId(sess.getSessionId());
+                SearchResult results = esc.search();
+
+                Experiment[] result = (Experiment[]) results.getResultSet();
+                float totalexpNum = 0;
+                if (result != null) {
+                    totalexpNum = result.length;
+
+                }
+                for (int x = 0; x < result.length; x++) {
+                    if (result[x] instanceof ExperimentImpl) {
+                        CaArrayExperiment exp = new CaArrayExperiment((
+                                ExperimentImpl) result[x]);
+                        //  pb.updateTo(x / totalexpNum * model.getMaximum());
+
+                        temp.add(exp);
+
+                    }
+                } while (results.hasMore()) {
+                    SearchCriteria nextcrit = results.getNextCriteria();
+                    results = nextcrit.search();
+                    Object[] objects2 = results.getResultSet();
+                    for (int x = 0; x < objects2.length; x++) {
+                        if (objects2[x] instanceof ExperimentImpl) {
+                            CaArrayExperiment exp = new CaArrayExperiment((
+                                    ExperimentImpl) objects2[x]);
+
+                            temp.add(exp);
+
+                        }
+                    }
+                }
+
+                stopConnection = false;
+                Collections.sort(temp);
+                //dump the experiment objects into the return array.
+                exps = (CaArrayExperiment[]) temp.toArray(exps);
+                setExperiments(exps);
+
+            //copy the getExperiment(e) to here
+                      previousResourceName = currentResourceName;
+            connectionSuccess = true;
+            if (experiments == null) {
+                connectionSuccess = false;
+                JOptionPane.showMessageDialog(null,
+                                              "Unable to connect to server.",
+                                              "Open File Error",
+                                              JOptionPane.ERROR_MESSAGE);
+                done = true;
+                return;
+            }
+
+            for (int i = 0; i < experiments.length; ++i) {
+                DefaultMutableTreeNode node = new DefaultMutableTreeNode(
+                        experiments[i]);
+                remoteTreeModel.insertNodeInto(node, root, root.getChildCount());
+            }
+            remoteFileTree.expandRow(0);
+            experimentsLoaded = true;
+
+
+
+
+                done = true;
+            } catch (Exception une) {
+                une.printStackTrace();
+                stopConnection = true;
+                done = true;
+
+            }
+
+        }
+
+        public int getStatus() {
+            status++;
+            return status;
+        }
+
+        public boolean isDone() {
+            return done;
+        }
+
+    }
+
+
+    /**
      * Gets a list of all experiments available on the remote server.
      */
     public CaArrayExperiment[] getExperiments() {
-        CaArrayExperiment[] exps = new CaArrayExperiment[0];
-        Vector temp = new Vector();
-//        final ProgressBar pb = ProgressBar.create(ProgressBar.
-//                                                  INDETERMINATE_TYPE);
-//        pb.addObserver(this);
-        final ProgressMonitor progressMonitor = new ProgressMonitor(this,
-                                  "Connecting..",
-                                  "", 0, 10000);
+
+       System.out.println(new Date() + "eneter getExp");
+       progressMonitor = new ProgressMonitor(this,
+                   "Connecting..",
+            "", 0, 1000000);
         progressMonitor.setProgress(0);
         progressMonitor.setMillisToDecideToPopup(100);
 
         try {
-
 
             if (url == null) {
                 user = System.getProperty("caarray.mage.user");
@@ -462,175 +622,44 @@ public class CaARRAYPanel extends JPanel implements Observer {
                         "SecureSessionManagerURL");
             }
 
-//            pb.setTitle("Connectiong to remote server..");
-//            pb.setMessage("Connectiong to remote server.. ");
-//            DefaultBoundedRangeModel model = new ProgressBar.IncrementModel(0,
-//                    10000, 0, 10000, 1);
-//            pb.setBounds(model);
-//            pb.start();
-//
-//            pb.updateTo(0f);
-//            pb.setFocusable(true);
-
             System.setProperty("RMIServerURL", url + "/SearchCriteriaHandler");
             System.setProperty("SecureSessionManagerURL",
                                url + "/SecureSessionManager");
-//            System.setProperty("caarray.mage.user", user);
-//            System.setProperty("caarray.mage.password", password);
-            final SecureSession sess = SecureSessionFactory.
-                                       defaultSecureSession();
-            class ConnectionTask extends Thread{
-                private int status = 0;
-                private boolean done = false;
-               public void run() {
-                  try {
-                      url = url + "/SecureSessionManager";
-                      ((Directable) sess).direct(url);
-
-                      sess.start(user, passwd);
-                      done = true;
-                  } catch (RuntimeException une) {
-                      une.printStackTrace();
-                      stopConnection = true;
-                      done = true;
-
-                  }
-              }
-              public int getStatus(){
-                  status++;
-                  return status;
-              }
-              public boolean isDone(){
-                  return done;
-              }
-
-            }
-           final ConnectionTask task = new ConnectionTask(){
+             final ConnectionTask task = new ConnectionTask() {
 
             };
-//            Runnable dataLoader = new Runnable() {
-//                public void run() {
-//                    try {
-//                        url = url + "/SecureSessionManager";
-//                        ((Directable) sess).direct(url);
-//
-//                        sess.start(user, passwd);
-//                        pb.setName("finished");
-//                    } catch (RuntimeException une) {
-//                        une.printStackTrace();
-//                        stopConnection = true;
-//                        pb.stop();
-//
-//                    }
-//                }
-//            };
 
-            /**
-  * The actionPerformed method in this class
-  * is called each time the Timer "goes off".
-  */
- class TimerListener implements ActionListener {
-     public void actionPerformed(ActionEvent evt) {
-         progressMonitor.setProgress(task.getStatus()*100);
-
-         if (progressMonitor.isCanceled() || task.isDone()) {
-             progressMonitor.close();
-
-             Toolkit.getDefaultToolkit().beep();
-             //timer.stop();
-             if (task.isDone()) {
-
-             } else {
-                // taskOutput.append("Task canceled." + newline);
-
-             }
-
-         }
-     }
- }
- Timer timer = new Timer(1000, new TimerListener());
-  timer.start();
- task.start();
-
+            timer = new Timer(500, new TimerListener());
+            timer.start();
+            task.go();
+            System.out.println(new Date() + "after task.go()");
 //            Thread t = new Thread(dataLoader);
 //            t.setPriority(Thread.MAX_PRIORITY);
 //            t.start();
             if (stopConnection) {
-                               return null;
-                }
-
-                progressMonitor.setProgress(task.getStatus()*100);
-
-       while (!progressMonitor.isCanceled() && ! task.isDone()) {
-           if (stopConnection) {
-                              return null;
-               }
-
-
-           Thread.sleep(1000);
-
-       }
-           progressMonitor.close();
-           timer.stop();
-
-         Toolkit.getDefaultToolkit().beep();
-         //timer.stop();
-         if (!task.isDone()) {
-             return null;
-         } else {
-
-
-         }
-
-
-//            while (!pb.getName().equals("finished")) {
-//                if (stopConnection) {
-//                    return null;
-//                }
-//
-//                Thread.sleep(1000);
-//            }
-//            pb.setMessage("Getting expriments information.. ");
-            ExperimentSearchCriteria esc = SearchCriteriaFactory.
-                                           new_EXPERIMENT_EXPERIMENT_SC();
-            esc.setSessionId(sess.getSessionId());
-            SearchResult results = esc.search();
-
-            Experiment[] result = (Experiment[]) results.getResultSet();
-            float totalexpNum = 0;
-            if (result != null) {
-                totalexpNum = result.length;
-
-            }
-            for (int x = 0; x < result.length; x++) {
-                if (result[x] instanceof ExperimentImpl) {
-                    CaArrayExperiment exp = new CaArrayExperiment((
-                            ExperimentImpl) result[x]);
-                  //  pb.updateTo(x / totalexpNum * model.getMaximum());
-
-                    temp.add(exp);
-
-                }
-            } while (results.hasMore()) {
-                SearchCriteria nextcrit = results.getNextCriteria();
-                results = nextcrit.search();
-                Object[] objects2 = results.getResultSet();
-                for (int x = 0; x < objects2.length; x++) {
-                    if (objects2[x] instanceof ExperimentImpl) {
-                        CaArrayExperiment exp = new CaArrayExperiment((
-                                ExperimentImpl) objects2[x]);
-
-                        temp.add(exp);
-
-                    }
-                }
+                return null;
             }
 
-            stopConnection = false;
-            Collections.sort(temp);
-            //dump the experiment objects into the return array.
-            exps = (CaArrayExperiment[]) temp.toArray(exps);
-            return exps;
+
+            System.out.println(new Date() + " " + task.getStatus() * 100);
+            while (!progressMonitor.isCanceled() && !task.isDone()) {
+                progressMonitor.setProgress(task.getStatus() * 100);
+
+                 System.out.println(progressMonitor.getMillisToDecideToPopup() + " " + new Date() + " " + task.getStatus() * 100 + "in while loop");
+                if (stopConnection) {
+                    return null;
+                }
+
+                Thread.sleep(1000);
+
+            }
+            System.out.println(new Date() + "end of while loop");
+             //progressMonitor.close();
+           if(task.isDone()){
+             timer.stop();
+           }
+
+            return experiments;
 
         }
 
