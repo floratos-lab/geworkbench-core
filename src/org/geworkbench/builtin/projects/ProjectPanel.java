@@ -359,37 +359,97 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         }
     }
 
+
     /**
-     * Inserts a new ancillary data set  as a new node in the project tree.
-     * The node is a child of the curently selected data set
-     *
-     * @param _ancDataSet
-     */
-    private void addDataSetSubNode(DSAncillaryDataSet _ancDataSet) {
-        DataSetNode dNode = selection.getSelectedDataSetNode();
-        if (dNode != null) {
-            _ancDataSet.setDataSetFile(dNode.dataFile.getFile());
-            // Makes sure that we do not already have an exact instance of this ancillary file
-            Enumeration children = dNode.children();
-            while (children.hasMoreElements()) {
-                Object obj = children.nextElement();
-                if (obj instanceof DataSetSubNode) {
-                    DSAncillaryDataSet ads = ((DataSetSubNode) obj)._aDataSet;
-                    if (_ancDataSet.equals(ads)) {
-                        return;
-                    }
-                }
-            }
-            // Inserts the new node and sets the menuNode and other variables to point to it
-            DataSetSubNode node = new DataSetSubNode(_ancDataSet);
-            projectTreeModel.insertNodeInto(node, dNode, dNode.getChildCount());
-            // Make sure the user can see the lovely new node.
-            projectTree.scrollPathToVisible(new TreePath(node));
-            //      serialize("default.ws");
-            projectTree.setSelectionPath(new TreePath(node.getPath()));
-            selection.setNodeSelection(node);
-        }
-    }
+       * getMatchNode
+       *
+       * @param root ProjectTreeNode
+       * @param _ancDataSet AncillaryDataSet
+       * @return DataSetNode
+       */
+      public DataSetNode getMatchNode(ProjectTreeNode pnode,
+                                      File fastaFilename) {
+
+          //if (_ancDataSet instanceof BlastDataSet) {
+          //    fastaFilename = ( (BlastDataSet) _ancDataSet).getFastaFile();
+          if ((pnode instanceof DataSetNode) &&
+              ((((DataSetNode) pnode).dataFile.getFile()).equals(
+                      fastaFilename))) {
+              return (DataSetNode) pnode;
+          } else if (pnode != null) {
+              Enumeration children = pnode.children();
+              while (children.hasMoreElements()) {
+                  Object obj = children.nextElement();
+                  if (getMatchNode((ProjectTreeNode) obj, fastaFilename) != null) {
+
+                      return getMatchNode((ProjectTreeNode) obj, fastaFilename);
+                  }
+              }
+
+          }
+
+          return null;
+      }
+
+
+      /**
+       * Inserts a new ancillary data set  as a new node in the project tree.
+       * The node is a child of the curently selected data set
+       *
+       * @param _ancDataSet
+       */
+      private void addDataSetSubNode(DSAncillaryDataSet _ancDataSet) {
+          DataSetNode dNode = selection.getSelectedDataSetNode();
+          DataSetNode matchedDNode = null;
+          File fastaFile = _ancDataSet.getDataSetFile();
+          if(fastaFile!= null){
+              if (dNode != null) {
+
+                  File dNodeFile = dNode.dataFile.getFile();
+
+                  if (dNodeFile.equals(fastaFile)) {
+                      _ancDataSet.setDataSetFile(dNode.dataFile.getFile());
+                  } else {
+                      //get the matched node in case the node selected changed.
+                      matchedDNode = getMatchNode(root, fastaFile);
+                  }
+
+              } else {
+                  matchedDNode = getMatchNode(root, fastaFile);
+              }
+          }
+          if (matchedDNode != null) {
+              dNode = matchedDNode;
+          }
+          if (dNode == null) {
+              System.out.println("There is no node at project panel!");
+              return;
+          }
+
+          _ancDataSet.setDataSetFile(dNode.dataFile.getFile());
+          // Makes sure that we do not already have an exact instance of this ancillary file
+          Enumeration children = dNode.children();
+          while (children.hasMoreElements()) {
+              Object obj = children.nextElement();
+              if (obj instanceof DataSetSubNode) {
+                  DSAncillaryDataSet ads = ((DataSetSubNode) obj)._aDataSet;
+                  if (_ancDataSet.equals(ads)) {
+                      return;
+                  }
+              }
+          }
+
+          // Inserts the new node and sets the menuNode and other variables to point to it
+          DataSetSubNode node = new DataSetSubNode(_ancDataSet);
+          projectTreeModel.insertNodeInto(node, dNode, dNode.getChildCount());
+          // Make sure the user can see the lovely new node.
+          projectTree.scrollPathToVisible(new TreePath(node));
+          //      serialize("default.ws");
+          projectTree.setSelectionPath(new TreePath(node.getPath()));
+          selection.setNodeSelection(node);
+      }
+
+
 
     /**
      * Stores to a datafile
