@@ -1098,14 +1098,8 @@ public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMa
                     } else {
                         edge = ggr.miScore(i, j, 0.0, null);
                     }
-
-                    //          double pvalue = PathwayDecoderUtil.getPValue(edge.getMI(), microarraySet.size());
-                    //if ((edge != null) && (edge.getMI() > threshold)) {
-                    //          if(pvalue < 0.000001) {
-                    //          GeneNetworkEdgeImpl edge = ggr.getScore(i, j, 0.0, null);
-                    //          if (edge.getMI() > 0.004) {
-                    this.add(i, j, (float) edge.getMI());
-                    //          }
+                    if (edge != null)
+                        this.add(i, j, (float) edge.getMI());
                 }
             }
         }
