@@ -10,11 +10,6 @@ import java.io.PrintWriter;
 
 class CasDataPlug extends CasDataType {
     public CasDataPlug() {
-        try {
-            jbInit();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
     }
 
     String type;
@@ -65,8 +60,4 @@ class CasDataPlug extends CasDataType {
     public void print(PrintWriter w) {
         if (name != null) w.print(name + " = ");
     }
-
-    private void jbInit() throws Exception {
-    }
-
 }

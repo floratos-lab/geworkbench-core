@@ -2,9 +2,7 @@ package org.geworkbench.engine.cascript;
 
 import java.util.HashMap;
 import java.io.*;
-import java.util.StringTokenizer;
 import java.util.Properties;
-import java.util.Enumeration;
 
 class CasDataTypeImport extends HashMap {
     public CasDataTypeImport() {
@@ -17,6 +15,7 @@ class CasDataTypeImport extends HashMap {
             InputStream is = CasDataTypeImport.class.getResourceAsStream("datatypes.properties");
             Properties props = new Properties();
             props.load(is);
+            is.close();
             this.putAll(props);
         }
         catch (Exception e) {
