@@ -1,25 +1,20 @@
 package org.geworkbench.util.patterns;
 
-import org.geworkbench.util.sequences.SequenceDB;
-import org.geworkbench.util.BinaryEncodeDecode;
-import org.geworkbench.bison.datastructure.bioobjects.sequence.CSSequence;
-import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
-import org.geworkbench.bison.datastructure.complex.pattern.CSMatchedPattern;
-import org.geworkbench.bison.datastructure.complex.pattern.DSMatchedPattern;
-import org.geworkbench.bison.datastructure.complex.pattern.DSPattern;
-import org.geworkbench.bison.datastructure.complex.pattern.DSPatternMatch;
-import org.geworkbench.bison.datastructure.complex.pattern.sequence.CSSeqPatternMatch;
-import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeqPattern;
-import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSSeqRegistration;
-import polgara.soapPD_wsdl.SOAPOffset;
-import polgara.soapPD_wsdl.holders.ArrayOfSOAPOffsetHolder;
-
-import javax.xml.rpc.holders.IntHolder;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
+
+import javax.xml.rpc.holders.IntHolder;
+
+import org.geworkbench.bison.datastructure.bioobjects.sequence.CSSequence;
+import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
+import org.geworkbench.bison.datastructure.complex.pattern.*;
+import org.geworkbench.bison.datastructure.complex.pattern.sequence.*;
+import org.geworkbench.util.sequences.SequenceDB;
+import polgara.soapPD_wsdl.SOAPOffset;
+import polgara.soapPD_wsdl.holders.ArrayOfSOAPOffsetHolder;
 
 /**
  * <p>Title: </p>
@@ -334,6 +329,14 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence, DSSeqRegis
             PatternOperations.fill(this, seqDB);
         }
         return getASCII();
+    }
+
+    public SequenceDB getSeqDB() {
+        return seqDB;
+    }
+
+    public void setSeqDB(SequenceDB seqDB) {
+        this.seqDB = seqDB;
     }
 
 }
