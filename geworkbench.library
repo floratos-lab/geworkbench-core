@@ -143,6 +143,7 @@
     <path>[lib/dom4j-1.6.1.jar]</path>
     <path>[lib/piccolo.jar]</path>
     <path>[lib/piccolox.jar]</path>
+    <path>[lib/jgraphpad.jar]</path>
   </class>
   <source>
     <path>components/alignment/src</path>
@@ -172,5 +173,5 @@
     <path>components/viewers/src</path>
     <path>src</path>
   </source>
-  <lastmodsaved>1125001464361</lastmodsaved>
+  <lastmodsaved>1128438178890</lastmodsaved>
 </library>
