@@ -300,6 +300,7 @@
         <root url="jar://$PROJECT_DIR$/lib/piccolox.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/piccolo.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/xmlsec.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/jgraphpad.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

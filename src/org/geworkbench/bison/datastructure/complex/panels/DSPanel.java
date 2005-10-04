@@ -30,7 +30,7 @@ public interface DSPanel <T extends DSNamed> extends DSItemList<T>, DSNamed, DSI
      *
      * @return a string representation of the panel
      */
-    @Override public String toString();
+    public String toString();
 
     /**
      * Active panels are used by the visual displays. Inactive ones are ignored
