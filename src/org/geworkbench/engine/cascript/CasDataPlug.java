@@ -21,21 +21,37 @@ class CasDataPlug extends CasDataType {
         type = t;
         var = null;
     }
+
+    //this is used for the copy function
+    CasDataPlug(String n, String t, Object variable) {
+        name = n;
+        type = t;
+        var = variable;
+    }
+
     CasDataPlug(String n, String t, CasDataTypeImport C) {
         CDTI = C;
         name = n;
         type = t;
         var = null;
-        //fix this, you should be sending in CDTI into the constructor and working with it here.
-        try {
-            var = Class.forName(type);
-            Package p = var.getClass().getPackage();
-            System.out.println(p.getName());
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            throw new CasException("Class " + type + " not found for datatype " + name);
-        }
+        CasDataPlugConstructorHelper(C);
+    }
+
+    //this method makes sure that the type of the CasDataPlug is one of the supported types found in
+    private void CasDataPlugConstructorHelper(CasDataTypeImport C) {
+            Object t = C.get(type);
+            if (t != null) {
+                try {
+                    //the new instance should be created here, through the class
+                    var = Class.forName((String)t).newInstance();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    throw new CasException("Error occurred creating new instance of Class " + type + " for datatype " + name);
+                }
+            }
+            else
+                throw new CasException("Class " + type + " not found for datatype " + name);
+
     }
 
     public String typename() {
@@ -54,7 +70,7 @@ class CasDataPlug extends CasDataType {
         var = a;
     }
     public CasDataType copy() {
-        return new CasDataPlug(name, type, CDTI);
+        return new CasDataPlug(name, type, var);
     }
 
     public void print(PrintWriter w) {
