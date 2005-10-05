@@ -9,7 +9,7 @@ import java.util.Vector;
  * Interpreter routines that is called directly from the tree walker.
  *
  * @author Behrooz Badii - badiib@gmail.com
- * @version $Id: CasInterpreter.java,v 1.10 2005-10-03 21:56:16 bb2122 Exp $
+ * @version $Id: CasInterpreter.java,v 1.11 2005-10-05 20:20:16 bb2122 Exp $
  */
 class CasInterpreter {
     CasSymbolTable symt;
@@ -90,6 +90,7 @@ class CasInterpreter {
         }
     }
 
+    //state CAN change in this method
     //this is used in the assignment token in the walker and when you have to initialize a variable
     //REMEMBER TO PUT MORE STUFF IN HERE!!!!
     //YOU REALLY GOTTA FIX THIS METHOD
@@ -98,6 +99,14 @@ class CasInterpreter {
     //to do - you have to check if B is a CasCallReturn, if it is, it can be assigned to a CasInt, CasDouble, CasString, CasBool, or CasModule
     public CasDataType assign(CasDataType a, CasDataType b) {
         System.out.println("in assignment");
+        if (b instanceof CasCallReturn) {
+            b = checkCasCallReturn((CasCallReturn)b);
+        }
+        if (b instanceof CasValue) {
+            //This method is objectionable.  We are worried that a getValue() call in geWorkBench will affect the system and not just return a value.
+            //are the get and set methods implemented correctly in geWorkBench so that we don't have changes to the system?
+            b = checkCasValue((CasValue) b);
+        }
         if (a.getPartOf() != null) {
             CasDataType x = null;
             System.out.println("in a array or matrix");
@@ -289,6 +298,61 @@ class CasInterpreter {
         } else throw new CasException("there are too many indices, only two dimensional arrays are supported");
     }
 
+    //this method checks the object within CasCallReturn and either changes it into a CasInt, CasString, CasBool, CasDouble, or keeps the object intact
+    //should we add CasModule support?
+    public CasDataType checkCasCallReturn(CasCallReturn b) {
+        if (b.getRetValue() instanceof Integer) {
+            return new CasInt(((Integer)b.getRetValue()).intValue());
+        }
+        else if (b.getRetValue() instanceof String) {
+            return new CasString(((String)b.getRetValue()));
+        }
+        else if (b.getRetValue() instanceof Boolean) {
+            return new CasBool(((Boolean)b.getRetValue()).booleanValue());
+        }
+        else if (b.getRetValue() instanceof Double) {
+            return new CasDouble(((Double)b.getRetValue()).doubleValue());
+        }
+        else if (b.getRetValue() instanceof Float) {
+            return new CasDouble(((Float)b.getRetValue()).doubleValue());
+        }
+        else {
+            return b;
+        }
+    }
+
+    //state CAN change in this method
+    //This method is objectionable.  We are worried that a getValue() call in geWorkBench will affect the system and not just return a value.
+    //are the get and set methods implemented correctly in geWorkBench so that we don't have changes to the system?
+    public CasDataType checkCasValue(CasValue b) {
+        CasValue get = new CasValue(((CasValue) b).formodule, "get" + ((CasValue) b).othername, ((CasValue) b).association);
+        try {
+            Object data = get.getm().invoke(get.getPlugin());
+            if (data instanceof Integer) {
+                return new CasInt(((Integer)data).intValue());
+            }
+            else if (data instanceof String) {
+                return new CasString(((String)data));
+            }
+            else if (data instanceof Boolean) {
+                return new CasBool(((Boolean)data).booleanValue());
+            }
+            else if (data instanceof Double) {
+                return new CasDouble(((Double)data).doubleValue());
+            }
+            else if (data instanceof Float) {
+                return new CasDouble(((Float)data).doubleValue());
+            }
+            else {
+                return b;
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            throw new CasException("Error occurred calling method " + get.othername + " for module " + get.formodule + ".");
+        }
+    }
+
     //waiting is done in seconds, not milliseconds
     //stopme is called in a WAIT statement
     public CasDataType stopme(CasDataType a) {
@@ -307,6 +371,7 @@ class CasInterpreter {
         }
     }
 
+    //state CAN change in this method
     //methodcall occurs when the CasMethod is used, so we will find it in OBJECT_CALL
     //MethodCall is going to have to be public Object.
     //we need to have return types here!
@@ -357,6 +422,7 @@ class CasInterpreter {
         }
     }
 
+    //state CAN change in this method buy only for DataPlugs, not Modules
     //this is called by MethodCall if what we're dealing with is a DataPlug and not a Module
     public Object OtherMethodCall(String casname, String casmethod, Object[] args) {
         Object ret = null;
