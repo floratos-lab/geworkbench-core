@@ -68,23 +68,28 @@ public class CSMatchedHMMSeqPattern extends org.geworkbench.util.patterns.CSMatc
         for (int i = 0; i < loci.length; i++) {
             max = Math.max(max, loci[i].getEnd() - loci[i].getStart());
             CSSequence seq = seqDB.getSequence(loci[i].getSeqId());
-            String str = seq.getSequence().substring(loci[i].getStart(), loci[i].getEnd());
-            DSSeqRegistration regis = new DSSeqRegistration();
-            regis.x1 = loci[i].getStart();
-            regis.x2 = loci[i].getEnd();
-            CSSeqPatternMatch pmatch = new CSSeqPatternMatch(seq);
-            pmatch.setRegistration(regis);
+            if (seq != null) {
+                String str = seq.getSequence().substring(loci[i].getStart(),
+                                                         loci[i].getEnd());
+                DSSeqRegistration regis = new DSSeqRegistration();
+                regis.x1 = loci[i].getStart();
+                regis.x2 = loci[i].getEnd();
+                CSSeqPatternMatch pmatch = new CSSeqPatternMatch(seq);
+                pmatch.setRegistration(regis);
 
-            lociList.add(loci[i]);
-            matches.add(pmatch);
-            offsetArr[i] = new SOAPOffset();
-            offsetArr[i].setDx(loci[i].getStart());
-            offsetArr[i].setToken(str);
+                lociList.add(loci[i]);
+                matches.add(pmatch);
+                offsetArr[i] = new SOAPOffset();
+                offsetArr[i].setDx(loci[i].getStart());
+                offsetArr[i].setToken(str);
+            }else{
+                System.out.println("seq is null");
+            }
+            offset.value = offsetArr;
+
+            this.seqNo = new IntHolder(count);
+            this.idNo = new IntHolder(loci.length);
         }
-        offset.value = offsetArr;
-
-        this.seqNo = new IntHolder(count);
-        this.idNo = new IntHolder(loci.length);
     }
 
     public int getLength() {
