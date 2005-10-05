@@ -13,7 +13,7 @@ class CasDataPlug extends CasDataType {
     }
 
     String type;
-    CasDataTypeImport CDTI;
+    //CasDataTypeImport CDTI;
     Object var;
 
     CasDataPlug(String t) {
@@ -30,7 +30,7 @@ class CasDataPlug extends CasDataType {
     }
 
     CasDataPlug(String n, String t, CasDataTypeImport C) {
-        CDTI = C;
+        //CDTI = C;
         name = n;
         type = t;
         var = null;
