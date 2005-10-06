@@ -26,15 +26,12 @@ public class ReferenceImplMap extends HashMap<Class, Class>{
             is.close();
             Set keys = props.keySet();
             for (Object key : keys){
-                try {
-                    Class keyType = Class.forName((String) key);
-                    Class valueType = Class.forName((String)props.get(key));
-                    this.put(keyType, valueType);
-                }
-                catch (ClassNotFoundException cnfe){}
+                Class keyType = Class.forName((String) key);
+                Class valueType = Class.forName((String)props.get(key));
+                this.put(keyType, valueType);
             }
-        }
-        catch (IOException ioe){}
+        } catch (ClassNotFoundException cnfe){
+        } catch (IOException ioe){}
     }
 
     public static ReferenceImplMap getDefaultImplementationMap(){
