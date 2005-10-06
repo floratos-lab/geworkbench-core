@@ -22,12 +22,12 @@ public class BisonFactory {
         return instance;
     }
 
-    public static Object createInstance(String clazz){
+    public static Object createInstance(String klass){
         Object instance = null;
         try {
-            Class klass = Class.forName(clazz);
+            Class clazz = Class.forName(klass);
             Class implType = ReferenceImplMap.getDefaultImplementationMap().
-                               getDefaultImplementation(klass);
+                               getDefaultImplementation(clazz);
             instance = implType.newInstance();
         } catch (ClassNotFoundException cnfe){
         } catch (InstantiationException ie){
