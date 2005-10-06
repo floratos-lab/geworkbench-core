@@ -1,7 +1,7 @@
 package org.geworkbench.engine.cascript;
 
 import java.io.PrintWriter;
-import org.geworkbench.engine.management.*;
+import org.geworkbench.engine.management.BisonFactory;
 
 /**
  * CasDataPlug is a rudimentary way of holding datastructures
