@@ -21,7 +21,7 @@ class CasDataMethod extends CasDataType {
         association = a;
         parameters = p;
         try {
-            m = (a.getVar().getClass()).getMethod(othername, parameters);
+            m = a.getVar().getClass().getMethod(othername, parameters);
         }
         catch (Exception e) {
             e.printStackTrace();

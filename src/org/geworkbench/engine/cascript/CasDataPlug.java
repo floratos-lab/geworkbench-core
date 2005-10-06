@@ -1,6 +1,7 @@
 package org.geworkbench.engine.cascript;
 
 import java.io.PrintWriter;
+import org.geworkbench.engine.management.*;
 
 /**
  * CasDataPlug is a rudimentary way of holding datastructures
@@ -43,7 +44,7 @@ class CasDataPlug extends CasDataType {
             if (t != null) {
                 try {
                     //the new instance should be created here, through the class
-                    var = Class.forName((String)t).newInstance();
+                    var = BisonFactory.createInstance((String)t);
                 } catch (Exception e) {
                     e.printStackTrace();
                     throw new CasException("Error occurred creating new instance of Class " + type + " for datatype " + name);
@@ -67,7 +68,10 @@ class CasDataPlug extends CasDataType {
     }
 
     public void setVar(Object a) {
-        var = a;
+        try {
+            var = var.getClass().cast(a);
+        }
+        catch (ClassCastException cce){}
     }
     public CasDataType copy() {
         return new CasDataPlug(name, type, var);

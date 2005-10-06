@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 /**
- * Provides a map of default reference implementation of <code>bison</code>
+ * Provides a map of default reference implementations of <code>bison</code>
  * interfaces
  * @author manjunath at genomecenter dot columbia dot edu
  */
