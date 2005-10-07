@@ -503,6 +503,8 @@ public class SequencePatternDisplayPanel extends JPanel {
     public void removePattern(DSPattern<DSSequence, DSSeqRegistration> pt) {
         patternMatches.remove(pt);
         patternDisplay.remove(pt);
+        repaint();
+
     }
 
     public Hashtable<DSPattern<DSSequence, DSSeqRegistration>, List<DSPatternMatch<DSSequence, DSSeqRegistration>>> getPatternMatches() {
