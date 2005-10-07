@@ -154,9 +154,14 @@ public class Skin extends GUIFramework {
                     super.keyEntered(event);
                 }
             }
+
+            protected void elementDoubleClicked(int index, MouseEvent e) {
+                dialogResult.cancelled = false;
+                dialog.dispose();
+            }
         };
         autoList.setPrefixMode(true);
-        dialog.setTitle("Choose Component");
+        dialog.setTitle("Component");
 //        JPanel panel = new JPanel();
 //        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 //        dialog.getContentPane().add(panel);

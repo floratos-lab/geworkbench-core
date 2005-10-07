@@ -27,8 +27,6 @@ public class JAutoList extends JPanel {
 
     private boolean prefixMode = false;
 
-    private int highlightedIndex = 0;
-
     public JAutoList(ListModel model) {
         super();
         this.model = model;
@@ -110,7 +108,6 @@ public class JAutoList extends JPanel {
                     list.setSelectedIndex(i);
                     list.scrollRectToVisible(list.getCellBounds(i, i));
                     found = true;
-                    highlightedIndex = i;
                     break;
                 }
             }
@@ -145,7 +142,6 @@ public class JAutoList extends JPanel {
                     list.setSelectedIndex(i);
                     list.scrollRectToVisible(list.getCellBounds(i, i));
                     found = true;
-                    highlightedIndex = i;
                     break;
                 }
             }
@@ -214,7 +210,6 @@ public class JAutoList extends JPanel {
             if (searchField.getText().length() == 0) {
                 list.setSelectedIndex(0);
                 list.scrollRectToVisible(list.getCellBounds(0, 0));
-                highlightedIndex = 0;
                 lastSearchFailed = false;
                 handlePostSearch();
             }
@@ -272,7 +267,7 @@ public class JAutoList extends JPanel {
     }
 
     public int getHighlightedIndex() {
-        return highlightedIndex;
+        return list.getSelectedIndex();
     }
 
     public boolean isPrefixMode() {
