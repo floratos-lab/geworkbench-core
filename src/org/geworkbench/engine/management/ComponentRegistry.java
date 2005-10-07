@@ -210,7 +210,7 @@ public class ComponentRegistry {
     private List components;
     // Map from component ID to PluginDescriptor.
     private Map<String, PluginDescriptor> idToDescriptor;
-    // Map from component source name to ComponentReSource.
+    // Map from component source name to ComponentResource.
     private Map<String, ComponentResource> nameToComponentResource;
 
     private ComponentRegistry() {
@@ -435,6 +435,17 @@ public class ComponentRegistry {
         if (component != null) {
             if (moduleType.isAssignableFrom(component.getClass())) {
                 return moduleType.cast(component);
+            }
+        }
+        return null;
+    }
+
+    public PluginDescriptor getDescriptorForPlugin(Object plugin) {
+        Set<Map.Entry<String,PluginDescriptor>> entries = idToDescriptor.entrySet();
+        for (Iterator<Map.Entry<String, PluginDescriptor>> iterator = entries.iterator(); iterator.hasNext();) {
+            Map.Entry<String, PluginDescriptor> entry = iterator.next();
+            if (entry.getValue().getPlugin() == plugin) {
+                return entry.getValue();
             }
         }
         return null;

@@ -25,6 +25,10 @@ public class JAutoList extends JPanel {
     private boolean lastSearchFailed = false;
     private boolean lastSearchWasAscending = true;
 
+    private boolean prefixMode = false;
+
+    private int highlightedIndex = 0;
+
     public JAutoList(ListModel model) {
         super();
         this.model = model;
@@ -102,10 +106,11 @@ public class JAutoList extends JPanel {
             text = text.toLowerCase();
             boolean found = false;
             for (int i = index; i >= 0; i--) {
-                if (model.getElementAt(i).toString().toLowerCase().contains(text)) {
+                if (match(i, text)) {
                     list.setSelectedIndex(i);
                     list.scrollRectToVisible(list.getCellBounds(i, i));
                     found = true;
+                    highlightedIndex = i;
                     break;
                 }
             }
@@ -113,6 +118,15 @@ public class JAutoList extends JPanel {
         }
         // Degenerate case
         return true;
+    }
+
+    private boolean match(int index, String text) {
+        String element = model.getElementAt(index).toString().toLowerCase();
+        if (!prefixMode) {
+            return element.contains(text);
+        } else {
+            return element.startsWith(text);
+        }
     }
 
     /**
@@ -127,10 +141,11 @@ public class JAutoList extends JPanel {
             text = text.toLowerCase();
             boolean found = false;
             for (int i = index; i < model.getSize(); i++) {
-                if (model.getElementAt(i).toString().toLowerCase().contains(text)) {
+                if (match(i, text)) {
                     list.setSelectedIndex(i);
                     list.scrollRectToVisible(list.getCellBounds(i, i));
                     found = true;
+                    highlightedIndex = i;
                     break;
                 }
             }
@@ -153,7 +168,7 @@ public class JAutoList extends JPanel {
     /**
      * Override to customize the result of the 'next' button being clicked (or ENTER being pressed in text field).
      */
-    protected void findNext(boolean ascending) {
+    protected boolean findNext(boolean ascending) {
         handlePreSearch();
         int index = list.getSelectedIndex();
         if (lastSearchFailed) {
@@ -181,6 +196,7 @@ public class JAutoList extends JPanel {
             }
         }
         handlePostSearch();
+        return !lastSearchFailed;
     }
 
     /**
@@ -194,6 +210,14 @@ public class JAutoList extends JPanel {
             findNext(true);
         } else if (event.getKeyChar() == 0x1b) { // ESC key
             searchField.setText("");
+        } else if (event.getKeyChar() == 0x08) { // Backspace key
+            if (searchField.getText().length() == 0) {
+                list.setSelectedIndex(0);
+                list.scrollRectToVisible(list.getCellBounds(0, 0));
+                highlightedIndex = 0;
+                lastSearchFailed = false;
+                handlePostSearch();
+            }
         } else if (event.isControlDown()) {
             if (event.getKeyChar() == '\u000E') {
                 findNext(true);
@@ -245,6 +269,18 @@ public class JAutoList extends JPanel {
 
     public ListModel getModel() {
         return model;
+    }
+
+    public int getHighlightedIndex() {
+        return highlightedIndex;
+    }
+
+    public boolean isPrefixMode() {
+        return prefixMode;
+    }
+
+    public void setPrefixMode(boolean prefixMode) {
+        this.prefixMode = prefixMode;
     }
 
     /**

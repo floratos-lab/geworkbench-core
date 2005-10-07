@@ -8,8 +8,12 @@ import net.eleritec.docking.defaults.DefaultDockingPort;
 import org.geworkbench.events.ComponentDockingEvent;
 import org.geworkbench.events.listeners.ComponentDockingListener;
 import org.geworkbench.engine.config.GUIFramework;
+import org.geworkbench.engine.config.VisualPlugin;
+import org.geworkbench.engine.config.PluginDescriptor;
 import org.geworkbench.engine.config.events.AppEventListenerException;
 import org.geworkbench.engine.config.events.EventSource;
+import org.geworkbench.engine.management.ComponentRegistry;
+import org.geworkbench.util.JAutoList;
 
 import javax.swing.*;
 import java.awt.*;
@@ -108,6 +112,107 @@ public class Skin extends GUIFramework {
         jControlPanel.setComponentProvider(new ComponentProvider());
         selectionPanel.setComponentProvider(new ComponentProvider());
         projectPanel.setComponentProvider(new ComponentProvider());
+        final String CANCEL_DIALOG = "cancel-dialog";
+        contentPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_F12, 0), CANCEL_DIALOG);
+        contentPane.getActionMap().put(CANCEL_DIALOG, new AbstractAction() {
+            public void actionPerformed(ActionEvent event) {
+                chooseComponent();
+            }
+        });//        contentPane.addKeyListener(new KeyAdapter() {
+    }
+
+    private static class DialogResult {
+        public boolean cancelled = false;
+    }
+
+    private void chooseComponent() {
+        // 1) Get all visual components
+        ComponentRegistry registry = ComponentRegistry.getRegistry();
+        VisualPlugin[] plugins = registry.getModules(VisualPlugin.class);
+        final String[] names = new String[plugins.length];
+        for (int i = 0; i < plugins.length; i++) {
+            names[i] = registry.getDescriptorForPlugin(plugins[i]).getLabel();
+        }
+        // 2) Sort alphabetically
+        Arrays.sort(names);
+        // 3) Create dialog with JAutoText (prefix mode)
+        DefaultListModel model = new DefaultListModel();
+        for (int i = 0; i < names.length; i++) {
+            model.addElement(names[i]);
+        }
+        final JDialog dialog = new JDialog();
+        final DialogResult dialogResult = new DialogResult();
+        final JAutoList autoList = new JAutoList(model) {
+            protected void keyEntered(KeyEvent event) {
+                if (event.getKeyChar() == '\n') {
+                    dialogResult.cancelled = false;
+                    dialog.dispose();
+                } else if (event.getKeyChar() == 0x1b) {
+                    dialogResult.cancelled = true;
+                    dialog.dispose();
+                } else {
+                    super.keyEntered(event);
+                }
+            }
+        };
+        autoList.setPrefixMode(true);
+        dialog.setTitle("Choose Component");
+//        JPanel panel = new JPanel();
+//        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+//        dialog.getContentPane().add(panel);
+        dialog.getContentPane().add(autoList);
+        dialog.setModal(true);
+        dialog.pack();
+        Dimension size = dialog.getSize();
+        Dimension frameSize = getSize();
+        int x = getLocationOnScreen().x + (frameSize.width - size.width) / 2;
+        int y = getLocationOnScreen().y + (frameSize.height - size.height) / 2;
+        // 4) Register enter and esc.
+//        String actionOK = "OK";
+//        String actionCancel = "Cancel";
+//        panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), actionOK);
+//        panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), actionCancel);
+//        panel.getActionMap().put(actionOK, new AbstractAction() {
+//            public void actionPerformed(ActionEvent event) {
+//                autoList.get
+//            }
+//        });
+//        panel.getActionMap().put(actionCancel, new AbstractAction() {
+//            public void actionPerformed(ActionEvent event) {
+//                dialog.dispose();
+//            }
+//        });
+//
+        // 5) Display and get result
+        dialog.setBounds(x, y, size.width, size.height);
+        dialog.setVisible(true);
+        if (!dialogResult.cancelled) {
+            int index = autoList.getHighlightedIndex();
+            Set keys = areas.keySet();
+            boolean found = false;
+            for (Iterator iterator = keys.iterator(); iterator.hasNext();) {
+                String key = (String) iterator.next();
+                if (areas.get(key) instanceof DefaultDockingPort) {
+                    DefaultDockingPort port = (DefaultDockingPort) areas.get(key);
+                    if (port.getDockedComponent() instanceof JTabbedPane) {
+                        JTabbedPane pane = (JTabbedPane) port.getDockedComponent();
+                        int n = pane.getTabCount();
+                        for (int i = 0; i < n; i++) {
+                            String title = pane.getTitleAt(i);
+                            if (title.equals(names[index])) {
+                                pane.setSelectedIndex(i);
+                                pane.getComponentAt(i).requestFocus();
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (found) {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**
