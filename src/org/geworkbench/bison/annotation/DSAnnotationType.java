@@ -10,9 +10,9 @@ package org.geworkbench.bison.annotation;
 public interface DSAnnotationType<T> {
 
     /**
-     * Retrieves the label for this annotation type.
+     * Retrieves the label (name) for this annotation type.
      */
-    public Object getLabel();
+    public String getLabel();
 
     /**
      * Retrieves the type of the annotation type's associated values.

@@ -225,9 +225,22 @@ public class CSMarkerVector extends CSSequentialItemList<DSGeneMarker> implement
     }
 
     //To change
-    public void remove(DSGeneMarker item) {
-        super.remove(item);
-        geneIdMap.remove(new Integer(item.getGeneId()));
+    public boolean remove(Object item) {
+        boolean removed = super.remove(item);
+        if (removed) {
+            if (item instanceof DSGeneMarker) {
+                geneIdMap.remove(new Integer(((DSGeneMarker)item).getGeneId()));
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public DSGeneMarker remove(int index) {
+        DSGeneMarker marker = super.remove(index);
+        geneIdMap.remove(new Integer(marker.getGeneId()));
+        return marker;
     }
 
     public void clear() {

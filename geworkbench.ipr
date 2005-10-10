@@ -301,6 +301,7 @@
         <root url="jar://$PROJECT_DIR$/lib/piccolo.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/xmlsec.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/jgraphpad.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/collections-generic-4.0.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
