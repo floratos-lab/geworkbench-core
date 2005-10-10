@@ -165,7 +165,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
         int count = 0;
         for (Iterator it = v.iterator(); it.hasNext();) {
             String acc = ((String) it.next()).toString();
-            markerVector.get(count).setLabel(acc);
+            markerVector.setLabel(count, acc);
             this.getMarkers().get(count).setDisPlayType(DSGeneMarker.AFFY_TYPE);
             markerVector.get(count++).setDescription(acc);
         }
@@ -226,7 +226,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
         int count = 0;
         for (Iterator it = v.iterator(); it.hasNext();) {
             String acc = ((String) it.next()).toString();
-            markerVector.get(count).setLabel(acc);
+            markerVector.setLabel(count, acc);
             this.getMarkers().get(count).setDisPlayType(DSGeneMarker.GENEPIX_TYPE);
             markerVector.get(count++).setDescription(acc);
         }

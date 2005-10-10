@@ -247,4 +247,19 @@ public class CSMarkerVector extends CSSequentialItemList<DSGeneMarker> implement
         super.clear();
         geneIdMap.clear();
     }
+
+    public boolean setLabel(int index, String label) {
+        DSGeneMarker item = get(index);
+        if (item != null) {
+            String oldLabel = item.getLabel();
+            if (oldLabel != null) {
+                objectMap.remove(oldLabel);
+            }
+            item.setLabel(label);
+            objectMap.put(label, item);
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

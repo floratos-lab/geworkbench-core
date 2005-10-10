@@ -15,7 +15,7 @@ public class CSItemList <T extends DSNamed> extends ArrayList<T> implements DSIt
 
     String id = RandomNumberGenerator.getID();
     //use Hashtable to not allow null keys
-    Hashtable<String, T> objectMap = new Hashtable<String, T>();
+    protected Hashtable<String, T> objectMap = new Hashtable<String, T>();
 
     public CSItemList() {
     }
