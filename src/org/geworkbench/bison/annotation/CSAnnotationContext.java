@@ -60,8 +60,7 @@ public class CSAnnotationContext<T extends DSBioObject> implements DSAnnotationC
     }
 
     public DSAnnotationType getAnnotationType(int index) {
-        // todo - shouldn't need cast
-        return (DSAnnotationType) annotations.get(index);
+        return annotations.get(index);
     }
 
     public <Q> void annotateItem(T item, DSAnnotationType<Q> annotationType, Q value) {
