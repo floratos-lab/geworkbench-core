@@ -144,6 +144,7 @@
     <path>[lib/piccolo.jar]</path>
     <path>[lib/piccolox.jar]</path>
     <path>[lib/jgraphpad.jar]</path>
+    <path>[lib/collections-generic-4.0.jar]</path>
   </class>
   <source>
     <path>components/alignment/src</path>
@@ -173,5 +174,5 @@
     <path>components/viewers/src</path>
     <path>src</path>
   </source>
-  <lastmodsaved>1128438178890</lastmodsaved>
+  <lastmodsaved>1129058103671</lastmodsaved>
 </library>
