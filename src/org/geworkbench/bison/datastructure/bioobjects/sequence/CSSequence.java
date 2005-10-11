@@ -19,7 +19,17 @@ import java.io.Serializable;
 
 public class CSSequence implements DSSequence, Serializable {
 
-    private final static ObjectStreamField[] serialPersistentFields = {new ObjectStreamField("isDNA", boolean.class), new ObjectStreamField("label", String.class), new ObjectStreamField("sequence", String.class)};
+    private final static ObjectStreamField[] serialPersistentFields = 
+    {
+        new ObjectStreamField("isDNA", boolean.class), 
+        new ObjectStreamField("label", String.class), 
+        new ObjectStreamField("sequence", String.class),
+        new ObjectStreamField("descriptions", CSDescribable.class),
+        new ObjectStreamField("extend", CSExtendable.class),
+        new ObjectStreamField("id", String.class),
+        new ObjectStreamField("serial", int.class),
+        new ObjectStreamField("isEnabled", boolean.class)
+    };
 
     static final String[] repeats = {"(at){5,}", "a{7,}", "c{7,}", "g{7,}", "t{7,}"};
     static final java.util.regex.Pattern[] repeatPattern = new java.util.regex.Pattern[repeats.length];
@@ -44,7 +54,7 @@ public class CSSequence implements DSSequence, Serializable {
     }
 
     public CSSequence(String l, String s) {
-        sequence = s;
+        setSequence(s);
         label = l;
     }
 
@@ -56,6 +66,12 @@ public class CSSequence implements DSSequence, Serializable {
         return sequence;
     }
 
+    public CSSequence getSubSequence(int from, int to){
+        if (from >= 0 && to < sequence.length())
+            return new CSSequence(getLabel(), getSequence().substring(from, to));
+        return this;
+    }
+    
     public void setLabel(String l) {
         label = l;
     }
