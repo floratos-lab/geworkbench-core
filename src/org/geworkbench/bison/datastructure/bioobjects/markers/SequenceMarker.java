@@ -45,7 +45,7 @@ public class SequenceMarker extends CSGeneMarker implements Serializable {
                     setLabel(tokens[1]);
                 } else {
                     setDescription(s);
-                    setLabel(s);
+                    setLabel(tokens[0]);
                 }
             }
         } else if (tokens.length == 2) {

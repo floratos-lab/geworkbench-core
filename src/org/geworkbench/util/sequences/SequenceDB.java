@@ -269,6 +269,13 @@ public class SequenceDB extends CSDataSet<DSSequence> implements DSCollection<
         return markerList;
     }
 
+    @Override public DSSequence get(String label){
+        DSGeneMarker marker = getMarkerList().get(label);
+        if (marker != null)
+            return get(marker.getSerial());
+        return get(label);
+    }
+    
     public int[] getMatchIndex() {
         return matchIndex;
     }
