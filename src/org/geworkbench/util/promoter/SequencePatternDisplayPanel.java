@@ -496,9 +496,11 @@ public class SequencePatternDisplayPanel extends JPanel {
     }
 
     public void addAPattern(DSPattern<DSSequence, DSSeqRegistration> pt, Display dis, List<DSPatternMatch<DSSequence, DSSeqRegistration>> matches) {
-        patternDisplay.put(pt, dis);
-        patternMatches.put(pt, matches);
-        repaint();
+        if(pt!= null && dis !=null && matches!=null){
+            patternDisplay.put(pt, dis);
+            patternMatches.put(pt, matches);
+            repaint();
+        }
     }
 
     public void removePattern(DSPattern<DSSequence, DSSeqRegistration> pt) {
