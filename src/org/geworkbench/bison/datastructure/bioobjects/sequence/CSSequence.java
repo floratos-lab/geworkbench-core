@@ -69,7 +69,7 @@ public class CSSequence implements DSSequence, Serializable {
     public CSSequence getSubSequence(int from, int to){
         if (from >= 0 && to >= 0 && from < sequence.length() && to < sequence.length())
             return new CSSequence(getLabel(), getSequence().substring(from, to));
-        return this;
+        return null;
     }
     
     public void setLabel(String l) {
