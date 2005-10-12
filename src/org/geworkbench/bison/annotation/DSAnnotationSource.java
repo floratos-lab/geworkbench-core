@@ -1,13 +1,13 @@
 package org.geworkbench.bison.annotation;
 
-import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
+import org.geworkbench.bison.datastructure.properties.DSNamed;
 
 /**
  * Defines the contract for a source of annotation data for items.
  *
  * @author John Watkinson
  */
-public interface DSAnnotationSource<T extends DSBioObject> {
+public interface DSAnnotationSource<T extends DSNamed> {
 
     /**
      * Retrieves the annotation for an item.

@@ -168,4 +168,17 @@ public class CSItemList <T extends DSNamed> extends ArrayList<T> implements DSIt
         t.setLabel(label);
         objectMap.put(label, t);
     }
+
+    public boolean equals(Object o) {
+        if (o instanceof DSItemList) {
+            DSItemList other = (DSItemList) o;
+            return id.equals(other.getID());
+        } else {
+            return false;
+        }
+    }
+
+    public int hashCode() {
+        return id.hashCode();
+    }
 }

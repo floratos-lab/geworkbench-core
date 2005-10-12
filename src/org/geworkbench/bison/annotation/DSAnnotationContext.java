@@ -2,13 +2,14 @@ package org.geworkbench.bison.annotation;
 
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
-import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
+import org.geworkbench.bison.datastructure.properties.DSNamed;
 
 import java.util.List;
 
 /**
  * This defines the contract for a context of <i>annotations</i>, <i>labels</i> and <i>classifications</i> for a
- * {@link DSDataSet}. The terms are defined below.
+ * {@link DSItemList}. The terms are defined below.
  * <h3>Annotations</h3>
  * An annotation is a (type, value) pair applied to an item. For example, a phenotype could be annotated with
  * (Gender, Female). For each annotation type, an item can only have one annotation value.
@@ -18,7 +19,7 @@ import java.util.List;
  * to consider a subset of items for display or analysis.
  * <p>
  * Special labels called <i>Criterion Labels</i> can be created. These
- * labels are automatically applied to the items of the {@link DSDataSet} that satisfy the associated
+ * labels are automatically applied to the items of the {@link DSItemList} that satisfy the associated
  * {@link DSCriterion criterion}. The criterion is a true/false function of the annotations for that item. Changes to
  * the annotation values of the items will result in automatic membership changes to criterion labels.
  * <h3>Classes</h3>
@@ -33,7 +34,7 @@ import java.util.List;
  *
  * @author John Watkinson
  */
-public interface DSAnnotationContext<T extends DSBioObject> extends DSAnnotationSource<T> {
+public interface DSAnnotationContext<T extends DSNamed> extends DSAnnotationSource<T> {
 
     /**
      * Retrieves the name of this context.
@@ -43,7 +44,7 @@ public interface DSAnnotationContext<T extends DSBioObject> extends DSAnnotation
     /**
      * Sets the name of this context.
      * When the context is used in conjunction with a {@link DSAnnotationContextManager}, do not use this method.
-     * Use {@link DSAnnotationContextManager#renameContext(DSDataSet, String, String)} instead. Otherwise, the
+     * Use {@link DSAnnotationContextManager#renameContext(DSItemList, String, String)} instead. Otherwise, the
      * {@link DSAnnotationContextManager} will lose track of this context.
      */
     public void setName(String newName);
@@ -51,7 +52,7 @@ public interface DSAnnotationContext<T extends DSBioObject> extends DSAnnotation
     /**
      * Retrieves the underlying data set on which this context is based.
      */
-    public DSDataSet<T> getDataSet();
+    public DSItemList<T> getItemList();
 
     //// ANNOTATIONS
 

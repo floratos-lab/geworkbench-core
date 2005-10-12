@@ -16,7 +16,7 @@ public abstract class TestDSAnnotationContext extends TestCase {
 
     public abstract DSAnnotationContextManager getAnnotationContextManager();
 
-    public abstract <Q> DSAnnotationType<Q> createAnnotationType(Object label, Class<Q> type);
+    public abstract <Q> DSAnnotationType<Q> createAnnotationType(String label, Class<Q> type);
 
     //// Test methods
 
@@ -148,7 +148,8 @@ public abstract class TestDSAnnotationContext extends TestCase {
         DSPanel<DSMicroarray> labelPanel = context.getItemsWithLabel(type1);
         // Ensure that it has the right structure
         assertEquals(labelPanel.getLabel(), type1);
-        assertEquals(labelPanel.panels().size(), 0);
+        // Note: default selection sub-panel is always present
+        assertEquals(labelPanel.panels().size(), 1);
         assertEquals(labelPanel.size(), 2);
         assertTrue(labelPanel.contains(item2));
         assertTrue(labelPanel.contains(item3));
@@ -156,9 +157,10 @@ public abstract class TestDSAnnotationContext extends TestCase {
         DSPanel<DSMicroarray> orPanel = context.getItemsWithAnyLabel(type1, type2);
         // Ensure that it has the right structure
         DSItemList<DSPanel<DSMicroarray>> subPanels = orPanel.panels();
-        assertEquals(subPanels.size(), 2);
-        DSPanel type1Panel = subPanels.get(0);
-        DSPanel type2Panel = subPanels.get(1);
+        // Note: default selection sub-panel is always present
+        assertEquals(subPanels.size(), 3);
+        DSPanel type1Panel = subPanels.get(1);
+        DSPanel type2Panel = subPanels.get(2);
         assertEquals(type1Panel.getLabel(), type1);
         assertEquals(type2Panel.getLabel(), type2);
         assertEquals(type1Panel.size(), 2);
@@ -170,7 +172,8 @@ public abstract class TestDSAnnotationContext extends TestCase {
         DSPanel<DSMicroarray> andPanel = context.getItemsWithAllLabels(type1, type2);
         // Ensure that it has the right structure
         subPanels = andPanel.panels();
-        assertTrue(subPanels.isEmpty());
+        // Note: default selection sub-panel is always present
+        assertEquals(subPanels.size(), 1);
         assertEquals(andPanel.size(), 1);
         assertTrue(andPanel.contains(item3));
         // Activate type1 and type2 using both methods
@@ -183,9 +186,10 @@ public abstract class TestDSAnnotationContext extends TestCase {
         DSPanel<DSMicroarray> activePanel = context.getActiveItems();
         // Ensure that it has the right structure
         subPanels = activePanel.panels();
-        assertEquals(subPanels.size(), 2);
-        type1Panel = subPanels.get(0);
-        type2Panel = subPanels.get(1);
+        // Note: default selection sub-panel is always present
+        assertEquals(subPanels.size(), 3);
+        type1Panel = subPanels.get(1);
+        type2Panel = subPanels.get(2);
         assertEquals(type1Panel.getLabel(), type1);
         assertEquals(type2Panel.getLabel(), type2);
         assertEquals(type1Panel.size(), 2);
@@ -211,7 +215,7 @@ public abstract class TestDSAnnotationContext extends TestCase {
         assertSame(context.getLabel(0), none);
         assertSame(context.getLabel(1), type2);
         // Ensure that item2 has no labels and item3 has only type2 now.
-        assertEquals(context.getLabelsForItem(item1).length, 0);
+        assertEquals(context.getLabelsForItem(item2).length, 0);
         labels = context.getLabelsForItem(item3);
         assertEquals(labels.length, 1);
         assertSame(labels[0], type2);
@@ -351,7 +355,8 @@ public abstract class TestDSAnnotationContext extends TestCase {
         // Get all items for "Case"
         DSPanel<DSMicroarray> caseItems = context.getItemsForClass(classCase);
         // Ensure that thes structure of the panel is correct-- note that each item should appear only once
-        assertEquals(caseItems.panels().size(), 0);
+        // Note: default selection sub-panel is always present
+        assertEquals(caseItems.panels().size(), 1);
         assertEquals(caseItems.size(), 2);
         assertTrue(caseItems.contains(item2));
         assertTrue(caseItems.contains(item3));
