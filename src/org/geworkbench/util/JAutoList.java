@@ -71,8 +71,8 @@ public class JAutoList extends JPanel {
             }
         });
         searchField.addKeyListener(new KeyAdapter() {
-            @Override public void keyTyped(KeyEvent e) {
-                keyEntered(e);
+            @Override public void keyPressed(KeyEvent e) {
+                JAutoList.this.keyPressed(e);
             }
         });
     }
@@ -200,18 +200,32 @@ public class JAutoList extends JPanel {
      *
      * @param event the key event.
      */
-    protected void keyEntered(KeyEvent event) {
-        if (event.getKeyChar() == '\n') {
+    protected void keyPressed(KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.VK_ENTER) {
             // Same effect as next button
             findNext(true);
-        } else if (event.getKeyChar() == 0x1b) { // ESC key
+        } else if (event.getKeyCode() == KeyEvent.VK_ESCAPE) { // ESC key
             searchField.setText("");
-        } else if (event.getKeyChar() == 0x08) { // Backspace key
-            if (searchField.getText().length() == 0) {
+        } else if (event.getKeyCode() == KeyEvent.VK_BACK_SPACE) { // Backspace key
+            if (searchField.getText().length() == 1) {
                 list.setSelectedIndex(0);
                 list.scrollRectToVisible(list.getCellBounds(0, 0));
                 lastSearchFailed = false;
                 handlePostSearch();
+            }
+        } else if (event.getKeyCode() == KeyEvent.VK_DOWN) {
+            int index = list.getSelectedIndex();
+            index++;
+            if (index < model.getSize()) {
+                list.setSelectedIndex(index);
+                list.scrollRectToVisible(list.getCellBounds(index, index));
+            }
+        } else if (event.getKeyCode() == KeyEvent.VK_UP) {
+            int index = list.getSelectedIndex();
+            index--;
+            if (index >= 0) {
+                list.setSelectedIndex(index);
+                list.scrollRectToVisible(list.getCellBounds(index, index));
             }
         } else if (event.isControlDown()) {
             if (event.getKeyChar() == '\u000E') {

@@ -9,7 +9,6 @@ import org.geworkbench.events.ComponentDockingEvent;
 import org.geworkbench.events.listeners.ComponentDockingListener;
 import org.geworkbench.engine.config.GUIFramework;
 import org.geworkbench.engine.config.VisualPlugin;
-import org.geworkbench.engine.config.PluginDescriptor;
 import org.geworkbench.engine.config.events.AppEventListenerException;
 import org.geworkbench.engine.config.events.EventSource;
 import org.geworkbench.engine.management.ComponentRegistry;
@@ -143,7 +142,7 @@ public class Skin extends GUIFramework {
         final JDialog dialog = new JDialog();
         final DialogResult dialogResult = new DialogResult();
         final JAutoList autoList = new JAutoList(model) {
-            protected void keyEntered(KeyEvent event) {
+            protected void keyPressed(KeyEvent event) {
                 if (event.getKeyChar() == '\n') {
                     dialogResult.cancelled = false;
                     dialog.dispose();
@@ -151,7 +150,7 @@ public class Skin extends GUIFramework {
                     dialogResult.cancelled = true;
                     dialog.dispose();
                 } else {
-                    super.keyEntered(event);
+                    super.keyPressed(event);
                 }
             }
 
