@@ -28,7 +28,7 @@ public class PatternDB extends CSDataSet implements DSAncillaryDataSet, Serializ
     static private ImageIcon icon = new ImageIcon(PatternDB.class.getResource("pattern.gif"));
 
     private boolean dirty = false;
-    private ArrayList patterns = new ArrayList();
+    protected ArrayList patterns = new ArrayList();
     private Parameters parms = new Parameters();
     protected File dataSetFile;
 

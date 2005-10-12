@@ -1,11 +1,10 @@
 package org.geworkbench.components.promoter;
 
-import java.io.*;
+import java.io.File;
+import java.io.Serializable;
 import java.util.*;
 
-import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeqPattern;
-import org.geworkbench.util.patterns.CSMatchedSeqPattern;
-import org.geworkbench.util.patterns.PatternDB;
+import org.geworkbench.util.sequences.SequenceDB;
 
 /**
  * <p>Title: </p>
@@ -25,8 +24,14 @@ public class PromoterPatternDB implements Serializable {
     Hashtable matches;
     private ArrayList patterns;
     File seqFile;
-    PromoterPatternDB(File _seqFile){
-             }
+    SequenceDB seqDB;
+    public PromoterPatternDB(File _seqFile) {
+    }
+
+    public PromoterPatternDB(SequenceDB _seqDB) {
+        this.seqDB = _seqDB;
+    }
+
 //
 //    public boolean read(File _file) {
 //       try {
@@ -88,6 +93,10 @@ public class PromoterPatternDB implements Serializable {
         this.matches = matches;
     }
 
+    public void setSeqDB(SequenceDB seqDB) {
+        this.seqDB = seqDB;
+    }
+
     public Hashtable getMatches() {
         return matches;
     }
@@ -98,6 +107,10 @@ public class PromoterPatternDB implements Serializable {
 
     public HashMap getDisplay() {
         return display;
+    }
+
+    public SequenceDB getSeqDB() {
+        return seqDB;
     }
 
 
