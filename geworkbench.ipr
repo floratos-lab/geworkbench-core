@@ -302,6 +302,7 @@
         <root url="jar://$PROJECT_DIR$/lib/xmlsec.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/jgraphpad.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/collections-generic-4.0.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/forms-1.0.5.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
