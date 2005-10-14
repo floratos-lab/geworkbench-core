@@ -38,7 +38,9 @@ class CasValue extends CasDataType {
     }
 
     public void print(PrintWriter w) {
-        if (name != null) w.print(name + " = ");
+        //if (name != null) w.print(name + " = ");
+        this.toString();
     }
+
 
 }

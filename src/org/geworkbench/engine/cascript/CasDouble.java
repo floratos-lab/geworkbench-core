@@ -6,7 +6,7 @@ import java.io.PrintWriter;
  * The wrapper class for double
  *
  * @author Behrooz Badii - badiib@gmail.com
- * @version $Id: CasDouble.java,v 1.2 2005-08-18 20:43:53 bb2122 Exp $
+ * @version $Id: CasDouble.java,v 1.3 2005-10-14 18:38:12 bb2122 Exp $
  * @modified Hanhua Feng - hf2048@columbia.edu
  */
 class CasDouble extends CasDataType {
@@ -36,7 +36,7 @@ class CasDouble extends CasDataType {
     }
 
     public void print(PrintWriter w) {
-        if (name != null) w.print(name + " = ");
+        //if (name != null) w.print(name + " = ");
         w.println(Double.toString(var));
     }
 

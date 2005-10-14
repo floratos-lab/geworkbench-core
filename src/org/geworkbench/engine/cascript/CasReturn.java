@@ -1,5 +1,7 @@
 package org.geworkbench.engine.cascript;
 
+import java.io.PrintWriter;
+
 /**
  * This holds the return value for a function
  * A new CasDataType (aka CasReturn) to make sure that the
@@ -20,4 +22,11 @@ public class CasReturn extends CasDataType {
         return retValue;
     }
 
+    public String typename() {
+        return "CasReturn";
+    }
+
+    public void print(PrintWriter w) {
+        w.println(typename());
+    }
 }

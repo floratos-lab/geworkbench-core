@@ -8,7 +8,7 @@ import java.io.PrintWriter;
  * Error messages are generated here.
  *
  * @author Behrooz Badii to CasDataType.java
- * @version $Id: CasDataType.java,v 1.3 2005-08-18 20:43:53 bb2122 Exp $
+ * @version $Id: CasDataType.java,v 1.4 2005-10-14 18:38:12 bb2122 Exp $
  * @modified from Hanhua Feng - hf2048@columbia.edu MxDataType.java
  */
 public class CasDataType {
@@ -56,7 +56,7 @@ public class CasDataType {
     }
 
     public void print(PrintWriter w) {
-        if (name != null) w.print(name + " = ");
+        //if (name != null) w.print(name + " = ");
         w.println("<undefined>");
     }
 

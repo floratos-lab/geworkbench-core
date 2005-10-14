@@ -6,7 +6,7 @@ import java.io.PrintWriter;
  * the wrapper class for string
  *
  * @author Behrooz Badii - badiib@gmail.com
- * @version $Id: CasString.java,v 1.2 2005-08-18 20:43:58 bb2122 Exp $
+ * @version $Id: CasString.java,v 1.3 2005-10-14 18:38:12 bb2122 Exp $
  * @modified from Hanhua Feng - hf2048@columbia.edu
  */
 class CasString extends CasDataType {
@@ -29,12 +29,21 @@ class CasString extends CasDataType {
     }
 
     public void print(PrintWriter w) {
-        if (name != null) w.print(name + " = ");
+        //if (name != null) w.print(name + " = ");
         w.print(var);
         w.println();
     }
 
     public CasDataType plus(CasDataType b) {
+        if (b instanceof CasBool) {
+            b = new CasString(Boolean.toString(((CasBool)b).getvar()));
+        }
+        else if (b instanceof CasInt) {
+            b = new CasString(Integer.toString(((CasInt)b).getvar()));
+        }
+        else if (b instanceof CasDouble) {
+            b = new CasString(Double.toString(((CasDouble)b).getvar()));
+        }
         if (b instanceof CasString) return new CasString(var + ((CasString) b).var);
 
         return error(b, "+");

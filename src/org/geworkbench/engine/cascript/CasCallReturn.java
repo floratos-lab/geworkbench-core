@@ -1,5 +1,7 @@
 package org.geworkbench.engine.cascript;
 
+import java.io.PrintWriter;
+
 /**
  * This holds the return value for a function call to geworkbench
  * retValue has to be tested to make sure it's acceptable as an object for CAS
@@ -20,4 +22,8 @@ public class CasCallReturn extends CasDataType {
         return retValue;
     }
 
+    public void print(PrintWriter w) {
+            //if (name != null) w.print(name + " = ");
+            this.toString();
+    }
 }

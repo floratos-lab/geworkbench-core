@@ -9,7 +9,7 @@ import java.util.Vector;
  * The function data type
  *
  * @author Behrooz Badii - badiib@gmail.comHanhua Feng - hf2048@columbia.edu
- * @version $Id: CasFunction.java,v 1.3 2005-08-18 20:43:53 bb2122 Exp $
+ * @version $Id: CasFunction.java,v 1.4 2005-10-14 18:38:12 bb2122 Exp $
  * @modified from Hanhua Feng - hf2048@columbia.edu
  */
 class CasFunction extends CasDataType {
@@ -40,15 +40,11 @@ class CasFunction extends CasDataType {
     public void print(PrintWriter w) {
         if (name != null) w.print(name + " = ");
         w.print("<function>(");
-        /*for ( int i=0; ; i++ )
-            {
-                w.print( args[i] );
-                if ( i >= args.length - 1 )
-                    break;
-                w.print( "," );
-            }
-            w.println( ")" );
-        }*/
+        for ( int i=0; i < args.size(); i++ ) {
+            w.print( args.elementAt(i) );
+            w.print( "," );
+        }
+        w.println( ")" );
     }
 
     public Vector<CasArgument> getArgs() {

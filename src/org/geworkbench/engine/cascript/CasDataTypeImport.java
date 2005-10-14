@@ -7,7 +7,6 @@ import java.util.Properties;
 class CasDataTypeImport extends HashMap {
     public CasDataTypeImport() {
         initialize();
-        System.out.println(this.get("DSMicroarraySet"));
     }
 
     void initialize() {

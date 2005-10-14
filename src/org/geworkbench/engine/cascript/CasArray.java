@@ -55,7 +55,7 @@ class CasArray extends CasDataType {
     }
 
     public void print(PrintWriter w) {
-        if (name != null) w.print(name + " = ");
+        //if (name != null) w.print(name + " = ");
         w.println(var.toString());
     }
 

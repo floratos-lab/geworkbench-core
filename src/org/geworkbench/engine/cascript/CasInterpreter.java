@@ -9,7 +9,7 @@ import java.util.Vector;
  * Interpreter routines that is called directly from the tree walker.
  *
  * @author Behrooz Badii - badiib@gmail.com
- * @version $Id: CasInterpreter.java,v 1.11 2005-10-05 20:20:16 bb2122 Exp $
+ * @version $Id: CasInterpreter.java,v 1.12 2005-10-14 18:38:12 bb2122 Exp $
  */
 class CasInterpreter {
     CasSymbolTable symt;
@@ -195,13 +195,25 @@ class CasInterpreter {
                 symt.setVar(a.name, (CasBool) x);
                 return new CasBool(true);
             }
-            if (a instanceof CasString && b instanceof CasString) {
-                System.out.println(((CasString) a).name + " has value " + ((CasString) a).getvar());
-                System.out.println("new value " + ((CasString) b).getvar());
-                CasDataType x = rvalue(b);
-                x.setName(a.name);
-                symt.setVar(a.name, (CasString) x);
-                return new CasBool(true);
+            if (a instanceof CasString) {
+                if (b instanceof CasBool) {
+                    b = new CasString(Boolean.toString(((CasBool)b).getvar()));
+                }
+                else if (b instanceof CasInt) {
+                    b = new CasString(Integer.toString(((CasInt)b).getvar()));
+                }
+                else if (b instanceof CasDouble) {
+                    b = new CasString(Double.toString(((CasDouble)b).getvar()));
+                }
+                if (b instanceof CasString) {
+                    System.out.println(((CasString) a).name + " has value " +
+                                       ((CasString) a).getvar());
+                    System.out.println("new value " + ((CasString)b).getvar());
+                    CasDataType x = rvalue(b);
+                    x.setName(a.name);
+                    symt.setVar(a.name, (CasString) x);
+                    return new CasBool(true);
+                }
             }
             //should this be allowed?
             if (a instanceof CasModule && b instanceof CasModule) {
