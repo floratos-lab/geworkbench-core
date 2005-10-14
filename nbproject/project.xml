@@ -2,11 +2,39 @@
 <project xmlns="http://www.netbeans.org/ns/project/1">
     <type>org.netbeans.modules.ant.freeform</type>
     <configuration>
-        <general-data xmlns="http://www.netbeans.org/ns/freeform-project/1">
+        
+        
+    <general-data xmlns="http://www.netbeans.org/ns/freeform-project/1">
             <!--Do not use Project Properties customizer when editing this file manually.-->
             <name>geworkbench</name>
             <properties/>
             <folders>
+            
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
             <source-folder>
                     <label>src</label>
                     <type>java</type>
@@ -178,6 +206,32 @@
             </ide-actions>
             <view>
                 <items>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
                     <source-folder style="packages">
                         <label>src</label>
                         <location>src</location>
@@ -296,12 +350,39 @@
                 <ide-action name="debug"/>
                 </context-menu>
             </view>
+        
         <subprojects/>
         </general-data>
         <java-data xmlns="http://www.netbeans.org/ns/freeform-project-java/2">
+        
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
         <compilation-unit>
                 <package-root>src</package-root>
-                <classpath mode="compile">classes;lib/activation.jar;lib/antlr-2.7.5.jar;lib/ArrayExpress.jar;lib/axis.jar;lib/bcel-5.1.jar;lib/caBIO.jar;lib/cglib-nodep-2.1.jar;lib/cog-axis.jar;lib/cog-jglobus.jar;lib/commons-beanutils.jar;lib/commons-collections.jar;lib/commons-digester.jar;lib/commons-discovery.jar;lib/commons-logging.jar;lib/commons-math-1.0.jar;lib/distributions.jar;lib/docking.jar;lib/dom4j-1.6.1.jar;lib/ensj-30.2.jar;lib/globusSplash.jar;lib/jai_core.jar;lib/Jama-1.0.1.jar;lib/jaxb-rt-1.0-ea.jar;lib/jaxrpc.jar;lib/jbcl.jar;lib/jcommon-1.0.0-rc1.jar;lib/jdom.jar;lib/jfreechart-1.0.0-rc1.jar;lib/jgraph.jar;lib/jhall.jar;lib/junit.jar;lib/log4j-1.2.8.jar;lib/looks-1.3.1.jar;lib/mageom.jar;lib/mail.jar;lib/NetComponents.jar;lib/ogsa.jar;lib/ostermillerutils_1_04_03_for_kaffe.jar;lib/piccolo.jar;lib/piccolox.jar;lib/poi-2.5.1-final-20040804.jar;lib/poi-scratchpad-2.5.1-final-20040804.jar;lib/polgara.jar;lib/puretls.jar;lib/saaj.jar;lib/weka.jar;lib/wsdl4j.jar;lib/xml-apis.jar;lib/BNJ_libs/jxl.jar;lib/BNJ_libs/openjgraph.jar;lib/BNJ_libs/skinlf.jar;lib/caArrayMageom/aspectjrt.jar;lib/caArrayMageom/caarray-client.jar;lib/caArrayMageom/commons-dbcp.jar;lib/caArrayMageom/commons-lang.jar;lib/caArrayMageom/commons-pool.jar;lib/caArrayMageom/db-ojb-1.0.rc7.jar;lib/caArrayMageom/j2ee.jar;lib/caArrayMageom/jaxen-full.jar;lib/caArrayMageom/mageom-client.jar;lib/Simulation_libs/colt.jar;lib/Simulation_libs/jahmm-0.2.6.jar;lib/Simulation_libs/JClass.jar;lib/Simulation_libs/jcommon.jar;lib/Simulation_libs/jfreechart.jar;lib/Simulation_libs/mpiJava.jar;lib/Simulation_libs/netx.jar;lib/Simulation_libs/odeToJava.jar;lib/Simulation_libs/SBMLReader.jar;lib/Simulation_libs/SBWCore.jar</classpath>
+                <classpath mode="compile">classes;lib/activation.jar;lib/antlr-2.7.5.jar;lib/ArrayExpress.jar;lib/axis.jar;lib/bcel-5.1.jar;lib/caBIO.jar;lib/cglib-nodep-2.1.jar;lib/cog-axis.jar;lib/cog-jglobus.jar;lib/commons-beanutils.jar;lib/commons-collections.jar;lib/commons-digester.jar;lib/commons-discovery.jar;lib/commons-logging.jar;lib/commons-math-1.0.jar;lib/distributions.jar;lib/docking.jar;lib/dom4j-1.6.1.jar;lib/ensj-30.2.jar;lib/globusSplash.jar;lib/jai_core.jar;lib/Jama-1.0.1.jar;lib/jaxb-rt-1.0-ea.jar;lib/jaxrpc.jar;lib/jbcl.jar;lib/jcommon-1.0.0-rc1.jar;lib/jdom.jar;lib/jfreechart-1.0.0-rc1.jar;lib/jgraph.jar;lib/jhall.jar;lib/junit.jar;lib/log4j-1.2.8.jar;lib/looks-1.3.1.jar;lib/mageom.jar;lib/mail.jar;lib/NetComponents.jar;lib/ogsa.jar;lib/ostermillerutils_1_04_03_for_kaffe.jar;lib/piccolo.jar;lib/piccolox.jar;lib/poi-2.5.1-final-20040804.jar;lib/poi-scratchpad-2.5.1-final-20040804.jar;lib/polgara.jar;lib/puretls.jar;lib/saaj.jar;lib/weka.jar;lib/wsdl4j.jar;lib/xml-apis.jar;lib/BNJ_libs/jxl.jar;lib/BNJ_libs/openjgraph.jar;lib/BNJ_libs/skinlf.jar;lib/caArrayMageom/aspectjrt.jar;lib/caArrayMageom/caarray-client.jar;lib/caArrayMageom/commons-dbcp.jar;lib/caArrayMageom/commons-lang.jar;lib/caArrayMageom/commons-pool.jar;lib/caArrayMageom/db-ojb-1.0.rc7.jar;lib/caArrayMageom/j2ee.jar;lib/caArrayMageom/jaxen-full.jar;lib/caArrayMageom/mageom-client.jar;lib/Simulation_libs/colt.jar;lib/Simulation_libs/jahmm-0.2.6.jar;lib/Simulation_libs/JClass.jar;lib/Simulation_libs/jcommon.jar;lib/Simulation_libs/jfreechart.jar;lib/Simulation_libs/mpiJava.jar;lib/Simulation_libs/netx.jar;lib/Simulation_libs/odeToJava.jar;lib/Simulation_libs/SBMLReader.jar;lib/Simulation_libs/SBWCore.jar;lib/forms-1.0.5.jar</classpath>
                 <source-level>1.5</source-level>
             </compilation-unit>
             <compilation-unit>
@@ -311,7 +392,7 @@
             </compilation-unit>
             <compilation-unit>
                 <package-root>components/analysis/src</package-root>
-                <classpath mode="compile">components/alignment/classes;components/analysis/lib/JSciCore.jar;classes</classpath>
+                <classpath mode="compile">components/alignment/classes;components/analysis/lib/JSciCore.jar;classes;lib/forms-1.0.5.jar</classpath>
                 <source-level>1.5</source-level>
             </compilation-unit>
             <compilation-unit>
