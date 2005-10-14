@@ -477,20 +477,22 @@ importVocab = CAStokens;
 walkme
 : #(PROG (publicvar)* (function)+)
   {
-    System.out.println("got here");
+    /*Testing purposes
+    System.out.println("got here");*/
     //make new symboltable for main
     ipt.symt = new CasSymbolTable(ipt.symt, ipt.symt.getLevel()+1);
     fbody(mainbody);
     //get rid of main's symbol table
     ipt.symt = ipt.symt.Parent();
-    System.out.println("after main");
+    /*Testing purposes
+    System.out.println("after main");*/
   }
 ;
 
 //public variable declaration
 //to do list - put this variable into symbol table for public variables
 publicvar
-: #(PUBLICVAR variable) {System.out.println("we're in publicvar");}
+: #(PUBLICVAR variable) {/*Testing purposes System.out.println("we're in publicvar");*/}
 ;
 
 //defining a function
@@ -505,7 +507,9 @@ function
 {
   if (id.equals("main")) {
     mainbody = #fbody;
+    /*Testing purposes
     System.out.println("It's almost alive!");
+    */
   }
   ipt.makeFunction(id, argList, fbody, ipt.symt, typereturn, brackets);
 }
@@ -535,9 +539,11 @@ variable
   CasDataType typereturn;
   Vector<CasDataType> indices = null;}
 : #(VARIABLE typereturn = type (#(IDENTIFIER ID {id = #ID.getText();} (indices = index)?) (#(EQUAL value = expr))?
-{System.out.println("we're in a variable declaration for variable " + id);
+{/*Testing purposes System.out.println("we're in a variable declaration for variable " + id)*/;
+/*Testing purposes
 if (indices == null)
   System.out.println("We're not dealing with an array");
+*/
 if (ipt.symt.existsinscope(id)) {
   throw new CasException(id + " already exists as a function or variable");
 }
@@ -570,11 +576,15 @@ String id = "";
 : #(TYPE (n:primitives | (MODULE ID {isdiff = 1; id = #ID.getText();}) | (DATATYPE ID {isdiff = 2; id = #ID.getText();})))
 {
 if (isdiff == 1) {
+  /*Testing purposes
   System.out.println("We got ourselves a type of module with type of " + id);
+  */
   typereturn = new CasModule(id);
 }
 else if (isdiff == 2) {
+  /*Testing purposes
   System.out.println("We got ourselves a type of datatype with type of " + id);
+  */
   typereturn = new CasDataPlug(id);
 }
 else {
@@ -602,7 +612,7 @@ primitives
 
 fbody returns [CasDataType a]
 {a = null;}
-: #(FUNCTIONBODY (a = expr) {System.out.println("hello");})
+: #(FUNCTIONBODY (a = expr) {/*Testing purposes System.out.println("hello");*/})
 ; //deals with the overhead of the FUNCTIONBODY keyword
 
 expr returns [CasDataType r] //support arrays rooz
@@ -633,7 +643,7 @@ else
     if (ipt.symt.findVar(id) instanceof CasModule) {
       //should you be checking if id a CasModule in the firstplace?
       r = new CasValue(id, id2, ((CasModule)ipt.symt.findVar(id)));
-      System.out.println("we're in object_value");
+      /*Testing purposes System.out.println("we're in object_value");*/
     }
     else {
       throw new CasException(id + "is not a module, so it can't have any variables");
@@ -644,7 +654,8 @@ else
   { id2 = ID22.getText();
     //r has to be something different, it has to come from MethodCall
     //MethodCall should tell the difference between a CasModule and a CasDataPlug
-    System.out.println("we're in object_call");
+    /*Testing purposes
+    System.out.println("we're in object_call");*/
     r = new CasCallReturn(ipt.MethodCall(id, id2, arglist));
   }
   //object_call, like a function call in JAVA through a object ex. genePanel.createPanel(i++,10,true)

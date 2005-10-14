@@ -72,13 +72,15 @@ public CASWalker() {
 			_t = __t172;
 			_t = _t.getNextSibling();
 			
-			System.out.println("got here");
+			/*Testing purposes
+			System.out.println("got here");*/
 			//make new symboltable for main
 			ipt.symt = new CasSymbolTable(ipt.symt, ipt.symt.getLevel()+1);
 			fbody(mainbody);
 			//get rid of main's symbol table
 			ipt.symt = ipt.symt.Parent();
-			System.out.println("after main");
+			/*Testing purposes
+			System.out.println("after main");*/
 			
 		}
 		catch (RecognitionException ex) {
@@ -101,7 +103,7 @@ public CASWalker() {
 			_t = _retTree;
 			_t = __t178;
 			_t = _t.getNextSibling();
-			System.out.println("we're in publicvar");
+			/*Testing purposes System.out.println("we're in publicvar");*/
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
@@ -162,7 +164,9 @@ public CASWalker() {
 			
 			if (id.equals("main")) {
 			mainbody = fbody;
+			/*Testing purposes
 			System.out.println("It's almost alive!");
+			*/
 			}
 			ipt.makeFunction(id, argList, fbody, ipt.symt, typereturn, brackets);
 			
@@ -250,9 +254,11 @@ public CASWalker() {
 					}
 					}
 					}
-					System.out.println("we're in a variable declaration for variable " + id);
+					/*Testing purposes System.out.println("we're in a variable declaration for variable " + id)*/;
+					/*Testing purposes
 					if (indices == null)
 					System.out.println("We're not dealing with an array");
+					*/
 					if (ipt.symt.existsinscope(id)) {
 					throw new CasException(id + " already exists as a function or variable");
 					}
@@ -344,11 +350,15 @@ public CASWalker() {
 			_t = _t.getNextSibling();
 			
 			if (isdiff == 1) {
+			/*Testing purposes
 			System.out.println("We got ourselves a type of module with type of " + id);
+			*/
 			typereturn = new CasModule(id);
 			}
 			else if (isdiff == 2) {
+			/*Testing purposes
 			System.out.println("We got ourselves a type of datatype with type of " + id);
+			*/
 			typereturn = new CasDataPlug(id);
 			}
 			else {
@@ -636,7 +646,7 @@ public CASWalker() {
 				if (ipt.symt.findVar(id) instanceof CasModule) {
 				//should you be checking if id a CasModule in the firstplace?
 				r = new CasValue(id, id2, ((CasModule)ipt.symt.findVar(id)));
-				System.out.println("we're in object_value");
+				/*Testing purposes System.out.println("we're in object_value");*/
 				}
 				else {
 				throw new CasException(id + "is not a module, so it can't have any variables");
@@ -664,7 +674,8 @@ public CASWalker() {
 				id2 = ID22.getText();
 				//r has to be something different, it has to come from MethodCall
 				//MethodCall should tell the difference between a CasModule and a CasDataPlug
-				System.out.println("we're in object_call");
+				/*Testing purposes
+				System.out.println("we're in object_call");*/
 				r = new CasCallReturn(ipt.MethodCall(id, id2, arglist));
 				
 				break;
@@ -1301,7 +1312,7 @@ public CASWalker() {
 			a=expr(_t);
 			_t = _retTree;
 			}
-			System.out.println("hello");
+			/*Testing purposes System.out.println("hello");*/
 			_t = __t209;
 			_t = _t.getNextSibling();
 		}

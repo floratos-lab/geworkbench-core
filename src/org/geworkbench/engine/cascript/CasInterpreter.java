@@ -9,7 +9,7 @@ import java.util.Vector;
  * Interpreter routines that is called directly from the tree walker.
  *
  * @author Behrooz Badii - badiib@gmail.com
- * @version $Id: CasInterpreter.java,v 1.12 2005-10-14 18:38:12 bb2122 Exp $
+ * @version $Id: CasInterpreter.java,v 1.13 2005-10-14 19:29:22 bb2122 Exp $
  */
 class CasInterpreter {
     CasSymbolTable symt;
@@ -36,18 +36,20 @@ class CasInterpreter {
         if (indices == null) {
             if (type instanceof CasModule) {
                 symt.put(id, new CasModule(id, ((CasModule)type).getType()));
+                /*Testing purposes
                 System.out.println("put in casModule");
                 System.out.println("Name: " + symt.findVar(id).name);
-                System.out.println("Type: " + ((CasModule) symt.findVar(id)).type);
+                System.out.println("Type: " + ((CasModule) symt.findVar(id)).type);*/
             }
             if (type instanceof CasDataPlug) {
                 if (CDTI.containsKey(((CasDataPlug)type).getType())) {
                     symt.put(id,
                              new CasDataPlug(id, ((CasDataPlug) type).getType(), CDTI));
+                    /*Testing purposes
                     System.out.println("put in casDataPlug");
                     System.out.println("Name: " + symt.findVar(id).name);
                     System.out.println("Type: " +
-                                       ((CasDataPlug) symt.findVar(id)).type);
+                                       ((CasDataPlug) symt.findVar(id)).type);*/
                 }
                 else
                     throw new CasException("The datatype type " + ((CasDataPlug) type).getType() + " for the variable " + id + " is not supported.");
@@ -63,25 +65,30 @@ class CasInterpreter {
                     symt.put(id, type.copy());
                 }
                 symt.findVar(id).setName(id);
-                System.out.println("Name: " + symt.findVar(id).name);
+                /*Testing purposes
+                System.out.println("Name: " + symt.findVar(id).name);*/
             }
         }
         //time to deal with arrays and matrices
         else if (indices.size() == 1) {
-            System.out.println("we are dealing with an array here, with dimensionality of one in assign() call");
+            /*Testing purposes
+            System.out.println("we are dealing with an array here, with dimensionality of one in assign() call");*/
             if (indices.elementAt(0) instanceof CasInt) {
                 symt.put(id, new CasArray(((CasInt) indices.elementAt(0)).getvar(), type));
                 symt.findVar(id).setName(id);
                 (symt.findVar(id)).initializeArray(); //this is dependent on setName occurring first
-                System.out.println("Name: " + symt.findVar(id).name);
+                /*Testing purposes
+                System.out.println("Name: " + symt.findVar(id).name);*/
             } else throw new CasException("index of array declaration for " + id + " must be an integer");
         } else if (indices.size() == 2) {
-            System.out.println("we are dealing with an array here, with dimensionality of two in assign() call");
+            /*Testing purposes
+            System.out.println("we are dealing with an array here, with dimensionality of two in assign() call");*/
             if ((indices.elementAt(0) instanceof CasInt) && (indices.elementAt(1) instanceof CasInt)) {
                 symt.put(id, new CasMatrix(((CasInt) indices.elementAt(0)).getvar(), ((CasInt) indices.elementAt(0)).getvar(), type));
                 symt.findVar(id).setName(id);
                 (symt.findVar(id)).initializeMatrix(); //this is dependent on setName occurring first
-                System.out.println("Name: " + symt.findVar(id).name);
+                /*Testing purposes
+                System.out.println("Name: " + symt.findVar(id).name);*/
             } else throw new CasException("indices of two-dimensional array declaration (matrix declaration) for " + id + " must be integers");
         }
 
@@ -98,7 +105,8 @@ class CasInterpreter {
     //make the return type different for each one.  If it is successful, return a, if not, throw an exception.
     //to do - you have to check if B is a CasCallReturn, if it is, it can be assigned to a CasInt, CasDouble, CasString, CasBool, or CasModule
     public CasDataType assign(CasDataType a, CasDataType b) {
-        System.out.println("in assignment");
+        /*Testing purposes
+        System.out.println("in assignment");*/
         if (b instanceof CasCallReturn) {
             b = checkCasCallReturn((CasCallReturn)b);
         }
@@ -109,27 +117,33 @@ class CasInterpreter {
         }
         if (a.getPartOf() != null) {
             CasDataType x = null;
-            System.out.println("in a array or matrix");
+            /*Testing purposes
+            System.out.println("in a array or matrix");*/
             if (a instanceof CasInt && b instanceof CasInt) {
-                System.out.println("new value " + ((CasInt) b).getvar());
+                /*Testing purposes
+                System.out.println("new value " + ((CasInt) b).getvar());*/
                 x = ((CasInt) rvalue(b));
             }
             if (a instanceof CasDouble) {
                 if (b instanceof CasDouble) {
-                    System.out.println("new value " + ((CasDouble) b).getvar());
+                   /*Testing purposes
+                   System.out.println("new value " + ((CasDouble) b).getvar());*/
                     x = ((CasDouble) rvalue(b));
                 }
                 if (b instanceof CasInt) {
-                    System.out.println("new value " + ((CasInt) b).getvar());
-                    x = ((CasDouble) rvalue(b));
+                   /*Testing purposes
+                   System.out.println("new value " + ((CasInt) b).getvar());*/
+                   x = ((CasDouble) rvalue(b));
                 }
             }
             if (a instanceof CasBool && b instanceof CasBool) {
-                System.out.println("new value " + ((CasBool) b).getvar());
+                /*Testing purposes
+                System.out.println("new value " + ((CasBool) b).getvar());*/
                 x = ((CasBool) rvalue(b));
             }
             if (a instanceof CasString && b instanceof CasString) {
-                System.out.println("new value " + ((CasString) b).getvar());
+                /*Testing purposes
+                System.out.println("new value " + ((CasString) b).getvar());*/
                 x = ((CasString) rvalue(b));
             }
             //here, we have x, a will be replaced by x in the structure itself
@@ -143,7 +157,8 @@ class CasInterpreter {
                 x.setPartOf(a.getPartOf());
                 symt.findVar(x.getPartOf()).setMatrixValue(x, x.getPosition(), x.getPosition2());
             }
-            System.out.println("substructure assignment success!");
+            /*Testing purposes
+            System.out.println("substructure assignment success!");*/
             return new CasBool(true);
         }
         if (a instanceof CasValue && b instanceof CasValue) {
@@ -163,8 +178,9 @@ class CasInterpreter {
         }
         if (null != a.getName()) {
             if (a instanceof CasInt && b instanceof CasInt) {
+                /*Testing purposes
                 System.out.println(((CasInt) a).name + " has value " + ((CasInt) a).getvar());
-                System.out.println("new value " + ((CasInt) b).getvar());
+                System.out.println("new value " + ((CasInt) b).getvar());*/
                 CasDataType x = rvalue(b);
                 x.setName(a.name);
                 //symt.setVar( x.name, x, true, 0 );  // scope?
@@ -172,15 +188,18 @@ class CasInterpreter {
                 return new CasBool(true);
             }
             if (a instanceof CasDouble) {
-                System.out.println(((CasInt) a).name + " has value " + ((CasDouble) a).getvar());
+                /*Testing purposes
+                System.out.println(((CasInt) a).name + " has value " + ((CasDouble) a).getvar());*/
                 if (b instanceof CasDouble) {
-                    System.out.println("new value " + ((CasDouble) b).getvar());
+                    /*Testing purposes
+                    System.out.println("new value " + ((CasDouble) b).getvar());*/
                     CasDataType x = rvalue(b);
                     x.setName(a.name);
                     symt.setVar(a.name, (CasDouble) x);
                 }
                 if (b instanceof CasInt) {
-                    System.out.println("new value " + ((CasInt) b).getvar());
+                    /*Testing purposes
+                    System.out.println("new value " + ((CasInt) b).getvar());*/
                     CasDataType x = rvalue(b);
                     x.setName(a.name);
                     symt.setVar(a.name, (CasInt) x);
@@ -188,8 +207,9 @@ class CasInterpreter {
                 return new CasBool(true);
             }
             if (a instanceof CasBool && b instanceof CasBool) {
+                /*Testing purposes
                 System.out.println(((CasBool) a).name + " has value " + ((CasBool) a).getvar());
-                System.out.println("new value " + ((CasBool) b).getvar());
+                System.out.println("new value " + ((CasBool) b).getvar());*/
                 CasDataType x = rvalue(b);
                 x.setName(a.name);
                 symt.setVar(a.name, (CasBool) x);
@@ -206,9 +226,10 @@ class CasInterpreter {
                     b = new CasString(Double.toString(((CasDouble)b).getvar()));
                 }
                 if (b instanceof CasString) {
+                    /*Testing purposes
                     System.out.println(((CasString) a).name + " has value " +
                                        ((CasString) a).getvar());
-                    System.out.println("new value " + ((CasString)b).getvar());
+                    System.out.println("new value " + ((CasString)b).getvar());*/
                     CasDataType x = rvalue(b);
                     x.setName(a.name);
                     symt.setVar(a.name, (CasString) x);
@@ -217,7 +238,8 @@ class CasInterpreter {
             }
             //should this be allowed?
             if (a instanceof CasModule && b instanceof CasModule) {
-                System.out.println("in Casmodule part of ipt.assign(a,b)");
+                /*Testing purposes
+                System.out.println("in Casmodule part of ipt.assign(a,b)");*/
                 if (((CasModule)a).getType().equals(((CasModule)b).getType())) {
                     //you have make sure the types are the same!
                     CasDataType x = rvalue(b);
@@ -229,7 +251,8 @@ class CasInterpreter {
                     throw new CasException("Assignment for modules " + a.getName() + " and " + b.getName() + "is invalid; they are not of the same type");
             }
             if (a instanceof CasDataPlug) {
-                System.out.println("in CasDataPlug part of ipt.assign(a,b)");
+                /*Testing purposes
+                System.out.println("in CasDataPlug part of ipt.assign(a,b)");*/
                 //if b is also a CasDataPlug
                 //remember to check that anything being assigned to a CasDataPlug has to be assignable to the original interface
                 if (b instanceof CasDataPlug) {
@@ -289,7 +312,8 @@ class CasInterpreter {
 
     //you have to test for array out of bounds exceptions here!, would it be a null pointer exception?
     public CasDataType dimensionAccess(String id, Vector<CasDataType> indices) {
-        System.out.println("in dimensionAccess() call");
+        /*Testing purposes
+        System.out.println("in dimensionAccess() call");*/
         CasDataType a = symt.findVar(id);
         CasDataType ret;
         if (indices.size() == 1 && a instanceof CasArray) {
@@ -368,7 +392,8 @@ class CasInterpreter {
     //waiting is done in seconds, not milliseconds
     //stopme is called in a WAIT statement
     public CasDataType stopme(CasDataType a) {
-        System.out.println("in stopme");
+        /*Testing purposes
+        System.out.println("in stopme");*/
         if (a instanceof CasInt) {
             try {
                 Thread.sleep(((CasInt) a).getvar() * 1000);
@@ -413,8 +438,9 @@ class CasInterpreter {
                     symt.put(casname + " " + casmethod,
                              new CasMethod(casname, casmethod,
                                            (CasModule) symt.findVar(casname)));
+                    /*Testing purposes
                     System.out.println("made new method " + casmethod + " for " +
-                                       casname);
+                                       casname);*/
                     CasMethod callme = (CasMethod) symt.findVar(casname + " " +
                             casmethod);
                     try {
@@ -457,8 +483,9 @@ class CasInterpreter {
                 symt.put(casname + " " + casmethod,
                          new CasDataMethod(casname, casmethod,
                                        (CasDataPlug) symt.findVar(casname), p));
+                /*Testing purposes
                 System.out.println("made new method " + casmethod + " for " +
-                                   casname);
+                                   casname);*/
                 CasDataMethod callme = (CasDataMethod) symt.findVar(casname + " " +
                         casmethod);
                 try {
@@ -491,23 +518,29 @@ class CasInterpreter {
         Object args[] = v.toArray();
         for (int i = 0; i < args.length; i++) {
             if (args[i] instanceof CasBool) {
-                System.out.println("Boolean" + ((CasBool) args[i]).getvar());
+                /*Testing purposes
+                System.out.println("Boolean" + ((CasBool) args[i]).getvar());*/
                 args[i] = new Boolean(((CasBool) args[i]).getvar());
             } else if (args[i] instanceof CasInt) {
-                System.out.println("Int" + ((CasInt) args[i]).getvar());
+                /*Testing purposes
+                System.out.println("Int" + ((CasInt) args[i]).getvar());*/
                 args[i] = new Integer(((CasInt) args[i]).getvar());
             } else if (args[i] instanceof CasDouble) {
-                System.out.println("Double" + ((CasDouble) args[i]).getvar());
+                /*Testing purposes
+                System.out.println("Double" + ((CasDouble) args[i]).getvar());*/
                 args[i] = new Double(((CasDouble) args[i]).getvar());
             } else if (args[i] instanceof CasString) {
-                System.out.println("String" + ((CasString) args[i]).getvar());
+                /*Testing purposes
+                System.out.println("String" + ((CasString) args[i]).getvar());*/
                 args[i] = ((CasString) args[i]).getvar();
             } else if (args[i] instanceof CasModule) {
                 args[i] = ((CasModule) args[i]).getPlugin();
-                System.out.println("This should be an object");
+                /*Testing purposes
+                System.out.println("This should be an object");*/
             } else {
                 args[i] = ((CasDataPlug) args[i]).getVar();
-                System.out.println("Dataplug in argument to MethodCall");
+                /*Testing purposes
+                System.out.println("Dataplug in argument to MethodCall");*/
             }
         }
         return args;
@@ -604,14 +637,16 @@ class CasInterpreter {
     public void makeFunction(String id, Vector<CasArgument> args, AST body, CasSymbolTable s, CasDataType typereturn, int brackets) {
         //if we take the symboltable that was passed in, it is static
         CasFunction a = new CasFunction(id, args, body, s, typereturn, brackets);
-        System.out.println("we're in function " + a.getName() + " with this many brackets:" + a.brackets);
+        /*Testing purposes
+        System.out.println("we're in function " + a.getName() + " with this many brackets:" + a.brackets);*/
         CasArgument temp;
         for (int i = 0; i < a.args.size(); i++) {
             temp = a.args.elementAt(i);
+            /*Testing purposes
             System.out.println("Reading arguments: id = " + temp.getId());
             if (temp.getType() instanceof CasModule ) System.out.println("we have a module of type: " + ((CasModule)temp.getType()).getType());
             else System.out.println("the type is: " + temp.getType().getType());
-            System.out.println("Number of brackets: " + temp.getBrackets());
+            System.out.println("Number of brackets: " + temp.getBrackets());*/
         }
         if (symt.notexists(a.getName())) {
             symt.put(a.getName(), a);
@@ -630,6 +665,7 @@ class CasInterpreter {
         symt = new CasSymbolTable(((CasFunction) whatthefunc).getParentSymbolTable(), ((CasFunction) whatthefunc).getParentSymbolTable().getLevel() + 1);
 
         //remember to check arguments against their correct type
+        //you have NOT done this yet, do this on monday 10/17
         for (int i = 0; i < actualargs.size(); i++) {
             CasDataType a = rvalue(argList.elementAt(i));
             a.setName(actualargs.elementAt(i).getId());
