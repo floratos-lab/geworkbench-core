@@ -15,6 +15,8 @@ import java.util.*;
  */
 public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationContext<T> {
 
+    private static final String SELECTION = "Selection";
+
     private class Label {
 
         public String name;
@@ -244,7 +246,16 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
             iterator.next();
             Label lab = iterator.getValue();
             if (lab.active) {
-                top.panels().add(lab.getPanel());
+                // Handle special case of "Selection" label
+                if (SELECTION.equals(lab.name)) {
+                    DSPanel<T> selection = top.getSelection();
+                    DSPanel<T> labelPanel = lab.getPanel();
+                    for (Iterator<T> itemIterator = labelPanel.iterator(); itemIterator.hasNext();) {
+                        selection.add(itemIterator.next());
+                    }
+                } else {
+                    top.panels().add(lab.getPanel());
+                }
             }
         }
         return top;
@@ -277,7 +288,15 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
         for (int i = 0; i < labels.length; i++) {
             Label lab = this.labels.get(labels[i]);
             if (lab != null) {
-                top.panels().add(lab.getPanel());
+                if (SELECTION.equals(lab.name)) {
+                    DSPanel<T> selection = top.getSelection();
+                    DSPanel<T> labelPanel = lab.getPanel();
+                    for (Iterator<T> itemIterator = labelPanel.iterator(); itemIterator.hasNext();) {
+                        selection.add(itemIterator.next());
+                    }
+                } else {
+                    top.panels().add(lab.getPanel());
+                }
             }
         }
         return top;

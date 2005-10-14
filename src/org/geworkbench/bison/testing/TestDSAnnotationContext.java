@@ -259,6 +259,24 @@ public abstract class TestDSAnnotationContext extends TestCase {
         // Change the annotation of item1 to make it now satisfy the criterion
         context.annotateItem(item1, age, 55);
         assertTrue(context.hasLabel(item1, senior));
+        // Test that the "Selection" label, which is special for DSPanel, works
+        // Make all labels inactive
+        int n = context.getNumberOfLabels();
+        for (int i = 0; i < n; i++) {
+            context.setLabelActive(context.getLabel(i), false);
+        }
+        String selection = "Selection";
+        context.labelItem(item1, selection);
+        DSPanel selectionPanel = context.getItemsWithLabel(selection);
+        // Only selection panel
+//        assertEquals(1, selectionPanel.panels().size());
+//        assertSame(item1, ((DSPanel)selectionPanel.panels().get(0)).get(0));
+        // Activate selection
+        context.activateLabel(selection);
+        activePanel = context.getActiveItems();
+        // Only selection panel
+        assertEquals(1, activePanel.panels().size());
+        assertSame(item1, activePanel.panels().get(0).get(0));
     }
 
     public void testClassification() {
