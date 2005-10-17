@@ -164,7 +164,7 @@ public class LoadData extends JDialog {
         addButton.setText("Add A New Resource");
         addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                displayRemoteResourceDiolog(RemoteResourceDialog.ADD);
+                displayRemoteResourceDialog(RemoteResourceDialog.ADD);
 
             }
 
@@ -173,7 +173,7 @@ public class LoadData extends JDialog {
         editButton.setText("Edit");
         editButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                displayRemoteResourceDiolog(jComboBox1.getSelectedItem(),
+                displayRemoteResourceDialog(jComboBox1.getSelectedItem(),
                                             RemoteResourceDialog.EDIT);
 
             }
@@ -337,7 +337,7 @@ public class LoadData extends JDialog {
      *
      * @param option int
      */
-    void displayRemoteResourceDiolog(int option) {
+    void displayRemoteResourceDialog(int option) {
         RemoteResourceDialog.showDialog(this, null, option, null);
         updateExistedResources();
     }
@@ -348,7 +348,7 @@ public class LoadData extends JDialog {
      * @param shortname Object
      * @param option int
      */
-    void displayRemoteResourceDiolog(Object shortname, int option) {
+    void displayRemoteResourceDialog(Object shortname, int option) {
         if (shortname != null) {
             RemoteResourceDialog.showDialog(this, null, option,
                                             shortname.toString());
