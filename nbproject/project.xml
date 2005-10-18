@@ -2,142 +2,170 @@
 <project xmlns="http://www.netbeans.org/ns/project/1">
 	<type>org.netbeans.modules.ant.freeform</type>
 	<configuration>
-		<general-data xmlns="http://www.netbeans.org/ns/freeform-project/1">
+		
+		
+	<general-data xmlns="http://www.netbeans.org/ns/freeform-project/1">
 			<!--Do not use Project Properties customizer when editing this file manually.-->
 			<name>geworkbench</name>
 			<properties/>
 			<folders>
-				<source-folder>
-					<label>src</label>
-					<type>java</type>
-					<location>src</location>
-				</source-folder>
-				<source-folder>
-					<label>components\alignment\src</label>
-					<type>java</type>
-					<location>components/alignment/src</location>
-				</source-folder>
-				<source-folder>
-					<label>components\analysis\src</label>
-					<type>java</type>
-					<location>components/analysis/src</location>
-				</source-folder>
-				<source-folder>
-					<label>components\am\src</label>
-					<type>java</type>
-					<location>components/am/src</location>
-				</source-folder>
-				<source-folder>
-					<label>components\associationdiscovery\src</label>
-					<type>java</type>
-					<location>components/associationdiscovery/src</location>
-				</source-folder>
-				<source-folder>
-					<label>components\cascript\src</label>
-					<type>java</type>
-					<location>components/cascript/src</location>
-				</source-folder>
-				<source-folder>
-					<label>components\clustering\src</label>
-					<type>java</type>
-					<location>components/clustering/src</location>
-				</source-folder>
-				<source-folder>
-					<label>components\colormosaic\src</label>
-					<type>java</type>
-					<location>components/colormosaic/src</location>
-				</source-folder>
-				<source-folder>
-					<label>components\cytoscape\src</label>
-					<type>java</type>
-					<location>components/cytoscape/src</location>
-				</source-folder>
-				<source-folder>
-					<label>components\discovery\src</label>
-					<type>java</type>
-					<location>components/discovery/src</location>
-				</source-folder>
-				<source-folder>
-					<label>components\filtering\src</label>
-					<type>java</type>
-					<location>components/filtering/src</location>
-				</source-folder>
-				<source-folder>
-					<label>components\goterms\src</label>
-					<type>java</type>
-					<location>components/goterms/src</location>
-				</source-folder>
-				<source-folder>
-					<label>components\hierarchicalclustering\src</label>
-					<type>java</type>
-					<location>components/hierarchicalclustering/src</location>
-				</source-folder>
-				<source-folder>
-					<label>components\microarrays\src</label>
-					<type>java</type>
-					<location>components/microarrays/src</location>
-				</source-folder>
-				<source-folder>
-					<label>components\normalization\src</label>
-					<type>java</type>
-					<location>components/normalization/src</location>
-				</source-folder>
-				<source-folder>
-					<label>components\pathwaydecoder\src</label>
-					<type>java</type>
-					<location>components/pathwaydecoder/src</location>
-				</source-folder>
-				<source-folder>
-					<label>components\patterns\src</label>
-					<type>java</type>
-					<location>components/patterns/src</location>
-				</source-folder>
-				<source-folder>
-					<label>components\plots\src</label>
-					<type>java</type>
-					<location>components/plots/src</location>
-				</source-folder>
-				<source-folder>
-					<label>components\poshistogram\src</label>
-					<type>java</type>
-					<location>components/poshistogram/src</location>
-				</source-folder>
-				<source-folder>
-					<label>components\promoter\src</label>
-					<type>java</type>
-					<location>components/promoter/src</location>
-				</source-folder>
-				<source-folder>
-					<label>components\selectors\src</label>
-					<type>java</type>
-					<location>components/selectors/src</location>
-				</source-folder>
-				<source-folder>
-					<label>components\sequenceretriever\src</label>
-					<type>java</type>
-					<location>components/sequenceretriever/src</location>
-				</source-folder>
-				<source-folder>
-					<label>components\sequences\src</label>
-					<type>java</type>
-					<location>components/sequences/src</location>
-				</source-folder>
-				<source-folder>
-					<label>components\versioninfo\src</label>
-					<type>java</type>
-					<location>components/versioninfo/src</location>
-				</source-folder>
-				<source-folder>
-					<label>components\viewers\src</label>
-					<type>java</type>
-					<location>components/viewers/src</location>
-				</source-folder>
-				<source-folder>
-					<label>test</label>
-					<type>java</type>
-					<location>test</location>
-				</source-folder>
-			</folders>
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+			<source-folder>
+                    <label>src</label>
+                    <type>java</type>
+                    <location>src</location>
+                </source-folder>
+                <source-folder>
+                    <label>components\alignment\src</label>
+                    <type>java</type>
+                    <location>components/alignment/src</location>
+                </source-folder>
+                <source-folder>
+                    <label>components\analysis\src</label>
+                    <type>java</type>
+                    <location>components/analysis/src</location>
+                </source-folder>
+                <source-folder>
+                    <label>components\am\src</label>
+                    <type>java</type>
+                    <location>components/am/src</location>
+                </source-folder>
+                <source-folder>
+                    <label>components\associationdiscovery\src</label>
+                    <type>java</type>
+                    <location>components/associationdiscovery/src</location>
+                </source-folder>
+                <source-folder>
+                    <label>components\cascript\src</label>
+                    <type>java</type>
+                    <location>components/cascript/src</location>
+                </source-folder>
+                <source-folder>
+                    <label>components\clustering\src</label>
+                    <type>java</type>
+                    <location>components/clustering/src</location>
+                </source-folder>
+                <source-folder>
+                    <label>components\colormosaic\src</label>
+                    <type>java</type>
+                    <location>components/colormosaic/src</location>
+                </source-folder>
+                <source-folder>
+                    <label>components\cytoscape\src</label>
+                    <type>java</type>
+                    <location>components/cytoscape/src</location>
+                </source-folder>
+                <source-folder>
+                    <label>components\discovery\src</label>
+                    <type>java</type>
+                    <location>components/discovery/src</location>
+                </source-folder>
+                <source-folder>
+                    <label>components\filtering\src</label>
+                    <type>java</type>
+                    <location>components/filtering/src</location>
+                </source-folder>
+                <source-folder>
+                    <label>components\goterms\src</label>
+                    <type>java</type>
+                    <location>components/goterms/src</location>
+                </source-folder>
+                <source-folder>
+                    <label>components\hierarchicalclustering\src</label>
+                    <type>java</type>
+                    <location>components/hierarchicalclustering/src</location>
+                </source-folder>
+                <source-folder>
+                    <label>components\microarrays\src</label>
+                    <type>java</type>
+                    <location>components/microarrays/src</location>
+                </source-folder>
+                <source-folder>
+                    <label>components\normalization\src</label>
+                    <type>java</type>
+                    <location>components/normalization/src</location>
+                </source-folder>
+                <source-folder>
+                    <label>components\pathwaydecoder\src</label>
+                    <type>java</type>
+                    <location>components/pathwaydecoder/src</location>
+                </source-folder>
+                <source-folder>
+                    <label>components\patterns\src</label>
+                    <type>java</type>
+                    <location>components/patterns/src</location>
+                </source-folder>
+                <source-folder>
+                    <label>components\plots\src</label>
+                    <type>java</type>
+                    <location>components/plots/src</location>
+                </source-folder>
+                <source-folder>
+                    <label>components\poshistogram\src</label>
+                    <type>java</type>
+                    <location>components/poshistogram/src</location>
+                </source-folder>
+                <source-folder>
+                    <label>components\promoter\src</label>
+                    <type>java</type>
+                    <location>components/promoter/src</location>
+                </source-folder>
+                <source-folder>
+                    <label>components\selectors\src</label>
+                    <type>java</type>
+                    <location>components/selectors/src</location>
+                </source-folder>
+                <source-folder>
+                    <label>components\sequenceretriever\src</label>
+                    <type>java</type>
+                    <location>components/sequenceretriever/src</location>
+                </source-folder>
+                <source-folder>
+                    <label>components\sequences\src</label>
+                    <type>java</type>
+                    <location>components/sequences/src</location>
+                </source-folder>
+                <source-folder>
+                    <label>components\versioninfo\src</label>
+                    <type>java</type>
+                    <location>components/versioninfo/src</location>
+                </source-folder>
+                <source-folder>
+                    <label>components\viewers\src</label>
+                    <type>java</type>
+                    <location>components/viewers/src</location>
+                </source-folder>
+                <source-folder>
+                    <label>test</label>
+                    <type>java</type>
+                    <location>test</location>
+                </source-folder>
+            </folders>
 			<ide-actions>
 				<action name="build">
 					<target>compile</target>
@@ -178,111 +206,137 @@
 			</ide-actions>
 			<view>
 				<items>
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
 					<source-folder style="packages">
-						<label>src</label>
-						<location>src</location>
-					</source-folder>
-					<source-folder style="packages">
-						<label>components\alignment\src</label>
-						<location>components/alignment/src</location>
-					</source-folder>
-					<source-folder style="packages">
-						<label>components\analysis\src</label>
-						<location>components/analysis/src</location>
-					</source-folder>
-					<source-folder style="packages">
-						<label>components\am\src</label>
-						<location>components/am/src</location>
-					</source-folder>
-					<source-folder style="packages">
-						<label>components\associationdiscovery\src</label>
-						<location>components/associationdiscovery/src</location>
-					</source-folder>
-					<source-folder style="packages">
-						<label>components\cascript\src</label>
-						<location>components/cascript/src</location>
-					</source-folder>
-					<source-folder style="packages">
-						<label>components\clustering\src</label>
-						<location>components/clustering/src</location>
-					</source-folder>
-					<source-folder style="packages">
-						<label>components\colormosaic\src</label>
-						<location>components/colormosaic/src</location>
-					</source-folder>
-					<source-folder style="packages">
-						<label>components\cytoscape\src</label>
-						<location>components/cytoscape/src</location>
-					</source-folder>
-					<source-folder style="packages">
-						<label>components\discovery\src</label>
-						<location>components/discovery/src</location>
-					</source-folder>
-					<source-folder style="packages">
-						<label>components\filtering\src</label>
-						<location>components/filtering/src</location>
-					</source-folder>
-					<source-folder style="packages">
-						<label>components\goterms\src</label>
-						<location>components/goterms/src</location>
-					</source-folder>
-					<source-folder style="packages">
-						<label>components\hierarchicalclustering\src</label>
-						<location>components/hierarchicalclustering/src</location>
-					</source-folder>
-					<source-folder style="packages">
-						<label>components\microarrays\src</label>
-						<location>components/microarrays/src</location>
-					</source-folder>
-					<source-folder style="packages">
-						<label>components\normalization\src</label>
-						<location>components/normalization/src</location>
-					</source-folder>
-					<source-folder style="packages">
-						<label>components\pathwaydecoder\src</label>
-						<location>components/pathwaydecoder/src</location>
-					</source-folder>
-					<source-folder style="packages">
-						<label>components\patterns\src</label>
-						<location>components/patterns/src</location>
-					</source-folder>
-					<source-folder style="packages">
-						<label>components\plots\src</label>
-						<location>components/plots/src</location>
-					</source-folder>
-					<source-folder style="packages">
-						<label>components\poshistogram\src</label>
-						<location>components/poshistogram/src</location>
-					</source-folder>
-					<source-folder style="packages">
-						<label>components\promoter\src</label>
-						<location>components/promoter/src</location>
-					</source-folder>
-					<source-folder style="packages">
-						<label>components\selectors\src</label>
-						<location>components/selectors/src</location>
-					</source-folder>
-					<source-folder style="packages">
-						<label>components\sequenceretriever\src</label>
-						<location>components/sequenceretriever/src</location>
-					</source-folder>
-					<source-folder style="packages">
-						<label>components\sequences\src</label>
-						<location>components/sequences/src</location>
-					</source-folder>
-					<source-folder style="packages">
-						<label>components\versioninfo\src</label>
-						<location>components/versioninfo/src</location>
-					</source-folder>
-					<source-folder style="packages">
-						<label>components\viewers\src</label>
-						<location>components/viewers/src</location>
-					</source-folder>
-					<source-folder style="packages">
-						<label>test</label>
-						<location>test</location>
-					</source-folder>
-					<source-file>
+                        <label>src</label>
+                        <location>src</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>components\alignment\src</label>
+                        <location>components/alignment/src</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>components\analysis\src</label>
+                        <location>components/analysis/src</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>components\am\src</label>
+                        <location>components/am/src</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>components\associationdiscovery\src</label>
+                        <location>components/associationdiscovery/src</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>components\cascript\src</label>
+                        <location>components/cascript/src</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>components\clustering\src</label>
+                        <location>components/clustering/src</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>components\colormosaic\src</label>
+                        <location>components/colormosaic/src</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>components\cytoscape\src</label>
+                        <location>components/cytoscape/src</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>components\discovery\src</label>
+                        <location>components/discovery/src</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>components\filtering\src</label>
+                        <location>components/filtering/src</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>components\goterms\src</label>
+                        <location>components/goterms/src</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>components\hierarchicalclustering\src</label>
+                        <location>components/hierarchicalclustering/src</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>components\microarrays\src</label>
+                        <location>components/microarrays/src</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>components\normalization\src</label>
+                        <location>components/normalization/src</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>components\pathwaydecoder\src</label>
+                        <location>components/pathwaydecoder/src</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>components\patterns\src</label>
+                        <location>components/patterns/src</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>components\plots\src</label>
+                        <location>components/plots/src</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>components\poshistogram\src</label>
+                        <location>components/poshistogram/src</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>components\promoter\src</label>
+                        <location>components/promoter/src</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>components\selectors\src</label>
+                        <location>components/selectors/src</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>components\sequenceretriever\src</label>
+                        <location>components/sequenceretriever/src</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>components\sequences\src</label>
+                        <location>components/sequences/src</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>components\versioninfo\src</label>
+                        <location>components/versioninfo/src</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>components\viewers\src</label>
+                        <location>components/viewers/src</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>test</label>
+                        <location>test</location>
+                    </source-folder>
+                    <source-file>
 						<location>build.xml</location>
 					</source-file>
 				</items>
@@ -296,139 +350,166 @@
 					<ide-action name="debug"/>
 				</context-menu>
 			</view>
-			<subprojects/>
-		</general-data>
-		<java-data xmlns="http://www.netbeans.org/ns/freeform-project-java/2">
-			<compilation-unit>
-				<package-root>src</package-root>
-				<classpath mode="compile">classes;lib/activation.jar;lib/antlr-2.7.5.jar;lib/ArrayExpress.jar;lib/axis.jar;lib/bcel-5.1.jar;lib/caBIO.jar;lib/cglib-nodep-2.1.jar;lib/cog-axis.jar;lib/cog-jglobus.jar;lib/commons-beanutils.jar;lib/commons-collections.jar;lib/commons-digester.jar;lib/commons-discovery.jar;lib/commons-logging.jar;lib/commons-math-1.0.jar;lib/distributions.jar;lib/docking.jar;lib/dom4j-1.6.1.jar;lib/ensj-30.2.jar;lib/globusSplash.jar;lib/jai_core.jar;lib/Jama-1.0.1.jar;lib/jaxb-rt-1.0-ea.jar;lib/jaxrpc.jar;lib/jbcl.jar;lib/jcommon-1.0.0-rc1.jar;lib/jdom.jar;lib/jfreechart-1.0.0-rc1.jar;lib/jgraph.jar;lib/jhall.jar;lib/junit.jar;lib/log4j-1.2.8.jar;lib/looks-1.3.1.jar;lib/mageom.jar;lib/mail.jar;lib/NetComponents.jar;lib/ogsa.jar;lib/ostermillerutils_1_04_03_for_kaffe.jar;lib/piccolo.jar;lib/piccolox.jar;lib/poi-2.5.1-final-20040804.jar;lib/poi-scratchpad-2.5.1-final-20040804.jar;lib/polgara.jar;lib/puretls.jar;lib/saaj.jar;lib/weka.jar;lib/wsdl4j.jar;lib/xml-apis.jar;lib/BNJ_libs/jxl.jar;lib/BNJ_libs/openjgraph.jar;lib/BNJ_libs/skinlf.jar;lib/caArrayMageom/aspectjrt.jar;lib/caArrayMageom/caarray-client.jar;lib/caArrayMageom/commons-dbcp.jar;lib/caArrayMageom/commons-lang.jar;lib/caArrayMageom/commons-pool.jar;lib/caArrayMageom/db-ojb-1.0.rc7.jar;lib/caArrayMageom/j2ee.jar;lib/caArrayMageom/jaxen-full.jar;lib/caArrayMageom/mageom-client.jar;lib/Simulation_libs/colt.jar;lib/Simulation_libs/jahmm-0.2.6.jar;lib/Simulation_libs/JClass.jar;lib/Simulation_libs/jcommon.jar;lib/Simulation_libs/jfreechart.jar;lib/Simulation_libs/mpiJava.jar;lib/Simulation_libs/netx.jar;lib/Simulation_libs/odeToJava.jar;lib/Simulation_libs/SBMLReader.jar;lib/Simulation_libs/SBWCore.jar;lib/forms-1.0.5.jar</classpath>
-				<source-level>1.5</source-level>
-			</compilation-unit>
-			<compilation-unit>
-				<package-root>components/alignment/src</package-root>
-				<classpath mode="compile">components/alignment/classes;components/alignment/lib/biojava-1.3.1.jar;components/alignment/lib/ogsa-samples.jar;components/alignment/lib/progtutorial_BlastClient.jar;components/alignment/lib/progtutorial_BlastService-stub.jar;classes</classpath>
-				<source-level>1.5</source-level>
-			</compilation-unit>
-			<compilation-unit>
-				<package-root>components/analysis/src</package-root>
-				<classpath mode="compile">components/alignment/classes;components/analysis/lib/JSciCore.jar;classes;lib/forms-1.0.5.jar</classpath>
-				<source-level>1.5</source-level>
-			</compilation-unit>
-			<compilation-unit>
-				<package-root>components/am/src</package-root>
-				<classpath mode="compile">components/am/classes;classes</classpath>
-				<source-level>1.5</source-level>
-			</compilation-unit>
-			<compilation-unit>
-				<package-root>components/associationdiscovery/src</package-root>
-				<classpath mode="compile">components/associationdiscovery/classes;components/associationdiscovery/lib/gw2.jar;classes;lib/jaxrpc.jar</classpath>
-				<source-level>1.5</source-level>
-			</compilation-unit>
-			<compilation-unit>
-				<package-root>components/cascript/src</package-root>
-				<classpath mode="compile">components/cascript/classes;classes</classpath>
-				<source-level>1.5</source-level>
-			</compilation-unit>
-			<compilation-unit>
-				<package-root>components/clustering/src</package-root>
-				<classpath mode="compile">components/clustering/classes;classes;lib/forms-1.0.5.jar;lib/junit.jar</classpath>
-				<source-level>1.5</source-level>
-			</compilation-unit>
-			<compilation-unit>
-				<package-root>components/colormosaic/src</package-root>
-				<classpath mode="compile">components/colormosaic/classes;classes</classpath>
-				<source-level>1.5</source-level>
-			</compilation-unit>
-			<compilation-unit>
-				<package-root>components/cytoscape/src</package-root>
-				<classpath mode="compile">components/cytoscape/classes;components/cytoscape/lib/cytoscape.jar;classes</classpath>
-				<source-level>1.5</source-level>
-			</compilation-unit>
-			<compilation-unit>
-				<package-root>components/discovery/src</package-root>
-				<classpath mode="compile">components/discovery/classes;classes;lib/polgara.jar;lib/jaxrpc.jar</classpath>
-				<source-level>1.5</source-level>
-			</compilation-unit>
-			<compilation-unit>
-				<package-root>components/filtering/src</package-root>
-				<classpath mode="compile">components/filtering/classes;classes</classpath>
-				<source-level>1.5</source-level>
-			</compilation-unit>
-			<compilation-unit>
-				<package-root>components/goterms/src</package-root>
-				<classpath mode="compile">components/goterms/classes;classes;lib/caBIO.jar;lib/distributions.jar;lib/jgraph.jar;lib/jcommon-1.0.0-rc1.jar;lib/jfreechart-1.0.0-rc1.jar</classpath>
-				<source-level>1.5</source-level>
-			</compilation-unit>
-			<compilation-unit>
-				<package-root>components/hierarchicalclustering/src</package-root>
-				<classpath mode="compile">components/hierarchicalclustering/classes;classes</classpath>
-				<source-level>1.5</source-level>
-			</compilation-unit>
-			<compilation-unit>
-				<package-root>components/microarrays/src</package-root>
-				<classpath mode="compile">components/microarrays/classes;classes;lib/jfreechart-1.0.0-rc1.jar;lib/jcommon-1.0.0-rc1.jar</classpath>
-				<source-level>1.5</source-level>
-			</compilation-unit>
-			<compilation-unit>
-				<package-root>components/normalization/src</package-root>
-				<classpath mode="compile">components/normalization/classes;classes</classpath>
-				<source-level>1.5</source-level>
-			</compilation-unit>
-			<compilation-unit>
-				<package-root>components/pathwaydecoder/src</package-root>
-				<classpath mode="compile">components/pathwaydecoder/classes;components/pathwaydecoder/lib/jgraphpad.jar;components/pathwaydecoder/lib/mutualinfo.jar;classes;lib/jgraph.jar;lib/jcommon-1.0.0-rc1.jar;lib/jfreechart-1.0.0-rc1.jar;lib/distributions.jar;lib/Simulation_libs/colt.jar;lib/Simulation_libs/mpiJava.jar</classpath>
-				<source-level>1.5</source-level>
-			</compilation-unit>
-			<compilation-unit>
-				<package-root>components/patterns/src</package-root>
-				<classpath mode="compile">components/patterns/classes;classes</classpath>
-				<source-level>1.5</source-level>
-			</compilation-unit>
-			<compilation-unit>
-				<package-root>components/plots/src</package-root>
-				<classpath mode="compile">components/plots/classes;classes;lib/jcommon-1.0.0-rc1.jar;lib/jfreechart-1.0.0-rc1.jar</classpath>
-				<source-level>1.5</source-level>
-			</compilation-unit>
-			<compilation-unit>
-				<package-root>components/poshistogram/src</package-root>
-				<classpath mode="compile">components/poshistogram/classes;classes;lib/jcommon-1.0.0-rc1.jar;lib/jfreechart-1.0.0-rc1.jar</classpath>
-				<source-level>1.5</source-level>
-			</compilation-unit>
-			<compilation-unit>
-				<package-root>components/promoter/src</package-root>
-				<classpath mode="compile">components/promoter/classes;components/promoter/lib/biojava-1.3.1.jar;classes;lib/polgara.jar</classpath>
-				<source-level>1.5</source-level>
-			</compilation-unit>
-			<compilation-unit>
-				<package-root>components/selectors/src</package-root>
-				<classpath mode="compile">components/selectors/classes;classes;lib/Simulation_libs/colt.jar</classpath>
-				<source-level>1.5</source-level>
-			</compilation-unit>
-			<compilation-unit>
-				<package-root>components/sequenceretriever/src</package-root>
-				<classpath mode="compile">components/sequenceretriever/classes;classes;components/sequenceretriever/lib/ensj-30.2.jar;components/sequenceretriever/lib/mysql-connector-java-3.0.16-ga-bin.jar;components/sequenceretriever/lib/mysql-connector-java-3.0.8-stable-bin.jar;lib/activation.jar;lib/antlr-2.7.5.jar;lib/ArrayExpress.jar;lib/axis.jar;lib/bcel-5.1.jar;lib/caBIO.jar;lib/cglib-nodep-2.1.jar;lib/cog-axis.jar;lib/cog-jglobus.jar;lib/commons-beanutils.jar;lib/commons-collections.jar;lib/commons-digester.jar;lib/commons-discovery.jar;lib/commons-logging.jar;lib/commons-math-1.0.jar;lib/distributions.jar;lib/docking.jar;lib/dom4j-1.6.1.jar;lib/ensj-30.2.jar;lib/globusSplash.jar;lib/jai_core.jar;lib/Jama-1.0.1.jar;lib/jaxb-rt-1.0-ea.jar;lib/jaxrpc.jar;lib/jbcl.jar;lib/jcommon-1.0.0-rc1.jar;lib/jdom.jar;lib/jfreechart-1.0.0-rc1.jar;lib/jgraph.jar;lib/jgraphpad.jar;lib/jhall.jar;lib/junit.jar;lib/log4j-1.2.8.jar;lib/looks-1.3.1.jar;lib/mageom.jar;lib/mail.jar;lib/NetComponents.jar;lib/ogsa.jar;lib/ostermillerutils_1_04_03_for_kaffe.jar;lib/piccolo.jar;lib/piccolox.jar;lib/poi-2.5.1-final-20040804.jar;lib/poi-scratchpad-2.5.1-final-20040804.jar;lib/polgara.jar;lib/puretls.jar;lib/saaj.jar;lib/weka.jar;lib/wsdl4j.jar;lib/xml-apis.jar;lib/xmlsec.jar</classpath>
-				<source-level>1.5</source-level>
-			</compilation-unit>
-			<compilation-unit>
-				<package-root>components/sequences/src</package-root>
-				<classpath mode="compile">classes;components/sequences/classes</classpath>
-				<source-level>1.5</source-level>
-			</compilation-unit>
-			<compilation-unit>
-				<package-root>components/versioninfo/src</package-root>
-				<classpath mode="compile">components/versioninfo/classes;classes</classpath>
-				<source-level>1.5</source-level>
-			</compilation-unit>
-			<compilation-unit>
-				<package-root>components/viewers/src</package-root>
-				<classpath mode="compile">components/viewers/classes;classes</classpath>
-				<source-level>1.5</source-level>
-			</compilation-unit>
-			<compilation-unit>
-				<package-root>test</package-root>
-				<unit-tests/>
-				<source-level>1.5</source-level>
-			</compilation-unit>
-		</java-data>
-	</configuration>
+			
+		<subprojects/>
+        </general-data>
+        <java-data xmlns="http://www.netbeans.org/ns/freeform-project-java/2">
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+		<compilation-unit>
+                <package-root>src</package-root>
+                <classpath mode="compile">classes;lib/activation.jar;lib/antlr-2.7.5.jar;lib/ArrayExpress.jar;lib/axis.jar;lib/bcel-5.1.jar;lib/caBIO.jar;lib/cglib-nodep-2.1.jar;lib/cog-axis.jar;lib/cog-jglobus.jar;lib/commons-beanutils.jar;lib/commons-collections.jar;lib/commons-digester.jar;lib/commons-discovery.jar;lib/commons-logging.jar;lib/commons-math-1.0.jar;lib/distributions.jar;lib/docking.jar;lib/dom4j-1.6.1.jar;lib/ensj-30.2.jar;lib/globusSplash.jar;lib/jai_core.jar;lib/Jama-1.0.1.jar;lib/jaxb-rt-1.0-ea.jar;lib/jaxrpc.jar;lib/jbcl.jar;lib/jcommon-1.0.0-rc1.jar;lib/jdom.jar;lib/jfreechart-1.0.0-rc1.jar;lib/jgraph.jar;lib/jhall.jar;lib/junit.jar;lib/log4j-1.2.8.jar;lib/looks-1.3.1.jar;lib/mail.jar;lib/NetComponents.jar;lib/ogsa.jar;lib/ostermillerutils_1_04_03_for_kaffe.jar;lib/piccolo.jar;lib/piccolox.jar;lib/poi-2.5.1-final-20040804.jar;lib/poi-scratchpad-2.5.1-final-20040804.jar;lib/polgara.jar;lib/puretls.jar;lib/saaj.jar;lib/weka.jar;lib/wsdl4j.jar;lib/xml-apis.jar;lib/BNJ_libs/jxl.jar;lib/BNJ_libs/openjgraph.jar;lib/BNJ_libs/skinlf.jar;lib/caArrayMageom/aspectjrt.jar;lib/caArrayMageom/caarray-client.jar;lib/caArrayMageom/commons-dbcp.jar;lib/caArrayMageom/commons-lang.jar;lib/caArrayMageom/commons-pool.jar;lib/caArrayMageom/db-ojb-1.0.rc7.jar;lib/caArrayMageom/j2ee.jar;lib/caArrayMageom/jaxen-full.jar;lib/caArrayMageom/mageom-client.jar;lib/mageom.jar;lib/Simulation_libs/colt.jar;lib/Simulation_libs/jahmm-0.2.6.jar;lib/Simulation_libs/JClass.jar;lib/Simulation_libs/jcommon.jar;lib/Simulation_libs/jfreechart.jar;lib/Simulation_libs/mpiJava.jar;lib/Simulation_libs/netx.jar;lib/Simulation_libs/odeToJava.jar;lib/Simulation_libs/SBMLReader.jar;lib/Simulation_libs/SBWCore.jar;lib/forms-1.0.5.jar</classpath>
+                <source-level>1.5</source-level>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>components/alignment/src</package-root>
+                <classpath mode="compile">components/alignment/classes;components/alignment/lib/biojava-1.3.1.jar;components/alignment/lib/ogsa-samples.jar;components/alignment/lib/progtutorial_BlastClient.jar;components/alignment/lib/progtutorial_BlastService-stub.jar;classes</classpath>
+                <source-level>1.5</source-level>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>components/analysis/src</package-root>
+                <classpath mode="compile">components/alignment/classes;components/analysis/lib/JSciCore.jar;classes;lib/forms-1.0.5.jar</classpath>
+                <source-level>1.5</source-level>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>components/am/src</package-root>
+                <classpath mode="compile">components/am/classes;classes</classpath>
+                <source-level>1.5</source-level>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>components/associationdiscovery/src</package-root>
+                <classpath mode="compile">components/associationdiscovery/classes;components/associationdiscovery/lib/gw2.jar;classes;lib/jaxrpc.jar</classpath>
+                <source-level>1.5</source-level>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>components/cascript/src</package-root>
+                <classpath mode="compile">components/cascript/classes;classes</classpath>
+                <source-level>1.5</source-level>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>components/clustering/src</package-root>
+                <classpath mode="compile">components/clustering/classes;classes;lib/forms-1.0.5.jar;lib/junit.jar</classpath>
+                <source-level>1.5</source-level>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>components/colormosaic/src</package-root>
+                <classpath mode="compile">components/colormosaic/classes;classes</classpath>
+                <source-level>1.5</source-level>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>components/cytoscape/src</package-root>
+                <classpath mode="compile">components/cytoscape/classes;components/cytoscape/lib/cytoscape.jar;classes</classpath>
+                <source-level>1.5</source-level>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>components/discovery/src</package-root>
+                <classpath mode="compile">components/discovery/classes;classes;lib/polgara.jar;lib/jaxrpc.jar</classpath>
+                <source-level>1.5</source-level>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>components/filtering/src</package-root>
+                <classpath mode="compile">components/filtering/classes;classes</classpath>
+                <source-level>1.5</source-level>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>components/goterms/src</package-root>
+                <classpath mode="compile">components/goterms/classes;classes;lib/caBIO.jar;lib/distributions.jar;lib/jgraph.jar;lib/jcommon-1.0.0-rc1.jar;lib/jfreechart-1.0.0-rc1.jar</classpath>
+                <source-level>1.5</source-level>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>components/hierarchicalclustering/src</package-root>
+                <classpath mode="compile">components/hierarchicalclustering/classes;classes</classpath>
+                <source-level>1.5</source-level>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>components/microarrays/src</package-root>
+                <classpath mode="compile">components/microarrays/classes;classes;lib/jfreechart-1.0.0-rc1.jar;lib/jcommon-1.0.0-rc1.jar</classpath>
+                <source-level>1.5</source-level>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>components/normalization/src</package-root>
+                <classpath mode="compile">components/normalization/classes;classes</classpath>
+                <source-level>1.5</source-level>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>components/pathwaydecoder/src</package-root>
+                <classpath mode="compile">components/pathwaydecoder/classes;components/pathwaydecoder/lib/jgraphpad.jar;components/pathwaydecoder/lib/mutualinfo.jar;classes;lib/jgraph.jar;lib/jcommon-1.0.0-rc1.jar;lib/jfreechart-1.0.0-rc1.jar;lib/distributions.jar;lib/Simulation_libs/colt.jar;lib/Simulation_libs/mpiJava.jar</classpath>
+                <source-level>1.5</source-level>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>components/patterns/src</package-root>
+                <classpath mode="compile">components/patterns/classes;classes</classpath>
+                <source-level>1.5</source-level>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>components/plots/src</package-root>
+                <classpath mode="compile">components/plots/classes;classes;lib/jcommon-1.0.0-rc1.jar;lib/jfreechart-1.0.0-rc1.jar</classpath>
+                <source-level>1.5</source-level>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>components/poshistogram/src</package-root>
+                <classpath mode="compile">components/poshistogram/classes;classes;lib/jcommon-1.0.0-rc1.jar;lib/jfreechart-1.0.0-rc1.jar</classpath>
+                <source-level>1.5</source-level>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>components/promoter/src</package-root>
+                <classpath mode="compile">components/promoter/classes;components/promoter/lib/biojava-1.3.1.jar;classes;lib/polgara.jar</classpath>
+                <source-level>1.5</source-level>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>components/selectors/src</package-root>
+                <classpath mode="compile">components/selectors/classes;classes;lib/Simulation_libs/colt.jar</classpath>
+                <source-level>1.5</source-level>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>components/sequenceretriever/src</package-root>
+                <classpath mode="compile">components/sequenceretriever/classes;classes;components/sequenceretriever/lib/ensj-30.2.jar;components/sequenceretriever/lib/mysql-connector-java-3.0.16-ga-bin.jar;components/sequenceretriever/lib/mysql-connector-java-3.0.8-stable-bin.jar;lib/activation.jar;lib/antlr-2.7.5.jar;lib/ArrayExpress.jar;lib/axis.jar;lib/bcel-5.1.jar;lib/caBIO.jar;lib/cglib-nodep-2.1.jar;lib/cog-axis.jar;lib/cog-jglobus.jar;lib/commons-beanutils.jar;lib/commons-collections.jar;lib/commons-digester.jar;lib/commons-discovery.jar;lib/commons-logging.jar;lib/commons-math-1.0.jar;lib/distributions.jar;lib/docking.jar;lib/dom4j-1.6.1.jar;lib/ensj-30.2.jar;lib/globusSplash.jar;lib/jai_core.jar;lib/Jama-1.0.1.jar;lib/jaxb-rt-1.0-ea.jar;lib/jaxrpc.jar;lib/jbcl.jar;lib/jcommon-1.0.0-rc1.jar;lib/jdom.jar;lib/jfreechart-1.0.0-rc1.jar;lib/jgraph.jar;lib/jgraphpad.jar;lib/jhall.jar;lib/junit.jar;lib/log4j-1.2.8.jar;lib/looks-1.3.1.jar;lib/mageom.jar;lib/mail.jar;lib/NetComponents.jar;lib/ogsa.jar;lib/ostermillerutils_1_04_03_for_kaffe.jar;lib/piccolo.jar;lib/piccolox.jar;lib/poi-2.5.1-final-20040804.jar;lib/poi-scratchpad-2.5.1-final-20040804.jar;lib/polgara.jar;lib/puretls.jar;lib/saaj.jar;lib/weka.jar;lib/wsdl4j.jar;lib/xml-apis.jar;lib/xmlsec.jar</classpath>
+                <source-level>1.5</source-level>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>components/sequences/src</package-root>
+                <classpath mode="compile">classes;components/sequences/classes</classpath>
+                <source-level>1.5</source-level>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>components/versioninfo/src</package-root>
+                <classpath mode="compile">components/versioninfo/classes;classes</classpath>
+                <source-level>1.5</source-level>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>components/viewers/src</package-root>
+                <classpath mode="compile">components/viewers/classes;classes</classpath>
+                <source-level>1.5</source-level>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>test</package-root>
+                <unit-tests/>
+                <source-level>1.5</source-level>
+            </compilation-unit>
+        </java-data>
+    </configuration>
 </project>
