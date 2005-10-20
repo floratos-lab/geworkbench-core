@@ -33,6 +33,7 @@ public class RemoteResourceDialog extends JDialog {
     private String currentURL;
     private String currentUser;
     private String currentPassword;
+    private static String previousResourceName;
     public RemoteResourceDialog() {
         try {
             jbInit();
@@ -273,6 +274,9 @@ public class RemoteResourceDialog extends JDialog {
     public void jButton1_actionPerformed(ActionEvent e) {
         RemoteResource rr = collectResourceInfo();
         if (rr != null) {
+            if(!previousResourceName.equals(currentResourceName)){
+                remoteResourceManager.deleteRemoteResource(previousResourceName);
+            }
             remoteResourceManager.addRemoteResource(rr);
             remoteResourceManager.saveToFile();
 
@@ -290,6 +294,9 @@ public class RemoteResourceDialog extends JDialog {
                                     int option,
                                     String initialValue
             ) {
+        if(initialValue!=null){
+            previousResourceName = initialValue;
+        }
         Frame frame = JOptionPane.getFrameForComponent(frameComp);
         dialog = new RemoteResourceDialog(frame,
                                           title,
