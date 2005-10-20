@@ -445,11 +445,8 @@ public class CaARRAYPanel extends JPanel implements Observer {
             int taskStatus = 10;
             if (task != null) {
                 taskStatus = task.getStatus() * 100;
-
-                System.out.println("taskStatus" + taskStatus + new Date());
-                progressBar.updateTo(taskStatus);
-
-                if ( task.isDone()) {
+               progressBar.updateTo(taskStatus);
+            if ( task.isDone()) {
                     progressMonitor.close();
                     if (parentPanel != null && !stopConnection) {
                         //update the GUI with new loaded panel.
@@ -457,10 +454,8 @@ public class CaARRAYPanel extends JPanel implements Observer {
                     }
                     Toolkit.getDefaultToolkit().beep();
                     timer.stop();
-
                     progressBar.dispose();
-
-                }
+              }
             }
         }
     }
@@ -474,6 +469,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
         Vector temp = new Vector();
         private int status = 0;
         private boolean done = false;
+        private boolean stopped = false;
         SecureSession sess;
 
         public ConnectionTask() {
@@ -549,7 +545,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
                 //dump the experiment objects into the return array.
                 exps = (CaArrayExperiment[]) temp.toArray(exps);
                 setExperiments(exps);
-                System.out.println("Set up" + new Date());
+                //System.out.println("Set up" + new Date());
                 //copy the getExperiment(e) to here
                 previousResourceName = currentResourceName;
                 connectionSuccess = true;
@@ -575,16 +571,17 @@ public class CaARRAYPanel extends JPanel implements Observer {
                 connectionSuccess = true;
                 done = true;
             } catch (Exception une) {
-               // une.printStackTrace();
+                //une.printStackTrace();
                 stopConnection = true;
                 done = true;
-                JOptionPane.showMessageDialog(null,
+                if(!stopped ){
+                    JOptionPane.showMessageDialog(null,
                                                   "Unable to connect to server.",
                                                   "Open File Error",
                                                   JOptionPane.ERROR_MESSAGE);
                     progressBar.dispose();
 
-
+                }
             }
             stillConnecting = false;
         }
@@ -597,6 +594,9 @@ public class CaARRAYPanel extends JPanel implements Observer {
         public boolean isDone() {
             return done;
         }
+        public void stop(){
+            stopped = true;
+        }
 
     }
 
@@ -606,7 +606,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
      */
     public CaArrayExperiment[] getExperiments() {
 
-        System.out.println(new Date() + "enter getExp");
+
         progressMonitor = new ProgressMonitor(this,
                                               "Connecting..",
                                               "", 0, 1000000);
@@ -627,9 +627,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
             System.setProperty("RMIServerURL", url + "/SearchCriteriaHandler");
             System.setProperty("SecureSessionManagerURL",
                                url + "/SecureSessionManager");
-            task = new ConnectionTask() {
-
-            };
+            task = new ConnectionTask();
 
             timer = new Timer(2500, new TimerListener());
             timer.start();
@@ -664,7 +662,12 @@ public class CaARRAYPanel extends JPanel implements Observer {
 
     public void update(java.util.Observable ob, Object o) {
         stopConnection = true;
-        timer.stop();
+        if(timer!=null){
+            timer.stop();
+        }
+          if(task!=null){
+            task.stop();
+        }
         experiments = null;
     }
 
