@@ -26,6 +26,7 @@ import gov.nih.nci.mageom.search.SearchCriteriaFactory;
 import gov.nih.nci.mageom.search.Experiment.ExperimentSearchCriteria;
 import org.geworkbench.bison.parsers.resources.CaArrayResource;
 import org.geworkbench.builtin.projects.LoadData;
+import org.geworkbench.util.ProgressBar;
 
 
 /**
@@ -49,7 +50,9 @@ public class CaARRAYPanel extends JPanel implements Observer {
      * Used to avoid querying the server for all experiments all the time.
      */
     protected boolean experimentsLoaded = false;
+    //display the status of connection.
     private boolean stopConnection = false;
+    private boolean stillConnecting = true;
     private String currentResourceName = null;
     private String previousResourceName = null;
     private JPanel jPanel6 = new JPanel();
@@ -88,6 +91,9 @@ public class CaARRAYPanel extends JPanel implements Observer {
     private ProgressMonitor progressMonitor;
     private ConnectionTask task;
     private Timer timer;
+    private ProgressBar progressBar = ProgressBar.create(ProgressBar.
+            BOUNDED_TYPE);
+    private LoadData parentPanel;
 
 
     public CaARRAYPanel(LoadData p) {
@@ -287,35 +293,20 @@ public class CaARRAYPanel extends JPanel implements Observer {
     }
 
     public void getExperiments(ActionEvent e) {
-//        if (!experimentsLoaded ||
-//            !currentResourceName.equals(previousResourceName)) {
-           if(true){
-               getExperiments();
-              try{
-               Thread.sleep(2000);
-              }catch(Exception er){er.printStackTrace();}
-//            previousResourceName = currentResourceName;
-//            connectionSuccess = true;
-//            if (experiments == null) {
-//                connectionSuccess = false;
-//                JOptionPane.showMessageDialog(this,
-//                                              "Unable to connect to server.",
-//                                              "Open File Error",
-//                                              JOptionPane.ERROR_MESSAGE);
-//                return;
-//            }
-//
-//            for (int i = 0; i < experiments.length; ++i) {
-//                DefaultMutableTreeNode node = new DefaultMutableTreeNode(
-//                        experiments[i]);
-//                remoteTreeModel.insertNodeInto(node, root, root.getChildCount());
-//            }
-//            remoteFileTree.expandRow(0);
-//            experimentsLoaded = true;
+        stillConnecting = true;
+        if (!experimentsLoaded ||
+            !currentResourceName.equals(previousResourceName)) {
 
+            getExperiments();
+
+            this.validate();
+            this.repaint();
+        }else if(currentResourceName.equals(previousResourceName)){
+
+            if(parentPanel!=null){
+                parentPanel.addRemotePanel();
+            }
         }
-        this.validate();
-        this.repaint();
     }
 
     /**
@@ -451,22 +442,25 @@ public class CaARRAYPanel extends JPanel implements Observer {
      */
     class TimerListener implements ActionListener {
         public void actionPerformed(ActionEvent evt) {
-            int taskStatus = task.getStatus()* 10;
-            System.out.println("taskStatus" + taskStatus + new Date());
-            progressMonitor.setProgress(taskStatus);
+            int taskStatus = 10;
+            if (task != null) {
+                taskStatus = task.getStatus() * 100;
 
-            if (progressMonitor.isCanceled() || task.isDone()) {
-                progressMonitor.close();
+                System.out.println("taskStatus" + taskStatus + new Date());
+                progressBar.updateTo(taskStatus);
 
-                Toolkit.getDefaultToolkit().beep();
-                timer.stop();
-                if (task.isDone()) {
+                if ( task.isDone()) {
+                    progressMonitor.close();
+                    if (parentPanel != null && !stopConnection) {
+                        //update the GUI with new loaded panel.
+                        parentPanel.addRemotePanel();
+                    }
+                    Toolkit.getDefaultToolkit().beep();
+                    timer.stop();
 
-                } else {
-                    // taskOutput.append("Task canceled." + newline);
+                    progressBar.dispose();
 
                 }
-
             }
         }
     }
@@ -482,9 +476,10 @@ public class CaARRAYPanel extends JPanel implements Observer {
         private boolean done = false;
         SecureSession sess;
 
-        public ConnectionTask(){
+        public ConnectionTask() {
 
         }
+
         public ConnectionTask(String _url, String _user, String _passwd) {
 
         }
@@ -499,10 +494,9 @@ public class CaARRAYPanel extends JPanel implements Observer {
                     connect();
                 }
             };
-                      Thread t = new Thread(dataLoader);
+            Thread t = new Thread(dataLoader);
             t.setPriority(Thread.MAX_PRIORITY);
-             t.start();
-
+            t.start();
 
         }
 
@@ -511,14 +505,15 @@ public class CaARRAYPanel extends JPanel implements Observer {
                 url = url + "/SecureSessionManager";
 
                 SecureSession sess = SecureSessionFactory.
-                                       defaultSecureSession();
+                                     defaultSecureSession();
                 ((Directable) sess).direct(url);
+                progressBar.setMessage("Authenticating user name and password...");
                 sess.start(user, passwd);
                 ExperimentSearchCriteria esc = SearchCriteriaFactory.
                                                new_EXPERIMENT_EXPERIMENT_SC();
                 esc.setSessionId(sess.getSessionId());
                 SearchResult results = esc.search();
-
+                 progressBar.setMessage("Retrieving data...");
                 Experiment[] result = (Experiment[]) results.getResultSet();
                 float totalexpNum = 0;
                 if (result != null) {
@@ -554,39 +549,44 @@ public class CaARRAYPanel extends JPanel implements Observer {
                 //dump the experiment objects into the return array.
                 exps = (CaArrayExperiment[]) temp.toArray(exps);
                 setExperiments(exps);
+                System.out.println("Set up" + new Date());
+                //copy the getExperiment(e) to here
+                previousResourceName = currentResourceName;
+                connectionSuccess = true;
+                if (experiments == null) {
+                    connectionSuccess = false;
+                    JOptionPane.showMessageDialog(null,
+                                                  "Unable to connect to server.",
+                                                  "Open File Error",
+                                                  JOptionPane.ERROR_MESSAGE);
+                    done = true;
+                    return;
+                }
 
-            //copy the getExperiment(e) to here
-                      previousResourceName = currentResourceName;
-            connectionSuccess = true;
-            if (experiments == null) {
-                connectionSuccess = false;
-                JOptionPane.showMessageDialog(null,
-                                              "Unable to connect to server.",
-                                              "Open File Error",
-                                              JOptionPane.ERROR_MESSAGE);
-                done = true;
-                return;
-            }
-
-            for (int i = 0; i < experiments.length; ++i) {
-                DefaultMutableTreeNode node = new DefaultMutableTreeNode(
-                        experiments[i]);
-                remoteTreeModel.insertNodeInto(node, root, root.getChildCount());
-            }
-            remoteFileTree.expandRow(0);
-            experimentsLoaded = true;
-
-
-
-
+                for (int i = 0; i < experiments.length; ++i) {
+                    DefaultMutableTreeNode node = new DefaultMutableTreeNode(
+                            experiments[i]);
+                    remoteTreeModel.insertNodeInto(node, root,
+                            root.getChildCount());
+                }
+                remoteFileTree.expandRow(0);
+                experimentsLoaded = true;
+                previousResourceName = currentResourceName;
+                connectionSuccess = true;
                 done = true;
             } catch (Exception une) {
-                une.printStackTrace();
+               // une.printStackTrace();
                 stopConnection = true;
                 done = true;
+                JOptionPane.showMessageDialog(null,
+                                                  "Unable to connect to server.",
+                                                  "Open File Error",
+                                                  JOptionPane.ERROR_MESSAGE);
+                    progressBar.dispose();
+
 
             }
-
+            stillConnecting = false;
         }
 
         public int getStatus() {
@@ -606,12 +606,14 @@ public class CaARRAYPanel extends JPanel implements Observer {
      */
     public CaArrayExperiment[] getExperiments() {
 
-       System.out.println(new Date() + "eneter getExp");
-       progressMonitor = new ProgressMonitor(this,
-                   "Connecting..",
-            "", 0, 1000000);
-        progressMonitor.setProgress(0);
-        progressMonitor.setMillisToDecideToPopup(100);
+        System.out.println(new Date() + "enter getExp");
+        progressMonitor = new ProgressMonitor(this,
+                                              "Connecting..",
+                                              "", 0, 1000000);
+
+        progressBar.setMessage("Connecting...");
+        progressBar.addObserver(this);
+        progressBar.start();
 
         try {
 
@@ -625,39 +627,22 @@ public class CaARRAYPanel extends JPanel implements Observer {
             System.setProperty("RMIServerURL", url + "/SearchCriteriaHandler");
             System.setProperty("SecureSessionManagerURL",
                                url + "/SecureSessionManager");
-             final ConnectionTask task = new ConnectionTask() {
+            task = new ConnectionTask() {
 
             };
 
-            timer = new Timer(500, new TimerListener());
+            timer = new Timer(2500, new TimerListener());
             timer.start();
             task.go();
-            System.out.println(new Date() + "after task.go()");
-//            Thread t = new Thread(dataLoader);
-//            t.setPriority(Thread.MAX_PRIORITY);
-//            t.start();
+
             if (stopConnection) {
                 return null;
             }
 
 
-            System.out.println(new Date() + " " + task.getStatus() * 100);
-            while (!progressMonitor.isCanceled() && !task.isDone()) {
-                progressMonitor.setProgress(task.getStatus() * 100);
-
-                 System.out.println(progressMonitor.getMillisToDecideToPopup() + " " + new Date() + " " + task.getStatus() * 100 + "in while loop");
-                if (stopConnection) {
-                    return null;
-                }
-
-                Thread.sleep(1000);
-
+            if (task.isDone()) {
+                timer.stop();
             }
-            System.out.println(new Date() + "end of while loop");
-             //progressMonitor.close();
-           if(task.isDone()){
-             timer.stop();
-           }
 
             return experiments;
 
@@ -665,7 +650,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
 
         catch (Exception e) {
             e.printStackTrace();
-            stopConnection = false;
+            stopConnection = true;
             //pb.stop();
             return null;
         }
@@ -679,6 +664,8 @@ public class CaARRAYPanel extends JPanel implements Observer {
 
     public void update(java.util.Observable ob, Object o) {
         stopConnection = true;
+        timer.stop();
+        experiments = null;
     }
 
     /**
@@ -1112,6 +1099,10 @@ public class CaARRAYPanel extends JPanel implements Observer {
         return currentResourceName;
     }
 
+    public LoadData getParentPanel() {
+        return parentPanel;
+    }
+
     public void setConnectionSuccess(boolean isConnectionSuccess) {
         this.connectionSuccess = isConnectionSuccess;
     }
@@ -1135,5 +1126,9 @@ public class CaARRAYPanel extends JPanel implements Observer {
     public void setExperiments(org.geworkbench.builtin.projects.util.
                                CaARRAYPanel.CaArrayExperiment[] experiments) {
         this.experiments = experiments;
+    }
+
+    public void setParentPanel(LoadData parentPanel) {
+        this.parentPanel = parentPanel;
     }
 }

@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.io.*;
 
 import org.geworkbench.builtin.projects.remoteresources.RemoteResourceDialog;
+import org.geworkbench.util.ProgressBar;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
@@ -68,6 +69,7 @@ public class LoadData extends JDialog {
     private RemoteResourceDialog remoteResourceDialog;
     private JPanel remoteControlPanel;
 
+
     /**
      * The project panel that manages the dialog box.
      */
@@ -114,7 +116,10 @@ public class LoadData extends JDialog {
 
     private void jbInit() throws Exception {
         // format = getLastDataFormat();
-        this.setModal(true);
+
+
+        //change it to false in order to provide a progress bar for loading remote data.
+        this.setModal(false);
         this.getContentPane().setLayout(borderLayout1);
         jPanel1.setLayout(gridLayout1);
         jPanel2.setLayout(flowLayout1);
@@ -469,8 +474,19 @@ public class LoadData extends JDialog {
         jPanel8.setUrl(remoteResourceDialog.getCurrentURL());
         jPanel8.setUser(remoteResourceDialog.getCurrentUser());
         jPanel8.setPasswd(remoteResourceDialog.getCurrentPassword());
+        jPanel8.setParentPanel(this);
         jPanel8.setCurrentResourceName(currentResourceName);
-        jPanel8.getExperiments(e);
+       jPanel8.getExperiments(e);
+//       if (jPanel8.isConnectionSuccess()) {
+//            this.getContentPane().remove(jPanel6);
+//            this.getContentPane().remove(jPanel4);
+//            this.getContentPane().add(jPanel8, BorderLayout.CENTER);
+//            this.validate();
+//            this.repaint();
+//        }
+    }
+
+    public void addRemotePanel(){
        if (jPanel8.isConnectionSuccess()) {
             this.getContentPane().remove(jPanel6);
             this.getContentPane().remove(jPanel4);
@@ -478,8 +494,8 @@ public class LoadData extends JDialog {
             this.validate();
             this.repaint();
         }
-    }
 
+    }
     private void addRemotePanel_actionPerformed(ActionEvent e) {
         lowerPanel.add(jPanel10);
         this.validate();
