@@ -233,7 +233,7 @@
   <!-- ====================================================================== -->
 
  <target name="createResource" depends="clean" description="Creating a new folder for depositing..."> 
-        <!--delete dir="../cleanResource"/-->
+        <delete dir="../cleanResource"/>
         <mkdir dir="../cleanResource"/>
   <copy todir="../cleanResource"> 
   <fileset dir="."> 
@@ -269,6 +269,10 @@
 <include name="**/*.script" /> 
 <include name="**/*.jar" /> 
 <include name="**/*.dll" /> 
+<exclude name="**/*.ontology"/>
+<exclude name="**/*.ontology.txt"/>
+<exclude name="**/All.NC.-2k+2k.txt"/>
+<exclude name="**/LICENSE.txt"/>
  </fileset> 
   </copy>
  </target>
