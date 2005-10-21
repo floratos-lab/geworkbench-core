@@ -228,4 +228,49 @@
             <report format="frames" todir="${junitreport}"/>
         </junitreport>
     </target>
+  <!-- ====================================================================== -->
+  <!-- Prepare a clean file for depositing to NCI CVS -->
+  <!-- ====================================================================== -->
+
+ <target name="createResource" depends="clean" description="Creating a new folder for depositing..."> 
+        <!--delete dir="../cleanResource"/-->
+        <mkdir dir="../cleanResource"/>
+  <copy todir="../cleanResource"> 
+  <fileset dir="."> 
+<include name="**/*.chtml" /> 
+<include name="**/*.html" /> 
+<include name="**/*.au" /> 
+<include name="**/*.midi" /> 
+<include name="**/*.gif" /> 
+<include name="**/*.GIF" /> 
+<include name="**/*.xml" /> 
+<include name="**/*.properties" /> 
+<include name="**/*.policy" /> 
+<include name="**/*.aiff" /> 
+<include name="**/*.jnlp" /> 
+<include name="**/*.jpe" /> 
+<include name="**/*.jpeg" /> 
+<include name="**/*.rmf" /> 
+<include name="**/*.wav" /> 
+<include name="**/*.mid" /> 
+<include name="**/*.ini" /> 
+<include name="**/*.xsl" /> 
+<include name="**/*.css" /> 
+<include name="**/*.png" /> 
+<include name="**/*.PNG" /> 
+<include name="**/*.jpg" /> 
+<include name="**/*.htm" /> 
+<include name="**/*.html" /> 
+<include name="**/*.jhm" /> 
+<include name="**/*.hs" /> 
+<include name="**/*.txt" /> 
+<include name="**/*.java" /> 
+<include name="**/*.iml" /> 
+<include name="**/*.script" /> 
+<include name="**/*.jar" /> 
+<include name="**/*.dll" /> 
+ </fileset> 
+  </copy>
+ </target>
+
 </project>
