@@ -167,46 +167,4 @@ public class CaScriptEmulator {
         PluginRegistry.debugPrint();
         splash.hideSplash();
     }
-
-    public static Method getNamedMethod(Object plugin, String value) {
-        return ComponentRegistry.getRegistry().getScriptMethodByName(plugin, value);
-//        Method m = null;
-//        Method[] methods = plugin.getClass().getMethods();
-//        for (int i = 0; i < methods.length; i++) {
-//            Script annotation = null;
-//            if ((annotation = methods[i].getAnnotation(Script.class)) != null) {
-//                if (annotation.value().equalsIgnoreCase(value)) m = methods[i];
-//            }
-//        }
-//        return m;
-    }
-
-    // @todo - get these components from the ComponentRegistry
-    public static void main(String[] args) {
-        emulateStartup();
-        PluginDescriptor expFileFormat = PluginRegistry.getPluginDescriptor("expressionFileFilter");
-        PluginDescriptor projectPanel = PluginRegistry.getPluginDescriptor("projectWindow");
-        PluginDescriptor maPanel = PluginRegistry.getPluginDescriptor("microarrayPanel");
-        PluginDescriptor genePanel = PluginRegistry.getPluginDescriptor("genePanel");
-
-        Method loadData = getNamedMethod(projectPanel.getPlugin(), "loadDataSet");
-
-        Method getData = getNamedMethod(projectPanel.getPlugin(), "getDataSet");
-
-        Method setData = getNamedMethod(genePanel.getPlugin(), "setDataSet");
-        Method createPanel = getNamedMethod(genePanel.getPlugin(), "createPanel");
-
-        try {
-            loadData.invoke(projectPanel.getPlugin(),
-                    //                            "http://amdec-bioinfo.cu-genome.org/html/caWorkBench/data/webmatrix.exp",
-                    "c:\\repository_3_0\\project\\BioWorks\\data\\Expression.exp", expFileFormat.getPlugin());
-            Object data = getData.invoke(projectPanel.getPlugin());
-            setData.invoke(genePanel.getPlugin(), data);
-            createPanel.invoke(genePanel.getPlugin(), 0, 10, true);
-        } catch (IllegalAccessException iae) {
-            iae.printStackTrace();
-        } catch (InvocationTargetException ite) {
-            ite.printStackTrace();
-        }
-    }
 }

@@ -9,7 +9,7 @@ import java.util.Vector;
  * Interpreter routines that is called directly from the tree walker.
  *
  * @author Behrooz Badii - badiib@gmail.com
- * @version $Id: CasInterpreter.java,v 1.14 2005-10-24 19:26:51 bb2122 Exp $
+ * @version $Id: CasInterpreter.java,v 1.15 2005-10-24 21:25:42 bb2122 Exp $
  */
 class CasInterpreter {
     CasSymbolTable symt;
@@ -448,7 +448,7 @@ class CasInterpreter {
     //we need to have return types here!
     public Object MethodCall(String casname, String casmethod, Vector<CasDataType> v) {
         Object ret = null;
-        Object [] args = vectortoargs(v);
+        Object [] args = vectortoargs(v, casmethod);
         if (symt.exists(casname) && symt.findVar(casname) instanceof CasDataPlug) {
             //deal with it in another method
             ret = OtherMethodCall(casname, casmethod, args);
@@ -465,13 +465,14 @@ class CasInterpreter {
                 } catch (Exception e) {
                     e.printStackTrace();
                     throw new CasException(
-                            "Error occurred in MethodCall in interpreter for pre-existing method");
+                            "Error occurred in MethodCall in interpreter for pre-existing method for a module");
                 }
             } else {
                 if (symt.findVar(casname) instanceof CasModule) {
+                    Class[] p = argstoclasses(args);
                     symt.put(casname + " " + casmethod,
                              new CasMethod(casname, casmethod,
-                                           (CasModule) symt.findVar(casname)));
+                                           (CasModule) symt.findVar(casname), p));
                     /*Testing purposes
                     System.out.println("made new method " + casmethod + " for " +
                                        casname);*/
@@ -542,13 +543,21 @@ class CasInterpreter {
     static Class[] argstoclasses(Object[] args) {
         Class[] p = new Class[args.length];
         for (int i = 0; i < p.length; i++) {
-            p[i] = args[i].getClass();
+            if (args[i] instanceof Boolean) {
+                p[i] = boolean.class;
+            } else if (args[i] instanceof Integer) {
+                p[i] = int.class;
+            } else if (args[i] instanceof Double) {
+                p[i] = double.class;
+            } else {
+                p[i] = args[i].getClass();
+            }
         }
         return p;
     }
 
     //helper function for CasInterpreter.MethodCall
-    static Object[] vectortoargs(Vector<CasDataType> v) {
+    static Object[] vectortoargs(Vector<CasDataType> v, String id) {
         Object args[] = v.toArray();
         for (int i = 0; i < args.length; i++) {
             if (args[i] instanceof CasCallReturn) {
@@ -574,7 +583,7 @@ class CasInterpreter {
                 args[i] = ((CasModule) args[i]).getPlugin();
                 /*Testing purposes
                 System.out.println("This should be an object");*/
-            } else {
+            } else if (args[i] instanceof CasDataPlug) {
                 args[i] = ((CasDataPlug) args[i]).getVar();
                 /*Testing purposes
                 System.out.println("Dataplug in argument to MethodCall");*/

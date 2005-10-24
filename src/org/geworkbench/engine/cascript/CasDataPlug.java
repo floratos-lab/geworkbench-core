@@ -63,6 +63,10 @@ class CasDataPlug extends CasDataType {
         return type;
     }
 
+    public Class getRealClass() {
+        return var.getClass();
+    }
+
     public Object getVar() {
         return var;
     }

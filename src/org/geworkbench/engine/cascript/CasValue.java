@@ -2,6 +2,7 @@ package org.geworkbench.engine.cascript;
 
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
+import org.geworkbench.engine.management.ComponentRegistry;
 
 /* the wrapper class for ObjectValue
 *
@@ -18,7 +19,7 @@ class CasValue extends CasDataType {
         othername = casmethod;
         formodule = casname;
         association = a;
-        m = CaScriptEmulator.getNamedMethod(a.getPlugin(), casmethod);
+        m = ComponentRegistry.getRegistry().getScriptMethodByName(a.getPlugin(), casmethod);
     }
 
     public Method getm() {

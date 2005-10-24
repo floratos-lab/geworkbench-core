@@ -470,6 +470,29 @@ public class ComponentRegistry {
         return scriptMethods.toArray(new Method[0]);
     }
 
+    public Method getScriptMethodByNameAndParameters(Class componentType, String methodName, Class[] c) {
+        Method[] methods = getMethodsForComponentType(componentType);
+        Method retValue = null;
+        for ( Method method : methods) {
+            if (method.getName().equals(methodName)) {
+                Class[] k = method.getParameterTypes();
+                if (k != null && c != null && k.length == c.length) {
+                    for (int j = 0; j < k.length; j++) {
+                        if (!(k[j].isAssignableFrom(c[j]))) {
+                            break;
+                        }
+                    }
+                }
+                retValue = method;
+            }
+        }
+        return retValue;
+    }
+
+    public Method getScriptMethodByNameAndParameters(Object component, String methodName, Class[] c) {
+        return getScriptMethodByNameAndParameters(component.getClass(), methodName, c);
+    }
+
     public Method getScriptMethodByName(Class componentType, String methodName) {
         Method[] methods = getMethodsForComponentType(componentType);
         for (int i = 0; i < methods.length; i++) {
@@ -484,7 +507,6 @@ public class ComponentRegistry {
     public Method getScriptMethodByName(Object component, String methodName) {
         return getScriptMethodByName(component.getClass(), methodName);
     }
-
     /**
      * Gets all the public member methods of the given component.
      * Eventually, this will be restricted to only those with the @Script annotation.

@@ -2,6 +2,7 @@ package org.geworkbench.engine.cascript;
 
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
+import org.geworkbench.engine.management.ComponentRegistry;
 
 /* the wrapper class for Methods within CasModules
 *
@@ -12,17 +13,19 @@ class CasMethod extends CasDataType {
     String formodule;
     String othername;
     CasModule association;
+    Class[] parameters;
 
-    CasMethod(String casname, String casmethod, CasModule a) {
+    CasMethod(String casname, String casmethod, CasModule a, Class[] p) {
         name = casname + " " + casmethod;
         othername = casmethod;
         formodule = casname;
         association = a;
-        m = CaScriptEmulator.getNamedMethod(a.getPlugin(), casmethod);
+        parameters = p;
+        m = ComponentRegistry.getRegistry().getScriptMethodByNameAndParameters(a.getPlugin(), casmethod, parameters);
     }
 
     public CasDataType copy() {
-        return new CasMethod(formodule, othername, association);
+        return new CasMethod(formodule, othername, association, parameters);
     }
 
     public String getformodule() {
@@ -36,6 +39,11 @@ class CasMethod extends CasDataType {
     public Method getm() {
         return m;
     }
+
+    public Class[] getp() {
+        return parameters;
+    }
+
 
     public Object getPlugin() {
         return association.pd.getPlugin();

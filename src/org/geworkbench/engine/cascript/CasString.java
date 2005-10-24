@@ -6,7 +6,7 @@ import java.io.PrintWriter;
  * the wrapper class for string
  *
  * @author Behrooz Badii - badiib@gmail.com
- * @version $Id: CasString.java,v 1.3 2005-10-14 18:38:12 bb2122 Exp $
+ * @version $Id: CasString.java,v 1.4 2005-10-24 21:25:42 bb2122 Exp $
  * @modified from Hanhua Feng - hf2048@columbia.edu
  */
 class CasString extends CasDataType {
@@ -19,6 +19,7 @@ class CasString extends CasDataType {
     public String typename() {
         return "string";
     }
+
 
     public String getvar() {
         return var;
