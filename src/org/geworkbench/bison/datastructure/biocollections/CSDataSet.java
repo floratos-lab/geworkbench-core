@@ -20,7 +20,7 @@ import java.util.HashMap;
 /**
  * An abstract implementation of {@link DSDataSet}.
  */
-public abstract class CSDataSet <T extends DSBioObject> extends CSSequentialItemList<T> implements DSDataSet<T> {
+public class CSDataSet <T extends DSBioObject> extends CSSequentialItemList<T> implements DSDataSet<T> {
     protected boolean dirty = true;
     protected File file = null;
     protected String label = new String("Unnamed Data Set");
@@ -399,5 +399,8 @@ public abstract class CSDataSet <T extends DSBioObject> extends CSSequentialItem
      */
     public void setExperimentInformation(String experimentInformation) {
         experimentInfo = experimentInformation;
+    }
+
+    public void writeToFile(String fileName) {
     }
 }

@@ -14,9 +14,12 @@ void main() {
   string x = "data/aTestDataSet.exp";
   module microarrayPanel maPanel;
   projectPanel.loadDataSet(x, expFileFormat);
-  genePanel.DataSet = projectPanel.DataSet;
+  //genePanel.DataSet = projectPanel.DataSet;
+  datatype DSMicroarraySet dsds; //= projectPanel.DataSet;
+  print "after assignment to dsds";
+  genePanel.DataSet = dsds;
   // genePanel.createPanel(i++,10,true);
-  j = 5 + 7 + 7 * 9 * 8 - 5;
+  j = 5 + 7 + (7 * 9 * 8 - 5);
   print j;
   j = 0;
   while (i < 5) {

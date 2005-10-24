@@ -676,7 +676,7 @@ public CASWalker() {
 				//MethodCall should tell the difference between a CasModule and a CasDataPlug
 				/*Testing purposes
 				System.out.println("we're in object_call");*/
-				r = new CasCallReturn(ipt.MethodCall(id, id2, arglist));
+				r = ipt.checkCasCallReturn(new CasCallReturn(ipt.MethodCall(id, id2, arglist)));
 				
 				break;
 			}

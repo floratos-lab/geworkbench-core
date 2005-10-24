@@ -31,7 +31,7 @@ import java.util.*;
  * @version 3.0
  */
 
-public abstract class CSMicroarraySet<T extends DSMicroarray> extends CSDataSet<T> implements DSMicroarraySet<T> {
+public class CSMicroarraySet<T extends DSMicroarray> extends CSDataSet<T> implements DSMicroarraySet<T> {
     /**
      * Constant designating the Affymetrix platform. This is the value return by
      * calls to method <code>getPlatforType()</code>.
@@ -422,6 +422,16 @@ public abstract class CSMicroarraySet<T extends DSMicroarray> extends CSDataSet<
     }
 
     public void initialize(int maNo, int mrkNo) {
+    }
+
+    public void parse(DSMutableMarkerValue marker, String value) {
+    }
+
+    public int getPlatformType() {
+        return 0;
+    }
+
+    public void readFromFile(File file) {
     }
 
 }

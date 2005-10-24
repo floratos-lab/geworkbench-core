@@ -9,7 +9,7 @@ import java.util.Vector;
  * Interpreter routines that is called directly from the tree walker.
  *
  * @author Behrooz Badii - badiib@gmail.com
- * @version $Id: CasInterpreter.java,v 1.13 2005-10-14 19:29:22 bb2122 Exp $
+ * @version $Id: CasInterpreter.java,v 1.14 2005-10-24 19:26:51 bb2122 Exp $
  */
 class CasInterpreter {
     CasSymbolTable symt;
@@ -107,9 +107,9 @@ class CasInterpreter {
     public CasDataType assign(CasDataType a, CasDataType b) {
         /*Testing purposes
         System.out.println("in assignment");*/
-        if (b instanceof CasCallReturn) {
-            b = checkCasCallReturn((CasCallReturn)b);
-        }
+        //if (b instanceof CasCallReturn) { //this is done before assign is called anyway
+        //    b = checkCasCallReturn((CasCallReturn)b);
+        //}
         if (b instanceof CasValue) {
             //This method is objectionable.  We are worried that a getValue() call in geWorkBench will affect the system and not just return a value.
             //are the get and set methods implemented correctly in geWorkBench so that we don't have changes to the system?
@@ -161,20 +161,54 @@ class CasInterpreter {
             System.out.println("substructure assignment success!");*/
             return new CasBool(true);
         }
-        if (a instanceof CasValue && b instanceof CasValue) {
-            //lefthand side of assignment is set, righthand side is get
-            //set is the value that is going to be assigned to
-            CasValue set = new CasValue(((CasValue) a).formodule, "set" + ((CasValue) a).othername, ((CasValue) a).association);
-            //get is the value that set is going to have after this procedure
-            CasValue get = new CasValue(((CasValue) b).formodule, "get" + ((CasValue) b).othername, ((CasValue) b).association);
-            try {
-                Object data = get.getm().invoke(get.getPlugin());
-                set.getm().invoke(set.getPlugin(), data);
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new CasException("error in assign for two CasValues");
+        if (a instanceof CasValue) {
+            if (b instanceof CasValue) {
+                //lefthand side of assignment is set, righthand side is get
+                //set is the value that is going to be assigned to
+                CasValue set = new CasValue(((CasValue) a).formodule,
+                                            "set" + ((CasValue) a).othername,
+                                            ((CasValue) a).association);
+                //get is the value that set is going to have after this procedure
+                CasValue get = new CasValue(((CasValue) b).formodule,
+                                            "get" + ((CasValue) b).othername,
+                                            ((CasValue) b).association);
+                try {
+                    Object data = get.getm().invoke(get.getPlugin());
+                    set.getm().invoke(set.getPlugin(), data);
+                    return new CasBool(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    throw new CasException("error in assign for two CasValues");
+                }
             }
-            return new CasBool(true);
+            else if (b instanceof CasDataPlug) {
+                CasValue set = new CasValue(((CasValue) a).formodule,
+                            "set" + ((CasValue) a).othername,
+                            ((CasValue) a).association);
+                try {
+                    Object data = ((CasDataPlug)b).getVar();
+                    set.getm().invoke(set.getPlugin(),data);
+                    return new CasBool(true);
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                    throw new CasException("error in assigning a datatype to a CasValue");
+                }
+            }
+            else if (b instanceof CasCallReturn) {
+                CasValue set = new CasValue(((CasValue) a).formodule,
+                            "set" + ((CasValue) a).othername,
+                            ((CasValue) a).association);
+                try {
+                    Object data = ((CasCallReturn)b).getRetValue();
+                    set.getm().invoke(set.getPlugin(),data);
+                    return new CasBool(true);
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                    throw new CasException("error in assigning a datatype to a CasValue");
+                }
+            }
         }
         if (null != a.getName()) {
             if (a instanceof CasInt && b instanceof CasInt) {
@@ -517,6 +551,9 @@ class CasInterpreter {
     static Object[] vectortoargs(Vector<CasDataType> v) {
         Object args[] = v.toArray();
         for (int i = 0; i < args.length; i++) {
+            if (args[i] instanceof CasCallReturn) {
+                args[i] = ((CasCallReturn)args[i]).getRetValue();
+            }
             if (args[i] instanceof CasBool) {
                 /*Testing purposes
                 System.out.println("Boolean" + ((CasBool) args[i]).getvar());*/
@@ -657,19 +694,20 @@ class CasInterpreter {
     public CasDataType funcCall(CASWalker walker, String id, Vector<CasDataType> argList) {
         CasSymbolTable temp;
         CasDataType whatthefunc = symt.findVar(id);
-        if (! (whatthefunc instanceof CasFunction)) return whatthefunc.error("not a function");
+        if (! (whatthefunc instanceof CasFunction)) return whatthefunc.error(id + "is not a function.");
         Vector<CasArgument> actualargs = ((CasFunction) whatthefunc).getArgs();
-        if (actualargs.size() != argList.size()) return whatthefunc.error("wrong number of parameters");
+        if (actualargs.size() != argList.size()) return whatthefunc.error(id + " has the wrong number of parameters");
         temp = symt;
         //is this the right symbol table? should we be using the symbol that's part of the CasFunction object?
         symt = new CasSymbolTable(((CasFunction) whatthefunc).getParentSymbolTable(), ((CasFunction) whatthefunc).getParentSymbolTable().getLevel() + 1);
 
         //remember to check arguments against their correct type
-        //you have NOT done this yet, do this on monday 10/17
+        checkarguments(argList, actualargs, id);
+
         for (int i = 0; i < actualargs.size(); i++) {
             CasDataType a = rvalue(argList.elementAt(i));
             a.setName(actualargs.elementAt(i).getId());
-            if (symt.existsinscope(actualargs.elementAt(i).getId())) throw new CasException(actualargs.elementAt(i).getId() + " already exists");
+            if (symt.existsinscope(actualargs.elementAt(i).getId())) throw new CasException(actualargs.elementAt(i).getId() + " already exists in " + id);
             else symt.put(actualargs.elementAt(i).getId(), a);
         }
         CasDataType ret = null;
@@ -704,6 +742,49 @@ class CasInterpreter {
             throw new CasException("bad return type for function " + id);
     }
 
+    //must check if the arguments being sent in match up
+    public void checkarguments(Vector<CasDataType> argList, Vector<CasArgument> actualargs, String id) {
+        CasDataType a;
+        CasArgument b;
+        CasDataType btype;
+        for (int i = 0; i < argList.size(); i++){
+            a = argList.elementAt(i);
+            b = actualargs.elementAt(i);
+            btype = b.getType();
+            if (btype.getClass().equals(a.getClass())) {
+                if (a instanceof CasModule) {
+                    if (btype instanceof CasModule) {
+                      if (!(((CasModule)a).getType().equals(((CasModule)btype).getType()))) {
+                           throw new CasException("argument and parameter are both modules, but wrong module type for argument " + b.getId() + " for method " + id);
+                      }
+                    }
+                }
+                if (a instanceof CasDataPlug) {
+                    if (btype instanceof CasDataPlug) {
+                      if (!(((CasDataPlug)a).getType().equals(((CasDataPlug)btype).getType()))) {
+                           throw new CasException("argument and parameter are both datatype, but wrong datatype type for argument " + b.getId() + " for method " + id);
+                      }
+                    }
+                }
+                if (a instanceof CasArray) {
+                    if (btype instanceof CasArray) {
+                      if (!(((CasArray)a).getelementType().equals(((CasArray)btype).getelementType()))) {
+                           throw new CasException("argument and parameter are both arrays, but wrong array element type for argument " + b.getId() + " for method " + id);
+                      }
+                    }
+                }
+                if (a instanceof CasMatrix) {
+                    if (btype instanceof CasMatrix) {
+                      if (!(((CasMatrix)a).getelementType().equals(((CasMatrix)btype).getelementType()))) {
+                           throw new CasException("argument and parameter are both matrices, but wrong matrix element type for argument " + b.getId() + " for method " + id);
+                      }
+                    }
+                }
+            }
+            else
+                throw new CasException("invalid type for arguments for method" + id);
+        }
+    }
     //fix this stuff
     //i feel this code can be written much better than what is here now
     //maybe we can make checkreturntype based on the ret data, and instead of

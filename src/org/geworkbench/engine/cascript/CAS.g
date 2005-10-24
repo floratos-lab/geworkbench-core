@@ -656,7 +656,7 @@ else
     //MethodCall should tell the difference between a CasModule and a CasDataPlug
     /*Testing purposes
     System.out.println("we're in object_call");*/
-    r = new CasCallReturn(ipt.MethodCall(id, id2, arglist));
+    r = ipt.checkCasCallReturn(new CasCallReturn(ipt.MethodCall(id, id2, arglist)));
   }
   //object_call, like a function call in JAVA through a object ex. genePanel.createPanel(i++,10,true)
 | #(PRINT a = expr)           { r = a; a.print(); } //print statement
