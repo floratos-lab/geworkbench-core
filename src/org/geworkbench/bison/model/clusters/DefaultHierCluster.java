@@ -112,5 +112,8 @@ public class DefaultHierCluster extends AbstractCluster implements HierCluster {
         return 0;
     }
 
+    public String toString() {
+        return getID();
+    }
 }
 

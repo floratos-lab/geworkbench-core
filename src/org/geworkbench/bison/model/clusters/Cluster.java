@@ -3,6 +3,8 @@ package org.geworkbench.bison.model.clusters;
 import org.geworkbench.bison.datastructure.properties.DSIdentifiable;
 
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
@@ -44,10 +46,17 @@ public interface Cluster extends Iterator, DSIdentifiable {
     /**
      * Returns only the children nodes that are leafs.
      */
-    public Cluster[] getLeafChildren();
+    public List<Cluster> getLeafChildren();
 
     /**
      * Returns the number of leaf children for this node.
      */
     public int getLeafChildrenCount();
+
+    /**
+     * Returns a map of cluster to number of leaf children for that cluster.
+     * Can be used to efficiently build a dendrogram or other representation without multiple tree traversals.
+     * @return A map of Cluster to Integer representing the number of leaf children for that cluster.
+     */
+    public Map<Cluster, Integer> getLeafChildrenCountMap();
 }

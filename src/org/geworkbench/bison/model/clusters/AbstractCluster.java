@@ -1,10 +1,10 @@
 package org.geworkbench.bison.model.clusters;
 
 import org.geworkbench.bison.util.DefaultIdentifiable;
+import org.apache.commons.collections15.map.HashedMap;
 
 import java.lang.reflect.Array;
-import java.util.Iterator;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
@@ -19,7 +19,7 @@ public abstract class AbstractCluster implements Cluster {
     /**
      * Holds all children of this <code>Cluster</code>
      */
-    protected Vector children = new Vector();
+    protected Vector<Cluster> children = new Vector<Cluster>();
     /**
      * Reference to <code>Cluster</code> which contains this <code>Cluster</code>
      * as a child
@@ -95,21 +95,23 @@ public abstract class AbstractCluster implements Cluster {
      *
      * @return all the leaf children as an array
      */
-    public Cluster[] getLeafChildren() {
-        Vector tempClusters = new Vector();
-        Cluster[] tmpCluster = null;
-        if (!isLeaf()) {
-            for (int i = 0; i < children.size(); ++i) {
-                tmpCluster = ((Cluster) children.get(i)).getLeafChildren();
-                for (int j = 0; j < tmpCluster.length; j++)
-                    tempClusters.add(tmpCluster[j]);
+    public List<Cluster> getLeafChildren() {
+        List<Cluster> leafList = new ArrayList<Cluster>();
+        ArrayList<Cluster> queue = new ArrayList<Cluster>();
+        queue.addAll(children);
+        while (!queue.isEmpty()) {
+            Cluster cluster = queue.remove(0);
+            if (!cluster.isLeaf()) {
+                for (Cluster cluster1 : ((AbstractCluster) cluster).children) {
+                    queue.add(cluster1);
+                }
+            } else {
+                leafList.add(cluster);
             }
-
-        } else
-            tempClusters.add(this);
-        Cluster[] toBeReturned = (Cluster[]) Array.newInstance(this.getClass(), tempClusters.size());
-        tempClusters.toArray(toBeReturned);
-        return toBeReturned;
+        }
+//        Cluster[] toBeReturned = (Cluster[]) Array.newInstance(this.getClass(), leafList.size());
+//        leafList.toArray(toBeReturned);
+        return leafList;
     }
 
     /**
@@ -119,13 +121,59 @@ public abstract class AbstractCluster implements Cluster {
      * @return number of leaf children
      */
     public int getLeafChildrenCount() {
-        int leafCount = 0;
-        if (!isLeaf()) {
-            for (int i = 0; i < children.size(); ++i)
-                leafCount += ((Cluster) children.get(i)).getLeafChildrenCount();
-        } else
-            leafCount = 1;
-        return leafCount;
+        int count = getLeafChildren().size();
+        if (count == 0) {
+            return 1;
+        } else {
+            return count;
+        }
+    }
+
+    public Map<Cluster, Integer> getLeafChildrenCountMap() {
+        Map<Cluster, Integer> map = new HashedMap<Cluster, Integer>();
+        Set<Cluster> visited = new HashSet<Cluster>();
+        Stack<Cluster> stack = new Stack<Cluster>();
+        int height = 1;
+        Cluster end = new DefaultHierCluster();
+        stack.push(end);
+        Cluster thisnode = this;
+        while (thisnode != end) {
+            List<Cluster> children = ((AbstractCluster) thisnode).children;
+            if (children.size() == 0) {
+                // Is a leaf
+//                System.out.println("Leaf node: "+thisnode.getID());
+                map.put(thisnode, 0);
+            } else if (visited.containsAll(children)) {
+                // Total children scores, add children then add to map
+                int total = 0;
+                for (Cluster cluster : children) {
+                    if (((AbstractCluster) cluster).children.size() == 0) {
+                        // Only add a child to the count if it is a leaf
+                        total++;
+                    }
+                    total += map.get(cluster);
+                }
+//                System.out.println("Node "+thisnode.getID()+" subtotal "+total);
+                map.put(thisnode, total);
+            }
+
+            // decide what node to work on now
+            boolean found = false;
+            for (Cluster child : children) {
+                if (!visited.contains(child)) {
+                    stack.push(thisnode);
+                    visited.add(thisnode);
+                    thisnode = child;
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                visited.add(thisnode);
+                thisnode = stack.pop();
+            }
+        }
+        return map;
     }
 
     /**
