@@ -30,6 +30,9 @@ public CASWalker() {
 	tokenNames = _tokenNames;
 }
 
+/**
+ * the root of the initial tree is going to be walkme, start here!
+*/
 	public final void walkme(AST _t) throws RecognitionException {
 		
 		AST walkme_AST_in = (_t == ASTNULL) ? null : (AST)_t;
@@ -72,15 +75,11 @@ public CASWalker() {
 			_t = __t172;
 			_t = _t.getNextSibling();
 			
-			/*Testing purposes
-			System.out.println("got here");*/
 			//make new symboltable for main
 			ipt.symt = new CasSymbolTable(ipt.symt, ipt.symt.getLevel()+1);
 			fbody(mainbody);
 			//get rid of main's symbol table
 			ipt.symt = ipt.symt.Parent();
-			/*Testing purposes
-			System.out.println("after main");*/
 			
 		}
 		catch (RecognitionException ex) {
@@ -90,6 +89,9 @@ public CASWalker() {
 		_retTree = _t;
 	}
 	
+/**
+ * public variable declaration
+*/
 	public final void publicvar(AST _t) throws RecognitionException {
 		
 		AST publicvar_AST_in = (_t == ASTNULL) ? null : (AST)_t;
@@ -103,7 +105,6 @@ public CASWalker() {
 			_t = _retTree;
 			_t = __t178;
 			_t = _t.getNextSibling();
-			/*Testing purposes System.out.println("we're in publicvar");*/
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
@@ -112,6 +113,9 @@ public CASWalker() {
 		_retTree = _t;
 	}
 	
+/**
+ * defining a function
+*/
 	public final void function(AST _t) throws RecognitionException {
 		
 		AST function_AST_in = (_t == ASTNULL) ? null : (AST)_t;
@@ -164,9 +168,6 @@ public CASWalker() {
 			
 			if (id.equals("main")) {
 			mainbody = fbody;
-			/*Testing purposes
-			System.out.println("It's almost alive!");
-			*/
 			}
 			ipt.makeFunction(id, argList, fbody, ipt.symt, typereturn, brackets);
 			
@@ -178,6 +179,9 @@ public CASWalker() {
 		_retTree = _t;
 	}
 	
+/**
+ * this is a variable declaration, like int a = 5; 
+*/
 	public final void variable(AST _t) throws RecognitionException {
 		
 		AST variable_AST_in = (_t == ASTNULL) ? null : (AST)_t;
@@ -254,11 +258,7 @@ public CASWalker() {
 					}
 					}
 					}
-					/*Testing purposes System.out.println("we're in a variable declaration for variable " + id)*/;
-					/*Testing purposes
-					if (indices == null)
-					System.out.println("We're not dealing with an array");
-					*/
+					
 					if (ipt.symt.existsinscope(id)) {
 					throw new CasException(id + " already exists as a function or variable");
 					}
@@ -284,6 +284,12 @@ public CASWalker() {
 		_retTree = _t;
 	}
 	
+/** 
+ * the type of a function or variable returns one, possibly two strings
+ * if the type is module, there is a secondary string that defines the type of module
+ * if not, then the type is an ordinary primitive
+ * type is used for variables, functions, formal parameter lists, arrays, and matrices
+*/
 	public final CasDataType  type(AST _t) throws RecognitionException {
 		CasDataType typereturn;
 		
@@ -350,15 +356,9 @@ public CASWalker() {
 			_t = _t.getNextSibling();
 			
 			if (isdiff == 1) {
-			/*Testing purposes
-			System.out.println("We got ourselves a type of module with type of " + id);
-			*/
 			typereturn = new CasModule(id);
 			}
 			else if (isdiff == 2) {
-			/*Testing purposes
-			System.out.println("We got ourselves a type of datatype with type of " + id);
-			*/
 			typereturn = new CasDataPlug(id);
 			}
 			else {
@@ -383,6 +383,9 @@ public CASWalker() {
 		return typereturn;
 	}
 	
+/**
+ * list of formal arguments in a function definition
+*/
 	public final Vector<CasArgument>  args(AST _t) throws RecognitionException {
 		Vector<CasArgument> argList;
 		
@@ -460,6 +463,9 @@ public CASWalker() {
 		return argList;
 	}
 	
+/**
+ *index keeps track of all the indices that are defined in an variable declaration
+*/
 	public final Vector<CasDataType>  index(AST _t) throws RecognitionException {
 		Vector<CasDataType> v;
 		
@@ -498,6 +504,9 @@ public CASWalker() {
 		return v;
 	}
 	
+/**
+ * expr is a big deal, it deals with almost everything the language can throw at it
+*/
 	public final CasDataType  expr(AST _t) throws RecognitionException {
 		CasDataType r;
 		
@@ -1242,6 +1251,9 @@ public CASWalker() {
 		return r;
 	}
 	
+/**
+ * primitive types, including void
+*/
 	public final void primitives(AST _t) throws RecognitionException {
 		
 		AST primitives_AST_in = (_t == ASTNULL) ? null : (AST)_t;
@@ -1312,7 +1324,6 @@ public CASWalker() {
 			a=expr(_t);
 			_t = _retTree;
 			}
-			/*Testing purposes System.out.println("hello");*/
 			_t = __t209;
 			_t = _t.getNextSibling();
 		}
@@ -1324,6 +1335,9 @@ public CASWalker() {
 		return a;
 	}
 	
+/**
+ * list of parameters for a function call
+*/
 	public final  Vector<CasDataType>  param(AST _t) throws RecognitionException {
 		 Vector<CasDataType> arglist ;
 		

@@ -102,7 +102,9 @@ protected ESC : '\\' ( 'n' | 'r' | 't' | 'b' | 'f' | '"' | '\'' | '\\' );
 String : '"'! (ESC|~('"'|'\\'|'\n'|'\r'))* '"'! ;
 
 //Adapted from antlr example java.g
-// Whitespace -- ignored
+/**
+ *Whitespace -- ignored
+*/
 WS	:	(	' '
 		|	'\t'
 		|	'\f'
@@ -117,14 +119,18 @@ WS	:	(	' '
 		{ _ttype = Token.SKIP; }
 	;
 
-// Single-line comments
+/**
+ * Single-line comments
+*/
 SL_COMMENT
 	:	"//"
 		(~('\n'|'\r'))* ('\n'|'\r'('\n')?)
 		{$setType(Token.SKIP); newline();}
 	;
 
-// multiple-line comments
+/**
+ * Multiple-line comments
+*/
 ML_COMMENT
 	:	"/*"
 		(	/*	'\r' '\n' can be matched in one alternative or by matching
@@ -150,7 +156,7 @@ ML_COMMENT
 
 class CASParser extends Parser;
 options {
-    k = 2;
+    k = 4;
     buildAST = true;
     exportVocab = CAStokens;
     defaultErrorHandler = true;
@@ -203,26 +209,41 @@ tokens {
     }
 }
 
+/**
+ * program starts here
+*/
 program :
     (pubVarDecl)* (funcDecl)+ EOF!
     { #program = #([PROG, "PROG"], program); }
     ;
 
+/**
+ * public variable declaration
+*/
 pubVarDecl:
     PUBLIC! declareStmt
     { #pubVarDecl = #([PUBLICVAR, "PUBLICVAR"], pubVarDecl);}
     ;
 
+/**
+ * function declaration token
+*/
 funcDecl:
     (type(LEFTBRACKET RIGHTBRACKET)*| isvoid) ID argDeclarationList functionbody
     { #funcDecl = #([FUNCTION, "FUNCTION"], funcDecl); }
     ;
 
+/**
+ * function body; this is what you find in the braces
+*/
 functionbody:
     bracestatement
     { #functionbody = #([FUNCTIONBODY, "FUNCTIONBODY"], functionbody); }
     ;
 
+/**
+ * list of types of statements
+*/
 statement
     : evaluateStmt
     | breakStmt
@@ -236,186 +257,322 @@ statement
     | printStmt
     ;
 
+/**
+ * simple print statement
+*/
 printStmt
     : PRINT^ eval SEMICOLON!
     ;
 
+/**
+ * simple wait statement
+*/
 waitStmt
     : WAIT^ eval SEMICOLON!
     ;
 
+/**
+ * for loop composed of 4 pieces - the <1>;<2>;<3>; { <4> }
+*/
 forstatement
     : FORSTR^ forLeft forMid forRight forBody
     ;
 
+/**
+ * first part of a for loop, generally the variable initialization
+*/
 forLeft
     : LEFTPAREN! (declaration | evaluate)
     {#forLeft = #([FORLEFT, "FORLEFT"], forLeft); }
     ;
 
+/**
+ * second part of a for loop, the evaluation
+*/
 forMid
-    : SEMICOLON! evaluate
+    : SEMICOLON! expression
     {#forMid = #([FORMID, "FORMID"], forMid); }
     ;
 
+/**
+ * third part of a for loop, generally the incrementation
+*/
 forRight
     : SEMICOLON! evaluate RIGHTPAREN!
     {#forRight = #([FORRIGHT, "FORRIGHT"], forRight); }
     ;
 
+/**
+ * fourth part of a for loop, the body
+*/
 forBody
     : bracestatement
     {#forBody = #([FORBODY, "FORBODY"], forBody); }
     ;
 
+/**
+ * evaluation statement, only returns booleans
+*/
 evaluateStmt
     : evaluate SEMICOLON!
     ;
 
+/**
+ * break statement
+*/
 breakStmt
     : BREAK^ SEMICOLON!
     ;
 
+/**
+ * continue statement
+*/
 continueStmt
     : CONTINUE^ SEMICOLON!
     ;
 
+/**
+ * brace statement: can be either a single statement of a set of statements in braces
+*/
 bracestatement
     : (LEFTBRACE! (statement)+ RIGHTBRACE!) {#bracestatement = #([STATEMENTS, "STATEMENTS"], bracestatement); }| statement
     ;
 
+/**
+ * while loop statements with the evaluation and the following brace statement
+*/
 whileStmt
     : WHILESTR^ expressionStmt bracestatement
     ;
 
+/**
+ * while loop statements with the evaluation, the if body, and an else statement
+*/
 ifStmt
     : IFSTR^ expressionStmt ifStmtBody elseStmt
     ;
+
+/**
+ * if body is just a brace statement
+*/
 
 ifStmtBody
     : bracestatement
     {#ifStmtBody = #([THEN, "THEN"], ifStmtBody); }
     ;
 
+/**
+ * else statement, if it exists, notice the use of options {greedy = true;}
+*/
 elseStmt
     : (options {greedy = true;}
         : ELSE^ bracestatement)?
     ;
+
+/**
+ * condition for the while loop and the if conditional
+*/
 
 expressionStmt
     : LEFTPAREN! expression RIGHTPAREN!
     {#expressionStmt = #([CONDITION, "CONDITION"], expressionStmt); }
     ;
 
+/** 
+ * variable declaration statement
+*/
 declareStmt
     : declaration SEMICOLON!
     ;
 
+/**
+ *  variable declaration including its type, its identifier, and a third token called declareType
+*/
 declaration
     : type id declareType
     {#declaration = #([VARIABLE, "VARIABLE"], declaration); }
     ;
 
+/**
+ * return statement with an evaluation
+*/
 returnStmt
     : RETURNSTR^ evaluate SEMICOLON!
     ;
 
+/**
+ * evaluation statement including assignment
+*/
 evaluate
     : expression (EQUAL! expression
     {#evaluate = #([ASSIGNMENT, "ASSIGNMENT"], evaluate); })?
     ;
 
+/**
+ * caObj, this can be either a caValue of a caCall
+*/
 caObj:
     ID PERIOD! ID
     (argList {#caObj = #([OBJECT_CALL, "OBJECT_CALL"], caObj);}
     | /*empty*/ {#caObj = #([OBJECT_VALUE, "OBJECT_VALUE"], caObj);})
     ;
 
+/**
+ * caValue, AKA CasValue; this is what you use when you want to call a getDataSet, or setDataSet call
+ * the first ID is the module name, the second ID is the name of the "variable", in our case DataSet
+*/
 caValue
     : ID PERIOD! ID {#caValue = #([OBJECT_VALUE, "OBJECT_VALUE"], caValue);}
     ;
 
+/**
+ * caCall, AKA CasMethod; this is what you use to make a module call a method
+ * the first ID is the module name, the second ID is the method name
+*/
 caCall
     : ID PERIOD! ID argList {#caCall = #([OBJECT_CALL, "OBJECT_CALL"], caCall);}
     ;
 
+/**
+ * id is an identifier followed by an index.  If the index has a value, we're dealing with an array.
+ * If the index is empty, we're dealing with just a plain variable.
+*/
 id
     : ID index
     {#id = #([IDENTIFIER, "IDENTIFIER"], id); }
     ;
 
+/**
+ * index shows us in the tree if we have an array or not
+*/
 index
     : LEFTBRACKET! indexValue RIGHTBRACKET! indexTail
     {#index = #([INDEX, "INDEX"], index); }
     | /* nothing */
     ;
 
+/**
+ * if we have an indextail, then we have a matrix
+*/
 indexTail
     : (LEFTBRACKET! indexValue RIGHTBRACKET!)?
     ;
 
+/**
+ * an indexValue, value found inside brackets denoting placement in an array, must be an integer
+*/
 indexValue
-    : eval //it has to be a number, it MUST be an integer
+    : eval 
     ;
 
+/**
+ * declareType, the third part of the rule declare, can assign values to a variable right off the bat, and
+ * can list off more identifier with assignvalues aka int i = 0; j, k = 5;
+*/
 declareType
     : ( assignValue)? (COMMA! id ( assignValue)?)*
     ;
 
+/**
+ * rule found under declare type that holds the value being assigned to an identifier
+*/
 assignValue
     : EQUAL^ expression
     ;
 
+/**
+ * the types found in CAScript
+*/ 
 type:
     (INT|FLOAT|BOOLSTR|STRING|(MODULE ID)| (DATATYPE ID)) //you should have dynamic types based on the parsing of the registry here.
     { #type = #([TYPE, "TYPE"], type); }
     ;
 
+/**
+ * void is a possible type for methods
+*/
 isvoid:
     VOID
     { #isvoid = #([TYPE, "TYPE"], isvoid); }
     ;
 
+/**
+ * precedence is set all the way down to an atom, starting here:
+ * expression: (compare || compare)*
+*/
 expression
     : compare (OR^ compare)*
     ;
 
+/**
+ * compare: (inverse && inverse)*
+ * 
+*/
 compare
     : inverse (AND^ inverse)*
     ;
 
+/**
+ * inverse: !compareTo
+*/
 inverse
     : (NOT^)?
         compareTo
     ;
 
+/**
+ * compareTo: (eval [< or <= or > or >= or == or !=] eval)*
+*/
 compareTo
     : eval ( ( LESS^ | LESSEQUAL^ | MORE^ | MOREEQUAL^
         | EQUALTO^ | NOTEQUAL^) eval ) *
     ;
-//numbers and integers start showing at eval
+/**
+ * eval: (evalTerm [+ or -] evalTerm)*
+ * we have to be greedy to make sure pluses and minuses are not taken as positive and negative signs for numbers
+ * numbers and integers start showing at eval
+*/
 eval
     : evalTerm ((options {greedy=true;}: ( PLUS^ | MINUS^)) evalTerm ) *
     ;
 
+/**
+ * evalTerm: (negate [* or / or &] negate)*
+*/
 evalTerm
     : negate ( ( TIMES^ | SLASH^ | MODULO^) negate) *
     | LEFTBRACKET! negate RIGHTBRACKET!
     ;
 
+/**
+ * negate: -afteratom
+*/
 negate
     : (MINUS! afteratom {#negate = #([NEGATION, "NEGATION"], negate); })
     |afteratom;
 
+/**
+ * afteratom: beforeatom or beforeatom++ or beforeatom--
+ * incrementation and decrementation before and after a value was tricky
+*/
 afteratom
     : beforeatom (options {greedy=true;}:
       PLUSPLUS! {#afteratom = #([INCAFTER,"INCAFTER"],afteratom);}
     | MINUSMINUS! {#afteratom = #([DECAFTER,"DECAFTER"],afteratom);})?;
 
+/**
+ * before: atom or --beforeatom or ++beforeatom
+ * incrementation and decrementation before and after a value was tricky
+*/
 beforeatom
     : PLUSPLUS! atom { #beforeatom = #([INCBEFORE,"INCBEFORE"], beforeatom);}
     | MINUSMINUS! atom { #beforeatom = #([DECBEFORE,"DECBEFORE"], beforeatom); }
     | atom;
+
+/**
+ * an atom can a lot of things: an identifier, a caCall, a caValue, a functioncall, a number (integer or double)
+ * a string, true, false, it can even be an entire new expression in a set of parentheses, or a new declaration
+*/
 atom
     : id
     | caObj
@@ -428,25 +585,46 @@ atom
     | newatom
     ;
 
+/**
+ * not supported yet: It's much like an instantiation in java - new identifier argList
+*/
 newatom
     : NEW^ ID argList
     ;
 
+/**
+ * integer or double
+*/
 numberValue
     : NUM_INT
     | NUM_FLOAT
     ;
 
+/**
+ * argList, or an argument list: 
+ * you have a left parentheses, and then expressions separated by commas, then a right parantheses
+ * example: (5, 9, true, "hello")
+*/
 argList
     : LEFTPAREN! ((expression) (COMMA! expression)*)? RIGHTPAREN!
     {#argList = #([ARGS, "ARGS"], argList); }
     ;
 
+/**
+ * calling a function entails an identifier (which will have to be tested as an identifier standing for a function)
+ * and its argList
+*/
 callFunction
     : ID argList
     {#callFunction = #([FUNCTION_CALL, "FUNCTION_CALL"], callFunction); }
     ;
 
+/**
+ * argDeclarationList, or argument declaration list:
+ * you have a left parenthesis, and then sets of types, IDs, and possible opening and closing left and right brackets
+ * with sets separated by commas, then a right parenthesis
+ * example: (int i[][], int j, module genePanel gpan, double k)
+*/
 argDeclarationList
     : LEFTPAREN! (type ID (LEFTBRACKET RIGHTBRACKET)* (COMMA! type ID (LEFTBRACKET RIGHTBRACKET)*)* )? RIGHTPAREN!
     {#argDeclarationList = #([ARGDEC, "ARGDEC"], argDeclarationList); }
@@ -473,30 +651,30 @@ importVocab = CAStokens;
     AST mainbody = null;
 }
 
-//start here!
+/**
+ * the root of the initial tree is going to be walkme, start here!
+*/ 
 walkme
 : #(PROG (publicvar)* (function)+)
   {
-    /*Testing purposes
-    System.out.println("got here");*/
     //make new symboltable for main
     ipt.symt = new CasSymbolTable(ipt.symt, ipt.symt.getLevel()+1);
     fbody(mainbody);
     //get rid of main's symbol table
     ipt.symt = ipt.symt.Parent();
-    /*Testing purposes
-    System.out.println("after main");*/
   }
 ;
 
-//public variable declaration
-//to do list - put this variable into symbol table for public variables
+/**
+ * public variable declaration
+*/
 publicvar
-: #(PUBLICVAR variable) {/*Testing purposes System.out.println("we're in publicvar");*/}
+: #(PUBLICVAR variable)
 ;
 
-//defining a function
-//to do list - change "fbody" to "fbody:." check if it's main, execute it where you have system.out.println("Hello");
+/**
+ * defining a function
+*/
 function
 { int brackets = 0;
   String id = "";
@@ -507,15 +685,14 @@ function
 {
   if (id.equals("main")) {
     mainbody = #fbody;
-    /*Testing purposes
-    System.out.println("It's almost alive!");
-    */
   }
   ipt.makeFunction(id, argList, fbody, ipt.symt, typereturn, brackets);
 }
 ;
 
-//list of formal arguments in a function definition
+/**
+ * list of formal arguments in a function definition
+*/
 args returns [Vector<CasArgument> argList]
 {argList = new Vector<CasArgument>();
 CasArgument temp = null;
@@ -531,19 +708,16 @@ typereturn = null;
 temp = null;}
 )*);//notice the kleene closure.  We can keep finding more parameters and we want all of them
 
-//this is a variable declaration, like int a = 5;
-//fix this up, put these actions into CasInterpreter Class
+/**
+ * this is a variable declaration, like int a = 5; 
+*/
 variable
 { String id = "";
   CasDataType value = null;
   CasDataType typereturn;
   Vector<CasDataType> indices = null;}
 : #(VARIABLE typereturn = type (#(IDENTIFIER ID {id = #ID.getText();} (indices = index)?) (#(EQUAL value = expr))?
-{/*Testing purposes System.out.println("we're in a variable declaration for variable " + id)*/;
-/*Testing purposes
-if (indices == null)
-  System.out.println("We're not dealing with an array");
-*/
+{
 if (ipt.symt.existsinscope(id)) {
   throw new CasException(id + " already exists as a function or variable");
 }
@@ -555,18 +729,22 @@ value = null;
 create more entries in the symbol table*/
 ;
 
-//index keeps track of all the indices that are defined in an variable declaration
-index returns [Vector<CasDataType> v] //arrays are still not supported rooz
+/**
+ *index keeps track of all the indices that are defined in an variable declaration
+*/
+index returns [Vector<CasDataType> v]
 {v = new Vector<CasDataType>();
 CasDataType aindex = null;}
 : #(INDEX (aindex = expr {v.add(aindex);})*)
 ;
 
 
-//the type of a function or variable returns one, possibly two strings
-//if the type is module, there is a secondary string that defines the type of module
-//if not, then the type is an ordinary primitive
-//type is used for variables, functions, formal parameter lists, arrays, and matrices
+/** 
+ * the type of a function or variable returns one, possibly two strings
+ * if the type is module, there is a secondary string that defines the type of module
+ * if not, then the type is an ordinary primitive
+ * type is used for variables, functions, formal parameter lists, arrays, and matrices
+*/
 type returns [CasDataType typereturn]
 {
 typereturn = null;
@@ -576,15 +754,9 @@ String id = "";
 : #(TYPE (n:primitives | (MODULE ID {isdiff = 1; id = #ID.getText();}) | (DATATYPE ID {isdiff = 2; id = #ID.getText();})))
 {
 if (isdiff == 1) {
-  /*Testing purposes
-  System.out.println("We got ourselves a type of module with type of " + id);
-  */
   typereturn = new CasModule(id);
 }
 else if (isdiff == 2) {
-  /*Testing purposes
-  System.out.println("We got ourselves a type of datatype with type of " + id);
-  */
   typereturn = new CasDataPlug(id);
 }
 else {
@@ -602,6 +774,9 @@ else {
 }}
 ;
 
+/**
+ * primitive types, including void
+*/
 primitives
 : "void"
 | "int"
@@ -610,12 +785,16 @@ primitives
 | "string"
 ;
 
+
 fbody returns [CasDataType a]
 {a = null;}
-: #(FUNCTIONBODY (a = expr) {/*Testing purposes System.out.println("hello");*/})
-; //deals with the overhead of the FUNCTIONBODY keyword
+: #(FUNCTIONBODY (a = expr))
+; 
 
-expr returns [CasDataType r] //support arrays rooz
+/**
+ * expr is a big deal, it deals with almost everything the language can throw at it
+*/
+expr returns [CasDataType r] 
 {
 r = null;
 CasDataType a,b;
@@ -762,8 +941,11 @@ else
 | #(DECBEFORE a = expr)                  {r = a.db();} //incrementation after operation, --a
 ;
 
+/**
+ * list of parameters for a function call
+*/
 param returns [ Vector<CasDataType> arglist ]
 { arglist = null;
   CasDataType a;}
 : #(ARGS { arglist = new Vector<CasDataType>(); } ( a=expr      { arglist.add( a ); })*)
-;//list of parameters for a function call
+;

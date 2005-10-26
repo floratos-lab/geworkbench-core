@@ -1039,6 +1039,9 @@ tryAgain:
 		_returnToken = _token;
 	}
 	
+/**
+ *Whitespace -- ignored
+*/
 	public final void mWS(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = WS;
@@ -1100,6 +1103,9 @@ tryAgain:
 		_returnToken = _token;
 	}
 	
+/**
+ * Single-line comments
+*/
 	public final void mSL_COMMENT(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = SL_COMMENT;
@@ -1154,6 +1160,9 @@ tryAgain:
 		_returnToken = _token;
 	}
 	
+/**
+ * Multiple-line comments
+*/
 	public final void mML_COMMENT(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = ML_COMMENT;

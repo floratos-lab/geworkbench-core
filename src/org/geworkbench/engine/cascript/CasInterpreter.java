@@ -9,7 +9,7 @@ import java.util.Vector;
  * Interpreter routines that is called directly from the tree walker.
  *
  * @author Behrooz Badii - badiib@gmail.com
- * @version $Id: CasInterpreter.java,v 1.16 2005-10-26 19:39:07 bb2122 Exp $
+ * @version $Id: CasInterpreter.java,v 1.17 2005-10-26 21:51:30 bb2122 Exp $
  */
 class CasInterpreter {
     CasSymbolTable symt;
@@ -210,28 +210,18 @@ class CasInterpreter {
         }
         if (null != a.getName()) {
             if (a instanceof CasInt && b instanceof CasInt) {
-                /*Testing purposes
-                System.out.println(((CasInt) a).name + " has value " + ((CasInt) a).getvar());
-                System.out.println("new value " + ((CasInt) b).getvar());*/
                 CasDataType x = rvalue(b);
                 x.setName(a.name);
-                //symt.setVar( x.name, x, true, 0 );  // scope?
                 symt.setVar(a.name, (CasInt) x);
                 return new CasBool(true);
             }
             if (a instanceof CasDouble) {
-                /*Testing purposes
-                System.out.println(((CasInt) a).name + " has value " + ((CasDouble) a).getvar());*/
                 if (b instanceof CasDouble) {
-                    /*Testing purposes
-                    System.out.println("new value " + ((CasDouble) b).getvar());*/
                     CasDataType x = rvalue(b);
                     x.setName(a.name);
                     symt.setVar(a.name, (CasDouble) x);
                 }
                 if (b instanceof CasInt) {
-                    /*Testing purposes
-                    System.out.println("new value " + ((CasInt) b).getvar());*/
                     CasDataType x = rvalue(b);
                     x.setName(a.name);
                     symt.setVar(a.name, (CasInt) x);
@@ -239,9 +229,6 @@ class CasInterpreter {
                 return new CasBool(true);
             }
             if (a instanceof CasBool && b instanceof CasBool) {
-                /*Testing purposes
-                System.out.println(((CasBool) a).name + " has value " + ((CasBool) a).getvar());
-                System.out.println("new value " + ((CasBool) b).getvar());*/
                 CasDataType x = rvalue(b);
                 x.setName(a.name);
                 symt.setVar(a.name, (CasBool) x);
@@ -258,10 +245,6 @@ class CasInterpreter {
                     b = new CasString(Double.toString(((CasDouble)b).getvar()));
                 }
                 if (b instanceof CasString) {
-                    /*Testing purposes
-                    System.out.println(((CasString) a).name + " has value " +
-                                       ((CasString) a).getvar());
-                    System.out.println("new value " + ((CasString)b).getvar());*/
                     CasDataType x = rvalue(b);
                     x.setName(a.name);
                     symt.setVar(a.name, (CasString) x);
@@ -270,8 +253,6 @@ class CasInterpreter {
             }
             //should this be allowed?
             if (a instanceof CasModule && b instanceof CasModule) {
-                /*Testing purposes
-                System.out.println("in Casmodule part of ipt.assign(a,b)");*/
                 if (((CasModule)a).getType().equals(((CasModule)b).getType())) {
                     //you have make sure the types are the same!
                     CasDataType x = rvalue(b);
@@ -283,8 +264,6 @@ class CasInterpreter {
                     throw new CasException("Assignment for modules " + a.getName() + " and " + b.getName() + "is invalid; they are not of the same type");
             }
             if (a instanceof CasDataPlug) {
-                /*Testing purposes
-                System.out.println("in CasDataPlug part of ipt.assign(a,b)");*/
                 //if b is also a CasDataPlug
                 //remember to check that anything being assigned to a CasDataPlug has to be assignable to the original interface
                 if (b instanceof CasDataPlug) {
@@ -328,7 +307,7 @@ class CasInterpreter {
                         e.printStackTrace();
                         throw new CasException(((CasValue) b).formodule + "." + ((CasValue) b).othername + " cannot be assigned to " + ((CasDataPlug)a).getName() + " since the datatypes are not compatible.");
                     }
-                    //fix this as well, make sure the object from get when invoked is good for the CasDataPlug
+                    //make sure the object from get when invoked is good for the CasDataPlug
                 }
                 else
                     throw new CasException ("A datatype ("+a.getName()+") can only be assigned values from another datatype, a module's methods, or a module's variables");
@@ -341,6 +320,7 @@ class CasInterpreter {
         }
         return a.error("=");
     }
+    
     /**
      * helper method that accesses arrays and matrices
      * There is an error here, sometimes we get an array out of bounds exception in this method
