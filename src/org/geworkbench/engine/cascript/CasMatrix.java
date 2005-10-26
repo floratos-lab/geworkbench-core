@@ -2,6 +2,12 @@ package org.geworkbench.engine.cascript;
 
 import java.io.PrintWriter;
 
+/** the wrapper class for Arrays
+*
+* @author Behrooz Badii - badiib@gmail.com
+* CasMatrix is a wrapper class for a 2D arrays
+*/
+
 class CasMatrix extends CasDataType {
     CasDataType [][] var;
     CasDataType type;

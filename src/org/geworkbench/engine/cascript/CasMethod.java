@@ -4,7 +4,7 @@ import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import org.geworkbench.engine.management.ComponentRegistry;
 
-/* the wrapper class for Methods within CasModules
+/** the wrapper class for Methods within CasModules
 *
 * @author Behrooz Badii - badiib@gmail.com
 */

@@ -9,7 +9,7 @@ import java.util.Vector;
  * Interpreter routines that is called directly from the tree walker.
  *
  * @author Behrooz Badii - badiib@gmail.com
- * @version $Id: CasInterpreter.java,v 1.15 2005-10-24 21:25:42 bb2122 Exp $
+ * @version $Id: CasInterpreter.java,v 1.16 2005-10-26 19:39:07 bb2122 Exp $
  */
 class CasInterpreter {
     CasSymbolTable symt;
@@ -30,8 +30,9 @@ class CasInterpreter {
         CDTI = new CasDataTypeImport();
     }
 
-    //used for variable initialization in the symbol table
-    //modify this for CasDataPlug
+    /**used for variable initialization in the symbol table
+     *
+    */
     public void putvar(String id, CasDataType type, Vector<CasDataType> indices, CasDataType value) {
         if (indices == null) {
             if (type instanceof CasModule) {
@@ -97,13 +98,10 @@ class CasInterpreter {
         }
     }
 
-    //state CAN change in this method
-    //this is used in the assignment token in the walker and when you have to initialize a variable
-    //REMEMBER TO PUT MORE STUFF IN HERE!!!!
-    //YOU REALLY GOTTA FIX THIS METHOD
-    //should you be throwing a CasException if something goes wrong at CasValue? how should we be doing that?
-    //make the return type different for each one.  If it is successful, return a, if not, throw an exception.
-    //to do - you have to check if B is a CasCallReturn, if it is, it can be assigned to a CasInt, CasDouble, CasString, CasBool, or CasModule
+    /**state CAN change in this method
+     * this is used in the assignment token in the walker and when you have to initialize a variable
+     * make the return type different for each one.  If it is successful, return a, if not, throw an exception.
+    */
     public CasDataType assign(CasDataType a, CasDataType b) {
         /*Testing purposes
         System.out.println("in assignment");*/
@@ -343,8 +341,10 @@ class CasInterpreter {
         }
         return a.error("=");
     }
-
-    //you have to test for array out of bounds exceptions here!, would it be a null pointer exception?
+    /**
+     * helper method that accesses arrays and matrices
+     * There is an error here, sometimes we get an array out of bounds exception in this method
+     */
     public CasDataType dimensionAccess(String id, Vector<CasDataType> indices) {
         /*Testing purposes
         System.out.println("in dimensionAccess() call");*/
@@ -368,8 +368,9 @@ class CasInterpreter {
         } else throw new CasException("there are too many indices, only two dimensional arrays are supported");
     }
 
-    //this method checks the object within CasCallReturn and either changes it into a CasInt, CasString, CasBool, CasDouble, or keeps the object intact
-    //should we add CasModule support?
+    /**
+     * this method checks the object within CasCallReturn and either changes it into a CasInt, CasString, CasBool, CasDouble, or keeps the object intact
+    */
     public CasDataType checkCasCallReturn(CasCallReturn b) {
         if (b.getRetValue() instanceof Integer) {
             return new CasInt(((Integer)b.getRetValue()).intValue());
@@ -391,9 +392,11 @@ class CasInterpreter {
         }
     }
 
-    //state CAN change in this method
-    //This method is objectionable.  We are worried that a getValue() call in geWorkBench will affect the system and not just return a value.
-    //are the get and set methods implemented correctly in geWorkBench so that we don't have changes to the system?
+    /**state CAN change in this method
+    *This method is objectionable.  We are worried that a getValue() call in geWorkBench will affect the system and not just return a value.
+    *This method calls a get<somedataset>() method in geWorkBench and return and object.  If it is an Integer, String, Boolean, Double, or Float
+     *it is morphed into the corresponding Cas Class (CasInt, CasString, etc.).
+    */
     public CasDataType checkCasValue(CasValue b) {
         CasValue get = new CasValue(((CasValue) b).formodule, "get" + ((CasValue) b).othername, ((CasValue) b).association);
         try {
@@ -423,8 +426,10 @@ class CasInterpreter {
         }
     }
 
-    //waiting is done in seconds, not milliseconds
-    //stopme is called in a WAIT statement
+    /**
+     * waiting is done in seconds, not milliseconds
+     * stopme is called in a WAIT statement 
+    */
     public CasDataType stopme(CasDataType a) {
         /*Testing purposes
         System.out.println("in stopme");*/
@@ -442,10 +447,9 @@ class CasInterpreter {
         }
     }
 
-    //state CAN change in this method
-    //methodcall occurs when the CasMethod is used, so we will find it in OBJECT_CALL
-    //MethodCall is going to have to be public Object.
-    //we need to have return types here!
+    /*state CAN change in this method
+    *methodcall occurs when the CasMethod is used, so we will find it in OBJECT_CALL
+    */
     public Object MethodCall(String casname, String casmethod, Vector<CasDataType> v) {
         Object ret = null;
         Object [] args = vectortoargs(v, casmethod);
@@ -495,8 +499,9 @@ class CasInterpreter {
         }
     }
 
-    //state CAN change in this method buy only for DataPlugs, not Modules
-    //this is called by MethodCall if what we're dealing with is a DataPlug and not a Module
+    /* state CAN change in this method buy only for DataPlugs, not Modules
+     * this is called by MethodCall if what we're dealing with is a DataPlug and not a Module
+    */
     public Object OtherMethodCall(String casname, String casmethod, Object[] args) {
         Object ret = null;
         if (symt.exists(casname + " " + casmethod) &&
@@ -539,7 +544,9 @@ class CasInterpreter {
         }
     }
 
-    //helper function for CasInterpreter.OtherMethodCall
+    /**
+     * helper function for CasInterpreter.OtherMethodCall
+     */
     static Class[] argstoclasses(Object[] args) {
         Class[] p = new Class[args.length];
         for (int i = 0; i < p.length; i++) {
@@ -556,7 +563,9 @@ class CasInterpreter {
         return p;
     }
 
-    //helper function for CasInterpreter.MethodCall
+    /**
+     * helper function for CasInterpreter.MethodCall
+     */
     static Object[] vectortoargs(Vector<CasDataType> v, String id) {
         Object args[] = v.toArray();
         for (int i = 0; i < args.length; i++) {
@@ -592,94 +601,106 @@ class CasInterpreter {
         return args;
     }
 
-    //not used
-    public CasDataType[] convertExprList(Vector v) {
-        /* Note: expr list can be empty */
-        CasDataType[] x = new CasDataType[v.size()];
-        for (int i = 0; i < x.length; i++)
-            x[i] = (CasDataType) v.elementAt(i);
-        return x;
-    }
-
-    //not used
-    public static String[] convertVarList(Vector v) {
-        /* Note: var list can be empty */
-        String[] sv = new String[ v.size() ];
-        for (int i = 0; i < sv.length; i++)
-            sv[i] = (String) v.elementAt(i);
-        return sv;
-    }
-
-    //gets the variable from the SymbolTable
+    /**
+    * gets the variable from the SymbolTable
+     */
     public CasDataType getVariable(String s) {
         // default static scoping
         CasDataType x = symt.findVar(s);
         return x;
     }
 
-    //you need to make a copy, so that when i = j, they don't become the same reference
+    /**
+     * you need to make a copy, so that when i = j, they don't become the same reference
+     */
     public CasDataType rvalue(CasDataType a) {
         if (null == a.name) return a;
         return a.copy();
     }
 
-    //for this method to forNext(), these are all used for control flow
+    /**
+     * used in control flow
+     */
     public void setBreak() {
         control = fc_break;
     }
-
+    /**
+     * used in control flow
+     */
     public boolean breakSet() {
         if (control == fc_break) {
             return true;
         } else return false;
     }
-
+    /**
+     * used in control flow
+     */
     public void setContinue() {
         control = fc_continue;
     }
-
+    /**
+     * used in control flow
+     */
     public boolean continueSet() {
         if (control == fc_continue) {
             return true;
         } else return false;
     }
-
+    /**
+     * used in control flow
+     */
     public void setReturn() {
         control = fc_return;
     }
-
+    /**
+     * used in control flow
+     */
     public void tryResetFlowControl() {
         control = fc_none;
     }
-
+    /**
+     * used in control flow
+     */
     public void loopNext() {
         if (control == fc_continue) tryResetFlowControl();
     }
-
+    /**
+     * used in control flow
+     */
     public void loopEnd() {
         if (control == fc_break) tryResetFlowControl();
         symt = symt.Parent();
     }
-
+    /**
+     * used in control flow
+     */
     public boolean canProceed() {
         return control == fc_none;
     }
-
+    /**
+     * used in control flow
+     */
     public void loopInit() {
         // create a new symbol table
         symt = new CasSymbolTable(symt, symt.getLevel() + 1);
     }
-
+    /**
+     * used in control flow
+     */
     public boolean forCanProceed() {
         if (control != fc_none) return false;
         return true;
     }
-
+    /**
+     * used in control flow
+     */
     public void forNext() {
         if (control == fc_continue) tryResetFlowControl();
     }
 
-    //creating a user-defined function that can be called by the user later on
+    /**
+     * creates a user-defined function that can be called by the user later on
+     */
     public void makeFunction(String id, Vector<CasArgument> args, AST body, CasSymbolTable s, CasDataType typereturn, int brackets) {
         //if we take the symboltable that was passed in, it is static
         CasFunction a = new CasFunction(id, args, body, s, typereturn, brackets);
@@ -699,7 +720,9 @@ class CasInterpreter {
         } else throw new CasException(a.getName() + " already exists as a function or variable");
     }
 
-    //used for a function call
+    /**
+     * used for a function call
+     */
     public CasDataType funcCall(CASWalker walker, String id, Vector<CasDataType> argList) {
         CasSymbolTable temp;
         CasDataType whatthefunc = symt.findVar(id);
@@ -751,7 +774,10 @@ class CasInterpreter {
             throw new CasException("bad return type for function " + id);
     }
 
-    //must check if the arguments being sent in match up
+    /**
+     * helper function for funcCall
+     * must check if the arguments being sent in are matching up
+     */
     public void checkarguments(Vector<CasDataType> argList, Vector<CasArgument> actualargs, String id) {
         CasDataType a;
         CasArgument b;
@@ -794,11 +820,14 @@ class CasInterpreter {
                 throw new CasException("invalid type for arguments for method" + id);
         }
     }
-    //fix this stuff
-    //i feel this code can be written much better than what is here now
-    //maybe we can make checkreturntype based on the ret data, and instead of
-    //passing in func, we can pass in it's returntype and its dimensions
-    //then there is a possibility of recursion with arrays and matrices
+    
+    /**fix this stuff
+     * checks the return type of a function during funcCall
+     * i feel this code can be written much better than what is here now
+     * maybe we can make checkreturntype based on the ret data, and instead of
+     * passing in func, we can pass in it's returntype and its dimensions
+     * then there is a possibility of recursion with arrays and matrices
+    */
     public boolean checkreturntype(CasDataType ret, CasFunction func) {
         CasDataType type = func.getReturnType();
         int dimensions = func.getBrackets();

@@ -2,8 +2,7 @@ package org.geworkbench.engine.cascript;
 
 import java.io.PrintWriter;
 
-/*CasArgument Class, facilitates argument handling
-*
+/**CasArgument Class, facilitates argument handling
 * @author Behrooz Badii - badiib@gmail.com
 * argument type facilitates argument checking for function calls
 */

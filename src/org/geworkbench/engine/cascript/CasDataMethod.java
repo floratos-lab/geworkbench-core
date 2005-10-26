@@ -3,7 +3,7 @@ package org.geworkbench.engine.cascript;
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
 
-/* the wrapper class for Methods within CasDataPlugs
+/** the wrapper class for Methods within CasDataPlugs
 *
 * @author Behrooz Badii - badiib@gmail.com
 */

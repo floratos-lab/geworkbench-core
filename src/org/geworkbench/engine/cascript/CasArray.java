@@ -2,10 +2,10 @@ package org.geworkbench.engine.cascript;
 
 import java.io.PrintWriter;
 
-/* the wrapper class for Arrays
+/** the wrapper class for Arrays
 *
 * @author Behrooz Badii - badiib@gmail.com
-* argument type facilitates argument checking for function calls
+* CasArray is a wrapper class for arrays
 */
 
 class CasArray extends CasDataType {
