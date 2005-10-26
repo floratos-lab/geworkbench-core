@@ -368,6 +368,8 @@ public class AnnotationParser {
         if (data != null){
             String[] tokens = data.split("/////");
             if (tokens.length >= 2){
+                if (tokens[1].contains("///"))
+                    return tokens[1].split("///")[0];
                 return tokens[1];
             }
         }

@@ -171,15 +171,7 @@ public class CSGeneMarker implements DSGeneMarker, Serializable {
     }
 
     public String getShortName() {
-        if (abrev == null) {
-            String tmpAbrev = AnnotationParser.getInfoAsString(label, AnnotationParser.ABREV);
-            if (tmpAbrev.compareToIgnoreCase("---") == 0) {
-                abrev = label;
-            } else {
-                abrev = new String(tmpAbrev);
-            }
-        }
-        return abrev;
+        return AnnotationParser.getGeneName(label);
     }
 
     public boolean isEquivalent(DSGeneMarker i) {
