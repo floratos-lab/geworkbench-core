@@ -146,15 +146,15 @@ public class ProgressBar
             if (nv <= jProgressBar.getMaximum()) {
                 jProgressBar.setValue(value + inc);
                 jProgressBar.setString(Integer.toString(value + inc));
-                ((JPanel)this.getContentPane())
-                        .paintImmediately(((JPanel)this
-                                           .getContentPane()).getVisibleRect());
+//                ((JPanel)this.getContentPane())
+//                        .paintImmediately(((JPanel)this
+//                                           .getContentPane()).getVisibleRect());
                 return true;
             }
         }
-        ((JPanel)this.getContentPane())
-                .paintImmediately(((JPanel)this
-                                   .getContentPane()).getVisibleRect());
+//        ((JPanel)this.getContentPane())
+//                .paintImmediately(((JPanel)this
+//                                   .getContentPane()).getVisibleRect());
         return false;
     }
 

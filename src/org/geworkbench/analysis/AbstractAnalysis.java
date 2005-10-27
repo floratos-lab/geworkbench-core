@@ -5,6 +5,7 @@ import org.geworkbench.bison.datastructure.properties.CSDescribable;
 import org.geworkbench.bison.model.analysis.Analysis;
 import org.geworkbench.bison.model.analysis.ParamValidationResults;
 import org.geworkbench.bison.model.analysis.ParameterPanel;
+import org.geworkbench.engine.management.ComponentObjectInputStream;
 
 import java.io.*;
 import java.util.Enumeration;
@@ -238,12 +239,12 @@ public abstract class AbstractAnalysis implements Analysis, Serializable, java.u
             File file = new File((String) indices.get(key));
             try {
                 FileInputStream fis = new FileInputStream(file);
-                ObjectInputStream ois = new ObjectInputStream(fis);
+                ClassLoader classLoader = getClass().getClassLoader();
+                ComponentObjectInputStream ois = new ComponentObjectInputStream(fis, classLoader);
                 aspp = (AbstractSaveableParameterPanel) ois.readObject();
-            } catch (IOException ioe) {
-            } catch (ClassNotFoundException cnfe) {
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
         }
 
         //aspp.setResource(res);
