@@ -5,8 +5,10 @@ import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 
 import javax.swing.*;
 import java.io.File;
+import org.geworkbench.algorithms.BWAbstractAlgorithm;
 
-public class CSAlignmentResultSet extends CSDataSet implements DSAlignmentResultSet {
+public class CSAlignmentResultSet extends CSDataSet implements
+        DSAlignmentResultSet {
     public CSAlignmentResultSet(String fileName, String inputFile) {
 
         resultFile = new File(fileName);
@@ -15,10 +17,24 @@ public class CSAlignmentResultSet extends CSDataSet implements DSAlignmentResult
     }
 
     //private static ImageIcon icon = new ImageIcon("share/images/blast.gif");
-    static private ImageIcon icon = new ImageIcon(CSAlignmentResultSet.class.getResource("blast.gif"));
+    static private ImageIcon icon = new ImageIcon(CSAlignmentResultSet.class.
+                                                  getResource("blast.gif"));
     private String label = "Blast_Result";
     private File fastaFile = null;
     private File resultFile = null;
+    //Just add the new algorithm varible to get the job status show at the project panel.
+    private BWAbstractAlgorithm algorithm = null;
+    public BWAbstractAlgorithm getAlgorithm() {
+        return algorithm;
+    };
+
+    public void setAlgorithm(BWAbstractAlgorithm _algorithm) {
+        algorithm = _algorithm;
+    }
+
+    public void setResultFile(String outputFilename) {
+        resultFile = new File(outputFilename);
+    }
 
     /**
      * isDirty
@@ -88,7 +104,8 @@ public class CSAlignmentResultSet extends CSDataSet implements DSAlignmentResult
      */
     public boolean equals(Object ads) {
         if (ads instanceof DSAncillaryDataSet) {
-            return getDataSetName() == ((DSAncillaryDataSet) ads).getDataSetName();
+            return getDataSetName() ==
+                    ((DSAncillaryDataSet) ads).getDataSetName();
         } else {
             return false;
         }
