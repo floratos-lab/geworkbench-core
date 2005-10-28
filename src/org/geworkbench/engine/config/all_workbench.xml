@@ -58,10 +58,10 @@
         <menu-item path="File.Image snapshot" mode="onFocus" var="File.Image snapshot"/>
         <online-help helpSet="geaw/online-help/ColorMosaic/colorMosaicHelpSet.hs"/>
     </plugin>
-    <!--<plugin id="hierarchicalClusteringPanel" name="Dendrogram" class="org.geworkbench.components.hierarchicalclustering.HierClusterViewAppComponent">
+    <plugin id="hierarchicalClusteringPanel" name="Dendrogram" class="org.geworkbench.components.hierarchicalclustering.HierClusterViewAppComponent">
         <gui-area name="VisualArea"/>
         <menu-item path="File.Image snapshot" mode="always" var="File.Image snapshot"/>
-    </plugin>-->
+    </plugin>
     <plugin id="SOMClusteringPanel" name="SOM Clusters" class="org.geworkbench.components.plots.SOMDisplay">
         <gui-area name="VisualArea"/>
         <menu-item path="File.Image snapshot" mode="always" var="File.Image snapshot"/>
