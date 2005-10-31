@@ -172,7 +172,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
         rm.reader.close();
         //        reader = new BufferedReader(new FileReader(ar.getInputFile()));
         rm = createProgressReader("Loading data", ar.getInputFile());
-        CSMicroarray microarray = new CSMicroarray(0, v.size(), ar.getInputFile().getName(), null, null, true, DSMicroarraySet.geneExpType);
+        CSMicroarray microarray = new CSMicroarray(0, v.size(), ar.getInputFile().getName(), null, null, true, DSMicroarraySet.affyTxtType);
         microarray.setLabel(ar.getInputFile().getName());
         parser.reset();
         parser.setMicroarray(microarray);
@@ -188,13 +188,13 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
 
     public CSExprMicroarraySet(org.geworkbench.bison.parsers.resources.GenepixResource gr) throws Exception {
         this();
-        file = gr.getInputFile();        
+        file = gr.getInputFile();
         List ctu = new ArrayList();
         ctu.add("Block");
         ctu.add("Column");
         ctu.add("Row");
-        ctu.add("ID");
-        ctu.add("X");
+//        ctu.add("ID");
+//        ctu.add("X");
         ctu.add("Y");
         ctu.add("Dia");
         ctu.add("F635 Median");
@@ -507,7 +507,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
                     }
                     boolean pValueExists = ((st.length - 2) > microarrayNo);
                     for (int j = 2; j < st.length; j++) {
-                        DSMutableMarkerValue marker = (DSMutableMarkerValue) get(i).getMarkerValue(currGeneId);
+                        CSMarkerValue marker = (CSMarkerValue) get(i).getMarkerValue(currGeneId);
                         String value = st[j];
                         if ((value == null) || (value.equalsIgnoreCase(""))) { // skip the extra '/t'
                             value = st[++j];
@@ -572,7 +572,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
         } //end of inner clase parser
     }
 
-    public void parse(DSMutableMarkerValue marker, String value, String status) {
+    public void parse(CSMarkerValue marker, String value, String status) {
         if (Character.isLetter(status.charAt(0))) {
             try {
                 char c = status.charAt(0);
@@ -581,13 +581,13 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
                 }
                 switch (Character.toUpperCase(c)) {
                     case 'P':
-                        marker.setConfidence(0.7);
+                        marker.setPresent();
                         break;
                     case 'A':
-                        marker.setConfidence(0.1);
+                        marker.setAbsent();
                         break;
                     case 'M':
-                        marker.setConfidence(0.5);
+                        marker.setMarginal();
                         break;
                     default:
                         marker.setMissing(true);
@@ -612,20 +612,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
                     range.max = Math.max(range.max, v);
                     range.min = Math.min(range.min, v);
                 }
-                double p = 1.0;
-                switch (status.charAt(0)) {
-                    case 'A':
-                        p = 0.1;
-                        break;
-                    case 'M':
-                        p = 0.5;
-                        break;
-                    case 'P':
-                        p = 0.7;
-                        break;
-                    default:
-                        p = Double.parseDouble(status);
-                }
+                double p = Double.parseDouble(status);
                 marker.setConfidence(p);
             } catch (NumberFormatException e) {
                 marker.setValue(0.0);

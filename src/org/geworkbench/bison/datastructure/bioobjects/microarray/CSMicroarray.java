@@ -80,6 +80,8 @@ public class CSMicroarray implements DSMicroarray, Serializable {
                 markerArray[i] = new CSExpressionMarkerValue(0);
             } else if (type == DSMicroarraySet.genepixGPRType) {
                 markerArray[i] = new CSGenepixMarkerValue(0);
+            } else if (type == DSMicroarraySet.affyTxtType){
+                markerArray[i] = new CSAffyMarkerValue();
             } else {
                 markerArray[i] = new CSExpressionMarkerValue(0);
                 if (randomize) {

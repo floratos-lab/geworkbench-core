@@ -28,6 +28,7 @@ public interface DSMicroarraySet <T extends DSMicroarray> extends DSMatrixDataSe
     public final static int expPvalueType = 3; // added by xuegong
     public final static int chipChipType = 4; // added by xuegong
     public final static int genepixGPRType = 5;
+    public final static int affyTxtType = 6; // Txt MAS 4.0/5.0 file type
 
     // Copy the array into a new array with (potentially) new number of microarrays
     // or markers

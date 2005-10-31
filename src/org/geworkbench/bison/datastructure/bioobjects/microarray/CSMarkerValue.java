@@ -14,17 +14,25 @@ package org.geworkbench.bison.datastructure.bioobjects.microarray;
 abstract public class CSMarkerValue implements DSMutableMarkerValue {
 
     /**
-     * positive values are normal, negative values are masked
+     * Used to define how present/marginal/absent calls should be made based
+     * on the call p-value:
+     *      p-value < p_threshold                  --> Present
+     *      p_threshold <= p-values < m_threshold  --> Marginal
+     *      p-value >= m_threshold                 --> Absent
      */
+    // Fixme: These value should not be hardcoded, rather specified by the user.
+    // <AF>This way of overloading confidence to infer detection status and
+    // missing status may save storage space but is not clean and can be
+    // confusing to external developers trying to extend this class. I'd rather
+    // we spared the extra byte needed to explicitly store this information</AF>
+    protected static double p_threshold = 0.04;
+    protected static double m_threshold = 0.06;
+
     protected float value = 0.0F;
 
     /**
-     * confidence:
-     * <  0.0  -> Masked
-     * == 0.0  -> Undefined
-     * <= 0.33 -> Absent
-     * <= 0.66 -> Marginal
-     * >  0.66 -> Present
+     * Positive values are normal, negative values are masked. Zero indicates
+     * missing value.
      */
     protected float confidence = 0.0F;
 
@@ -54,25 +62,35 @@ abstract public class CSMarkerValue implements DSMutableMarkerValue {
             if (confidence < 0) {
                 confidence *= -1.0;
             } else if (confidence == 0) {
-                confidence = 1.0F;
+                setPresent();
             }
         }
     }
 
+    // This method should be overwritten by subclasses who do not infer
+    // detection status from the confidence value.
     public void setAbsent() {
-        confidence = 0.1F;
+        if (confidence == 0.0)
+            confidence = (float)m_threshold;
     }
 
+    // This method should be overwritten by subclasses who do not infer
+    // detection status from the confidence value.
     public void setPresent() {
-        confidence = 0.9F;
+        if (confidence == 0)
+            confidence = (float)(p_threshold - 0.00005);
     }
 
     public void setUndefined() {
         confidence = 0.0F;
     }
 
+    // This method should be overwritten by subclasses who do not infer
+    // detection status from the confidence value.
     public void setMarginal() {
-        confidence = 0.5F;
+        if (confidence == 0)
+            confidence = (float)(p_threshold);
+
     }
 
     public boolean isValid() {
@@ -80,15 +98,15 @@ abstract public class CSMarkerValue implements DSMutableMarkerValue {
     }
 
     public boolean isAbsent() {
-        return ((confidence > 0) && (confidence <= .33));
+        return (confidence >= m_threshold);
     }
 
     public boolean isMarginal() {
-        return ((confidence > 0.33) && (confidence <= .66));
+        return ((confidence >= p_threshold) && (confidence < m_threshold));
     }
 
     public boolean isPresent() {
-        return (confidence > 0.66);
+        return (confidence > 0.0 && confidence < p_threshold);
     }
 
     public boolean isMissing() {
@@ -119,19 +137,22 @@ abstract public class CSMarkerValue implements DSMutableMarkerValue {
 
     public char getStatusAsChar() {
         char result = 'U';
-        double c = Math.abs(confidence);
-        if (c > 0.66) {
-            result = 'P';
-        } else if (c > 0.33) {
-            result = 'M';
-        } else if (c > 0.0) {
+        float  tempConf = confidence;
+        confidence = Math.abs(confidence);
+        if(isAbsent()) {
             result = 'A';
-        } else if (c == 0.0) {
+        } else if(isMarginal()) {
+            result = 'M';
+        } else if(isPresent()) {
+            result = 'P';
+        } else if(isMissing()) {
             result = 'U';
         }
-        if (confidence < 0.0) {
+        if(tempConf < 0.0) {
             result = Character.toLowerCase(result);
         }
+        confidence = tempConf;
+
         return result;
     }
 
@@ -142,6 +163,25 @@ abstract public class CSMarkerValue implements DSMutableMarkerValue {
     public void setConfidence(double c) {
         confidence = (float) c;
     }
+
+    /**
+     * Set the cutoff p-value used for a Present call
+     * @param pThreshold
+     */
+    public void setPresentThreshold(double pThreshold){
+        if (pThreshold > 0 && pThreshold <=1)
+            p_threshold = pThreshold;
+    }
+
+    /**
+     * Set the cutoff p-value used for a Marginal call
+     * @param mThreshold
+     */
+    public void setMarginalThreshold(double mThreshold){
+        if (mThreshold > 0 && mThreshold <=1)
+            m_threshold = mThreshold;
+    }
+
 
     /**
      * Compares two expression markers

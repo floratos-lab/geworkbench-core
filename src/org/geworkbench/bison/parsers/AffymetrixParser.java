@@ -2,6 +2,7 @@ package org.geworkbench.bison.parsers;
 
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSAffyMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.CSAffyMarkerValue;
 
 import java.util.*;
 
@@ -215,87 +216,12 @@ public class AffymetrixParser {
                 tokenIndex++;
             } while (true);
 
-            initMarkerValue(ctu, (DSAffyMarkerValue) microarray.getMarkerValue(markerIndex++));
+            ( (CSAffyMarkerValue) microarray.getMarkerValue(markerIndex++)).init(context);
             //AffyMarkerValue affyMarker = new AffyMarkerValueImpl(context);
             //microarray.addMarkerValue(affyMarker);
         }
     }
 
-    /**
-     * Initializes class attributes from the contents of
-     * the <code>AffyParseContext</code> argument.
-     */
-    private void initMarkerValue(Map columns, DSAffyMarkerValue markerValue) {
-        Object value = null;
-        if (columns.containsKey("Probe Set Name")) {
-            value = columns.get("Probe Set Name");
-        }
-
-        // Notice below that there are values "competing" for the same semantic concept.
-        // E.g., "Avg Diff", "Signal" can both populate AffyMarkerValue.signal. The
-        // relative ordering of the if-blocks corresponding to such values imposes
-        // a relative importance that resolves conflicts: e.g., if
-        // both "Avg Diff" and "Signal" are present, "Signal" will be preferred.
-        if (columns.containsKey("Avg Diff")) {
-            value = columns.get("Avg Diff");
-            if (value instanceof Double) {
-                markerValue.setValue(((Double) value).doubleValue());
-                markerValue.setMissing(false);
-            }
-
-        }
-
-        if (columns.containsKey("Signal")) {
-            value = columns.get("Signal");
-            if (value instanceof Double) {
-                markerValue.setValue(((Double) value).doubleValue());
-                markerValue.setMissing(false);
-            }
-
-        }
-
-        if (columns.containsKey("Log2(ratio)")) {
-            value = columns.get("Log2(ratio)");
-            if (value instanceof Double) {
-                markerValue.setValue(((Double) value).doubleValue());
-                markerValue.setMissing(false);
-            }
-
-        }
-
-        if (columns.containsKey("Detection p-value")) {
-            value = columns.get("Detection p-value");
-            if (value instanceof Double)
-                markerValue.setConfidence(((Double) value).doubleValue());
-        }
-
-        if (columns.containsKey("Abs Call")) {
-            value = columns.get("Abs Call");
-            if (value instanceof Character)
-                setDetectionStatus(markerValue, ((Character) value).charValue());
-        }
-
-        if (columns.containsKey("Detection")) {
-            value = columns.get("Detection");
-            if (value instanceof Character)
-                setDetectionStatus(markerValue, ((Character) value).charValue());
-        }
-
-    }
-
-    private static void setDetectionStatus(DSAffyMarkerValue markerValue, char status) {
-        switch (status) {
-            case DETECTION_ABSENT:
-                markerValue.setAbsent();
-                break;
-            case DETECTION_MARGINAL:
-                markerValue.setMarginal();
-                break;
-            case DETECTION_PRESENT:
-                markerValue.setPresent();
-                break;
-        }
-    }
 
     /**
      * Gets property based on experiment information

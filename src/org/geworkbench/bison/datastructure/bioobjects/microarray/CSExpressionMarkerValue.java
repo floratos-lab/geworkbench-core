@@ -20,6 +20,9 @@ public class CSExpressionMarkerValue extends CSMarkerValue implements DSAffyMark
      */
     protected static DecimalFormat formatter = new DecimalFormat("##.##");
 
+    public CSExpressionMarkerValue() {
+    }
+
     /**
      * Constructor
      *
@@ -80,17 +83,6 @@ public class CSExpressionMarkerValue extends CSMarkerValue implements DSAffyMark
      */
     public int getDimensionality() {
         return 1;
-    }
-
-    public void setConfidence(double c) {
-        super.setConfidence(c);
-        if (c < 0.33) {
-            setAbsent();
-        } else if (c < .66) {
-            setMarginal();
-        } else {
-            setPresent();
-        }
     }
 
     public DSMarkerValue deepCopy() {
