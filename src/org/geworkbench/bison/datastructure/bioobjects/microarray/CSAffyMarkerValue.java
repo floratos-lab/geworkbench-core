@@ -28,26 +28,24 @@ public class CSAffyMarkerValue extends CSExpressionMarkerValue implements
     /**
      * Constants used to represent detection call status
      */
-    static final char ABSENT = 'A';
-    static final char PRESENT = 'P';
-    static final char MARGINAL = 'M';
+    static final char ABSENT    = 'A';
+    static final char PRESENT   = 'P';
+    static final char MARGINAL  = 'M';
+    static final char UNDEFINED = '\0';    
 
-    protected boolean isMissing = false;
 
     /**
      * Stores the contents of the "Detection" column from the Affy input file that
      * corresponds to this value.
      */
-    char detectionStatus = '\0';
+    char detectionStatus = UNDEFINED;
     /**
      * Serializable fields.
      */
     private final static ObjectStreamField[] serialPersistentFields = {
-          new ObjectStreamField("detectionStatus", char.class),
-          new ObjectStreamField("isMissing", boolean.class)
-      };
+          new ObjectStreamField("detectionStatus", char.class)};
+    
       public CSAffyMarkerValue(){
-        this.isMissing = true;
       }
 
       /**
@@ -56,7 +54,8 @@ public class CSAffyMarkerValue extends CSExpressionMarkerValue implements
        * @param val    The parse context used for the initialization.
        */
       public CSAffyMarkerValue(AffyParseContext val) {
-          init(val);
+    	  if (val != null)
+    		  init(val.getColumnsToUse());
       }
 
       /**
@@ -65,64 +64,8 @@ public class CSAffyMarkerValue extends CSExpressionMarkerValue implements
        * @param val    The parse context used for the initialization.
        */
       public CSAffyMarkerValue(NCIParseContext val) {
-        HashMap columns = val.getColumnsToUse();
-        Object value = null;
-        if (columns.containsKey("Probe Set Name")){
-          value = columns.get("Probe Set Name");
-//      if (value instanceof String)
-//        this.markerInfo = new MarkerInfoImpl((String)value);
-        }
-
-        // Notice below that there are values "competing" for the same semantic concept.
-        // E.g., "Avg Diff", "Signal" can both populate AffyMarkerValue.signal. The
-        // relative ordering of the if-blocks corresponding to such values imposes
-        // a relative importance that resolves conflicts: e.g., if
-        // both "Avg Diff" and "Signal" are present, "Signal" will be preferred.
-        if (columns.containsKey("Avg Diff")) {
-          value = columns.get("Avg Diff");
-          if (value instanceof Double){
-            setValue(( (Double) value).doubleValue());
-            this.isMissing = false;
-          }
-
-        }
-
-        if (columns.containsKey("Signal")) {
-          value = columns.get("Signal");
-          if (value instanceof Double){
-            setValue(( (Double) value).doubleValue());
-            this.isMissing = false;
-          }
-
-        }
-
-        if (columns.containsKey("Log2(ratio)")) {
-          value = columns.get("Log2(ratio)");
-          if (value instanceof Double){
-            setValue(( (Double) value).doubleValue());
-            this.isMissing = false;
-          }
-
-        }
-
-        if (columns.containsKey("Detection p-value")) {
-          value = columns.get("Detection p-value");
-          if (value instanceof Double)
-            setConfidence(( (Double) value).doubleValue());
-        }
-
-        if (columns.containsKey("Abs Call")) {
-          value = columns.get("Abs Call");
-          if (value instanceof Character)
-            this.detectionStatus = ( (Character) value).charValue();
-        }
-
-        if (columns.containsKey("Detection")) {
-          value = columns.get("Detection");
-          if (value instanceof Character)
-            this.detectionStatus = ( (Character) value).charValue();
-        }
-
+    	  if (val != null)
+    		  init(val.getColumnsToUse());    	  
       }
 
       /**
@@ -136,7 +79,6 @@ public class CSAffyMarkerValue extends CSExpressionMarkerValue implements
       {
         setValue(amvi.value);
         this.confidence       = amvi.confidence;
-        this.isMissing        = amvi.isMissing;
         this.detectionStatus  = amvi.detectionStatus;
       }
 
@@ -147,96 +89,148 @@ public class CSAffyMarkerValue extends CSExpressionMarkerValue implements
        * @param val    The parse context used for the initialization.
        */
       public void init(AffyParseContext val) {
-        Map columns = val.getColumnsToUse();
-        Object value = null;
-        if (columns.containsKey("Probe Set Name")){
-          value = columns.get("Probe Set Name");
-        }
-
-        // Notice below that there are values "competing" for the same semantic concept.
-        // E.g., "Avg Diff", "Signal" can both populate AffyMarkerValue.signal. The
-        // relative ordering of the if-blocks corresponding to such values imposes
-        // a relative importance that resolves conflicts: e.g., if
-        // both "Avg Diff" and "Signal" are present, "Signal" will be preferred.
-        if (columns.containsKey("Avg Diff")) {
-          value = columns.get("Avg Diff");
-          if (value instanceof Double){
-            setValue(( (Double) value).doubleValue());
-            this.isMissing = false;
-          }
-
-        }
-
-        if (columns.containsKey("Signal")) {
-          value = columns.get("Signal");
-          if (value instanceof Double){
-            setValue(( (Double) value).doubleValue());
-            this.isMissing = false;
-          }
-
-        }
-
-        if (columns.containsKey("Log2(ratio)")) {
-          value = columns.get("Log2(ratio)");
-          if (value instanceof Double){
-            setValue(( (Double) value).doubleValue());
-            this.isMissing = false;
-          }
-
-        }
-
-        if (columns.containsKey("Detection p-value")) {
-          value = columns.get("Detection p-value");
-          if (value instanceof Double)
-            setConfidence(( (Double) value).doubleValue());
-        }
-
-        if (columns.containsKey("Abs Call")) {
-          value = columns.get("Abs Call");
-          if (value instanceof Character)
-            this.detectionStatus = ( (Character) value).charValue();
-        }
-
-        if (columns.containsKey("Detection")) {
-          value = columns.get("Detection");
-          if (value instanceof Character)
-            this.detectionStatus = ( (Character) value).charValue();
-        }
-
+    	  if (val != null)
+    		  init(val.getColumnsToUse());
       }
-
-       public void setConfidence(double c) {
-           confidence = (float)c;
-       }
+      
+      
+      protected void init(Map columns) {
+    	  Object value = null;
+    	  boolean pValueFound = false;  // indicates if the "Detection p-value" column is used
+    	  boolean absCallFound = false;  // indicates if either of the "Detection" or "Abs Call" columns are used    	  
+    	  
+    	  if (columns.containsKey("Probe Set Name")){
+    		  value = columns.get("Probe Set Name");
+    	  }
+    	  
+    	  // Notice below that there are values "competing" for the same semantic concept.
+    	  // E.g., "Avg Diff", "Signal" can both populate AffyMarkerValue.signal. The
+    	  // relative ordering of the if-blocks corresponding to such values imposes
+    	  // a relative importance that resolves conflicts: e.g., if
+    	  // both "Avg Diff" and "Signal" are present, "Signal" will be preferred.
+    	  if (columns.containsKey("Avg Diff")) {
+    		  value = columns.get("Avg Diff");
+    		  if (value instanceof Double){
+    			  setValue(( (Double) value).doubleValue());
+    		  }
+    		  
+    	  }
+    	  
+    	  if (columns.containsKey("Signal")) {
+    		  value = columns.get("Signal");
+    		  if (value instanceof Double){
+    			  setValue(( (Double) value).doubleValue());
+    		  }
+    		  
+    	  }
+    	  
+    	  if (columns.containsKey("Log2(ratio)")) {
+    		  value = columns.get("Log2(ratio)");
+    		  if (value instanceof Double){
+    			  setValue(( (Double) value).doubleValue());
+    		  }
+    		  
+    	  }
+    	  
+    	  if (columns.containsKey("Detection p-value")) {
+    		  value = columns.get("Detection p-value");
+    		  if (value instanceof Double){
+    			  setConfidence(( (Double) value).doubleValue());
+    			  pValueFound = true;
+    		  }
+    	  }
+    	  
+    	  if (columns.containsKey("Abs Call")) {
+    		  value = columns.get("Abs Call");
+    		  if (value instanceof Character){
+    			  Character ch = Character.toUpperCase(((Character) value).charValue());
+    			  if (ch == PRESENT || ch == ABSENT || ch == MARGINAL){
+    				  this.detectionStatus = ch;
+    				  absCallFound = true;
+    				  // If there is no p-value column explicitly used, then apply 
+    				  // the p-value conventions of the superclass.
+    				  if (!pValueFound)
+    					  switch (ch){
+    					  case PRESENT: 
+    						  super.setPresent();
+    						  break;
+    					  case ABSENT:
+    						  super.setAbsent();
+    						  break;
+    					  case MARGINAL:
+    						  super.setMarginal();
+    						  break;
+    					  }
+    			  }
+    		  }
+    	  }
+    	  
+    	  if (columns.containsKey("Detection")) {
+    		  value = columns.get("Detection");
+    		  if (value instanceof Character){
+    			  Character ch = Character.toUpperCase(((Character) value).charValue());
+    			  if (ch == PRESENT || ch == ABSENT || ch == MARGINAL){
+    				  this.detectionStatus = ch;
+    				  absCallFound = true;
+    				  // If there is no p-value column explicitly specified, then apply 
+    				  // the p-value conventions of the superclass.
+    				  if (!pValueFound)
+    					  switch (ch){
+    					  case PRESENT: 
+    						  super.setPresent();
+    						  break;
+    					  case ABSENT:
+    						  super.setAbsent();
+    						  break;
+    					  case MARGINAL:
+    						  super.setMarginal();
+    						  break;
+    					  }
+    			  }
+    		  }
+    	  }
+    	  
+    	  if (!absCallFound && !pValueFound){
+    		  super.setPresent();
+    	  }
+    	  
+      }
 
       public double getDisplayValue() {
         return getValue();
       }
 
       public boolean isPresent(){
-        return (detectionStatus == PRESENT)? true : false;
+        return (detectionStatus == PRESENT)? true : 
+        	(detectionStatus == UNDEFINED? super.isPresent() : false);
       }
 
       /**
        * Sets the detection level of this affy marker value to "Present".
        */
       public void setPresent(){
-        detectionStatus = PRESENT;
+    	  if (isMissing())
+    		  super.setPresent(); // make sure the confidence field is set consistently
+    	  detectionStatus = PRESENT;
       }
 
       public boolean isMarginal(){
-        return (detectionStatus == MARGINAL)? true : false;
+          return (detectionStatus == MARGINAL)? true : 
+          	(detectionStatus == UNDEFINED? super.isMarginal() : false);
       }
 
       /**
        * Sets the detection level of this affy marker value to "Marginal".
        */
       public void setMarginal(){
+    	  if (isMissing())
+    		  super.setMarginal(); // make sure the confidence field is set consistently    	  
         detectionStatus = MARGINAL;
       }
 
       public boolean isAbsent() {
-        return (detectionStatus == ABSENT)? true : false;
+          return (detectionStatus == ABSENT)? true : 
+          	(detectionStatus == UNDEFINED? super.isAbsent() : false);
       }
 
       /**
@@ -244,6 +238,8 @@ public class CSAffyMarkerValue extends CSExpressionMarkerValue implements
 
        */
       public void setAbsent() {
+    	  if (isMissing())
+    		  super.setAbsent(); // make sure the confidence field is set consistently    	  
         detectionStatus = ABSENT;
       }
 
@@ -266,14 +262,6 @@ public class CSAffyMarkerValue extends CSExpressionMarkerValue implements
           return 1;
       }
 
-      public boolean isMissing(){
-         return isMissing;
-       }
-
-       public void setMissing(boolean isMissing){
-         this.isMissing = isMissing;
-       }
-
        /**
         * Tests if two markers are equal
         * @param m marker to be compared
@@ -284,7 +272,12 @@ public class CSAffyMarkerValue extends CSExpressionMarkerValue implements
        }
 
        public char getStatusAsChar() {
-           return (confidence < 0.0 ? 'U' : detectionStatus);
+    	   if (detectionStatus == UNDEFINED)
+    		   return super.getStatusAsChar();
+    	   else if (isMasked())
+    		   return Character.toLowerCase(detectionStatus);
+    	   else 
+    		   return detectionStatus;
        }
 
        public int compareTo(Object o) {
