@@ -32,9 +32,9 @@ abstract public class CSMarkerValue implements DSMutableMarkerValue {
 	// missing status may save storage space but is not clean and can be
 	// confusing to external developers trying to extend this class. I'd rather
 	// we spared the extra byte needed to explicitly store this information</AF>
-	protected static double p_threshold = 0.04;
+	protected static float p_threshold = (float) 0.04;
 
-	protected static double m_threshold = 0.06;
+	protected static float m_threshold = (float) 0.06;
 	
 	/**
 	 * Value which is assigned to the field <code>confidence</code> to indicate
@@ -176,7 +176,7 @@ abstract public class CSMarkerValue implements DSMutableMarkerValue {
 	 */
 	public void setPresentThreshold(double pThreshold) {
 		if (pThreshold > 0 && pThreshold <= 1)
-			p_threshold = pThreshold;
+			p_threshold = (float) pThreshold;
 	}
 
 	/**
@@ -186,7 +186,7 @@ abstract public class CSMarkerValue implements DSMutableMarkerValue {
 	 */
 	public void setMarginalThreshold(double mThreshold) {
 		if (mThreshold > 0 && mThreshold <= 1)
-			m_threshold = mThreshold;
+			m_threshold = (float) mThreshold;
 	}
 
 	/**
