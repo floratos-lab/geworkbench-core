@@ -385,7 +385,7 @@ public class CSGenotypeMicroarraySet extends CSMicroarraySet<DSMicroarray> imple
             String[] allele = parseableValue[parseableValue.length - 1].split("[| /]");
             switch (allele.length) {
                 case 0:
-                    gtMarker.setUndefined();
+                    gtMarker.setMissing(true);
                     gtMarker.setGenotype(0, 0);
                     break;
                 case 1:
@@ -396,7 +396,7 @@ public class CSGenotypeMicroarraySet extends CSMicroarraySet<DSMicroarray> imple
                         gtMarker.setAllele(v);
                     }
                     if (v == 0) {
-                        gtMarker.setUndefined();
+                        gtMarker.setMissing(true);
                     } else {
                         gtMarker.setPresent();
                     }
@@ -407,7 +407,7 @@ public class CSGenotypeMicroarraySet extends CSMicroarraySet<DSMicroarray> imple
                     gtMarker.setGenotype(a1, a2);
                     if ((a1 == 0) || (a2 == 0)) {
                         //SetAbsent();
-                        gtMarker.setUndefined();
+                        gtMarker.setMissing(true);
                     } else {
                         gtMarker.setPresent();
                     }
@@ -418,7 +418,7 @@ public class CSGenotypeMicroarraySet extends CSMicroarraySet<DSMicroarray> imple
                     gtMarker.setGenotype(a1, a2);
                     if ((a1 == 0) || (a2 == 0)) {
                         //SetAbsent();
-                        gtMarker.setUndefined();
+                        gtMarker.setMissing(true);
                     } else {
                         gtMarker.setPresent();
                     }
@@ -447,13 +447,13 @@ public class CSGenotypeMicroarraySet extends CSMicroarraySet<DSMicroarray> imple
                         gtMarker.setMarginal();
                         break;
                     default:
-                        gtMarker.setUndefined();
+                        gtMarker.setMissing(true);
                         break;
                 }
                 parse(marker, value);
             } catch (NumberFormatException e) {
                 gtMarker.setGenotype(0, 0);
-                gtMarker.setUndefined();
+                gtMarker.setMissing(true);
             }
         }
     }
