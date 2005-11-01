@@ -77,7 +77,6 @@ public class CSGenepixMarkerValue extends CSMarkerValue implements
     double ch1b = 0d;
     double ch2b = 0d;
     double ratio = 0d;
-    boolean missing = false;
     String flag = "0";
     /**
      * Serializable fields.
@@ -87,7 +86,8 @@ public class CSGenepixMarkerValue extends CSMarkerValue implements
             new ObjectStreamField("ch2f", double.class),
             new ObjectStreamField("ch1b", double.class),
             new ObjectStreamField("ch2b", double.class),
-            new ObjectStreamField("ratio", double.class)};
+            new ObjectStreamField("ratio", double.class),
+            new ObjectStreamField("flag", String.class)};
 
     public CSGenepixMarkerValue(double val) {
 
@@ -368,16 +368,8 @@ public class CSGenepixMarkerValue extends CSMarkerValue implements
         super.setConfidence(confidence);
     }
 
-    public boolean isMissing() {
-        return missing;
-    }
-
     public String getFlag() {
         return flag;
-    }
-
-    public void setMissing(boolean isMissing) {
-        missing = isMissing;
     }
 
     public void setFlag(String flag) {
