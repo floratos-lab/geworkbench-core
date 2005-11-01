@@ -97,6 +97,11 @@ public abstract class AbstractCluster implements Cluster {
      */
     public List<Cluster> getLeafChildren() {
         List<Cluster> leafList = new ArrayList<Cluster>();
+        if (children.size() == 0) {
+            // Handle degenerate case of a single node tree
+            leafList.add(this);
+            return leafList;
+        }
         ArrayList<Cluster> queue = new ArrayList<Cluster>();
         queue.addAll(children);
         while (!queue.isEmpty()) {
