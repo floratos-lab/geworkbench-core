@@ -48,4 +48,12 @@ public class GenotypeColorContext implements ColorContext {
     public void updateContext(DSMicroarraySetView view) {
         // no-op
     }
+
+    public Color getMaxColorValue(float intensity) {
+        return new Color(1f, 0, 0);
+    }
+
+    public Color getMinColorValue(float intensity) {
+        return new Color(0, 1f, 0);
+    }
 }

@@ -66,4 +66,12 @@ public class DefaultColorContext implements org.geworkbench.bison.util.colorcont
             }
         }
     }
+
+    public Color getMaxColorValue(float intensity) {
+        return new Color(1f, 0, 0);
+    }
+
+    public Color getMinColorValue(float intensity) {
+        return new Color(0, 1f, 0);
+    }
 }

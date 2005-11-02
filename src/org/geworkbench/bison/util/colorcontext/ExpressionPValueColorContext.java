@@ -99,4 +99,12 @@ public class ExpressionPValueColorContext implements org.geworkbench.bison.util.
     public void updateContext(DSMicroarraySetView view) {
         ColorContextUtils.computeRange(view);
     }
+
+    public Color getMaxColorValue(float intensity) {
+        return new Color(1f, 0, 0);
+    }
+
+    public Color getMinColorValue(float intensity) {
+        return new Color(0, 1f, 0);
+    }
 }

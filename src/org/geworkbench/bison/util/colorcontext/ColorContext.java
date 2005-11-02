@@ -37,4 +37,18 @@ public interface ColorContext extends Serializable {
      * Called whenever the view changes so that the ColorContext can (optionally) update itself.
      */
     public void updateContext(DSMicroarraySetView view);
+
+    /**
+     * Returns the color corresponding to the maxiumum value possible at this intensity.
+     * @param intensity
+     * @return
+     */
+    public Color getMaxColorValue(float intensity);
+
+    /**
+     * * Returns the color corresponding to the minimum value possible at this intensity.
+     * @param intensity
+     * @return
+     */
+    public Color getMinColorValue(float intensity);
 }
