@@ -40,6 +40,9 @@
   <property name="cytoscape.home" value="${caBIO.home}/cytoscape"/>
   <property name="caArrayMageom.home" value="${caBIO.home}/caArrayMageom"/>
   <property name="src" value="${cvs.src}/src"/>
+ <property name="cleanResource" value="./cleanResource"/> 
+ <property name="dist" value="/users/amdecweb/zipfiles"/>
+  <property name="release.file" value="${dist}/geworkbench_source"/>
   <property name="version.src" value="${cvs.src}/components/versioninfo/src/org/geworkbench/components/versioninfo"/>
 
 
@@ -287,4 +290,67 @@
     <cvs command="tag  -b ${build}" cvsroot=":ext:${user.name}@adcvs.cu-genome.org:/cvs/acallab" dest="${cvs.src}" failonerror="yes" passfile="${passfile}"/>
     <echo message="finish tag"/>
   </target>
+
+
+<!-- Prepare a clean file for depositing to NCI CVS -->
+ 
+
+ <target name="createResource" depends="cvscheckout" description="Creating a new folder for depositing..."> 
+        <delete dir="${cleanResource}"/>
+        <mkdir dir="${cleanResource}"/>
+  <copy todir="${cleanResource}"> 
+  <fileset dir="${cvs.src}"> 
+<include name="**/*.chtml" /> 
+<include name="**/*.html" /> 
+<include name="**/*.au" /> 
+<include name="**/*.midi" /> 
+<include name="**/*.gif" /> 
+<include name="**/*.GIF" /> 
+<include name="**/*.xml" /> 
+<include name="**/*.properties" /> 
+<include name="**/*.policy" /> 
+<include name="**/*.aiff" /> 
+<include name="**/*.jnlp" /> 
+<include name="**/*.jpe" /> 
+<include name="**/*.jpeg" /> 
+<include name="**/*.rmf" /> 
+<include name="**/*.wav" /> 
+<include name="**/*.mid" /> 
+<include name="**/*.ini" /> 
+<include name="**/*.xsl" /> 
+<include name="**/*.css" /> 
+<include name="**/*.png" /> 
+<include name="**/*.PNG" /> 
+<include name="**/*.jpg" /> 
+<include name="**/*.htm" /> 
+<include name="**/*.html" /> 
+<include name="**/*.jhm" /> 
+<include name="**/*.hs" /> 
+<include name="**/*.txt" /> 
+<include name="**/*.java" /> 
+<include name="**/*.iml" /> 
+<include name="**/*.script" /> 
+<include name="**/*.sh" /> 
+<include name="**/*.bat" /> 
+ 
+<include name="**/*.jar" /> 
+<include name="**/*.dll" /> 
+<exclude name="**/*.ontology"/>
+<exclude name="**/*.ontology.txt"/>
+<exclude name="**/All.NC.-2k+2k.txt"/>
+<exclude name="**/LICENSE.txt"/>
+ </fileset> 
+  </copy>
+ </target>
+
+
+ <target name="zipfile" depends="createResource" description="Builds a zip file for source distribution.">
+        
+      
+<zip destfile="${release.file}.zip"
+       basedir="${cleanResource}"
+       update="true"
+  />
+       
+    </target>
 </project>

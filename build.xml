@@ -267,6 +267,9 @@
 <include name="**/*.java" /> 
 <include name="**/*.iml" /> 
 <include name="**/*.script" /> 
+<include name="**/*.sh" /> 
+<include name="**/*.bat" /> 
+ 
 <include name="**/*.jar" /> 
 <include name="**/*.dll" /> 
 <exclude name="**/*.ontology"/>
