@@ -1,5 +1,6 @@
 <component-descriptor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Descriptor Schema.xsd">
     <component class="org.geworkbench.builtin.projects.ProjectPanel">
+        <online-help helpSet="org/geworkbench/builtin/projects/help/projectPanelHelpSet.hs"/>
         <menu-item path="File.Open.File" mode="always" var="File.Open.File"/>
         <menu-item path="File.Save.Workspace" mode="always" var="File.Save.Workspace"/>
         <menu-item path="File.Open.Workspace" mode="always" var="File.Open.Workspace"/>
