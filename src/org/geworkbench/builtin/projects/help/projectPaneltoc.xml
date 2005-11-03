@@ -5,7 +5,7 @@
 	<tocitem text="Project Panel">
 
 		 <tocitem target="overview" text="Overview" />
-         <!--<tocitem target="alignmentResults" text="Alignment Results" />-->
+         <!--<tocitem target="manage.project" text="Manage Projects" />-->
 
 
 	</tocitem>

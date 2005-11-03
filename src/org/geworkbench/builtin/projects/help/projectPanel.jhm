@@ -7,6 +7,7 @@
 <map version="1.0">
 
 	<mapID target="overview" url="ProjectPanel.htm"/>
-	<!--<mapID target="alignmentResults" url="Alignment Results.htm"/>-->
+	<mapID target="Manage Projects" url="Manage Projects.htm"/>
+	
 </map>
 
