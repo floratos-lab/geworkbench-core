@@ -4,7 +4,7 @@
 
 	<tocitem text="Project Panel">
 
-		 <tocitem target="overview" text="Overview" />
+		 <tocitem target="project.folder.overview" text="Project Folders Overview" />
 
 		<tocitem target="manage.project" text="Manage Projects"/>
 
