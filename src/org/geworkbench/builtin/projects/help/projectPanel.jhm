@@ -8,9 +8,9 @@
 
 	<mapID target="project.folder.overview" url="Project Folders Overview.HTML"/>
 
-	<mapID target="manage.project" url="Manage Project.htm"/>
+	<mapID target="manage.project" url="Manage Project.HTML"/>
 
-	<mapID target="manage.workspace" url="Manage Workspace.htm"/>
+	<mapID target="manage.workspace" url="Manage Workspace.HTML"/>
 	
 	<mapID target="open.dataset" url="Open Dataset.HTML"/>
 	
