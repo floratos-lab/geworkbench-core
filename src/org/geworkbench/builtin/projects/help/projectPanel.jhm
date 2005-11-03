@@ -6,7 +6,7 @@
 
 <map version="1.0">
 
-	<mapID target="project.folder.overview" url="Project Folders Overview.htm"/>
+	<mapID target="project.folder.overview" url="Project Folders Overview.HTML"/>
 
 	<mapID target="manage.project" url="Manage Project.htm"/>
 
