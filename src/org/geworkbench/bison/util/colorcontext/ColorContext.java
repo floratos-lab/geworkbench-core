@@ -46,9 +46,16 @@ public interface ColorContext extends Serializable {
     public Color getMaxColorValue(float intensity);
 
     /**
-     * * Returns the color corresponding to the minimum value possible at this intensity.
+     * Returns the color corresponding to the minimum value possible at this intensity.
      * @param intensity
      * @return
      */
     public Color getMinColorValue(float intensity);
+
+    /**
+     * Returns the color that indicates a value between the minimum and maximum values. Usually white or black. 
+     * @param intensity
+     * @return
+     */
+    public Color getMiddleColorValue(float intensity);
 }

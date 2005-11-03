@@ -56,4 +56,8 @@ public class GenotypeColorContext implements ColorContext {
     public Color getMinColorValue(float intensity) {
         return new Color(0, 1f, 0);
     }
+
+    public Color getMiddleColorValue(float intensity) {
+        return Color.black;
+    }
 }

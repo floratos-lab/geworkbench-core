@@ -74,4 +74,8 @@ public class DefaultColorContext implements org.geworkbench.bison.util.colorcont
     public Color getMinColorValue(float intensity) {
         return new Color(0, 1f, 0);
     }
+
+    public Color getMiddleColorValue(float intensity) {
+        return Color.black;
+    }
 }

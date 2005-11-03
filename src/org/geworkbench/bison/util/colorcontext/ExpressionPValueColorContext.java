@@ -101,10 +101,14 @@ public class ExpressionPValueColorContext implements org.geworkbench.bison.util.
     }
 
     public Color getMaxColorValue(float intensity) {
-        return new Color(1f, 0, 0);
+        return Color.red;
     }
 
     public Color getMinColorValue(float intensity) {
-        return new Color(0, 1f, 0);
+        return Color.blue;
+    }
+
+    public Color getMiddleColorValue(float intensity) {
+        return Color.white;
     }
 }
