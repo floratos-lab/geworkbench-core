@@ -8,17 +8,17 @@
 
 	<mapID target="overview" url="ProjectPanel.htm"/>
 
-	<mapID target="Manage Projects" url="Manage Project.htm"/>
+	<mapID target="manage.project" url="Manage Project.htm"/>
 
-	<mapID target="Manage Workspace" url="Manage Workspace.htm"/>
+	<mapID target="manage.workspace" url="Manage Workspace.htm"/>
 	
-	<mapID target="Open Dataset" url="open_dataset.htm"/>
+	<mapID target="open.dataset" url="Open Dataset.HTML"/>
 	
-	<mapID target="Merge Dataset" url="merge_dataset.htm"/>
+	<mapID target="merge.dataset" url="Merge Dataset.HTML"/>
 	
-	<mapID target="Rename Dataset" url="rename_dataset.htm"/>
+	<mapID target="rename.dataset" url="Rename Dataset.HTML"/>
 	
-<mapID target="Delete Dataset" url="delete_dataset.htm"/>
+    <mapID target="delete.dataset" url="Delete Dataset.HTML"/>
 	
 </map>
 

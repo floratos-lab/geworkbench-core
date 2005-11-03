@@ -16,7 +16,7 @@
 
 		<tocitem target="rename.dataset" text="Rename Dataset"/>
 
-         <!--<tocitem target="delete.dataset" text="Delete Dataset" />-->
+         <tocitem target="delete.dataset" text="Delete Dataset" />
 
 
 	</tocitem>
