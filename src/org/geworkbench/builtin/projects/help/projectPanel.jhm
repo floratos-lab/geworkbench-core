@@ -19,6 +19,8 @@
 	<mapID target="rename.dataset" url="Rename Dataset.HTML"/>
 	
     <mapID target="delete.dataset" url="Delete Dataset.HTML"/>
+
+    <mapID target="Preference" url="Preferences.HTML"/>
 	
 </map>
 
