@@ -21,6 +21,8 @@
     <mapID target="delete.dataset" url="Delete Dataset.HTML"/>
 
     <mapID target="Preference" url="Preferences.HTML"/>
+
+    <mapID target="remote.data" url="remote.HTML"/>
 	
 
 </map>
