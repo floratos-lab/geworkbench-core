@@ -19,6 +19,8 @@
          <tocitem target="delete.dataset" text="Delete Dataset" />
 
          <tocitem target="Preference" text="Preferences" />
+
+         <tocitem target="Remote.Source" text="Remote" />
 	</tocitem>
 
 </toc>
