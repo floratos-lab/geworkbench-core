@@ -22,7 +22,6 @@
 
     <mapID target="Preference" url="Preferences.HTML"/>
 	
-    <mapID target="Remote" url="Remote.htm"/>
-	
+
 </map>
 
