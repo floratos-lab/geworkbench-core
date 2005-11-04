@@ -37,6 +37,7 @@
       <entry name="?*.hs" />
       <entry name="?*.jhm" />
       <entry name="?*.htm" />
+      <entry name="?*.css" />
     </wildcardResourcePatterns>
   </component>
   <component name="DataSourceManagerImpl" />
