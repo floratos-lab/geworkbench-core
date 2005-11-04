@@ -18,7 +18,7 @@
 
          <tocitem target="delete.dataset" text="Delete Dataset" />
 
-         <tocitem target="preference" text="preference" />
+         <tocitem target="Preference" text="Preferences" />
 	</tocitem>
 
 </toc>
