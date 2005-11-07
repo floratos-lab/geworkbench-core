@@ -4,7 +4,7 @@
 
 	<tocitem text="Project Panel">
 
-		 <tocitem target="project.folder.overview" text="Project FoldersOverview" />
+		 <tocitem target="project.folder.overview" text="Project Folders Overview" />
 
 		<tocitem target="manage.project" text="Manage Projects"/>
 
@@ -20,7 +20,7 @@
 
          <tocitem target="Preference" text="Preferences" />
 
-         <tocitem target="remote.data" text="remote" />
+         <tocitem target="remote.data" text="Remote Data Source" />
 
 	</tocitem>
 
