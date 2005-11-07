@@ -5,6 +5,7 @@ import org.geworkbench.bison.model.clusters.DefaultHierCluster;
 import org.geworkbench.bison.model.clusters.Cluster;
 
 import java.util.Map;
+import java.util.List;
 
 /**
  * Test default hierarchical cluster.
@@ -74,6 +75,35 @@ public class TestDefaultHierCluster extends TestCase {
         assertEquals(c1.getID()+" failed.", map.get(c1).intValue(), c1.getLeafChildrenCount());
         assertEquals(c2.getID()+" failed.", map.get(c2).intValue(), c2.getLeafChildrenCount());
         assertEquals(c6.getID()+" failed.", map.get(c6).intValue(), c6.getLeafChildrenCount());
+    }
+
+    public void testLeafOrdering() {
+        DefaultHierCluster cluster = makeTestCluster();
+        assertTrue(checkOrder(cluster.getLeafChildren(), c1.getLeafChildren()));
+        assertTrue(checkOrder(cluster.getLeafChildren(), c2.getLeafChildren()));
+        assertTrue(checkOrder(cluster.getLeafChildren(), c6.getLeafChildren()));
+        assertTrue(checkOrder(cluster.getLeafChildren(), c8.getLeafChildren()));
+    }
+
+    public static boolean checkOrder(List<Cluster> list1ContainsList2, List<Cluster> list2) {
+        int count = 0;
+        for (Cluster outercluster : list1ContainsList2) {
+            DefaultHierCluster c1 = (DefaultHierCluster) outercluster;
+            // Find common start point
+            if (c1.getID().equals(((DefaultHierCluster) list2.get(0)).getID())) {
+                // Compare from this point on
+                for (Cluster cluster : list2) {
+                    DefaultHierCluster c1check = (DefaultHierCluster) cluster;
+                    if (!c1check.getID().equals(((DefaultHierCluster) list1ContainsList2.get(count)).getID())) {
+                        return false;
+                    }
+                    count++;
+                }
+                return true;
+            }
+            count++;
+        }
+        return false;
     }
 
 /*

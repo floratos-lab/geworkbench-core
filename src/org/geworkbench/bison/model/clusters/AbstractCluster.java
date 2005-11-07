@@ -97,25 +97,36 @@ public abstract class AbstractCluster implements Cluster {
      */
     public List<Cluster> getLeafChildren() {
         List<Cluster> leafList = new ArrayList<Cluster>();
-        if (children.size() == 0) {
-            // Handle degenerate case of a single node tree
-            leafList.add(this);
-            return leafList;
-        }
-        ArrayList<Cluster> queue = new ArrayList<Cluster>();
-        queue.addAll(children);
-        while (!queue.isEmpty()) {
-            Cluster cluster = queue.remove(0);
-            if (!cluster.isLeaf()) {
-                for (Cluster cluster1 : ((AbstractCluster) cluster).children) {
-                    queue.add(cluster1);
+        Set<Cluster> visited = new HashSet<Cluster>();
+        Stack<Cluster> stack = new Stack<Cluster>();
+        int height = 1;
+        Cluster end = new DefaultHierCluster();
+        stack.push(end);
+        Cluster thisnode = this;
+        while (thisnode != end) {
+            List<Cluster> children = ((AbstractCluster) thisnode).children;
+            if (children.size() == 0) {
+                // Is a leaf
+                //                System.out.println("Leaf node: "+thisnode.getID());
+                leafList.add(thisnode);
+            }
+
+            // decide what node to work on now
+            boolean found = false;
+            for (Cluster child : children) {
+                if (!visited.contains(child)) {
+                    stack.push(thisnode);
+                    visited.add(thisnode);
+                    thisnode = child;
+                    found = true;
+                    break;
                 }
-            } else {
-                leafList.add(cluster);
+            }
+            if (!found) {
+                visited.add(thisnode);
+                thisnode = stack.pop();
             }
         }
-//        Cluster[] toBeReturned = (Cluster[]) Array.newInstance(this.getClass(), leafList.size());
-//        leafList.toArray(toBeReturned);
         return leafList;
     }
 
