@@ -9,7 +9,7 @@ import java.util.Vector;
  * Interpreter routines that is called directly from the tree walker.
  *
  * @author Behrooz Badii - badiib@gmail.com
- * @version $Id: CasInterpreter.java,v 1.18 2005-11-09 22:20:40 bb2122 Exp $
+ * @version $Id: CasInterpreter.java,v 1.19 2005-11-09 22:33:50 bb2122 Exp $
  */
 class CasInterpreter {
     CasSymbolTable symt;
@@ -862,48 +862,26 @@ class CasInterpreter {
                 else
                     throw new CasException("Trying to decrement a variable inside " + a.getPartOf() + "that is not a double or integer is not allowed.");
             }
-            if (symt.findVar(a.getPartOf()) instanceof CasArray) {
-                if (iod == true)
-                  symt.findVar(a.getPartOf()).setArrayValue(a.ib(), a.getPosition());
-                else
-                  symt.findVar(a.getPartOf()).setArrayValue(a.db(), a.getPosition());  
-            }
-            if (symt.findVar(a.getPartOf()) instanceof CasMatrix) {
-                if (iod == true)
-                    symt.findVar(a.getPartOf()).setMatrixValue(a.ib(), a.getPosition(), a.getPosition2());
-                else 
-                    symt.findVar(a.getPartOf()).setMatrixValue(a.db(), a.getPosition(), a.getPosition2());
-            }
-            return a;
+            if (iod == true)
+                return a.ib();
+            else  
+                return a.db();
         }
         else if (a.getName() != null) {
-            if (a instanceof CasInt) {
-                if (iod == true )
-                    return a.ib();
-                    //symt.setVar(a.name, a.ib());
-                else
-                    return a.db();
-                    //symt.setVar(a.name, a.db());
-            }
-            else if (a instanceof CasDouble) {
+            if (!(a instanceof CasInt || a instanceof CasDouble)) {
                 if (iod == true)
-                    symt.setVar(a.name, a.ib());
+                    throw new CasException("Trying to increment a variable " + a.getName() + "that is not a double or integer is not allowed.");
                 else
-                    symt.setVar(a.name, a.db());
+                    throw new CasException("Trying to decrement a variable " + a.getName() + "that is not a double or integer is not allowed.");                
             }
-            else {
-                if (iod == true)
-                    throw new CasException("Error occurred in incrementation for variable " + a.getName());
-                else
-                    throw new CasException("Error occurred in decrementation for variable " + a.getName());
-            }
-            return a;
-        }
-        else {
-            if (iod == true)
-                throw new CasException("Error occurred in incrementation");
+            if (iod == true )
+                return a.ib();
             else
-                throw new CasException("Error occurred in decrementation");
-        }
+                return a.db();
+        }    
+        if (iod == true)
+            throw new CasException("Error occurred in incrementation");
+        else
+            throw new CasException("Error occurred in decrementation");
     }
 }
