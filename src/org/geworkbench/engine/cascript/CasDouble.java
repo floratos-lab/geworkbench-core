@@ -6,7 +6,7 @@ import java.io.PrintWriter;
  * The wrapper class for double
  *
  * @author Behrooz Badii - badiib@gmail.com
- * @version $Id: CasDouble.java,v 1.4 2005-11-09 20:40:28 bb2122 Exp $
+ * @version $Id: CasDouble.java,v 1.5 2005-11-09 22:20:40 bb2122 Exp $
  * @modified Hanhua Feng - hf2048@columbia.edu
  */
 class CasDouble extends CasDataType {
@@ -123,13 +123,14 @@ class CasDouble extends CasDataType {
         return new CasBool(var != doubleValue(b));
     }
 
-    public void ia() {
+    /*public void ia() {
         var++;
     }
 
     public void da() {
         var--;
     }
+     */
 
     public CasDataType ib() {
         ++var;

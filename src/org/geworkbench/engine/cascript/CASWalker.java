@@ -1195,7 +1195,7 @@ public CASWalker() {
 				_t = _retTree;
 				_t = __t251;
 				_t = _t.getNextSibling();
-				r = a.copy(); a.ia();
+				r = a.copy(); ipt.incOrDec(a, true);
 				break;
 			}
 			case DECAFTER:
@@ -1208,7 +1208,7 @@ public CASWalker() {
 				_t = _retTree;
 				_t = __t252;
 				_t = _t.getNextSibling();
-				r = a.copy(); a.da();
+				r = a.copy(); ipt.incOrDec(a, false);
 				break;
 			}
 			case INCBEFORE:
@@ -1221,7 +1221,7 @@ public CASWalker() {
 				_t = _retTree;
 				_t = __t253;
 				_t = _t.getNextSibling();
-				r = a.ib();
+				r = ipt.incOrDec(a, true);
 				break;
 			}
 			case DECBEFORE:
@@ -1234,7 +1234,7 @@ public CASWalker() {
 				_t = _retTree;
 				_t = __t254;
 				_t = _t.getNextSibling();
-				r = a.db();
+				r = ipt.incOrDec(a, false);
 				break;
 			}
 			default:

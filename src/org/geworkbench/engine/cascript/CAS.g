@@ -935,10 +935,10 @@ else
 | #(SLASH a = expr b = expr)             {r = a.lfracts(b);} //division
 | #(MODULO a = expr b = expr)            {r = a.modulus(b);} //undefined
 | #(NEGATION a = expr)                   {r = a.uminus();} //unary minus operation
-| #(INCAFTER a = expr)                   {r = a.copy(); a.ia();} //incrementation after operation, a++
-| #(DECAFTER a = expr)                   {r = a.copy(); a.da();} //decrementation after operation, a--
-| #(INCBEFORE a = expr)                  {r = a.ib();} //incrementation before operation, ++a
-| #(DECBEFORE a = expr)                  {r = a.db();} //incrementation after operation, --a
+| #(INCAFTER a = expr)                   {r = a.copy(); ipt.incOrDec(a, true);} //incrementation after operation, a++
+| #(DECAFTER a = expr)                   {r = a.copy(); ipt.incOrDec(a, false);} //decrementation after operation, a--
+| #(INCBEFORE a = expr)                  {r = ipt.incOrDec(a, true);} //incrementation before operation, ++a
+| #(DECBEFORE a = expr)                  {r = ipt.incOrDec(a, false);} //incrementation after operation, --a
 ;
 
 /**

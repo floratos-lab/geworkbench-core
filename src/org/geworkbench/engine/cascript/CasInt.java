@@ -6,7 +6,7 @@ import java.io.PrintWriter;
  * the wrapper class of int
  *
  * @author Behrooz Badii - badiib@gmail.com
- * @version $Id: CasInt.java,v 1.4 2005-11-09 20:40:28 bb2122 Exp $
+ * @version $Id: CasInt.java,v 1.5 2005-11-09 22:20:40 bb2122 Exp $
  * @modified from Hanhua Feng - hf2048@columbia.edu
  */
 class CasInt extends CasDataType {
@@ -135,14 +135,13 @@ class CasInt extends CasDataType {
         return b.ne(this);
     }
 
-    public void ia() {
+    /*public void ia() {
         var++;
     }
 
     public void da() {
         var--;
-    }
-
+    }*/
     public CasDataType ib() {
         ++var;
         return this;
