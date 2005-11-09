@@ -6,7 +6,7 @@ import java.io.PrintWriter;
  * the wrapper class of int
  *
  * @author Behrooz Badii - badiib@gmail.com
- * @version $Id: CasInt.java,v 1.3 2005-10-14 18:38:12 bb2122 Exp $
+ * @version $Id: CasInt.java,v 1.4 2005-11-09 20:40:28 bb2122 Exp $
  * @modified from Hanhua Feng - hf2048@columbia.edu
  */
 class CasInt extends CasDataType {
@@ -46,7 +46,9 @@ class CasInt extends CasDataType {
 
     public CasDataType plus(CasDataType b) {
         if (b instanceof CasInt) return new CasInt(var + intValue(b));
-        return new CasDouble(var + CasDouble.doubleValue(b));
+        else if (b instanceof CasDouble) return new CasDouble(var + CasDouble.doubleValue(b));
+        else if (b instanceof CasString) return new CasString(var + ((CasString)b).getvar());
+        else return error(b, "+");
     }
 
     public CasDataType add(CasDataType b) {
