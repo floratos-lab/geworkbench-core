@@ -1,0 +1,138 @@
+
+                          Release Notes
+    
+                          caWorkbench
+                          Version 3.0
+                        November 10, 2005
+
+       Joint Centers for Systems Biology, Columbia University
+
+
+
+================================================================
+                            Contents
+================================================================
+    
+    1.0 caWorkbench Introduction and History
+    2.0 Release History
+    3.0 New Features and Updates
+    4.0 Bugs Fixed Since Last Release
+    5.0 Known Issues/Defects
+    6.0 Bug Reports and Support
+    7.0 Documentation and Files
+    8.0 caWorkbench Web Pages 
+
+
+
+================================================================
+    1.0 - caWorkbench Introduction and History
+================================================================
+ 
+
+    caWorkBench3.0, an open source bioinformatics platform 
+    written in Java, makes sophisticated  tools for data management, 
+    analysis and visualization available to the community in a 
+    convenient fashion. 
+    It evolved from a project which was originally sponsored by 
+    the National Cancer Institute Center for Bioinformatics (NCICB). 
+    Some of the most fully developed capabilities of the platform
+    include microarray data analysis, pathway analysis and 
+    reverse engineering, sequence analysis, transcription factor 
+    binding site analysis, and pattern discovery. 
+ 
+
+
+================================================================
+    2.0 Release History
+================================================================
+
+    caWorkbench 2.0 
+    --	June 2004    
+
+    
+  
+
+================================================================
+    3.0 New Features and Updates
+================================================================ 
+
+  New features added in caWorkbench3.0:
+ 
+    --	Implementation of Cytoscape 2.0 adapter. 
+    --	Support for components to be docked and undocked. 
+    --	Support for convenient multiple-microarray loading. 
+    --	Graphical interface support for query-based loading 
+        retrieval from data sources. 
+    --	Implementation of scatter plot visualization. 
+    --	Implementation of expression value distribution plot. 
+    --	Implementation of house-keeping gene normalization. 
+    --	Implementation of Gene-pix ?Flags?-based filtering. 
+    --	Implementation of spiked-in controls. 
+    --	Implementation of Preferences specification. 
+    --	Support for user annotations and comments for images. 
+    --	Support for editor-based viewing of input files. 
+    --	Implementation of improvements to the marker ID display. 
+    --	Support for the display of Scalable Vector Graphics images of gene pathways. 
+    --	Support for sorting by pathway annotation. 
+
+
+================================================================
+    4.0 Defects Fixed Since Last Release
+================================================================
+    
+    More than 200 reported bugs are fixed since last release. Visit 
+    http://bugzilla.cu-genome.org/index.cgi for more information.
+
+
+
+================================================================
+    5.0 Known Issues/Defects
+================================================================
+    
+    +------------------------------------------------+
+    | None                                           |
+    +------------------------------------------------+
+   
+  
+
+
+
+================================================================
+    6.0 Bug Reports and Support
+================================================================
+    
+    Send email to caworkbench@cu-genome.org to request support or
+    report a bug.
+
+    
+
+
+
+================================================================
+    7.0 Documentation and Files
+================================================================
+
+    
+   The documents and support files include:
+
+
+	caWorkbench Readme file:
+		caWorkbench_Readme_V_3_0.txt
+		 
+  
+   	caArray License: 
+		caWorkbenchLicense.txt
+
+   From the application of caWorkbench, users can access 
+   "Help Topic" by clicking the top menu.
+
+
+
+================================================================
+    8.0 caWorkbench Web Pages
+================================================================
+     
+    caWorkbench 3.0
+    --  http://amdec-bioinfo.cu-genome.org/html/caWorkBench3.htm
+    
+ 
