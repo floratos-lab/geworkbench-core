@@ -48,13 +48,12 @@
   New features added in caWorkbench3.0:
  
     --  Improvements to the application user interface (UI):
-        * Addition of a new UI flavor, dispalaying components in a drop down menu 
+        * Addition of a new UI flavor, displaying components in a drop down menu 
          rather than in tabbed format. To use the new flavor, start the application with
 	"ant runNewFlavor". 
         * Addition of F12 navigation function in the tabbed skin.
-	By clicking the "F12" key, a popup window will show up with a table of
-	all available panels names. User can search any panel and the selected
-        panel will be automatically clicked and displayed.
+	By clicking the "F12" key, a popup window will show a list of
+	all available panels. The user can select any panel which will then be automatically displayed.
 	
     --  Improvements to the user interface of specific components such as 
 	Gene Panel, Marker annotations, GO Terms Panel, Synteny, 
@@ -82,11 +81,11 @@
 ================================================================
     3.0 Known Issues/Defects
 ================================================================
- Reverse Engineering and associations panel will not be fully
- fuctional when the application runs in Mac machine. It is related to 
- load libraries in Mac.
+ Reverse Engineering and the Association panel will not be fully
+ fuctional when the application runs on a Macintosh.  This  is due
+ to an issue with code to load libraries.
  
- Human U133 chip data may not annotate correctly.
+ Annotation is only availabe for genes found on the Affymetrix HG-U95 chip.
 
  Remote execuation of ARACNE in Reverse Engineering Panel is temprory disabled.
 
@@ -120,11 +119,11 @@
 		caWorkbenchLicense.txt
 
    From the application of caWorkbench, users can access 
-   "Help Topic" by clicking the top menu. It has very detailed information
+   "Help Topic" by clicking the top menu. It has detailed information
 	about each module.
 
 
-   For the majority of the new features,detailed requirements 
+   For the majority of new features,detailed requirements 
    specification documents are available at the caBIG CVS site:
         http://cabigcvs.nci.nih.gov/viewcvs/viewcvs.cgi/caworkbenchcabig
 
