@@ -48,20 +48,21 @@
   New features added in caWorkbench3.0:
  
     --  Improvements to the application user interface (UI):
-        * Addition of a new UI flavor, displaying components in a drop down menu 
-         rather than in tabbed format. To use the new flavor, start the application with
-	"ant runNewFlavor". 
+        * Addition of a new UI flavor, displaying components in a 
+	drop down menu rather than in tabbed format. To use the 
+	new flavor, start the application with "ant runNewFlavor". 
         * Addition of F12 navigation function in the tabbed skin.
 	By clicking the "F12" key, a popup window will show a list of
-	all available panels. The user can select any panel which will then be automatically displayed.
-	
-    --  Improvements to the user interface of specific components such as 
-	Gene Panel, Marker annotations, GO Terms Panel, Synteny, 
+	all available panels. The user can select any panel which 
+	will then be automatically displayed.
+    --  Improvements to the user interface of specific components such
+	as Gene Panel, Marker annotations, GO Terms Panel, Synteny, 
 	Reverse Engineering, Promoter Panel.
     --	Support for multiple-microarray loading.
     --  Support for data access from multiple caArray repositories.
     --	Scatter plot visualization for pair of markers and microarrays.
-    --  New, faster and memory-efficient implementation of hierarchical clustering.
+    --  New, faster and memory-efficient implementation of 
+	hierarchical clustering.
     --	Expression value distribution plot. 
     --	Support for additional normalizers:
         * House-keeping gene normalization. 
@@ -85,7 +86,8 @@
  fuctional when the application runs on a Macintosh.  This  is due
  to an issue with code to load libraries.
  
- Annotation is only availabe for genes found on the Affymetrix HG-U95 chip.
+ SequenceRetriever Panel only works with markers found on the 
+	Affymetrix HG-U95 chip.
 
  Remote execuation of ARACNE in Reverse Engineering Panel is temprory disabled.
 

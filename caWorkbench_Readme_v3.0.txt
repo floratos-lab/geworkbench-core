@@ -27,6 +27,8 @@
 	To compile the source code, Ant is required. 
 		use "ant compile" or "ant" to compile source codes.
 		use "ant run" to run the application.
+		use "ant runNewFlavor" to run the application with displaying 
+		   components in a drop down menu rather than in tabbed format.  
 		 
 		
 		
