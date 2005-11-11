@@ -10,7 +10,7 @@ import java.awt.*;
  * <p>Copyright: Copyright (c) 2003 -2004</p>
  * <p>Company: Columbia University</p>
  *
- * @author $Author: watkin $
+ * @author $Author: xiaoqing $
  * @version 1.0
  */
 public class AlgorithmSelectionPanel extends JPanel {
@@ -56,7 +56,7 @@ public class AlgorithmSelectionPanel extends JPanel {
         hierarc.setActionCommand(HIERARCHICAL);
         exhaustive.setText("Exhhaust.");
         exhaustive.setActionCommand(EXHAUSTIVE);
-        exhaustive.setSelected(true);
+        discovery.setSelected(true);
 
         algorithmGroup.add(discovery);
         algorithmGroup.add(exhaustive);
