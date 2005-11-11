@@ -3,7 +3,7 @@
     
                           caWorkbench
                           Version 3.0
-                        November 10, 2005
+                        November 11, 2005
 
        Joint Centers for Systems Biology, Columbia University
 
@@ -82,11 +82,11 @@
 ================================================================
     3.0 Known Issues/Defects
 ================================================================
- Reverse Engineering and the Association panel will not be fully
+ Reverse Engineering and the Association panel are not fully
  fuctional when the application runs on a Macintosh.  This  is due
  to an issue with code to load libraries.
  
- SequenceRetriever Panel only works with markers found on the 
+ The SequenceRetriever Panel only works with markers found on the 
 	Affymetrix HG-U95 chip.
 
  Remote execuation of ARACNE in Reverse Engineering Panel is temprory disabled.
@@ -120,9 +120,8 @@
    	caWorkbnech License: 
 		caWorkbenchLicense.txt
 
-   From the application of caWorkbench, users can access 
-   "Help Topic" by clicking the top menu. It has detailed information
-	about each module.
+   Within caWorkbench, users can access "Help Topics" by clicking the
+	top menu. It has detailed information about each module.
 
 
    For the majority of new features,detailed requirements 
@@ -139,6 +138,6 @@
     At present, the user manual and video tutorial available 
     at the page is for caWorkbench 2.0. 
  
-   Updated manual and tutorial versions are forthcoming.
+   Updated versions of the manual and tutorial are forthcoming.
     
  
