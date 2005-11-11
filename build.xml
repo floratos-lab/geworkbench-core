@@ -191,6 +191,20 @@
             <classpath refid="run.classpath"/>
         </java>
     </target>
+<!-- ====================================================================== -->
+    <!-- RUN ComboxBox Flavor-->
+    <!-- ====================================================================== -->
+    <target name="runNewFlavor" depends="compile" description="Runs geWorkbench.">
+        <java fork="true" classname="org.geworkbench.engine.config.UILauncher">
+            <jvmarg value="-Xmx512M"/>
+            <jvmarg value="-Djava.library.path=lib"/>
+		<arg value="all_combobox.xml" /> 
+            <classpath refid="run.classpath"/>
+        </java>
+    </target>
+
+
+
     <!-- ====================================================================== -->
     <!-- TEST -->
     <!-- ====================================================================== -->
@@ -261,6 +275,7 @@
 <include name="**/*.jpg" /> 
 <include name="**/*.htm" /> 
 <include name="**/*.html" /> 
+<include name="**/*.HTML" /> 
 <include name="**/*.jhm" /> 
 <include name="**/*.hs" /> 
 <include name="**/*.txt" /> 
