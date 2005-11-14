@@ -4,7 +4,9 @@ import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
+import org.geworkbench.bison.util.Icons;
 
+import javax.swing.*;
 import java.io.File;
 import java.util.HashMap;
 
@@ -18,6 +20,10 @@ public class CSSignificanceResultSet <T extends DSGeneMarker> extends CSAncillar
     public CSSignificanceResultSet(DSMicroarraySet parent, String label) {
         super(parent, label);
         significance = new HashMap<T, Double>();
+    }
+
+    public ImageIcon getIcon() {
+        return Icons.SIGNIFICANCE_ICON;
     }
 
     public File getDataSetFile() {

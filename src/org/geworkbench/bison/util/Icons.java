@@ -18,4 +18,5 @@ public class Icons {
     public static ImageIcon PATTERN_ICON = new ImageIcon(Icons.class.getResource("pattern16x16.gif"));
     public static ImageIcon GENERIC_ICON = new ImageIcon(Icons.class.getResource("generic16x16.gif"));
     public static ImageIcon ALIGNMENT_ICON = new ImageIcon(Icons.class.getResource("alignment16x16.gif"));
+    public static ImageIcon SIGNIFICANCE_ICON = new ImageIcon(Icons.class.getResource("significance16x16.gif"));
 }
