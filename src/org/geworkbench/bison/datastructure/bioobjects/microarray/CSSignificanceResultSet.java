@@ -28,4 +28,8 @@ public class CSSignificanceResultSet <T extends DSGeneMarker> extends CSAncillar
     public double getSignificance(T marker) {
         return 0;  //To change body of implemented methods use File | Settings | File Templates.
     }
+
+    public DSMicroarraySet getParentDataSet() {
+        return (DSMicroarraySet) super.getParentDataSet();
+    }
 }
