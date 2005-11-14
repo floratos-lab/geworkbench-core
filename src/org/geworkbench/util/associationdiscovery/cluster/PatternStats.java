@@ -53,6 +53,7 @@ public class PatternStats extends CSMatchedMatrixPattern {
         // This routine creates a contingency table for all the
         // different incarnations of a polygenic genotype
         // or haplotype, both in the phenotype and control set.
+        // todo - watkin - refactor to use CSAnnotationContext
         DSClassCriteria classCriteria = CSCriterionManager.getClassCriteria(chips);
         if (!classCriteria.isUnsupervised()) {
             // Compute only if phenotype and controls are defined

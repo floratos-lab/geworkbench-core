@@ -77,10 +77,13 @@
 	<plugin id="tabularMicroarrayPanel" name="Tabular Microarray Panel" class="org.geworkbench.components.microarrays.TabularMicroarrayPanel" source="microarrays">
 		<gui-area name="VisualArea"/>
 	</plugin>
-	<plugin id="phenotypePanel" name="Phenotype Panel" class="org.geworkbench.components.selectors.PropertyTagSelectorPanel" source="selectors">
-		<gui-area name="SelectionArea"/>
-	</plugin>
-	<!--plugin id="hierarchicalClusteringAnalysis" name="Hierachical Clustering Analysis" class="org.geworkbench.components.clustering.HierClustAnalysis" source="clustering"/-->
+	<!--<plugin id="phenotypePanel" name="Phenotype Panel" class="org.geworkbench.components.selectors.PropertyTagSelectorPanel" source="selectors">-->
+		<!--<gui-area name="SelectionArea"/>-->
+	<!--</plugin>-->
+    <plugin id="phenotypePanel2" name="Phenotype Panel" class="org.geworkbench.components.selectors.PhenotypePanel" source="selectors">
+        <gui-area name="SelectionArea"/>
+    </plugin>
+	<!-- plugin id="hierarchicalClusteringAnalysis" name="Hierachical Clustering Analysis" class="org.geworkbench.components.clustering.HierClustAnalysis" source="clustering"/ -->
 	<plugin id="fastHierarchicalClusteringAnalysis" name="Fast Hierachical Clustering Analysis" class="org.geworkbench.components.clustering.FastHierClustAnalysis" source="clustering"/>
 	<!--plugin id="jniHierarchicalClusteringAnalysis" name="JNI Hierachical Clustering Analysis" class="org.geworkbench.components.clustering.JniHierClustAnalysis"/-->
 	<plugin id="somAnalysis" name="SOM Analysis" class="org.geworkbench.components.clustering.SOMAnalysis" source="clustering"/>
@@ -92,10 +95,10 @@
 	<plugin id="preferences" name="preferences" class="org.geworkbench.engine.config.PreferencesMenu"/>
 	<plugin id="sessionManager" name="Session Mgr" class="org.geworkbench.util.session.SessionAppComponent"/>
 	<plugin id="versioninfo" name="Version Infomation" class="org.geworkbench.components.versioninfo.VersionInfoComponent" source="versioninfo"/>
+    <plugin id="promoterPanel" name="Promoter Panel" class="org.geworkbench.components.promoter.PromoterView" source="promoter">
+        <gui-area name="VisualArea"/>
+    </plugin>
 	<plugin id="sequencePanel" name="Sequence Panel" class="org.geworkbench.components.sequences.SequenceViewAppComponent" source="sequences">
-		<gui-area name="VisualArea"/>
-	</plugin>
-	<plugin id="promoterPanel" name="Promoter Panel" class="org.geworkbench.components.promoter.PromoterView" source="promoter">
 		<gui-area name="VisualArea"/>
 	</plugin>
 	<plugin id="SequenceRetriever" name="Sequence Retriever" class="org.geworkbench.components.sequenceretriever.SequenceRetriever" source="sequenceretriever">
@@ -143,7 +146,7 @@
 	<plugin id="splash" name="Pattern Discovery" class="org.geworkbench.components.discovery.SequenceDiscoveryViewAppComponent" source="discovery">
 		<gui-area name="CommandArea"/>
 	</plugin>
-	<plugin id="syntenyParameters" name="Synteny" class="org.geworkbench.components.alignment.panels.SyntenyParameters" source="alignment">
+	<plugin id="syntenyParameters" name="Synteny Parameters" class="org.geworkbench.components.alignment.panels.SyntenyParameters" source="alignment">
 		<gui-area name="CommandArea"/>
 	</plugin>
 	<plugin id="normalizationPanel" name="Normalization Panel" class="org.geworkbench.components.analysis.NormalizationPanel" source="analysis">

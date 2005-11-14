@@ -1,6 +1,8 @@
 package org.geworkbench.bison.datastructure.biocollections.views;
 
 import org.geworkbench.bison.annotation.DSCriteria;
+import org.geworkbench.bison.annotation.DSAnnotationContext;
+import org.geworkbench.bison.annotation.CSAnnotationContextManager;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
@@ -8,8 +10,6 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.complex.panels.CSPanel;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
-import org.geworkbench.bison.util.CSCriterionManager;
-import org.geworkbench.bison.util.CSMarkerManager;
 
 
 /**
@@ -25,7 +25,7 @@ import org.geworkbench.bison.util.CSMarkerManager;
  * @author Adam Margolin
  * @version 3.0
  */
-public class CSMicroarraySetView <T extends DSGeneMarker, Q extends DSMicroarray> extends CSDataSetView<Q> implements DSMicroarraySetView<T, Q> {
+public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray> extends CSDataSetView<Q> implements DSMicroarraySetView<T, Q> {
     //    DSMicroarraySet<DSMicroarray> dataSet = null;
 
     /**
@@ -134,15 +134,19 @@ public class CSMicroarraySetView <T extends DSGeneMarker, Q extends DSMicroarray
     public void setMicroarraySet(DSMicroarraySet<Q> ma) {
         if (ma != null) {
             dataSet = ma;
-            DSPanel mp = CSMarkerManager.getMarkerPanel(ma);
-            if (mp != null) {
-                markerPanel = mp;
+            {
+                DSAnnotationContext<DSGeneMarker> context = CSAnnotationContextManager.getInstance().getCurrentContext(ma.getMarkers());
+                DSPanel<DSGeneMarker> mp = context.getActiveItems();
+                if (mp != null) {
+                    markerPanel = (DSPanel<T>)mp;
+                }
             }
-            DSCriteria<DSBioObject> criteria = CSCriterionManager.getCriteria(dataSet);
-            classCriteria = CSCriterionManager.getClassCriteria(dataSet);
-            mp = criteria.getSelectedCriterion();
-            if (mp != null) {
-                itemPanel = mp;
+            {
+                DSAnnotationContext<Q> context = CSAnnotationContextManager.getInstance().getCurrentContext(dataSet);
+                DSPanel<Q> mp = context.getActiveItems();
+                if (mp != null) {
+                    itemPanel = mp;
+                }
             }
         }
     }

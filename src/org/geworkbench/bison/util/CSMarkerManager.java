@@ -19,6 +19,8 @@ import java.util.WeakHashMap;
  *
  * @author not attributable
  * @version 3.0
+ * @deprecated Panels can be obtained from {@link org.geworkbench.bison.annotation.DSAnnotationContext}, which is
+ * retrieved from the {@link org.geworkbench.bison.annotation.DSAnnotationContextManager}.
  */
 public class CSMarkerManager {
     /**

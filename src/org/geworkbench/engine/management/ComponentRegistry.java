@@ -2,6 +2,9 @@ package org.geworkbench.engine.management;
 
 import net.sf.cglib.proxy.*;
 import org.geworkbench.engine.config.PluginDescriptor;
+import org.geworkbench.engine.config.VisualPlugin;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
@@ -13,6 +16,8 @@ import java.io.IOException;
  * Component registry implementation.
  */
 public class ComponentRegistry {
+
+    static Log log = LogFactory.getLog(ComponentRegistry.class);
 
     private static ComponentRegistry componentRegistry;
 
@@ -110,7 +115,7 @@ public class ComponentRegistry {
     /**
      * Inner class that handles the CGLIB extension of the publishers.
      */
-    private class ComponentExtension <T> implements MethodInterceptor {
+    private class ComponentExtension<T> implements MethodInterceptor {
 
         Class<T> base;
         PluginDescriptor descriptor;
@@ -204,6 +209,8 @@ public class ComponentRegistry {
 
     // Holds the listener componentRegistry.
     private TypeMap<List> listeners;
+    // Holds lists of components that are registered to accept specified types.
+    private TypeMap<List<Class>> acceptors;
     // Executor Service for asynchronous event dispatching.
     private Map<Class, SynchModel> synchModels;
     // List of the components themselves.
@@ -215,6 +222,7 @@ public class ComponentRegistry {
 
     private ComponentRegistry() {
         listeners = new TypeMap<List>();
+        acceptors = new TypeMap<List<Class>>();
         synchModels = new HashMap<Class, SynchModel>();
         components = new ArrayList();
         idToDescriptor = new HashMap<String, PluginDescriptor>();
@@ -254,6 +262,42 @@ public class ComponentRegistry {
         for (Class<?> targetType : targetTypes) {
             if (targetType.isAssignableFrom(type)) {
                 subscribers.addAll(listeners.get(targetType));
+            }
+        }
+        return subscribers;
+    }
+
+    /**
+     * Adds a type accepter the componentRegistry.
+     *
+     * @param type       the type to listen to.
+     * @param subscriber the listening subscriber.
+     */
+    private synchronized void addAcceptor(Class type, Class subscriber) {
+        List<Class> list = acceptors.get(type);
+        if (list == null) {
+            list = new ArrayList();
+            acceptors.put(type, list);
+        }
+        list.add(subscriber);
+    }
+
+    /**
+     * Gets the acceptors for the given type.
+     *
+     * @todo fix
+     */
+    public synchronized Set<Class> getAcceptors(Class<?> type) {
+        if (type == null) {
+            return new HashSet<Class>(acceptors.get(null));
+        }
+        Set<Class> targetTypes = acceptors.keySet();
+        Set<Class> subscribers = new HashSet<Class>();
+        for (Class<?> targetType : targetTypes) {
+            if (targetType != null) {
+                if (targetType.isAssignableFrom(type)) {
+                    subscribers.addAll(acceptors.get(targetType));
+                }
             }
         }
         return subscribers;
@@ -381,7 +425,27 @@ public class ComponentRegistry {
         if (descriptor.getID() != null) {
             idToDescriptor.put(descriptor.getID(), descriptor);
         }
+        // Map the types this component accepts to the component
+        if (VisualPlugin.class.isAssignableFrom(type)) {
+            registerTypeAcceptance(type);
+        }
         return component;
+    }
+
+    public <T> void registerTypeAcceptance(Class<T> type) {
+        log.debug("Checking acceptance of types for " + type);
+        AcceptTypes at = type.getAnnotation(AcceptTypes.class);
+        if (at != null) {
+            Class[] accepts = at.value();
+            for (int i = 0; i < accepts.length; i++) {
+                Class accept = accepts[i];
+                log.debug(type + " registering type " + accept);
+                addAcceptor(accept, type);
+            }
+        } else {
+            log.debug("No acceptance types-- component will always be on.");
+            addAcceptor(null, type);
+        }
     }
 
     public void registerSubscriptions(Object component, PluginDescriptor descriptor) {
@@ -441,10 +505,21 @@ public class ComponentRegistry {
     }
 
     public PluginDescriptor getDescriptorForPlugin(Object plugin) {
-        Set<Map.Entry<String,PluginDescriptor>> entries = idToDescriptor.entrySet();
+        Set<Map.Entry<String, PluginDescriptor>> entries = idToDescriptor.entrySet();
         for (Iterator<Map.Entry<String, PluginDescriptor>> iterator = entries.iterator(); iterator.hasNext();) {
             Map.Entry<String, PluginDescriptor> entry = iterator.next();
             if (entry.getValue().getPlugin() == plugin) {
+                return entry.getValue();
+            }
+        }
+        return null;
+    }
+
+    public PluginDescriptor getDescriptorForPluginClass(Class mainPluginClass) {
+        Set<Map.Entry<String, PluginDescriptor>> entries = idToDescriptor.entrySet();
+        for (Iterator<Map.Entry<String, PluginDescriptor>> iterator = entries.iterator(); iterator.hasNext();) {
+            Map.Entry<String, PluginDescriptor> entry = iterator.next();
+            if (entry.getValue().getPluginClass() == mainPluginClass) {
                 return entry.getValue();
             }
         }

@@ -13,6 +13,8 @@ import java.io.File;
  * Defines a generic set of Microarrays.
  * <p/>
  * DSDataSet. The objects in a matrix dataset will themselves contain vectors of values. -- AM
+ * todo - watkin - this should have two generic type variables, one for microarray, one for marker.
+ * Currently, it is just generic for microarrays.
  */
 public interface DSMicroarraySet <T extends DSMicroarray> extends DSMatrixDataSet<T>, DSDataSet<T> {
 
@@ -59,6 +61,7 @@ public interface DSMicroarraySet <T extends DSMicroarray> extends DSMatrixDataSe
      * get the marker list
      *
      * @return DSItemList
+     * todo - watkin - this should not be DSGeneMarker, but a generic variable.
      */
     public DSItemList<DSGeneMarker> getMarkers();
 

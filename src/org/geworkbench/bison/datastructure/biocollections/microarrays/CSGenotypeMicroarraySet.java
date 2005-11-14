@@ -7,8 +7,12 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.CSGenotypicMark
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMutableMarkerValue;
+import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.util.*;
 import org.geworkbench.bison.parsers.resources.Resource;
+import org.geworkbench.bison.annotation.CSAnnotationContextManager;
+import org.geworkbench.bison.annotation.CSAnnotationContext;
+import org.geworkbench.bison.annotation.DSAnnotationContext;
 
 import javax.swing.*;
 import java.io.*;
@@ -46,7 +50,7 @@ public class CSGenotypeMicroarraySet extends CSMicroarraySet<DSMicroarray> imple
     }
 
     public ImageIcon getIcon() {
-        return Icons._dataSetIcon;
+        return Icons.DATASET_ICON;
     }
 
     public File getFile() {
@@ -165,7 +169,8 @@ public class CSGenotypeMicroarraySet extends CSMicroarraySet<DSMicroarray> imple
         int currMicroarrayId = 0;
         Vector phenotypes = new Vector();
 
-        void executeLine(String line, DSMicroarraySet mArraySet) {
+        void executeLine(String line, DSMicroarraySet<? extends DSBioObject> mArraySet) {
+            CSAnnotationContextManager manager = CSAnnotationContextManager.getInstance();
             StringTokenizer st = new StringTokenizer(line, "\t\n\r");
             if (st.hasMoreTokens()) {
                 String token = st.nextToken();
@@ -205,15 +210,15 @@ public class CSGenotypeMicroarraySet extends CSMicroarraySet<DSMicroarray> imple
                     // you can read cell variable here
                     String phLabel = st.nextToken();
                     boolean isAccession = phLabel.equalsIgnoreCase("Accession");
+                    DSAnnotationContext context = manager.getContext(mArraySet, phLabel);
+                    CSAnnotationContext.initializePhenotypeContext(context);
                     int i = 0;
                     while (st.hasMoreTokens()) {
                         String nextToken = st.nextToken();
                         if (isAccession) {
                             get(i++).setLabel(nextToken);
                         } else {
-                            DSAnnotLabel property = new CSAnnotLabel(phLabel);
-                            DSAnnotValue value = new CSAnnotValue(nextToken, nextToken.hashCode());
-                            mArraySet.addPropertyValue(i++, property, value);
+                            context.labelItem(mArraySet.get(i++), nextToken);
                         }
                     }
                 } else if (token.equalsIgnoreCase("ID")) {
@@ -246,10 +251,10 @@ public class CSGenotypeMicroarraySet extends CSMicroarraySet<DSMicroarray> imple
                         get(currMicroarrayId).setLabel(token);
                         for (int propId = 0; propId < phenotypes.size(); propId++) {
                             String propLabel = (String) phenotypes.get(propId);
-                            DSAnnotLabel property = new CSAnnotLabel(propLabel);
                             String nextToken = st.nextToken();
-                            DSAnnotValue value = new CSAnnotValue(nextToken, nextToken.hashCode());
-                            mArraySet.addPropertyValue(currMicroarrayId, property, value);
+                            DSAnnotationContext context = manager.getContext(mArraySet, propLabel);
+                            CSAnnotationContext.initializePhenotypeContext(context);
+                            context.labelItem(mArraySet.get(currMicroarrayId), nextToken);
                         }
                         while (st.hasMoreTokens()) {
                             String value = st.nextToken();

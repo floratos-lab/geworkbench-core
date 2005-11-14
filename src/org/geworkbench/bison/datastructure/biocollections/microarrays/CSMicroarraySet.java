@@ -1,8 +1,7 @@
 package org.geworkbench.bison.datastructure.biocollections.microarrays;
 
 import org.apache.commons.math.stat.StatUtils;
-import org.geworkbench.bison.annotation.DSCriteria;
-import org.geworkbench.bison.annotation.CSCriteria;
+import org.geworkbench.bison.annotation.*;
 import org.geworkbench.bison.datastructure.biocollections.CSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.CSMarkerVector;
 import org.geworkbench.bison.datastructure.biocollections.classification.phenotype.DSClassCriteria;
@@ -11,7 +10,6 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.*;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
-import org.geworkbench.bison.util.CSCriterionManager;
 import org.geworkbench.bison.util.RandomNumberGenerator;
 
 import java.io.*;
@@ -182,13 +180,21 @@ public class CSMicroarraySet<T extends DSMicroarray> extends CSDataSet<T> implem
     }
 
     protected void writePhenotypeValueArray(BufferedWriter writer) throws IOException {
-        DSCriteria<DSBioObject> criteria = CSCriterionManager.getCriteria(this);
-        for (DSPanel<DSBioObject> criterion : criteria.values()) {
-            writer.write("Description\t" + criterion.getLabel());
+        // DSCriteria<DSBioObject> criteria = CSCriterionManager.getCriteria(this);
+        DSAnnotationContextManager manager = CSAnnotationContextManager.getInstance();
+        DSAnnotationContext<T>[] contexts = manager.getAllContexts(this);
+        for (int j = 0; j < contexts.length; j++) {
+            DSAnnotationContext<T> context = contexts[j];
+            writer.write("Description\t" + context.getName());
             for (int i = 0; i < size(); i++) {
                 DSMicroarray mArray = get(i);
-                DSPanel value = criterion.getPanel(mArray);
-                writer.write("\t" + value.getLabel());
+                String[] labels = context.getLabelsForItem((T)mArray);
+                // todo - watkin - this file format does not support multiple labellings per item
+                if (labels.length > 0) {
+                    writer.write("\t" + labels[0]);
+                } else {
+                    writer.write("\tUndefined");
+                }
             }
             writer.write('\n');
         }
@@ -407,9 +413,13 @@ public class CSMicroarraySet<T extends DSMicroarray> extends CSDataSet<T> implem
             CSMicroarray mArray = new CSMicroarray(ma.getSerial(), newMarkerNo, ma.getLabel(), null, null, false, type);
             newMicroarrays.add(ma.getSerial(), mArray);
         }
-        DSCriteria<DSBioObject> criteria = CSCriterionManager.getCriteria(this);
-        CSCriterionManager.setCriteria(this, criteria);
+        // DSCriteria<DSBioObject> criteria = CSCriterionManager.getCriteria(this);
+        // CSCriterionManager.setCriteria(this, criteria);
+        CSAnnotationContextManager manager = CSAnnotationContextManager.getInstance();
+        manager.copyContexts((DSMicroarraySet<DSMicroarray>)this, newMicroarrays);
+        // todo - watkin - This is not a deep copy, so changes to this vector will affect original and cloned sets.
         newMicroarrays.markerVector = markerVector;
+        // todo - watkin - return null after all that work!?!?
         return null;
     }
 

@@ -1,14 +1,10 @@
 package org.geworkbench.builtin.projects;
 
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.bison.datastructure.biocollections.classification.phenotype.DSClassCriteria;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
-import org.geworkbench.bison.annotation.DSCriteria;
-import org.geworkbench.bison.util.CSCriterionManager;
+import org.geworkbench.bison.annotation.CSAnnotationContextManager;
 
 import java.io.IOException;
-import java.io.ObjectStreamException;
-import java.io.Serializable;
 
 /**
  * <p>Title: Gene Expression Analysis Toolkit</p>
@@ -23,7 +19,6 @@ import java.io.Serializable;
 public class DataSetNode extends ProjectTreeNode {
     public DSDataSet dataFile = null;
 
-    private SerialInstance serialInstance;
 
     DataSetNode(DSDataSet df) {
         dataFile = df;
@@ -32,33 +27,25 @@ public class DataSetNode extends ProjectTreeNode {
 
     private void writeObject(java.io.ObjectOutputStream out) throws IOException {
         // Include the criteria info if there is any
-        DSCriteria criteria = CSCriterionManager.getCriteria(dataFile);
-        DSClassCriteria classCriteria = CSCriterionManager.getClassCriteria(dataFile);
-        serialInstance = new SerialInstance(criteria, classCriteria);
+        CSAnnotationContextManager manager = CSAnnotationContextManager.getInstance();
+        CSAnnotationContextManager.SerializableContexts contexts = manager.getContextsForSerialization(dataFile);
         out.defaultWriteObject();
+        out.writeObject(contexts);
+        if (dataFile instanceof DSMicroarraySet) {
+            DSMicroarraySet set = (DSMicroarraySet) dataFile;
+            CSAnnotationContextManager.SerializableContexts markerContexts = manager.getContextsForSerialization(set.getMarkers());
+            out.writeObject(markerContexts);
+        }
     }
 
     private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
-        if (serialInstance.criteria != null) {
-            CSCriterionManager.setCriteria(dataFile, serialInstance.criteria);
+        CSAnnotationContextManager manager = CSAnnotationContextManager.getInstance();
+        manager.setContextsFromSerializedObject(dataFile, (CSAnnotationContextManager.SerializableContexts) in.readObject());
+        if (dataFile instanceof DSMicroarraySet) {
+            DSMicroarraySet set = (DSMicroarraySet) dataFile;
+            manager.setContextsFromSerializedObject(set.getMarkers(), (CSAnnotationContextManager.SerializableContexts) in.readObject());
         }
-        if (serialInstance.classCriteria != null) {
-            CSCriterionManager.setClassCriteria(dataFile, serialInstance.classCriteria);
-        }
-        serialInstance = null;
-    }
-
-    protected static class SerialInstance implements Serializable {
-
-        DSCriteria criteria;
-        DSClassCriteria classCriteria;
-
-        public SerialInstance(DSCriteria criteria, DSClassCriteria classCriteria) {
-            this.criteria = criteria;
-            this.classCriteria = classCriteria;
-        }
-
     }
 
 }

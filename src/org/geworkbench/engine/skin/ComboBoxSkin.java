@@ -1,6 +1,7 @@
 package org.geworkbench.engine.skin;
 
 import org.geworkbench.engine.config.GUIFramework;
+import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 
 import javax.swing.*;
 import java.awt.*;
@@ -108,10 +109,11 @@ public class ComboBoxSkin extends GUIFramework {
 
     public void addToContainer(String areaName, Component visualPlugin) {
         if (visualPlugin != null)
-            addToContainer(areaName, visualPlugin, visualPlugin.getName());
+            addToContainer(areaName, visualPlugin, visualPlugin.getName(), visualPlugin.getClass());
     }
 
-    public void addToContainer(String areaName, Component visualPlugin, String pluginName) {
+    public void addToContainer(String areaName, Component visualPlugin, String pluginName, Class mainPluginClass) {
+        // Todo - Deal with mainPluginClass as in Skin
         GuiArea ga = (GuiArea) areas.get(areaName);
         if (ga != null)
             ga.addComponent(visualPlugin, pluginName);
@@ -534,5 +536,9 @@ public class ComboBoxSkin extends GUIFramework {
 
             }
         }
+    }
+
+    public void setVisualizationType(DSDataSet type) {
+        //ToDo: Show only those visualizations that support the selected type
     }
 }

@@ -3,6 +3,7 @@ package org.geworkbench.builtin.projects;
 import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.bison.datastructure.biocollections.CSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
+import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 
 import javax.swing.*;
 import java.io.File;
@@ -18,7 +19,7 @@ import java.util.Vector;
  * @version 1.0
  */
 
-public class ImageData extends CSDataSet implements DSAncillaryDataSet {
+public class ImageData extends CSAncillaryDataSet {
 
     private File imageFile = null;
     private ImageIcon image = null;
@@ -28,6 +29,7 @@ public class ImageData extends CSDataSet implements DSAncillaryDataSet {
     private boolean isDirty = false;
 
     public ImageData(File image) {
+        super(null, null);
         imageFile = image;
         id = RandomNumberGenerator.getID();
     }

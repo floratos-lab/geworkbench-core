@@ -3,6 +3,7 @@ package org.geworkbench.builtin.projects.history;
 import org.geworkbench.events.ProjectEvent;
 import org.geworkbench.builtin.projects.ProjectPanel;
 import org.geworkbench.engine.management.Subscribe;
+import org.geworkbench.engine.management.AcceptTypes;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.engine.config.VisualPlugin;
@@ -22,7 +23,7 @@ import java.awt.*;
  * modifications (editing, normalization, filtering, etc) that a microarray
  * set has undergone.
  */
-public class HistoryPanel implements VisualPlugin {
+@AcceptTypes({DSDataSet.class}) public class HistoryPanel implements VisualPlugin {
     /**
      * Text to display when there are no user comments entered.
      */

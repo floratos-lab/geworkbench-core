@@ -1,6 +1,5 @@
 package org.geworkbench.util.visualproperties;
 
-import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 
 import java.awt.*;
 import java.util.WeakHashMap;
@@ -23,22 +22,22 @@ public class PanelVisualPropertiesManager {
         return instance;
     }
 
-    private WeakHashMap<DSPanel, org.geworkbench.util.visualproperties.PanelVisualProperties> panelToVisualProperties;
+    private WeakHashMap<Object, PanelVisualProperties> panelToVisualProperties;
 
     public PanelVisualPropertiesManager() {
-        panelToVisualProperties = new WeakHashMap<DSPanel, PanelVisualProperties>();
+        panelToVisualProperties = new WeakHashMap<Object, PanelVisualProperties>();
     }
 
-    public void setVisualProperties(DSPanel panel, PanelVisualProperties properties) {
+    public void setVisualProperties(Object panel, PanelVisualProperties properties) {
         panelToVisualProperties.put(panel, properties);
     }
 
-    public PanelVisualProperties getVisualProperties(DSPanel panel) {
-        return panelToVisualProperties.get(panel);
+    public PanelVisualProperties getVisualProperties(Object item) {
+        return panelToVisualProperties.get(item);
     }
 
-    public void clearVisualProperties(DSPanel panel) {
-        panelToVisualProperties.remove(panel);
+    public void clearVisualProperties(Object item) {
+        panelToVisualProperties.remove(item);
     }
 
     public void clearAllVisualProperties() {

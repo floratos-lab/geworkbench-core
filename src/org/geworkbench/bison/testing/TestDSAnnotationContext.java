@@ -28,7 +28,7 @@ public abstract class TestDSAnnotationContext extends TestCase {
         DSMicroarray item2 = dataSet.get(1);
         DSMicroarray item3 = dataSet.get(2);
         // Use the default context
-        DSAnnotationContext<DSMicroarray> context = manager.getDefaultContext(dataSet);
+        DSAnnotationContext<DSMicroarray> context = manager.getCurrentContext(dataSet);
         assertNotNull(context);
         // Create an annotation
         DSAnnotationType<String> gender = createAnnotationType("Gender", String.class);

@@ -4,9 +4,7 @@ import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.HashMap;
-import java.util.StringTokenizer;
-import java.util.ArrayList;
+import java.util.*;
 
 public class Util {
     public Util() {
@@ -113,6 +111,24 @@ public class Util {
     public static ImageIcon createImageIcon(String path) {
         java.net.URL imgURL = Util.class.getResource(path);
         return new ImageIcon(imgURL);
+    }
+
+
+    /**
+     * Generates a unique name given a desired name and a set of existing names.
+     * Appends ' (n)' to the name for n = 1, 2, 3, ... until a unique name is found.
+     * @param desiredName
+     * @param existingNames
+     * @return
+     */
+    public static String getUniqueName(String desiredName, Set<String> existingNames) {
+        String name = desiredName;
+        int i = 0;
+        while (existingNames.contains(name)) {
+            i++;
+            name = desiredName + " (" + i + ")";
+        }
+        return name;
     }
 
 }

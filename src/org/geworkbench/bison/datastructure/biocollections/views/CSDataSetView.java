@@ -30,7 +30,7 @@ public class CSDataSetView <Q extends DSBioObject> implements DSDataSetView<Q> {
      */
     protected DSPanel<Q> itemPanel = new CSPanel<Q>("");
 
-    protected DSClassCriteria classCriteria = null;
+    // protected DSClassCriteria classCriteria = null;
 
     /**
      * Designates if the microarray subselection imposed by the activated

@@ -1,13 +1,11 @@
 package org.geworkbench.bison.annotation;
 
-import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.properties.DSNamed;
 import org.apache.commons.collections15.set.ListOrderedSet;
 
-import java.util.Map;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.WeakHashMap;
 
 /**
  * @author John Watkinson
@@ -25,10 +23,12 @@ public class CSAnnotationContextManager implements DSAnnotationContextManager {
 
     public static final String DEFAULT_CONTEXT_NAME = "Default";
 
-    private Map<DSItemList, ListOrderedSet<DSAnnotationContext>> contextMap;
+    private WeakHashMap<DSItemList, ListOrderedSet<DSAnnotationContext>> contextMap;
+    private WeakHashMap<DSItemList, String> currentContextMap;
 
     public CSAnnotationContextManager() {
-        contextMap = new HashMap<DSItemList, ListOrderedSet<DSAnnotationContext>>();
+        contextMap = new WeakHashMap<DSItemList, ListOrderedSet<DSAnnotationContext>>();
+        currentContextMap = new WeakHashMap<DSItemList, String>();
     }
 
     public <T extends DSNamed> DSAnnotationContext<T>[] getAllContexts(DSItemList<T> itemList) {
@@ -42,13 +42,29 @@ public class CSAnnotationContextManager implements DSAnnotationContextManager {
 
     public <T extends DSNamed> DSAnnotationContext<T> getContext(DSItemList<T> itemList, String name) {
         ListOrderedSet<DSAnnotationContext> contexts = contextMap.get(itemList);
-        for (Iterator<DSAnnotationContext> iterator = contexts.iterator(); iterator.hasNext();) {
-            DSAnnotationContext context = iterator.next();
-            if (name.equals(context.getName())) {
-                return context;
+        if (contexts != null) {
+            for (Iterator<DSAnnotationContext> iterator = contexts.iterator(); iterator.hasNext();) {
+                DSAnnotationContext context = iterator.next();
+                if (name.equals(context.getName())) {
+                    return context;
+                }
             }
         }
-        return null;
+        // Create context
+        return createContext(itemList, name);
+    }
+
+    public boolean hasContext(DSItemList itemList, String name) {
+        ListOrderedSet<DSAnnotationContext> contexts = contextMap.get(itemList);
+        if (contexts != null) {
+            for (Iterator<DSAnnotationContext> iterator = contexts.iterator(); iterator.hasNext();) {
+                DSAnnotationContext context = iterator.next();
+                if (name.equals(context.getName())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public <T extends DSNamed> DSAnnotationContext<T> createContext(DSItemList<T> itemList, String name) {
@@ -96,15 +112,18 @@ public class CSAnnotationContextManager implements DSAnnotationContextManager {
 
     public boolean renameContext(DSItemList itemList, String oldName, String newName) {
         DSAnnotationContext context = getContext(itemList, oldName);
+        if (hasContext(itemList, newName)) {
+            throw new IllegalArgumentException("Context with name '" + newName + "' already exists.");
+        }
         if (context == null) {
-            throw new NullPointerException("Context not found: " + oldName);
+            return false;
         } else {
             context.setName(newName);
-            return !oldName.equals(newName);
+            return true;
         }
     }
 
-    public <T extends DSBioObject> DSAnnotationContext<T> getDefaultContext(DSItemList<T> itemList) {
+    public <T extends DSNamed> DSAnnotationContext<T> getCurrentContext(DSItemList<T> itemList) {
         ListOrderedSet<DSAnnotationContext> contexts = contextMap.get(itemList);
         if (contexts == null) {
             contexts = new ListOrderedSet<DSAnnotationContext>();
@@ -115,6 +134,51 @@ public class CSAnnotationContextManager implements DSAnnotationContextManager {
             CSAnnotationContext<T> context = new CSAnnotationContext<T>(DEFAULT_CONTEXT_NAME, itemList);
             contexts.add(context);
         }
-        return contexts.get(0);
+        String currentContext = currentContextMap.get(itemList);
+        DSAnnotationContext context = null;
+        if (currentContext != null) {
+            context = getContext(itemList, currentContext);
+        }
+        if (context == null) {
+            context = contexts.get(0);
+            currentContextMap.put(itemList, context.getName());
+        }
+        return context;
+    }
+
+    public <T extends DSNamed> void setCurrentContext(DSItemList<T> itemList, DSAnnotationContext<T> context) {
+        currentContextMap.put(itemList, context.getName());
+    }
+
+    public <T extends DSNamed> void copyContexts(DSItemList<T> from, DSItemList<T> to) {
+        DSAnnotationContext<T>[] contexts = getAllContexts(from);
+        ListOrderedSet<DSAnnotationContext> contextSet = contextMap.get(to);
+        if (contextSet == null) {
+            contextSet = new ListOrderedSet<DSAnnotationContext>();
+            contextMap.put(to, contextSet);
+        }
+        for (int i = 0; i < contexts.length; i++) {
+            DSAnnotationContext<T> context = contexts[i];
+            contextSet.add(context.clone());
+        }
+    }
+
+    public static class SerializableContexts {
+        private ListOrderedSet<DSAnnotationContext> contexts;
+        private String current;
+
+        public SerializableContexts(ListOrderedSet<DSAnnotationContext> contexts, String current) {
+            this.contexts = contexts;
+            this.current = current;
+        }
+    }
+
+    public SerializableContexts getContextsForSerialization(DSItemList itemList) {
+        return new SerializableContexts(contextMap.get(itemList), currentContextMap.get(itemList));
+    }
+
+    public void setContextsFromSerializedObject(DSItemList itemList, SerializableContexts contexts) {
+        contextMap.put(itemList, contexts.contexts);
+        currentContextMap.put(itemList, contexts.current);
     }
 }

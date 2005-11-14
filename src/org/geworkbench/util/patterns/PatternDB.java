@@ -4,6 +4,8 @@ import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.util.patterns.CSMatchedSeqPattern;
 import org.geworkbench.bison.datastructure.biocollections.CSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
+import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
+import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeqPattern;
 import polgara.soapPD_wsdl.Parameters;
 
@@ -22,7 +24,7 @@ import java.util.Iterator;
  * @version 1.0
  */
 
-public class PatternDB extends CSDataSet implements DSAncillaryDataSet, Serializable {
+public class PatternDB extends CSAncillaryDataSet implements Serializable {
     private final static ObjectStreamField[] serialPersistentFields = {new ObjectStreamField("dirty", boolean.class), new ObjectStreamField("file", File.class), new ObjectStreamField("sequenceFile", File.class), new ObjectStreamField("parms", Parameters.class)};
 
     static private ImageIcon icon = new ImageIcon(PatternDB.class.getResource("pattern.gif"));
@@ -32,13 +34,15 @@ public class PatternDB extends CSDataSet implements DSAncillaryDataSet, Serializ
     private Parameters parms = new Parameters();
     protected File dataSetFile;
 
-    public PatternDB(File _file, File _seqFile) {
+    public PatternDB(File _file, File _seqFile, DSDataSet parent) {
+        super(parent, "PatternDB");
         dataSetFile = new File(_seqFile.getName());
         read(file);
         setID(RandomNumberGenerator.getID());
     }
 
-    public PatternDB(File _seqFile) {
+    public PatternDB(File _seqFile, DSDataSet parent) {
+        super(parent, "PatternDB");
         dataSetFile = new File(_seqFile.getName());
     }
 

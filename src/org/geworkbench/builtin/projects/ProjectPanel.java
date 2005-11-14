@@ -583,7 +583,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             DSDataSet ds = selection.getDataSet();
             if (ds != null) {
-                org.geworkbench.util.patterns.PatternDB patternDB = new org.geworkbench.util.patterns.PatternDB(ds.getFile());
+                org.geworkbench.util.patterns.PatternDB patternDB = new org.geworkbench.util.patterns.PatternDB(ds.getFile(), null);
                 if (patternDB.read(chooser.getSelectedFile())) {
                     addDataSetSubNode(patternDB);
                 }

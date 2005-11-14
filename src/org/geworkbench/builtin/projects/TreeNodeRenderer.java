@@ -36,6 +36,10 @@ public class TreeNodeRenderer extends DefaultTreeCellRenderer {
      */
     public ImageNode imageNodeSelection = null;
     /**
+     * <code>ImageIcon</code> for display on Workspace Nodes
+     */
+    ImageIcon workspaceIcon = null;
+    /**
      * <code>ImageIcon</code> for display on Project Nodes
      */
     ImageIcon projectIcon = null;
@@ -59,6 +63,7 @@ public class TreeNodeRenderer extends DefaultTreeCellRenderer {
 
     public TreeNodeRenderer(ProjectSelection selection) {
         this.selection = selection;
+        workspaceIcon = new ImageIcon(Icons.class.getResource("workspace16x16.gif"));
         projectIcon = new ImageIcon(Icons.class.getResource("project16x16.gif"));
         microarrayIcon = new ImageIcon(Icons.class.getResource("chip16x16.gif"));
         phenotypeIcon = new ImageIcon(Icons.class.getResource("Phenotype16x16.gif"));
@@ -100,9 +105,12 @@ public class TreeNodeRenderer extends DefaultTreeCellRenderer {
      */
     public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
         super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
-        setForeground(Color.lightGray);
-        if (value.getClass() == ProjectNode.class) {
-            setIcon(Icons._projectIcon);
+        setForeground(Color.black);
+        if (value == tree.getModel().getRoot()) {
+            setIcon(Icons.WORKSPACE_ICON);
+            setToolTipText("This is the workspace.");
+        } else if (value.getClass() == ProjectNode.class) {
+            setIcon(Icons.PROJECT_ICON);
             setToolTipText("This is a project folder.");
         } else {
             if (value.getClass() == DataSetNode.class) {
@@ -111,7 +119,7 @@ public class TreeNodeRenderer extends DefaultTreeCellRenderer {
                 if (icon != null) {
                     setIcon(icon);
                 } else {
-                    setIcon(Icons._dataSetIcon);
+                    setIcon(Icons.DATASET_ICON);
                 }
                 String[] descriptions = df.getDescriptions();
                 if (df != null && (df instanceof DSMicroarraySet)){
@@ -131,7 +139,7 @@ public class TreeNodeRenderer extends DefaultTreeCellRenderer {
                 if (icon != null) {
                     setIcon(icon);
                 } else {
-                    setIcon(Icons._dataSubSetIcon);
+                    setIcon(Icons.DATASUBSET_ICON);
                 }
                 String[] descriptions = adf.getDescriptions();
                 if (descriptions.length > 0) {
@@ -140,12 +148,13 @@ public class TreeNodeRenderer extends DefaultTreeCellRenderer {
                     setToolTipText("This is an undefined Ancillary Data set");
                 }
             } else if (value.getClass() == ImageNode.class) {
-                setIcon(Icons._imageIcon);
+                setIcon(Icons.IMAGE_ICON);
             }
         }
-        if (value == selection.getSelectedNode()) {
-            setForeground(Color.black);
-        }
+        // watkin - Using a light gray is confusing and hard to read, using black for all nodes.
+//        if (value == selection.getSelectedNode()) {
+//            setForeground(Color.black);
+//        }
         return this;
     }
 

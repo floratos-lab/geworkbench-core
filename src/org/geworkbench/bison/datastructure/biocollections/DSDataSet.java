@@ -68,22 +68,6 @@ public interface DSDataSet <T extends DSBioObject> extends DSDescribable, DSName
     public void addObject(Object objectType, Object anObject);
 
     /**
-     * Adds an annotation property/value pair by index.
-     *
-     * @param objId    the index.
-     * @param property the annotation label.
-     * @param value    the annotation value.
-     */
-    void addPropertyValue(int objId, DSAnnotLabel property, DSAnnotValue value);
-
-    /**
-     * Sets an annotation label.
-     *
-     * @param property the property to set.
-     */
-    void setSelectedProperty(DSAnnotLabel property);
-
-    /**
      * Gets the activation status of the data set.
      *
      * @return <code>true</code> if active, <code>true</code> otherwise.

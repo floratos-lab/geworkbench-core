@@ -56,7 +56,7 @@ public class PatternFileFormat extends DataSetFileFormat {
     }
 
     public DSDataSet getDataFile(File file) {
-        org.geworkbench.util.patterns.PatternDB patternDB = new PatternDB(file);
+        org.geworkbench.util.patterns.PatternDB patternDB = new PatternDB(file, null);
         if (patternDB.read(file)) {
             return patternDB;
         }

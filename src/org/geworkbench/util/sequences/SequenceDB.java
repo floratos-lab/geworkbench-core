@@ -41,7 +41,7 @@ public class SequenceDB extends CSDataSet<DSSequence> implements DSCollection<
 //                           new ObjectStreamField("genePanel", DSPanel.class)};
 
     static private ImageIcon icon = new ImageIcon(SequenceDB.class.getResource(
-            "dna.GIF"));
+            "dna16x16.GIF"));
     static private HashMap databases = new HashMap();
     private boolean dirty = false;
     private SequenceResource seqResource = null;
@@ -51,8 +51,7 @@ public class SequenceDB extends CSDataSet<DSSequence> implements DSCollection<
     private String label = "Undefined";
     private int sequenceNo = 0;
     private File file = null;
-    private DSItemList<org.geworkbench.bison.datastructure.bioobjects.markers.
-            SequenceMarker> markerList = null;
+    private DSItemList<SequenceMarker> markerList = null;
     //added by xiaoqing for bug fix to create subsetSequenceDB. which matchs the old sequences index with new temp sub seqenceDB index.
     //Need rewrite to fit with caWorkbench3.
     private int[] matchIndex;

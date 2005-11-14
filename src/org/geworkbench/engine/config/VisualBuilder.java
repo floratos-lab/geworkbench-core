@@ -325,7 +325,7 @@ public class VisualBuilder extends JFrame {
                 if (value.isVisualPlugin()) { //add visual plugin to the selected area
                     String visualArea = (String) jVisualAreaComboBox.getSelectedItem();
                     if ((visualArea != null) && (!visualArea.equalsIgnoreCase("")))
-                        GeawConfigObject.getGuiWindow().addToContainer(visualArea, ((VisualPlugin) value.getPlugin()).getComponent(), value.getLabel());
+                        GeawConfigObject.getGuiWindow().addToContainer(visualArea, ((VisualPlugin) value.getPlugin()).getComponent(), value.getLabel(), value.getPluginClass());
                     PluginRegistry.addVisualAreaInfo(visualArea, (VisualPlugin) value.getPlugin());
                 }
                 //get interfaces

@@ -5,6 +5,7 @@ import org.geworkbench.events.ImageSnapshotEvent;
 import org.geworkbench.events.CommentsEvent;
 import org.geworkbench.engine.management.Publish;
 import org.geworkbench.engine.management.Subscribe;
+import org.geworkbench.engine.management.AcceptTypes;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.engine.config.VisualPlugin;
@@ -21,7 +22,7 @@ import java.awt.*;
  * @author First Genetic Trust
  * @version 1.0
  */
-public class CommentsPanel implements VisualPlugin {
+@AcceptTypes({DSDataSet.class}) public class CommentsPanel implements VisualPlugin {
     /**
      * Used as the "name" part in the name-value pair that stores the user
      * comments in a <code>MicroarraySet</code> object X. In particular, if

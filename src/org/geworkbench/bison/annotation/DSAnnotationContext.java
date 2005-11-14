@@ -34,7 +34,12 @@ import java.util.List;
  *
  * @author John Watkinson
  */
-public interface DSAnnotationContext<T extends DSNamed> extends DSAnnotationSource<T> {
+public interface DSAnnotationContext<T extends DSNamed> extends DSAnnotationSource<T>, Cloneable {
+
+    /**
+     * Deep clones this context.
+     */
+    public CSAnnotationContext<T> clone();
 
     /**
      * Retrieves the name of this context.
@@ -196,6 +201,7 @@ public interface DSAnnotationContext<T extends DSNamed> extends DSAnnotationSour
      * Retrieves the items for a label.
      * @param label the label for which to retrieve items.
      * @return a panel with the same name as the label, containing the appropriate items.
+     * The panel is empty if there are no items for the given label.
      */
     public DSPanel<T> getItemsWithLabel(String label);
 
@@ -203,6 +209,11 @@ public interface DSAnnotationContext<T extends DSNamed> extends DSAnnotationSour
      * Returns <tt>true</tt> if the item has the specified label, <tt>false</tt> otherwise.
      */
     public boolean hasLabel(T item, String label);
+
+    /**
+     * Returns the index of the label in this context.
+     */
+    public int indexOfLabel(String label);
 
     /**
      * Retrieves all items that hold at least one of the specified labels.
@@ -233,6 +244,12 @@ public interface DSAnnotationContext<T extends DSNamed> extends DSAnnotationSour
      * @return <tt>true</tt> if the item held the label prior to removal, <tt>false</tt> otherwise.
      */
     public boolean removeLabelFromItem(T item, String label);
+
+    /**
+     * Clears all items from a label.
+     * @param label the label from which to clear all items.
+     */
+    public void clearItemsFromLabel(String label);
 
     //// CLASSES
 
@@ -316,6 +333,13 @@ public interface DSAnnotationContext<T extends DSNamed> extends DSAnnotationSour
     public String[] getLabelsForClass(String clazz);
 
     /**
+     * Gets all labels and the items contained within each. There is an anonymous DSPanel which contains a DSPanel for
+     * each label.
+     * @return
+     */
+    public DSPanel<T> getLabelTree();
+
+    /**
      * Removes a class from a label, restoring its classification to the default class.
      * @param label the label from which the class should be removed.
      * @return the old classification held by this label, or <tt>null</tt> if no explicit class was assigned to this
@@ -331,4 +355,11 @@ public interface DSAnnotationContext<T extends DSNamed> extends DSAnnotationSour
      */
     public DSPanel<T> getItemsForClass(String clazz);
 
+    /**
+     * Renames a label.
+     * @param oldName the old name of the label.
+     * @param newName the new name of the label.
+     * @return
+     */
+    public boolean renameLabel(String oldName, String newName);
 }

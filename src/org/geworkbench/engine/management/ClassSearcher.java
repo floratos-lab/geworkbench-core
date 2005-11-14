@@ -99,7 +99,7 @@ public class ClassSearcher {
     }
 
     private void indexClass(InputStream classStream, String filename) throws IOException {
-        log.debug("Indexing '" + filename + "'...");
+        // log.debug("Indexing '" + filename + "'...");
         ClassParser parser = new ClassParser(classStream, filename);
         JavaClass jc = parser.parse();
         String className = jc.getClassName();

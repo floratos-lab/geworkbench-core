@@ -47,7 +47,7 @@ public class UIController { // extends Digester
             System.err.println("PluginObject::addGUIComponent - Attempt to add as " + "GUI component the plugin with id = " + compDes.getID() + ", which does not implement " + "interface VisualPlugin.\n");
             return;
         }
-        GeawConfigObject.getGuiWindow().addToContainer(visualarea, ((VisualPlugin) compDes.getPlugin()).getComponent(), compDes.getLabel());
+        GeawConfigObject.getGuiWindow().addToContainer(visualarea, ((VisualPlugin) compDes.getPlugin()).getComponent(), compDes.getLabel(), compDes.getPluginClass());
     }
 
     public static void addExtensionPoint(PluginDescriptor compDes, String extPoint) {

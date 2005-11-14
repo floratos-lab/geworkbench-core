@@ -8,8 +8,6 @@ import org.geworkbench.bison.datastructure.biocollections.views.CSMicroarraySetV
 import org.geworkbench.bison.datastructure.biocollections.views.DSMicroarraySetView;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
-import org.geworkbench.bison.annotation.DSCriteria;
-import org.geworkbench.bison.util.CSCriterionManager;
 import org.geworkbench.bison.util.Range;
 
 /**

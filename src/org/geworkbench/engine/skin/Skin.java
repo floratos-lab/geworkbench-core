@@ -9,12 +9,19 @@ import org.geworkbench.events.ComponentDockingEvent;
 import org.geworkbench.events.listeners.ComponentDockingListener;
 import org.geworkbench.engine.config.GUIFramework;
 import org.geworkbench.engine.config.VisualPlugin;
+import org.geworkbench.engine.config.PluginDescriptor;
 import org.geworkbench.engine.config.events.AppEventListenerException;
 import org.geworkbench.engine.config.events.EventSource;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.util.JAutoList;
+import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.collections15.map.ReferenceMap;
 
 import javax.swing.*;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -31,6 +38,8 @@ import java.util.*;
 
 public class Skin extends GUIFramework {
 
+    static Log log = LogFactory.getLog(GUIFramework.class);
+
     static HashMap visualRegistry = new HashMap();
     JPanel contentPane;
     JLabel statusBar = new JLabel();
@@ -38,7 +47,7 @@ public class Skin extends GUIFramework {
     JSplitPane jSplitPane1 = new JSplitPane();
     BorderLayout borderLayout5 = new BorderLayout();
     DefaultDockingPort visualPanel = new DefaultDockingPort();
-    DefaultDockingPort jControlPanel = new DefaultDockingPort();
+    DefaultDockingPort commandPanel = new DefaultDockingPort();
     BorderLayout borderLayout2 = new BorderLayout();
     BorderLayout borderLayout3 = new BorderLayout();
     JSplitPane jSplitPane2 = new JSplitPane();
@@ -54,8 +63,18 @@ public class Skin extends GUIFramework {
 
     DockingNotifier eventSink = new DockingNotifier();
 
+    private Set<Class> acceptors;
+    private Set<String> fixedComponents;
+    private HashMap<Component, Class> mainComponentClass = new HashMap<Component, Class>();
+    private ReferenceMap<DSDataSet, String> visualLastSelected = new ReferenceMap<DSDataSet, String>();
+    private ReferenceMap<DSDataSet, String> commandLastSelected = new ReferenceMap<DSDataSet, String>();
+    private ReferenceMap<DSDataSet, String> selectionLastSelected = new ReferenceMap<DSDataSet, String>();
+    private DSDataSet currentDataSet;
+    private boolean tabSwappingMode = false;
+
     public Skin() {
         registerAreas();
+        fixedComponents = new HashSet<String>();
         try {
             jbInit();
         } catch (Exception e) {
@@ -97,7 +116,7 @@ public class Skin extends GUIFramework {
         contentPane.add(statusBar, BorderLayout.SOUTH);
         contentPane.add(jSplitPane1, BorderLayout.CENTER);
         jSplitPane1.add(jSplitPane2, JSplitPane.RIGHT);
-        jSplitPane2.add(jControlPanel, JSplitPane.BOTTOM);
+        jSplitPane2.add(commandPanel, JSplitPane.BOTTOM);
         jSplitPane2.add(visualPanel, JSplitPane.TOP);
         jSplitPane1.add(jSplitPane3, JSplitPane.LEFT);
         jSplitPane3.add(selectionPanel, JSplitPane.BOTTOM);
@@ -107,10 +126,10 @@ public class Skin extends GUIFramework {
         jSplitPane2.setDividerLocation((int) (guiHeight * 0.60));
         jSplitPane3.setDividerLocation((int) (guiHeight * 0.35));
         this.setLocation((dim.width - this.getWidth()) / 2, (dim.height - this.getHeight()) / 2);
-        visualPanel.setComponentProvider(new ComponentProvider());
-        jControlPanel.setComponentProvider(new ComponentProvider());
-        selectionPanel.setComponentProvider(new ComponentProvider());
-        projectPanel.setComponentProvider(new ComponentProvider());
+        visualPanel.setComponentProvider(new ComponentProvider(VISUAL_AREA));
+        commandPanel.setComponentProvider(new ComponentProvider(COMMAND_AREA));
+        selectionPanel.setComponentProvider(new ComponentProvider(SELECTION_AREA));
+        projectPanel.setComponentProvider(new ComponentProvider(PROJECT_AREA));
         final String CANCEL_DIALOG = "cancel-dialog";
         contentPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_F12, 0), CANCEL_DIALOG);
         contentPane.getActionMap().put(CANCEL_DIALOG, new AbstractAction() {
@@ -125,13 +144,32 @@ public class Skin extends GUIFramework {
     }
 
     private void chooseComponent() {
+        if (acceptors == null) {
+            // Get all appropriate acceptors
+            acceptors = new HashSet<Class>();
+        }
         // 1) Get all visual components
         ComponentRegistry registry = ComponentRegistry.getRegistry();
         VisualPlugin[] plugins = registry.getModules(VisualPlugin.class);
-        final String[] names = new String[plugins.length];
+        ArrayList<String> availablePlugins = new ArrayList<String>();
         for (int i = 0; i < plugins.length; i++) {
-            names[i] = registry.getDescriptorForPlugin(plugins[i]).getLabel();
+            String name = registry.getDescriptorForPlugin(plugins[i]).getLabel();
+            if (fixedComponents.contains(name)) {
+                availablePlugins.add(name);
+            } else {
+                for (Iterator<Class> iterator = acceptors.iterator(); iterator.hasNext();) {
+                    Class type = iterator.next();
+                    if (registry.getDescriptorForPluginClass(type).getLabel().equals(name)) {
+                        availablePlugins.add(name);
+                        break;
+                    }
+                }
+            }
         }
+        final String[] names = availablePlugins.toArray(new String[0]);
+//        for (int i = 0; i < plugins.length; i++) {
+//            names[i] = registry.getDescriptorForPlugin(plugins[i]).getLabel();
+//        }
         // 2) Sort alphabetically
         Arrays.sort(names);
         // 3) Create dialog with JAutoText (prefix mode)
@@ -167,6 +205,7 @@ public class Skin extends GUIFramework {
         dialog.getContentPane().add(autoList);
         dialog.setModal(true);
         dialog.pack();
+        dialog.setSize(200, 300);
         Dimension size = dialog.getSize();
         Dimension frameSize = getSize();
         int x = getLocationOnScreen().x + (frameSize.width - size.width) / 2;
@@ -225,12 +264,15 @@ public class Skin extends GUIFramework {
     protected void registerAreas() {
         areas.put(TOOL_AREA, jToolBar);
         areas.put(VISUAL_AREA, visualPanel);
-        areas.put(COMMAND_AREA, jControlPanel);
+        areas.put(COMMAND_AREA, commandPanel);
         areas.put(SELECTION_AREA, selectionPanel);
         areas.put(PROJECT_AREA, projectPanel);
     }
 
     public void addToContainer(String areaName, Component visualPlugin) {
+        if (!areaName.equals(VISUAL_AREA) && !areaName.equals(COMMAND_AREA)) {
+            fixedComponents.add(visualPlugin.getName());
+        }
         DockableImpl wrapper = new DockableImpl(visualPlugin, visualPlugin.getName());
         DockingManager.registerDockable(wrapper);
         DefaultDockingPort port = (DefaultDockingPort) areas.get(areaName);
@@ -275,12 +317,21 @@ public class Skin extends GUIFramework {
         return (String) visualRegistry.get(visualPlugin);
     }
 
-    public void addToContainer(String areaName, Component visualPlugin, String pluginName) {
+    public void addToContainer(String areaName, Component visualPlugin, String pluginName, Class mainPluginClass) {
+        visualPlugin.setName(pluginName);
+        if (!areaName.equals(VISUAL_AREA) && !areaName.equals(COMMAND_AREA)) {
+            fixedComponents.add(visualPlugin.getName());
+        }
         DockableImpl wrapper = new DockableImpl(visualPlugin, pluginName);
         DockingManager.registerDockable(wrapper);
-        DefaultDockingPort port = (DefaultDockingPort) areas.get(areaName);
-        port.dock(wrapper, DockingPort.CENTER_REGION);
+        if (!areaName.equals(GUIFramework.VISUAL_AREA) && !areaName.equals(GUIFramework.COMMAND_AREA)) {
+            DefaultDockingPort port = (DefaultDockingPort) areas.get(areaName);
+            port.dock(wrapper, DockingPort.CENTER_REGION);
+        } else {
+            log.debug("Plugin wanting to go to visual or command area: " + pluginName);
+        }
         visualRegistry.put(visualPlugin, areaName);
+        mainComponentClass.put(visualPlugin, mainPluginClass);
     }
 
     private void dockingFinished(DockableImpl comp) {
@@ -489,10 +540,42 @@ public class Skin extends GUIFramework {
     }
 
     private class ComponentProvider extends ComponentProviderAdapter {
+
+        private String area;
+
+        public ComponentProvider(String area) {
+            this.area = area;
+        }
+
+        // Add change listeners to appropriate areas so
         public JTabbedPane createTabbedPane() {
-            JTabbedPane pane = new JTabbedPane();
-            pane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+            final JTabbedPane pane = new JTabbedPane();
+            if (area.equals(VISUAL_AREA)) {
+                pane.addChangeListener(new TabChangeListener(pane, visualLastSelected));
+            } else if (area.equals(COMMAND_AREA)) {
+                pane.addChangeListener(new TabChangeListener(pane, commandLastSelected));
+            } else if (area.equals(SELECTION_AREA)) {
+                pane.addChangeListener(new TabChangeListener(pane, selectionLastSelected));
+            }
             return pane;
+        }
+
+    }
+
+    private class TabChangeListener implements ChangeListener {
+        private final JTabbedPane pane;
+        private final ReferenceMap<DSDataSet, String> lastSelected;
+
+        public TabChangeListener(JTabbedPane pane, ReferenceMap<DSDataSet, String> lastSelected) {
+            this.pane = pane;
+            this.lastSelected = lastSelected;
+        }
+
+        public void stateChanged(ChangeEvent e) {
+            if ((currentDataSet != null) && !tabSwappingMode) {
+                int index = pane.getSelectedIndex();
+                lastSelected.put(currentDataSet, pane.getTitleAt(index));
+            }
         }
     }
 
@@ -505,4 +588,77 @@ public class Skin extends GUIFramework {
             }
         }
     }
+
+    public void setVisualizationType(DSDataSet type) {
+        currentDataSet = type;
+        // These are default acceptors
+        acceptors = ComponentRegistry.getRegistry().getAcceptors(null);
+        if (type != null) {
+            acceptors.addAll(ComponentRegistry.getRegistry().getAcceptors(type.getClass()));
+        }
+        if (type == null) {
+            log.debug("Default acceptors found:");
+        } else {
+            log.debug("Found the following acceptors for type " + type.getClass());
+        }
+        for (Iterator iterator = acceptors.iterator(); iterator.hasNext();) {
+            Object o = iterator.next();
+            log.debug(o.toString());
+        }
+
+        // Set up Visual Area
+        tabSwappingMode = true;
+        addAppropriateComponents(acceptors, GUIFramework.VISUAL_AREA);
+        selectLastComponent(GUIFramework.VISUAL_AREA, visualLastSelected.get(type));
+        addAppropriateComponents(acceptors, GUIFramework.COMMAND_AREA);
+        selectLastComponent(GUIFramework.COMMAND_AREA, commandLastSelected.get(type));
+        selectLastComponent(GUIFramework.SELECTION_AREA, selectionLastSelected.get(type));
+        tabSwappingMode = false;
+        contentPane.revalidate();
+        contentPane.repaint();
+    }
+
+    private void addAppropriateComponents(Set acceptors, String screenRegion) {
+        DefaultDockingPort port = (DefaultDockingPort) areas.get(screenRegion);
+        port.removeAll();
+//            JTabbedPane visualpane = (JTabbedPane) ((DockingPort) areas.get(GUIFramework.VISUAL_AREA)).getDockedComponent();
+//            visualpane.removeAll();
+        Set components = visualRegistry.keySet();
+        SortedMap<Integer, Component> tabsToAdd = new TreeMap<Integer, Component>();
+        for (Iterator visualIterator = components.iterator(); visualIterator.hasNext();) {
+            Component component = (Component) visualIterator.next();
+            if (visualRegistry.get(component).equals(screenRegion)) {
+                Class mainclass = mainComponentClass.get(component);
+                if (acceptors.contains(mainclass)) {
+                    log.debug("Found component in visual area to show: " + mainclass.toString());
+                    PluginDescriptor desc = ComponentRegistry.getRegistry().getDescriptorForPluginClass(mainclass);
+                    tabsToAdd.put(desc.getPreferredOrder(), component);
+                }
+            }
+        }
+        for (Integer tabIndex : tabsToAdd.keySet()) {
+            PluginDescriptor desc = ComponentRegistry.getRegistry().getDescriptorForPluginClass(mainComponentClass.get(tabsToAdd.get(tabIndex)));
+            Component component = tabsToAdd.get(tabIndex);
+            port.dock(new DockableImpl(component, desc.getLabel()), DockingPort.CENTER_REGION);
+        }
+        port.invalidate();
+    }
+
+    private void selectLastComponent(String screenRegion, String selected) {
+        DefaultDockingPort port = (DefaultDockingPort) areas.get(screenRegion);
+        if (selected != null) {
+            Component docked = port.getDockedComponent();
+            if (docked instanceof JTabbedPane) {
+                JTabbedPane pane = (JTabbedPane) docked;
+                int n = pane.getTabCount();
+                for (int i = 0; i < n; i++) {
+                    if (selected.equals(pane.getTitleAt(i))) {
+                        pane.setSelectedIndex(i);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
 }

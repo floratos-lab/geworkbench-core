@@ -3,7 +3,6 @@ package org.geworkbench.bison.datastructure.biocollections.microarrays;
 import MAGE.BioAssay;
 import MAGE.DerivedBioAssay;
 import MAGE.MeasuredBioAssay;
-import org.geworkbench.bison.util.colorcontext.ColorContext;
 import org.geworkbench.bison.parsers.resources.AffyResource;
 import org.geworkbench.bison.parsers.resources.CaArrayResource;
 import org.geworkbench.bison.parsers.*;
@@ -11,19 +10,10 @@ import org.geworkbench.bison.util.RandomNumberGenerator;
 import gov.nih.nci.mageom.bean.BioAssay.BioAssayImpl;
 import org.geworkbench.bison.util.Range;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
-import org.geworkbench.bison.util.colorcontext.ExpressionColorContext;
-import org.geworkbench.bison.util.colorcontext.ExpressionPValueColorContext;
-import org.geworkbench.bison.datastructure.biocollections.classification.phenotype.CSClassCriteria;
-import org.geworkbench.bison.annotation.CSCriteria;
-import org.geworkbench.bison.annotation.DSCriteria;
-import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.bison.datastructure.biocollections.views.CSMicroarraySetView;
-import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
+import org.geworkbench.bison.annotation.*;
 import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.*;
-import org.geworkbench.bison.datastructure.complex.panels.CSPanel;
-import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.util.*;
 import org.geworkbench.bison.parsers.resources.Resource;
 
@@ -265,7 +255,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
     }
 
     public ImageIcon getIcon() {
-        return Icons._dataSetIcon;
+        return Icons.DATASET_ICON;
     }
 
     public File getFile() {
@@ -415,7 +405,8 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
 
         int currMicroarrayId = 0;
 
-        void executeLine(String line, DSMicroarraySet mArraySet) {
+        void executeLine(String line, DSMicroarraySet<DSMicroarray> mArraySet) {
+            CSAnnotationContextManager manager = CSAnnotationContextManager.getInstance();
             if (line.charAt(0) == '#') {
                 return; //
             }
@@ -449,20 +440,28 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
                     //This handles all the phenotype definition lines
                     String phLabel = new String(st[1]);
                     int i = 0;
+                    DSAnnotationContext<DSMicroarray> context = manager.getContext(mArraySet, phLabel);
+                    // Todo - centralize the setup of these classes
+                    CSAnnotationContext.initializePhenotypeContext(context);
                     for (int j = 2; j < st.length; j++) {
                         String valueLabel = new String(st[j]);
-                        DSAnnotLabel property = new CSAnnotLabel(phLabel);
-                        if (CSCriterionManager.getCriteria(mArraySet) == null) {
-                            CSCriterionManager.setCriteria(mArraySet, new CSCriteria());
-                            CSCriterionManager.setClassCriteria(mArraySet, new CSClassCriteria());
-                        }
-                        DSCriteria criteria = CSCriterionManager.getCriteria(mArraySet);
                         if ((valueLabel != null) && (!valueLabel.equalsIgnoreCase(""))) {
-                            DSAnnotValue value = new CSAnnotValue(valueLabel, valueLabel.hashCode());
-                            if (criteria.get(property) == null)
-                                criteria.put(property, new CSPanel<DSMicroarray>(phLabel));
-                            criteria.addItem(((DSMicroarray) mArraySet.get(i++)), property, value);
+                            context.labelItem(mArraySet.get(j - 2), valueLabel);
                         }
+                        // ---
+                        // String valueLabel = new String(st[j]);
+//                        DSAnnotLabel property = new CSAnnotLabel(phLabel);
+//                        if (CSCriterionManager.getCriteria(mArraySet) == null) {
+//                            CSCriterionManager.setCriteria(mArraySet, new CSCriteria());
+//                            CSCriterionManager.setClassCriteria(mArraySet, new CSClassCriteria());
+//                        }
+//                        DSCriteria criteria = CSCriterionManager.getCriteria(mArraySet);
+//                        if ((valueLabel != null) && (!valueLabel.equalsIgnoreCase(""))) {
+//                            DSAnnotValue value = new CSAnnotValue(valueLabel, valueLabel.hashCode());
+//                            if (criteria.get(property) == null)
+//                                criteria.put(property, new CSPanel<DSMicroarray>(phLabel));
+//                            criteria.addItem(((DSMicroarray) mArraySet.get(i++)), property, value);
+//                        }
                     }
                 } else if (line.charAt(0) != '\t') {
                     // This handles individual gene lines with (value, pvalue) pairs separated by tabs
@@ -678,6 +677,25 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
             writer.write(outLine);
             writer.newLine();
 
+            DSAnnotationContextManager manager = CSAnnotationContextManager.getInstance();
+            int n = manager.getNumberOfContexts(this);
+            for (int i = 0; i < n; i++) {
+                DSAnnotationContext<DSMicroarray> context = manager.getContext(this, i);
+                StringBuilder line = new StringBuilder("Description" + '\t' + context.getName());
+                for (Iterator<DSMicroarray> iterator = this.iterator(); iterator.hasNext();) {
+                    DSMicroarray microarray = iterator.next();
+                    String label = "Undefined";
+                    String[] labels = context.getLabelsForItem(microarray);
+                    // watkin - Unfortunately, the file format only supports one label per context.
+                    if (labels.length > 0) {
+                        label = labels[0];
+                    }
+                    line.append('\t' + label);
+                }
+                writer.write(line.toString());
+                writer.newLine();
+            }
+            /*
             DSCriteria<DSBioObject> criteria = CSCriterionManager.getCriteria(this);
             for (DSPanel<DSBioObject> property : criteria.values()) {
                 // For each phenotypic criteria (Default one, "Accession" is ignored)
@@ -694,6 +712,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
                 writer.write(line);
                 writer.newLine();
             }
+            */
             ProgressMonitor pm = new ProgressMonitor(null, "Total " + markerVector.size(), "saving ", 0, markerVector.size());
             // Proceed to write one marker at a time
             for (int i = 0; i < markerVector.size(); ++i) {
@@ -787,39 +806,39 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
         ProgressMonitor pm = null;
     }
 
-    public void computeRange() {
-        CSMicroarraySetView<DSGeneMarker, DSMicroarray> view = new CSMicroarraySetView();
-        DSDataSet dataSet = (DSDataSet) this;
-        view.setDataSet(dataSet);
-        DSCriteria criteria = CSCriterionManager.getCriteria(dataSet);
-        view.setItemPanel(criteria.getSelectedCriterion());
-        view.useItemPanel(true);
-        for (DSGeneMarker marker : getMarkers()) {
-            ((org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker) marker).reset(marker.getSerial(), 0, 0);
-        }
-        if (view.items().size() == 1) {
-            // @todo - watkin - move this range calculation in to a different ColorContext, maybe?
-            DSMicroarray ma = view.items().get(0);
-            Range range = new org.geworkbench.bison.util.Range();
-            for (DSGeneMarker marker : getMarkers()) {
-                DSMutableMarkerValue mValue = (DSMutableMarkerValue) ma.getMarkerValue(marker.getSerial());
-                range.min = Math.min(range.min, mValue.getValue());
-                range.max = Math.max(range.max, mValue.getValue());
-                range.norm.add(mValue.getValue());
-            }
-            for (DSGeneMarker marker : getMarkers()) {
-                Range markerRange = ((org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker) marker).getRange();
-                markerRange.min = range.min;
-                markerRange.max = range.max;
-                markerRange.norm = range.norm;
-            }
-        } else {
-            for (DSGeneMarker marker : getMarkers()) {
-                for (DSMicroarray ma : view.items()) {
-                    DSMutableMarkerValue mValue = (DSMutableMarkerValue) ma.getMarkerValue(marker.getSerial());
-                    ((org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker) marker).check(mValue, false);
-                }
-            }
-        }
-    }
+//    public void computeRange() {
+//        CSMicroarraySetView<DSGeneMarker, DSMicroarray> view = new CSMicroarraySetView();
+//        DSDataSet dataSet = (DSDataSet) this;
+//        view.setDataSet(dataSet);
+//        DSCriteria criteria = CSCriterionManager.getCriteria(dataSet);
+//        view.setItemPanel(criteria.getSelectedCriterion());
+//        view.useItemPanel(true);
+//        for (DSGeneMarker marker : getMarkers()) {
+//            ((org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker) marker).reset(marker.getSerial(), 0, 0);
+//        }
+//        if (view.items().size() == 1) {
+//            // @todo - watkin - move this range calculation in to a different ColorContext, maybe?
+//            DSMicroarray ma = view.items().get(0);
+//            Range range = new org.geworkbench.bison.util.Range();
+//            for (DSGeneMarker marker : getMarkers()) {
+//                DSMutableMarkerValue mValue = (DSMutableMarkerValue) ma.getMarkerValue(marker.getSerial());
+//                range.min = Math.min(range.min, mValue.getValue());
+//                range.max = Math.max(range.max, mValue.getValue());
+//                range.norm.add(mValue.getValue());
+//            }
+//            for (DSGeneMarker marker : getMarkers()) {
+//                Range markerRange = ((org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker) marker).getRange();
+//                markerRange.min = range.min;
+//                markerRange.max = range.max;
+//                markerRange.norm = range.norm;
+//            }
+//        } else {
+//            for (DSGeneMarker marker : getMarkers()) {
+//                for (DSMicroarray ma : view.items()) {
+//                    DSMutableMarkerValue mValue = (DSMutableMarkerValue) ma.getMarkerValue(marker.getSerial());
+//                    ((org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker) marker).check(mValue, false);
+//                }
+//            }
+//        }
+//    }
 }

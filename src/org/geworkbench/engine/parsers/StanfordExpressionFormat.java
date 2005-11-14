@@ -233,6 +233,7 @@ public class StanfordExpressionFormat extends DataSetFileFormat {
                     if (labels.length > 1) {
                         String valueLabel = new String(labels[0]);
                         DSAnnotLabel property = new CSAnnotLabel("Phenotype");
+                        // todo - watkin - if this format is to be used, this needs to be refactored to use CSAnnotationContext
                         if (CSCriterionManager.getCriteria(mArraySet) == null) {
                             CSCriterionManager.setCriteria(mArraySet, new CSCriteria());
                             CSCriterionManager.setClassCriteria(mArraySet, new CSClassCriteria());

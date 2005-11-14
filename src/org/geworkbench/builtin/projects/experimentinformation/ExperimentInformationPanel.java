@@ -2,6 +2,7 @@ package org.geworkbench.builtin.projects.experimentinformation;
 
 import org.geworkbench.events.ProjectEvent;
 import org.geworkbench.engine.management.Subscribe;
+import org.geworkbench.engine.management.AcceptTypes;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.engine.config.VisualPlugin;
@@ -20,7 +21,7 @@ import java.awt.*;
  * This application component is responsible for displaying the exepriment
  * information (if any) associated with a microarray set.
  */
-public class ExperimentInformationPanel implements VisualPlugin {
+@AcceptTypes({DSDataSet.class}) public class ExperimentInformationPanel implements VisualPlugin {
 
     /**
      * Text to display when there are no user comments entered.

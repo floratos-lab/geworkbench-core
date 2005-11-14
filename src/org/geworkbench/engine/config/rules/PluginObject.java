@@ -59,6 +59,12 @@ public class PluginObject {
      * The plugin component that last had the focus.
      */
     private static PluginDescriptor lastInFocus = null;
+
+    /**
+     * Used to count up as we load plugins because of the digester.
+     */
+    private static int loadOrderTracker = 0;
+
     /**
      * The <code>PluginDescriptor</code> created for this plugin.
      */
@@ -123,7 +129,8 @@ public class PluginObject {
      * @param resourceName Resource from which to load the plugin.
      */
     public void createPlugin(String id, String name, String className, String resourceName) {
-        compDes = new PluginDescriptor(className, id, name, resourceName);
+        compDes = new PluginDescriptor(className, id, name, resourceName, loadOrderTracker);
+        loadOrderTracker++;
         Debug.debug("PluginObject::createPlugIn --> Creating id = " + id + " name = " + name + " className = " + className + " resourceName = " + resourceName);
         PluginRegistry.addPlugin(compDes);
         // Digest component descriptor
@@ -160,7 +167,7 @@ public class PluginObject {
             return;
         }
         compDes.setVisualLocation(guiAreaName);
-        GeawConfigObject.getGuiWindow().addToContainer(guiAreaName, ((VisualPlugin) compDes.getPlugin()).getComponent(), compDes.getLabel());
+        GeawConfigObject.getGuiWindow().addToContainer(guiAreaName, ((VisualPlugin) compDes.getPlugin()).getComponent(), compDes.getLabel(), compDes.getPluginClass());
         PluginRegistry.addVisualAreaInfo(guiAreaName, (VisualPlugin) compDes.getPlugin());
     }
 

@@ -37,7 +37,7 @@ public class CSMicroarraySet1 extends CSMicroarraySet<DSMicroarray> implements S
     }
 
     public ImageIcon getIcon() {
-        return Icons._dataSetIcon;
+        return Icons.DATASET_ICON;
     }
 
     public File getFile() {

@@ -167,6 +167,7 @@ public class PatternOps {
      */
     public static void refinePatternGenes(CSMatchedMatrixPattern mp, DSMicroarraySet<DSMicroarray> microarraySet, double pValue) {
         // Get the Class manager
+        // todo - watkin - refactor to use CSAnnotationContext
         DSClassCriteria classCriteria = CSCriterionManager.getClassCriteria(microarraySet);
         List<DSPatternMatch<DSMicroarray, DSPValue>> matches = mp.matches();
         DSItemList<? extends DSBioObject> background = null;

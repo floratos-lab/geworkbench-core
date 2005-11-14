@@ -1,6 +1,7 @@
 package org.geworkbench.engine.skin;
 
 import org.geworkbench.engine.config.GUIFramework;
+import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 
 import javax.swing.*;
 import java.awt.*;
@@ -100,7 +101,8 @@ public class Workbench extends GUIFramework {
         desktop.add(frame);
     }
 
-    public void addToContainer(String areaName, Component visualPlugin, String pluginName) {
+    public void addToContainer(String areaName, Component visualPlugin, String pluginName, Class mainPluginClass) {
+        // Todo - deal with mainPluginClass mapping as in Skin
         InternalFrame frame = createFrame();
         frame.setContentPane((Container) visualPlugin);
         frame.setTitle(pluginName);
@@ -149,5 +151,9 @@ public class Workbench extends GUIFramework {
             }
             return new Rectangle((column++) * 40, row * 40, 32, 32);
         }
+    }
+
+    public void setVisualizationType(DSDataSet type) {
+        //ToDo: Show only those visualizations that support the selected type
     }
 }

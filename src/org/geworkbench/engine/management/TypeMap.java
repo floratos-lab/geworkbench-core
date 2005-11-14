@@ -18,11 +18,14 @@ public class TypeMap <T> extends HashMap<Class, T> {
     }
 
     @Override public T get(Object key) {
+        if (key == null) {
+            return super.get(null);
+        }
         Class type = (Class) key;
-        T result = super.get(type);
+        T result = null;
         while ((result == null) && (type != null)) {
-            type = type.getSuperclass();
             result = super.get(type);
+            type = type.getSuperclass();
         }
         return result;
     }

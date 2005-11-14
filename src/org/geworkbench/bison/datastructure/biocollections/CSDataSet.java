@@ -1,13 +1,8 @@
 package org.geworkbench.bison.datastructure.biocollections;
 
 import org.geworkbench.bison.util.DefaultIdentifiable;
-import org.geworkbench.bison.datastructure.biocollections.classification.phenotype.DSClassCriteria;
-import org.geworkbench.bison.annotation.DSCriteria;
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
-import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
-import org.geworkbench.bison.datastructure.complex.panels.CSPanel;
 import org.geworkbench.bison.datastructure.complex.panels.CSSequentialItemList;
-import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.datastructure.properties.CSDescribable;
 import org.geworkbench.bison.datastructure.properties.CSExtendable;
 import org.geworkbench.bison.util.*;
@@ -119,45 +114,18 @@ public class CSDataSet <T extends DSBioObject> extends CSSequentialItemList<T> i
     }
 
     /**
-     * Adds an annotation property/value pair by index.
-     *
-     * @param mArrayId the index.
-     * @param property the annotation label.
-     * @param value    the annotation value.
-     * @todo - watkin - I can't figure out what this method does.
-     */
-    public void addPropertyValue(int mArrayId, DSAnnotLabel property, DSAnnotValue value) {
-        DSCriteria<DSBioObject> criteria = CSCriterionManager.getCriteria(this);
-        DSPanel<DSBioObject> criterion = criteria.get(property);
-        DSPanel<DSBioObject> tagPanel = null;
-        if (criterion == null) {
-            criterion = new CSPanel<DSBioObject>(property.toString());
-            criteria.put(property, criterion);
-        }
-        tagPanel = criterion.panels().get(value.toString());
-        if (tagPanel == null) {
-            tagPanel = new CSPanel<DSBioObject>(value.toString());
-            criterion.panels().add(tagPanel);
-        }
-        T item = get(mArrayId);
-        // @todo - watkin - This breaks the class hierarchy
-        if (item instanceof DSMicroarray) {
-            tagPanel.add((DSMicroarray) item);
-        }
-    }
-
-    /**
      * Sets an annotation label.
      *
      * @param property the property to set.
      * @todo - watkin - Not sure what this does.
+     * watkin - phased out
      */
-    public void setSelectedProperty(DSAnnotLabel property) {
-        DSCriteria<DSBioObject> criteria = CSCriterionManager.getCriteria(this);
-        DSClassCriteria classCriteria = CSCriterionManager.getClassCriteria(this);
-        criteria.setSelectedCriterion(property);
-        classCriteria.setSelectedCriterion(property);
-    }
+//    public void setSelectedProperty(DSAnnotLabel property) {
+//        DSCriteria<DSBioObject> criteria = CSCriterionManager.getCriteria(this);
+//        DSClassCriteria classCriteria = CSCriterionManager.getClassCriteria(this);
+//        criteria.setSelectedCriterion(property);
+//        classCriteria.setSelectedCriterion(property);
+//    }
 
     /**
      * Gets the activation status of the data set.
@@ -204,7 +172,7 @@ public class CSDataSet <T extends DSBioObject> extends CSSequentialItemList<T> i
      * @todo - watkin - This is a very implementation-specific method. Should not be defined here.
      */
     public ImageIcon getIcon() {
-        return Icons._dataSetIcon;
+        return Icons.DATASET_ICON;
     }
 
     /**

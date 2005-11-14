@@ -75,6 +75,11 @@ public class PluginDescriptor extends IdentifiableImpl {
     private String visualLocation;
 
     /**
+     * Order in which this component was loaded, and which it prefers to be displayed relative to others.
+     */
+    private int preferredOrder;
+
+    /**
      * The class of this plugin descriptor.
      */
     private Class pluginClass;
@@ -100,8 +105,9 @@ public class PluginDescriptor extends IdentifiableImpl {
      * @param someID          Assigned id.
      * @param someName        Assigned name.
      */
-    public PluginDescriptor(String className, String someID, String someName, String resourceName) {
+    public PluginDescriptor(String className, String someID, String someName, String resourceName, int preferredOrder) {
         super(someID, someName);
+        this.preferredOrder = preferredOrder;
         this.pluginClassPath = className;
         ComponentResource resource = null;
         if (resourceName != null) {
@@ -187,6 +193,14 @@ public class PluginDescriptor extends IdentifiableImpl {
 
     public ClassLoader getClassLoader(){
         return loader;
+    }
+
+    public int getPreferredOrder() {
+        return preferredOrder;
+    }
+
+    public void setPreferredOrder(int preferredOrder) {
+        this.preferredOrder = preferredOrder;
     }
 
     /**

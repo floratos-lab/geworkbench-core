@@ -20,11 +20,11 @@ public class VisualPropertiesDialog extends JDialog {
     private PanelVisualProperties defaultProperties;
     private boolean defaults = false;
 
-    public VisualPropertiesDialog(Frame owner, String title, DSPanel panel, int defaultIndex) throws HeadlessException {
+    public VisualPropertiesDialog(Frame owner, String title, Object item, int defaultIndex) throws HeadlessException {
         super(owner, title, true);
         // Look for existing visual properties
         PanelVisualPropertiesManager manager = PanelVisualPropertiesManager.getInstance();
-        properties = manager.getVisualProperties(panel);
+        properties = manager.getVisualProperties(item);
         defaultProperties = manager.getDefaultVisualProperties(defaultIndex);
         if (properties == null) {
             properties = new PanelVisualProperties(defaultProperties.getShapeIndex(), defaultProperties.getColor());

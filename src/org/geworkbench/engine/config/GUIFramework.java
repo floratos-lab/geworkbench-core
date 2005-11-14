@@ -1,5 +1,7 @@
 package org.geworkbench.engine.config;
 
+import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -43,8 +45,9 @@ public abstract class GUIFramework extends JFrame {
      * @param areaName
      * @param visualPlugin
      * @param pluginName
+     * @param mainPluginClass The main class for this plugin as defined in all.xml. Used to determine which plugins to display for a given datatype
      */
-    public abstract void addToContainer(String areaName, Component visualPlugin, String pluginName);
+    public abstract void addToContainer(String areaName, Component visualPlugin, String pluginName, Class mainPluginClass);
 
     /**
      * Removes the designated <code>visualPlugin</code> from the GUI.
@@ -59,4 +62,11 @@ public abstract class GUIFramework extends JFrame {
      * @param visualPlugin
      */
     public abstract String getVisualArea(Component visualPlugin);
+
+    /**
+     * Allows a project node selection event to tell the GUIFramework which type of data is going to be
+     * visualized. Will allow for the display of only those visualizations that support the selected data type.
+     * @param type
+     */
+    public abstract void setVisualizationType(DSDataSet type);
 }

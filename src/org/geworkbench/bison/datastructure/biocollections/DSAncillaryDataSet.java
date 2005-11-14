@@ -1,5 +1,7 @@
 package org.geworkbench.bison.datastructure.biocollections;
 
+import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
+
 import java.io.File;
 
 /**
@@ -8,7 +10,7 @@ import java.io.File;
  * @todo - watkin - What is the difference between these methods and {@link DSDataSet#getFile()} and {@link DSDataSet#setAbsPath(String)}? Can they be merged?
  * Also, do ancillary data sets have to be files or can the be resources of other types (such as a URL).
  */
-public interface DSAncillaryDataSet extends DSDataSet {
+public interface DSAncillaryDataSet<T extends DSBioObject> extends DSDataSet<T> {
 
     /**
      * Gets the data set file.
@@ -23,4 +25,10 @@ public interface DSAncillaryDataSet extends DSDataSet {
      * @param file the file to associate with this data set.
      */
     public void setDataSetFile(File file);
+
+    /**
+     * Gets the parent data set for this ancillary data set.
+     * @return
+     */
+    public DSDataSet<T> getParentDataSet();
 }

@@ -4,6 +4,7 @@ import org.geworkbench.events.ProjectEvent;
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
+import org.geworkbench.engine.config.rules.GeawConfigObject;
 
 /**
  * <p>Title: Sequence and Pattern Plugin</p>
@@ -117,18 +118,28 @@ public class ProjectSelection {
             selectedNode = node;
             menuNode = node;
             selectedProjectNode = (ProjectNode) getNodeOfClass(node, ProjectNode.class);
+            boolean subNode = false;
             if (node instanceof DataSetNode) {
                 selectedDataSetNode = (DataSetNode) node;
+                GeawConfigObject.getGuiWindow().setVisualizationType(selectedDataSetNode.dataFile);
             } else if (node instanceof DataSetSubNode) {
                 selectedDataSetSubNode = (DataSetSubNode) node;
                 selectedDataSetNode = (DataSetNode) getNodeOfClass(node, DataSetNode.class);
+                GeawConfigObject.getGuiWindow().setVisualizationType(selectedDataSetSubNode._aDataSet);
+                subNode = true;
             } else if (node instanceof ProjectNode && node.getChildCount() == 0) {
                 selectedDataSetNode = null;
                 selectedDataSetSubNode = null;
+                GeawConfigObject.getGuiWindow().setVisualizationType(null);
                 throwEvent("receiveProjectSelection", ProjectEvent.CLEARED);
             }
+
             checkProjectNode();
-            throwEvent("receiveProjectSelection", ProjectEvent.SELECTED);
+            if (subNode) {
+                throwSubNodeEvent("receiveProjectSelection");
+            } else {
+                throwEvent("receiveProjectSelection", ProjectEvent.SELECTED);
+            }
         }
     }
 
@@ -187,6 +198,12 @@ public class ProjectSelection {
                 panel.publishProjectEvent(new ProjectEvent(message, selectedDataSetNode.dataFile));
             }
             panel.sendCommentsEvent(selectedDataSetNode);
+        }
+    }
+
+    public void throwSubNodeEvent(String message) {
+        if ((selectedDataSetSubNode != null) && (selectedDataSetSubNode._aDataSet != null)) {
+            panel.publishProjectEvent(new ProjectEvent(message, selectedDataSetSubNode._aDataSet));
         }
     }
 }

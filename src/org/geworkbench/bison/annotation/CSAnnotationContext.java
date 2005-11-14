@@ -9,15 +9,47 @@ import org.apache.commons.collections15.MapIterator;
 import org.apache.commons.collections15.set.ListOrderedSet;
 
 import java.util.*;
+import java.lang.ref.WeakReference;
+import java.awt.*;
 
 /**
  * @author John Watkinson
  */
 public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationContext<T> {
 
-    private static final String SELECTION = "Selection";
+    public static final String SELECTION = "Selection";
 
-    private class Label {
+    public static final String CLASS_CASE = "Case";
+    public static final String CLASS_CONTROL = "Control";
+    public static final String CLASS_TEST = "Test";
+    public static final String CLASS_IGNORE = "Ignore";
+
+    private static final HashMap<String,Integer> colorMap = new HashMap<String, Integer>();
+
+    static {
+        colorMap.put(CLASS_CASE, Color.RED.getRGB());
+        colorMap.put(CLASS_CONTROL, Color.BLUE.getRGB());
+        colorMap.put(CLASS_TEST, Color.GREEN.getRGB());
+        colorMap.put(CLASS_IGNORE, Color.DARK_GRAY.getRGB());
+    }
+
+    public static int getRGBForClass(String className) {
+        return colorMap.get(className);
+    }
+
+    /**
+     * Initializes a context to have typical values for describing phenotypes.
+     */
+    public static void initializePhenotypeContext(DSAnnotationContext context) {
+        context.addLabel(SELECTION);
+        context.addClass(CLASS_CASE);
+        context.addClass(CLASS_CONTROL);
+        context.addClass(CLASS_TEST);
+        context.addClass(CLASS_IGNORE);
+        context.setDefaultClass(CLASS_CONTROL);
+    }
+
+    private class Label implements Cloneable {
 
         public String name;
         public DSPanel<T> panel;
@@ -33,6 +65,19 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
             active = false;
         }
 
+        protected Label clone() {
+            CSPanel<T> clonedPanel = null;
+            Label clone;
+            if (panel != null) {
+                clonedPanel = new CSPanel<T>(panel);
+                clone = new Label(name, clonedPanel);
+            } else {
+                clone = new Label(name, criterion);
+            }
+            clone.active = active;
+            return clone;
+        }
+
         /**
          * A criterion-based label.
          */
@@ -46,6 +91,7 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
                 return panel;
             } else {
                 DSPanel<T> panel = new CSPanel<T>(name);
+                DSItemList<T> itemList = itemListReference.get();
                 for (T t : itemList) {
                     if (criterion.applyCriterion(t, CSAnnotationContext.this)) {
                         panel.add(t);
@@ -61,20 +107,50 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
     }
 
     private String name;
-    private DSItemList<T> itemList;
+    /**
+     * Stored as a weak reference so that this context can be released by the GC when the item list is GCed.
+     * @see CSAnnotationContextManager#contextMap
+     */
+    private WeakReference<DSItemList<T>> itemListReference;
 
-    private ListOrderedMap<DSAnnotationType, Map<T, ?>> annotations;
+    private ListOrderedMap<DSAnnotationType, HashMap<T, ?>> annotations;
     private ListOrderedMap<String, Label> labels;
     private ListOrderedMap<String, ListOrderedSet<String>> classes;
     private String defaultClass;
 
     public CSAnnotationContext(String name, DSItemList<T> itemList) {
         this.name = name;
-        this.itemList = itemList;
-        annotations = new ListOrderedMap<DSAnnotationType, Map<T, ?>>();
+        this.itemListReference = new WeakReference<DSItemList<T>>(itemList);
+        annotations = new ListOrderedMap<DSAnnotationType, HashMap<T, ?>>();
         labels = new ListOrderedMap<String, Label>();
         classes = new ListOrderedMap<String, ListOrderedSet<String>>();
         defaultClass = null;
+    }
+
+    /**
+     * Deep clones this context.
+     */
+    public CSAnnotationContext<T> clone() {
+        CSAnnotationContext<T> clone = new CSAnnotationContext<T>(name, itemListReference.get());
+        MapIterator<DSAnnotationType, HashMap<T, ?>> annotationsIterator = annotations.mapIterator();
+        while (annotationsIterator.hasNext()) {
+            annotationsIterator.next();
+            clone.annotations.put(annotationsIterator.getKey(), (HashMap<T,?>)annotationsIterator.getValue().clone());
+        }
+        MapIterator<String, Label> labelIterator = labels.mapIterator();
+        while (labelIterator.hasNext()) {
+            labelIterator.next();
+            clone.labels.put(labelIterator.getKey(), labelIterator.getValue().clone());
+        }
+        MapIterator<String, ListOrderedSet<String>> classIterator = classes.mapIterator();
+        while (classIterator.hasNext()) {
+            classIterator.next();
+            ListOrderedSet<String> cloneSet = new ListOrderedSet<String>();
+            cloneSet.addAll(classIterator.getValue());
+            clone.classes.put(classIterator.getKey(), cloneSet);
+        }
+        clone.defaultClass = defaultClass;
+        return clone;
     }
 
     public String getName() {
@@ -86,7 +162,7 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
     }
 
     public DSItemList<T> getItemList() {
-        return itemList;
+        return itemListReference.get();
     }
 
     public boolean addAnnotationType(DSAnnotationType annotationType) {
@@ -112,7 +188,7 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
     }
 
     public <Q> void annotateItem(T item, DSAnnotationType<Q> annotationType, Q value) {
-        Map<T, Q> map = (Map<T, Q>) annotations.get(annotationType);
+        HashMap<T, Q> map = (HashMap<T, Q>) annotations.get(annotationType);
         if (map == null) {
             map = new HashMap<T, Q>();
             annotations.put(annotationType, map);
@@ -246,16 +322,48 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
             iterator.next();
             Label lab = iterator.getValue();
             if (lab.active) {
+                DSPanel<T> labelPanel = lab.getPanel();
+                labelPanel.setActive(true);
                 // Handle special case of "Selection" label
                 if (SELECTION.equals(lab.name)) {
                     DSPanel<T> selection = top.getSelection();
-                    DSPanel<T> labelPanel = lab.getPanel();
                     for (Iterator<T> itemIterator = labelPanel.iterator(); itemIterator.hasNext();) {
                         selection.add(itemIterator.next());
                     }
+                    selection.setActive(true);
                 } else {
-                    top.panels().add(lab.getPanel());
+                    top.panels().add(labelPanel);
                 }
+            }
+        }
+        return top;
+    }
+
+    public DSPanel<T> getLabelTree() {
+        CSPanel<T> top = new CSPanel<T>();
+        MapIterator<String, Label> iterator = labels.mapIterator();
+        while (iterator.hasNext()) {
+            iterator.next();
+            Label lab = iterator.getValue();
+            DSPanel<T> labelPanel = lab.getPanel();
+            // Handle special case of "Selection" label
+            if (SELECTION.equals(lab.name)) {
+                DSPanel<T> selection = top.getSelection();
+                for (Iterator<T> itemIterator = labelPanel.iterator(); itemIterator.hasNext();) {
+                    selection.add(itemIterator.next());
+                }
+                if (isLabelActive(SELECTION)) {
+                    selection.setActive(true);
+                } else {
+                    selection.setActive(false);
+                }
+            } else {
+                if (isLabelActive(lab.name)) {
+                    labelPanel.setActive(true);
+                } else {
+                    labelPanel.setActive(false);
+                }
+                top.panels().add(labelPanel);
             }
         }
         return top;
@@ -264,7 +372,7 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
     public DSPanel<T> getItemsWithLabel(String label) {
         Label lab = labels.get(label);
         if (lab == null) {
-            return null;
+            return new CSPanel<T>(label);
         } else {
             return lab.getPanel();
         }
@@ -280,6 +388,47 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
             }
         } else {
             return false;
+        }
+    }
+
+    public int indexOfLabel(String label) {
+        return labels.indexOf(label);
+    }
+
+    public void clearItemsFromLabel(String label) {
+        Label lab = labels.get(label);
+        if (lab != null) {
+            if (lab.isCriterion()) {
+                throw new IllegalArgumentException("Cannot modify a criterion label directly.");
+            } else {
+                lab.panel = new CSPanel<T>(lab.name);
+            }
+        }
+    }
+
+    public boolean renameLabel(String oldName, String newName) {
+        Label lab = labels.get(oldName);
+        if (lab == null) {
+            return false;
+        } else {
+            lab.name = newName;
+            if (lab.panel != null) {
+                lab.panel.setLabel(newName);
+            }
+            // Must build up a new labels map
+            ListOrderedMap<String, Label> newLabels = new ListOrderedMap<String, Label>();
+            int n = labels.size();
+            MapIterator<String, Label> iterator = labels.mapIterator();
+            while (iterator.hasNext()) {
+                iterator.next();
+                String label = iterator.getKey();
+                if (oldName.equals(label)) {
+                    label = newName;
+                }
+                newLabels.put(label, iterator.getValue());
+            }
+            labels = newLabels;
+            return true;
         }
     }
 
@@ -507,4 +656,9 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
             return name.hashCode();
         }
     }
+
+    public String toString() {
+        return name;
+    }
+
 }
