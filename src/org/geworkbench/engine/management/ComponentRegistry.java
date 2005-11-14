@@ -2,9 +2,10 @@ package org.geworkbench.engine.management;
 
 import net.sf.cglib.proxy.*;
 import org.geworkbench.engine.config.PluginDescriptor;
-import org.geworkbench.engine.config.VisualPlugin;
+import org.geworkbench.util.Util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.geworkbench.engine.config.VisualPlugin;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
@@ -20,6 +21,7 @@ public class ComponentRegistry {
     static Log log = LogFactory.getLog(ComponentRegistry.class);
 
     private static ComponentRegistry componentRegistry;
+    private static final String GEAR_EXPLODE_DIR = "gears_exploded";
 
     /**
      * Gets an instance of the ComponentRegistry.
@@ -605,6 +607,45 @@ public class ComponentRegistry {
         return idToDescriptor.values();
     }
 
+    public void initializeGearResources(String gearPath) {
+        // Check for gears
+        File gearDir = new File(gearPath);
+        if (gearDir.exists() && gearDir.isDirectory()) {
+            // Do gears
+            File explode = new File(gearDir.getAbsolutePath() + '/' + GEAR_EXPLODE_DIR);
+            if (!explode.exists()) {
+                explode.mkdir();
+            }
+            File[] libFiles = gearDir.listFiles();
+            for (int i = 0; i < libFiles.length; i++) {
+                File file = libFiles[i];
+                if (!file.isDirectory()) {
+                    String name = file.getName().toLowerCase();
+                    if (name.endsWith(".gear")) {
+                        log.debug("Found gear file " + name);
+                        // Make a dir for this gear file to be extracted into
+                        File thisdir = new File(explode, name.split("\\.")[0]);
+                        if (thisdir.exists()) {
+                            Util.deleteDirectory(thisdir);
+                        }
+                        thisdir.mkdir();
+                        try {
+                            List files = Util.unZip(file.getAbsolutePath(), thisdir.getAbsolutePath());
+                            ComponentResource resource = new ComponentResource(thisdir.getPath(), true);
+                            nameToComponentResource.put(thisdir.getName(), resource);
+                            log.trace("Added " + thisdir.getName() + " to resource locations. ("+thisdir.getPath()+")");
+
+                        } catch (IOException e) {
+                            log.error("Error during unzip of gear file " + name, e);
+                        }
+                    }
+                }
+            }
+        } else {
+            log.error("GEAR file directory ("+gearPath+") not found.");
+        }
+    }
+
     public void initializeComponentResources(String path) {
         File dir = new File(path);
         if (!dir.isDirectory()) {
@@ -616,8 +657,9 @@ public class ComponentRegistry {
             File file = files[i];
             if (file.isDirectory()) {
                 try {
-                    ComponentResource resource = new ComponentResource(file.getPath());
+                    ComponentResource resource = new ComponentResource(file.getPath(), false);
                     nameToComponentResource.put(file.getName(), resource);
+                    log.trace("Added " + file.getName() + " to resource locations. ("+file.getPath()+")");
                 } catch (IOException e) {
                     System.out.println("Warning: could not initialize component resource '" + file.getName() + "'.");
                 }

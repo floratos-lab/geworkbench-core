@@ -93,6 +93,8 @@ public class PluginDescriptor extends IdentifiableImpl {
 
     private ClassLoader loader;
 
+    private ComponentResource resource;
+
     // ---------------------------------------------------------------------------
     // --------------- Constructors
     // ---------------------------------------------------------------------------
@@ -109,7 +111,7 @@ public class PluginDescriptor extends IdentifiableImpl {
         super(someID, someName);
         this.preferredOrder = preferredOrder;
         this.pluginClassPath = className;
-        ComponentResource resource = null;
+        resource = null;
         if (resourceName != null) {
             resource = ComponentRegistry.getRegistry().getComponentResourceByName(resourceName);
             if (resource == null) {
@@ -193,6 +195,13 @@ public class PluginDescriptor extends IdentifiableImpl {
 
     public ClassLoader getClassLoader(){
         return loader;
+    }
+
+    public boolean isLoadedFromGear() {
+        if (resource == null) {
+            return false;
+        }
+        return resource.isFromGear();
     }
 
     public int getPreferredOrder() {
@@ -386,4 +395,3 @@ public class PluginDescriptor extends IdentifiableImpl {
     }
 
 }
-

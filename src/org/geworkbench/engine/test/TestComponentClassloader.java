@@ -13,7 +13,7 @@ import java.io.IOException;
 public class TestComponentClassloader extends TestCase {
 
     public void testComponentResource() throws IOException {
-        ComponentResource cr = new ComponentResource("gears");
+        ComponentResource cr = new ComponentResource("gears", false);
         ClassLoader loader = cr.getClassLoader();
     }
 }

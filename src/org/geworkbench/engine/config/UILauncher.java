@@ -53,6 +53,7 @@ public class UILauncher implements AnnotationParserListener {
     public static final String DEVELOPMENT_FLAG = "-dev";
     private static final String DEFAULT_COMPONENTS_DIR = "components";
     private static final String COMPONENTS_DIR_PROPERTY = "components.dir";
+    private static final String DEFAULT_GEAR_DIR = "gears";
 
     static {
         splash = new org.geworkbench.util.SplashBitmap(SplashBitmap.class.getResource("splashscreen.png"));
@@ -181,6 +182,7 @@ public class UILauncher implements AnnotationParserListener {
                 componentsDir = DEFAULT_COMPONENTS_DIR;
             }
             ComponentRegistry.getRegistry().initializeComponentResources(componentsDir);
+            ComponentRegistry.getRegistry().initializeGearResources(DEFAULT_GEAR_DIR);
             System.out.println("... scan complete.");
         } else {
             System.out.println("Development mode-- skipping plugin scan.");

@@ -1,12 +1,21 @@
 package org.geworkbench.util;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import javax.swing.*;
+import java.io.*;
+import java.util.*;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipEntry;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.*;
 
 public class Util {
+    static Log log = LogFactory.getLog(Util.class);
+
     public Util() {
     }
 
@@ -113,6 +122,71 @@ public class Util {
         return new ImageIcon(imgURL);
     }
 
+    static public boolean deleteDirectory(File path) {
+        if (path.exists()) {
+            File[] files = path.listFiles();
+            for (int i = 0; i < files.length; i++) {
+                if (files[i].isDirectory()) {
+                    deleteDirectory(files[i]);
+                } else {
+                    files[i].delete();
+                }
+            }
+        }
+        return (path.delete());
+    }
+
+    public static List unZip(String inFile, String outDir) throws IOException {
+        Enumeration entries;
+        ZipFile zipFile;
+
+        List files = new ArrayList();
+
+        zipFile = new ZipFile(inFile);
+
+        entries = zipFile.entries();
+
+        while (entries.hasMoreElements()) {
+            ZipEntry entry = (ZipEntry) entries.nextElement();
+
+            if (entry.isDirectory()) {
+                // Assume directories are stored parents first then children.
+                log.trace("Extracting directory: " + entry.getName());
+                // Check for entry that contains multiple directories - must be created individually
+                String[] dirs = entry.getName().split("/");
+                String dirSoFar = "";
+                for (String thisDir : dirs) {
+                    dirSoFar += "/" + thisDir;
+                    File newdir = new File(outDir, dirSoFar);
+                    log.trace("Creating directory "+dirSoFar);
+                    newdir.mkdir();
+                    files.add(newdir);
+                }
+            } else {
+                log.trace("Extracting file: " + entry.getName());
+                File file = new File(outDir, entry.getName());
+                File path = file.getParentFile();
+                // Make directory if needed
+                path.mkdir();
+                copyInputStream(zipFile.getInputStream(entry),
+                        new BufferedOutputStream(new FileOutputStream(file)));
+                files.add(file);
+            }
+        }
+
+        zipFile.close();
+        return files;
+    }
+
+    private static void copyInputStream(InputStream in, OutputStream out) throws IOException {
+        byte[] buffer = new byte[1024];
+        int len;
+
+        while ((len = in.read(buffer)) >= 0) out.write(buffer, 0, len);
+
+        in.close();
+        out.close();
+    }
 
     /**
      * Generates a unique name given a desired name and a set of existing names.
@@ -130,5 +204,4 @@ public class Util {
         }
         return name;
     }
-
 }
