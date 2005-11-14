@@ -15,6 +15,8 @@ public interface DSSignificanceResultSet <T extends DSGeneMarker> extends DSAnci
      */
     public double getSignificance(T marker);
 
+    public void setSignificance(T marker, double signficance);
+
     public DSMicroarraySet getParentDataSet();
 
 }

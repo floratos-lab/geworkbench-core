@@ -6,14 +6,18 @@ import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarr
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 
 import java.io.File;
+import java.util.HashMap;
 
 /**
  * @author John Watkinson
  */
 public class CSSignificanceResultSet <T extends DSGeneMarker> extends CSAncillaryDataSet implements DSSignificanceResultSet<T> {
 
+    private HashMap<T, Double> significance;
+
     public CSSignificanceResultSet(DSMicroarraySet parent, String label) {
         super(parent, label);
+        significance = new HashMap<T, Double>();
     }
 
     public File getDataSetFile() {
@@ -26,7 +30,11 @@ public class CSSignificanceResultSet <T extends DSGeneMarker> extends CSAncillar
     }
 
     public double getSignificance(T marker) {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return significance.get(marker);
+    }
+
+    public void setSignificance(T marker, double value) {
+        significance.put(marker, value);
     }
 
     public DSMicroarraySet getParentDataSet() {
