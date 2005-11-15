@@ -35,7 +35,7 @@ public class CSSignificanceResultSet <T extends DSGeneMarker> extends CSAncillar
         // no-op
     }
 
-    public double getSignificance(T marker) {
+    public Double getSignificance(T marker) {
         return significance.get(marker);
     }
 

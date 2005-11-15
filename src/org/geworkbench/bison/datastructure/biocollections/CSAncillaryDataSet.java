@@ -15,6 +15,6 @@ public abstract class CSAncillaryDataSet<T extends DSBioObject> extends CSDataSe
     }
 
     public DSDataSet<T> getParentDataSet() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return parent;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

@@ -13,7 +13,7 @@ public interface DSSignificanceResultSet <T extends DSGeneMarker> extends DSAnci
     /**
      * Gets the significance value for the marker.
      */
-    public double getSignificance(T marker);
+    public Double getSignificance(T marker);
 
     public void setSignificance(T marker, double signficance);
 
