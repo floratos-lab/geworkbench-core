@@ -40,7 +40,7 @@ public class SequenceDB extends CSDataSet<DSSequence> implements DSCollection<
 //                           new ObjectStreamField("maxLength", int.class),
 //                           new ObjectStreamField("genePanel", DSPanel.class)};
 
-    static private ImageIcon icon = new ImageIcon(SequenceDB.class.getResource(
+    static public ImageIcon icon = new ImageIcon(SequenceDB.class.getResource(
             "dna16x16.GIF"));
     static private HashMap databases = new HashMap();
     private boolean dirty = false;

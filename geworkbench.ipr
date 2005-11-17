@@ -305,7 +305,10 @@
         <root url="jar://$PROJECT_DIR$/lib/collections-generic-4.0.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/forms-1.0.5.jar!/" />
       </CLASSES>
-      <JAVADOC />
+      <JAVADOC>
+        <root url="http://www.jfree.org/jfreechart/javadoc/index.html/" />
+        <root url="http://www.jfree.org/jfreechart/javadoc/" />
+      </JAVADOC>
       <SOURCES />
     </library>
   </component>
