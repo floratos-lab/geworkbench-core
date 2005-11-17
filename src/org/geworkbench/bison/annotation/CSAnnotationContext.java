@@ -599,6 +599,15 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
 
     public String[] getLabelsForClass(String clazz) {
         ListOrderedSet<String> set = classes.get(clazz);
+        if (clazz.equals(defaultClass)) {
+            MapIterator<String, Label> iterator = labels.mapIterator();
+            while (iterator.hasNext()) {
+                iterator.next();
+                if (getClassForLabel(iterator.getKey()).equals(defaultClass)) {
+                    set.add(iterator.getKey());
+                }
+            }
+        }
         if (set == null) {
             return new String[0];
         } else {
