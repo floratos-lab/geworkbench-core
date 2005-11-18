@@ -516,8 +516,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                 setNodeSelection(clickedNode);
             }
             if ((clickedNode != null) && clickedNode instanceof DataSetSubNode) {
-                DSAncillaryDataSet ds = ((DataSetSubNode) clickedNode)._aDataSet;
-                publishProjectEvent(new ProjectEvent("ProjectNode", ds));
+                // DSAncillaryDataSet ds = ((DataSetSubNode) clickedNode)._aDataSet;
+                // publishProjectEvent(new ProjectEvent("ProjectNode", ds));
             }
             if ((clickedNode != null) && clickedNode instanceof ImageNode) {
                 if (e.getClickCount() == 1) {

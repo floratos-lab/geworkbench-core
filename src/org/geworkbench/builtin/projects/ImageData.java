@@ -29,7 +29,7 @@ public class ImageData extends CSAncillaryDataSet {
     private boolean isDirty = false;
 
     public ImageData(File image) {
-        super(null, null);
+        super(null, "Image");
         imageFile = image;
         id = RandomNumberGenerator.getID();
     }
