@@ -68,6 +68,9 @@
 	<plugin id="scatterPlot" name="Scatter Plot" class="org.geworkbench.components.plots.ScatterPlot" source="plots">
 		<gui-area name="VisualArea"/>
 	</plugin>
+	<plugin id="volcanoPlot" name="Volcano Plot" class="org.geworkbench.components.plots.VolcanoPlot" source="plots">
+		<gui-area name="VisualArea"/>
+	</plugin>
 	<plugin id="SOMClusteringPanel" name="SOM Clusters" class="org.geworkbench.components.plots.SOMDisplay" source="plots">
 		<gui-area name="VisualArea"/>
 	</plugin>
