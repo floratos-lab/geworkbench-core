@@ -57,10 +57,9 @@ public CASLexer(LexerSharedInputState state) {
 	literals.put(new ANTLRHashString("true", this), new Integer(15));
 	literals.put(new ANTLRHashString("let", this), new Integer(21));
 	literals.put(new ANTLRHashString("void", this), new Integer(22));
-	literals.put(new ANTLRHashString("float", this), new Integer(5));
+	literals.put(new ANTLRHashString("boolean", this), new Integer(6));
 	literals.put(new ANTLRHashString("string", this), new Integer(7));
 	literals.put(new ANTLRHashString("continue", this), new Integer(20));
-	literals.put(new ANTLRHashString("bool", this), new Integer(6));
 	literals.put(new ANTLRHashString("function", this), new Integer(18));
 	literals.put(new ANTLRHashString("while", this), new Integer(12));
 	literals.put(new ANTLRHashString("break", this), new Integer(19));
@@ -69,6 +68,7 @@ public CASLexer(LexerSharedInputState state) {
 	literals.put(new ANTLRHashString("return", this), new Integer(14));
 	literals.put(new ANTLRHashString("if", this), new Integer(10));
 	literals.put(new ANTLRHashString("int", this), new Integer(4));
+	literals.put(new ANTLRHashString("double", this), new Integer(5));
 	literals.put(new ANTLRHashString("public", this), new Integer(17));
 	literals.put(new ANTLRHashString("module", this), new Integer(8));
 	literals.put(new ANTLRHashString("else", this), new Integer(11));
@@ -234,7 +234,7 @@ tryAgain:
 						theRetToken=_returnToken;
 					}
 					else if ((LA(1)=='.') && ((LA(2) >= '0' && LA(2) <= '9'))) {
-						mNUM_FLOAT(true);
+						mNUM_DOUBLE(true);
 						theRetToken=_returnToken;
 					}
 					else if ((LA(1)=='/') && (LA(2)=='/')) {
@@ -774,9 +774,9 @@ tryAgain:
 		_returnToken = _token;
 	}
 	
-	public final void mNUM_FLOAT(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
+	public final void mNUM_DOUBLE(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
-		_ttype = NUM_FLOAT;
+		_ttype = NUM_DOUBLE;
 		int _saveIndex;
 		
 		match('.');
@@ -921,13 +921,13 @@ tryAgain:
 			}
 			
 			}
-			_ttype = NUM_FLOAT;
+			_ttype = NUM_DOUBLE;
 			break;
 		}
 		case 'E':  case 'e':
 		{
 			mExponent(false);
-			_ttype = NUM_FLOAT;
+			_ttype = NUM_DOUBLE;
 			break;
 		}
 		default:

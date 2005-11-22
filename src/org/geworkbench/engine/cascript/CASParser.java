@@ -156,7 +156,7 @@ public CASParser(ParserSharedInputState state) {
 			{
 			switch ( LA(1)) {
 			case INT:
-			case FLOAT:
+			case DOUBLE:
 			case BOOLSTR:
 			case STRING:
 			case MODULE:
@@ -262,12 +262,12 @@ public CASParser(ParserSharedInputState state) {
 				match(INT);
 				break;
 			}
-			case FLOAT:
+			case DOUBLE:
 			{
 				AST tmp84_AST = null;
 				tmp84_AST = astFactory.create(LT(1));
 				astFactory.addASTChild(currentAST, tmp84_AST);
-				match(FLOAT);
+				match(DOUBLE);
 				break;
 			}
 			case BOOLSTR:
@@ -381,7 +381,7 @@ public CASParser(ParserSharedInputState state) {
 			{
 			switch ( LA(1)) {
 			case INT:
-			case FLOAT:
+			case DOUBLE:
 			case BOOLSTR:
 			case STRING:
 			case MODULE:
@@ -546,7 +546,7 @@ public CASParser(ParserSharedInputState state) {
 				break;
 			}
 			case INT:
-			case FLOAT:
+			case DOUBLE:
 			case BOOLSTR:
 			case STRING:
 			case MODULE:
@@ -563,7 +563,7 @@ public CASParser(ParserSharedInputState state) {
 			case NEW:
 			case PRINT:
 			case NUM_INT:
-			case NUM_FLOAT:
+			case NUM_DOUBLE:
 			case MINUS:
 			case NOT:
 			case PLUSPLUS:
@@ -606,7 +606,7 @@ public CASParser(ParserSharedInputState state) {
 			case FALSE:
 			case NEW:
 			case NUM_INT:
-			case NUM_FLOAT:
+			case NUM_DOUBLE:
 			case MINUS:
 			case NOT:
 			case PLUSPLUS:
@@ -650,7 +650,7 @@ public CASParser(ParserSharedInputState state) {
 				break;
 			}
 			case INT:
-			case FLOAT:
+			case DOUBLE:
 			case BOOLSTR:
 			case STRING:
 			case MODULE:
@@ -1013,7 +1013,7 @@ public CASParser(ParserSharedInputState state) {
 			{
 			switch ( LA(1)) {
 			case INT:
-			case FLOAT:
+			case DOUBLE:
 			case BOOLSTR:
 			case STRING:
 			case MODULE:
@@ -1027,7 +1027,7 @@ public CASParser(ParserSharedInputState state) {
 			case FALSE:
 			case NEW:
 			case NUM_INT:
-			case NUM_FLOAT:
+			case NUM_DOUBLE:
 			case MINUS:
 			case NOT:
 			case PLUSPLUS:
@@ -1554,7 +1554,7 @@ public CASParser(ParserSharedInputState state) {
 			case FALSE:
 			case NEW:
 			case NUM_INT:
-			case NUM_FLOAT:
+			case NUM_DOUBLE:
 			case MINUS:
 			case NOT:
 			case PLUSPLUS:
@@ -1914,7 +1914,7 @@ public CASParser(ParserSharedInputState state) {
 			case FALSE:
 			case NEW:
 			case NUM_INT:
-			case NUM_FLOAT:
+			case NUM_DOUBLE:
 			case MINUS:
 			case PLUSPLUS:
 			case MINUSMINUS:
@@ -2047,7 +2047,7 @@ public CASParser(ParserSharedInputState state) {
 			case FALSE:
 			case NEW:
 			case NUM_INT:
-			case NUM_FLOAT:
+			case NUM_DOUBLE:
 			case MINUS:
 			case PLUSPLUS:
 			case MINUSMINUS:
@@ -2158,7 +2158,7 @@ public CASParser(ParserSharedInputState state) {
 			case FALSE:
 			case NEW:
 			case NUM_INT:
-			case NUM_FLOAT:
+			case NUM_DOUBLE:
 			case PLUSPLUS:
 			case MINUSMINUS:
 			case LEFTPAREN:
@@ -2300,7 +2300,7 @@ public CASParser(ParserSharedInputState state) {
 			case FALSE:
 			case NEW:
 			case NUM_INT:
-			case NUM_FLOAT:
+			case NUM_DOUBLE:
 			case LEFTPAREN:
 			case ID:
 			case String:
@@ -2336,7 +2336,7 @@ public CASParser(ParserSharedInputState state) {
 		try {      // for error handling
 			switch ( LA(1)) {
 			case NUM_INT:
-			case NUM_FLOAT:
+			case NUM_DOUBLE:
 			{
 				numberValue();
 				astFactory.addASTChild(currentAST, returnAST);
@@ -2466,12 +2466,12 @@ public CASParser(ParserSharedInputState state) {
 				numberValue_AST = (AST)currentAST.root;
 				break;
 			}
-			case NUM_FLOAT:
+			case NUM_DOUBLE:
 			{
 				AST tmp172_AST = null;
 				tmp172_AST = astFactory.create(LT(1));
 				astFactory.addASTChild(currentAST, tmp172_AST);
-				match(NUM_FLOAT);
+				match(NUM_DOUBLE);
 				numberValue_AST = (AST)currentAST.root;
 				break;
 			}
@@ -2524,8 +2524,8 @@ public CASParser(ParserSharedInputState state) {
 		"<2>",
 		"NULL_TREE_LOOKAHEAD",
 		"\"int\"",
-		"\"float\"",
-		"\"bool\"",
+		"\"double\"",
+		"\"boolean\"",
 		"\"string\"",
 		"\"module\"",
 		"\"datatype\"",
@@ -2546,7 +2546,7 @@ public CASParser(ParserSharedInputState state) {
 		"\"new\"",
 		"\"print\"",
 		"NUM_INT",
-		"NUM_FLOAT",
+		"NUM_DOUBLE",
 		"PERIOD",
 		"COMMA",
 		"COLON",

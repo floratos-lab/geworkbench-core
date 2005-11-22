@@ -1,8 +1,8 @@
 // $ANTLR 2.7.5 (20050128): CAS.g -> CASWalkerTokenTypes.txt$
 CASWalker    // output token vocab name
 INT="int"=4
-FLOAT="float"=5
-BOOLSTR="bool"=6
+DOUBLE="double"=5
+BOOLSTR="boolean"=6
 STRING="string"=7
 MODULE="module"=8
 DATATYPE="datatype"=9
@@ -23,7 +23,7 @@ WAIT="wait"=23
 NEW="new"=24
 PRINT="print"=25
 NUM_INT=26
-NUM_FLOAT=27
+NUM_DOUBLE=27
 PERIOD=28
 COMMA=29
 COLON=30
@@ -94,4 +94,3 @@ FUNCTIONBODY=94
 ARGDEC=95
 STATEMENTS=96
 IDENTIFIER=97
-LITERAL_boolean="boolean"=98

@@ -17,8 +17,9 @@ class CasArray extends CasDataType {
         type = typereturn;
     }
 
-    public CasArray(CasDataType []v) {
+    public CasArray(CasDataType []v, CasDataType typereturn) {
         var = v;
+        type = typereturn;
     }
 
     public CasDataType[] getvar() {
@@ -34,7 +35,7 @@ class CasArray extends CasDataType {
     }
 
     public CasDataType copy() {
-        return new CasArray(var);
+        return new CasArray(var, type);
     }
 
     public CasDataType accessArray(int i) {

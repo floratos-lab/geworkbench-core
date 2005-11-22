@@ -38,7 +38,7 @@ class CasMatrix extends CasDataType {
     }
 
     public CasDataType subArrayofMatrix(int i) {
-        return new CasArray(var[i]);
+        return new CasArray(var[i], type);
     }
 
     public CasDataType accessMatrix(int i, int j) {

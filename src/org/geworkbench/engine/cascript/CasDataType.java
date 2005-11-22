@@ -8,7 +8,7 @@ import java.io.PrintWriter;
  * Error messages are generated here.
  *
  * @author Behrooz Badii to CasDataType.java
- * @version $Id: CasDataType.java,v 1.4 2005-10-14 18:38:12 bb2122 Exp $
+ * @version $Id: CasDataType.java,v 1.5 2005-11-22 19:59:20 bb2122 Exp $
  * @modified from Hanhua Feng - hf2048@columbia.edu MxDataType.java
  */
 public class CasDataType {
@@ -194,6 +194,10 @@ public class CasDataType {
     }
 
     public CasDataType subArrayofMatrix(int i) {
+        return error("sub-array in Matrix");
+    }
+    
+    public CasDataType setsubArrayofMatrixValue(CasDataType a, int i) {
         return error("sub-array in Matrix");
     }
 

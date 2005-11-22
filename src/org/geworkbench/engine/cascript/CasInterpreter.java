@@ -9,7 +9,7 @@ import java.util.Vector;
  * Interpreter routines that is called directly from the tree walker.
  *
  * @author Behrooz Badii - badiib@gmail.com
- * @version $Id: CasInterpreter.java,v 1.19 2005-11-09 22:33:50 bb2122 Exp $
+ * @version $Id: CasInterpreter.java,v 1.20 2005-11-22 19:59:20 bb2122 Exp $
  */
 class CasInterpreter {
     CasSymbolTable symt;
@@ -85,7 +85,7 @@ class CasInterpreter {
             /*Testing purposes
             System.out.println("we are dealing with an array here, with dimensionality of two in assign() call");*/
             if ((indices.elementAt(0) instanceof CasInt) && (indices.elementAt(1) instanceof CasInt)) {
-                symt.put(id, new CasMatrix(((CasInt) indices.elementAt(0)).getvar(), ((CasInt) indices.elementAt(0)).getvar(), type));
+                symt.put(id, new CasMatrix(((CasInt) indices.elementAt(0)).getvar(), ((CasInt) indices.elementAt(1)).getvar(), type));
                 symt.findVar(id).setName(id);
                 (symt.findVar(id)).initializeMatrix(); //this is dependent on setName occurring first
                 /*Testing purposes
@@ -144,6 +144,11 @@ class CasInterpreter {
                 System.out.println("new value " + ((CasString) b).getvar());*/
                 x = ((CasString) rvalue(b));
             }
+            if (a instanceof CasArray && b instanceof CasArray) {
+                /*Testing purposes
+                System.out.println("new value " + ((CasString) b).getvar());*/
+                x = ((CasArray) rvalue(b));
+            }
             //here, we have x, a will be replaced by x in the structure itself
             if (symt.findVar(a.getPartOf()) instanceof CasArray && x != null) {
                 x.setPosition(a.getPosition());
@@ -151,9 +156,14 @@ class CasInterpreter {
                 symt.findVar(x.getPartOf()).setArrayValue(x, x.getPosition());
             }
             if (symt.findVar(a.getPartOf()) instanceof CasMatrix && x != null) {
-                x.setPositions(a.getPosition(), a.getPosition2());
-                x.setPartOf(a.getPartOf());
-                symt.findVar(x.getPartOf()).setMatrixValue(x, x.getPosition(), x.getPosition2());
+                if (b instanceof CasArray) {
+                    throw new CasException("assigning an array to a row in a matrix is not allowed.");
+                }
+                else {
+                  x.setPositions(a.getPosition(), a.getPosition2());
+                  x.setPartOf(a.getPartOf());
+                  symt.findVar(x.getPartOf()).setMatrixValue(x, x.getPosition(), x.getPosition2());
+                }
             }
             /*Testing purposes
             System.out.println("substructure assignment success!");*/
@@ -233,6 +243,28 @@ class CasInterpreter {
                 x.setName(a.name);
                 symt.setVar(a.name, (CasBool) x);
                 return new CasBool(true);
+            }
+            if (a instanceof CasArray && b instanceof CasArray) {
+                CasDataType x = rvalue(b);
+                x.setName(a.name);
+                if (((CasArray)a).getvar().length == ((CasArray)b).getvar().length) {    
+                    symt.setVar(a.name, (CasArray) x);
+                    return new CasBool(true);
+                }
+                else {
+                    throw new CasException("An array of size " + ((CasArray)b).getvar().length + " is being assigned to an array of size " + ((CasArray)a).getvar().length + ".  This is not allowed.");
+                }
+            }
+            if (a instanceof CasMatrix && b instanceof CasMatrix) {
+                CasDataType x = rvalue(b);
+                x.setName(a.name);
+                if ((((CasMatrix)a).getvar().length == ((CasMatrix)b).getvar().length) && (((CasMatrix)a).getvar()[0].length == ((CasMatrix)b).getvar()[0].length)) {    
+                    symt.setVar(a.name, (CasMatrix) x);
+                    return new CasBool(true);
+                }
+                else {
+                    throw new CasException("A matrix of dimensions " + ((CasMatrix)b).getvar().length + "x" + ((CasMatrix)b).getvar()[0].length + " is being assigned to a matrix of dimensions " + ((CasMatrix)a).getvar().length + "x" + ((CasMatrix)a).getvar()[0].length + ".  This is not allowed.");
+                }
             }
             if (a instanceof CasString) {
                 if (b instanceof CasBool) {
@@ -338,6 +370,8 @@ class CasInterpreter {
         } else if (indices.size() == 1 && a instanceof CasMatrix) {
             if (indices.elementAt(0) instanceof CasInt) {
                 ret = ((CasMatrix) a).subArrayofMatrix(((CasInt) indices.elementAt(0)).getvar());
+                ret.setPartOf(a.name);
+                ret.setPosition(((CasInt)indices.elementAt(0)).getvar());
                 return ret;
             } else throw new CasException("index of array access for " + a.getName() + " must be an integer");
         } else if (indices.size() == 2 && a instanceof CasMatrix) {

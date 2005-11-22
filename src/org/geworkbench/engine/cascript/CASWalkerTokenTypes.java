@@ -4,7 +4,7 @@ public interface CASWalkerTokenTypes {
 	int EOF = 1;
 	int NULL_TREE_LOOKAHEAD = 3;
 	int INT = 4;
-	int FLOAT = 5;
+	int DOUBLE = 5;
 	int BOOLSTR = 6;
 	int STRING = 7;
 	int MODULE = 8;
@@ -26,7 +26,7 @@ public interface CASWalkerTokenTypes {
 	int NEW = 24;
 	int PRINT = 25;
 	int NUM_INT = 26;
-	int NUM_FLOAT = 27;
+	int NUM_DOUBLE = 27;
 	int PERIOD = 28;
 	int COMMA = 29;
 	int COLON = 30;
@@ -97,5 +97,4 @@ public interface CASWalkerTokenTypes {
 	int ARGDEC = 95;
 	int STATEMENTS = 96;
 	int IDENTIFIER = 97;
-	int LITERAL_boolean = 98;
 }
