@@ -228,7 +228,7 @@ public class CSMicroarraySet<T extends DSMicroarray> extends CSDataSet<T> implem
         ois.defaultReadObject();
     }
 
-    public DSItemList<DSGeneMarker> getMarkers() {
+    public CSMarkerVector getMarkers() {
         return markerVector;
     }
 

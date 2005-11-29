@@ -32,209 +32,12 @@ import java.util.*;
  */
 
 public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implements Serializable {
+
     private HashMap properties = new HashMap();
     private ArrayList descriptions = new ArrayList();
-    private boolean dirty = true;
     private File file = null;
-    private Resource maResource = null;
+
     private org.geworkbench.bison.parsers.DataParseContext dataContext = new org.geworkbench.bison.parsers.DataParseContext();
-
-    public CSExprMicroarraySet(org.geworkbench.bison.parsers.resources.MAGEResource res) {
-        this();
-        addDescription(res.getExperiment().getName());
-        setLabel(res.getExperiment().getName());
-        this.label = new String(res.getExperiment().getName());
-        List ctu = new ArrayList();
-        ctu.add("Avg Diff");
-        ctu.add("Signal");
-        ctu.add("Log2(ratio)");
-        ctu.add("Detection");
-        ctu.add("Detection p-value");
-        ctu.add("Abs Call");
-        MAGEParser parser = new MAGEParser(ctu);
-        BioAssay[] assays = res.getBioAssays();
-        int arrays = 0;
-        for (int i = 0; i < assays.length; i++) {
-            BioAssay ba = (BioAssay) assays[i];
-            if (ba != null && (ba instanceof DerivedBioAssay || ba instanceof MeasuredBioAssay)) {
-                arrays++;
-            }
-        }
-        arrays = 0;
-        for (int i = 0; i < assays.length; i++) {
-            BioAssay ba = (BioAssay) assays[i];
-            if (ba != null && (ba instanceof DerivedBioAssay || ba instanceof MeasuredBioAssay)) {
-                CSMicroarray ar = null;
-                ar = parser.getMicroarray(arrays, ba, this);
-                if (ar != null) {
-                    add(arrays++, ar);
-                }
-            }
-        }
-    }
-
-    public CSExprMicroarraySet(CaArrayResource res) {
-        this();
-        addDescription(res.getExperiment().toString());
-        setLabel(res.getExperiment().getIdentifier());
-        this.label = new String(res.getExperiment().getIdentifier());
-        List ctu = new ArrayList();
-        ctu.add("Avg Diff");
-        ctu.add("Signal");
-        ctu.add("Log2(ratio)");
-        ctu.add("Detection");
-        ctu.add("Detection p-value");
-        ctu.add("Abs Call");
-        CaARRAYParser parser = new CaARRAYParser(ctu);
-        gov.nih.nci.mageom.domain.BioAssay.BioAssay[] assays = res.getBioAssays();
-        int arrays = 0;
-        for (int i = 0; i < assays.length; i++) {
-            gov.nih.nci.mageom.domain.BioAssay.BioAssay bap = assays[i];
-            DSMicroarray ar = null;
-            if (bap != null) {
-                ar = parser.getMicroarray(arrays, bap, this);
-            }
-            if (ar != null) {
-                add(arrays++, ar);
-            }
-        }
-    }
-
-
-    public CSExprMicroarraySet(org.geworkbench.bison.parsers.resources.MAGEResource2 res) {
-        this();
-        addDescription(res.getExperiment().toString());
-        setLabel(res.getExperiment().getIdentifier().toString());
-        this.label = new String(res.getExperiment().getIdentifier().toString());
-        List ctu = new ArrayList();
-        ctu.add("Avg Diff");
-        ctu.add("Signal");
-        ctu.add("Log2(ratio)");
-        ctu.add("Detection");
-        ctu.add("Detection p-value");
-        ctu.add("Abs Call");
-        NCIParser parser = new NCIParser(ctu);
-        gov.nih.nci.mageom.domain.BioAssay.BioAssay[] assays = res.getBioAssays();
-        int arrays = 0;
-        for (int i = 0; i < assays.length; i++) {
-            BioAssayImpl bap = (BioAssayImpl) assays[i];
-            CSMicroarray ar = null;
-            if (bap != null) {
-                ar = parser.getMicroarray(arrays, bap, this);
-            }
-            if (ar != null) {
-                add(arrays++, ar);
-            }
-        }
-    }
-
-    public CSExprMicroarraySet(AffyResource ar) throws Exception {
-        this();
-        file = ar.getInputFile();
-        List ctu = new ArrayList();
-        ctu.add("Probe Set Name");
-        ctu.add("Avg Diff");
-        ctu.add("Signal");
-        ctu.add("Detection");
-        ctu.add("Detection p-value");
-        ctu.add("Abs Call");
-        AffymetrixParser parser = new AffymetrixParser(ctu);
-        ReaderMonitor rm = createProgressReader("Scanning file", ar.getInputFile());
-        String line = null;
-        while ((line = rm.reader.readLine()) != null) {
-            if (!line.trim().equals("")) {
-                parser.process(line);
-            }
-        }
-
-        Vector v = parser.getAccessions();
-        setLabel(ar.getInputFile().getName());
-        setCompatibilityLabel("MAS");
-        this.label = ar.getInputFile().getName();
-        initialize(1, v.size());
-        int count = 0;
-        for (Iterator it = v.iterator(); it.hasNext();) {
-            String acc = ((String) it.next()).toString();
-            markerVector.setLabel(count, acc);
-            this.getMarkers().get(count).setDisPlayType(DSGeneMarker.AFFY_TYPE);
-            markerVector.get(count++).setDescription(acc);
-        }
-        rm.reader.close();
-        //        reader = new BufferedReader(new FileReader(ar.getInputFile()));
-        rm = createProgressReader("Loading data", ar.getInputFile());
-        CSMicroarray microarray = new CSMicroarray(0, v.size(), ar.getInputFile().getName(), null, null, true, DSMicroarraySet.affyTxtType);
-        microarray.setLabel(ar.getInputFile().getName());
-        parser.reset();
-        parser.setMicroarray(microarray);
-        while ((line = rm.reader.readLine()) != null) {
-            if (!line.trim().equals("")) {
-                parser.parseLine(line);
-            }
-        }
-        rm.reader.close();
-        parser.getMicroarray().setLabel(ar.getInputFile().getName());
-        add(0, parser.getMicroarray());
-    }
-
-    public CSExprMicroarraySet(org.geworkbench.bison.parsers.resources.GenepixResource gr) throws Exception {
-        this();
-        file = gr.getInputFile();
-        List ctu = new ArrayList();
-        ctu.add("Block");
-        ctu.add("Column");
-        ctu.add("Row");
-//        ctu.add("ID");
-//        ctu.add("X");
-        ctu.add("Y");
-        ctu.add("Dia");
-        ctu.add("F635 Median");
-        ctu.add("F635 Mean");
-        ctu.add("B635 Median");
-        ctu.add("B635 Mean");
-        ctu.add("F532 Median");
-        ctu.add("F532 Mean");
-        ctu.add("B532 Median");
-        ctu.add("B532 Mean");
-        ctu.add("Ratio of Means");
-        ctu.add("Flags");
-        // ctu.add("Log Ratio");
-        GenePixParser parser = new GenePixParser(ctu);
-        ReaderMonitor rm = createProgressReader("Processing file ", gr.getInputFile());
-
-        String line = null;
-        while ((line = rm.reader.readLine()) != null) {
-            if (!line.trim().equals("")) {
-                parser.process(line);
-            }
-        }
-
-        Vector v = parser.getAccessions();
-        setLabel(gr.getInputFile().getName());
-        setCompatibilityLabel("Genepix");
-        this.label = gr.getInputFile().getName();
-        initialize(1, v.size());
-        int count = 0;
-        for (Iterator it = v.iterator(); it.hasNext();) {
-            String acc = ((String) it.next()).toString();
-            markerVector.setLabel(count, acc);
-            this.getMarkers().get(count).setDisPlayType(DSGeneMarker.GENEPIX_TYPE);
-            markerVector.get(count++).setDescription(acc);
-        }
-        rm.reader.close();
-        rm = createProgressReader("Reading data", gr.getInputFile());
-        CSMicroarray microarray = new CSMicroarray(0, v.size(), gr.getInputFile().getName(), null, null, true, DSMicroarraySet.genepixGPRType);
-        microarray.setLabel(gr.getInputFile().getName());
-        parser.reset();
-        parser.setMicroarray(microarray);
-        while ((line = rm.reader.readLine()) != null) {
-            if (!line.trim().equals("")) {
-                parser.parseLine(line);
-            }
-        }
-        rm.reader.close();
-        parser.getMicroarray().setLabel(gr.getInputFile().getName());
-        add(0, parser.getMicroarray());
-    }
 
     private ReaderMonitor createProgressReader(String display, File file) throws FileNotFoundException {
         FileInputStream fileIn = new FileInputStream(file);
@@ -252,6 +55,8 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
         /** @todo Remove if not used */
         //        addObject(DSRangeMarker.class, CSExpressionMarker.class);
         addDescription("Microarray experiment");
+        DSAnnotationContext<DSMicroarray> context = CSAnnotationContextManager.getInstance().getCurrentContext(this);
+        CSAnnotationContext.initializePhenotypeContext(context);
     }
 
     public ImageIcon getIcon() {
@@ -337,7 +142,6 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
             return;
         } catch (Exception ioe) {
             ioe.printStackTrace();
-            int i = 0;
             return;
         } finally {
         }
@@ -441,7 +245,6 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
                     String phLabel = new String(st[1]);
                     int i = 0;
                     DSAnnotationContext<DSMicroarray> context = manager.getContext(mArraySet, phLabel);
-                    // Todo - centralize the setup of these classes
                     CSAnnotationContext.initializePhenotypeContext(context);
                     for (int j = 2; j < st.length; j++) {
                         String valueLabel = new String(st[j]);

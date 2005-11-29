@@ -3,6 +3,8 @@ package org.geworkbench.builtin.projects;
 import org.geworkbench.bison.util.colorcontext.ColorContext;
 import org.geworkbench.engine.parsers.FileFormat;
 import org.geworkbench.engine.parsers.InputFileFormatException;
+import org.geworkbench.engine.parsers.MAGELoader;
+import org.geworkbench.engine.parsers.CaArrayLoader;
 import org.geworkbench.bison.parsers.resources.MAGEResource2;
 import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.util.SaveImage;
@@ -32,6 +34,7 @@ import org.geworkbench.events.ProjectEvent;
 import org.geworkbench.events.SingleValueEditEvent;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.tree.*;
 import java.awt.*;
@@ -361,95 +364,93 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 
     /**
-       * getMatchNode
-       *
-       * @param root ProjectTreeNode
-       * @param _ancDataSet AncillaryDataSet
-       * @return DataSetNode
-       */
-      public DataSetNode getMatchNode(ProjectTreeNode pnode,
-                                      File fastaFilename) {
+     * getMatchNode
+     *
+     * @param root        ProjectTreeNode
+     * @param _ancDataSet AncillaryDataSet
+     * @return DataSetNode
+     */
+    public DataSetNode getMatchNode(ProjectTreeNode pnode,
+                                    File fastaFilename) {
 
-          //if (_ancDataSet instanceof BlastDataSet) {
-          //    fastaFilename = ( (BlastDataSet) _ancDataSet).getFastaFile();
-          if ((pnode instanceof DataSetNode) &&
-              ((((DataSetNode) pnode).dataFile.getFile()).equals(
-                      fastaFilename))) {
-              return (DataSetNode) pnode;
-          } else if (pnode != null) {
-              Enumeration children = pnode.children();
-              while (children.hasMoreElements()) {
-                  Object obj = children.nextElement();
-                  if (getMatchNode((ProjectTreeNode) obj, fastaFilename) != null) {
+        //if (_ancDataSet instanceof BlastDataSet) {
+        //    fastaFilename = ( (BlastDataSet) _ancDataSet).getFastaFile();
+        if ((pnode instanceof DataSetNode) &&
+                ((((DataSetNode) pnode).dataFile.getFile()).equals(
+                        fastaFilename))) {
+            return (DataSetNode) pnode;
+        } else if (pnode != null) {
+            Enumeration children = pnode.children();
+            while (children.hasMoreElements()) {
+                Object obj = children.nextElement();
+                if (getMatchNode((ProjectTreeNode) obj, fastaFilename) != null) {
 
-                      return getMatchNode((ProjectTreeNode) obj, fastaFilename);
-                  }
-              }
+                    return getMatchNode((ProjectTreeNode) obj, fastaFilename);
+                }
+            }
 
-          }
+        }
 
-          return null;
-      }
-
-
-      /**
-       * Inserts a new ancillary data set  as a new node in the project tree.
-       * The node is a child of the curently selected data set
-       *
-       * @param _ancDataSet
-       */
-      private void addDataSetSubNode(DSAncillaryDataSet _ancDataSet) {
-          DataSetNode dNode = selection.getSelectedDataSetNode();
-          DataSetNode matchedDNode = null;
-          File fastaFile = _ancDataSet.getDataSetFile();
-          if(fastaFile!= null){
-              if (dNode != null) {
-
-                  File dNodeFile = dNode.dataFile.getFile();
-
-                  if (dNodeFile.equals(fastaFile)) {
-                      _ancDataSet.setDataSetFile(dNode.dataFile.getFile());
-                  } else {
-                      //get the matched node in case the node selected changed.
-                      matchedDNode = getMatchNode(root, fastaFile);
-                  }
-
-              } else {
-                  matchedDNode = getMatchNode(root, fastaFile);
-              }
-          }
-          if (matchedDNode != null) {
-              dNode = matchedDNode;
-          }
-          if (dNode == null) {
-              System.out.println("There is no node at project panel!");
-              return;
-          }
-
-          _ancDataSet.setDataSetFile(dNode.dataFile.getFile());
-          // Makes sure that we do not already have an exact instance of this ancillary file
-          Enumeration children = dNode.children();
-          while (children.hasMoreElements()) {
-              Object obj = children.nextElement();
-              if (obj instanceof DataSetSubNode) {
-                  DSAncillaryDataSet ads = ((DataSetSubNode) obj)._aDataSet;
-                  if (_ancDataSet.equals(ads)) {
-                      return;
-                  }
-              }
-          }
-
-          // Inserts the new node and sets the menuNode and other variables to point to it
-          DataSetSubNode node = new DataSetSubNode(_ancDataSet);
-          projectTreeModel.insertNodeInto(node, dNode, dNode.getChildCount());
-          // Make sure the user can see the lovely new node.
-          projectTree.scrollPathToVisible(new TreePath(node));
-          //      serialize("default.ws");
-          projectTree.setSelectionPath(new TreePath(node.getPath()));
-          selection.setNodeSelection(node);
-      }
+        return null;
+    }
 
 
+    /**
+     * Inserts a new ancillary data set  as a new node in the project tree.
+     * The node is a child of the curently selected data set
+     *
+     * @param _ancDataSet
+     */
+    private void addDataSetSubNode(DSAncillaryDataSet _ancDataSet) {
+        DataSetNode dNode = selection.getSelectedDataSetNode();
+        DataSetNode matchedDNode = null;
+        File fastaFile = _ancDataSet.getDataSetFile();
+        if (fastaFile != null) {
+            if (dNode != null) {
+
+                File dNodeFile = dNode.dataFile.getFile();
+
+                if (dNodeFile.equals(fastaFile)) {
+                    _ancDataSet.setDataSetFile(dNode.dataFile.getFile());
+                } else {
+                    //get the matched node in case the node selected changed.
+                    matchedDNode = getMatchNode(root, fastaFile);
+                }
+
+            } else {
+                matchedDNode = getMatchNode(root, fastaFile);
+            }
+        }
+        if (matchedDNode != null) {
+            dNode = matchedDNode;
+        }
+        if (dNode == null) {
+            System.out.println("There is no node at project panel!");
+            return;
+        }
+
+        _ancDataSet.setDataSetFile(dNode.dataFile.getFile());
+        // Makes sure that we do not already have an exact instance of this ancillary file
+        Enumeration children = dNode.children();
+        while (children.hasMoreElements()) {
+            Object obj = children.nextElement();
+            if (obj instanceof DataSetSubNode) {
+                DSAncillaryDataSet ads = ((DataSetSubNode) obj)._aDataSet;
+                if (_ancDataSet.equals(ads)) {
+                    return;
+                }
+            }
+        }
+
+        // Inserts the new node and sets the menuNode and other variables to point to it
+        DataSetSubNode node = new DataSetSubNode(_ancDataSet);
+        projectTreeModel.insertNodeInto(node, dNode, dNode.getChildCount());
+        // Make sure the user can see the lovely new node.
+        projectTree.scrollPathToVisible(new TreePath(node));
+        //      serialize("default.ws");
+        projectTree.setSelectionPath(new TreePath(node.getPath()));
+        selection.setNodeSelection(node);
+    }
 
     /**
      * Stores to a datafile
@@ -639,7 +640,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         }
         //to do
 
-        DSMicroarraySet maSet = new CSExprMicroarraySet(mRes);
+        DSMicroarraySet maSet = CaArrayLoader.loadCaArrayData(mRes);
         addColorContext(maSet);
         addDataSetNode((DSDataSet) maSet, true);
         return true;
@@ -658,7 +659,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
             return false;
         }
 
-        DSMicroarraySet maSet = new CSExprMicroarraySet(mRes);
+        DSMicroarraySet maSet = MAGELoader.loadMAGEDataSet(mRes);
         addColorContext(maSet);
         addDataSetNode((DSDataSet) maSet, true);
         return true;
@@ -698,7 +699,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         }
         //to do
 
-        DSMicroarraySet maSet = new CSExprMicroarraySet(mRes);
+        DSMicroarraySet maSet = MAGELoader.loadMAGEDataSet(mRes);
         addColorContext(maSet);
         addDataSetNode((DSDataSet) maSet, true);
         return true;
@@ -713,7 +714,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
     protected void jLoadMArrayItem_actionPerformed(ActionEvent e) {
         // Proceed only if there is a single node selected and that node
         // is a project node.
-        if (projectTree.getSelectionCount() != 1 || !(projectTree.getSelectionPath().getLastPathComponent() instanceof ProjectNode)) {
+        if (projectTree.getSelectionCount() != 1 || !(projectTree.getSelectionPath().getLastPathComponent() instanceof ProjectNode))
+        {
             JOptionPane.showMessageDialog(null, "Select a project node.", "Open File Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -1018,7 +1020,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
      * @param e
      */
     protected void jRenameProjectItem_actionPerformed(ActionEvent e) {
-        if (projectTree == null || selection == null || (selection.areNodeSelectionsCleared()) || selection.getSelectedProjectNode() == null) {
+        if (projectTree == null || selection == null || (selection.areNodeSelectionsCleared()) || selection.getSelectedProjectNode() == null)
+        {
             JOptionPane.showMessageDialog(null, "Select a project node.", "Rename Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -1037,7 +1040,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
      * @param e
      */
     protected void fileRemove_actionPerformed(ActionEvent e) {
-        if (projectTree == null || selection == null || !((selection.getSelectedNode() instanceof DataSetNode) || (selection.getSelectedNode() instanceof DataSetSubNode))) {
+        if (projectTree == null || selection == null || !((selection.getSelectedNode() instanceof DataSetNode) || (selection.getSelectedNode() instanceof DataSetSubNode)))
+        {
             JOptionPane.showMessageDialog(null, "Select a microarray set.", "Delete Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -1719,6 +1723,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         jDataPane.add(jDataSetPanel, new GridBagConstraints(0, 0, 1, 1, 0.5, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
         jDataSetPanel.add(jDataSetLabel, BorderLayout.NORTH);
         jDataSetPanel.add(jDataSetScrollPane, BorderLayout.CENTER);
+        projectTree.setBorder(new EmptyBorder(1, 1, 0, 0));
         jDataSetScrollPane.getViewport().add(projectTree, null);
         jDataSetPanel.add(jDataSetScrollPane, BorderLayout.CENTER);
         jProjectPanel.setLayout(borderLayout2);
@@ -1891,7 +1896,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
     }
 
     protected void imageRemove_actionPerformed(ActionEvent e) {
-        if (projectTree == null || projectTree.getSelectionPath() == null || !(projectTree.getSelectionPath().getLastPathComponent() instanceof ImageNode)) {
+        if (projectTree == null || projectTree.getSelectionPath() == null || !(projectTree.getSelectionPath().getLastPathComponent() instanceof ImageNode))
+        {
             JOptionPane.showMessageDialog(null, "Select an image node.", "Delete Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -1925,7 +1931,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                         dataSetFiles);
             }
             if (dataSet instanceof DSMicroarraySet)
-                addColorContext((DSMicroarraySet)dataSet);
+                addColorContext((DSMicroarraySet) dataSet);
             progressBar.setString("");
             progressBar.setIndeterminate(false);
             jDataSetPanel.setCursor(Cursor.getPredefinedCursor(Cursor.

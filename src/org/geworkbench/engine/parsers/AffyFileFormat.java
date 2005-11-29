@@ -3,16 +3,23 @@ package org.geworkbench.engine.parsers;
 import org.geworkbench.engine.parsers.InputFileFormatException;
 import org.geworkbench.engine.parsers.microarray.DataSetFileFormat;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.biocollections.CSMarkerVector;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
+import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
+import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.parsers.resources.AffyResource;
 import org.geworkbench.bison.parsers.resources.Resource;
+import org.geworkbench.bison.parsers.AffymetrixParser;
 
 import javax.swing.filechooser.FileFilter;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import javax.swing.*;
+import java.io.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Vector;
+import java.util.Iterator;
 
 /**
  * <p>Title: Bioworks</p>
@@ -96,7 +103,56 @@ public class AffyFileFormat extends DataSetFileFormat {
         if (!checkFormat(file))
             throw new InputFileFormatException("AffyFileFormat::getMArraySet - " + "Attempting to open a file that does not comply with the " + "Affy format.");
         try {
-            microarraySet = new CSExprMicroarraySet((AffyResource) getResource(file));
+            // microarraySet = new CSExprMicroarraySet((AffyResource) getResource(file));
+            microarraySet = new CSExprMicroarraySet();
+            List ctu = new ArrayList();
+            ctu.add("Probe Set Name");
+            ctu.add("Avg Diff");
+            ctu.add("Signal");
+            ctu.add("Detection");
+            ctu.add("Detection p-value");
+            ctu.add("Abs Call");
+            AffymetrixParser parser = new AffymetrixParser(ctu);
+            FileInputStream fileIn = new FileInputStream(file);
+            ProgressMonitorInputStream progressIn = new ProgressMonitorInputStream(null, "Scanning File", fileIn);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(progressIn));
+
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                if (!line.trim().equals("")) {
+                    parser.process(line);
+                }
+            }
+
+            Vector v = parser.getAccessions();
+            microarraySet.setLabel(file.getName());
+            microarraySet.setCompatibilityLabel("MAS");
+            microarraySet.initialize(1, v.size());
+            CSMarkerVector markerVector = (CSMarkerVector) microarraySet.getMarkers();
+            int count = 0;
+            for (Iterator it = v.iterator(); it.hasNext();) {
+                String acc = ((String) it.next()).toString();
+                markerVector.setLabel(count, acc);
+                markerVector.get(count).setDisPlayType(DSGeneMarker.AFFY_TYPE);
+                markerVector.get(count++).setDescription(acc);
+            }
+            reader.close();
+            // Read again, this time loading data
+            fileIn = new FileInputStream(file);
+            progressIn = new ProgressMonitorInputStream(null, "Loading Data", fileIn);
+            reader = new BufferedReader(new InputStreamReader(progressIn));
+            CSMicroarray microarray = new CSMicroarray(0, v.size(), file.getName(), null, null, true, DSMicroarraySet.affyTxtType);
+            microarray.setLabel(file.getName());
+            parser.reset();
+            parser.setMicroarray(microarray);
+            while ((line = reader.readLine()) != null) {
+                if (!line.trim().equals("")) {
+                    parser.parseLine(line);
+                }
+            }
+            reader.close();
+            parser.getMicroarray().setLabel(file.getName());
+            microarraySet.add(0, parser.getMicroarray());
         } catch (Exception e) {
             e.printStackTrace();
         }

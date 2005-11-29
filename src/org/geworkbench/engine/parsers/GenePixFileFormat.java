@@ -3,16 +3,22 @@ package org.geworkbench.engine.parsers;
 import org.geworkbench.engine.parsers.InputFileFormatException;
 import org.geworkbench.engine.parsers.microarray.DataSetFileFormat;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.biocollections.CSMarkerVector;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
+import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
 import org.geworkbench.bison.parsers.resources.GenepixResource;
 import org.geworkbench.bison.parsers.resources.Resource;
+import org.geworkbench.bison.parsers.GenePixParser;
 
 import javax.swing.filechooser.FileFilter;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import javax.swing.*;
+import java.io.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Vector;
+import java.util.Iterator;
 
 /**
  * <p>Title: Bioworks</p>
@@ -97,7 +103,66 @@ public class GenePixFileFormat extends DataSetFileFormat {
         if (!checkFormat(file))
             throw new org.geworkbench.engine.parsers.InputFileFormatException("GenepixFileFormat::getMArraySet - " + "Attempting to open a file that does not comply with the " + "Genepix format.");
         try {
-            microarraySet = new CSExprMicroarraySet((GenepixResource) getResource(file));
+            microarraySet = new CSExprMicroarraySet();
+            List ctu = new ArrayList();
+            ctu.add("Block");
+            ctu.add("Column");
+            ctu.add("Row");
+//        ctu.add("ID");
+//        ctu.add("X");
+            ctu.add("Y");
+            ctu.add("Dia");
+            ctu.add("F635 Median");
+            ctu.add("F635 Mean");
+            ctu.add("B635 Median");
+            ctu.add("B635 Mean");
+            ctu.add("F532 Median");
+            ctu.add("F532 Mean");
+            ctu.add("B532 Median");
+            ctu.add("B532 Mean");
+            ctu.add("Ratio of Means");
+            ctu.add("Flags");
+            // ctu.add("Log Ratio");
+            GenePixParser parser = new GenePixParser(ctu);
+
+            FileInputStream fileIn = new FileInputStream(file);
+            ProgressMonitorInputStream progressIn = new ProgressMonitorInputStream(null, "Processing File", fileIn);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(progressIn));
+
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                if (!line.trim().equals("")) {
+                    parser.process(line);
+                }
+            }
+
+            Vector v = parser.getAccessions();
+            microarraySet.setLabel(file.getName());
+            microarraySet.setCompatibilityLabel("Genepix");
+            microarraySet.initialize(1, v.size());
+            CSMarkerVector markerVector = (CSMarkerVector) microarraySet.getMarkers();
+            int count = 0;
+            for (Iterator it = v.iterator(); it.hasNext();) {
+                String acc = ((String) it.next()).toString();
+                markerVector.setLabel(count, acc);
+                markerVector.get(count).setDisPlayType(DSGeneMarker.GENEPIX_TYPE);
+                markerVector.get(count++).setDescription(acc);
+            }
+            reader.close();
+            fileIn = new FileInputStream(file);
+            progressIn = new ProgressMonitorInputStream(null, "Reading Data", fileIn);
+            reader = new BufferedReader(new InputStreamReader(progressIn));
+
+            CSMicroarray microarray = new CSMicroarray(0, v.size(), file.getName(), null, null, true, DSMicroarraySet.genepixGPRType);
+            parser.reset();
+            parser.setMicroarray(microarray);
+            while ((line = reader.readLine()) != null) {
+                if (!line.trim().equals("")) {
+                    parser.parseLine(line);
+                }
+            }
+            reader.close();
+            microarraySet.add(0, parser.getMicroarray());
         } catch (Exception e) {
             e.printStackTrace();
         }
