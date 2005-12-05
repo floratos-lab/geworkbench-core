@@ -157,8 +157,8 @@
 		<gui-area name="CommandArea"/>
 	</plugin>
     <!-- Example Component -->
-    <plugin id="Example" name="Example" class="org.geworkbench.components.example.ExampleComponent" source="example">
-        <gui-area name="VisualArea"/>
-    </plugin>
+    <!--<plugin id="Example" name="Example" class="org.geworkbench.components.example.ExampleComponent" source="example">-->
+        <!--<gui-area name="VisualArea"/>-->
+    <!--</plugin>-->
 
 </geaw-config>
