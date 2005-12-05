@@ -1304,6 +1304,12 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                 } else if (node instanceof ImageNode) {
                     node = projectRenderer.microarraySetNodeSelection;
                     projectTreeModel.insertNodeInto(imageNode, node, node.getChildCount());
+                } else if (node instanceof DataSetSubNode) {
+                    DataSetSubNode subNode = (DataSetSubNode) node;
+                    node = (ProjectTreeNode) subNode.getParent();
+                    if (node instanceof DataSetNode) {
+                        projectTreeModel.insertNodeInto(imageNode, node, node.getChildCount());
+                    }
                 }
 
             }

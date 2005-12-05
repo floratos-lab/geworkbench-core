@@ -533,7 +533,7 @@ public class PluginObject {
      */
     private MouseAdapter focusHandler = new MouseAdapter() {
         public void mousePressed(MouseEvent e) {
-            if (lastInFocus != compDes) {
+                if (lastInFocus != compDes) {
                 if (lastInFocus != null)
                     lastInFocus.disableFocusMenuItems();
                 compDes.enableFocusMenuItems();

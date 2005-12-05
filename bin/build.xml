@@ -29,6 +29,7 @@
             <jvmarg value="-Xmx384M"/>
             <jvmarg value="-Djava.library.path=lib"/>
             <classpath refid="run.classpath"/>
+            <arg value="default.xml"/>
         </java>
     </target>
 </project>

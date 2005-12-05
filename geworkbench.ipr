@@ -202,6 +202,7 @@
       <module fileurl="file://$PROJECT_DIR$/components/cytoscape/cytoscape.iml" filepath="$PROJECT_DIR$/components/cytoscape/cytoscape.iml" />
       <module fileurl="file://$PROJECT_DIR$/dev/dev.iml" filepath="$PROJECT_DIR$/dev/dev.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/discovery/discovery.iml" filepath="$PROJECT_DIR$/components/discovery/discovery.iml" />
+      <module fileurl="file://$PROJECT_DIR$/components/example/example.iml" filepath="$PROJECT_DIR$/components/example/example.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/filtering/filtering.iml" filepath="$PROJECT_DIR$/components/filtering/filtering.iml" />
       <module fileurl="file://$PROJECT_DIR$/geworkbench.iml" filepath="$PROJECT_DIR$/geworkbench.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/goterms/goterms.iml" filepath="$PROJECT_DIR$/components/goterms/goterms.iml" />

@@ -34,6 +34,7 @@
     <orderEntry type="module" module-name="versioninfo" />
     <orderEntry type="module" module-name="viewers" />
     <orderEntry type="module" module-name="gsea" />
+    <orderEntry type="module" module-name="example" />
     <orderEntryProperties />
   </component>
 </module>
