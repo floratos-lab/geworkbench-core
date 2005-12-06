@@ -1,3 +1,7 @@
+//to do - remember to set the name of CasPreData and the datatype it is holding, these must ALWAYS occur!
+//during assignment, remember to check the cas call return, anything touching it is unknown!
+//during assignment, make sure anything on the right hand assigned is already initialized!
+//if it has a name, it must be initialized! if it is not, then we have a problem!
 package org.geworkbench.engine.cascript;
 
 import antlr.collections.AST;
@@ -6,13 +10,12 @@ import java.util.Random;
 import java.util.Vector;
 
 /**
- * Interpreter routines that is called directly from the tree walker.
+ * Interpreter routines that is called directly from the tree walkerfor purely semantic analysis checks.
  *
  * @author Behrooz Badii - badiib@gmail.com
- * @version $Id: CasInterpreter.java,v 1.21 2005-12-06 21:51:41 bb2122 Exp $
  */
-class CasInterpreter {
-    CasSymbolTable symt;
+class CasPreInterpreter {
+    CasPreSymbolTable psymt;
     CasDataTypeImport CDTI;
 
     final static int fc_none = 0;
@@ -25,18 +28,19 @@ class CasInterpreter {
 
     private Random random = new Random();
 
-    public CasInterpreter() {
-        symt = new CasSymbolTable(null, -1); //-1 means that we're in a global scope
+    public CasPreInterpreter() {
+        psymt = new CasPreSymbolTable(null, -1); //-1 means that we're in a global scope
         CDTI = new CasDataTypeImport();
     }
 
     /**used for variable initialization in the symbol table
      *
     */
+    //to do - set declared variable to true for EVERYTHING in arrays and matrices
     public void putvar(String id, CasDataType type, Vector<CasDataType> indices, CasDataType value) {
         if (indices == null) {
             if (type instanceof CasModule) {
-                symt.putVar(id, new CasModule(id, ((CasModule)type).getType()));
+                psymt.putVar(id, new CasPreData(new CasModule(id, ((CasModule)type).getType()), true, true, true));
                 /*Testing purposes
                 System.out.println("put in casModule");
                 System.out.println("Name: " + symt.findVar(id).name);
@@ -44,8 +48,7 @@ class CasInterpreter {
             }
             if (type instanceof CasDataPlug) {
                 if (CDTI.containsKey(((CasDataPlug)type).getType())) {
-                    symt.putVar(id,
-                             new CasDataPlug(id, ((CasDataPlug) type).getType(), CDTI));
+                    psymt.putVar(id, new CasPreData(new CasDataPlug(id, ((CasDataPlug)type).getType(), CDTI), true, false, true));
                     /*Testing purposes
                     System.out.println("put in casDataPlug");
                     System.out.println("Name: " + symt.findVar(id).name);
@@ -57,15 +60,16 @@ class CasInterpreter {
             }
             else {
                 if (type instanceof CasString) {
-                    symt.putVar(id, type.copy());
+                    psymt.putVar(id, new CasPreData(type.copy(), true, false, true));
                 } else if (type instanceof CasDouble) {
-                    symt.putVar(id, type.copy());
+                    psymt.putVar(id, new CasPreData(type.copy(), true, false, true));
                 } else if (type instanceof CasInt) {
-                    symt.putVar(id, type.copy());
+                    psymt.putVar(id, new CasPreData(type.copy(), true, false, true));
                 } else if (type instanceof CasBool) {
-                    symt.putVar(id, type.copy());
+                    psymt.putVar(id, new CasPreData(type.copy(), true, false, true));
                 }
-                symt.findVar(id).setName(id);
+                psymt.findVar(id).getData().setName(id);
+                psymt.findVar(id).setName(id);
                 /*Testing purposes
                 System.out.println("Name: " + symt.findVar(id).name);*/
             }
@@ -75,9 +79,11 @@ class CasInterpreter {
             /*Testing purposes
             System.out.println("we are dealing with an array here, with dimensionality of one in assign() call");*/
             if (indices.elementAt(0) instanceof CasInt) {
-                symt.putVar(id, new CasArray(((CasInt) indices.elementAt(0)).getvar(), type));
-                symt.findVar(id).setName(id);
-                (symt.findVar(id)).initializeArray(); //this is dependent on setName occurring first
+                psymt.putVar(id, new CasPreData(new CasArray(((CasInt) indices.elementAt(0)).getvar(), type), true, true, true));
+                psymt.findVar(id).setName(id);
+                psymt.findVar(id).getData().setName(id);
+                (psymt.findVar(id).getData()).initializeArray(); //this is dependent on setName occurring first
+//put a helper function here for preanalysis to initialize EVERY array value!
                 /*Testing purposes
                 System.out.println("Name: " + symt.findVar(id).name);*/
             } else throw new CasException("index of array declaration for " + id + " must be an integer");
@@ -85,16 +91,18 @@ class CasInterpreter {
             /*Testing purposes
             System.out.println("we are dealing with an array here, with dimensionality of two in assign() call");*/
             if ((indices.elementAt(0) instanceof CasInt) && (indices.elementAt(1) instanceof CasInt)) {
-                symt.putVar(id, new CasMatrix(((CasInt) indices.elementAt(0)).getvar(), ((CasInt) indices.elementAt(1)).getvar(), type));
-                symt.findVar(id).setName(id);
-                (symt.findVar(id)).initializeMatrix(); //this is dependent on setName occurring first
+                psymt.putVar(id, new CasPreData(new CasMatrix(((CasInt) indices.elementAt(0)).getvar(), ((CasInt) indices.elementAt(1)).getvar(), type), true, true, true));
+                psymt.findVar(id).setName(id);
+                psymt.findVar(id).getData().setName(id);
+                (psymt.findVar(id).getData()).initializeMatrix(); //this is dependent on setName occurring first
+//put a helper function here for preanalysis to initialize EVERY MATRIX value!
                 /*Testing purposes
                 System.out.println("Name: " + symt.findVar(id).name);*/
             } else throw new CasException("indices of two-dimensional array declaration (matrix declaration) for " + id + " must be integers");
         }
 
         if (value != null) {
-            assign(symt.findVar(id), value);
+            assign(psymt.findVar(id), new CasPreData(value, false, true, true));
         }
     }
 
@@ -102,266 +110,291 @@ class CasInterpreter {
      * this is used in the assignment token in the walker and when you have to initialize a variable
      * make the return type different for each one.  If it is successful, return a, if not, throw an exception.
     */
-    public CasDataType assign(CasDataType a, CasDataType b) {
+    public CasDataType assign(CasPreData a, CasPreData b) {
+        CasDataType aD = a.getData();
+        CasDataType bD = b.getData();
         /*Testing purposes
         System.out.println("in assignment");*/
         //if (b instanceof CasCallReturn) { //this is done before assign is called anyway
         //    b = checkCasCallReturn((CasCallReturn)b);
         //}
-        if (b instanceof CasValue) {
+        if (bD instanceof CasValue) {
             //This method is objectionable.  We are worried that a getValue() call in geWorkBench will affect the system and not just return a value.
             //are the get and set methods implemented correctly in geWorkBench so that we don't have changes to the system?
-            b = checkCasValue((CasValue) b);
+            bD = checkCasValue((CasValue) bD);
+            b.setData(bD);
         }
-        if (a.getPartOf() != null) {
+//this means we have to find do more fussing with arrays and matrices here
+        if (aD.getPartOf() != null) {
             CasDataType x = null;
             /*Testing purposes
             System.out.println("in a array or matrix");*/
-            if (a instanceof CasInt && b instanceof CasInt) {
+            if (aD instanceof CasInt && bD instanceof CasInt) {
                 /*Testing purposes
                 System.out.println("new value " + ((CasInt) b).getvar());*/
-                x = ((CasInt) rvalue(b));
+                x = ((CasInt) rvalue(bD));
             }
-            if (a instanceof CasDouble) {
-                if (b instanceof CasDouble) {
+            if (aD instanceof CasDouble) {
+                if (bD instanceof CasDouble) {
                    /*Testing purposes
                    System.out.println("new value " + ((CasDouble) b).getvar());*/
-                    x = ((CasDouble) rvalue(b));
+                    x = ((CasDouble) rvalue(bD));
                 }
-                if (b instanceof CasInt) {
+                if (bD instanceof CasInt) {
                    /*Testing purposes
                    System.out.println("new value " + ((CasInt) b).getvar());*/
-                   x = ((CasDouble) rvalue(b));
+                   x = ((CasDouble) rvalue(bD));
                 }
             }
-            if (a instanceof CasBool && b instanceof CasBool) {
+            if (aD instanceof CasBool && bD instanceof CasBool) {
                 /*Testing purposes
                 System.out.println("new value " + ((CasBool) b).getvar());*/
-                x = ((CasBool) rvalue(b));
+                x = ((CasBool) rvalue(bD));
             }
-            if (a instanceof CasString && b instanceof CasString) {
+            if (aD instanceof CasString && bD instanceof CasString) {
                 /*Testing purposes
                 System.out.println("new value " + ((CasString) b).getvar());*/
-                x = ((CasString) rvalue(b));
+                x = ((CasString) rvalue(bD));
             }
-            if (a instanceof CasArray && b instanceof CasArray) {
+            if (aD instanceof CasArray && bD instanceof CasArray) {
                 /*Testing purposes
                 System.out.println("new value " + ((CasString) b).getvar());*/
-                x = ((CasArray) rvalue(b));
+                x = ((CasArray) rvalue(bD));
             }
             //here, we have x, a will be replaced by x in the structure itself
-            if (symt.findVar(a.getPartOf()) instanceof CasArray && x != null) {
-                x.setPosition(a.getPosition());
-                x.setPartOf(a.getPartOf());
-                symt.findVar(x.getPartOf()).setArrayValue(x, x.getPosition());
+//fuss with this line
+            if ((psymt.findVar(aD.getPartOf())).getData() instanceof CasArray && x != null) {
+                x.setPosition(aD.getPosition());
+                x.setPartOf(aD.getPartOf());
+//mess with this following line a bit
+                (psymt.findVar(x.getPartOf())).getData().setArrayValue(x, x.getPosition());
             }
-            if (symt.findVar(a.getPartOf()) instanceof CasMatrix && x != null) {
-                if (b instanceof CasArray) {
+//fuss with this line
+            if ((psymt.findVar(aD.getPartOf())).getData() instanceof CasMatrix && x != null) {
+                if (bD instanceof CasArray) {
                     throw new CasException("assigning an array to a row in a matrix is not allowed.");
                 }
                 else {
-                  x.setPositions(a.getPosition(), a.getPosition2());
-                  x.setPartOf(a.getPartOf());
-                  symt.findVar(x.getPartOf()).setMatrixValue(x, x.getPosition(), x.getPosition2());
+                  x.setPositions(aD.getPosition(), aD.getPosition2());
+                  x.setPartOf(aD.getPartOf());
+//mess with this following line a bit
+                  (psymt.findVar(x.getPartOf())).getData().setMatrixValue(x, x.getPosition(), x.getPosition2());
                 }
             }
             /*Testing purposes
             System.out.println("substructure assignment success!");*/
             return new CasBool(true);
         }
-        if (a instanceof CasValue) {
-            if (b instanceof CasValue) {
+//we do NOT want this to occur! no invocation allowed!
+        if (aD instanceof CasValue) {
+            if (bD instanceof CasValue) {
                 //lefthand side of assignment is set, righthand side is get
                 //set is the value that is going to be assigned to
-                CasValue set = new CasValue(((CasValue) a).formodule,
-                                            "set" + ((CasValue) a).othername,
-                                            ((CasValue) a).association);
+                CasValue set = new CasValue(((CasValue) aD).formodule,
+                                            "set" + ((CasValue) aD).othername,
+                                            ((CasValue) aD).association);
                 //get is the value that set is going to have after this procedure
-                CasValue get = new CasValue(((CasValue) b).formodule,
-                                            "get" + ((CasValue) b).othername,
-                                            ((CasValue) b).association);
-                try {
+                CasValue get = new CasValue(((CasValue) bD).formodule,
+                                            "get" + ((CasValue) bD).othername,
+                                            ((CasValue) bD).association);
+//DO TYPE CHECKING HERE!                
+                /*try {
                     Object data = get.getm().invoke(get.getPlugin());
                     set.getm().invoke(set.getPlugin(), data);
                     return new CasBool(true);
                 } catch (Exception e) {
                     e.printStackTrace();
                     throw new CasException("error in assign for two CasValues");
-                }
+                }*/
             }
-            else if (b instanceof CasDataPlug) {
-                CasValue set = new CasValue(((CasValue) a).formodule,
-                            "set" + ((CasValue) a).othername,
-                            ((CasValue) a).association);
-                try {
-                    Object data = ((CasDataPlug)b).getVar();
+            else if (bD instanceof CasDataPlug) {
+                CasValue set = new CasValue(((CasValue) aD).formodule,
+                            "set" + ((CasValue) aD).othername,
+                            ((CasValue) aD).association);
+//DO TYPE CHECKING HERE!
+                /*try {
+                    Object data = ((CasDataPlug)bD).getVar();
                     set.getm().invoke(set.getPlugin(),data);
                     return new CasBool(true);
                 }
                 catch (Exception e) {
                     e.printStackTrace();
                     throw new CasException("error in assigning a datatype to a CasValue");
-                }
+                }*/
             }
-            else if (b instanceof CasCallReturn) {
-                CasValue set = new CasValue(((CasValue) a).formodule,
-                            "set" + ((CasValue) a).othername,
-                            ((CasValue) a).association);
-                try {
-                    Object data = ((CasCallReturn)b).getRetValue();
+            else if (bD instanceof CasCallReturn) {
+                CasValue set = new CasValue(((CasValue) aD).formodule,
+                            "set" + ((CasValue) aD).othername,
+                            ((CasValue) aD).association);
+//DO TYPE CHECKING HERE!
+                /*try {
+                    Object data = ((CasCallReturn)bD).getRetValue();
                     set.getm().invoke(set.getPlugin(),data);
                     return new CasBool(true);
                 }
                 catch (Exception e) {
                     e.printStackTrace();
                     throw new CasException("error in assigning a datatype to a CasValue");
-                }
+                }*/
             }
         }
         if (null != a.getName()) {
-            if (a instanceof CasInt && b instanceof CasInt) {
-                CasDataType x = rvalue(b);
-                x.setName(a.name);
-                symt.setVar(a.name, (CasInt) x);
+            if (aD instanceof CasInt && bD instanceof CasInt) {
+                CasDataType x = rvalue(bD);
+                x.setName(aD.name);
+//no more variable changing until we get to research part of the semantic analysis
+                //symt.setVar(aD.name, (CasInt) x);
                 return new CasBool(true);
             }
-            if (a instanceof CasDouble) {
-                if (b instanceof CasDouble) {
-                    CasDataType x = rvalue(b);
-                    x.setName(a.name);
-                    symt.setVar(a.name, (CasDouble) x);
+            if (aD instanceof CasDouble) {
+                if (bD instanceof CasDouble) {
+                    CasDataType x = rvalue(bD);
+                    x.setName(aD.name);
+                    //symt.setVar(aD.name, (CasDouble) x);
+//no more variable changing until we get to research part of the semantic analysis
                 }
-                if (b instanceof CasInt) {
-                    CasDataType x = rvalue(b);
+                if (bD instanceof CasInt) {
+                    CasDataType x = rvalue(bD);
                     x.setName(a.name);
-                    symt.setVar(a.name, (CasInt) x);
+                    //symt.setVar(a.name, (CasInt) x);
+//no more variable changing until we get to research part of the semantic analysis
                 }
                 return new CasBool(true);
             }
-            if (a instanceof CasBool && b instanceof CasBool) {
-                CasDataType x = rvalue(b);
-                x.setName(a.name);
-                symt.setVar(a.name, (CasBool) x);
+            if (aD instanceof CasBool && bD instanceof CasBool) {
+                CasDataType x = rvalue(bD);
+                x.setName(aD.name);
+                //symt.setVar(aD.name, (CasBool) x);
+//no more variable changing until we get to research part of the semantic analysis
                 return new CasBool(true);
             }
-            if (a instanceof CasArray && b instanceof CasArray) {
-                CasDataType x = rvalue(b);
-                x.setName(a.name);
-                if (((CasArray)a).getvar().length == ((CasArray)b).getvar().length) {    
-                    symt.setVar(a.name, (CasArray) x);
+            if (aD instanceof CasArray && bD instanceof CasArray) {
+                CasDataType x = rvalue(bD);
+                x.setName(aD.name);
+                if (((CasArray)aD).getvar().length == ((CasArray)bD).getvar().length) {    
+                    //symt.setVar(aD.name, (CasArray) x);
+//no more variable changing until we get to research part of the semantic analysis
                     return new CasBool(true);
                 }
                 else {
-                    throw new CasException("An array of size " + ((CasArray)b).getvar().length + " is being assigned to an array of size " + ((CasArray)a).getvar().length + ".  This is not allowed.");
+                    throw new CasException("An array of size " + ((CasArray)bD).getvar().length + " is being assigned to an array of size " + ((CasArray)aD).getvar().length + ".  This is not allowed.");
                 }
             }
-            if (a instanceof CasMatrix && b instanceof CasMatrix) {
-                CasDataType x = rvalue(b);
-                x.setName(a.name);
-                if ((((CasMatrix)a).getvar().length == ((CasMatrix)b).getvar().length) && (((CasMatrix)a).getvar()[0].length == ((CasMatrix)b).getvar()[0].length)) {    
-                    symt.setVar(a.name, (CasMatrix) x);
+            if (aD instanceof CasMatrix && bD instanceof CasMatrix) {
+                CasDataType x = rvalue(bD);
+                x.setName(aD.name);
+                if ((((CasMatrix)aD).getvar().length == ((CasMatrix)bD).getvar().length) && (((CasMatrix)aD).getvar()[0].length == ((CasMatrix)bD).getvar()[0].length)) {    
+                    //symt.setVar(aD.name, (CasMatrix) x);
+//no more variable changing until we get to research part of the semantic analysis
                     return new CasBool(true);
                 }
                 else {
-                    throw new CasException("A matrix of dimensions " + ((CasMatrix)b).getvar().length + "x" + ((CasMatrix)b).getvar()[0].length + " is being assigned to a matrix of dimensions " + ((CasMatrix)a).getvar().length + "x" + ((CasMatrix)a).getvar()[0].length + ".  This is not allowed.");
+                    throw new CasException("A matrix of dimensions " + ((CasMatrix)bD).getvar().length + "x" + ((CasMatrix)bD).getvar()[0].length + " is being assigned to a matrix of dimensions " + ((CasMatrix)aD).getvar().length + "x" + ((CasMatrix)aD).getvar()[0].length + ".  This is not allowed.");
                 }
             }
-            if (a instanceof CasString) {
-                CasDataType x = b.copy();
+            if (aD instanceof CasString) {
+                CasDataType x = bD.copy();
                 if (x instanceof CasBool) {
-                    x = new CasString(Boolean.toString(((CasBool)b).getvar()));
+                    x = new CasString(Boolean.toString(((CasBool)bD).getvar()));
                 }
                 else if (x instanceof CasInt) {
-                    x = new CasString(Integer.toString(((CasInt)b).getvar()));
+                    x = new CasString(Integer.toString(((CasInt)bD).getvar()));
                 }
                 else if (x instanceof CasDouble) {
-                    x = new CasString(Double.toString(((CasDouble)b).getvar()));
+                    x = new CasString(Double.toString(((CasDouble)bD).getvar()));
                 }
                 if (x instanceof CasString) {
-                    x = rvalue(b);
-                    x.setName(a.name);
-                    symt.setVar(a.name, (CasString) x);
+                    x = rvalue(x);
+                    x.setName(aD.name);
+// no more variable changing until we get to research part of the semantic analysis
+                    //symt.setVar(aD.name, (CasString) x);
                     return new CasBool(true);
                 }
             }
             //should this be allowed?
-            if (a instanceof CasModule && b instanceof CasModule) {
-                if (((CasModule)a).getType().equals(((CasModule)b).getType())) {
+            if (aD instanceof CasModule && bD instanceof CasModule) {
+                if (((CasModule)aD).getType().equals(((CasModule)bD).getType())) {
                     //you have make sure the types are the same!
-                    CasDataType x = rvalue(b);
-                    x.setName(a.name);
-                    symt.setVar(a.name, (CasModule) x);
+                    CasDataType x = rvalue(bD);
+                    x.setName(aD.name);
+// no more variable changing until we get to research part of the semantic analysis
+                    //symt.setVar(a.name, (CasModule) x);
                     return new CasBool(true);
                 }
                 else
                     throw new CasException("Assignment for modules " + a.getName() + " and " + b.getName() + "is invalid; they are not of the same type");
             }
-            if (a instanceof CasDataPlug) {
+            if (aD instanceof CasDataPlug) {
                 //if b is also a CasDataPlug
                 //remember to check that anything being assigned to a CasDataPlug has to be assignable to the original interface
-                if (b instanceof CasDataPlug) {
-                    if (((CasDataPlug) a).getType().equals(((CasDataPlug) b).
+                if (bD instanceof CasDataPlug) {
+                    if (((CasDataPlug) aD).getType().equals(((CasDataPlug) bD).
                             getType())) {
                         //you have make sure the types are the same!
-                        CasDataType x = rvalue(b);
+                        CasDataType x = rvalue(bD);
                         x.setName(a.name);
-                        symt.setVar(a.name, (CasDataPlug) x);
+// no more variable changing until we get to research part of the semantic analysis                        
+                        //symt.setVar(a.name, (CasDataPlug) x);
                         return new CasBool(true);
                     }
                 }
                 //fix this, this is both for a CasMethod and a CasDataMethod
-                else if (b instanceof CasCallReturn) {
-                    Object data = ((CasCallReturn) b).getRetValue();
+                else if (bD instanceof CasCallReturn) {
+                    Object data = ((CasCallReturn) bD).getRetValue();
                     try {
-                        if (((CasDataPlug) a).getVar().getClass().isAssignableFrom(data.getClass())) {
-                            CasDataType x = ((CasDataPlug) a).copy();
+                        if (((CasDataPlug) aD).getVar().getClass().isAssignableFrom(data.getClass())) {
+                            CasDataType x = ((CasDataPlug) aD).copy();
                             ((CasDataPlug) x).setVar(data);
-                            symt.setVar(x.name, (CasDataPlug) x);
+// no more variable changing until we get to research part of the semantic analysis                        
+                            //symt.setVar(x.name, (CasDataPlug) x);
                             return new CasBool(true);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        throw new CasException("The geWorkBench return value cannot be assigned to " + ((CasDataPlug) a).getName() +
-                                               "; it is not compatible with " + ((CasDataPlug) a).getName() + ".");
+                        throw new CasException("The geWorkBench return value cannot be assigned to " + ((CasDataPlug) aD).getName() +
+                                               "; it is not compatible with " + ((CasDataPlug) aD).getName() + ".");
                     }
                 }
-                else if (b instanceof CasValue) {
-                    CasValue get = new CasValue(((CasValue) b).formodule, "get" + ((CasValue) b).othername, ((CasValue) b).association);
+                else if (bD instanceof CasValue) {
+                    CasValue get = new CasValue(((CasValue) bD).formodule, "get" + ((CasValue) bD).othername, ((CasValue) bD).association);
                     try {
                         Object data = get.getm().invoke(get.getPlugin());
-                        if (((CasDataPlug)a).getVar().getClass().isAssignableFrom(data.getClass())) {
-                            CasDataType x = ((CasDataPlug)a).copy();
+                        if (((CasDataPlug)aD).getVar().getClass().isAssignableFrom(data.getClass())) {
+                            CasDataType x = ((CasDataPlug)aD).copy();
                             ((CasDataPlug)x).setVar(data);
-                            symt.setVar(x.name, (CasDataPlug) x);
+// no more variable changing until we get to research part of the semantic analysis                        
+                            //symt.setVar(x.name, (CasDataPlug) x);
                             return new CasBool(true);
                         }
                     }
                     catch (Exception e) {
                         e.printStackTrace();
-                        throw new CasException(((CasValue) b).formodule + "." + ((CasValue) b).othername + " cannot be assigned to " + ((CasDataPlug)a).getName() + " since the datatypes are not compatible.");
+                        throw new CasException(((CasValue) bD).formodule + "." + ((CasValue) bD).othername + " cannot be assigned to " + ((CasDataPlug)aD).getName() + " since the datatypes are not compatible.");
                     }
                     //make sure the object from get when invoked is good for the CasDataPlug
                 }
                 else
-                    throw new CasException ("A datatype ("+a.getName()+") can only be assigned values from another datatype, a module's methods, or a module's variables");
+                    throw new CasException ("A datatype ("+aD.getName()+") can only be assigned values from another datatype, a module's methods, or a module's variables");
                 //make sure that the CasDataPlug type is equal to what is either being called using
                 //make sure it's the right DataPlug! object var has to be assignable
                 //a CasValue, CasMethod, or another CasDataPlug
             }
-            if (null != b.getName()) return a.error(b, "=");
-            else return a.error("=");
+            if (null != bD.getName()) return aD.error(bD, "=");
+            else return aD.error("=");
         }
-        return a.error("=");
+        return aD.error("=");
     }
     
     /**
      * helper method that accesses arrays and matrices
      * There is an error here, sometimes we get an array out of bounds exception in this method
      */
+    
+//this method should just return the type which the array holds, given the length is correct
     public CasDataType dimensionAccess(String id, Vector<CasDataType> indices) {
         /*Testing purposes
         System.out.println("in dimensionAccess() call");*/
-        CasDataType a = symt.findVar(id);
+        CasDataType a = psymt.findVar(id).getData();
         CasDataType ret;
         if (indices.size() == 1 && a instanceof CasArray) {
             if (indices.elementAt(0) instanceof CasInt) {
@@ -412,6 +445,7 @@ class CasInterpreter {
     *This method calls a get<somedataset>() method in geWorkBench and return and object.  If it is an Integer, String, Boolean, Double, or Float
      *it is morphed into the corresponding Cas Class (CasInt, CasString, etc.).
     */
+//in this method, we want NO invocation, just return an empty return value!
     public CasDataType checkCasValue(CasValue b) {
         CasValue get = new CasValue(((CasValue) b).formodule, "get" + ((CasValue) b).othername, ((CasValue) b).association);
         try {
@@ -445,6 +479,8 @@ class CasInterpreter {
      * waiting is done in seconds, not milliseconds
      * stopme is called in a WAIT statement 
     */
+    
+//in this method, check for the integer, and if it is an integer, just jump over it, no waiting necessary
     public CasDataType stopme(CasDataType a) {
         /*Testing purposes
         System.out.println("in stopme");*/
@@ -465,40 +501,44 @@ class CasInterpreter {
     /*state CAN change in this method
     *methodcall occurs when the CasMethod is used, so we will find it in OBJECT_CALL
     */
+    
+//check the type of the method, do not invoke it, just return the type
     public Object MethodCall(String casname, String casmethod, Vector<CasDataType> v) {
         Object ret = null;
         Object [] args = vectortoargs(v, casmethod);
-        if (symt.exists(casname) && symt.findVar(casname) instanceof CasDataPlug) {
+        if (psymt.exists(casname) && (psymt.findVar(casname)).getData() instanceof CasDataPlug) {
             //deal with it in another method
             ret = OtherMethodCall(casname, casmethod, args);
             return ret;
         }
         else {
-            if (symt.exists(casname + " " + casmethod) &&
-                symt.findVar(casname + " " + casmethod) instanceof CasMethod) {
-                CasMethod callme = (CasMethod) symt.findVar(casname + " " +
-                        casmethod);
+            if (psymt.exists(casname + " " + casmethod) &&
+                (psymt.findVar(casname + " " + casmethod)).getData() instanceof CasMethod) {
+                CasMethod callme = (CasMethod) (psymt.findVar(casname + " " +
+                        casmethod)).getData();
+//do not do this, just return valid return type!
                 try {
-                    ret = callme.m.invoke(callme.getPlugin(), args);
+                    //ret = callme.m.invoke(callme.getPlugin(), args);
                     return ret;
                 } catch (Exception e) {
                     e.printStackTrace();
                     throw new CasException(
                             "Error occurred in MethodCall in interpreter for pre-existing method for a module");
-                }
+                }                
             } else {
-                if (symt.findVar(casname) instanceof CasModule) {
+                if ((psymt.findVar(casname)).getData() instanceof CasModule) {
                     Class[] p = argstoclasses(args);
-                    symt.putVar(casname + " " + casmethod,
+                    psymt.putVar(casname + " " + casmethod, new CasPreData(
                              new CasMethod(casname, casmethod,
-                                           (CasModule) symt.findVar(casname), p));
+                                           (CasModule) (psymt.findVar(casname)).getData(), p), true, true, true));
                     /*Testing purposes
                     System.out.println("made new method " + casmethod + " for " +
                                        casname);*/
-                    CasMethod callme = (CasMethod) symt.findVar(casname + " " +
-                            casmethod);
+                    CasMethod callme = (CasMethod) (psymt.findVar(casname + " " +
+                            casmethod)).getData();
+//do not do this, just return valid return type!
                     try {
-                        ret = callme.m.invoke(callme.getPlugin(), args);
+                        //ret = callme.m.invoke(callme.getPlugin(), args);
                         return ret;
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -517,14 +557,17 @@ class CasInterpreter {
     /* state CAN change in this method buy only for DataPlugs, not Modules
      * this is called by MethodCall if what we're dealing with is a DataPlug and not a Module
     */
+    
+//check the type of the method, do not invoke it, just return the type
     public Object OtherMethodCall(String casname, String casmethod, Object[] args) {
         Object ret = null;
-        if (symt.exists(casname + " " + casmethod) &&
-            symt.findVar(casname + " " + casmethod) instanceof CasDataMethod) {
-            CasDataMethod callme = (CasDataMethod) symt.findVar(casname + " " +
-                    casmethod);
+        if (psymt.exists(casname + " " + casmethod) &&
+            (psymt.findVar(casname + " " + casmethod)).getData() instanceof CasDataMethod) {
+            CasDataMethod callme = (CasDataMethod) (psymt.findVar(casname + " " +
+                    casmethod)).getData();
+//do not do this, just return valid return type!
             try {
-                ret = callme.m.invoke(callme.geta().getVar(), args);
+                //ret = callme.m.invoke(callme.geta().getVar(), args);
                 return ret;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -532,19 +575,20 @@ class CasInterpreter {
                         "Error occurred in MethodCall in interpreter for pre-existing method for a datatype");
             }
         } else {
-            if (symt.findVar(casname) instanceof CasDataPlug) {
+            if ((psymt.findVar(casname)).getData() instanceof CasDataPlug) {
                 //you have to change args to the classtypes for that method!
                 Class[] p = argstoclasses(args);
-                symt.putVar(casname + " " + casmethod,
+                psymt.putVar(casname + " " + casmethod, new CasPreData(
                          new CasDataMethod(casname, casmethod,
-                                       (CasDataPlug) symt.findVar(casname), p));
+                                       (CasDataPlug) (psymt.findVar(casname).getData()), p), true, true, true));
                 /*Testing purposes
                 System.out.println("made new method " + casmethod + " for " +
                                    casname);*/
-                CasDataMethod callme = (CasDataMethod) symt.findVar(casname + " " +
-                        casmethod);
+                CasDataMethod callme = (CasDataMethod) psymt.findVar(casname + " " +
+                        casmethod).getData();
+//do not do this, just return valid return type!
                 try {
-                    ret = callme.m.invoke(callme.geta().getVar(), args);
+                    //ret = callme.m.invoke(callme.geta().getVar(), args);
                     return ret;
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -621,7 +665,7 @@ class CasInterpreter {
      */
     public CasDataType getVariable(String s) {
         // default static scoping
-        CasDataType x = symt.findVar(s);
+        CasDataType x = psymt.findVar(s).getData();
         return x;
     }
 
@@ -684,7 +728,7 @@ class CasInterpreter {
      */
     public void loopEnd() {
         if (control == fc_break) tryResetFlowControl();
-        symt = symt.Parent();
+        psymt = psymt.Parent();
     }
     /**
      * used in control flow
@@ -697,7 +741,7 @@ class CasInterpreter {
      */
     public void loopInit() {
         // create a new symbol table
-        symt = new CasSymbolTable(symt, symt.getLevel() + 1);
+        psymt = new CasPreSymbolTable(psymt, psymt.getLevel() + 1);
     }
     /**
      * used in control flow
@@ -730,8 +774,8 @@ class CasInterpreter {
             else System.out.println("the type is: " + temp.getType().getType());
             System.out.println("Number of brackets: " + temp.getBrackets());*/
         }
-        if (symt.notexists(a.getName())) {
-            symt.putVar(a.getName(), a);
+        if (psymt.notexists(a.getName())) {
+            psymt.putVar(a.getName(),new CasPreData (a, true, true, true));
         } else throw new CasException(a.getName() + " already exists as a function or variable");
     }
 
@@ -739,14 +783,14 @@ class CasInterpreter {
      * used for a function call
      */
     public CasDataType funcCall(CASWalker walker, String id, Vector<CasDataType> argList) {
-        CasSymbolTable temp;
-        CasDataType whatthefunc = symt.findVar(id);
-        if (! (whatthefunc instanceof CasFunction)) return whatthefunc.error(id + "is not a function.");
+        CasPreSymbolTable temp;
+        CasDataType whatthefunc = psymt.findVar(id).getData();
+        if (! (whatthefunc instanceof CasPreFunction)) return whatthefunc.error(id + "is not a function.");
         Vector<CasArgument> actualargs = ((CasFunction) whatthefunc).getArgs();
         if (actualargs.size() != argList.size()) return whatthefunc.error(id + " has the wrong number of parameters");
-        temp = symt;
+        temp = psymt;
         //is this the right symbol table? should we be using the symbol that's part of the CasFunction object?
-        symt = new CasSymbolTable(((CasFunction) whatthefunc).getParentSymbolTable(), ((CasFunction) whatthefunc).getParentSymbolTable().getLevel() + 1);
+        psymt = new CasPreSymbolTable(((CasPreFunction) whatthefunc).getParentSymbolTable(), ((CasFunction) whatthefunc).getParentSymbolTable().getLevel() + 1);
 
         //remember to check arguments against their correct type
         checkarguments(argList, actualargs, id);
@@ -754,12 +798,12 @@ class CasInterpreter {
         for (int i = 0; i < actualargs.size(); i++) {
             CasDataType a = rvalue(argList.elementAt(i));
             a.setName(actualargs.elementAt(i).getId());
-            if (symt.existsinscope(actualargs.elementAt(i).getId())) throw new CasException(actualargs.elementAt(i).getId() + " already exists in " + id);
-            else symt.putVar(actualargs.elementAt(i).getId(), a);
+            if (psymt.existsinscope(actualargs.elementAt(i).getId())) throw new CasException(actualargs.elementAt(i).getId() + " already exists in " + id);
+            else psymt.putVar(actualargs.elementAt(i).getId(), new CasPreData (a, true, true, true));
         }
         CasDataType ret = null;
         try {
-            ret = walker.fbody(((CasFunction) whatthefunc).getBody());
+            ret = walker.fbody(((CasPreFunction) whatthefunc).getBody());
         } catch (antlr.RecognitionException e) {
             e.printStackTrace();
             throw new CasException("we have a problem in funcCall");
@@ -771,15 +815,15 @@ class CasInterpreter {
         if (control == fc_return) tryResetFlowControl();
 
         // remove this symbol table and return
-        symt = temp;
+        psymt = temp;
         //check the return type before passing it back, if it's not the same return type, throw an error
         //you still have to do this!
-        if (((CasFunction)whatthefunc).getReturnType() instanceof CasVoid && ret instanceof CasReturn)
+        if (((CasPreFunction)whatthefunc).getReturnType() instanceof CasVoid && ret instanceof CasReturn)
             throw new CasException("you're not supposed to return anything with the function " + id + " + because its return type is void");
-        else if (((CasFunction)whatthefunc).getReturnType() instanceof CasVoid && !(ret instanceof CasReturn))
+        else if (((CasPreFunction)whatthefunc).getReturnType() instanceof CasVoid && !(ret instanceof CasReturn))
             return new CasVariable("return statement");
         else if (ret instanceof CasReturn) {
-            if (checkreturntype(((CasReturn)ret).getRetValue(), (CasFunction) whatthefunc)) {
+            if (checkreturntype(((CasReturn)ret).getRetValue(), (CasPreFunction) whatthefunc)) {
                 return ((CasReturn)ret).getRetValue();
             }
             else
@@ -843,7 +887,7 @@ class CasInterpreter {
      * passing in func, we can pass in it's returntype and its dimensions
      * then there is a possibility of recursion with arrays and matrices
     */
-    public boolean checkreturntype(CasDataType ret, CasFunction func) {
+    public boolean checkreturntype(CasDataType ret, CasPreFunction func) {
         CasDataType type = func.getReturnType();
         int dimensions = func.getBrackets();
         if (dimensions == 0) {
@@ -920,3 +964,4 @@ class CasInterpreter {
             throw new CasException("Error occurred in decrementation");
     }
 }
+

@@ -3,24 +3,23 @@ package org.geworkbench.engine.cascript;
 import java.util.HashMap;
 
 /**
- * Symbol table class
+ * Symbol table class for semantics
  *
  * @author Behrooz Badii - badiib@gmail.com
- * @version $Id: CasSymbolTable.java,v 1.4 2005-12-06 21:51:41 bb2122 Exp $
  * @modified from Hanhua Feng - hf2048@columbia.edu
  */
-class CasSymbolTable extends HashMap {
-    CasSymbolTable parent;
+class CasPreSymbolTable extends HashMap {
+    CasPreSymbolTable parent;
     boolean read_only;
     int level;
 
-    public CasSymbolTable(CasSymbolTable sparent, int slevel) {
+    public CasPreSymbolTable(CasPreSymbolTable sparent, int slevel) {
         parent = sparent;
         level = slevel; //this should be -1 for global scope
         read_only = false;
     }
 
-    public CasSymbolTable() {
+    public CasPreSymbolTable() {
         parent = null;
         level = -2;
         read_only = false;
@@ -39,7 +38,7 @@ class CasSymbolTable extends HashMap {
         return level;
     }
 
-    public final CasSymbolTable Parent() {
+    public final CasPreSymbolTable Parent() {
         return parent;
     }
 
@@ -47,13 +46,13 @@ class CasSymbolTable extends HashMap {
         return containsKey(name);
     }
 
-    public final CasDataType findVar(String name) {
-        if (this.containsVar(name)) return (CasDataType) get(name);
+    public final CasPreData findVar(String name) {
+        if (this.containsVar(name)) return (CasPreData) get(name);
         if (level == -1) throw new CasException("Variable " + name + " not found");
         else return Parent().findVar(name);
     }
 
-    public final CasSymbolTable getScope(String name) {
+    public final CasPreSymbolTable getScope(String name) {
         if (this.containsVar(name)) return this;
         if (level == -1) throw new CasException("Variable " + name + " not found");
         else return this.Parent().getScope(name);
@@ -76,16 +75,16 @@ class CasSymbolTable extends HashMap {
         else return this.Parent().notexists(name);
     }
 
-    public final void setVar(String name, CasDataType data) {
-
-        data.name = name;
-        CasSymbolTable st = getScope(name);
+    public final void setVar(String name, CasPreData data) {
+        
+        data.getData().name = name;
+        CasPreSymbolTable st = getScope(name);
         /*Testing purposes
         System.out.println("Changing value of " + name + " in setVar in CasSymbolTable");*/
         st.putVar(name, data);
     }
     
-    public final void putVar(String name, CasDataType data) {
+    public final void putVar(String name, CasPreData data) {
         put(name, data);
     }
 
