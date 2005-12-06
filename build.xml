@@ -214,8 +214,11 @@
     <!-- JAVADOC -->
     <!-- ====================================================================== -->
     <target name="javadoc" depends="prepare" description="Creates javadocs for core only.">
-        <javadoc maxmemory="256M" sourcepath="${src}" destdir="${docs}" packagenames="*">
+        <javadoc maxmemory="256M" destdir="${docs}" packagenames="*">
             <classpath refid="classpath"/>
+            <packageset dir="${src}" defaultexcludes="yes">
+                <include name="org/geworkbench/**"/>
+             </packageset>
         </javadoc>
     </target>
     <!-- ====================================================================== -->
