@@ -6,7 +6,7 @@ import java.util.HashMap;
  * Symbol table class
  *
  * @author Behrooz Badii - badiib@gmail.com
- * @version $Id: CasSymbolTable.java,v 1.4 2005-12-06 21:51:41 bb2122 Exp $
+ * @version $Id: CasSymbolTable.java,v 1.5 2005-12-07 15:47:10 manju Exp $
  * @modified from Hanhua Feng - hf2048@columbia.edu
  */
 class CasSymbolTable extends HashMap {
@@ -82,11 +82,7 @@ class CasSymbolTable extends HashMap {
         CasSymbolTable st = getScope(name);
         /*Testing purposes
         System.out.println("Changing value of " + name + " in setVar in CasSymbolTable");*/
-        st.putVar(name, data);
-    }
-    
-    public final void putVar(String name, CasDataType data) {
-        put(name, data);
+        st.put(name, data);
     }
 
     private void jbInit() throws Exception {

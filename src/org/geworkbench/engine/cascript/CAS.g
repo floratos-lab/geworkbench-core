@@ -14,8 +14,8 @@ testLiterals = false;
 /*These are keywords*/
 tokens {
     INT = "int";
-    DOUBLE = "double";
-    BOOLSTR = "boolean";
+    FLOAT = "float";
+    BOOLSTR = "bool";
     STRING = "string";
     MODULE = "module";
     DATATYPE = "datatype";
@@ -36,7 +36,7 @@ tokens {
     NEW = "new";
     PRINT = "print";
     NUM_INT;
-    NUM_DOUBLE;
+    NUM_FLOAT;
 }
 {
     int nr_error = 0;
@@ -88,9 +88,9 @@ If the two rules were combined, the lookahead set for Number would include
 a period (e.g., from ".1") followed by end-of-token e.g., from "1" by
 itself), which collides with the lookahead set for the single-period rule.
 */
-NUM_DOUBLE: '.' ('0'..'9')+ (Exponent)?;
-Number :    ('0'..'9')+ ( '.' ('0'..'9')* (Exponent)? { $setType(NUM_DOUBLE); }
-            | Exponent { $setType(NUM_DOUBLE); }
+NUM_FLOAT: '.' ('0'..'9')+ (Exponent)?;
+Number :    ('0'..'9')+ ( '.' ('0'..'9')* (Exponent)? { $setType(NUM_FLOAT); }
+            | Exponent { $setType(NUM_FLOAT); }
             | /* empty */ { $setType(NUM_INT); });
 
 // a couple protected methods to assist in matching floating point numbers
@@ -484,7 +484,7 @@ assignValue
  * the types found in CAScript
 */ 
 type:
-    (INT|DOUBLE|BOOLSTR|STRING|(MODULE ID)| (DATATYPE ID)) //you should have dynamic types based on the parsing of the registry here.
+    (INT|FLOAT|BOOLSTR|STRING|(MODULE ID)| (DATATYPE ID)) //you should have dynamic types based on the parsing of the registry here.
     { #type = #([TYPE, "TYPE"], type); }
     ;
 
@@ -597,7 +597,7 @@ newatom
 */
 numberValue
     : NUM_INT
-    | NUM_DOUBLE
+    | NUM_FLOAT
     ;
 
 /**
@@ -765,7 +765,7 @@ else {
     typereturn = new CasVoid();
   else if (temp.equals("int"))
     typereturn = new CasInt(0);
-  else if (temp.equals("double"))
+  else if (temp.equals("float"))
     typereturn = new CasDouble(0);
   else if (temp.equals("boolean"))
     typereturn = new CasBool(false);
@@ -780,7 +780,7 @@ else {
 primitives
 : "void"
 | "int"
-| "double"
+| "float"
 | "boolean"
 | "string"
 ;
@@ -803,7 +803,7 @@ String id2 = "";
 Vector<CasDataType> arglist = null;
 }
 : NUM_INT                     { r = new CasInt(Integer.parseInt(#NUM_INT.getText())); } //literal integers
-| NUM_DOUBLE                   { r = new CasDouble(Double.parseDouble(#NUM_DOUBLE.getText()));} //literal doubles
+| NUM_FLOAT                   { r = new CasDouble(Double.parseDouble(#NUM_FLOAT.getText()));} //literal doubles
 | TRUE                        { r = new CasBool(true); } //literal "true" value
 | FALSE                       { r = new CasBool(false); } //literal "false" value
 | #(IDENTIFIER ID {id = #ID.getText();} (arglist = index)?)   //here we are just using arglist to gather indices
@@ -949,4 +949,3 @@ param returns [ Vector<CasDataType> arglist ]
   CasDataType a;}
 : #(ARGS { arglist = new Vector<CasDataType>(); } ( a=expr      { arglist.add( a ); })*)
 ;
-

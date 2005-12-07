@@ -310,10 +310,10 @@ public CASWalker() {
 			if (_t==null) _t=ASTNULL;
 			switch ( _t.getType()) {
 			case INT:
-			case DOUBLE:
-			case BOOLSTR:
+			case FLOAT:
 			case STRING:
 			case VOID:
+			case LITERAL_boolean:
 			{
 				n = _t==ASTNULL ? null : (AST)_t;
 				primitives(_t);
@@ -367,7 +367,7 @@ public CASWalker() {
 			typereturn = new CasVoid();
 			else if (temp.equals("int"))
 			typereturn = new CasInt(0);
-			else if (temp.equals("double"))
+			else if (temp.equals("float"))
 			typereturn = new CasDouble(0);
 			else if (temp.equals("boolean"))
 			typereturn = new CasBool(false);
@@ -543,10 +543,10 @@ public CASWalker() {
 				r = new CasInt(Integer.parseInt(tmp21_AST_in.getText()));
 				break;
 			}
-			case NUM_DOUBLE:
+			case NUM_FLOAT:
 			{
 				AST tmp22_AST_in = (AST)_t;
-				match(_t,NUM_DOUBLE);
+				match(_t,NUM_FLOAT);
 				_t = _t.getNextSibling();
 				r = new CasDouble(Double.parseDouble(tmp22_AST_in.getText()));
 				break;
@@ -877,7 +877,7 @@ public CASWalker() {
 				_loop232:
 				do {
 					if (_t==null) _t=ASTNULL;
-					if (((_t.getType() >= INT && _t.getType() <= IDENTIFIER))) {
+					if (((_t.getType() >= INT && _t.getType() <= LITERAL_boolean))) {
 						statement = (AST)_t;
 						if ( _t==null ) throw new MismatchedTokenException();
 						_t = _t.getNextSibling();
@@ -1275,17 +1275,17 @@ public CASWalker() {
 				_t = _t.getNextSibling();
 				break;
 			}
-			case DOUBLE:
+			case FLOAT:
 			{
 				AST tmp72_AST_in = (AST)_t;
-				match(_t,DOUBLE);
+				match(_t,FLOAT);
 				_t = _t.getNextSibling();
 				break;
 			}
-			case BOOLSTR:
+			case LITERAL_boolean:
 			{
 				AST tmp73_AST_in = (AST)_t;
-				match(_t,BOOLSTR);
+				match(_t,LITERAL_boolean);
 				_t = _t.getNextSibling();
 				break;
 			}
@@ -1384,8 +1384,8 @@ public CASWalker() {
 		"<2>",
 		"NULL_TREE_LOOKAHEAD",
 		"\"int\"",
-		"\"double\"",
-		"\"boolean\"",
+		"\"float\"",
+		"\"bool\"",
 		"\"string\"",
 		"\"module\"",
 		"\"datatype\"",
@@ -1406,7 +1406,7 @@ public CASWalker() {
 		"\"new\"",
 		"\"print\"",
 		"NUM_INT",
-		"NUM_DOUBLE",
+		"NUM_FLOAT",
 		"PERIOD",
 		"COMMA",
 		"COLON",
@@ -1476,7 +1476,8 @@ public CASWalker() {
 		"FUNCTIONBODY",
 		"ARGDEC",
 		"STATEMENTS",
-		"IDENTIFIER"
+		"IDENTIFIER",
+		"\"boolean\""
 	};
 	
 	private static final long[] mk_tokenSet_0() {
