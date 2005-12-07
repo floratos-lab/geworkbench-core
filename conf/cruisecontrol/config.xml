@@ -47,7 +47,7 @@
                      buildresultsurl="http://caldev:8080/cruisecontrol"
                      spamwhilebroken="false"
                      reportsuccess="fixes">
-              <failure address="watkin"/>
+              <failure address="caworkbench-dev"/>
           </htmlemail>
       </publishers>
 
