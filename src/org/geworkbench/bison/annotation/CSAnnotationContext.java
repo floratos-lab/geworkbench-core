@@ -3,6 +3,7 @@ package org.geworkbench.bison.annotation;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.datastructure.complex.panels.CSPanel;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
+import org.geworkbench.bison.datastructure.complex.panels.LabelledObject;
 import org.geworkbench.bison.datastructure.properties.DSNamed;
 import org.apache.commons.collections15.map.ListOrderedMap;
 import org.apache.commons.collections15.MapIterator;
@@ -376,6 +377,17 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
         } else {
             return lab.getPanel();
         }
+    }
+
+    public DSPanel<T> getItemsWithoutLabel(String label) {
+        DSPanel retPanel = new CSPanel("Not " + label);
+        DSItemList<T> list = getItemList();
+        for (T t : list) {
+            if (!hasLabel(t, label)) {
+                retPanel.add(t);
+            }
+        }
+        return retPanel;
     }
 
     public boolean hasLabel(T item, String label) {

@@ -314,7 +314,11 @@ public class CSGeneMarker implements DSGeneMarker, Serializable {
                 }
             }
         }
-        return text0;
 
+        if (text0 == null || text0.length() == 0) {
+            return disType;
+        } else {
+            return text0;
+        }
     }
 }

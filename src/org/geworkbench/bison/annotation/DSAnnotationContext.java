@@ -206,6 +206,14 @@ public interface DSAnnotationContext<T extends DSNamed> extends DSAnnotationSour
     public DSPanel<T> getItemsWithLabel(String label);
 
     /**
+     * Retrieves the items that do not have the specified label.
+     * @param label The label you want to ignore.
+     * @return a panel named "Not label", containing the appropriate items.
+     * The panel is empty if there are no items that don't have the given label.
+     */
+    public DSPanel<T> getItemsWithoutLabel(String label);
+
+    /**
      * Returns <tt>true</tt> if the item has the specified label, <tt>false</tt> otherwise.
      */
     public boolean hasLabel(T item, String label);

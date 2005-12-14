@@ -1,5 +1,8 @@
 package org.geworkbench.util.svm;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.util.List;
 import java.util.ArrayList;
 
@@ -7,6 +10,8 @@ import java.util.ArrayList;
  * @author John Watkinson
  */
 public class SupportVectorMachine {
+
+    static Log log = LogFactory.getLog(SupportVectorMachine.class);
 
     private List<float[]> trainingSet;
     private int[] trainingClassifications;
@@ -27,7 +32,12 @@ public class SupportVectorMachine {
             for (int i = 0; i < n; i++) {
                 dot += a[i] * b[i];
             }
-            return dot + 1;
+            double manual = (dot + 1) * (dot +1);
+//            double pow = Math.pow(dot + 1, 2);
+//            if (manual != pow) {
+//                log.error("Not equal");
+//            }
+            return manual;
         }
     };
 
@@ -55,6 +65,7 @@ public class SupportVectorMachine {
         this.kernel = kernel;
         this.maxIterations = maxIterations;
         this.convergenceThreshold = convergenceThreshold;
+        this.compute();
     }
 
     private double discriminant(float[] input) {
