@@ -32,12 +32,12 @@ public class SupportVectorMachine {
             for (int i = 0; i < n; i++) {
                 dot += a[i] * b[i];
             }
-            double manual = (dot + 1) * (dot +1);
-//            double pow = Math.pow(dot + 1, 2);
+//            double manual = (dot + 1) * (dot +1);
+            return dot + 1;
 //            if (manual != pow) {
 //                log.error("Not equal");
 //            }
-            return manual;
+//            return manual;
         }
     };
 
@@ -109,6 +109,7 @@ public class SupportVectorMachine {
             iteration++;
             lastObjective = objectiveVal;
             objectiveVal = objective();
+            log.debug("Iteration " + iteration + " had delta " + Math.abs(objectiveVal - lastObjective));
         }
     }
 
