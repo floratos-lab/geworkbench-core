@@ -129,18 +129,12 @@ public class CSGenotypicMarkerValue extends CSMarkerValue implements Serializabl
      */
     public String toString() {
         String string = null;
-        String mask = null;
-        if (isMasked()) {
-            mask = new String("X");
-        } else {
-            mask = new String("");
-        }
         if (!isMissing()) {
             string = getAllele(0) + "|" + getAllele(1);
             //            string = new String(formatter.format(getValue()) + "\t" +
             //                                getStatusAsChar());
         } else {
-            string = new String("?");
+            string = "?";
         }
         return string;
     }

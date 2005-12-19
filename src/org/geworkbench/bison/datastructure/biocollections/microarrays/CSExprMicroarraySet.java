@@ -170,7 +170,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
             return;
         } catch (Exception ioe) {
             System.out.println("Error while parsing line: " + line);
-            System.out.println("Error: " + ioe);
+            ioe.printStackTrace();
             return;
         } finally {
             //            setPhenotype();
@@ -219,7 +219,14 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
             // for compatibility reasons although its use is discouraged in new code."
             // http://java.sun.com/j2se/1.4.2/docs/api/java/bisonparsers/StringTokenizer.html
             // - Manju
-            String[] st = line.split("\t");
+            // watkin - I changed it back to a StringTokenizer, as it will ignore redundant delimiters (tabs)
+            // while String.split will not.
+            StringTokenizer tokenizer = new StringTokenizer(line, "\t", false);
+            int n = tokenizer.countTokens();
+            String[] st = new String[n];
+            for (int i = 0; i < n; i++) {
+                st[i] = tokenizer.nextToken();
+            }
 
             if (st.length > 0) {
                 String token = st[0];
