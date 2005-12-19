@@ -2,7 +2,7 @@ package org.geworkbench.util.associationdiscovery.PSSM;
 
 import org.geworkbench.util.associationdiscovery.cluster.CSMatrixPattern;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
-import org.geworkbench.bison.datastructure.bioobjects.microarray.DSGenotypicMarker;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSGenotypicMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.complex.pattern.DSMatchedPattern;
@@ -96,7 +96,7 @@ class CSPSSMMatrixPattern extends CSMatrixPattern implements DSPattern<DSMicroar
                 double v0 = 0;
                 double v1 = 0;
                 if (isAllele) {
-                    DSGenotypicMarker gt = (DSGenotypicMarker) value;
+                    DSGenotypicMarkerValue gt = (DSGenotypicMarkerValue) value;
                     v0 = (double) gt.getAllele(0);
                     v1 = (double) gt.getAllele(1);
                 } else {
@@ -130,7 +130,7 @@ class CSPSSMMatrixPattern extends CSMatrixPattern implements DSPattern<DSMicroar
                     double v0 = 0;
                     double v1 = 0;
                     if (isAllele) {
-                        DSGenotypicMarker gt = (DSGenotypicMarker) value;
+                        DSGenotypicMarkerValue gt = (DSGenotypicMarkerValue) value;
                         v0 = (double) gt.getAllele(0);
                         v1 = (double) gt.getAllele(1);
                     } else {

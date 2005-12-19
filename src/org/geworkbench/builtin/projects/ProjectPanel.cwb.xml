@@ -1,5 +1,9 @@
 <component-descriptor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Descriptor Schema.xsd">
-    <component class="org.geworkbench.builtin.projects.ProjectPanel">
+    <component
+            name="Project Panel"
+            class="org.geworkbench.builtin.projects.ProjectPanel"
+            icon="projectPanelIcon.gif"
+            version="3.1">
         <online-help helpSet="org/geworkbench/builtin/projects/help/projectPanelHelpSet.hs"/>
         <menu-item path="File.Open.File" mode="always" var="File.Open.File"/>
         <menu-item path="File.Save.Workspace" mode="always" var="File.Save.Workspace"/>
@@ -13,5 +17,6 @@
         <menu-item path="File.Remove.Image" mode="always" var="File.Remove.Image"/>
         <menu-item path="Edit.Rename.Project" mode="always" var="Edit.Rename.Project"/>
         <menu-item path="Edit.Rename.File" mode="always" var="Edit.Rename.File"/>
+        The Project Panel is responsible for organizing and displaying data sets.
     </component>
 </component-descriptor>

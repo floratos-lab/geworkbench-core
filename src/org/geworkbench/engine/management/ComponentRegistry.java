@@ -12,6 +12,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.io.File;
 import java.io.IOException;
+import java.net.URLClassLoader;
 
 /**
  * Component registry implementation.
@@ -665,9 +666,22 @@ public class ComponentRegistry {
                 }
             }
         }
+        // Finally, add the default resource
+        try {
+            ComponentResource rootResource = new ComponentResource((URLClassLoader)getClass().getClassLoader());
+            nameToComponentResource.put(".", rootResource);
+        } catch (Exception e) {
+            System.out.println("Unable to create root component resource.");
+            e.printStackTrace();
+        }
+
     }
 
     public ComponentResource getComponentResourceByName(String name) {
         return nameToComponentResource.get(name);
+    }
+
+    public Collection<ComponentResource> getAllComponentResources() {
+        return nameToComponentResource.values();
     }
 }

@@ -25,9 +25,19 @@
                 <xs:documentation>Pointer to the .class file for the visual component.</xs:documentation>
             </xs:annotation>
         </xs:attribute>
+        <xs:attribute name="name" type="xs:string" use="optional">
+            <xs:annotation>
+                <xs:documentation>Common name of the component.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
         <xs:attribute name="icon" type="xs:string" use="optional">
             <xs:annotation>
                 <xs:documentation>Pointer to the image file for the component's icon.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="version" type="xs:string" use="optional">
+            <xs:annotation>
+                <xs:documentation>The version number of this component.</xs:documentation>
             </xs:annotation>
         </xs:attribute>
     </xs:complexType>

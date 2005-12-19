@@ -15,6 +15,8 @@ import java.net.URISyntaxException;
 import java.io.*;
 
 /**
+ * Indexes a classpath so that classes can be searched hierarchically according to class structure.
+ *
  * @author John Watkinson
  */
 public class ClassSearcher {

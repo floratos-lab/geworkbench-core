@@ -1,13 +1,13 @@
 package org.geworkbench.bison.datastructure.bioobjects.microarray;
 
-public interface DSGenotypicMarker extends DSMutableMarkerValue {
+public interface DSGenotypicMarkerValue extends DSMutableMarkerValue {
     /**
      * Gets either of the two alleles
      *
      * @param id int either of the two dimensions
      * @return int allele as int
      */
-    public int getAllele(int id);
+    public short getAllele(int id);
 
     /**
      * Sets the primary allele
@@ -19,8 +19,8 @@ public interface DSGenotypicMarker extends DSMutableMarkerValue {
     /**
      * Sets genotype
      *
-     * @param allele_1 int
-     * @param allele_2 int
+     * @param allele0 int
+     * @param allele1 int
      */
-    public void setGenotype(int allele_1, int allele_2);
+    public void setGenotype(int allele0, int allele1);
 }

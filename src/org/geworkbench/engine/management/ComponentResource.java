@@ -65,11 +65,28 @@ public class ComponentResource {
         classLoader = createClassLoader();
     }
 
+    /**
+     * Use this to create the component resource for the built-in components only.
+     * @param classLoader the root classloader
+     */
+    public ComponentResource(URLClassLoader classLoader) throws IOException {
+        dir = ".";
+        isFromGear = false;
+        this.classLoader = classLoader;
+        File classesDir = new File(dir + '/' + CLASSES_DIR);
+        if (classesDir.exists()) {
+            URL baseURL = classesDir.toURI().toURL();
+            log.debug("Adding " + baseURL + " to classpath.");
+            // Create ClassSearcher based on classes path
+            classSearcher = new ClassSearcher(new URL[]{baseURL});
+        }
+    }
+
     private URLClassLoader createClassLoader() throws IOException {
         log.debug("Creating classloader for "+dir);
         // Do classes dir
-        File classesDir = new File(dir + '/' + CLASSES_DIR);
         List<URL> urls = new ArrayList<URL>();
+        File classesDir = new File(dir + '/' + CLASSES_DIR);
         if (classesDir.exists()) {
             URL baseURL = classesDir.toURI().toURL();
             log.debug("Adding " + baseURL + " to classpath.");
@@ -108,6 +125,17 @@ public class ComponentResource {
 
     public ClassLoader getClassLoader() {
         return classLoader;
+    }
+
+    public String getName() {
+        return dir;
+    }
+
+    /**
+     * Gets the class searcher for the component resource.
+     */
+    public ClassSearcher getClassSearcher() {
+        return classSearcher;
     }
 
 }

@@ -15,8 +15,8 @@ import java.io.Serializable;
  */
 
 public class Range implements Serializable {
-    public double min = +999999;
-    public double max = -999999;
+    public double min = Double.MAX_VALUE;
+    public double max = Double.MIN_VALUE;
     public Normal norm = new Normal();
 
     public Range() {

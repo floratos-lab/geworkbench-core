@@ -1,5 +1,8 @@
 <geaw-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ConfigurationFile Schema.xsd">
 	<!--<gui-window name="Main GUI" class="geaw.GUIApp"/>-->
+    <description>
+        The default configuration.
+    </description>
 	<gui-window name="Main GUI" class="org.geworkbench.engine.skin.Skin"/>
 	<plugin id="projectWindow" name="Project Panel" class="org.geworkbench.builtin.projects.ProjectPanel">
 		<gui-area name="ProjectArea"/>

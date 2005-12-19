@@ -4,6 +4,7 @@ import org.apache.commons.math.stat.StatUtils;
 import org.geworkbench.bison.datastructure.biocollections.views.DSMicroarraySetView;
 import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
+import org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMarkerValue;
 
 import java.awt.*;
@@ -57,7 +58,7 @@ public class ExpressionPValueColorContext implements org.geworkbench.bison.util.
 //        intensity *= 2;
         intensity = 2 / intensity; 
         double value = mv.getValue();
-        org.geworkbench.bison.util.Range range = ((CSExpressionMarker) mInfo).getRange();
+        org.geworkbench.bison.util.Range range = ((DSRangeMarker) mInfo).getRange();
         double mean = range.norm.getMean(); //(range.max + range.min) / 2.0;
         double foldChange = (value - mean) / (range.norm.getSigma() + 0.00001); //Math.log(change) / Math.log(2.0);
         if (foldChange < -intensity) {

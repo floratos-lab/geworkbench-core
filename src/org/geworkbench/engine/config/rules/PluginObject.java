@@ -1,17 +1,15 @@
 package org.geworkbench.engine.config.rules;
 
 import org.geworkbench.util.Debug;
-import org.apache.commons.digester.Digester;
 import org.geworkbench.engine.management.ComponentRegistry;
-import org.geworkbench.engine.config.MenuListener;
-import org.geworkbench.engine.config.PluginDescriptor;
-import org.geworkbench.engine.config.PluginRegistry;
-import org.geworkbench.engine.config.VisualPlugin;
+import org.geworkbench.engine.config.*;
 import org.geworkbench.engine.config.events.AppEventListener;
 import org.geworkbench.engine.config.events.EventSource;
-import org.xml.sax.SAXException;
+import org.jdom.input.SAXBuilder;
+import org.jdom.Document;
+import org.jdom.JDOMException;
+import org.jdom.Element;
 
-import javax.help.HelpSet;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -94,38 +92,77 @@ public class PluginObject {
     // --------------- Methods
     // ---------------------------------------------------------------------------
 
-    private void processComponentDescriptor() throws IOException, SAXException {
+    public static ComponentMetadata processComponentDescriptor(String resourceName, Class type) throws IOException, JDOMException, NotMenuListenerException, MalformedMenuItemException, NotVisualPluginException {
         // Look for descriptor file
-        Class type = compDes.getPluginClass();
+        ComponentMetadata metadata = new ComponentMetadata(type, resourceName);
         String filename = type.getSimpleName() + COMPONENT_DESCRIPTOR_EXTENSION;
+        SAXBuilder builder = new SAXBuilder();
         InputStream in = type.getResourceAsStream(filename);
         if (in != null) {
-            // Create digester and parse
-            Digester componentDigester = new Digester();
-            componentDigester.setUseContextClassLoader(true);
-            componentDigester.addRule("component-descriptor", new DescriptorRule(this));
-            // Register the menu item listeners.
-            componentDigester.addCallMethod("component-descriptor/component/menu-item", "registerMenuItem", 5);
-            componentDigester.addCallParam("component-descriptor/component/menu-item", 0, "path");
-            componentDigester.addCallParam("component-descriptor/component/menu-item", 1, "mode");
-            componentDigester.addCallParam("component-descriptor/component/menu-item", 2, "var");
-            componentDigester.addCallParam("component-descriptor/component/menu-item", 3, "icon");
-            componentDigester.addCallParam("component-descriptor/component/menu-item", 4, "accelerator");
-            // Load the online help files for the various components.
-            componentDigester.addCallMethod("component-descriptor/component/online-help", "registerHelpTopic", 1);
-            componentDigester.addCallParam("component-descriptor/component/online-help", 0, "helpSet");
-            // todo - Add support to store an image icon for the component
-            componentDigester.parse(in);
+            Document doc = builder.build(in);
+            Element root = doc.getRootElement();
+            if (root.getName().equals("component-descriptor")) {
+                root = root.getChild("component");
+                if (root != null) {
+                    // Check for optional attributes
+                    String iconName = root.getAttributeValue("icon");
+                    if (iconName != null) {
+                        URL url = type.getResource(iconName);
+                        if (url != null) {
+                            ImageIcon icon = new ImageIcon(url);
+                            if (icon != null) {
+                                metadata.setIcon(icon);
+                            }
+                        } else {
+                            System.out.println("Icon for component '" + type + "' not found: " + iconName);
+                        }
+                    }
+                    String commonName = root.getAttributeValue("name");
+                    if (commonName != null) {
+                        metadata.setName(commonName);
+                    }
+                    String version = root.getAttributeValue("version");
+                    if (version != null) {
+                        metadata.setVersion(version);
+                    }
+                    String description = root.getText().trim();
+                    if ((description != null) && (description.length() > 0)) {
+                        metadata.setDescription(description);
+                    }
+                    java.util.List<Element> elements = root.getChildren();
+                    for (int i = 0; i < elements.size(); i++) {
+                        Element element = elements.get(i);
+                        if (element.getName().equals("menu-item")) {
+                            metadata.addMenuInfo(
+                                    element.getAttributeValue("path"),
+                                    element.getAttributeValue("mode"),
+                                    element.getAttributeValue("var"),
+                                    element.getAttributeValue("icon"),
+                                    element.getAttributeValue("accelerator")
+                            );
+                        } else if (element.getName().equals("online-help")) {
+                            metadata.setHelpSet(element.getAttributeValue("helpSet"));
+                        }
+                    }
+                    if (metadata.getName() == null) {
+                        metadata.setName(type.getSimpleName());
+                    }
+                    return metadata;
+                }
+            }
         }
+        ComponentMetadata defaultData = new ComponentMetadata(type, resourceName);
+        defaultData.setName(type.getSimpleName());
+        return defaultData;
     }
 
     /**
      * Creates a new plugin in and adds it to the <code>PluginRegistry</code>.
      * The plugin is instantiated by a call to its default constructor.
      *
-     * @param id        Id to be used for the new plugin.
-     * @param name      Name to be used for the new plugin.
-     * @param className Class name for the new plugin.
+     * @param id           Id to be used for the new plugin.
+     * @param name         Name to be used for the new plugin.
+     * @param className    Class name for the new plugin.
      * @param resourceName Resource from which to load the plugin.
      */
     public void createPlugin(String id, String name, String className, String resourceName) {
@@ -135,7 +172,8 @@ public class PluginObject {
         PluginRegistry.addPlugin(compDes);
         // Digest component descriptor
         try {
-            processComponentDescriptor();
+            ComponentMetadata metadata = processComponentDescriptor(resourceName, compDes.getPluginClass());
+            compDes.setComponentMetadata(metadata);
         } catch (Exception e) {
             System.out.println("Problem parsing component descriptor for component: " + compDes.getPluginClass() + ".");
         }
@@ -256,7 +294,7 @@ public class PluginObject {
      * @param icon
      * @param accelerator
      */
-    public void registerMenuItem(String path, String mode, String var, String icon, String accelerator) throws NotMenuListenerException, NotVisualPluginException, MalformedMenuItemException {
+    public static void registerMenuItem(PluginDescriptor descriptor, String path, String mode, String var, String icon, String accelerator) throws NotMenuListenerException, NotVisualPluginException, MalformedMenuItemException {
         JMenuItem menuItem;
         ActionListener menuListener;
         int i;
@@ -264,8 +302,8 @@ public class PluginObject {
         final String[] menuModifiers = {"onFocus", "always"};
         // First, check that the plugin wishing to register the ActionListener
         // implements MenuListener.
-        if (!compDes.isMenuListener())
-            throw new NotMenuListenerException("PluginObject::registerMenuItem - " + "Attempt to register a menu item listener by component with ID = " + compDes.getID() + ", that is not a MenuListener.");
+        if (!descriptor.isMenuListener())
+            throw new NotMenuListenerException("PluginObject::registerMenuItem - " + "Attempt to register a menu item listener by component with ID = " + descriptor.getID() + ", that is not a MenuListener.");
         // Then, verify that the 'mode' variable takes one among the values that
         // are permitted.
         // Just in case
@@ -276,12 +314,12 @@ public class PluginObject {
             throw new MalformedMenuItemException("PluginObject::registerMenuItem - " + "Invalid value found for argument 'mode' = " + mode);
         // Then, if the mode of listening is "onFocus", check that the plugin has
         // a visual representation.
-        if ((mode.compareTo("onFocus") == 0) && (!compDes.isVisualPlugin()))
-            throw new NotVisualPluginException("PluginObject::registerMenuItem - " + "Attempt to register a 'onFocus' menu item listener by component with ID = " + compDes.getID() + ", which is not a VisualPlugin.");
+        if ((mode.compareTo("onFocus") == 0) && (!descriptor.isVisualPlugin()))
+            throw new NotVisualPluginException("PluginObject::registerMenuItem - " + "Attempt to register a 'onFocus' menu item listener by component with ID = " + descriptor.getID() + ", which is not a VisualPlugin.");
         // Return the menu item corresponding to the designated path. If the menu
         // item does not already exist, it gets created.
         try {
-            menuItem = getMenuItem(path, icon, accelerator);
+            menuItem = getMenuItem(descriptor, path, icon, accelerator);
         } catch (Exception e) {
             e.printStackTrace(System.err);
             return;
@@ -289,9 +327,9 @@ public class PluginObject {
 
         // Query the plugin to get the ActionListener that should be
         // used with this menu item.
-        menuListener = ((MenuListener) compDes.getPlugin()).getActionListener(var);
+        menuListener = ((MenuListener) descriptor.getPlugin()).getActionListener(var);
         if (menuListener != null)
-            compDes.addMenuListener(menuItem, menuListener, mode);
+            descriptor.addMenuListener(menuItem, menuListener, mode);
         // If the 'mode' for the listener is "always", go on and add the listener
         // to the menu item.
         if (mode.compareTo("always") == 0) {
@@ -300,31 +338,7 @@ public class PluginObject {
         }
 
         //stores the menu item info into the PluginDescriptor
-        compDes.addMenuItemInfo(path, mode, var, icon, accelerator);
-    }
-
-    /**
-     * Allows a plugin to attach a section to the available online help.
-     *
-     * @param pluginHelpSet The name of the helpset file containing the details
-     *                      for the section to be attached.
-     */
-    public void registerHelpTopic(String pluginHelpSet) {
-        if (pluginHelpSet == null)
-            return;
-        HelpSet pginHS = null;
-        // Attempt to open the help set file and create a helpset object.
-        try {
-            ClassLoader cl = compDes.getPlugin().getClass().getClassLoader();
-            URL url = HelpSet.findHelpSet(cl, pluginHelpSet);
-            pginHS = new HelpSet(cl, url);
-        } catch (Exception ee) {
-            System.err.println("Help Set " + pluginHelpSet + " for component " + compDes.getLabel() + " not found.");
-            return;
-        }
-
-        // Add the helpset for the new component to the master set.
-        GeawConfigObject.addHelpSet(pginHS);
+        descriptor.addMenuItemInfo(path, mode, var, icon, accelerator);
     }
 
     /**
@@ -411,7 +425,7 @@ public class PluginObject {
      * @throws DynamicMenuItemException
      * @throws ClassNotFoundException
      */
-    private JMenuItem getMenuItem(String path, String icon, String accelerator) throws MalformedMenuItemException, DynamicMenuItemException, ClassNotFoundException {
+    private static JMenuItem getMenuItem(PluginDescriptor descriptor, String path, String icon, String accelerator) throws MalformedMenuItemException, DynamicMenuItemException, ClassNotFoundException {
         StringTokenizer tokens; // Breaks up 'path' into its parts.
         JMenu[] mainMenuItems;
         String topLevelMenuText;
@@ -447,7 +461,7 @@ public class PluginObject {
             topMenu = newMenu;
         } else
             topMenu = mainMenuItems[i];
-        return addMenuItem(tokens, topMenu, icon, accelerator);
+        return addMenuItem(descriptor, tokens, topMenu, icon, accelerator);
     }
 
     /**
@@ -465,7 +479,7 @@ public class PluginObject {
      * @throws DynamicMenuItemException
      * @throws ClassNotFoundException
      */
-    private JMenuItem addMenuItem(StringTokenizer tokens, JMenu parentMenu, String icon, String accelerator) throws DynamicMenuItemException, ClassNotFoundException {
+    private static JMenuItem addMenuItem(PluginDescriptor descriptor, StringTokenizer tokens, JMenu parentMenu, String icon, String accelerator) throws DynamicMenuItemException, ClassNotFoundException {
         JMenuItem[] parentMenuItems;
         String menuText;
         JMenu newMenu;
@@ -485,13 +499,13 @@ public class PluginObject {
             if (parentMenuItems[i].getText().compareTo(menuText) == 0)
                 break;
         if (i == len)
-        // Check if this is the final part of the original processing path.
-        // In that case, create and return the new menu item.
+            // Check if this is the final part of the original processing path.
+            // In that case, create and return the new menu item.
             if (tokens.countTokens() == 0) {
                 theMenuItem = new JMenuItem(menuText);
                 theMenuItem.setEnabled(false);
                 if (icon != null)
-                    theMenuItem.setIcon(new ImageIcon(compDes.getPlugin().getClass().getResource(icon)));
+                    theMenuItem.setIcon(new ImageIcon(descriptor.getPlugin().getClass().getResource(icon)));
                 parentMenu.add(theMenuItem);
                 return theMenuItem;
             } else {
@@ -499,7 +513,7 @@ public class PluginObject {
                 // newMenu.setFont(GeawConfigObject.menuItemFont);
                 newMenu.setText(menuText);
                 parentMenu.add(newMenu);
-                return addMenuItem(tokens, newMenu, icon, accelerator);
+                return addMenuItem(descriptor, tokens, newMenu, icon, accelerator);
             }
 
         else {
@@ -507,7 +521,7 @@ public class PluginObject {
                 if (tokens.countTokens() == 0)
                     throw new DynamicMenuItemException("PluginObject::addMenuItem - " + "Final menu item conflict with existing submenu.");
                 else
-                    return addMenuItem(tokens, (JMenu) parentMenuItems[i], icon, accelerator);
+                    return addMenuItem(descriptor, tokens, (JMenu) parentMenuItems[i], icon, accelerator);
             } else {
                 if (tokens.countTokens() != 0)
                     throw new DynamicMenuItemException("PluginObject::addMenuItem - " + "A subpath in a new menu item conflict with an existing terminal " + "menu item.");
@@ -515,7 +529,7 @@ public class PluginObject {
                     // If the existing menu item does not have an associate icon,
                     // add the icon requested by the <menu-item> currently processed.
                     if (parentMenuItems[i].getIcon() == null && icon != null)
-                        parentMenuItems[i].setIcon(new ImageIcon(this.getClass().getResource(icon)));
+                        parentMenuItems[i].setIcon(new ImageIcon(descriptor.getPluginClass().getResource(icon)));
                     return parentMenuItems[i];
                 }
 
@@ -533,7 +547,7 @@ public class PluginObject {
      */
     private MouseAdapter focusHandler = new MouseAdapter() {
         public void mousePressed(MouseEvent e) {
-                if (lastInFocus != compDes) {
+            if (lastInFocus != compDes) {
                 if (lastInFocus != null)
                     lastInFocus.disableFocusMenuItems();
                 compDes.enableFocusMenuItems();

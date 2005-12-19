@@ -100,8 +100,8 @@ public class SupportVectorMachine {
                 double newLambda = (1 - trainingClassifications[i] * discriminant(item) + lambda[i] * kernelEval) / kernelEval;
                 if (newLambda < 0) {
                     lambda[i] = 0;
-//                } else if (newLambda > 1) {
-//                    lambda[i] = 1;
+                } else if (newLambda > 1) {
+                    lambda[i] = 1;
                 } else {
                     lambda[i] = (float) newLambda;
                 }
@@ -153,5 +153,9 @@ public class SupportVectorMachine {
         svm.test(4, 6);
         svm.test(0, 0);
         svm.test(2, 1.5f);
+        System.out.println("" + Math.pow(-1.3, 2));
+        System.out.println("" + Math.pow(0, 2));
+        System.out.println("" + Math.pow(1, 2));
+        System.out.println("" + Math.pow(1.5, 2));
     }
 }

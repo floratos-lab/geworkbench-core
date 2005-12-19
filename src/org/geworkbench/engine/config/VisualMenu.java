@@ -1,5 +1,8 @@
 package org.geworkbench.engine.config;
 
+import org.geworkbench.engine.builder.*;
+import org.geworkbench.engine.builder.VisualBuilder;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -18,10 +21,14 @@ public class VisualMenu implements MenuListener {
         if (string.equalsIgnoreCase("Tools.VisualBuilder")) {
             ActionListener listener = new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    VisualBuilder designer = new VisualBuilder();
-                    designer.setRegistry();
-                    designer.pack();
-                    designer.setVisible(true);
+//                    VisualBuilder designer = new VisualBuilder();
+//                    designer.setRegistry();
+//                    designer.pack();
+//                    designer.setVisible(true);
+                    org.geworkbench.engine.builder.VisualBuilder builder = new VisualBuilder(null);
+                    builder.pack();
+                    // builder.setSize(920, 600);
+                    builder.setVisible(true);
                 }
             };
             return listener;

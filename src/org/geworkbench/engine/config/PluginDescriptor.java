@@ -3,12 +3,13 @@ package org.geworkbench.engine.config;
 import org.geworkbench.util.Debug;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.engine.management.ComponentResource;
-import org.geworkbench.engine.config.rules.MalformedMenuItemException;
+import org.geworkbench.engine.config.rules.*;
 
 import javax.help.HelpSet;
 import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.util.*;
+import java.net.URL;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
@@ -94,6 +95,8 @@ public class PluginDescriptor extends IdentifiableImpl {
     private ClassLoader loader;
 
     private ComponentResource resource;
+
+    private ComponentMetadata metadata;
 
     // ---------------------------------------------------------------------------
     // --------------- Constructors
@@ -394,4 +397,36 @@ public class PluginDescriptor extends IdentifiableImpl {
         return subscriptionIgnoreSet.contains(type);
     }
 
+    public void setComponentMetadata(ComponentMetadata metadata) throws NotMenuListenerException, MalformedMenuItemException, NotVisualPluginException {
+        this.metadata = metadata;
+        //// Set up help set
+        if (metadata.getHelpSet() != null) {
+            String pluginHelpSet = metadata.getHelpSet();
+            if (pluginHelpSet == null)
+                return;
+            HelpSet pginHS = null;
+            // Attempt to open the help set file and create a helpset object.
+            try {
+                ClassLoader cl = getPlugin().getClass().getClassLoader();
+                URL url = HelpSet.findHelpSet(cl, pluginHelpSet);
+                pginHS = new HelpSet(cl, url);
+            } catch (Exception ee) {
+                System.err.println("Help Set " + pluginHelpSet + " for component " + getLabel() + " not found.");
+                return;
+            }
+            // Add the helpset for the new component to the master set.
+            GeawConfigObject.addHelpSet(pginHS);
+        }
+        //// Set up menu items
+        List<MenuItemInfo> menuItems = metadata.getMenuInfoList();
+        for (int i = 0; i < menuItems.size(); i++) {
+            MenuItemInfo menuItemInfo = menuItems.get(i);
+            PluginObject.registerMenuItem(this,
+                    menuItemInfo.getPath(),
+                    menuItemInfo.getMode(),
+                    menuItemInfo.getVar(),
+                    menuItemInfo.getIcon(),
+                    menuItemInfo.getAccelerator());
+        }
+    }
 }
