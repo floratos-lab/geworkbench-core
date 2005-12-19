@@ -3,8 +3,10 @@ package org.geworkbench.bison.datastructure.bioobjects.markers.genotype;
 import org.geworkbench.bison.util.Range;
 import org.geworkbench.bison.datastructure.bioobjects.markers.CSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
+import org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSGenotypicMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMarkerValue;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMutableMarkerValue;
 
 import java.io.*;
 import java.util.Arrays;
@@ -20,7 +22,7 @@ import java.util.HashMap;
  * @version 1.0
  */
 
-public class CSGenotypeMarker extends CSGeneMarker implements Serializable {
+public class CSGenotypeMarker extends CSGeneMarker implements Serializable, DSRangeMarker {
     protected org.geworkbench.bison.util.Range range = new org.geworkbench.bison.util.Range();
     protected boolean isSNP = true;
     protected boolean isGT = true;
@@ -52,41 +54,50 @@ public class CSGenotypeMarker extends CSGeneMarker implements Serializable {
         isGT = isGenotype;
     }
 
-    public void check(DSMarkerValue marker, boolean isPh) {
-        CSGenotypicMarkerValue gt = (CSGenotypicMarkerValue) marker;
-        getRange().max = Math.max(getRange().max, gt.getAllele(0));
-        getRange().max = Math.max(getRange().max, gt.getAllele(1));
-        HashMap table = phDistribution;
-        if (!isPh) {
-            table = bgDistribution;
-            bkN++;
-        } else {
-            phN++;
-        }
-        Integer key0 = new Integer(gt.getAllele(0));
-        Integer count = (Integer) table.get(key0);
-        if (count != null) {
-            table.put(key0, new Integer(count.intValue() + 1));
-            ;
-        } else {
-            count = new Integer(1);
-            table.put(key0, count);
-        }
-        key0 = new Integer(gt.getAllele(1));
-        count = (Integer) table.get(key0);
-        if (count != null) {
-            table.put(key0, new Integer(count.intValue() + 1));
-            ;
-        } else {
-            count = new Integer(1);
-            table.put(key0, count);
-        }
+    public void check(DSMutableMarkerValue marker, boolean isPh) {
+        range.min = Math.min(range.min, marker.getValue());
+        range.max = Math.max(range.max, marker.getValue());
+        range.norm.add(marker.getValue());
     }
+
+//    public void check(DSMutableMarkerValue marker, boolean isPh) {
+//        CSGenotypicMarkerValue gt = (CSGenotypicMarkerValue) marker;
+//        getRange().max = Math.max(getRange().max, gt.getAllele(0));
+//        getRange().max = Math.max(getRange().max, gt.getAllele(1));
+//        HashMap table = phDistribution;
+//        if (!isPh) {
+//            table = bgDistribution;
+//            bkN++;
+//        } else {
+//            phN++;
+//        }
+//        Integer key0 = new Integer(gt.getAllele(0));
+//        Integer count = (Integer) table.get(key0);
+//        if (count != null) {
+//            table.put(key0, new Integer(count.intValue() + 1));
+//            ;
+//        } else {
+//            count = new Integer(1);
+//            table.put(key0, count);
+//        }
+//        key0 = new Integer(gt.getAllele(1));
+//        count = (Integer) table.get(key0);
+//        if (count != null) {
+//            table.put(key0, new Integer(count.intValue() + 1));
+//            ;
+//        } else {
+//            count = new Integer(1);
+//            table.put(key0, count);
+//        }
+//    }
 
     public void reset(int id, int phNo, int bgNo) {
         setSerial(id);
         phN = 0;
         bkN = 0;
+        range.max = Double.MIN_VALUE;
+        range.min = Double.MAX_VALUE;
+        range.norm = new org.geworkbench.bison.util.Normal();
     }
 
     public void addPh(DSMarkerValue marker) {

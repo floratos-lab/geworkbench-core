@@ -17,7 +17,7 @@ import java.text.DecimalFormat;
  * @version 1.0
  */
 
-public class CSGenotypicMarkerValue extends CSMarkerValue implements Serializable, DSGenotypicMarker {
+public class CSGenotypicMarkerValue extends CSMarkerValue implements Serializable, DSGenotypicMarkerValue {
 
     /**
      * Formats values to be displayed
@@ -25,14 +25,12 @@ public class CSGenotypicMarkerValue extends CSMarkerValue implements Serializabl
     protected static DecimalFormat formatter = new DecimalFormat("##.##");
 
     /**
-     * A means of storing each of the two alleles in one int in 16 bits
-     */
-    private final static int alleleFactor = (1 << 16);
-
-    /**
      * Bit to specify if this marker contains two alleles
      */
     public boolean isGT = true;
+
+    private short allele0;
+    private short allele1;
 
     /**
      * Constructor
@@ -40,7 +38,7 @@ public class CSGenotypicMarkerValue extends CSMarkerValue implements Serializabl
      * @param mg MarkerGenotype to be cloned
      */
     public CSGenotypicMarkerValue(CSGenotypicMarkerValue mg) {
-        value = mg.value;
+        setGenotype(mg.allele0, mg.allele1);
         confidence = mg.confidence;
         isGT = mg.isGT;
     }
@@ -52,7 +50,7 @@ public class CSGenotypicMarkerValue extends CSMarkerValue implements Serializabl
      * @param a2 int allele
      */
     public CSGenotypicMarkerValue(int a1, int a2) {
-        setGenotype(a1, a2);
+        setGenotype((short)a1, (short)a2);
     }
 
     /**
@@ -61,7 +59,8 @@ public class CSGenotypicMarkerValue extends CSMarkerValue implements Serializabl
      * @param allele_1 int
      */
     public CSGenotypicMarkerValue(int allele_1) {
-        value = allele_1;
+        allele0 = (short)allele_1;
+        value = allele0;
         isGT = false;
     }
 
@@ -71,28 +70,25 @@ public class CSGenotypicMarkerValue extends CSMarkerValue implements Serializabl
      * @param allele int
      */
     public void setAllele(int allele) {
-        value = allele;
+        allele0 = (short)allele;
         isGT = false;
     }
 
     /**
      * Sets genotype
      *
-     * @param allele_1 int
-     * @param allele_2 int
+     * @param allele0 int
+     * @param allele1 int
      */
-    public void setGenotype(int allele_1, int allele_2) {
-        this.value = allele_1 + allele_2 * alleleFactor;
+    public void setGenotype(int allele0, int allele1) {
+        if (allele1 == 0) {
+            value = 0;
+        } else {
+            value = ((float)allele0) / allele1;
+        }
+        this.allele0 = (short)allele0;
+        this.allele1 = (short)allele1;
         isGT = true;
-    }
-
-    /**
-     * Sets the genotype as an int
-     *
-     * @param genotype int
-     */
-    protected void setGenotype(int genotype) {
-        value = genotype;
     }
 
     /**
@@ -101,12 +97,12 @@ public class CSGenotypicMarkerValue extends CSMarkerValue implements Serializabl
      * @param id int either of the two dimensions
      * @return int allele as int
      */
-    public int getAllele(int id) {
+    public short getAllele(int id) {
         switch (id) {
             case 0:
-                return (int) value % alleleFactor;
+                return allele0;
             case 1:
-                return (int) value / alleleFactor;
+                return allele1;
         }
         return 0;
     }
@@ -158,7 +154,7 @@ public class CSGenotypicMarkerValue extends CSMarkerValue implements Serializabl
         if ((aMarker == null) || (isAbsent() || aMarker.isAbsent())) {
             return false;
         }
-        return (value == aMarker.value);
+        return ((isGT == aMarker.isGT) && (value == aMarker.value));
     }
 
     /**
@@ -186,25 +182,25 @@ public class CSGenotypicMarkerValue extends CSMarkerValue implements Serializabl
     }
 
     public void parse(String signal, int gtBase) {
-        int a1;
-        int a2;
+        short a1;
+        short a2;
         String[] parseableValue = signal.split(":");
         String[] allele = parseableValue[parseableValue.length - 1].split("[| /]");
         switch (allele.length) {
             case 1:
-                int v = Integer.parseInt(allele[0]);
-                setGenotype(v / gtBase, v % gtBase);
+                int v = Short.parseShort(allele[0]);
+                setGenotype((short)(v / gtBase), (short)(v % gtBase));
                 setMissing(v == 0);
                 break;
             case 2:
-                a1 = Integer.parseInt(allele[0]);
-                a2 = Integer.parseInt(allele[1]);
+                a1 = Short.parseShort(allele[0]);
+                a2 = Short.parseShort(allele[1]);
                 setGenotype(a1, a2);
                 setMissing((a1 == 0) || (a2 == 0));
                 break;
             default:
-                a1 = Integer.parseInt(allele[0]);
-                a2 = Integer.parseInt(allele[allele.length - 1]);
+                a1 = Short.parseShort(allele[0]);
+                a2 = Short.parseShort(allele[allele.length - 1]);
                 setGenotype(a1, a2);
                 setMissing((a1 == 0) || (a2 == 0));
                 break;
@@ -219,7 +215,7 @@ public class CSGenotypicMarkerValue extends CSMarkerValue implements Serializabl
             }
             parse(signal, gtBase);
         } catch (NumberFormatException e) {
-            setGenotype(0, 0);
+            setGenotype((short)0, (short)0);
             setMissing(true);
         }
     }
@@ -267,7 +263,17 @@ public class CSGenotypicMarkerValue extends CSMarkerValue implements Serializabl
         }
     }
 
+    public double getValue() {
+        if (isGT) {
+            return value;
+        } else {
+            return allele0;
+        }
+    }
+
     public int compareTo(Object o) {
         return Double.compare(((CSAffyMarkerValue) o).getValue(), getValue());
     }
+
+
 }
