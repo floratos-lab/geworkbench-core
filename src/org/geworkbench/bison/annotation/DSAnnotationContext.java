@@ -290,6 +290,11 @@ public interface DSAnnotationContext<T extends DSNamed> extends DSAnnotationSour
     public int getNumberOfClasses();
 
     /**
+     * Returns true if there are no items labelled 'class'.
+     */ 
+    public boolean isUnsupervised();
+
+    /**
      * Retrieves a class by index.
      * The index is also the priority of the class (lower index means higher priority).
      */

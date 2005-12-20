@@ -541,6 +541,16 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
         return classes.size();
     }
 
+
+    public boolean isUnsupervised() {
+        ListOrderedSet<String> set = classes.get(CLASS_CASE);
+        if (set.isEmpty()) {
+            return true;
+        } else {
+           return false;
+        }
+    }
+
     public String getClass(int index) {
         return classes.get(index);
     }
@@ -642,7 +652,6 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
 
     public DSPanel<T> getItemsForClass(String clazz) {
         ListOrderedSet<T> items = new ListOrderedSet<T>();
-        ListOrderedSet<String> set = classes.get(clazz);
         // Include all unclassified labels as well
         int n = getNumberOfLabels();
         for (int i = 0; i < n; i++) {

@@ -382,34 +382,36 @@ public class ClusterStatistics {
     public static double scorePattern(DSMicroarraySet<DSMicroarray> mArraySet, CSMatchedMatrixPattern pattern) {
         double score = 0.0;
         DSAnnotationContext context = CSAnnotationContextManager.getInstance().getCurrentContext(mArraySet);
-        DSPanel<DSMicroarray> cases = context.getItemsForClass(CSAnnotationContext.CLASS_CASE);
-        DSPanel<DSMicroarray> controls = context.getItemsForClass(CSAnnotationContext.CLASS_CONTROL);
-        //CSMatchedPSSMMatrixPattern pssm = new CSMatchedPSSMMatrixPattern(pattern, mArraySet);
-        double countPh = 0;
-        double countBk = 0;
-        double phNo = cases.size();
-        double bkNo = controls.size();
-        for (DSMicroarray ma : cases) {
-            if (pattern.getPattern().match(ma).getPValue() < 1.0) {
-                countPh++;
+        if (!context.isUnsupervised()) {
+            DSPanel<DSMicroarray> cases = context.getItemsForClass(CSAnnotationContext.CLASS_CASE);
+            DSPanel<DSMicroarray> controls = context.getItemsForClass(CSAnnotationContext.CLASS_CONTROL);
+            //CSMatchedPSSMMatrixPattern pssm = new CSMatchedPSSMMatrixPattern(pattern, mArraySet);
+            double countPh = 0;
+            double countBk = 0;
+            double phNo = cases.size();
+            double bkNo = controls.size();
+            for (DSMicroarray ma : cases) {
+                if (pattern.getPattern().match(ma).getPValue() < 1.0) {
+                    countPh++;
+                }
             }
-        }
-        for (DSMicroarray ma : controls) {
-            if (pattern.getPattern().match(ma).getPValue() < 1.0) {
-                countBk++;
+            for (DSMicroarray ma : controls) {
+                if (pattern.getPattern().match(ma).getPValue() < 1.0) {
+                    countBk++;
+                }
             }
+            double ph1 = phNo - countPh;
+            double bk1 = bkNo - countBk;
+            double expectedPh = (countPh + countBk) * phNo / (phNo + bkNo);
+            double expectedBk = (countPh + countBk) * bkNo / (phNo + bkNo);
+            double expectedPh1 = (ph1 + bk1) * phNo / (phNo + bkNo);
+            double expectedBk1 = (ph1 + bk1) * bkNo / (phNo + bkNo);
+            ChiSquareDistribution distribution = new ChiSquareDistribution(1);
+            double chi2 = Math.pow(countPh - expectedPh, 2.0) / expectedPh + Math.pow(countBk - expectedBk, 2.0) / expectedBk + Math.pow(ph1 - expectedPh1, 2.0) / expectedPh1 + Math.pow(bk1 - expectedBk1, 2.0) / expectedBk1;
+            //score = ((countPh+1)/(phNo+1))/((countBk+1)/(bkNo+1));
+            score = 1 - distribution.getCDF(chi2);
+            pattern.bkMatches = (int) countBk;
         }
-        double ph1 = phNo - countPh;
-        double bk1 = bkNo - countBk;
-        double expectedPh = (countPh + countBk) * phNo / (phNo + bkNo);
-        double expectedBk = (countPh + countBk) * bkNo / (phNo + bkNo);
-        double expectedPh1 = (ph1 + bk1) * phNo / (phNo + bkNo);
-        double expectedBk1 = (ph1 + bk1) * bkNo / (phNo + bkNo);
-        ChiSquareDistribution distribution = new ChiSquareDistribution(1);
-        double chi2 = Math.pow(countPh - expectedPh, 2.0) / expectedPh + Math.pow(countBk - expectedBk, 2.0) / expectedBk + Math.pow(ph1 - expectedPh1, 2.0) / expectedPh1 + Math.pow(bk1 - expectedBk1, 2.0) / expectedBk1;
-        //score = ((countPh+1)/(phNo+1))/((countBk+1)/(bkNo+1));
-        score = 1 - distribution.getCDF(chi2);
-        pattern.bkMatches = (int) countBk;
         return score;
     }
     /*
