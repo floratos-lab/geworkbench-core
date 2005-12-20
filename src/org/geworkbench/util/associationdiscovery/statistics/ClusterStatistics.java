@@ -8,8 +8,12 @@ import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarr
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMutableMarkerValue;
+import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.util.CSCriterionManager;
 import org.geworkbench.bison.util.DSAnnotValue;
+import org.geworkbench.bison.annotation.DSAnnotationContext;
+import org.geworkbench.bison.annotation.CSAnnotationContextManager;
+import org.geworkbench.bison.annotation.CSAnnotationContext;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -377,41 +381,35 @@ public class ClusterStatistics {
 
     public static double scorePattern(DSMicroarraySet<DSMicroarray> mArraySet, CSMatchedMatrixPattern pattern) {
         double score = 0.0;
-        DSClassCriteria classCriteria = CSCriterionManager.getClassCriteria(mArraySet);
-        if (!classCriteria.isUnsupervised()) {
-            //CSMatchedPSSMMatrixPattern pssm = new CSMatchedPSSMMatrixPattern(pattern, mArraySet);
-            double countPh = 0;
-            double countBk = 0;
-            double phNo = 0;
-            double bkNo = 0;
-            for (DSMicroarray ma : mArraySet) {
-                DSAnnotValue value = classCriteria.getValue(ma);
-                if (value == CSClassCriteria.cases) {
-                    phNo++;
-                    if (pattern.getPattern().match(ma).getPValue() < 1.0) {
-                        //if (pssm.isAStrictMatch(chip)) {
-                        countPh++;
-                    }
-                } else if (value == CSClassCriteria.controls) {
-                    bkNo++;
-                    if (pattern.getPattern().match(ma).getPValue() < 1.0) {
-                        //if (pssm.isAStrictMatch(chip)) {
-                        countBk++;
-                    }
-                }
+        DSAnnotationContext context = CSAnnotationContextManager.getInstance().getCurrentContext(mArraySet);
+        DSPanel<DSMicroarray> cases = context.getItemsForClass(CSAnnotationContext.CLASS_CASE);
+        DSPanel<DSMicroarray> controls = context.getItemsForClass(CSAnnotationContext.CLASS_CONTROL);
+        //CSMatchedPSSMMatrixPattern pssm = new CSMatchedPSSMMatrixPattern(pattern, mArraySet);
+        double countPh = 0;
+        double countBk = 0;
+        double phNo = cases.size();
+        double bkNo = controls.size();
+        for (DSMicroarray ma : cases) {
+            if (pattern.getPattern().match(ma).getPValue() < 1.0) {
+                countPh++;
             }
-            double ph1 = phNo - countPh;
-            double bk1 = bkNo - countBk;
-            double expectedPh = (countPh + countBk) * phNo / (phNo + bkNo);
-            double expectedBk = (countPh + countBk) * bkNo / (phNo + bkNo);
-            double expectedPh1 = (ph1 + bk1) * phNo / (phNo + bkNo);
-            double expectedBk1 = (ph1 + bk1) * bkNo / (phNo + bkNo);
-            ChiSquareDistribution distribution = new ChiSquareDistribution(1);
-            double chi2 = Math.pow(countPh - expectedPh, 2.0) / expectedPh + Math.pow(countBk - expectedBk, 2.0) / expectedBk + Math.pow(ph1 - expectedPh1, 2.0) / expectedPh1 + Math.pow(bk1 - expectedBk1, 2.0) / expectedBk1;
-            //score = ((countPh+1)/(phNo+1))/((countBk+1)/(bkNo+1));
-            score = 1 - distribution.getCDF(chi2);
-            pattern.bkMatches = (int) countBk;
         }
+        for (DSMicroarray ma : controls) {
+            if (pattern.getPattern().match(ma).getPValue() < 1.0) {
+                countBk++;
+            }
+        }
+        double ph1 = phNo - countPh;
+        double bk1 = bkNo - countBk;
+        double expectedPh = (countPh + countBk) * phNo / (phNo + bkNo);
+        double expectedBk = (countPh + countBk) * bkNo / (phNo + bkNo);
+        double expectedPh1 = (ph1 + bk1) * phNo / (phNo + bkNo);
+        double expectedBk1 = (ph1 + bk1) * bkNo / (phNo + bkNo);
+        ChiSquareDistribution distribution = new ChiSquareDistribution(1);
+        double chi2 = Math.pow(countPh - expectedPh, 2.0) / expectedPh + Math.pow(countBk - expectedBk, 2.0) / expectedBk + Math.pow(ph1 - expectedPh1, 2.0) / expectedPh1 + Math.pow(bk1 - expectedBk1, 2.0) / expectedBk1;
+        //score = ((countPh+1)/(phNo+1))/((countBk+1)/(bkNo+1));
+        score = 1 - distribution.getCDF(chi2);
+        pattern.bkMatches = (int) countBk;
         return score;
     }
     /*
