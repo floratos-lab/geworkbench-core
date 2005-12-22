@@ -1,6 +1,6 @@
 package org.geworkbench.util.patterns;
 
-import org.geworkbench.util.sequences.SequenceDB;
+import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.CSSequence;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import org.geworkbench.bison.datastructure.complex.pattern.CSMatchedPattern;
@@ -8,7 +8,6 @@ import org.geworkbench.bison.datastructure.complex.pattern.DSMatchedPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.DSPatternMatch;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.CSSeqPatternMatch;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSSeqRegistration;
-import org.geworkbench.util.patterns.*;
 import polgara.soapPD_wsdl.HMMLoci;
 import polgara.soapPD_wsdl.SOAPOffset;
 
@@ -35,7 +34,7 @@ public class CSMatchedHMMSeqPattern extends org.geworkbench.util.patterns.CSMatc
     private HMMLoci[] loci;
     private List<HMMLoci> lociList;
 
-    public CSMatchedHMMSeqPattern(SequenceDB _seqDB, String _consensusSequence, HMMLoci[] _loci) {
+    public CSMatchedHMMSeqPattern(DSSequenceSet _seqDB, String _consensusSequence, HMMLoci[] _loci) {
         super(_seqDB);
         this.ascii = _consensusSequence;
         this.loci = _loci;
@@ -67,7 +66,7 @@ public class CSMatchedHMMSeqPattern extends org.geworkbench.util.patterns.CSMatc
 
         for (int i = 0; i < loci.length; i++) {
             max = Math.max(max, loci[i].getEnd() - loci[i].getStart());
-            CSSequence seq = seqDB.getSequence(loci[i].getSeqId());
+            DSSequence seq = seqDB.getSequence(loci[i].getSeqId());
             if (seq != null) {
                 String str = seq.getSequence().substring(loci[i].getStart(),
                                                          loci[i].getEnd());

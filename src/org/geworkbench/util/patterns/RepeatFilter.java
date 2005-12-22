@@ -1,7 +1,6 @@
 package org.geworkbench.util.patterns;
 
-import org.geworkbench.util.sequences.SequenceDB;
-import org.geworkbench.util.patterns.*;
+import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 import org.geworkbench.util.patterns.CSMatchedSeqPattern;
 import org.geworkbench.util.patterns.PatternFilter;
 
@@ -51,7 +50,7 @@ public class RepeatFilter extends JPanel implements PatternFilter {
         return true;
     }
 
-    public ArrayList filter(ArrayList patterns, SequenceDB sequenceDB) {
+    public ArrayList filter(ArrayList patterns, DSSequenceSet sequenceDB) {
         ArrayList filteredPatterns = new ArrayList();
         Iterator it = patterns.iterator();
         int period = Integer.parseInt(jTextField1.getText());

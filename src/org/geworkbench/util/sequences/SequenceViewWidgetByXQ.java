@@ -2,16 +2,13 @@ package org.geworkbench.util.sequences;
 
 import org.geworkbench.events.SequenceDiscoveryTableEvent;
 import org.geworkbench.util.PropertiesMonitor;
-import org.geworkbench.util.patterns.CSMatchedSeqPattern;
-import org.geworkbench.util.patterns.PatternOperations;
-import org.geworkbench.util.sequences.*;
 import org.geworkbench.util.sequences.SequenceViewWidgetPanel;
 import org.geworkbench.bison.datastructure.biocollections.Collection;
 import org.geworkbench.bison.datastructure.biocollections.DSCollection;
+import org.geworkbench.bison.datastructure.biocollections.sequences.CSSequenceSet;
+import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import org.geworkbench.bison.datastructure.complex.pattern.DSMatchedPattern;
-import org.geworkbench.bison.datastructure.complex.pattern.DSPatternMatch;
-import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeqPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSSeqRegistration;
 
 import javax.swing.*;
@@ -20,7 +17,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputMethodEvent;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.util.HashMap;
 import org.geworkbench.util.patterns.PatternTableModel;
@@ -54,7 +50,7 @@ public class SequenceViewWidgetByXQ extends JPanel {
   private final int yStep = 12;
   private int prevSeqId = 0;
   private int prevSeqDx = 0;
-  private SequenceDB sequenceDB = new SequenceDB();
+  private DSSequenceSet sequenceDB = new CSSequenceSet();
   //patterns
   //ArrayList  selectedPatterns   = null;
   DSCollection<DSMatchedPattern<DSSequence, DSSeqRegistration>> selectedPatterns = new Collection<DSMatchedPattern<DSSequence, DSSeqRegistration>>();
@@ -170,7 +166,7 @@ public class SequenceViewWidgetByXQ extends JPanel {
      // g.clearRect(0, 0, jPanel1.getWidth(), jPanel1.getHeight());
       if ( (seqId >= 0) && (seqId < sequenceDB.getSequenceNo())) {
         //g.setFont(font);
-        CSSequence sequence = sequenceDB.getSequence(seqId);
+        DSSequence sequence = sequenceDB.getSequence(seqId);
         if (sequence != null) {
           if ( (seqDx >= 0) && (seqDx < sequence.length())) {
             String seqAscii = sequence.getSequence().substring(seqDx);
@@ -319,13 +315,13 @@ public class SequenceViewWidgetByXQ extends JPanel {
   //patternList = patList;
   //}
 
-  public void setSequenceDB(SequenceDB db) {
+  public void setSequenceDB(DSSequenceSet db) {
     sequenceDB = db;
     seqViewWPanel.initialize(null, db);
     repaint();
   }
 
-  public SequenceDB getSequenceDB() {
+  public DSSequenceSet getSequenceDB() {
     return sequenceDB;
   }
 

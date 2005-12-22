@@ -1,7 +1,8 @@
 package org.geworkbench.engine.parsers.sequences;
 
 import org.geworkbench.engine.parsers.microarray.DataSetFileFormat;
-import org.geworkbench.util.sequences.SequenceDB;
+import org.geworkbench.bison.datastructure.biocollections.sequences.CSSequenceSet;
+import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.parsers.resources.Resource;
@@ -112,9 +113,9 @@ public class SequenceFileFormat extends DataSetFileFormat {
                 "Attempting to open a file that does not comply with the " +
                 "FASTA format.");
 
-    SequenceDB sequenceDB = null;
+    DSSequenceSet sequenceDB = null;
     try {
-      sequenceDB = SequenceDB.createFASTAfile(file);
+      sequenceDB = CSSequenceSet.createFASTAfile(file);
     } catch (Exception e) {
       System.out.println("Exception: " + e);
     }

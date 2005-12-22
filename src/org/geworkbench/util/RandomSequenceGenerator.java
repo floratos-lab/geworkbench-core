@@ -1,6 +1,6 @@
 package org.geworkbench.util;
 
-import org.geworkbench.util.sequences.SequenceDB;
+import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.CSSequence;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 
@@ -11,10 +11,10 @@ public class RandomSequenceGenerator {
     char[] tokens = null;
 
     /**
-     * @param sequencedb SequenceDB
+     * @param sequencedb CSSequenceSet
      * @param pValue     double
      */
-    public RandomSequenceGenerator(SequenceDB sequencedb, double pValue) {
+    public RandomSequenceGenerator(DSSequenceSet<? extends DSSequence> sequencedb, double pValue) {
         final int maxLen = 20000;
         if (true) {
             int length = 0;

@@ -1,6 +1,6 @@
 package org.geworkbench.util.patterns;
 
-import org.geworkbench.util.sequences.SequenceDB;
+import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ public interface PatternFilter {
      * For instance, this could eliminate patterns that
      * have specific types of distributions
      */
-    ArrayList filter(ArrayList patterns, SequenceDB sequenceDB);
+    ArrayList filter(ArrayList patterns, DSSequenceSet sequenceDB);
 
     JPanel getParameterPanel();
 }

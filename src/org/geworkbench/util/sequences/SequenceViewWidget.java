@@ -4,10 +4,11 @@ import org.geworkbench.events.SequenceDiscoveryTableEvent;
 import org.geworkbench.util.PropertiesMonitor;
 import org.geworkbench.util.patterns.CSMatchedSeqPattern;
 import org.geworkbench.util.patterns.PatternOperations;
-import org.geworkbench.util.sequences.*;
 import org.geworkbench.util.sequences.SequenceViewWidgetPanel;
 import org.geworkbench.bison.datastructure.biocollections.Collection;
 import org.geworkbench.bison.datastructure.biocollections.DSCollection;
+import org.geworkbench.bison.datastructure.biocollections.sequences.CSSequenceSet;
+import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import org.geworkbench.bison.datastructure.complex.pattern.DSMatchedPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.DSPatternMatch;
@@ -42,8 +43,8 @@ public class SequenceViewWidget extends JPanel {
     private final int yStep = 12;
     private int prevSeqId = 0;
     private int prevSeqDx = 0;
-    private SequenceDB sequenceDB = new SequenceDB();
-    private SequenceDB currentSequenceDB = new SequenceDB();
+    private DSSequenceSet sequenceDB = new CSSequenceSet();
+    private DSSequenceSet currentSequenceDB = new CSSequenceSet();
     //Layouts
     private GridBagLayout gridBagLayout1 = new GridBagLayout();
     private GridBagLayout gridBagLayout2 = new GridBagLayout();
@@ -129,9 +130,9 @@ public class SequenceViewWidget extends JPanel {
 
         setPatterns(e.getPatternMatchCollection());
 
-       // SequenceDB sdb = e.getSequenceDB();
+       // CSSequenceSet sdb = e.getSequenceDB();
        if (showAllBtn.isSelected()) {
-           SequenceDB db = sequenceDB.createSubSetSequenceDB(createTempDBIndex());
+           DSSequenceSet db = sequenceDB.createSubSetSequenceDB(createTempDBIndex());
            int indexArray[] = sequenceDB.getMatchIndex();
 
            db.setMatchIndex(sequenceDB.getMatchIndex());
@@ -375,7 +376,7 @@ public class SequenceViewWidget extends JPanel {
 
 
 
-    public void setSequenceDB(SequenceDB db) {
+    public void setSequenceDB(DSSequenceSet db) {
         sequenceDB = db;
         currentSequenceDB = db;
         //selectedPatterns = new ArrayList();
@@ -383,7 +384,7 @@ public class SequenceViewWidget extends JPanel {
         repaint();
     }
 
-    public SequenceDB getSequenceDB() {
+    public DSSequenceSet getSequenceDB() {
         return sequenceDB;
     }
 

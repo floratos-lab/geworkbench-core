@@ -1,6 +1,6 @@
 package org.geworkbench.events;
 
-import org.geworkbench.util.sequences.SequenceDB;
+import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.engine.config.events.Event;
@@ -15,15 +15,15 @@ import org.geworkbench.engine.config.events.EventSource;
  * <p>Company: Columbia Genomics Center</p>
  *
  * @author Saroja Hanasoge
- * @version $Id: SequencePanelEvent.java,v 1.1.1.1 2005-07-28 22:36:26 watkin Exp $
+ * @version $Id: SequencePanelEvent.java,v 1.2 2005-12-22 18:44:02 watkin Exp $
  */
 
 public class SequencePanelEvent extends Event {
     private String _value = null;
     private DSPanel<DSSequence> _panels = null;
-    private SequenceDB sequenceDB = null;
+    private DSSequenceSet sequenceDB = null;
 
-    public SequencePanelEvent(EventSource source, DSPanel<DSSequence> p, SequenceDB db) {
+    public SequencePanelEvent(EventSource source, DSPanel<DSSequence> p, DSSequenceSet db) {
         super(source);
         _panels = p;
         sequenceDB = db;
@@ -33,11 +33,11 @@ public class SequencePanelEvent extends Event {
         return _panels;
     }
 
-    public void setSequenceDB(SequenceDB sDB) {
+    public void setSequenceDB(DSSequenceSet sDB) {
         sequenceDB = sDB;
     }
 
-    public SequenceDB getSequenceDB() {
+    public DSSequenceSet getSequenceDB() {
         return sequenceDB;
     }
 }

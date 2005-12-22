@@ -1,13 +1,12 @@
 package org.geworkbench.util.patterns;
 
-import org.geworkbench.util.sequences.SequenceDB;
+import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import org.geworkbench.bison.datastructure.complex.pattern.DSMatchedPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.DSPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.DSPatternMatch;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeqPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSSeqRegistration;
-import org.geworkbench.util.patterns.*;
 import org.geworkbench.util.patterns.CSMatchedSeqPattern;
 
 import java.io.BufferedWriter;
@@ -32,7 +31,7 @@ public class FlexiblePattern extends ArrayList<DSPatternMatch<DSSequence, DSSeqR
      * set of offsets. This is implemented by having an array of N offsets
      * and N loci
      */
-    private SequenceDB seqDB = null;
+    private DSSequenceSet seqDB = null;
     public int seqNo = 0;
     public ArrayList patterns = new ArrayList(); // contains the individual patterns
     public ArrayList mLocus = new ArrayList();

@@ -10,6 +10,7 @@ public class Icons {
     public static ImageIcon PROJECT_ICON = new ImageIcon(Icons.class.getResource("project16x16.gif"));
     public static ImageIcon DATASET_ICON = new ImageIcon(Icons.class.getResource("chip16x16.gif"));
     public static ImageIcon PHENOTYPE_ICON = new ImageIcon(Icons.class.getResource("Phenotype16x16.gif"));
+    public static ImageIcon SEQUENCE_ICON = new ImageIcon(Icons.class.getResource("dna16x16.gif"));
     public static ImageIcon DATASUBSET_ICON = new ImageIcon(Icons.class.getResource("Phenotype16x16.gif"));
     public static ImageIcon IMAGE_ICON = new ImageIcon(Icons.class.getResource("image16x16.gif"));
     public static ImageIcon DENDOGRAM_ICON = new ImageIcon(Icons.class.getResource("dendrogram16x16.gif"));

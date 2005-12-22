@@ -5,8 +5,9 @@ import org.geworkbench.util.associationdiscovery.cluster.hierarchical.Node;
 import org.geworkbench.util.remote.Connection;
 import org.geworkbench.util.patterns.CSMatchedHMMSeqPattern;
 import org.geworkbench.util.patterns.CSMatchedSeqPattern;
-import org.geworkbench.util.sequences.SequenceDB;
+import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.CSSequence;
+import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import polgara.soapPD_wsdl.HMMLoci;
 import polgara.soapPD_wsdl.LoginToken;
 import polgara.soapPD_wsdl.Parameters;
@@ -43,7 +44,7 @@ public class Session {
     private SoapPDPortType soapPort;
 
     //the database for this session
-    private SequenceDB database;
+    private DSSequenceSet database;
 
     //the name Session's name.
     private String sessionName;
@@ -78,7 +79,7 @@ public class Session {
      * @param userId       for creating a session
      * @throws SessionCreationException if a a call to the server failed.
      */
-    public Session(String sessionName, SequenceDB database, String databaseName, Connection connection, String userName, int userId) throws SessionCreationException {
+    public Session(String sessionName, DSSequenceSet database, String databaseName, Connection connection, String userName, int userId) throws SessionCreationException {
         /** @todo   fix this  type matching!  ... (dna=0 protein=1 on server)*/
         sType = (database.isDNA()) ? 0 : 1;
 
@@ -102,14 +103,14 @@ public class Session {
      * to the already established session.
      *
      * @param sessionName  String
-     * @param database     SequenceDB
+     * @param database     CSSequenceSet
      * @param databaseName String
      * @param connection   Connection
      * @param userName     String
      * @param userId       int
      * @param sessionId    int
      */
-    public Session(String sessionName, SequenceDB database, String databaseName, Connection connection, String userName, int userId, int sessionId) {
+    public Session(String sessionName, DSSequenceSet database, String databaseName, Connection connection, String userName, int userId, int sessionId) {
         sType = (database.isDNA()) ? 0 : 1;
 
         if (Session.isNormalSession) {
@@ -128,7 +129,7 @@ public class Session {
         logToken.setSessionId(sessionIdInt);
     }
 
-    private void init(String sessionName, SequenceDB database, String databaseName, Connection connection, String userName) {
+    private void init(String sessionName, DSSequenceSet database, String databaseName, Connection connection, String userName) {
         this.database = database;
         this.sessionName = sessionName;
         this.soapPort = connection.getPort();
@@ -152,7 +153,7 @@ public class Session {
             }
 
             try {
-                CSSequence seq = database.getSequence(index);
+                CSSequence seq = (CSSequence)database.getSequence(index);
                 seq.maskRepeats();
                 addSequence(seq.getSequence(), seq.getLabel(), sType);
             } catch (RemoteException exp) {
@@ -236,7 +237,7 @@ public class Session {
      *
      * @return the sequence database
      */
-    public synchronized SequenceDB getSequenceDB() {
+    public synchronized DSSequenceSet getSequenceDB() {
         if (Session.isNormalSession) {
             return database;
         }

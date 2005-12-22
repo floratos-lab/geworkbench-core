@@ -16,8 +16,8 @@ import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import org.geworkbench.bison.datastructure.complex.pattern.DSPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.DSPatternMatch;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSSeqRegistration;
+import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 import org.geworkbench.util.promoter.pattern.Display;
-import org.geworkbench.util.sequences.SequenceDB;
 
 /**
  * <p>Title: </p>
@@ -40,7 +40,7 @@ public class SequencePatternDisplayPanel extends JPanel {
     int maxLen = 1;
 
     int selected = 0;
-    SequenceDB sequenceDB = null;
+    DSSequenceSet sequenceDB = null;
     HashMap patternDisplay = new HashMap();
     Hashtable<DSPattern<DSSequence, DSSeqRegistration>, List<DSPatternMatch<DSSequence, DSSeqRegistration>>> patternMatches = new Hashtable<DSPattern<DSSequence, DSSeqRegistration>, List<DSPatternMatch<DSSequence, DSSeqRegistration>>>();
     JPanel jinfoPanel = null;
@@ -80,7 +80,7 @@ public class SequencePatternDisplayPanel extends JPanel {
 
     }
 
-    public void initialize(SequenceDB seqDB) {
+    public void initialize(DSSequenceSet seqDB) {
         //        selectedPatterns = ar;
         patternMatches.clear();
         patternDisplay.clear();
@@ -140,7 +140,7 @@ public class SequencePatternDisplayPanel extends JPanel {
     private void paintText(Graphics g) throws ArrayIndexOutOfBoundsException {
 
         if (sequenceDB != null) {
-            CSSequence theone = sequenceDB.getSequence(selected);
+            DSSequence theone = sequenceDB.getSequence(selected);
 
             if (theone != null) {
                 Font f = new Font("Courier New", Font.PLAIN, 11);
@@ -304,7 +304,7 @@ public class SequencePatternDisplayPanel extends JPanel {
     void drawSequence(Graphics g, int rowId, int seqId, double len) {
         String lab = ">seq " + seqId;
         if (sequenceDB.getSequenceNo() > 0) {
-            CSSequence theSequence = sequenceDB.getSequence(seqId);
+            DSSequence theSequence = sequenceDB.getSequence(seqId);
             len = (double) theSequence.length();
             lab = theSequence.getLabel();
 

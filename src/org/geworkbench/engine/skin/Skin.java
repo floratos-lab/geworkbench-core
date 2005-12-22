@@ -14,7 +14,6 @@ import org.geworkbench.engine.config.events.AppEventListenerException;
 import org.geworkbench.engine.config.events.EventSource;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.util.JAutoList;
-import org.geworkbench.util.sequences.SequenceDB;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.util.Icons;
 import org.apache.commons.logging.Log;

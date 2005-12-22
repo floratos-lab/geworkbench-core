@@ -12,7 +12,7 @@ import org.geworkbench.bison.datastructure.bioobjects.sequence.CSSequence;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import org.geworkbench.bison.datastructure.complex.pattern.*;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.*;
-import org.geworkbench.util.sequences.SequenceDB;
+import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 import polgara.soapPD_wsdl.SOAPOffset;
 import polgara.soapPD_wsdl.holders.ArrayOfSOAPOffsetHolder;
 
@@ -35,7 +35,7 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence, DSSeqRegis
 
     public IntHolder idNo = new IntHolder();
     public IntHolder seqNo = new IntHolder();
-    protected SequenceDB seqDB = null;
+    protected DSSequenceSet seqDB = null;
     //private ArrayOfintHolder       locusId  = new ArrayOfintHolder();
     //private ArrayOfintHolder       locusOff = new ArrayOfintHolder();
     // locus is a bytecoded int array, where each group of 8 bytes
@@ -54,7 +54,7 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence, DSSeqRegis
         rand_hash = new java.util.Random().nextInt();
     }
 
-    public CSMatchedSeqPattern(SequenceDB _seqDB) {
+    public CSMatchedSeqPattern(DSSequenceSet _seqDB) {
         seqDB = _seqDB;
         pattern = this;
         rand_hash = new java.util.Random().nextInt();
@@ -307,7 +307,7 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence, DSSeqRegis
         }
     }
 
-    public CSSequence getObject(int i) throws IndexOutOfBoundsException {
+    public DSSequence getObject(int i) throws IndexOutOfBoundsException {
         if ((seqDB != null) && (i < getSupport())) {
             return seqDB.getSequence(this.getId(i));
         }
@@ -331,11 +331,11 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence, DSSeqRegis
         return getASCII();
     }
 
-    public SequenceDB getSeqDB() {
+    public DSSequenceSet getSeqDB() {
         return seqDB;
     }
 
-    public void setSeqDB(SequenceDB seqDB) {
+    public void setSeqDB(DSSequenceSet seqDB) {
         this.seqDB = seqDB;
     }
 

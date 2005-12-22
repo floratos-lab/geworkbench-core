@@ -1,21 +1,19 @@
-package org.geworkbench.util.sequences;
+package org.geworkbench.bison.datastructure.biocollections.sequences;
 
 import org.geworkbench.bison.util.RandomNumberGenerator;
+import org.geworkbench.bison.util.Icons;
 import org.geworkbench.bison.datastructure.bioobjects.markers.SequenceMarker;
 import org.geworkbench.engine.parsers.sequences.SequenceResource;
 import org.geworkbench.bison.datastructure.biocollections.CSDataSet;
-import org.geworkbench.bison.datastructure.biocollections.DSCollection;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.CSSequence;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import org.geworkbench.bison.datastructure.complex.panels.CSSequentialItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
-import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.parsers.resources.Resource;
 
 import javax.swing.*;
 import java.io.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -28,23 +26,11 @@ import java.util.HashMap;
  * @version 1.0
  */
 
-public class SequenceDB extends CSDataSet<DSSequence> implements DSCollection<
-        DSSequence> {
-//    private final static ObjectStreamField[] serialPersistentFields = {new
-//            ObjectStreamField("dirty", boolean.class),
-//            new ObjectStreamField("isDNA", boolean.class),
-//                           new ObjectStreamField("label", String.class),
-//                           new ObjectStreamField("sequenceNo", int.class),
-//                           new ObjectStreamField("file", File.class),
-//                           new ObjectStreamField("sequences", ArrayList.class),
-//                           new ObjectStreamField("maxLength", int.class),
-//                           new ObjectStreamField("genePanel", DSPanel.class)};
+public class CSSequenceSet<T extends DSSequence> extends CSDataSet<T> implements DSSequenceSet<T> {
 
-    static public ImageIcon icon = new ImageIcon(SequenceDB.class.getResource(
-            "dna16x16.GIF"));
+    static public ImageIcon icon = Icons.SEQUENCE_ICON;
     static private HashMap databases = new HashMap();
     private boolean dirty = false;
-    private SequenceResource seqResource = null;
     private boolean isDNA = true;
     //private ArrayList sequences = new ArrayList();
     private int maxLength = 0;
@@ -57,7 +43,7 @@ public class SequenceDB extends CSDataSet<DSSequence> implements DSCollection<
     private int[] matchIndex;
     private int[] reverseIndex;
 
-    public SequenceDB() {
+    public CSSequenceSet() {
         setID(RandomNumberGenerator.getID());
     }
 
@@ -65,7 +51,7 @@ public class SequenceDB extends CSDataSet<DSSequence> implements DSCollection<
         return label;
     }
 
-    public void addASequence(CSSequence sequence) {
+    public void addASequence(T sequence) {
         if (!sequence.isDNA()) {
             isDNA = false;
         }
@@ -87,12 +73,12 @@ public class SequenceDB extends CSDataSet<DSSequence> implements DSCollection<
         return this.size();
     }
 
-    public CSSequence getSequence(int i) {
+    public T getSequence(int i) {
         if ((this.size() == 0) && (file != null)) {
             readFASTAfile(file);
         }
         if (i < this.size() && i >= 0) {
-            return (CSSequence)this.get(i);
+            return this.get(i);
         } else {
             return null;
         }
@@ -106,8 +92,8 @@ public class SequenceDB extends CSDataSet<DSSequence> implements DSCollection<
         return isDNA;
     }
 
-    public static SequenceDB createFASTAfile(File file) {
-        SequenceDB seqDB = new SequenceDB();
+    public static DSSequenceSet createFASTAfile(File file) {
+        CSSequenceSet seqDB = new CSSequenceSet();
         seqDB.readFASTAfile(file);
         return seqDB;
     }
@@ -118,7 +104,7 @@ public class SequenceDB extends CSDataSet<DSSequence> implements DSCollection<
 
         try {
             BufferedReader reader = new BufferedReader(new FileReader(file));
-            CSSequence sequence = null;
+            T sequence = null;
             String data = new String();
             String s = reader.readLine();
             int id = 0;
@@ -130,7 +116,7 @@ public class SequenceDB extends CSDataSet<DSSequence> implements DSCollection<
                         sequence.setSequence(data);
                         addASequence(sequence);
                     }
-                    sequence = new CSSequence();
+                    sequence = (T)(new CSSequence());
                     sequence.setLabel(s);
                     data = new String();
                 } else {
@@ -180,14 +166,6 @@ public class SequenceDB extends CSDataSet<DSSequence> implements DSCollection<
 
     }
 
-    public void setResource(Resource resource) {
-        seqResource = (SequenceResource) resource;
-    }
-
-    public void removeResource(Resource resource) {
-        seqResource = null;
-    }
-
     public void readFromResource() {
 
     }
@@ -233,10 +211,10 @@ public class SequenceDB extends CSDataSet<DSSequence> implements DSCollection<
         return icon;
     }
 
-    static public SequenceDB getSequenceDB(File file) {
-        SequenceDB sequenceDB = (SequenceDB) databases.get(file.getPath());
+    static public CSSequenceSet getSequenceDB(File file) {
+        CSSequenceSet sequenceDB = (CSSequenceSet) databases.get(file.getPath());
         if (sequenceDB == null) {
-            sequenceDB = new SequenceDB();
+            sequenceDB = new CSSequenceSet();
             sequenceDB.readFASTAfile(file);
         }
         return sequenceDB;
@@ -268,7 +246,7 @@ public class SequenceDB extends CSDataSet<DSSequence> implements DSCollection<
         return markerList;
     }
 
-    @Override public DSSequence get(String label){
+    @Override public T get(String label){
         DSGeneMarker marker = getMarkerList().get(label);
         if (marker != null)
             return get(marker.getSerial());
@@ -283,8 +261,8 @@ public class SequenceDB extends CSDataSet<DSSequence> implements DSCollection<
         return reverseIndex;
     }
 
-    public SequenceDB createSubSetSequenceDB(boolean[] included) {
-        SequenceDB newDB = new SequenceDB();
+    public DSSequenceSet createSubSetSequenceDB(boolean[] included) {
+        DSSequenceSet newDB = new CSSequenceSet();
         int newIndex = 0;
         initIndexArray();
         for (int i = 0; i < included.length; i++) {
@@ -305,7 +283,7 @@ public class SequenceDB extends CSDataSet<DSSequence> implements DSCollection<
         try {
             BufferedWriter out = new BufferedWriter(new FileWriter(file));
             for (int i = 0; i < this.getSequenceNo(); i++) {
-                CSSequence s = this.getSequence(i);
+                T s = this.getSequence(i);
                 out.write(">" + s.getLabel() + "\n");
                 out.write(s.getSequence() + "\n");
             }

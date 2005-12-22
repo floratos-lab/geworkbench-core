@@ -4,7 +4,7 @@ import org.geworkbench.util.patterns.CSMatchedHMMSeqPattern;
 import org.geworkbench.util.patterns.CSMatchedSeqPattern;
 import org.geworkbench.util.patterns.FlexiblePattern;
 import org.geworkbench.util.patterns.PatternOperations;
-import org.geworkbench.util.sequences.SequenceDB;
+import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 import org.geworkbench.bison.datastructure.biocollections.DSCollection;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.CSSequence;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
@@ -35,7 +35,7 @@ public class SequenceViewWidgetPanel extends JPanel {
     //ArrayList  selectedPatterns   = null;
     DSCollection<DSMatchedPattern<DSSequence,
             DSSeqRegistration>> selectedPatterns = null;
-    SequenceDB sequenceDB = null;
+    DSSequenceSet sequenceDB = null;
     boolean showAll = false;
 
     public SequenceViewWidgetPanel() {
@@ -58,9 +58,9 @@ public class SequenceViewWidgetPanel extends JPanel {
         }
     }
 
-    //public void initialize(ArrayList patterns, SequenceDB seqDB) {
+    //public void initialize(ArrayList patterns, CSSequenceSet seqDB) {
     public void initialize(DSCollection<DSMatchedPattern<DSSequence,
-                           DSSeqRegistration>> matches, SequenceDB seqDB) {
+                           DSSeqRegistration>> matches, DSSequenceSet seqDB) {
         selectedPatterns = matches;
         sequenceDB = seqDB;
         repaint();
@@ -219,7 +219,7 @@ public class SequenceViewWidgetPanel extends JPanel {
     void drawSequence(Graphics g, int rowId, int seqId, double len) {
         String lab = ">seq " + seqId;
         if (sequenceDB.getSequenceNo() > 0) {
-            CSSequence theSequence = sequenceDB.getSequence(seqId);
+            DSSequence theSequence = sequenceDB.getSequence(seqId);
             len = (double) theSequence.length();
             lab = theSequence.getLabel();
 

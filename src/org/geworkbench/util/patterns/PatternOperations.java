@@ -1,8 +1,7 @@
 package org.geworkbench.util.patterns;
 
-import org.geworkbench.util.sequences.SequenceDB;
+import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeqPattern;
-import org.geworkbench.util.patterns.*;
 import org.geworkbench.util.patterns.CSMatchedSeqPattern;
 import polgara.soapPD_wsdl.SOAPOffset;
 
@@ -54,7 +53,7 @@ public class PatternOperations {
         return c;
     }
 
-    static public void fill(DSMatchedSeqPattern pattern, SequenceDB sDB) {
+    static public void fill(DSMatchedSeqPattern pattern, DSSequenceSet sDB) {
         if (pattern.getClass().isAssignableFrom(org.geworkbench.util.patterns.CSMatchedSeqPattern.class)) {
             CSMatchedSeqPattern p = (CSMatchedSeqPattern) pattern;
             String ascii = new String();

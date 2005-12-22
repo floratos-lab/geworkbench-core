@@ -6,8 +6,7 @@ import org.apache.axis.types.UnsignedInt;
 import org.geworkbench.util.associationdiscovery.cluster.hierarchical.Node;
 import org.geworkbench.util.remote.GlobusConnection;
 import org.geworkbench.util.patterns.CSMatchedHMMSeqPattern;
-import org.geworkbench.util.patterns.CSMatchedSeqPattern;
-import org.geworkbench.util.sequences.SequenceDB;
+import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.CSSequence;
 
 import javax.xml.rpc.holders.ByteArrayHolder;
@@ -40,7 +39,7 @@ public class GlobusSession {
     private SoapPDPortType soapPort;
 
     //the database for this session
-    private SequenceDB database;
+    private DSSequenceSet database;
 
     //the name Session's name.
     private String sessionName;
@@ -74,7 +73,7 @@ public class GlobusSession {
      * @param userId       for creating a session
      * @throws SessionCreationException if a a call to the server failed.
      */
-    public GlobusSession(String sessionName, SequenceDB database, String databaseName, GlobusConnection connection, String userName, int userId) throws SessionCreationException {
+    public GlobusSession(String sessionName, DSSequenceSet database, String databaseName, GlobusConnection connection, String userName, int userId) throws SessionCreationException {
         try {
             init(sessionName, database, databaseName, connection, userName);
 
@@ -94,14 +93,14 @@ public class GlobusSession {
      * to the already established session.
      *
      * @param sessionName  String
-     * @param database     SequenceDB
+     * @param database     CSSequenceSet
      * @param databaseName String
      * @param connection   Connection
      * @param userName     String
      * @param userId       int
      * @param sessionId    int
      */
-    public GlobusSession(String sessionName, SequenceDB database, String databaseName, GlobusConnection connection, String userName, int userId, int sessionId) {
+    public GlobusSession(String sessionName, DSSequenceSet database, String databaseName, GlobusConnection connection, String userName, int userId, int sessionId) {
         init(sessionName, database, databaseName, connection, userName);
         sType = (database.isDNA()) ? 0 : 1;
         setLogToken(userId, sessionId);
@@ -115,7 +114,7 @@ public class GlobusSession {
         logToken.setSessionId(sessionIdInt);
     }
 
-    private void init(String sessionName, SequenceDB database, String databaseName, GlobusConnection connection, String userName) {
+    private void init(String sessionName, DSSequenceSet database, String databaseName, GlobusConnection connection, String userName) {
         this.database = database;
         this.sessionName = sessionName;
         this.soapPort = connection.getPort();
@@ -138,7 +137,7 @@ public class GlobusSession {
         }
 
         try {
-            CSSequence seq = database.getSequence(index);
+            CSSequence seq = (CSSequence)database.getSequence(index);
             seq.maskRepeats();
             addSequence(seq.getSequence(), seq.getLabel(), sType);
         } catch (RemoteException exp) {
@@ -214,7 +213,7 @@ public class GlobusSession {
      *
      * @return the sequence database
      */
-    public synchronized SequenceDB getSequenceDB() {
+    public synchronized DSSequenceSet getSequenceDB() {
         return database;
     }
 

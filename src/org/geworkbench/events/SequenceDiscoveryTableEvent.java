@@ -14,7 +14,7 @@ import org.geworkbench.engine.config.events.Event;
  * <p>Company: Columbia Genomics Center</p>
  *
  * @author Saroja Hanasoge
- * @version $Id: SequenceDiscoveryTableEvent.java,v 1.1.1.1 2005-07-28 22:36:26 watkin Exp $
+ * @version $Id: SequenceDiscoveryTableEvent.java,v 1.2 2005-12-22 18:44:02 watkin Exp $
  */
 
 public class SequenceDiscoveryTableEvent extends Event {
@@ -32,7 +32,7 @@ public class SequenceDiscoveryTableEvent extends Event {
 
 
     /*
-    private SequenceDB sequenceDB = null;
+    private CSSequenceSet sequenceDB = null;
     private Pattern[]  patterns   = null;
     private Parameters parms = null;
 
@@ -49,11 +49,11 @@ public class SequenceDiscoveryTableEvent extends Event {
         patterns = _patterns;
     }
 
-    public SequenceDB getSequenceDB() {
+    public CSSequenceSet getSequenceDB() {
         return sequenceDB;
     }
 
-    public void setSequenceDB(SequenceDB seqDB) {
+    public void setSequenceDB(CSSequenceSet seqDB) {
         sequenceDB = seqDB;
     }
 

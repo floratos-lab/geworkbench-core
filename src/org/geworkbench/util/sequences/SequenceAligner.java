@@ -11,6 +11,9 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.geworkbench.bison.datastructure.biocollections.sequences.CSSequenceSet;
+import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
+
 /**
  * <p>Title: Preliminary class written to calculate sequence entropy and profileHMMs</p>
  * <p>Description: Still in development phase</p>
@@ -22,7 +25,7 @@ import java.util.regex.Pattern;
  */
 
 public class SequenceAligner { //rename to entropy calculator?
-    private SequenceDB sequenceDB = null;
+    private DSSequenceSet sequenceDB = null;
     private SoapPDPortType port = null;
     private int handle = -1;
     private int index = -1;
@@ -58,7 +61,7 @@ public class SequenceAligner { //rename to entropy calculator?
     private static int splashAlignCount = 0;
     //private static int hmmBuildOutputCount = 0;
 
-    public SequenceAligner(SequenceDB sDB) {
+    public SequenceAligner(DSSequenceSet sDB) {
         sequenceDB = sDB;
         aminoAcids.put("A", new Integer(0)); //Alanine
         aminoAcids.put("R", new Integer(1)); //Arginine
@@ -510,7 +513,7 @@ public class SequenceAligner { //rename to entropy calculator?
 
     public void setSequenceDB(String fileName) {
         File f = new File(fileName);
-        sequenceDB = SequenceDB.getSequenceDB(f);
+        sequenceDB = CSSequenceSet.getSequenceDB(f);
     }
 
     public String getSPLASHalignFileName() {
@@ -521,7 +524,7 @@ public class SequenceAligner { //rename to entropy calculator?
         return hmmAlignFile;
     }
 
-    public void setSequenceDB(SequenceDB sDB) {
+    public void setSequenceDB(DSSequenceSet sDB) {
         sequenceDB = sDB;
     }
 
