@@ -275,7 +275,7 @@ public class RemoteResourceDialog extends JDialog {
         RemoteResource rr = collectResourceInfo();
         if (rr != null) {
             if(previousResourceName != null && !previousResourceName.equals(currentResourceName)){
-                remoteResourceManager.deleteRemoteResource(previousResourceName);
+                //remoteResourceManager.deleteRemoteResource(previousResourceName);
             }
             remoteResourceManager.addRemoteResource(rr);
             remoteResourceManager.saveToFile();

@@ -30,8 +30,10 @@ public class RemoteResourceManager {
         if (filename != null && new File(filename).canRead()) {
 
             init(new File(filename));
-            deleteRemoteResource("caARRAY");
-            init();
+
+            //changed for bug 395
+//            deleteRemoteResource("caARRAY");
+//            init();
         } else {
             init();
         }
