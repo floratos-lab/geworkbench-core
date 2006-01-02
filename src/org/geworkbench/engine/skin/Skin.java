@@ -576,7 +576,11 @@ public class Skin extends GUIFramework {
         public void stateChanged(ChangeEvent e) {
             if ((currentDataSet != null) && !tabSwappingMode) {
                 int index = pane.getSelectedIndex();
-                lastSelected.put(currentDataSet, pane.getTitleAt(index));
+                try {
+                    lastSelected.put(currentDataSet, pane.getTitleAt(index));
+                } catch (Exception e1) {
+                    log.warn(e1);
+                }
             }
         }
     }
