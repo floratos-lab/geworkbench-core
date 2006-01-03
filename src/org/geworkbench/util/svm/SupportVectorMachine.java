@@ -71,7 +71,9 @@ public class SupportVectorMachine {
     private double discriminant(float[] input) {
         double v = 0;
         for (int i = 0; i < n; i++) {
-            v += lambda[i] * trainingClassifications[i] * kernel.eval(input, trainingSet.get(i));
+            if (lambda[i] > 0) {
+                v += lambda[i] * trainingClassifications[i] * kernel.eval(input, trainingSet.get(i));
+            }
         }
         return v;
     }
@@ -79,7 +81,9 @@ public class SupportVectorMachine {
     private double objective() {
         double v = 0;
         for (int i = 0; i < n; i++) {
-            v += lambda[i] * (2 - trainingClassifications[i] * discriminant(trainingSet.get(i)));
+            if (lambda[i] > 0) {
+                v += lambda[i] * (2 - trainingClassifications[i] * discriminant(trainingSet.get(i)));
+            }
         }
         return v;
     }
