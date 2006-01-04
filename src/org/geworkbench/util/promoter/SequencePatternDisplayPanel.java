@@ -87,7 +87,14 @@ public class SequencePatternDisplayPanel extends JPanel {
         sequenceDB = seqDB;
         repaint();
     }
+//Reset, added by xq.
+    public void initialize( ) {
 
+           patternMatches.clear();
+           patternDisplay.clear();
+           sequenceDB = null;
+           repaint();
+    }
     public void flipIsText() {
 
         isText = !isText;
@@ -132,6 +139,8 @@ public class SequencePatternDisplayPanel extends JPanel {
             int maxY = (seqNo + 1) * yStep + yOff;
             setPreferredSize(new Dimension(this.getWidth() - yOff, maxY));
             revalidate();
+
+        }else{
 
         }
 
