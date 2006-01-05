@@ -15,6 +15,7 @@ import org.geworkbench.bison.parsers.resources.Resource;
 import javax.swing.*;
 import java.io.*;
 import java.util.HashMap;
+import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 
 /**
  * <p>Title: </p>
@@ -83,6 +84,34 @@ public class CSSequenceSet<T extends DSSequence> extends CSDataSet<T> implements
             return null;
         }
     }
+
+    public T getSequence(DSGeneMarker marker) {
+    if ((this.size() == 0) && (file != null)) {
+        readFASTAfile(file);
+    }
+    if (markerList.contains(marker)) {
+        int i = markerList.indexOf(marker);
+        return this.get(i);
+    } else {
+        return null;
+    }
+}
+
+public DSSequenceSet getActiveSequenceSet(DSPanel<? extends DSGeneMarker> markerPanel){
+    DSSequenceSet sequenceDB = new CSSequenceSet();
+    if(markerPanel!=null && markerPanel.size()>0){
+        for(DSGeneMarker marker: markerPanel){
+
+                T newSequence = this.getSequence(marker);
+                 if(newSequence!=null){
+                sequenceDB.addASequence(newSequence);
+            }
+        }
+    }
+    return sequenceDB;
+}
+
+
 
     public int getMaxLength() {
         return maxLength;
@@ -252,7 +281,7 @@ public class CSSequenceSet<T extends DSSequence> extends CSDataSet<T> implements
             return get(marker.getSerial());
         return super.get(label);
     }
-    
+
     public int[] getMatchIndex() {
         return matchIndex;
     }
