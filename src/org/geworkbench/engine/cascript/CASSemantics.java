@@ -1,5 +1,5 @@
-// $ANTLR 2.7.5 (20050128): "CAS.g" -> "CASWalker.java"$
-package org.geworkbench.engine.cascript; import java.lang.*; import javax.swing.JOptionPane;
+// $ANTLR 2.7.5 (20050128): "Semantics.g" -> "CASSemantics.java"$
+package org.geworkbench.engine.cascript;
 import antlr.TreeParser;
 import antlr.Token;
 import antlr.collections.AST;
@@ -21,12 +21,12 @@ import antlr.collections.impl.BitSet;
 import java.util.Vector;
 
 
-public class CASWalker extends antlr.TreeParser       implements CASWalkerTokenTypes
+public class CASSemantics extends antlr.TreeParser       implements CASSemanticsTokenTypes
  {
 
-    CasInterpreter ipt = new CasInterpreter();
+    CasPreInterpreter ipt = new CasPreInterpreter();
     AST mainbody = null;
-public CASWalker() {
+public CASSemantics() {
 	tokenNames = _tokenNames;
 }
 
@@ -38,12 +38,12 @@ public CASWalker() {
 		AST walkme_AST_in = (_t == ASTNULL) ? null : (AST)_t;
 		
 		try {      // for error handling
-			AST __t172 = _t;
+			AST __t2 = _t;
 			AST tmp1_AST_in = (AST)_t;
 			match(_t,PROG);
 			_t = _t.getFirstChild();
 			{
-			_loop174:
+			_loop4:
 			do {
 				if (_t==null) _t=ASTNULL;
 				if ((_t.getType()==PUBLICVAR)) {
@@ -51,14 +51,14 @@ public CASWalker() {
 					_t = _retTree;
 				}
 				else {
-					break _loop174;
+					break _loop4;
 				}
 				
 			} while (true);
 			}
 			{
-			int _cnt176=0;
-			_loop176:
+			int _cnt6=0;
+			_loop6:
 			do {
 				if (_t==null) _t=ASTNULL;
 				if ((_t.getType()==FUNCTION)) {
@@ -66,20 +66,20 @@ public CASWalker() {
 					_t = _retTree;
 				}
 				else {
-					if ( _cnt176>=1 ) { break _loop176; } else {throw new NoViableAltException(_t);}
+					if ( _cnt6>=1 ) { break _loop6; } else {throw new NoViableAltException(_t);}
 				}
 				
-				_cnt176++;
+				_cnt6++;
 			} while (true);
 			}
-			_t = __t172;
+			_t = __t2;
 			_t = _t.getNextSibling();
 			
 			//make new symboltable for main
-			ipt.symt = new CasSymbolTable(ipt.symt, ipt.symt.getLevel()+1);
+			ipt.psymt = new CasPreSymbolTable(ipt.psymt, ipt.psymt.getLevel()+1);
 			fbody(mainbody);
 			//get rid of main's symbol table
-			ipt.symt = ipt.symt.Parent();
+			ipt.psymt = ipt.psymt.Parent();
 			
 		}
 		catch (RecognitionException ex) {
@@ -97,13 +97,13 @@ public CASWalker() {
 		AST publicvar_AST_in = (_t == ASTNULL) ? null : (AST)_t;
 		
 		try {      // for error handling
-			AST __t178 = _t;
+			AST __t8 = _t;
 			AST tmp2_AST_in = (AST)_t;
 			match(_t,PUBLICVAR);
 			_t = _t.getFirstChild();
 			variable(_t);
 			_t = _retTree;
-			_t = __t178;
+			_t = __t8;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -127,7 +127,7 @@ public CASWalker() {
 		CasArgument temp = null;
 		
 		try {      // for error handling
-			AST __t180 = _t;
+			AST __t10 = _t;
 			AST tmp3_AST_in = (AST)_t;
 			match(_t,FUNCTION);
 			_t = _t.getFirstChild();
@@ -135,7 +135,7 @@ public CASWalker() {
 			typereturn=type(_t);
 			_t = _retTree;
 			{
-			_loop183:
+			_loop13:
 			do {
 				if (_t==null) _t=ASTNULL;
 				if ((_t.getType()==LEFTBRACKET)) {
@@ -148,7 +148,7 @@ public CASWalker() {
 					brackets++;
 				}
 				else {
-					break _loop183;
+					break _loop13;
 				}
 				
 			} while (true);
@@ -163,13 +163,13 @@ public CASWalker() {
 			fbody = (AST)_t;
 			if ( _t==null ) throw new MismatchedTokenException();
 			_t = _t.getNextSibling();
-			_t = __t180;
+			_t = __t10;
 			_t = _t.getNextSibling();
 			
 			if (id.equals("main")) {
 			mainbody = fbody;
 			}
-			ipt.makeFunction(id, argList, fbody, ipt.symt, typereturn, brackets);
+			ipt.makeFunction(id, argList, fbody, ipt.psymt, typereturn, brackets);
 			
 		}
 		catch (RecognitionException ex) {
@@ -186,24 +186,24 @@ public CASWalker() {
 		
 		AST variable_AST_in = (_t == ASTNULL) ? null : (AST)_t;
 		String id = "";
-		CasDataType value = null;
+		CasPreData value = null;
 		CasDataType typereturn;
-		Vector<CasDataType> indices = null;
+		Vector<CasPreData> indices = null;
 		
 		try {      // for error handling
-			AST __t191 = _t;
+			AST __t21 = _t;
 			AST tmp7_AST_in = (AST)_t;
 			match(_t,VARIABLE);
 			_t = _t.getFirstChild();
 			typereturn=type(_t);
 			_t = _retTree;
 			{
-			int _cnt197=0;
-			_loop197:
+			int _cnt27=0;
+			_loop27:
 			do {
 				if (_t==null) _t=ASTNULL;
 				if ((_t.getType()==IDENTIFIER)) {
-					AST __t193 = _t;
+					AST __t23 = _t;
 					AST tmp8_AST_in = (AST)_t;
 					match(_t,IDENTIFIER);
 					_t = _t.getFirstChild();
@@ -230,20 +230,20 @@ public CASWalker() {
 					}
 					}
 					}
-					_t = __t193;
+					_t = __t23;
 					_t = _t.getNextSibling();
 					{
 					if (_t==null) _t=ASTNULL;
 					switch ( _t.getType()) {
 					case EQUAL:
 					{
-						AST __t196 = _t;
+						AST __t26 = _t;
 						AST tmp10_AST_in = (AST)_t;
 						match(_t,EQUAL);
 						_t = _t.getFirstChild();
 						value=expr(_t);
 						_t = _retTree;
-						_t = __t196;
+						_t = __t26;
 						_t = _t.getNextSibling();
 						break;
 					}
@@ -259,7 +259,7 @@ public CASWalker() {
 					}
 					}
 					
-					if (ipt.symt.existsinscope(id)) {
+					if (ipt.psymt.existsinscope(id)) {
 					throw new CasException(id + " already exists as a function or variable");
 					}
 					ipt.putvar(id, typereturn, indices, value);
@@ -268,13 +268,13 @@ public CASWalker() {
 					
 				}
 				else {
-					if ( _cnt197>=1 ) { break _loop197; } else {throw new NoViableAltException(_t);}
+					if ( _cnt27>=1 ) { break _loop27; } else {throw new NoViableAltException(_t);}
 				}
 				
-				_cnt197++;
+				_cnt27++;
 			} while (true);
 			}
-			_t = __t191;
+			_t = __t21;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -302,7 +302,7 @@ public CASWalker() {
 		
 		
 		try {      // for error handling
-			AST __t203 = _t;
+			AST __t33 = _t;
 			AST tmp11_AST_in = (AST)_t;
 			match(_t,TYPE);
 			_t = _t.getFirstChild();
@@ -310,10 +310,10 @@ public CASWalker() {
 			if (_t==null) _t=ASTNULL;
 			switch ( _t.getType()) {
 			case INT:
-			case FLOAT:
+			case DOUBLE:
+			case BOOLSTR:
 			case STRING:
 			case VOID:
-			case LITERAL_boolean:
 			{
 				n = _t==ASTNULL ? null : (AST)_t;
 				primitives(_t);
@@ -352,7 +352,7 @@ public CASWalker() {
 			}
 			}
 			}
-			_t = __t203;
+			_t = __t33;
 			_t = _t.getNextSibling();
 			
 			if (isdiff == 1) {
@@ -367,7 +367,7 @@ public CASWalker() {
 			typereturn = new CasVoid();
 			else if (temp.equals("int"))
 			typereturn = new CasInt(0);
-			else if (temp.equals("float"))
+			else if (temp.equals("double"))
 			typereturn = new CasDouble(0);
 			else if (temp.equals("boolean"))
 			typereturn = new CasBool(false);
@@ -397,12 +397,12 @@ public CASWalker() {
 		CasDataType typereturn = null;
 		
 		try {      // for error handling
-			AST __t185 = _t;
+			AST __t15 = _t;
 			AST tmp16_AST_in = (AST)_t;
 			match(_t,ARGDEC);
 			_t = _t.getFirstChild();
 			{
-			_loop189:
+			_loop19:
 			do {
 				if (_t==null) _t=ASTNULL;
 				if ((_t.getType()==TYPE)) {
@@ -447,12 +447,12 @@ public CASWalker() {
 					temp = null;
 				}
 				else {
-					break _loop189;
+					break _loop19;
 				}
 				
 			} while (true);
 			}
-			_t = __t185;
+			_t = __t15;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -466,20 +466,20 @@ public CASWalker() {
 /**
  *index keeps track of all the indices that are defined in an variable declaration
 */
-	public final Vector<CasDataType>  index(AST _t) throws RecognitionException {
-		Vector<CasDataType> v;
+	public final Vector<CasPreData>  index(AST _t) throws RecognitionException {
+		Vector<CasPreData> v;
 		
 		AST index_AST_in = (_t == ASTNULL) ? null : (AST)_t;
-		v = new Vector<CasDataType>();
-		CasDataType aindex = null;
+		v = new Vector<CasPreData>();
+		CasPreData aindex = null;
 		
 		try {      // for error handling
-			AST __t199 = _t;
+			AST __t29 = _t;
 			AST tmp20_AST_in = (AST)_t;
 			match(_t,INDEX);
 			_t = _t.getFirstChild();
 			{
-			_loop201:
+			_loop31:
 			do {
 				if (_t==null) _t=ASTNULL;
 				if ((_tokenSet_0.member(_t.getType()))) {
@@ -488,12 +488,12 @@ public CASWalker() {
 					v.add(aindex);
 				}
 				else {
-					break _loop201;
+					break _loop31;
 				}
 				
 			} while (true);
 			}
-			_t = __t199;
+			_t = __t29;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -507,8 +507,8 @@ public CASWalker() {
 /**
  * expr is a big deal, it deals with almost everything the language can throw at it
 */
-	public final CasDataType  expr(AST _t) throws RecognitionException {
-		CasDataType r;
+	public final CasPreData  expr(AST _t) throws RecognitionException {
+		CasPreData r;
 		
 		AST expr_AST_in = (_t == ASTNULL) ? null : (AST)_t;
 		AST str = null;
@@ -526,10 +526,10 @@ public CASWalker() {
 		AST right_and = null;
 		
 		r = null;
-		CasDataType a,b;
+		CasPreData a = null,b = null;
 		String id = "";
 		String id2 = "";
-		Vector<CasDataType> arglist = null;
+		Vector<CasPreData> arglist = null;
 		
 		
 		try {      // for error handling
@@ -540,15 +540,15 @@ public CASWalker() {
 				AST tmp21_AST_in = (AST)_t;
 				match(_t,NUM_INT);
 				_t = _t.getNextSibling();
-				r = new CasInt(Integer.parseInt(tmp21_AST_in.getText()));
+				r = new CasPreData(new CasInt(Integer.parseInt(tmp21_AST_in.getText())), false, true, true);
 				break;
 			}
-			case NUM_FLOAT:
+			case NUM_DOUBLE:
 			{
 				AST tmp22_AST_in = (AST)_t;
-				match(_t,NUM_FLOAT);
+				match(_t,NUM_DOUBLE);
 				_t = _t.getNextSibling();
-				r = new CasDouble(Double.parseDouble(tmp22_AST_in.getText()));
+				r = new CasPreData(new CasDouble(Double.parseDouble(tmp22_AST_in.getText())), false, true, true);
 				break;
 			}
 			case TRUE:
@@ -556,7 +556,7 @@ public CASWalker() {
 				AST tmp23_AST_in = (AST)_t;
 				match(_t,TRUE);
 				_t = _t.getNextSibling();
-				r = new CasBool(true);
+				r = new CasPreData(new CasBool(true), false, true, true);
 				break;
 			}
 			case FALSE:
@@ -564,12 +564,12 @@ public CASWalker() {
 				AST tmp24_AST_in = (AST)_t;
 				match(_t,FALSE);
 				_t = _t.getNextSibling();
-				r = new CasBool(false);
+				r = new CasPreData(new CasBool(false), false, true, true);
 				break;
 			}
 			case IDENTIFIER:
 			{
-				AST __t212 = _t;
+				AST __t42 = _t;
 				AST tmp25_AST_in = (AST)_t;
 				match(_t,IDENTIFIER);
 				_t = _t.getFirstChild();
@@ -596,7 +596,7 @@ public CASWalker() {
 				}
 				}
 				}
-				_t = __t212;
+				_t = __t42;
 				_t = _t.getNextSibling();
 				
 				if (arglist == null)
@@ -611,19 +611,19 @@ public CASWalker() {
 				str = (AST)_t;
 				match(_t,String);
 				_t = _t.getNextSibling();
-				r = new CasString( str.getText().toString() );
+				r = new CasPreData(new CasString( str.getText().toString()), false, true, true);
 				break;
 			}
 			case VARIABLE:
 			{
 				variable(_t);
 				_t = _retTree;
-				r = new CasBool(true);
+				r = new CasPreData(new CasVariable("variable declaration"), false, false, false);
 				break;
 			}
 			case ASSIGNMENT:
 			{
-				AST __t214 = _t;
+				AST __t44 = _t;
 				AST tmp27_AST_in = (AST)_t;
 				match(_t,ASSIGNMENT);
 				_t = _t.getFirstChild();
@@ -631,14 +631,16 @@ public CASWalker() {
 				_t = _retTree;
 				b=expr(_t);
 				_t = _retTree;
-				_t = __t214;
+				_t = __t44;
 				_t = _t.getNextSibling();
-				r = ipt.assign(a,b);
+				
+				r = ipt.assign(a,b); //for assign, remember to use b's flag to affect a's flags
+				
 				break;
 			}
 			case OBJECT_VALUE:
 			{
-				AST __t215 = _t;
+				AST __t45 = _t;
 				AST tmp28_AST_in = (AST)_t;
 				match(_t,OBJECT_VALUE);
 				_t = _t.getFirstChild();
@@ -649,12 +651,12 @@ public CASWalker() {
 				ID21 = (AST)_t;
 				match(_t,ID);
 				_t = _t.getNextSibling();
-				_t = __t215;
+				_t = __t45;
 				_t = _t.getNextSibling();
 				id2 = ID21.getText();
-				if (ipt.symt.findVar(id) instanceof CasModule) {
+				if (ipt.psymt.findVar(id).getData() instanceof CasModule) {
 				//should you be checking if id a CasModule in the firstplace?
-				r = new CasValue(id, id2, ((CasModule)ipt.symt.findVar(id)));
+				r = new CasPreData(new CasValue(id, id2, ((CasModule)ipt.psymt.findVar(id).getData())), true, true, false);
 				/*Testing purposes System.out.println("we're in object_value");*/
 				}
 				else {
@@ -665,7 +667,7 @@ public CASWalker() {
 			}
 			case OBJECT_CALL:
 			{
-				AST __t216 = _t;
+				AST __t46 = _t;
 				AST tmp30_AST_in = (AST)_t;
 				match(_t,OBJECT_CALL);
 				_t = _t.getFirstChild();
@@ -678,66 +680,66 @@ public CASWalker() {
 				_t = _t.getNextSibling();
 				arglist=param(_t);
 				_t = _retTree;
-				_t = __t216;
+				_t = __t46;
 				_t = _t.getNextSibling();
 				id2 = ID22.getText();
 				//r has to be something different, it has to come from MethodCall
 				//MethodCall should tell the difference between a CasModule and a CasDataPlug
 				/*Testing purposes
 				System.out.println("we're in object_call");*/
-				r = ipt.checkCasCallReturn(new CasCallReturn(ipt.MethodCall(id, id2, arglist)));
+				r = new CasPreData(ipt.checkCasCallReturn(new CasCallReturn(ipt.MethodCall(id, id2, arglist))), true, true, false);
 				
 				break;
 			}
 			case PRINT:
 			{
-				AST __t217 = _t;
+				AST __t47 = _t;
 				AST tmp32_AST_in = (AST)_t;
 				match(_t,PRINT);
 				_t = _t.getFirstChild();
 				a=expr(_t);
 				_t = _retTree;
-				_t = __t217;
+				_t = __t47;
 				_t = _t.getNextSibling();
-				r = a; a.print();
+				r = a; a.getData().print();
 				break;
 			}
 			case IFSTR:
 			{
-				AST __t218 = _t;
+				AST __t48 = _t;
 				AST tmp33_AST_in = (AST)_t;
 				match(_t,IFSTR);
 				_t = _t.getFirstChild();
-				AST __t219 = _t;
+				AST __t49 = _t;
 				AST tmp34_AST_in = (AST)_t;
 				match(_t,CONDITION);
 				_t = _t.getFirstChild();
 				a=expr(_t);
 				_t = _retTree;
-				_t = __t219;
+				_t = __t49;
 				_t = _t.getNextSibling();
-				AST __t220 = _t;
+				AST __t50 = _t;
 				AST tmp35_AST_in = (AST)_t;
 				match(_t,THEN);
 				_t = _t.getFirstChild();
 				thenif = (AST)_t;
 				if ( _t==null ) throw new MismatchedTokenException();
 				_t = _t.getNextSibling();
-				_t = __t220;
+				_t = __t50;
 				_t = _t.getNextSibling();
 				{
 				if (_t==null) _t=ASTNULL;
 				switch ( _t.getType()) {
 				case ELSE:
 				{
-					AST __t222 = _t;
+					AST __t52 = _t;
 					AST tmp36_AST_in = (AST)_t;
 					match(_t,ELSE);
 					_t = _t.getFirstChild();
 					elseif = (AST)_t;
 					if ( _t==null ) throw new MismatchedTokenException();
 					_t = _t.getNextSibling();
-					_t = __t222;
+					_t = __t52;
 					_t = _t.getNextSibling();
 					break;
 				}
@@ -751,12 +753,12 @@ public CASWalker() {
 				}
 				}
 				}
-				_t = __t218;
+				_t = __t48;
 				_t = _t.getNextSibling();
 				
-				if ( !( a instanceof CasBool ) )
-				return a.error( "if: expression should be bool" );
-				if ( ((CasBool)a).var )
+				if ( !( a.getData() instanceof CasBool ) )
+				return new CasPreData(a.getData().error( "if: expression should be bool" ), false, false, false);
+				if ( ((CasBool)a.getData()).var )
 				r = expr( thenif );
 				else if ( null != elseif )
 				r = expr( elseif );
@@ -765,30 +767,30 @@ public CASWalker() {
 			}
 			case WHILESTR:
 			{
-				AST __t223 = _t;
+				AST __t53 = _t;
 				AST tmp37_AST_in = (AST)_t;
 				match(_t,WHILESTR);
 				_t = _t.getFirstChild();
 				ipt.loopInit();
-				AST __t224 = _t;
+				AST __t54 = _t;
 				AST tmp38_AST_in = (AST)_t;
 				match(_t,CONDITION);
 				_t = _t.getFirstChild();
 				cond = (AST)_t;
 				if ( _t==null ) throw new MismatchedTokenException();
 				_t = _t.getNextSibling();
-				_t = __t224;
+				_t = __t54;
 				_t = _t.getNextSibling();
 				rest = (AST)_t;
 				if ( _t==null ) throw new MismatchedTokenException();
 				_t = _t.getNextSibling();
-				_t = __t223;
+				_t = __t53;
 				_t = _t.getNextSibling();
 				
 				a = expr(cond);
-				if ( !(a instanceof CasBool ))
-				return a.error ( "while: expression should be bool" );
-				while (!ipt.breakSet() && ((CasBool)a).getvar()) {
+				if ( !(a.getData() instanceof CasBool ))
+				return new CasPreData(a.getData().error ( "while: expression should be bool" ), false, false, false);
+				while (!ipt.breakSet() && ((CasBool)a.getData()).getvar()) {
 				if (ipt.continueSet()) {
 				ipt.tryResetFlowControl();
 				continue;
@@ -796,8 +798,8 @@ public CASWalker() {
 				r = expr (rest);
 				if (!ipt.breakSet())
 				a = expr(cond);
-				if ( !(a instanceof CasBool ))
-				return a.error ( "while: expression should be bool" );
+				if ( !(a.getData() instanceof CasBool ))
+				return new CasPreData(a.getData().error ( "while: expression should be bool" ), false, false, false);
 				}
 				ipt.loopEnd();
 				
@@ -805,52 +807,52 @@ public CASWalker() {
 			}
 			case FORSTR:
 			{
-				AST __t225 = _t;
+				AST __t55 = _t;
 				AST tmp39_AST_in = (AST)_t;
 				match(_t,FORSTR);
 				_t = _t.getFirstChild();
 				ipt.loopInit();
-				AST __t226 = _t;
+				AST __t56 = _t;
 				AST tmp40_AST_in = (AST)_t;
 				match(_t,FORLEFT);
 				_t = _t.getFirstChild();
 				r=expr(_t);
 				_t = _retTree;
-				_t = __t226;
+				_t = __t56;
 				_t = _t.getNextSibling();
-				AST __t227 = _t;
+				AST __t57 = _t;
 				AST tmp41_AST_in = (AST)_t;
 				match(_t,FORMID);
 				_t = _t.getFirstChild();
 				cond2 = (AST)_t;
 				if ( _t==null ) throw new MismatchedTokenException();
 				_t = _t.getNextSibling();
-				_t = __t227;
+				_t = __t57;
 				_t = _t.getNextSibling();
-				AST __t228 = _t;
+				AST __t58 = _t;
 				AST tmp42_AST_in = (AST)_t;
 				match(_t,FORRIGHT);
 				_t = _t.getFirstChild();
 				after = (AST)_t;
 				if ( _t==null ) throw new MismatchedTokenException();
 				_t = _t.getNextSibling();
-				_t = __t228;
+				_t = __t58;
 				_t = _t.getNextSibling();
-				AST __t229 = _t;
+				AST __t59 = _t;
 				AST tmp43_AST_in = (AST)_t;
 				match(_t,FORBODY);
 				_t = _t.getFirstChild();
 				forbody = (AST)_t;
 				if ( _t==null ) throw new MismatchedTokenException();
 				_t = _t.getNextSibling();
-				_t = __t229;
+				_t = __t59;
 				_t = _t.getNextSibling();
-				_t = __t225;
+				_t = __t55;
 				_t = _t.getNextSibling();
 				a = expr(cond2);
-				if ( !(a instanceof CasBool ))
-				return a.error ( "for: expression should be bool" );
-				while (!ipt.breakSet() && ((CasBool)a).getvar()) {
+				if ( !(a.getData() instanceof CasBool ))
+				return new CasPreData(a.getData().error ( "for: expression should be bool" ), false, false, false);
+				while (!ipt.breakSet() && ((CasBool)a.getData()).getvar()) {
 				if (ipt.continueSet()) {
 				ipt.tryResetFlowControl();
 				continue;
@@ -860,8 +862,8 @@ public CASWalker() {
 				expr(after);
 				a = expr(cond2);
 				}
-				if ( !(a instanceof CasBool ))
-				return a.error ( "for: expression should be bool" );
+				if ( !(a.getData() instanceof CasBool ))
+				return new CasPreData(a.getData().error ( "for: expression should be bool" ), false, false, false);
 				}
 				ipt.loopEnd();
 				
@@ -869,27 +871,27 @@ public CASWalker() {
 			}
 			case STATEMENTS:
 			{
-				AST __t230 = _t;
+				AST __t60 = _t;
 				AST tmp44_AST_in = (AST)_t;
 				match(_t,STATEMENTS);
 				_t = _t.getFirstChild();
 				{
-				_loop232:
+				_loop62:
 				do {
 					if (_t==null) _t=ASTNULL;
-					if (((_t.getType() >= INT && _t.getType() <= LITERAL_boolean))) {
+					if (((_t.getType() >= INT && _t.getType() <= IDENTIFIER))) {
 						statement = (AST)_t;
 						if ( _t==null ) throw new MismatchedTokenException();
 						_t = _t.getNextSibling();
 						if ( ipt.canProceed() ) r = expr(statement);
 					}
 					else {
-						break _loop232;
+						break _loop62;
 					}
 					
 				} while (true);
 				}
-				_t = __t230;
+				_t = __t60;
 				_t = _t.getNextSibling();
 				break;
 			}
@@ -898,7 +900,7 @@ public CASWalker() {
 				AST tmp45_AST_in = (AST)_t;
 				match(_t,BREAK);
 				_t = _t.getNextSibling();
-				r = new CasBreak(); ipt.setBreak();
+				r = new CasPreData(new CasBreak(), false, false, false); ipt.setBreak();
 				break;
 			}
 			case CONTINUE:
@@ -906,38 +908,38 @@ public CASWalker() {
 				AST tmp46_AST_in = (AST)_t;
 				match(_t,CONTINUE);
 				_t = _t.getNextSibling();
-				r = new CasContinue(); ipt.setContinue();
+				r = new CasPreData(new CasContinue(), false, false, false); ipt.setContinue();
 				break;
 			}
 			case RETURNSTR:
 			{
-				AST __t233 = _t;
+				AST __t63 = _t;
 				AST tmp47_AST_in = (AST)_t;
 				match(_t,RETURNSTR);
 				_t = _t.getFirstChild();
 				a=expr(_t);
 				_t = _retTree;
-				_t = __t233;
+				_t = __t63;
 				_t = _t.getNextSibling();
-				r = new CasReturn(ipt.rvalue( a )); ipt.setReturn();
+				r = new CasPreData(new CasReturn(ipt.rvalue( a.getData() )), a.getDeclared(), a.getInitialized(), a.getKnown()); ipt.setReturn();
 				break;
 			}
 			case WAIT:
 			{
-				AST __t234 = _t;
+				AST __t64 = _t;
 				AST tmp48_AST_in = (AST)_t;
 				match(_t,WAIT);
 				_t = _t.getFirstChild();
 				a=expr(_t);
 				_t = _retTree;
-				_t = __t234;
+				_t = __t64;
 				_t = _t.getNextSibling();
 				r = ipt.stopme(a);
 				break;
 			}
 			case FUNCTION_CALL:
 			{
-				AST __t235 = _t;
+				AST __t65 = _t;
 				AST tmp49_AST_in = (AST)_t;
 				match(_t,FUNCTION_CALL);
 				_t = _t.getFirstChild();
@@ -947,14 +949,14 @@ public CASWalker() {
 				id = tmp50_AST_in.getText();
 				arglist=param(_t);
 				_t = _retTree;
-				_t = __t235;
+				_t = __t65;
 				_t = _t.getNextSibling();
 				r = ipt.funcCall(this, id, arglist);
 				break;
 			}
 			case OR:
 			{
-				AST __t236 = _t;
+				AST __t66 = _t;
 				AST tmp51_AST_in = (AST)_t;
 				match(_t,OR);
 				_t = _t.getFirstChild();
@@ -963,19 +965,19 @@ public CASWalker() {
 				right_or = (AST)_t;
 				if ( _t==null ) throw new MismatchedTokenException();
 				_t = _t.getNextSibling();
-				_t = __t236;
+				_t = __t66;
 				_t = _t.getNextSibling();
 				
-				if ( a instanceof CasBool )
-				r = ( ((CasBool)a).var ? a : expr(right_or) );
+				if ( a.getData() instanceof CasBool )
+				r = ( ((CasBool)a.getData()).var ? ipt.PreDataMaker(a.getData().and(a.getData()),a,b) : ipt.PreDataMaker(a.getData().and( expr(right_or).getData()),a,b) );
 				else
-				r = a.or( expr(right_or) );
+				r = ipt.PreDataMaker(a.getData().or( expr(right_or).getData()),a,b);
 				
 				break;
 			}
 			case AND:
 			{
-				AST __t237 = _t;
+				AST __t67 = _t;
 				AST tmp52_AST_in = (AST)_t;
 				match(_t,AND);
 				_t = _t.getFirstChild();
@@ -984,32 +986,32 @@ public CASWalker() {
 				right_and = (AST)_t;
 				if ( _t==null ) throw new MismatchedTokenException();
 				_t = _t.getNextSibling();
-				_t = __t237;
+				_t = __t67;
 				_t = _t.getNextSibling();
 				
-				if ( a instanceof CasBool )
-				r = ( ((CasBool)a).var ? expr(right_and) : a );
+				if ( a.getData() instanceof CasBool )
+				r = ( ((CasBool)a.getData()).var ? ipt.PreDataMaker(a.getData().and( expr(right_and).getData()),a,b) : ipt.PreDataMaker(a.getData().and(a.getData()),a,b) );
 				else
-				r = a.and( expr(right_and) );
+				r = ipt.PreDataMaker(a.getData().and( expr(right_and).getData()),a,b);
 				
 				break;
 			}
 			case NOT:
 			{
-				AST __t238 = _t;
+				AST __t68 = _t;
 				AST tmp53_AST_in = (AST)_t;
 				match(_t,NOT);
 				_t = _t.getFirstChild();
 				a=expr(_t);
 				_t = _retTree;
-				_t = __t238;
+				_t = __t68;
 				_t = _t.getNextSibling();
-				r = a.not();
+				r = ipt.PreDataMaker(a.getData().not(),a,b);
 				break;
 			}
 			case LESS:
 			{
-				AST __t239 = _t;
+				AST __t69 = _t;
 				AST tmp54_AST_in = (AST)_t;
 				match(_t,LESS);
 				_t = _t.getFirstChild();
@@ -1017,14 +1019,14 @@ public CASWalker() {
 				_t = _retTree;
 				b=expr(_t);
 				_t = _retTree;
-				_t = __t239;
+				_t = __t69;
 				_t = _t.getNextSibling();
-				r = a.lt(b);
+				r = ipt.PreDataMaker(a.getData().lt(b.getData()),a,b);
 				break;
 			}
 			case LESSEQUAL:
 			{
-				AST __t240 = _t;
+				AST __t70 = _t;
 				AST tmp55_AST_in = (AST)_t;
 				match(_t,LESSEQUAL);
 				_t = _t.getFirstChild();
@@ -1032,14 +1034,14 @@ public CASWalker() {
 				_t = _retTree;
 				b=expr(_t);
 				_t = _retTree;
-				_t = __t240;
+				_t = __t70;
 				_t = _t.getNextSibling();
-				r = a.le(b);
+				r = ipt.PreDataMaker(a.getData().le(b.getData()),a,b);
 				break;
 			}
 			case MORE:
 			{
-				AST __t241 = _t;
+				AST __t71 = _t;
 				AST tmp56_AST_in = (AST)_t;
 				match(_t,MORE);
 				_t = _t.getFirstChild();
@@ -1047,14 +1049,14 @@ public CASWalker() {
 				_t = _retTree;
 				b=expr(_t);
 				_t = _retTree;
-				_t = __t241;
+				_t = __t71;
 				_t = _t.getNextSibling();
-				r = a.gt(b);
+				r = ipt.PreDataMaker(a.getData().gt(b.getData()),a,b);
 				break;
 			}
 			case MOREEQUAL:
 			{
-				AST __t242 = _t;
+				AST __t72 = _t;
 				AST tmp57_AST_in = (AST)_t;
 				match(_t,MOREEQUAL);
 				_t = _t.getFirstChild();
@@ -1062,14 +1064,14 @@ public CASWalker() {
 				_t = _retTree;
 				b=expr(_t);
 				_t = _retTree;
-				_t = __t242;
+				_t = __t72;
 				_t = _t.getNextSibling();
-				r = a.ge(b);
+				r = ipt.PreDataMaker(a.getData().ge(b.getData()),a,b);
 				break;
 			}
 			case EQUALTO:
 			{
-				AST __t243 = _t;
+				AST __t73 = _t;
 				AST tmp58_AST_in = (AST)_t;
 				match(_t,EQUALTO);
 				_t = _t.getFirstChild();
@@ -1077,14 +1079,14 @@ public CASWalker() {
 				_t = _retTree;
 				b=expr(_t);
 				_t = _retTree;
-				_t = __t243;
+				_t = __t73;
 				_t = _t.getNextSibling();
-				r = a.eq(b);
+				r = ipt.PreDataMaker(a.getData().eq(b.getData()),a,b);
 				break;
 			}
 			case NOTEQUAL:
 			{
-				AST __t244 = _t;
+				AST __t74 = _t;
 				AST tmp59_AST_in = (AST)_t;
 				match(_t,NOTEQUAL);
 				_t = _t.getFirstChild();
@@ -1092,14 +1094,14 @@ public CASWalker() {
 				_t = _retTree;
 				b=expr(_t);
 				_t = _retTree;
-				_t = __t244;
+				_t = __t74;
 				_t = _t.getNextSibling();
-				r = a.ne(b);
+				r = ipt.PreDataMaker(a.getData().ne(b.getData()),a,b);
 				break;
 			}
 			case PLUS:
 			{
-				AST __t245 = _t;
+				AST __t75 = _t;
 				AST tmp60_AST_in = (AST)_t;
 				match(_t,PLUS);
 				_t = _t.getFirstChild();
@@ -1107,14 +1109,14 @@ public CASWalker() {
 				_t = _retTree;
 				b=expr(_t);
 				_t = _retTree;
-				_t = __t245;
+				_t = __t75;
 				_t = _t.getNextSibling();
-				r = a.plus(b);
+				r = ipt.PreDataMaker(a.getData().plus(b.getData()),a,b);
 				break;
 			}
 			case MINUS:
 			{
-				AST __t246 = _t;
+				AST __t76 = _t;
 				AST tmp61_AST_in = (AST)_t;
 				match(_t,MINUS);
 				_t = _t.getFirstChild();
@@ -1122,14 +1124,14 @@ public CASWalker() {
 				_t = _retTree;
 				b=expr(_t);
 				_t = _retTree;
-				_t = __t246;
+				_t = __t76;
 				_t = _t.getNextSibling();
-				r = a.minus(b);
+				r = ipt.PreDataMaker(a.getData().minus(b.getData()),a,b);
 				break;
 			}
 			case TIMES:
 			{
-				AST __t247 = _t;
+				AST __t77 = _t;
 				AST tmp62_AST_in = (AST)_t;
 				match(_t,TIMES);
 				_t = _t.getFirstChild();
@@ -1137,14 +1139,14 @@ public CASWalker() {
 				_t = _retTree;
 				b=expr(_t);
 				_t = _retTree;
-				_t = __t247;
+				_t = __t77;
 				_t = _t.getNextSibling();
-				r = a.times(b);
+				r = ipt.PreDataMaker(a.getData().times(b.getData()),a,b);
 				break;
 			}
 			case SLASH:
 			{
-				AST __t248 = _t;
+				AST __t78 = _t;
 				AST tmp63_AST_in = (AST)_t;
 				match(_t,SLASH);
 				_t = _t.getFirstChild();
@@ -1152,14 +1154,14 @@ public CASWalker() {
 				_t = _retTree;
 				b=expr(_t);
 				_t = _retTree;
-				_t = __t248;
+				_t = __t78;
 				_t = _t.getNextSibling();
-				r = a.lfracts(b);
+				r = ipt.PreDataMaker(a.getData().lfracts(b.getData()),a,b);
 				break;
 			}
 			case MODULO:
 			{
-				AST __t249 = _t;
+				AST __t79 = _t;
 				AST tmp64_AST_in = (AST)_t;
 				match(_t,MODULO);
 				_t = _t.getFirstChild();
@@ -1167,72 +1169,72 @@ public CASWalker() {
 				_t = _retTree;
 				b=expr(_t);
 				_t = _retTree;
-				_t = __t249;
+				_t = __t79;
 				_t = _t.getNextSibling();
-				r = a.modulus(b);
+				r = ipt.PreDataMaker(a.getData().modulus(b.getData()),a,b);
 				break;
 			}
 			case NEGATION:
 			{
-				AST __t250 = _t;
+				AST __t80 = _t;
 				AST tmp65_AST_in = (AST)_t;
 				match(_t,NEGATION);
 				_t = _t.getFirstChild();
 				a=expr(_t);
 				_t = _retTree;
-				_t = __t250;
+				_t = __t80;
 				_t = _t.getNextSibling();
-				r = a.uminus();
+				r = ipt.PreDataMaker(a.getData().uminus(),a,b);
 				break;
 			}
 			case INCAFTER:
 			{
-				AST __t251 = _t;
+				AST __t81 = _t;
 				AST tmp66_AST_in = (AST)_t;
 				match(_t,INCAFTER);
 				_t = _t.getFirstChild();
 				a=expr(_t);
 				_t = _retTree;
-				_t = __t251;
+				_t = __t81;
 				_t = _t.getNextSibling();
 				r = a.copy(); ipt.incOrDec(a, true);
 				break;
 			}
 			case DECAFTER:
 			{
-				AST __t252 = _t;
+				AST __t82 = _t;
 				AST tmp67_AST_in = (AST)_t;
 				match(_t,DECAFTER);
 				_t = _t.getFirstChild();
 				a=expr(_t);
 				_t = _retTree;
-				_t = __t252;
+				_t = __t82;
 				_t = _t.getNextSibling();
 				r = a.copy(); ipt.incOrDec(a, false);
 				break;
 			}
 			case INCBEFORE:
 			{
-				AST __t253 = _t;
+				AST __t83 = _t;
 				AST tmp68_AST_in = (AST)_t;
 				match(_t,INCBEFORE);
 				_t = _t.getFirstChild();
 				a=expr(_t);
 				_t = _retTree;
-				_t = __t253;
+				_t = __t83;
 				_t = _t.getNextSibling();
 				r = ipt.incOrDec(a, true);
 				break;
 			}
 			case DECBEFORE:
 			{
-				AST __t254 = _t;
+				AST __t84 = _t;
 				AST tmp69_AST_in = (AST)_t;
 				match(_t,DECBEFORE);
 				_t = _t.getFirstChild();
 				a=expr(_t);
 				_t = _retTree;
-				_t = __t254;
+				_t = __t84;
 				_t = _t.getNextSibling();
 				r = ipt.incOrDec(a, false);
 				break;
@@ -1275,17 +1277,17 @@ public CASWalker() {
 				_t = _t.getNextSibling();
 				break;
 			}
-			case FLOAT:
+			case DOUBLE:
 			{
 				AST tmp72_AST_in = (AST)_t;
-				match(_t,FLOAT);
+				match(_t,DOUBLE);
 				_t = _t.getNextSibling();
 				break;
 			}
-			case LITERAL_boolean:
+			case BOOLSTR:
 			{
 				AST tmp73_AST_in = (AST)_t;
-				match(_t,LITERAL_boolean);
+				match(_t,BOOLSTR);
 				_t = _t.getNextSibling();
 				break;
 			}
@@ -1309,14 +1311,14 @@ public CASWalker() {
 		_retTree = _t;
 	}
 	
-	public final CasDataType  fbody(AST _t) throws RecognitionException {
-		CasDataType a;
+	public final CasPreData  fbody(AST _t) throws RecognitionException {
+		CasPreData a;
 		
 		AST fbody_AST_in = (_t == ASTNULL) ? null : (AST)_t;
 		a = null;
 		
 		try {      // for error handling
-			AST __t209 = _t;
+			AST __t39 = _t;
 			AST tmp75_AST_in = (AST)_t;
 			match(_t,FUNCTIONBODY);
 			_t = _t.getFirstChild();
@@ -1324,7 +1326,7 @@ public CASWalker() {
 			a=expr(_t);
 			_t = _retTree;
 			}
-			_t = __t209;
+			_t = __t39;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -1338,21 +1340,21 @@ public CASWalker() {
 /**
  * list of parameters for a function call
 */
-	public final  Vector<CasDataType>  param(AST _t) throws RecognitionException {
-		 Vector<CasDataType> arglist ;
+	public final  Vector<CasPreData>  param(AST _t) throws RecognitionException {
+		 Vector<CasPreData> arglist ;
 		
 		AST param_AST_in = (_t == ASTNULL) ? null : (AST)_t;
 		arglist = null;
-		CasDataType a;
+		CasPreData a;
 		
 		try {      // for error handling
-			AST __t256 = _t;
+			AST __t86 = _t;
 			AST tmp76_AST_in = (AST)_t;
 			match(_t,ARGS);
 			_t = _t.getFirstChild();
-			arglist = new Vector<CasDataType>();
+			arglist = new Vector<CasPreData>();
 			{
-			_loop258:
+			_loop88:
 			do {
 				if (_t==null) _t=ASTNULL;
 				if ((_tokenSet_0.member(_t.getType()))) {
@@ -1361,12 +1363,12 @@ public CASWalker() {
 					arglist.add( a );
 				}
 				else {
-					break _loop258;
+					break _loop88;
 				}
 				
 			} while (true);
 			}
-			_t = __t256;
+			_t = __t86;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -1384,8 +1386,8 @@ public CASWalker() {
 		"<2>",
 		"NULL_TREE_LOOKAHEAD",
 		"\"int\"",
-		"\"float\"",
-		"\"bool\"",
+		"\"double\"",
+		"\"boolean\"",
 		"\"string\"",
 		"\"module\"",
 		"\"datatype\"",
@@ -1406,7 +1408,7 @@ public CASWalker() {
 		"\"new\"",
 		"\"print\"",
 		"NUM_INT",
-		"NUM_FLOAT",
+		"NUM_DOUBLE",
 		"PERIOD",
 		"COMMA",
 		"COLON",
@@ -1476,8 +1478,7 @@ public CASWalker() {
 		"FUNCTIONBODY",
 		"ARGDEC",
 		"STATEMENTS",
-		"IDENTIFIER",
-		"\"boolean\""
+		"IDENTIFIER"
 	};
 	
 	private static final long[] mk_tokenSet_0() {

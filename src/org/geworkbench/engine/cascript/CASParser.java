@@ -1,5 +1,5 @@
 // $ANTLR 2.7.5 (20050128): "CAS.g" -> "CASParser.java"$
-package org.geworkbench.engine.cascript;
+package org.geworkbench.engine.cascript; import java.lang.*; import javax.swing.JOptionPane;
 import antlr.TokenBuffer;
 import antlr.TokenStreamException;
 import antlr.TokenStreamIOException;
@@ -23,12 +23,24 @@ public class CASParser extends antlr.LLkParser       implements CAStokensTokenTy
  {
 
     int nr_error = 0;
-    public void reportError( String s ) {
-        super.reportError( s );
+    StringBuilder sbe = new StringBuilder();
+    /** Parser error-reporting function can be overridden in subclass */
+    public void reportError(RecognitionException ex) {
+        sbe.append(ex.toString() + "\n");
         nr_error++;
     }
-    public void reportError( RecognitionException e ) {
-        super.reportError( e );
+
+    /** Parser error-reporting function can be overridden in subclass */
+    public void reportError(String s) {
+        //if (nr_error == 0) {
+        //  setPs();
+        //}
+        if (getFilename() == null) {
+            sbe.append(s + "\n");
+        }
+        else {
+            sbe.append(s + "\n");
+        }
         nr_error++;
     }
 

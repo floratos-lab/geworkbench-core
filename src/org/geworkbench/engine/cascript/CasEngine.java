@@ -18,11 +18,16 @@ public class CasEngine {
         DataInputStream input = new DataInputStream(new StringBufferInputStream(scriptText));
         // Create the lexer and parser and feed them the input
         CASLexer lexer = new CASLexer(input);
+        if (lexer.nr_error > 0) {
+            lexer.sbe.deleteCharAt(lexer.sbe.length()-1);
+            throw new CasException("\nLexing errors:\n" + lexer.sbe.toString());
+        } 
         CASParser parser = new CASParser(lexer);
         parser.program(); // "file" is the main rule in the parser
         //if there are parsing errors, do not interpret
-        if ( lexer.nr_error > 0 || parser.nr_error > 0 ) {
-            throw new CasException( "Parsing errors found. Stop." );
+        if ( parser.nr_error > 0 ) {
+            parser.sbe.deleteCharAt(parser.sbe.length()-1);
+            throw new CasException("\nParsing errors:\n" +parser.sbe.toString());
         }
         // Get the AST from the parser
         CommonAST parseTree = (CommonAST) parser.getAST();

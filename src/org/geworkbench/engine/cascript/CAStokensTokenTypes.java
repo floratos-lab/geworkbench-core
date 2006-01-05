@@ -1,5 +1,5 @@
 // $ANTLR 2.7.5 (20050128): "CAS.g" -> "CASParser.java"$
-package org.geworkbench.engine.cascript;
+package org.geworkbench.engine.cascript; import java.lang.*; import javax.swing.JOptionPane;
 public interface CAStokensTokenTypes {
 	int EOF = 1;
 	int NULL_TREE_LOOKAHEAD = 3;

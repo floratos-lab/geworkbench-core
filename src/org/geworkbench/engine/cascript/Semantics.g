@@ -1,3 +1,4 @@
+header {package org.geworkbench.engine.cascript;}
 //for some help - ":." means don't execute, just hold the reference of it
 {
 import antlr.MismatchedTokenException;
@@ -26,10 +27,10 @@ walkme
 : #(PROG (publicvar)* (function)+)
   {
     //make new symboltable for main
-    ipt.symt = new CasPreSymbolTable(ipt.symt, ipt.symt.getLevel()+1);
+    ipt.psymt = new CasPreSymbolTable(ipt.psymt, ipt.psymt.getLevel()+1);
     fbody(mainbody);
     //get rid of main's symbol table
-    ipt.symt = ipt.symt.Parent();
+    ipt.psymt = ipt.psymt.Parent();
   }
 ;
 
@@ -54,7 +55,7 @@ function
   if (id.equals("main")) {
     mainbody = #fbody;
   }
-  ipt.makeFunction(id, argList, fbody, ipt.symt, typereturn, brackets);
+  ipt.makeFunction(id, argList, fbody, ipt.psymt, typereturn, brackets);
 }
 ;
 
@@ -81,12 +82,12 @@ temp = null;}
 */
 variable
 { String id = "";
-  CasDataType value = null;
+  CasPreData value = null;
   CasDataType typereturn;
-  Vector<CasDataType> indices = null;}
+  Vector<CasPreData> indices = null;}
 : #(VARIABLE typereturn = type (#(IDENTIFIER ID {id = #ID.getText();} (indices = index)?) (#(EQUAL value = expr))?
 {
-if (ipt.symt.existsinscope(id)) {
+if (ipt.psymt.existsinscope(id)) {
   throw new CasException(id + " already exists as a function or variable");
 }
 ipt.putvar(id, typereturn, indices, value);
@@ -100,9 +101,9 @@ create more entries in the symbol table*/
 /**
  *index keeps track of all the indices that are defined in an variable declaration
 */
-index returns [Vector<CasDataType> v]
-{v = new Vector<CasDataType>();
-CasDataType aindex = null;}
+index returns [Vector<CasPreData> v]
+{v = new Vector<CasPreData>();
+CasPreData aindex = null;}
 : #(INDEX (aindex = expr {v.add(aindex);})*)
 ;
 
@@ -154,7 +155,7 @@ primitives
 ;
 
 
-fbody returns [CasDataType a]
+fbody returns [CasPreData a]
 {a = null;}
 : #(FUNCTIONBODY (a = expr))
 ; 
@@ -162,18 +163,18 @@ fbody returns [CasDataType a]
 /**
  * expr is a big deal, it deals with almost everything the language can throw at it
 */
-expr returns [CasDataType r] 
+expr returns [CasPreData r] 
 {
 r = null;
-CasDataType a,b;
+CasPreData a = null,b = null;
 String id = "";
 String id2 = "";
-Vector<CasDataType> arglist = null;
+Vector<CasPreData> arglist = null;
 }
-: NUM_INT                     { r = new CasInt(Integer.parseInt(#NUM_INT.getText())); } //literal integers
-| NUM_DOUBLE                   { r = new CasDouble(Double.parseDouble(#NUM_DOUBLE.getText()));} //literal doubles
-| TRUE                        { r = new CasBool(true); } //literal "true" value
-| FALSE                       { r = new CasBool(false); } //literal "false" value
+: NUM_INT                     { r = new CasPreData(new CasInt(Integer.parseInt(#NUM_INT.getText())), false, true, true); } //literal integers
+| NUM_DOUBLE                   { r = new CasPreData(new CasDouble(Double.parseDouble(#NUM_DOUBLE.getText())), false, true, true);} //literal doubles
+| TRUE                        { r = new CasPreData(new CasBool(true), false, true, true); } //literal "true" value
+| FALSE                       { r = new CasPreData(new CasBool(false), false, true, true); } //literal "false" value
 | #(IDENTIFIER ID {id = #ID.getText();} (arglist = index)?)   //here we are just using arglist to gather indices
 {
 if (arglist == null)
@@ -181,15 +182,17 @@ if (arglist == null)
 else
   r = ipt.dimensionAccess(id, arglist); //array access
 }
-| str:String                  { r = new CasString( str.getText().toString() ); } //literal string value
-| variable                    { r = new CasBool(true);} //variable declaration ex. int a = 5;
+| str:String                  { r = new CasPreData(new CasString( str.getText().toString()), false, true, true); } //literal string value
+| variable                    { r = new CasPreData(new CasVariable("variable declaration"), false, false, false);} //variable declaration ex. int a = 5;
 | #(ASSIGNMENT a=expr b=expr) //remember to extend ipt.assign(a,b) //assignment operation, more complex than it seems
-  {r = ipt.assign(a,b);}
+  {
+   r = ipt.assign(a,b); //for assign, remember to use b's flag to affect a's flags
+  }
 | #(OBJECT_VALUE ID {id = #ID.getText();} ID21:ID)
   { id2 = ID21.getText();
-    if (ipt.symt.findVar(id) instanceof CasModule) {
+    if (ipt.psymt.findVar(id).getData() instanceof CasModule) {
       //should you be checking if id a CasModule in the firstplace?
-      r = new CasValue(id, id2, ((CasModule)ipt.symt.findVar(id)));
+      r = new CasPreData(new CasValue(id, id2, ((CasModule)ipt.psymt.findVar(id).getData())), true, true, false);
       /*Testing purposes System.out.println("we're in object_value");*/
     }
     else {
@@ -203,26 +206,26 @@ else
     //MethodCall should tell the difference between a CasModule and a CasDataPlug
     /*Testing purposes
     System.out.println("we're in object_call");*/
-    r = ipt.checkCasCallReturn(new CasCallReturn(ipt.MethodCall(id, id2, arglist)));
+    r = new CasPreData(ipt.checkCasCallReturn(new CasCallReturn(ipt.MethodCall(id, id2, arglist))), true, true, false);
   }
   //object_call, like a function call in JAVA through a object ex. genePanel.createPanel(i++,10,true)
-| #(PRINT a = expr)           { r = a; a.print(); } //print statement
-| #(IFSTR #(CONDITION a=expr) #(THEN thenif:.) (#(ELSE elseif:.))?)
+| #(PRINT a = expr)           { r = a; a.getData().print(); } //print statement
+| #(IFSTR #(CONDITION a=expr) #(THEN thenif:.) (#(ELSE elseif:.))?) //we wanna change this completely
 {
-    if ( !( a instanceof CasBool ) )
-        return a.error( "if: expression should be bool" );
-    if ( ((CasBool)a).var )
+    if ( !( a.getData() instanceof CasBool ) )
+        return new CasPreData(a.getData().error( "if: expression should be bool" ), false, false, false);
+    if ( ((CasBool)a.getData()).var )
         r = expr( #thenif );
     else if ( null != elseif )
         r = expr( #elseif );
 }
 //conditional statement, pretty straightforward
-| #(WHILESTR {ipt.loopInit();} #(CONDITION cond:.) rest:.)
+| #(WHILESTR {ipt.loopInit();} #(CONDITION cond:.) rest:.) //we wanna change this completely
 {
   a = expr(#cond);
-  if ( !(a instanceof CasBool ))
-    return a.error ( "while: expression should be bool" );
-  while (!ipt.breakSet() && ((CasBool)a).getvar()) {
+  if ( !(a.getData() instanceof CasBool ))
+    return new CasPreData(a.getData().error ( "while: expression should be bool" ), false, false, false);
+  while (!ipt.breakSet() && ((CasBool)a.getData()).getvar()) {
     if (ipt.continueSet()) {
       ipt.tryResetFlowControl();
       continue;
@@ -230,17 +233,17 @@ else
     r = expr (#rest);
     if (!ipt.breakSet())
       a = expr(#cond);
-    if ( !(a instanceof CasBool ))
-        return a.error ( "while: expression should be bool" );
+    if ( !(a.getData() instanceof CasBool ))
+        return new CasPreData(a.getData().error ( "while: expression should be bool" ), false, false, false);
   }
   ipt.loopEnd();
 }
 //while loop, this probably has some bugs in it
-| #(FORSTR {ipt.loopInit(); }#(FORLEFT r = expr) #(FORMID cond2:.) #(FORRIGHT after:.) #(FORBODY forbody:.))
+| #(FORSTR {ipt.loopInit(); }#(FORLEFT r = expr) #(FORMID cond2:.) #(FORRIGHT after:.) #(FORBODY forbody:.)) //we wanna change this completely
 { a = expr(#cond2);
-  if ( !(a instanceof CasBool ))
-  return a.error ( "for: expression should be bool" );
-  while (!ipt.breakSet() && ((CasBool)a).getvar()) {
+  if ( !(a.getData() instanceof CasBool ))
+  return new CasPreData(a.getData().error ( "for: expression should be bool" ), false, false, false);
+  while (!ipt.breakSet() && ((CasBool)a.getData()).getvar()) {
     if (ipt.continueSet()) {
       ipt.tryResetFlowControl();
       continue;
@@ -250,17 +253,17 @@ else
       expr(#after);
       a = expr(#cond2);
     }
-    if ( !(a instanceof CasBool ))
-        return a.error ( "for: expression should be bool" );
+    if ( !(a.getData() instanceof CasBool ))
+        return new CasPreData(a.getData().error ( "for: expression should be bool" ), false, false, false);
   }
   ipt.loopEnd();
 }
 //for loop, this probably has some bugs in it, the same bugs the while loop has
 | #(STATEMENTS (statement:. { if ( ipt.canProceed() ) r = expr(#statement); } )*) //set of statements
-| BREAK                       { r = new CasBreak(); ipt.setBreak();} //break statement, changes control flow
-| CONTINUE                    { r = new CasContinue(); ipt.setContinue();} //continue statement, changes control flow
+| BREAK                       { r = new CasPreData(new CasBreak(), false, false, false); ipt.setBreak();} //break statement, changes control flow
+| CONTINUE                    { r = new CasPreData(new CasContinue(), false, false, false); ipt.setContinue();} //continue statement, changes control flow
 //should the returnstatement have its own DataType? like CasReturn? and you can check that it is that type in functioncall in the interpreter
-| #(RETURNSTR a = expr)    { r = new CasReturn(ipt.rvalue( a )); ipt.setReturn();} //return statement, changes control flow
+| #(RETURNSTR a = expr)    { r = new CasPreData(new CasReturn(ipt.rvalue( a.getData() )), a.getDeclared(), a.getInitialized(), a.getKnown()); ipt.setReturn();} //return statement, changes control flow
 | #(WAIT a = expr)         { r = ipt.stopme(a);} //pauses the program for a given number of seconds
 | #(FUNCTION_CALL ID {id = #ID.getText();} arglist = param)
   { r = ipt.funcCall(this, id, arglist);}
@@ -276,33 +279,34 @@ else
 
 | #(OR a = expr right_or:.)
   {
-    if ( a instanceof CasBool )
-        r = ( ((CasBool)a).var ? a : expr(#right_or) );
+    if ( a.getData() instanceof CasBool )
+        r = ( ((CasBool)a.getData()).var ? ipt.PreDataMaker(a.getData().and(a.getData()),a,b) : ipt.PreDataMaker(a.getData().and( expr(#right_or).getData()),a,b) );
     else
-        r = a.or( expr(#right_or) );
+        r = ipt.PreDataMaker(a.getData().or( expr(#right_or).getData()),a,b);
   }
 //the extra complexity is required because if the first operand is true, there is no need to do the second operand.
 | #(AND a = expr right_and:.)
   {
-    if ( a instanceof CasBool )
-        r = ( ((CasBool)a).var ? expr(#right_and) : a );
+    if ( a.getData() instanceof CasBool )
+        r = ( ((CasBool)a.getData()).var ? ipt.PreDataMaker(a.getData().and( expr(#right_and).getData()),a,b) : ipt.PreDataMaker(a.getData().and(a.getData()),a,b) );
     else
-        r = a.and( expr(#right_and) );
+        r = ipt.PreDataMaker(a.getData().and( expr(#right_and).getData()),a,b);
   }
 //the extra complexicty is required because if the first operand is false, there is no need to do the second operand.
-| #(NOT a = expr)                        {r = a.not();} //negation of a boolean value
-| #(LESS a = expr b = expr)              {r = a.lt(b);} //returns boolean value for a < b
-| #(LESSEQUAL a = expr b = expr)         {r = a.le(b);} //returns boolean value for a <=b
-| #(MORE a = expr b = expr)              {r = a.gt(b);} //returns boolean value for a > b
-| #(MOREEQUAL a = expr b = expr)         {r = a.ge(b);} //returns boolean value for a >=b
-| #(EQUALTO a = expr b = expr)           {r = a.eq(b);} //returns boolean value for a==b
-| #(NOTEQUAL a = expr b = expr)          {r = a.ne(b);} //returns boolean value for a!=b
-| #(PLUS a = expr b = expr)              {r = a.plus(b);} //addition of integers and doubles
-| #(MINUS a = expr b = expr)             {r = a.minus(b);} //subtraction of integers and doubles
-| #(TIMES a = expr b = expr)             {r = a.times(b);} //multiplication
-| #(SLASH a = expr b = expr)             {r = a.lfracts(b);} //division
-| #(MODULO a = expr b = expr)            {r = a.modulus(b);} //undefined
-| #(NEGATION a = expr)                   {r = a.uminus();} //unary minus operation
+//remember do switch all the a. to a.getData().
+| #(NOT a = expr)                        {r = ipt.PreDataMaker(a.getData().not(),a,b);} //negation of a boolean value
+| #(LESS a = expr b = expr)              {r = ipt.PreDataMaker(a.getData().lt(b.getData()),a,b);} //returns boolean value for a < b
+| #(LESSEQUAL a = expr b = expr)         {r = ipt.PreDataMaker(a.getData().le(b.getData()),a,b);} //returns boolean value for a <=b
+| #(MORE a = expr b = expr)              {r = ipt.PreDataMaker(a.getData().gt(b.getData()),a,b);} //returns boolean value for a > b
+| #(MOREEQUAL a = expr b = expr)         {r = ipt.PreDataMaker(a.getData().ge(b.getData()),a,b);} //returns boolean value for a >=b
+| #(EQUALTO a = expr b = expr)           {r = ipt.PreDataMaker(a.getData().eq(b.getData()),a,b);} //returns boolean value for a==b
+| #(NOTEQUAL a = expr b = expr)          {r = ipt.PreDataMaker(a.getData().ne(b.getData()),a,b);} //returns boolean value for a!=b
+| #(PLUS a = expr b = expr)              {r = ipt.PreDataMaker(a.getData().plus(b.getData()),a,b);} //addition of integers and doubles
+| #(MINUS a = expr b = expr)             {r = ipt.PreDataMaker(a.getData().minus(b.getData()),a,b);} //subtraction of integers and doubles
+| #(TIMES a = expr b = expr)             {r = ipt.PreDataMaker(a.getData().times(b.getData()),a,b);} //multiplication
+| #(SLASH a = expr b = expr)             {r = ipt.PreDataMaker(a.getData().lfracts(b.getData()),a,b);} //division
+| #(MODULO a = expr b = expr)            {r = ipt.PreDataMaker(a.getData().modulus(b.getData()),a,b);} //undefined
+| #(NEGATION a = expr)                   {r = ipt.PreDataMaker(a.getData().uminus(),a,b);} //unary minus operation
 | #(INCAFTER a = expr)                   {r = a.copy(); ipt.incOrDec(a, true);} //incrementation after operation, a++
 | #(DECAFTER a = expr)                   {r = a.copy(); ipt.incOrDec(a, false);} //decrementation after operation, a--
 | #(INCBEFORE a = expr)                  {r = ipt.incOrDec(a, true);} //incrementation before operation, ++a
@@ -312,9 +316,9 @@ else
 /**
  * list of parameters for a function call
 */
-param returns [ Vector<CasDataType> arglist ]
+param returns [ Vector<CasPreData> arglist ]
 { arglist = null;
-  CasDataType a;}
-: #(ARGS { arglist = new Vector<CasDataType>(); } ( a=expr      { arglist.add( a ); })*)
+  CasPreData a;}
+: #(ARGS { arglist = new Vector<CasPreData>(); } ( a=expr      { arglist.add( a ); })*)
 ;
 
