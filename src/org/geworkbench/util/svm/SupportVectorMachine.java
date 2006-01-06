@@ -12,7 +12,7 @@ import java.util.Random;
  */
 public class SupportVectorMachine {
 
-    private static final double EPSILON = 0.005;
+    private static final double EPSILON = 0.001;
 
     private static final Log log = LogFactory.getLog(SupportVectorMachine.class);
 
@@ -99,6 +99,16 @@ public class SupportVectorMachine {
         return v - b;
     }
 
+    private double biasedDiscriminant(int index) {
+        double v = 0;
+        for (int i = 0; i < n; i++) {
+            if (alpha[i] > 0) {
+                v += alpha[i] * trainingClassifications[i] * biasedKernelEval(index, i);
+            }
+        }
+        return v - b;
+    }
+
     private double objective() {
         double v = 0;
         for (int i = 0; i < n; i++) {
@@ -159,8 +169,8 @@ public class SupportVectorMachine {
 
     private float c;
 
-    private void updateErrorCache(int index) {
-        errorCache[index] = (float) (discriminant(trainingSet.get(index)) - trainingClassifications[index]);
+    private float computeError(int index) {
+        return (float) (biasedDiscriminant(index) - trainingClassifications[index]);
     }
 
     private void recacheErrors(int i1, int i2) {
@@ -171,8 +181,16 @@ public class SupportVectorMachine {
                 continue;
             }
             if ((alpha[i] > 0) && (alpha[i] < c)) {
-                updateErrorCache(i);
+                errorCache[i] = computeError(i);
             }
+        }
+    }
+
+    private float getError(int index) {
+        if ((alpha[index] > 0) && (alpha[index] < c)) {
+            return errorCache[index];
+        } else {
+            return computeError(index);
         }
     }
 
@@ -180,12 +198,13 @@ public class SupportVectorMachine {
         double bias = 0;
         if (i1 == i2) {
             if (trainingClassifications[i1] == 1) {
-                bias = lambda * nPos / n;
+                bias = lambda / nPos;
             } else {
-                bias = lambda * nNeg / n;
+                bias = lambda / nNeg;
             }
         }
-        return kernel.eval(trainingSet.get(i1), trainingSet.get(i2)) + bias;
+        // Bias disabled
+        return kernel.eval(trainingSet.get(i1), trainingSet.get(i2));
     }
 
     private boolean takeStep(int i1, int i2) {
@@ -196,8 +215,8 @@ public class SupportVectorMachine {
         float alph2 = alpha[i2];
         int y1 = trainingClassifications[i1];
         int y2 = trainingClassifications[i2];
-        float e1 = errorCache[i1];
-        float e2 = errorCache[i2];
+        float e1 = getError(i1);
+        float e2 = getError(i2);
         int s = y1 * y2;
         double L;
         double H;
@@ -244,6 +263,7 @@ public class SupportVectorMachine {
             return false;
         }
         a1 = alph1 + s * (alph2 - a2);
+        double bOld = b;
         double b1 = e1 + y1 * (a1 - alph1) * k11 + y2 * (a2 - alph2) * k12 + b;
         double b2 = e2 + y1 * (a1 - alph1) * k12 + y2 * (a2 - alph2) * k22 + b;
         if ((a1 > 0) && (a1 < c)) {
@@ -253,16 +273,25 @@ public class SupportVectorMachine {
         } else if (L != H) {
             b = (b1 + b2) / 2;
         }
+        // Recompute errors
+        for (int i = 0; i < n; i++) {
+            if ((i == i1) || (i == i2)) {
+                errorCache[i] = 0;
+            } else if ((alpha[i] > 0) && (alpha[i] < c)) {
+                // Update error value
+                errorCache[i] = (float) (errorCache[i] + y1 * (a1 - alph1) * biasedKernelEval(i1, i)
+                        + y2 * (a2 - alph2) * biasedKernelEval(i2, i) + bOld - b);
+            }
+        }
         alpha[i1] = (float) a1;
         alpha[i2] = (float) a2;
-        recacheErrors(i1, i2);
         return true;
     }
 
     private boolean examineExample(int i2) {
         int y2 = trainingClassifications[i2];
         float alph2 = alpha[i2];
-        float e2 = errorCache[i2];
+        float e2 = getError(i2);
         float r2 = e2 * y2;
         if (((r2 < -EPSILON) && (alph2 < c)) || ((r2 > EPSILON) && (alph2 > 0))) {
             int numNonDegenerates = 0;
@@ -278,10 +307,12 @@ public class SupportVectorMachine {
                     int i1 = i2;
                     double bestValue = 0;
                     for (int i = 0; i < n; i++) {
-                        double value = Math.abs(errorCache[i] - e2);
-                        if (value > bestValue) {
-                            bestValue = value;
-                            i1 = i;
+                        if ((alpha[i] > 0) && (alpha[i] < c)) {
+                            double value = Math.abs(getError(i) - e2);
+                            if (value > bestValue) {
+                                bestValue = value;
+                                i1 = i;
+                            }
                         }
                     }
                     if (takeStep(i1, i2)) {
@@ -294,7 +325,7 @@ public class SupportVectorMachine {
                 int randomOffset = RANDOM.nextInt(n);
                 for (int i = 0; i < n; i++) {
                     int i1 = (i + randomOffset) % n;
-                    if ((alpha[i1] != 0) && (alpha[i1] != c)) {
+                    if ((alpha[i1] > 0) && (alpha[i1] < c)) {
                         if (takeStep(i1, i2)) {
                             return true;
                         }
@@ -302,7 +333,7 @@ public class SupportVectorMachine {
                 }
             }
             {
-                // Third choice heuristic #2
+                // Third choice heuristic #3
                 int randomOffset = RANDOM.nextInt(n);
                 for (int i = 0; i < n; i++) {
                     int i1 = (i + randomOffset) % n;
@@ -323,7 +354,7 @@ public class SupportVectorMachine {
         // Initialize error cache
         errorCache = new float[n];
         for (int i = 0; i < n; i++) {
-            updateErrorCache(i);
+            computeError(i);
         }
         int numChanged = 0;
         boolean examineAll = true;
