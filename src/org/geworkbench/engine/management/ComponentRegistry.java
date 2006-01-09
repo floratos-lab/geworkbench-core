@@ -582,6 +582,23 @@ public class ComponentRegistry {
         return null;
     }
 
+    /**
+     * Gets all methods for a component that are available to the scripting engine.
+     * @param componentType the type of the component.
+     * @return an array of methods annotated with @Script.
+     */
+    public Method[] getAllScriptMethods(Class componentType) {
+        Method[] methods = getMethodsForComponentType(componentType);
+        ArrayList<Method> scriptMethods = new ArrayList<Method>();
+        for (int i = 0; i < methods.length; i++) {
+            Method method = methods[i];
+            if (method.getAnnotation(Script.class) != null) {
+                scriptMethods.add(method);
+            }
+        }
+        return scriptMethods.toArray(new Method[scriptMethods.size()]);
+    }
+
     public Method getScriptMethodByName(Object component, String methodName) {
         return getScriptMethodByName(component.getClass(), methodName);
     }
