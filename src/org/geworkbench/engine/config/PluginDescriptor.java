@@ -25,7 +25,7 @@ import java.net.URL;
  * a result of processing the <code>&lt;plugin&gt;</code> rules in the
  * application's configuration file.
  */
-public class PluginDescriptor extends IdentifiableImpl {
+public class PluginDescriptor extends IdentifiableImpl implements Comparable {
     // ---------------------------------------------------------------------------
     // --------------- Instance and static variables
     // ---------------------------------------------------------------------------
@@ -158,6 +158,15 @@ public class PluginDescriptor extends IdentifiableImpl {
      */
     public boolean equals(Object obj) {
         return (this.id == ((PluginDescriptor) obj).id);
+    }
+
+    public int compareTo(Object o) {
+        if (o instanceof PluginDescriptor) {
+            PluginDescriptor other = (PluginDescriptor) o;
+            return (id.compareTo(other.id));
+        } else {
+            return -1;
+        }
     }
 
     public Object getModule(String moduleMethod) {
@@ -429,7 +438,7 @@ public class PluginDescriptor extends IdentifiableImpl {
                     menuItemInfo.getAccelerator());
         }
     }
-    
+
     public String toString() {
         return getID() + ": " + getLabel();
     }
