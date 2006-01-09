@@ -429,4 +429,8 @@ public class PluginDescriptor extends IdentifiableImpl {
                     menuItemInfo.getAccelerator());
         }
     }
+    
+    public String toString() {
+        return getID() + ": " + getLabel();
+    }
 }
