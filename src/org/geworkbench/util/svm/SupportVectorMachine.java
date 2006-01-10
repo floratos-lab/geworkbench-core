@@ -196,15 +196,15 @@ public class SupportVectorMachine {
 
     private double biasedKernelEval(int i1, int i2) {
         double bias = 0;
-        if (i1 == i2) {
-            if (trainingClassifications[i1] == 1) {
-                bias = lambda / nPos;
-            } else {
-                bias = lambda / nNeg;
-            }
-        }
-        // Bias disabled
-        return kernel.eval(trainingSet.get(i1), trainingSet.get(i2));
+        // Bias computation eliminated for now - watkin
+//        if (i1 == i2) {
+//            if (trainingClassifications[i1] == 1) {
+//                bias = lambda / nPos;
+//            } else {
+//                bias = lambda / nNeg;
+//            }
+//        }
+        return kernel.eval(trainingSet.get(i1), trainingSet.get(i2)) + bias;
     }
 
     private boolean takeStep(int i1, int i2) {
