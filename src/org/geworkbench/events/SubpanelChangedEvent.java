@@ -19,11 +19,13 @@ public class SubpanelChangedEvent <T extends DSNamed> extends Event {
     public static final int NEW = 2;
     public static final int DELETE = 4;
 
-    DSPanel<T> subpanel = null;
-    int mode = SET_CONTENTS;
+    private DSPanel<T> subpanel = null;
+    private int mode = SET_CONTENTS;
+    private Class<T> type;
 
-    public SubpanelChangedEvent(DSPanel<T> subpan, int m) {
+    public SubpanelChangedEvent(Class<T> type, DSPanel<T> subpan, int m) {
         super(null);
+        this.type = type;
         subpanel = subpan;
         mode = m;
     }
@@ -34,5 +36,9 @@ public class SubpanelChangedEvent <T extends DSNamed> extends Event {
 
     public int getMode() {
         return mode;
+    }
+
+    public Class<T> getType() {
+        return type;
     }
 }

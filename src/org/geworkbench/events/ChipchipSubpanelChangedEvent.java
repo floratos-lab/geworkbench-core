@@ -9,7 +9,7 @@ import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 public class ChipchipSubpanelChangedEvent extends SubpanelChangedEvent<CSChipchipSet> {
 
     public ChipchipSubpanelChangedEvent(DSPanel<CSChipchipSet> dsChipchips, int m) {
-        super(dsChipchips, m);
+        super(CSChipchipSet.class, dsChipchips, m);
     }
 
 }
