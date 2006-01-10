@@ -3,7 +3,6 @@ package org.geworkbench.bison.annotation;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.datastructure.complex.panels.CSPanel;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
-import org.geworkbench.bison.datastructure.complex.panels.LabelledObject;
 import org.geworkbench.bison.datastructure.properties.DSNamed;
 import org.apache.commons.collections15.map.ListOrderedMap;
 import org.apache.commons.collections15.MapIterator;
@@ -663,6 +662,16 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
         DSPanel<T> panel = new CSPanel<T>(clazz);
         for (Iterator<T> iterator = items.iterator(); iterator.hasNext();) {
             panel.add(iterator.next());
+        }
+        // If this is the default class, then also include unlabeled items
+        if (clazz.equals(defaultClass)) {
+            DSItemList<T> allItems = itemListReference.get();
+            for (int i = 0; i < allItems.size(); i++) {
+                T item = allItems.get(i);
+                if (getLabelsForItem(item).length == 0) {
+                    panel.add(item);
+                }
+            }
         }
         return panel;
     }
