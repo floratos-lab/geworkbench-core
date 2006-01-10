@@ -163,7 +163,7 @@ public class PluginDescriptor extends IdentifiableImpl implements Comparable {
     public int compareTo(Object o) {
         if (o instanceof PluginDescriptor) {
             PluginDescriptor other = (PluginDescriptor) o;
-            return (id.compareTo(other.id));
+            return (id.compareToIgnoreCase(other.id));
         } else {
             return -1;
         }
