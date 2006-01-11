@@ -63,8 +63,9 @@ public class ExpressionFileFormat extends DataSetFileFormat {
         try {
             maSet.read(file);
         } catch (Exception e) {
+            e.printStackTrace();
         }
-        if (maSet.loadingCanceled)
+        if (maSet.loadingCancelled)
             return null;
         return maSet;
     }

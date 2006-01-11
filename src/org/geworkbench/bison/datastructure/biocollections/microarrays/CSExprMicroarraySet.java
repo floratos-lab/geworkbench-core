@@ -1,13 +1,6 @@
 package org.geworkbench.bison.datastructure.biocollections.microarrays;
 
-import MAGE.BioAssay;
-import MAGE.DerivedBioAssay;
-import MAGE.MeasuredBioAssay;
-import org.geworkbench.bison.parsers.resources.AffyResource;
-import org.geworkbench.bison.parsers.resources.CaArrayResource;
-import org.geworkbench.bison.parsers.*;
 import org.geworkbench.bison.util.RandomNumberGenerator;
-import gov.nih.nci.mageom.bean.BioAssay.BioAssayImpl;
 import org.geworkbench.bison.util.Range;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.bison.annotation.*;
@@ -15,7 +8,6 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.*;
 import org.geworkbench.bison.util.*;
-import org.geworkbench.bison.parsers.resources.Resource;
 
 import javax.swing.*;
 import java.io.*;
@@ -95,7 +87,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
         return label;
     }
 
-    public boolean loadingCanceled = false;
+    public boolean loadingCancelled = false;
 
     public void read(File _file) {
         file = _file;
@@ -125,7 +117,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
                 parser.parseLine(line, this);
                 if (rm.pm != null) {
                     if (rm.pm.isCanceled()) {
-                        loadingCanceled = true;
+                        loadingCancelled = true;
                         rm.reader.close();
                         return;
                     }
@@ -138,7 +130,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
             }
         } catch (InterruptedIOException iioe) {
             iioe.printStackTrace();
-            loadingCanceled = true;
+            loadingCancelled = true;
             return;
         } catch (Exception ioe) {
             ioe.printStackTrace();
@@ -157,7 +149,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
             while ((line = rm.reader.readLine()) != null) {
                 parser.executeLine(line, this);
                 if (rm.pm.isCanceled()) {
-                    loadingCanceled = true;
+                    loadingCancelled = true;
                     rm.reader.close();
                     return;
                 }
@@ -166,7 +158,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
                 }
             }
         } catch (InterruptedIOException iioe) {
-            loadingCanceled = true;
+            loadingCancelled = true;
             return;
         } catch (Exception ioe) {
             System.out.println("Error while parsing line: " + line);
@@ -369,7 +361,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
                     } else if (line.charAt(0) != '\t') {
                         if (mArraySet.getCompatibilityLabel() == null) {
                             String token = line.substring(0, startindx);
-                            String chiptype = AnnotationParser.matchChipType(token);
+                            String chiptype = AnnotationParser.matchChipType(token, false);
                             if (chiptype != null) {
                                 mArraySet.setCompatibilityLabel(chiptype);
                             }

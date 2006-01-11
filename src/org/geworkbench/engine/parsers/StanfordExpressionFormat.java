@@ -78,7 +78,7 @@ public class StanfordExpressionFormat extends DataSetFileFormat {
             read(maSet, file);
         } catch (Exception e) {
         }
-        if (maSet.loadingCanceled)
+        if (maSet.loadingCancelled)
             return null;
         return maSet;
     }
@@ -109,7 +109,7 @@ public class StanfordExpressionFormat extends DataSetFileFormat {
             //                AnnotationParser.callUserDefinedAnnotation();
             //            }
         } catch (InterruptedIOException iioe) {
-            //loadingCanceled = true;
+            //loadingCancelled = true;
             return;
         } catch (Exception ioe) {
             int i = 0;
@@ -131,7 +131,7 @@ public class StanfordExpressionFormat extends DataSetFileFormat {
                 geneId += executeLine(line, geneId, maSet);
             }
         } catch (InterruptedIOException iioe) {
-            //loadingCanceled = true;
+            //loadingCancelled = true;
             return;
         } catch (Exception ioe) {
             System.out.println("Error while parsing line: " + line);
@@ -202,7 +202,7 @@ public class StanfordExpressionFormat extends DataSetFileFormat {
         } else {
             if (mArraySet.getCompatibilityLabel() == null) {
                 String[] st = line.split("\t");
-                String chiptype = AnnotationParser.matchChipType(st[0]);
+                String chiptype = AnnotationParser.matchChipType(st[0], false);
                 if (chiptype != null) {
                     mArraySet.setCompatibilityLabel(chiptype);
                 }

@@ -74,7 +74,7 @@ public class MAGEParser {
                 //gm.check(mmv, false);
                 if (maSet.getCompatibilityLabel() == null) {
                     String token = gm.getLabel();
-                    String chiptype = AnnotationParser.matchChipType(token);
+                    String chiptype = AnnotationParser.matchChipType(token, false);
 
                     if (chiptype != null) {
                         maSet.setCompatibilityLabel(chiptype);
@@ -99,7 +99,7 @@ public class MAGEParser {
                     //gm.check(mmv, false);
                     if (maSet.getCompatibilityLabel() == null) {
                         String token = gm.getLabel();
-                        String chiptype = AnnotationParser.matchChipType(token);
+                        String chiptype = AnnotationParser.matchChipType(token, false);
 
                         if (chiptype != null) {
                             maSet.setCompatibilityLabel(chiptype);

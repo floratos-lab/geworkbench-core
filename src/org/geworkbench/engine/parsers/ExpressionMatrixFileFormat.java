@@ -64,7 +64,7 @@ public class ExpressionMatrixFileFormat extends DataSetFileFormat {
             maSet.read(file);
         } catch (Exception e) {
         }
-        if (maSet.loadingCanceled)
+        if (maSet.loadingCancelled)
             return null;
         return maSet;
     }
