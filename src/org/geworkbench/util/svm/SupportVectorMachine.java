@@ -12,7 +12,7 @@ import java.util.Random;
  */
 public class SupportVectorMachine {
 
-    private static final double EPSILON = 0.001;
+    private static final float DEFAULT_EPSILON = 0.001f;
 
     private static final Log log = LogFactory.getLog(SupportVectorMachine.class);
 
@@ -40,24 +40,59 @@ public class SupportVectorMachine {
             for (int i = 0; i < n; i++) {
                 dot += a[i] * b[i];
             }
-//            double manual = (dot + 1) * (dot +1);
             return dot + 1;
-//            if (manual != pow) {
-//                log.error("Not equal");
-//            }
-//            return manual;
+        }
+
+        public String toString() {
+            return "Linear 1st Power";
         }
     };
 
-    public SupportVectorMachine(List<float[]> caseList, List<float[]> controlList, KernelFunction kernel, float lambdaFactor) {
+    public static final KernelFunction LINEAR_KERNAL_FUNCTION_2ND_POWER = new KernelFunction() {
+        public double eval(float[] a, float[] b) {
+            int n = a.length;
+            double dot = 0;
+            for (int i = 0; i < n; i++) {
+                dot += a[i] * b[i];
+            }
+            return Math.pow(dot + 1, 2);
+        }
+
+        public String toString() {
+            return "Linear 2nd Power";
+        }
+    };
+
+    /**
+     * RBF Kernel looks like: exp( -dist(a,b)^2 / (2*width^2) )
+     */
+    public static final KernelFunction RADIAL_BASIS_KERNEL = new KernelFunction() {
+        public double eval(float[] a, float[] b) {
+            int n = a.length;
+            double dot = 0;
+            for (int i = 0; i < n; i++) {
+                float temp = a[i] - b[i];
+                dot += Math.pow(temp, 2);
+            }
+            // 2 is standing in for 2*width^2 for now based on a value I saw specified in another RBF implementation, this
+            // will have to be a parameter at some point
+            return Math.exp(-dot / 2);
+        }
+
+        public String toString() {
+            return "Radial Basis Function";
+        }
+    };
+
+    public SupportVectorMachine(List<float[]> caseList, List<float[]> controlList, KernelFunction kernel, float lambdaFactor) throws ClassifierException {
         this.lambda = lambdaFactor;
         int caseSize = caseList.size();
         if (caseSize == 0) {
-            throw new RuntimeException("Must have at least one case.");
+            throw new ClassifierException("Must have at least one case.");
         }
         int controlSize = controlList.size();
         if (controlSize == 0) {
-            throw new RuntimeException("Must have at least one control.");
+            throw new ClassifierException("Must have at least one control.");
         }
         n = caseSize + controlSize;
         trainingSet = new ArrayList<float[]>(n);
@@ -86,6 +121,13 @@ public class SupportVectorMachine {
 
     public void buildSupportVectorsSMO(float c) {
         this.c = c;
+        this.epsilon = DEFAULT_EPSILON;
+        computeSMO();
+    }
+
+    public void buildSupportVectorsSMO(float c, float epsilon) {
+        this.c = c;
+        this.epsilon = epsilon;
         computeSMO();
     }
 
@@ -167,7 +209,7 @@ public class SupportVectorMachine {
 
     private float[] errorCache;
 
-    private float c;
+    private float c, epsilon;
 
     private float computeError(int index) {
         return (float) (biasedDiscriminant(index) - trainingClassifications[index]);
@@ -246,9 +288,9 @@ public class SupportVectorMachine {
             alpha[i2] = (float) H;
             double Hobj = objective();
             alpha[i2] = alph2;
-            if (Lobj > Hobj + EPSILON) {
+            if (Lobj > Hobj + epsilon) {
                 a2 = L;
-            } else if (Lobj < Hobj - EPSILON) {
+            } else if (Lobj < Hobj - epsilon) {
                 a2 = H;
             } else {
                 a2 = alph2;
@@ -259,7 +301,7 @@ public class SupportVectorMachine {
         } else if (a2 > c - 1e-8) {
             a2 = c;
         }
-        if (Math.abs(a2 - alph2) < EPSILON * (a2 + alph2 + EPSILON)) {
+        if (Math.abs(a2 - alph2) < epsilon * (a2 + alph2 + epsilon)) {
             return false;
         }
         a1 = alph1 + s * (alph2 - a2);
@@ -293,7 +335,7 @@ public class SupportVectorMachine {
         float alph2 = alpha[i2];
         float e2 = getError(i2);
         float r2 = e2 * y2;
-        if (((r2 < -EPSILON) && (alph2 < c)) || ((r2 > EPSILON) && (alph2 > 0))) {
+        if (((r2 < -epsilon) && (alph2 < c)) || ((r2 > epsilon) && (alph2 > 0))) {
             int numNonDegenerates = 0;
             for (int i = 0; i < n; i++) {
                 if ((alpha[i] != 0) && (alpha[i] != c)) {
@@ -409,7 +451,12 @@ public class SupportVectorMachine {
         controls.add(example4);
         {
             /// NORMAL
-            SupportVectorMachine svm = new SupportVectorMachine(cases, controls, LINEAR_KERNAL_FUNCTION, 0.1f);
+            SupportVectorMachine svm = null;
+            try {
+                svm = new SupportVectorMachine(cases, controls, LINEAR_KERNAL_FUNCTION, 0.1f);
+            } catch (ClassifierException e) {
+                e.printStackTrace();
+            }
             svm.buildSupportVectors(50, 1e-6);
             svm.compute();
             svm.test(4, 1);
@@ -425,7 +472,12 @@ public class SupportVectorMachine {
         }
         {
             /// SMO
-            SupportVectorMachine svm = new SupportVectorMachine(cases, controls, LINEAR_KERNAL_FUNCTION, 0.1f);
+            SupportVectorMachine svm = null;
+            try {
+                svm = new SupportVectorMachine(cases, controls, LINEAR_KERNAL_FUNCTION, 0.1f);
+            } catch (ClassifierException e) {
+                e.printStackTrace();
+            }
             svm.buildSupportVectorsSMO(1);
             svm.compute();
             svm.test(4, 1);
