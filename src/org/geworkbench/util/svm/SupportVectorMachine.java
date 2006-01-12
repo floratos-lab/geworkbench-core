@@ -30,6 +30,10 @@ public class SupportVectorMachine {
     private int n;
     private int nPos, nNeg;
 
+    private boolean cancelled = false;
+
+    TrainingProgressListener trainingProgressListener = null;
+
     /**
      * Computes A·B + 1
      */
@@ -401,7 +405,7 @@ public class SupportVectorMachine {
         int numChanged = 0;
         boolean examineAll = true;
         int steps = 0;
-        while ((numChanged > 0) || examineAll) {
+        while (((numChanged > 0) || examineAll) && !isCancelled()) {
             steps++;
             numChanged = 0;
             if (examineAll) {
@@ -425,12 +429,31 @@ public class SupportVectorMachine {
             } else if (numChanged == 0) {
                 examineAll = true;
             }
-//            log.debug("  Step: " + steps + ", Changed: " + numChanged);
+            if (trainingProgressListener != null) {
+                trainingProgressListener.stepUpdate("step "+steps, numChanged);
+            }
+            //            log.debug("  Step: " + steps + ", Changed: " + numChanged);
         }
         log.debug("... done, total steps: " + steps + ".");
     }
 
     //// END SMO
+
+    public TrainingProgressListener getTrainingProgressListener() {
+        return trainingProgressListener;
+    }
+
+    public void setTrainingProgressListener(TrainingProgressListener trainingProgressListener) {
+        this.trainingProgressListener = trainingProgressListener;
+    }
+
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
+    }
 
     public void test(float a, float b) {
         float[] t = {a, b};

@@ -13,6 +13,9 @@ import javax.swing.*;
  * Note that the API changed slightly in the 3rd version:
  * You must now invoke start() on the SwingWorker after
  * creating it.
+ *
+ * @deprecated There is a new SwingWorker backported by Sun from JDK 6 in the threading package, use that instead.
+ * @todo There is a new SwingWorker from Sun that will be included in JDK 6, it's in the threading package, at some point convert all usages to this class.
  */
 
 public abstract class SwingWorker {
