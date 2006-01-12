@@ -34,7 +34,7 @@ public class ProgressGraph extends JComponent {
         this.ymin = ymin;
         this.numPoints = numPoints;
         this.points = new ArrayList<Integer>();
-        setPreferredSize(new Dimension(numPoints * 3, 20));
+        setPreferredSize(new Dimension(numPoints * 2, 20));
     }
 
     public void addPoint(int value) {
