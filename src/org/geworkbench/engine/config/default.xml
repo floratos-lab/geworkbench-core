@@ -85,7 +85,6 @@
 	<plugin id="thresholdNormalizer" name="Threshold Normalizer" class="org.geworkbench.components.normalization.ThresholdNormalizer" source="normalization"/>
 	<plugin id="QuantileNormalizer" name="Quantile Normalizer" class="org.geworkbench.components.normalization.QuantileNormalizer" source="normalization"/>
 	<plugin id="TwoChannelFilter" name="Genepix Filter" class="org.geworkbench.components.filtering.GenepixExpressionThresholdFilter" source="filtering"/>
-	<plugin id="visualBuilder" name="visualBuilder" class="org.geworkbench.engine.config.VisualMenu"/>
 	<plugin id="preferences" name="preferences" class="org.geworkbench.engine.config.PreferencesMenu"/>
 	<plugin id="sessionManager" name="Session Mgr" class="org.geworkbench.util.session.SessionAppComponent"/>
 	<plugin id="versioninfo" name="Version Infomation" class="org.geworkbench.components.versioninfo.VersionInfoComponent" source="versioninfo"/>
@@ -101,18 +100,12 @@
 	<plugin id="patternPanel" name="Patterns" class="org.geworkbench.components.patterns.PatternViewAppComponent" source="patterns">
 		<gui-area name="VisualArea"/>
 	</plugin>
-	<plugin id="SyntenyVisualization" name="Synteny" class="org.geworkbench.components.alignment.synteny.SyntenyViewAppComponent" source="alignment">
-		<gui-area name="VisualArea"/>
-	</plugin>
 	<plugin id="microarrayPanel" name="Microarray Panel" class="org.geworkbench.components.microarrays.MicroarrayPanel" source="microarrays">
 		<gui-area name="VisualArea"/>
 		<!-- An example 'subscription' directive: Set enabled to 'No' to prevent subscription for certain type. -->
 		<subscription type="org.geworkbench.events.ProjectEvent" enabled="Yes"/>
 	</plugin>
 	<plugin id="analysisPanel" name="Analysis" class="org.geworkbench.components.analysis.AnalysisPanel" source="analysis">
-		<gui-area name="CommandArea"/>
-	</plugin>
-	<plugin id="cascriptPanel" name="caSCRIPT" class="org.geworkbench.components.cascript.CaSCRIPTEditor" source="cascript">
 		<gui-area name="CommandArea"/>
 	</plugin>
 	<plugin id="commentsPanel" name="Dataset Annotation" class="org.geworkbench.builtin.projects.comments.CommentsPanel">
@@ -131,9 +124,6 @@
 		<gui-area name="CommandArea"/>
 	</plugin>
 	<plugin id="splash" name="Pattern Discovery" class="org.geworkbench.components.discovery.SequenceDiscoveryViewAppComponent" source="discovery">
-		<gui-area name="CommandArea"/>
-	</plugin>
-	<plugin id="syntenyParameters" name="Synteny Parameters" class="org.geworkbench.components.alignment.panels.SyntenyParameters" source="alignment">
 		<gui-area name="CommandArea"/>
 	</plugin>
 	<plugin id="normalizationPanel" name="Normalization Panel" class="org.geworkbench.components.analysis.NormalizationPanel" source="analysis">

@@ -26,6 +26,7 @@ import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.io.*;
 
 /**
  * <p>Title: Bioworks</p>
@@ -72,10 +73,29 @@ public class Skin extends GUIFramework {
     private ReferenceMap<DSDataSet, String> selectionLastSelected = new ReferenceMap<DSDataSet, String>();
     private DSDataSet currentDataSet;
     private boolean tabSwappingMode = false;
+    public static final String APP_SIZE_FILE = "appCoords.txt";
+    public static final String TEMP_DIR_PROPERTY = "temporary.files.directory";
 
     public Skin() {
         registerAreas();
         fixedComponents = new HashSet<String>();
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                Dimension finalSize = getSize();
+                Point finalLocation = getLocation();
+                File f = new File(System.getProperty(TEMP_DIR_PROPERTY), APP_SIZE_FILE);
+                try {
+                    PrintWriter out = new PrintWriter(new FileWriter(f));
+                    out.println("" + finalSize.width);
+                    out.println("" + finalSize.height);
+                    out.println("" + finalLocation.x);
+                    out.println("" + finalLocation.y);
+                    out.close();
+                } catch (IOException ioe) {
+                    ioe.printStackTrace();
+                }
+            }
+        });
         try {
             jbInit();
         } catch (Exception e) {
@@ -88,9 +108,29 @@ public class Skin extends GUIFramework {
         this.setIconImage(Icons.DATASET_ICON.getImage());
         contentPane.setLayout(borderLayout1);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        int guiWidth = (int) (dim.getWidth() * 0.9);
-        int guiHeight = (int) (dim.getHeight() * 0.9);
-        this.setSize(new Dimension(guiWidth, guiHeight));
+        int guiHeight = 0;
+        int guiWidth = 0;
+        boolean foundSize = false;
+        File sizeFile = new File(System.getProperty(TEMP_DIR_PROPERTY), APP_SIZE_FILE);
+        if (sizeFile.exists()) {
+            try {
+                BufferedReader in = new BufferedReader(new FileReader(sizeFile));
+                guiWidth = Integer.parseInt(in.readLine());
+                guiHeight = Integer.parseInt(in.readLine());
+                int guiX = Integer.parseInt(in.readLine());
+                int guiY = Integer.parseInt(in.readLine());
+                setLocation(guiX, guiY);
+                foundSize = true;
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        if (!foundSize) {
+            guiWidth = (int) (dim.getWidth() * 0.9);
+            guiHeight = (int) (dim.getHeight() * 0.9);
+            this.setLocation((dim.width - this.getWidth()) / 2, (dim.height - this.getHeight()) / 2);
+        }
+        setSize(new Dimension(guiWidth, guiHeight));
         this.setTitle(System.getProperty("application.title"));
         statusBar.setText(" ");
         jSplitPane1.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -127,7 +167,6 @@ public class Skin extends GUIFramework {
         jSplitPane1.setDividerLocation(230);
         jSplitPane2.setDividerLocation((int) (guiHeight * 0.60));
         jSplitPane3.setDividerLocation((int) (guiHeight * 0.35));
-        this.setLocation((dim.width - this.getWidth()) / 2, (dim.height - this.getHeight()) / 2);
         visualPanel.setComponentProvider(new ComponentProvider(VISUAL_AREA));
         commandPanel.setComponentProvider(new ComponentProvider(COMMAND_AREA));
         selectionPanel.setComponentProvider(new ComponentProvider(SELECTION_AREA));

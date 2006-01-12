@@ -18,6 +18,8 @@
         <property name="src" value="src"/>
         <!-- Directory for releases -->
         <property name="dist" value="dist"/>
+        <!-- Directory for releases -->
+        <property name="dev" value="devkit"/>
         <!-- Source directory for resources -->
         <property name="res" value="res"/>
         <!-- Directory for Javadoc -->
@@ -92,6 +94,48 @@
                 <include name="build.xml"/>
             </fileset>
         </zip>
+    </target>
+
+    <!-- ===================================================================== -->
+    <!-- DEV  -->
+    <!-- ===================================================================== -->
+    <target name="dev" depends="compile" description="Builds a developer kit (zip file).">
+        <delete dir="${dev}"/>
+        <mkdir dir="${dev}"/>
+        <mkdir dir="${dev}/components"/>
+        <mkdir dir="${dev}/conf"/>
+        <mkdir dir="${dev}/core"/>
+        <mkdir dir="${dev}/sampleData"/>
+        <copy todir="${dev}/lib">
+            <fileset dir="${lib}"/>
+        </copy>
+        <copy todir="${dev}/components">
+            <fileset dir="${components}">
+                <include name="alignment/**/*"/>
+                <include name="analysis/**/*"/>
+                <include name="analysis/**/*"/>
+                <include name="annotations/**/*"/>
+                <include name="associationdiscovery/**/*"/>
+                <include name="clustering/**/*"/>
+                <include name="colormosaic/**/*"/>
+                <include name="discovery/**/*"/>
+                <include name="example/**/*"/>
+            </fileset>
+        </copy>
+        <copy todir="${dev}/sampleData">
+            <fileset dir="data">
+                <include name="web100.exp"/>
+                <include name="rmaExpressSample.txt"/>
+                <include name="histoall.fa"/>
+                <include name="aml8_924_ab_hu68_4000markers.txt"/>
+                <include name="aml8_965_ab_hu68_4000markers.txt"/>
+                <include name="21161 neu10-4000markers.gpr"/>
+                <include name="21162 ras7-4000markers.gpr"/>
+            </fileset>
+        </copy>
+        <jar destfile="${dev}/core/geworkbench-core.jar">
+            <fileset dir="${classes}"/>
+        </jar>
     </target>
 
     <!-- ===================================================================== -->
