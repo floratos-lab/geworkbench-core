@@ -12,6 +12,7 @@
         <property name="debug" value="on"/>
         <!-- Paths -->
         <property name="classes" value="classes"/>
+        <property name="conf" value="conf"/>
         <property name="temp" value="temp"/>
         <!-- Java Source -->
         <property name="src" value="src"/>
@@ -35,77 +36,6 @@
     <!-- ===================================================================== -->
     <target name="prepare" depends="init" description="Prepares for compilation.">
         <mkdir dir="${classes}"/>
-        <!-- Classpath for compiling -->
-        <!--<path id="classpath">-->
-        <!--<pathelement location="lib\ArrayExpress.jar"/>-->
-        <!--<pathelement location="lib\caBIO.jar"/>-->
-        <!--<pathelement location="lib\xml-apis.jar"/>-->
-        <!--<pathelement location="lib\jai_core.jar"/>-->
-        <!--<pathelement location="lib\jdom.jar"/>-->
-        <!--<pathelement location="lib\axis.jar"/>-->
-        <!--<pathelement location="lib\activation.jar"/>-->
-        <!--<pathelement location="lib\mail.jar"/>-->
-        <!--<pathelement location="lib\commons-beanutils.jar"/>-->
-        <!--<pathelement location="lib\commons-collections.jar"/>-->
-        <!--<pathelement location="lib\commons-digester.jar"/>-->
-        <!--<pathelement location="lib\commons-discovery.jar"/>-->
-        <!--<pathelement location="lib\commons-logging.jar"/>-->
-        <!--<pathelement location="lib\jaxrpc.jar"/>-->
-        <!--<pathelement location="lib\log4j-1.2.8.jar"/>-->
-        <!--<pathelement location="lib\saaj.jar"/>-->
-        <!--<pathelement location="lib\wsdl4j.jar"/>-->
-        <!--<pathelement location="lib\jcommon-1.0.0-rc1.jar"/>-->
-        <!--<pathelement location="lib\jfreechart-1.0.0-rc1.jar"/>-->
-        <!--<pathelement location="lib\jhall.jar"/>-->
-        <!--<pathelement location="lib\junit.jar"/>-->
-        <!--<pathelement location="lib\polgara.jar"/>-->
-        <!--<pathelement location="lib\distributions.jar"/>-->
-        <!--<pathelement location="lib\Jama-1.0.1.jar"/>-->
-        <!--<pathelement location="lib\jgraph.jar"/>-->
-        <!--<pathelement location="lib\jbcl.jar"/>-->
-        <!--<pathelement location="lib\docking.jar"/>-->
-        <!--<pathelement location="lib\poi-2.5.1-final-20040804.jar"/>-->
-        <!--<pathelement location="lib\ogsa.jar"/>-->
-        <!--<pathelement location="lib\cog-jglobus.jar"/>-->
-        <!--<pathelement location="lib\cog-axis.jar"/>-->
-        <!--<pathelement location="lib\ostermillerutils_1_04_03_for_kaffe.jar"/>-->
-        <!--<pathelement location="lib\Simulation_libs\colt.jar"/>-->
-        <!--<pathelement location="lib\Simulation_libs\JClass.jar"/>-->
-        <!--<pathelement location="lib\Simulation_libs\jcommon.jar"/>-->
-        <!--<pathelement location="lib\Simulation_libs\jfreechart.jar"/>-->
-        <!--<pathelement location="lib\Simulation_libs\mpiJava.jar"/>-->
-        <!--<pathelement location="lib\Simulation_libs\netx.jar"/>-->
-        <!--<pathelement location="lib\Simulation_libs\odeToJava.jar"/>-->
-        <!--<pathelement location="lib\Simulation_libs\SBMLReader.jar"/>-->
-        <!--<pathelement location="lib\Simulation_libs\SBWCore.jar"/>-->
-        <!--<pathelement location="lib\Simulation_libs\jahmm-0.2.6.jar"/>-->
-        <!--<pathelement location="lib\BNJ_libs\jxl.jar"/>-->
-        <!--<pathelement location="lib\BNJ_libs\openjgraph.jar"/>-->
-        <!--<pathelement location="lib\BNJ_libs\skinlf.jar"/>-->
-        <!--<pathelement location="lib\cytoscape\cytoscape.jar"/>-->
-        <!--<pathelement location="lib\caArrayMageom\aspectjrt.jar"/>-->
-        <!--<pathelement location="lib\caArrayMageom\caarray-client.jar"/>-->
-        <!--<pathelement location="lib\caArrayMageom\commons-dbcp.jar"/>-->
-        <!--<pathelement location="lib\caArrayMageom\commons-lang.jar"/>-->
-        <!--<pathelement location="lib\caArrayMageom\commons-pool.jar"/>-->
-        <!--<pathelement location="lib\caArrayMageom\db-ojb-1.0.rc7.jar"/>-->
-        <!--<pathelement location="lib\caArrayMageom\j2ee.jar"/>-->
-        <!--<pathelement location="lib\caArrayMageom\jaxen-full.jar"/>-->
-        <!--<pathelement location="lib\caArrayMageom\mageom-client.jar"/>-->
-        <!--<pathelement location="lib\mageom.jar"/>-->
-        <!--<pathelement location="lib\globusSplash.jar"/>-->
-        <!--<pathelement location="lib\puretls.jar"/>-->
-        <!--<pathelement location="lib\commons-math-1.0.jar"/>-->
-        <!--<pathelement location="lib\weka.jar"/>-->
-        <!--<pathelement location="lib\cglib-nodep-2.1.jar"/>-->
-        <!--<pathelement location="lib\gominer.jar"/>-->
-        <!--<pathelement location="lib\ensj-30.2.jar"/>-->
-        <!--<pathelement location="lib\looks-1.3.1.jar"/>-->
-        <!--<pathelement location="lib\antlr-2.7.5.jar"/>-->
-        <!--<pathelement location="lib\jaxb-rt-1.0-ea.jar"/>-->
-        <!--<pathelement location="lib\NetComponents.jar"/>-->
-        <!--<pathelement location="lib\bcel-5.1.jar"/>-->
-        <!--</path>-->
         <path id="classpath">
             <fileset dir="${lib}">
                 <include name="**/*.jar"/>
@@ -114,6 +44,7 @@
         <!-- Classpath for running -->
         <path id="run.classpath">
             <pathelement location="${classes}"/>
+            <pathelement location="${conf}"/>
             <path refid="classpath"/>
         </path>
     </target>

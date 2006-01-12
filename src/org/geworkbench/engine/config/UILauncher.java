@@ -99,7 +99,7 @@ public class UILauncher implements AnnotationParserListener {
     static void initProperties() {
         InputStream reader = null;
         try {
-            reader = Class.forName("org.geworkbench.engine.config.UILauncher").getResourceAsStream("application.properties");
+            reader = Class.forName("org.geworkbench.engine.config.UILauncher").getResourceAsStream("/application.properties");
             System.getProperties().load(reader);
             if (System.getSecurityManager() == null) {
                 System.setSecurityManager(new SecurityManager());
@@ -206,7 +206,7 @@ public class UILauncher implements AnnotationParserListener {
         }
 
         try {
-            InputStream is = Class.forName("org.geworkbench.engine.config.UILauncher").getResourceAsStream(configFileName);
+            InputStream is = Class.forName("org.geworkbench.engine.config.UILauncher").getResourceAsStream("/" + configFileName);
             if (is == null) {
                 exitOnErrorMessage("Invalid or absent configuration file.");
             }

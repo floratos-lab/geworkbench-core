@@ -287,7 +287,6 @@
         <root url="jar://$PROJECT_DIR$/lib/caArrayMageom/j2ee.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/caArrayMageom/jaxen-full.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/caArrayMageom/mageom-client.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/mageom.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/globusSplash.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/puretls.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/commons-math-1.0.jar!/" />

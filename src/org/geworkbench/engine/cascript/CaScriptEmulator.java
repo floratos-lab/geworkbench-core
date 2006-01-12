@@ -109,7 +109,7 @@ public class CaScriptEmulator {
         InputStream reader = null;
         try {
             reader = UILauncher.class.
-                    getResourceAsStream("application.properties");
+                    getResourceAsStream("/application.properties");
             System.getProperties().load(reader);
             if (System.getSecurityManager() == null) {
                 System.setSecurityManager(new SecurityManager());
