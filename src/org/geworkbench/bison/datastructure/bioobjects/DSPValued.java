@@ -3,7 +3,7 @@ package org.geworkbench.bison.datastructure.bioobjects;
 /**
  * Implementing classes have a notion of an object and an associated 'confidence' value (p-value) for that object.
  */
-public interface DSPValued <T> {
+public interface DSPValued {
 
     /**
      * Get the p-value for this object.
@@ -12,10 +12,6 @@ public interface DSPValued <T> {
      */
     public double getPValue();
 
-    /**
-     * Get the object itself.
-     *
-     * @return the object for which there is an associated p-value.
-     */
-    public T getObject();
+    public void setPValue(double value);
+
 }

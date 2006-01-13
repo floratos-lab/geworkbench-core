@@ -9,7 +9,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="geworkbench" />
     <orderEntry type="module" module-name="alignment" />
-    <orderEntry type="module" module-name="am" />
     <orderEntry type="module" module-name="analysis" />
     <orderEntry type="module" module-name="annotations" />
     <orderEntry type="module" module-name="associationdiscovery" />

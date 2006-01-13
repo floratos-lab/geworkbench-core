@@ -1,16 +1,15 @@
 package org.geworkbench.bison.algorithm.classification;
 
-import org.geworkbench.bison.datastructure.biocollections.DataSet;
-import org.geworkbench.bison.datastructure.biocollections.classification.DSTrainingSet;
 import org.geworkbench.bison.datastructure.bioobjects.DSClassification;
-import org.geworkbench.bison.datastructure.bioobjects.DSParameters;
+import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
+import org.geworkbench.bison.datastructure.properties.DSNamed;
 
 import java.util.Collection;
 
 /**
  * Implementing classifiers are able to run classifications on objects.
  */
-public interface DSClassifier <T> {
+public interface DSClassifier<T extends DSNamed> {
 
     /**
      * Runs a classification on the given object.
@@ -28,19 +27,6 @@ public interface DSClassifier <T> {
      * @todo - watkin - Is Collection the right interface to use for the return value?
      * At this interface level, there is no contract on how the results are ordered or associated with the input.
      */
-    Collection<DSClassification<T>> run(DataSet<T> db);
+    Collection<DSClassification<T>> run(DSItemList<T> db);
 
-    /**
-     * Sets the parameters for this classifier.
-     *
-     * @param p the parameters.
-     */
-    void setParameters(DSParameters p);
-
-    /**
-     * Initializes this classifier with a training set.
-     *
-     * @param db the training set for this classifier.
-     */
-    void init(DSTrainingSet<T> db);
 }

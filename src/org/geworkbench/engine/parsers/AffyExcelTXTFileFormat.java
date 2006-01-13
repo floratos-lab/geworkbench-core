@@ -1,6 +1,5 @@
 package org.geworkbench.engine.parsers;
 
-import org.geworkbench.util.microarrayutils.MatrixCreater;
 import org.geworkbench.engine.parsers.microarray.DataSetFileFormat;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;

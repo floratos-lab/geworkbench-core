@@ -1,4 +1,4 @@
-package org.geworkbench.bison.datastructure.pattern;
+package org.geworkbench.bison.datastructure.complex.pattern;
 
 import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.bison.util.Icons;

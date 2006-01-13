@@ -192,7 +192,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/components/alignment/alignment.iml" filepath="$PROJECT_DIR$/components/alignment/alignment.iml" />
-      <module fileurl="file://$PROJECT_DIR$/components/am/am.iml" filepath="$PROJECT_DIR$/components/am/am.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/analysis/analysis.iml" filepath="$PROJECT_DIR$/components/analysis/analysis.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/annotations/annotations.iml" filepath="$PROJECT_DIR$/components/annotations/annotations.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/associationdiscovery/associationdiscovery.iml" filepath="$PROJECT_DIR$/components/associationdiscovery/associationdiscovery.iml" />

@@ -1,6 +1,5 @@
 package org.geworkbench.bison.datastructure.bioobjects.sequence;
 
-import org.geworkbench.bison.datastructure.biocollections.CSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
