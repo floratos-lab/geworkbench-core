@@ -18,7 +18,7 @@
 
     <!-- Configures the actual build loop, how often and which
          build file/target --> 
-    <schedule interval="60">
+    <schedule interval="3600">
       <ant antscript="c:\pkgs\apache-ant-1.6.3\bin\ant.bat"
            buildfile="build-geworkbench.xml"
            target="build"
@@ -47,7 +47,7 @@
                      buildresultsurl="http://caldev:8080/cruisecontrol"
                      spamwhilebroken="false"
                      reportsuccess="fixes">
-              <failure address="caworkbench-dev"/>
+              <failure address="caworkbench-dev" reportWhenFixed="true"/>
           </htmlemail>
       </publishers>
 
