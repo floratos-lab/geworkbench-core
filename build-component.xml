@@ -43,11 +43,17 @@
 
     </target>
 
+    <target name="compile-check" depends="prepare">
+        <condition property="src-exists">
+            <available file="${src}"/>
+        </condition>
+    </target>
+
     <!-- ===================================================================== -->
     <!-- COMPILE  -->
     <!-- ===================================================================== -->
 
-    <target name="compile" depends="prepare" description="Compiles .java source code.">
+    <target name="compile" depends="prepare, compile-check" description="Compiles .java source code." if="src-exists">
         <javac srcdir="${src}" destdir="${classes}" debug="${debug}" source="1.5" target="1.5" memorymaximumsize="256M" fork="true">
             <classpath>
                 <path refid="classpath"/>
