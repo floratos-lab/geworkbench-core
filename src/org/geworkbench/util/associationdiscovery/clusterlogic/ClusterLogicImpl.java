@@ -1,7 +1,5 @@
 package org.geworkbench.util.associationdiscovery.clusterlogic;
 
-import org.geworkbench.util.associationdiscovery.PSSM.CSMatchedPSSMMatrixPattern;
-import org.geworkbench.util.associationdiscovery.cluster.CSMatchedMatrixPattern;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.ExampleFilter;
@@ -11,6 +9,8 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMutableMarker
 import org.geworkbench.bison.datastructure.complex.pattern.CSPatternMatch;
 import org.geworkbench.bison.datastructure.complex.pattern.DSPatternMatch;
 import org.geworkbench.bison.util.DSPValue;
+import org.geworkbench.util.associationdiscovery.PSSM.CSMatchedPSSMMatrixPattern;
+import org.geworkbench.util.associationdiscovery.cluster.CSMatchedMatrixPattern;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;

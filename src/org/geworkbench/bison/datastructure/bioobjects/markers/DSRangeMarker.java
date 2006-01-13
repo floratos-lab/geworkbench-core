@@ -1,7 +1,7 @@
 package org.geworkbench.bison.datastructure.bioobjects.markers;
 
-import org.geworkbench.bison.util.Range;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMutableMarkerValue;
+import org.geworkbench.bison.util.Range;
 
 /**
  * <p>Title: Plug And Play</p>

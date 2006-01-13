@@ -5,14 +5,13 @@ import org.apache.bcel.classfile.JavaClass;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.util.*;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipEntry;
-import java.net.URLClassLoader;
-import java.net.URL;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.io.*;
+import java.net.URL;
+import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  * Indexes a classpath so that classes can be searched hierarchically according to class structure.

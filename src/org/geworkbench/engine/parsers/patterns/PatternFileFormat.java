@@ -1,11 +1,11 @@
 package org.geworkbench.engine.parsers.patterns;
 
-import org.geworkbench.engine.parsers.microarray.DataSetFileFormat;
-import org.geworkbench.engine.parsers.sequences.SequenceResource;
-import org.geworkbench.util.patterns.PatternDB;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.parsers.resources.Resource;
+import org.geworkbench.engine.parsers.microarray.DataSetFileFormat;
+import org.geworkbench.engine.parsers.sequences.SequenceResource;
+import org.geworkbench.util.patterns.PatternDB;
 
 import javax.swing.filechooser.FileFilter;
 import java.io.BufferedReader;

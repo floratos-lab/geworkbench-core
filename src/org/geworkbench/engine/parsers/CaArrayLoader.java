@@ -2,11 +2,11 @@ package org.geworkbench.engine.parsers;
 
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
-import org.geworkbench.bison.parsers.resources.CaArrayResource;
 import org.geworkbench.bison.parsers.CaARRAYParser;
+import org.geworkbench.bison.parsers.resources.CaArrayResource;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author John Watkinson

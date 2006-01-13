@@ -3,16 +3,14 @@ package org.geworkbench.bison.datastructure.bioobjects.microarray;
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
-import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.datastructure.complex.panels.CSPanel;
-import org.geworkbench.bison.util.Icons;
+import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 
-import javax.swing.*;
 import java.io.File;
-import java.util.HashMap;
-import java.util.Comparator;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 
 /**
  * @author John Watkinson
@@ -47,10 +45,6 @@ public class CSSignificanceResultSet <T extends DSGeneMarker> extends CSAncillar
         labels[0] = caseLabels;
         labels[1] = controlLabels;
         panel = new CSPanel<T>(label);
-    }
-
-    public ImageIcon getIcon() {
-        return Icons.SIGNIFICANCE_ICON;
     }
 
     public File getDataSetFile() {

@@ -1,8 +1,6 @@
 package org.geworkbench.util.patterns;
 
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeqPattern;
-import org.geworkbench.util.patterns.*;
-import org.geworkbench.util.patterns.PatternFetchException;
 
 /**
  * <p>Title: Sequence and Pattern Plugin</p>

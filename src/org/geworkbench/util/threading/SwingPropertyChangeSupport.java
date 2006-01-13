@@ -1,16 +1,15 @@
 package org.geworkbench.util.threading;
 
 /*
- * $Id: SwingPropertyChangeSupport.java,v 1.1 2006-01-12 21:19:13 mhall Exp $
+ * $Id: SwingPropertyChangeSupport.java,v 1.2 2006-01-13 22:48:38 watkin Exp $
  *
  * Copyright © 2005 Sun Microsystems, Inc. All rights
  * reserved. Use is subject to license terms.
  */
 
-import java.beans.PropertyChangeSupport;
+import javax.swing.*;
 import java.beans.PropertyChangeEvent;
-
-import javax.swing.SwingUtilities;
+import java.beans.PropertyChangeSupport;
 
 /**
  * This subclass of {@code java.beans.PropertyChangeSupport} is almost
@@ -19,7 +18,7 @@ import javax.swing.SwingUtilities;
  * listeners are only ever notified on the <i>Event Dispatch Thread</i>.
  *
  * @author Igor Kushnirskiy
- * @version $Revision: 1.1 $ $Date: 2006-01-12 21:19:13 $
+ * @version $Revision: 1.2 $ $Date: 2006-01-13 22:48:38 $
  */
 
 public final class SwingPropertyChangeSupport extends PropertyChangeSupport {

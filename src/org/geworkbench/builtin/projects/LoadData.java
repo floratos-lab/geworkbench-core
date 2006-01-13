@@ -1,10 +1,10 @@
 package org.geworkbench.builtin.projects;
 
-import org.geworkbench.engine.parsers.FileFormat;
-import org.geworkbench.engine.parsers.InputFileFormatException;
+import org.geworkbench.builtin.projects.remoteresources.RemoteResourceDialog;
 import org.geworkbench.builtin.projects.util.CaARRAYPanel;
 import org.geworkbench.builtin.projects.util.NCIPanel;
 import org.geworkbench.engine.management.ComponentRegistry;
+import org.geworkbench.engine.parsers.FileFormat;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -12,9 +12,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-
-import org.geworkbench.builtin.projects.remoteresources.RemoteResourceDialog;
-import org.geworkbench.util.ProgressBar;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>

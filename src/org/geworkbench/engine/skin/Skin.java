@@ -5,28 +5,28 @@ import net.eleritec.docking.DockingManager;
 import net.eleritec.docking.DockingPort;
 import net.eleritec.docking.defaults.ComponentProviderAdapter;
 import net.eleritec.docking.defaults.DefaultDockingPort;
-import org.geworkbench.events.ComponentDockingEvent;
-import org.geworkbench.events.listeners.ComponentDockingListener;
+import org.apache.commons.collections15.map.ReferenceMap;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.builtin.projects.Icons;
 import org.geworkbench.engine.config.GUIFramework;
-import org.geworkbench.engine.config.VisualPlugin;
 import org.geworkbench.engine.config.PluginDescriptor;
+import org.geworkbench.engine.config.VisualPlugin;
 import org.geworkbench.engine.config.events.AppEventListenerException;
 import org.geworkbench.engine.config.events.EventSource;
 import org.geworkbench.engine.management.ComponentRegistry;
+import org.geworkbench.events.ComponentDockingEvent;
+import org.geworkbench.events.listeners.ComponentDockingListener;
 import org.geworkbench.util.JAutoList;
-import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.bison.util.Icons;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.collections15.map.ReferenceMap;
 
 import javax.swing.*;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
 /**
  * <p>Title: Bioworks</p>
@@ -105,7 +105,7 @@ public class Skin extends GUIFramework {
 
     private void jbInit() throws Exception {
         contentPane = (JPanel) this.getContentPane();
-        this.setIconImage(Icons.DATASET_ICON.getImage());
+        this.setIconImage(Icons.MICROARRAYS_ICON.getImage());
         contentPane.setLayout(borderLayout1);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         int guiHeight = 0;

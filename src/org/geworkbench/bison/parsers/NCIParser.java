@@ -9,7 +9,6 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMutableMarkerValue;
-import org.geworkbench.bison.parsers.NCIParseContext;
 
 import java.util.HashMap;
 import java.util.List;

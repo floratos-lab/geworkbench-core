@@ -1,14 +1,14 @@
 package org.geworkbench.engine.config.rules;
 
-import org.geworkbench.util.Debug;
-import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.engine.config.*;
 import org.geworkbench.engine.config.events.AppEventListener;
 import org.geworkbench.engine.config.events.EventSource;
-import org.jdom.input.SAXBuilder;
+import org.geworkbench.engine.management.ComponentRegistry;
+import org.geworkbench.util.Debug;
 import org.jdom.Document;
-import org.jdom.JDOMException;
 import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
 
 import javax.swing.*;
 import java.awt.*;

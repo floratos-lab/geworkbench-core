@@ -1,7 +1,7 @@
 package org.geworkbench.events;
 
-import org.geworkbench.util.pathwaydecoder.mutualinformation.AdjacencyMatrix;
 import org.geworkbench.engine.config.events.Event;
+import org.geworkbench.util.pathwaydecoder.mutualinformation.AdjacencyMatrix;
 
 /**
  * <p>Title: Bioworks</p>

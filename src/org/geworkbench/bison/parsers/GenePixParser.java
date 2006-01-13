@@ -1,9 +1,8 @@
 package org.geworkbench.bison.parsers;
 
-import org.geworkbench.bison.datastructure.bioobjects.microarray.
-        DSGenepixMarkerValue;
-import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSGenepixMarkerValue;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSGenepixMarkerValue;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 
 import java.util.*;
 

@@ -1,7 +1,5 @@
 package org.geworkbench.bison.parsers.resources;
 
-import org.geworkbench.bison.parsers.resources.Resource;
-
 import java.io.Reader;
 import java.io.Writer;
 

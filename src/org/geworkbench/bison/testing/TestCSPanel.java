@@ -1,6 +1,5 @@
 package org.geworkbench.bison.testing;
 
-import junit.framework.TestCase;
 import junit.framework.Test;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
 import org.geworkbench.bison.datastructure.complex.panels.CSPanel;
@@ -8,8 +7,8 @@ import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.testing.list.AbstractTestList;
 
-import java.util.List;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Tests {@link CSPanel}.

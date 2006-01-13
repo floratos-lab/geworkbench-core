@@ -4,12 +4,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.swing.*;
-import java.awt.geom.GeneralPath;
-import java.awt.geom.Ellipse2D;
 import java.awt.*;
 import java.awt.font.LineMetrics;
-import java.util.List;
+import java.awt.geom.GeneralPath;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Allows for a graphical display of progress in a process where maybe only the stopping condition is known, but not how

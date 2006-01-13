@@ -1,6 +1,5 @@
 package org.geworkbench.engine.config;
 
-import org.geworkbench.util.BaseRuntimeException;
 import org.geworkbench.bison.datastructure.properties.DSIdentifiable;
 
 import java.util.Vector;

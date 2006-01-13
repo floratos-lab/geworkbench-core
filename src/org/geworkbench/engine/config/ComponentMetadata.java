@@ -1,8 +1,8 @@
 package org.geworkbench.engine.config;
 
 import javax.swing.*;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Metadata for a component, such as common name, version, description, etc.

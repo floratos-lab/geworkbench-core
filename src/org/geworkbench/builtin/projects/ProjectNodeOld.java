@@ -1,7 +1,6 @@
 package org.geworkbench.builtin.projects;
 
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
-import org.geworkbench.builtin.projects.MicroarraySetNode;
 
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;

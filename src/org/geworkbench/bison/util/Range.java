@@ -1,7 +1,5 @@
 package org.geworkbench.bison.util;
 
-import org.geworkbench.bison.util.Normal;
-
 import java.io.Serializable;
 
 /**

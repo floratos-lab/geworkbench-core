@@ -1,4 +1,4 @@
-package org.geworkbench.bison.util;
+package org.geworkbench.builtin.projects;
 
 import javax.swing.*;
 
@@ -8,7 +8,7 @@ import javax.swing.*;
 public class Icons {
     public static ImageIcon WORKSPACE_ICON = new ImageIcon(Icons.class.getResource("workspace16x16.gif"));
     public static ImageIcon PROJECT_ICON = new ImageIcon(Icons.class.getResource("project16x16.gif"));
-    public static ImageIcon DATASET_ICON = new ImageIcon(Icons.class.getResource("chip16x16.gif"));
+    public static ImageIcon MICROARRAYS_ICON = new ImageIcon(Icons.class.getResource("chip16x16.gif"));
     public static ImageIcon PHENOTYPE_ICON = new ImageIcon(Icons.class.getResource("Phenotype16x16.gif"));
     public static ImageIcon SEQUENCE_ICON = new ImageIcon(Icons.class.getResource("dna16x16.gif"));
     public static ImageIcon DATASUBSET_ICON = new ImageIcon(Icons.class.getResource("Phenotype16x16.gif"));

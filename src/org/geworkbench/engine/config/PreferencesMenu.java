@@ -1,11 +1,10 @@
 package org.geworkbench.engine.config;
 
-import org.geworkbench.engine.preferences.*;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSGenepixMarkerValue;
+import org.geworkbench.engine.preferences.GlobalPreferences;
 
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.io.File;
+import java.awt.event.ActionListener;
 
 /**
  * Manages the global preferences

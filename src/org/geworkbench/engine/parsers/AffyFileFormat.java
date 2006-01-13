@@ -1,24 +1,23 @@
 package org.geworkbench.engine.parsers;
 
-import org.geworkbench.engine.parsers.InputFileFormatException;
-import org.geworkbench.engine.parsers.microarray.DataSetFileFormat;
-import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.CSMarkerVector;
+import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
+import org.geworkbench.bison.parsers.AffymetrixParser;
 import org.geworkbench.bison.parsers.resources.AffyResource;
 import org.geworkbench.bison.parsers.resources.Resource;
-import org.geworkbench.bison.parsers.AffymetrixParser;
+import org.geworkbench.engine.parsers.microarray.DataSetFileFormat;
 
-import javax.swing.filechooser.FileFilter;
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 import java.io.*;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Vector;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
 
 /**
  * <p>Title: Bioworks</p>

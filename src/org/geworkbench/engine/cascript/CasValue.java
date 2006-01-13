@@ -1,8 +1,9 @@
 package org.geworkbench.engine.cascript;
 
+import org.geworkbench.engine.management.ComponentRegistry;
+
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
-import org.geworkbench.engine.management.ComponentRegistry;
 
 /* the wrapper class for ObjectValue
 *

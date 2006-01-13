@@ -3,8 +3,6 @@ package org.geworkbench.util.associationdiscovery.cluster;
 import org.apache.commons.math.MathException;
 import org.apache.commons.math.stat.descriptive.StatisticalSummaryValues;
 import org.apache.commons.math.stat.inference.TTestImpl;
-import org.geworkbench.util.associationdiscovery.statistics.ClusterStatistics;
-import org.geworkbench.bison.util.Normal;
 import org.geworkbench.bison.datastructure.biocollections.classification.phenotype.CSClassCriteria;
 import org.geworkbench.bison.datastructure.biocollections.classification.phenotype.DSClassCriteria;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
@@ -16,6 +14,8 @@ import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.complex.pattern.DSPatternMatch;
 import org.geworkbench.bison.util.CSCriterionManager;
 import org.geworkbench.bison.util.DSPValue;
+import org.geworkbench.bison.util.Normal;
+import org.geworkbench.util.associationdiscovery.statistics.ClusterStatistics;
 
 import java.util.ArrayList;
 import java.util.Arrays;

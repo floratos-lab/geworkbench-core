@@ -1,19 +1,15 @@
 package org.geworkbench.util.associationdiscovery.statistics;
 
 import distributions.ChiSquareDistribution;
-import org.geworkbench.util.associationdiscovery.cluster.CSMatchedMatrixPattern;
-import org.geworkbench.bison.datastructure.biocollections.classification.phenotype.CSClassCriteria;
-import org.geworkbench.bison.datastructure.biocollections.classification.phenotype.DSClassCriteria;
+import org.geworkbench.bison.annotation.CSAnnotationContext;
+import org.geworkbench.bison.annotation.CSAnnotationContextManager;
+import org.geworkbench.bison.annotation.DSAnnotationContext;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMutableMarkerValue;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
-import org.geworkbench.bison.util.CSCriterionManager;
-import org.geworkbench.bison.util.DSAnnotValue;
-import org.geworkbench.bison.annotation.DSAnnotationContext;
-import org.geworkbench.bison.annotation.CSAnnotationContextManager;
-import org.geworkbench.bison.annotation.CSAnnotationContext;
+import org.geworkbench.util.associationdiscovery.cluster.CSMatchedMatrixPattern;
 
 import java.util.HashMap;
 import java.util.Iterator;

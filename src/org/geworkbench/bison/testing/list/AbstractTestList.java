@@ -15,15 +15,15 @@
  */
 package org.geworkbench.bison.testing.list;
 
-import org.geworkbench.bison.testing.collection.AbstractTestCollection;
 import org.geworkbench.bison.testing.BulkTest;
+import org.geworkbench.bison.testing.collection.AbstractTestCollection;
+import org.geworkbench.bison.testing.iterator.AbstractTestListIterator;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
-import org.geworkbench.bison.testing.iterator.AbstractTestListIterator;
 
 /**
  * Abstract test class for {@link java.util.List} methods and contracts.
@@ -40,7 +40,7 @@ import org.geworkbench.bison.testing.iterator.AbstractTestListIterator;
  * @author Paul Jack
  * @author Stephen Colebourne
  * @author Matt Hall, John Watkinson, Neil O'Toole
- * @version $Revision: 1.2 $ $Date: 2005-08-16 15:03:49 $
+ * @version $Revision: 1.3 $ $Date: 2006-01-13 22:48:36 $
  */
 public abstract class AbstractTestList extends AbstractTestCollection {
 

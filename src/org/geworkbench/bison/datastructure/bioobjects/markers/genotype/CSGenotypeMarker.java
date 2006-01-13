@@ -1,12 +1,11 @@
 package org.geworkbench.bison.datastructure.bioobjects.markers.genotype;
 
-import org.geworkbench.bison.util.Range;
 import org.geworkbench.bison.datastructure.bioobjects.markers.CSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker;
-import org.geworkbench.bison.datastructure.bioobjects.microarray.CSGenotypicMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMutableMarkerValue;
+import org.geworkbench.bison.util.Range;
 
 import java.io.*;
 import java.util.Arrays;

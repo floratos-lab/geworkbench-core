@@ -4,8 +4,8 @@ import org.geworkbench.bison.datastructure.properties.CSDescribable;
 import org.geworkbench.bison.datastructure.properties.CSExtendable;
 
 import java.io.ObjectStreamField;
-import java.util.regex.Matcher;
 import java.io.Serializable;
+import java.util.regex.Matcher;
 
 /**
  * <p>Title: </p>

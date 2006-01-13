@@ -1,6 +1,5 @@
 package org.geworkbench.util.associationdiscovery.PSSM;
 
-import org.geworkbench.util.associationdiscovery.cluster.CSMatrixPattern;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSGenotypicMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMarkerValue;
@@ -10,6 +9,7 @@ import org.geworkbench.bison.datastructure.complex.pattern.DSPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.DSPatternMatch;
 import org.geworkbench.bison.datastructure.complex.pattern.matrix.CSPValued;
 import org.geworkbench.bison.util.DSPValue;
+import org.geworkbench.util.associationdiscovery.cluster.CSMatrixPattern;
 
 import java.util.HashMap;
 import java.util.Iterator;

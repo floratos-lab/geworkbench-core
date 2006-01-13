@@ -3,11 +3,11 @@ package org.geworkbench.engine.config;
 import com.jgoodies.looks.plastic.PlasticLookAndFeel;
 import com.jgoodies.looks.plastic.theme.SkyBlue;
 import org.apache.commons.digester.Digester;
-import org.geworkbench.util.SplashBitmap;
+import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParserListener;
 import org.geworkbench.engine.config.rules.GeawConfigRule;
 import org.geworkbench.engine.config.rules.PluginRule;
 import org.geworkbench.engine.management.ComponentRegistry;
-import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParserListener;
+import org.geworkbench.util.SplashBitmap;
 
 import javax.swing.*;
 import java.io.IOException;

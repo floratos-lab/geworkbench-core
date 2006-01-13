@@ -1,8 +1,8 @@
 package org.geworkbench.util.function.tp;
 
 import org.geworkbench.util.function.MultivariateGaussian;
-import org.geworkbench.util.pathwaydecoder.GeneGeneRelationship;
 import org.geworkbench.util.network.GeneNetworkEdgeImpl;
+import org.geworkbench.util.pathwaydecoder.GeneGeneRelationship;
 
 public class GaussianMI {
     public GaussianMI() {

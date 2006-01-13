@@ -1,10 +1,8 @@
 package org.geworkbench.util.session;
 
-import org.geworkbench.events.SessionConnectEvent;
-import org.geworkbench.util.session.LoginPanelModel;
-import org.geworkbench.util.session.SessionsViewController;
-import org.geworkbench.util.session.dialog.SessionsViewDialog;
 import org.geworkbench.engine.management.Publish;
+import org.geworkbench.events.SessionConnectEvent;
+import org.geworkbench.util.session.dialog.SessionsViewDialog;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

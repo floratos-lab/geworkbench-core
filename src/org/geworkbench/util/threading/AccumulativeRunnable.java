@@ -1,15 +1,17 @@
 package org.geworkbench.util.threading;
 
 /*
- * $Id: AccumulativeRunnable.java,v 1.1 2006-01-12 21:19:13 mhall Exp $
+ * $Id: AccumulativeRunnable.java,v 1.2 2006-01-13 22:48:38 watkin Exp $
  *
  * Copyright © 2005 Sun Microsystems, Inc. All rights
  * reserved. Use is subject to license terms.
  */
 
-import java.util.*;
+import javax.swing.*;
 import java.lang.reflect.Array;
-import javax.swing.SwingUtilities;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * An abstract class to be used in the cases where we need {@code Runnable}
@@ -68,7 +70,7 @@ import javax.swing.SwingUtilities;
  * </pre>
  *
  * @author Igor Kushnirskiy
- * @version $Revision: 1.1 $ $Date: 2006-01-12 21:19:13 $
+ * @version $Revision: 1.2 $ $Date: 2006-01-13 22:48:38 $
  *
  * @param <T> the type this {@code Runnable} accumulates
  *

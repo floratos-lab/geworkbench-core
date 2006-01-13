@@ -1,32 +1,29 @@
 package org.geworkbench.engine.builder;
 
-import org.geworkbench.util.JAutoList;
-import org.geworkbench.util.AutoListModel;
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+import org.geworkbench.engine.EngineIcons;
 import org.geworkbench.engine.config.ComponentMetadata;
-import org.geworkbench.engine.config.VisualPlugin;
 import org.geworkbench.engine.config.GUIFramework;
+import org.geworkbench.engine.config.VisualPlugin;
 import org.geworkbench.engine.config.rules.PluginObject;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.engine.management.ComponentResource;
-import org.geworkbench.engine.EngineIcons;
-import org.jdom.input.SAXBuilder;
+import org.geworkbench.util.AutoListModel;
 import org.jdom.Document;
-import org.jdom.JDOMException;
 import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ListDataListener;
 import java.awt.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 import java.util.List;
-import java.io.InputStream;
-import java.io.IOException;
-
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.builder.PanelBuilder;
 
 /**
  * @author John Watkinson

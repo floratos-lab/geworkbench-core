@@ -1,7 +1,7 @@
 package org.geworkbench.engine.config.rules;
 
-import org.geworkbench.util.SplashBitmap;
 import org.geworkbench.engine.config.GUIFramework;
+import org.geworkbench.util.SplashBitmap;
 
 import javax.help.CSH;
 import javax.help.HelpBroker;

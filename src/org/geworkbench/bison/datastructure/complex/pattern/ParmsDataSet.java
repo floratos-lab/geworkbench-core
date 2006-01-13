@@ -1,12 +1,10 @@
 package org.geworkbench.bison.datastructure.complex.pattern;
 
-import org.geworkbench.bison.util.RandomNumberGenerator;
-import org.geworkbench.bison.util.Icons;
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.util.RandomNumberGenerator;
 import polgara.soapPD_wsdl.Parameters;
 
-import javax.swing.*;
 import java.io.File;
 
 /**
@@ -25,10 +23,6 @@ public class ParmsDataSet extends CSAncillaryDataSet {
     File dataSetFile = null;
     String label = "Undefined";
 
-
-    public ImageIcon getIcon() {
-        return Icons.PATTERN_ICON;
-    }
 
     public ParmsDataSet(Parameters p, String name, DSDataSet parent) {
         super(parent, name);        

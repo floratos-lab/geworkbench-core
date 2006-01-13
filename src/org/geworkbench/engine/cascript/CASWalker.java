@@ -1,18 +1,5 @@
 // $ANTLR 2.7.5 (20050128): "CAS.g" -> "CASWalker.java"$
-package org.geworkbench.engine.cascript; import java.lang.*; import javax.swing.JOptionPane;
-import antlr.TreeParser;
-import antlr.Token;
-import antlr.collections.AST;
-import antlr.RecognitionException;
-import antlr.ANTLRException;
-import antlr.NoViableAltException;
-import antlr.MismatchedTokenException;
-import antlr.SemanticException;
-import antlr.collections.impl.BitSet;
-import antlr.ASTPair;
-import antlr.collections.impl.ASTArray;
-
-import antlr.MismatchedTokenException;
+package org.geworkbench.engine.cascript;import antlr.MismatchedTokenException;
 import antlr.NoViableAltException;
 import antlr.RecognitionException;
 import antlr.collections.AST;

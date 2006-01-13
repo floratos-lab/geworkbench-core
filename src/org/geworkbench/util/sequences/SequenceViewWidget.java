@@ -1,10 +1,5 @@
 package org.geworkbench.util.sequences;
 
-import org.geworkbench.events.SequenceDiscoveryTableEvent;
-import org.geworkbench.util.PropertiesMonitor;
-import org.geworkbench.util.patterns.CSMatchedSeqPattern;
-import org.geworkbench.util.patterns.PatternOperations;
-import org.geworkbench.util.sequences.SequenceViewWidgetPanel;
 import org.geworkbench.bison.datastructure.biocollections.Collection;
 import org.geworkbench.bison.datastructure.biocollections.DSCollection;
 import org.geworkbench.bison.datastructure.biocollections.sequences.CSSequenceSet;
@@ -14,6 +9,10 @@ import org.geworkbench.bison.datastructure.complex.pattern.DSMatchedPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.DSPatternMatch;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeqPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSSeqRegistration;
+import org.geworkbench.events.SequenceDiscoveryTableEvent;
+import org.geworkbench.util.PropertiesMonitor;
+import org.geworkbench.util.patterns.CSMatchedSeqPattern;
+import org.geworkbench.util.patterns.PatternOperations;
 
 import javax.swing.*;
 import java.awt.*;

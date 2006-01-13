@@ -1,15 +1,15 @@
 package org.geworkbench.bison.datastructure.biocollections.microarrays;
 
-import org.geworkbench.bison.parsers.NCIParser2;
-import org.geworkbench.bison.parsers.GenepixParser2;
-import org.geworkbench.bison.parsers.resources.GenepixResource;
-import org.geworkbench.bison.parsers.resources.MAGEResource2;
-import org.geworkbench.bison.util.RandomNumberGenerator;
 import gov.nih.nci.mageom.bean.BioAssay.BioAssayImpl;
 import org.geworkbench.bison.datastructure.bioobjects.markers.CSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMutableMarkerValue;
+import org.geworkbench.bison.parsers.GenepixParser2;
+import org.geworkbench.bison.parsers.NCIParser2;
+import org.geworkbench.bison.parsers.resources.GenepixResource;
+import org.geworkbench.bison.parsers.resources.MAGEResource2;
+import org.geworkbench.bison.util.RandomNumberGenerator;
 
 import java.io.BufferedReader;
 import java.io.File;

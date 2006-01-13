@@ -6,12 +6,8 @@ import org.apache.commons.logging.LogFactory;
 import javax.swing.*;
 import java.io.*;
 import java.util.*;
-import java.util.zip.ZipFile;
 import java.util.zip.ZipEntry;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.util.*;
+import java.util.zip.ZipFile;
 
 public class Util {
     static Log log = LogFactory.getLog(Util.class);

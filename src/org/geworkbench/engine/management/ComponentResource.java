@@ -3,16 +3,12 @@ package org.geworkbench.engine.management;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.net.URLClassLoader;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
-import java.net.MalformedURLException;
-import java.io.*;
-import java.util.List;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
+import java.util.List;
 
 /**
  * Represents a component (or set of components), their configuration, and required libraries.

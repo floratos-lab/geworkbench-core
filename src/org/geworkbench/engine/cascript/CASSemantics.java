@@ -1,17 +1,5 @@
 // $ANTLR 2.7.5 (20050128): "Semantics.g" -> "CASSemantics.java"$
 package org.geworkbench.engine.cascript;
-import antlr.TreeParser;
-import antlr.Token;
-import antlr.collections.AST;
-import antlr.RecognitionException;
-import antlr.ANTLRException;
-import antlr.NoViableAltException;
-import antlr.MismatchedTokenException;
-import antlr.SemanticException;
-import antlr.collections.impl.BitSet;
-import antlr.ASTPair;
-import antlr.collections.impl.ASTArray;
-
 import antlr.MismatchedTokenException;
 import antlr.NoViableAltException;
 import antlr.RecognitionException;

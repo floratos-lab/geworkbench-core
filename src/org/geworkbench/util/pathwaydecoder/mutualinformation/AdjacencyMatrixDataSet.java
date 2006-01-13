@@ -1,14 +1,10 @@
 package org.geworkbench.util.pathwaydecoder.mutualinformation;
 
-import org.geworkbench.bison.datastructure.biocollections.CSDataSet;
-import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
-import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
+import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
-import org.geworkbench.bison.util.Icons;
 import org.geworkbench.bison.util.RandomNumberGenerator;
 
-import javax.swing.*;
 import java.io.File;
 
 /**
@@ -30,10 +26,6 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet implements DSAnci
         this.threshold = threshold;
         this.depth = depth;
         this.networkName = networkName;
-    }
-
-    public ImageIcon getIcon() {
-        return Icons.NETWORK_ICON;
     }
 
     public void writeToFile(String fileName) {

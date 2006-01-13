@@ -1,8 +1,8 @@
 package org.geworkbench.util.pathwaydecoder.bayes.util;
 
-import org.geworkbench.util.pathwaydecoder.mutualinformation.AdjacencyMatrix;
-import org.geworkbench.bison.util.FileUtil;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
+import org.geworkbench.bison.util.FileUtil;
+import org.geworkbench.util.pathwaydecoder.mutualinformation.AdjacencyMatrix;
 
 import java.io.File;
 import java.util.Iterator;

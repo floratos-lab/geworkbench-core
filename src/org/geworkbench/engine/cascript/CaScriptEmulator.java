@@ -1,21 +1,16 @@
 package org.geworkbench.engine.cascript;
 
 import org.apache.commons.digester.Digester;
-import org.geworkbench.util.SplashBitmap;
-import org.geworkbench.util.Debug;
-import org.geworkbench.engine.config.rules.GeawConfigRule;
-import org.geworkbench.engine.config.rules.PluginRule;
-import org.geworkbench.engine.config.PluginDescriptor;
 import org.geworkbench.engine.config.PluginRegistry;
 import org.geworkbench.engine.config.UILauncher;
-import org.geworkbench.engine.management.Script;
-import org.geworkbench.engine.management.ComponentRegistry;
+import org.geworkbench.engine.config.rules.GeawConfigRule;
+import org.geworkbench.engine.config.rules.PluginRule;
+import org.geworkbench.util.Debug;
+import org.geworkbench.util.SplashBitmap;
 
 import javax.swing.*;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 /**
  * <p>Title: caWorkbench</p>

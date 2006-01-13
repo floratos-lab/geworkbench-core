@@ -1,11 +1,11 @@
 package org.geworkbench.util.associationdiscovery.PSSM;
 
-import org.geworkbench.util.associationdiscovery.cluster.CSMatchedMatrixPattern;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.complex.pattern.CSPatternMatch;
 import org.geworkbench.bison.datastructure.complex.pattern.DSPatternMatch;
 import org.geworkbench.bison.util.DSPValue;
+import org.geworkbench.util.associationdiscovery.cluster.CSMatchedMatrixPattern;
 
 import java.util.HashMap;
 

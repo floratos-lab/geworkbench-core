@@ -1,8 +1,7 @@
 package org.geworkbench.util.session;
 
-import org.geworkbench.util.PropertiesMonitor;
 import org.geworkbench.events.LoginPanelModelEvent;
-import org.geworkbench.events.LoginPanelModelListener;
+import org.geworkbench.util.PropertiesMonitor;
 
 import javax.swing.event.EventListenerList;
 import java.util.ArrayList;

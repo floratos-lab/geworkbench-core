@@ -1,7 +1,7 @@
 package org.geworkbench.events;
 
-import org.geworkbench.util.annotation.Pathway;
 import org.geworkbench.engine.config.events.Event;
+import org.geworkbench.util.annotation.Pathway;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>

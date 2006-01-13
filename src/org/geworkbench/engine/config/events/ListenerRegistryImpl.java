@@ -1,7 +1,7 @@
 package org.geworkbench.engine.config.events;
 
-import org.geworkbench.util.Debug;
 import org.geworkbench.engine.config.PluginRegistry;
+import org.geworkbench.util.Debug;
 
 import java.util.HashMap;
 import java.util.Iterator;

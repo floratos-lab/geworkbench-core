@@ -1,17 +1,8 @@
 // $ANTLR 2.7.5 (20050128): "CAS.g" -> "CASParser.java"$
-package org.geworkbench.engine.cascript; import java.lang.*;
-import antlr.TokenBuffer;
-import antlr.TokenStreamException;
-import antlr.Token;
-import antlr.TokenStream;
-import antlr.RecognitionException;
-import antlr.NoViableAltException;
-import antlr.ParserSharedInputState;
-import antlr.collections.impl.BitSet;
+package org.geworkbench.engine.cascript;import antlr.*;
 import antlr.collections.AST;
-import antlr.ASTFactory;
-import antlr.ASTPair;
 import antlr.collections.impl.ASTArray;
+import antlr.collections.impl.BitSet;
 
 public class CASParser extends antlr.LLkParser       implements CAStokensTokenTypes
  {

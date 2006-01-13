@@ -1,8 +1,8 @@
 package org.geworkbench.events;
 
-import org.geworkbench.util.associationdiscovery.cluster.CSMatchedMatrixPattern;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.engine.config.events.Event;
+import org.geworkbench.util.associationdiscovery.cluster.CSMatchedMatrixPattern;
 
 
 /**
@@ -12,7 +12,7 @@ import org.geworkbench.engine.config.events.Event;
  * <p>Company: Columbia Genomics Center</p>
  *
  * @author not attributable
- * @version $Id: DiscoverEvent.java,v 1.1.1.1 2005-07-28 22:36:26 watkin Exp $
+ * @version $Id: DiscoverEvent.java,v 1.2 2006-01-13 22:48:37 watkin Exp $
  */
 
 public class DiscoverEvent extends Event {

@@ -1,9 +1,9 @@
 package org.geworkbench.bison.testing;
 
-import org.geworkbench.bison.annotation.DSAnnotationContextManager;
-import org.geworkbench.bison.annotation.DSAnnotationType;
 import org.geworkbench.bison.annotation.CSAnnotationContextManager;
 import org.geworkbench.bison.annotation.CSAnnotationType;
+import org.geworkbench.bison.annotation.DSAnnotationContextManager;
+import org.geworkbench.bison.annotation.DSAnnotationType;
 
 /**
  * @author John Watkinson

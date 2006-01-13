@@ -11,9 +11,9 @@ import org.geworkbench.bison.util.DSAnnotValue;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import java.io.Serializable;
 
 /**
  * <p>Title: Bioworks</p>

@@ -17,15 +17,15 @@ package org.geworkbench.bison.testing;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import java.util.ArrayList;
-
 import org.geworkbench.bison.testing.list.AbstractTestList;
+
+import java.util.ArrayList;
 
 /**
  * Abstract test class for ArrayList.
  *
  * @author Matt Hall, John Watkinson, Jason van Zyl
- * @version $Revision: 1.1 $ $Date: 2005-08-10 22:20:31 $
+ * @version $Revision: 1.2 $ $Date: 2006-01-13 22:48:36 $
  */
 public abstract class TestArrayList extends AbstractTestList {
 

@@ -1,7 +1,7 @@
 package org.geworkbench.bison.datastructure.properties;
 
-import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
+import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 
 import java.io.Serializable;
 import java.util.ArrayList;

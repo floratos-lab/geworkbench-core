@@ -5,8 +5,8 @@ import cern.jet.stat.Descriptive;
 import org.geworkbench.util.function.MultivariateGaussianBimodal;
 import org.geworkbench.util.function.functionParameters.bimodalGaussianParams.BimodalGaussianParamsBase;
 import org.geworkbench.util.function.functionParameters.bimodalGaussianParams.BimodalGaussianParamsFactory;
-import org.geworkbench.util.pathwaydecoder.GeneGeneRelationship;
 import org.geworkbench.util.network.GeneNetworkEdgeImpl;
+import org.geworkbench.util.pathwaydecoder.GeneGeneRelationship;
 
 import java.io.BufferedWriter;
 import java.io.File;

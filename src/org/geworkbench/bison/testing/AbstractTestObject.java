@@ -15,8 +15,6 @@
  */
 package org.geworkbench.bison.testing;
 
-import org.geworkbench.bison.testing.BulkTest;
-
 import java.io.*;
 
 /**
@@ -32,7 +30,7 @@ import java.io.*;
  * @author Rodney Waldhoff
  * @author Stephen Colebourne
  * @author Matt Hall, John Watkinson, Anonymous
- * @version $Revision: 1.2 $ $Date: 2005-08-16 21:59:02 $
+ * @version $Revision: 1.3 $ $Date: 2006-01-13 22:48:36 $
  */
 public abstract class AbstractTestObject extends BulkTest {
 

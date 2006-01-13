@@ -1,7 +1,5 @@
 package org.geworkbench.engine.parsers;
 
-import org.geworkbench.util.BaseException;
-
 /**
  *
  * <p>Copyright: Copyright (c) 2003</p>

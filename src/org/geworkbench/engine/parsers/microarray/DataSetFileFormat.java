@@ -1,10 +1,10 @@
 package org.geworkbench.engine.parsers.microarray;
 
-import org.geworkbench.engine.parsers.FileFormat;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.engine.parsers.FileFormat;
+import org.geworkbench.engine.parsers.InputFileFormatException;
 
 import java.io.File;
-import org.geworkbench.engine.parsers.InputFileFormatException;
 
 /**
  * <p>Title: Sequence and Pattern Plugin</p>

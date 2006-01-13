@@ -1,7 +1,5 @@
 package org.geworkbench.bison.datastructure.bioobjects.markers;
 
-import org.geworkbench.bison.datastructure.bioobjects.markers.CSGeneMarker;
-import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.util.StringUtils;
 
 import java.io.Serializable;

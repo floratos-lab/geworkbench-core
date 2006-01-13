@@ -3,9 +3,9 @@ package org.geworkbench.util.pathwaydecoder.bayes.util;
 import edu.ksu.cis.kdd.data.Attribute;
 import edu.ksu.cis.kdd.data.Table;
 import edu.ksu.cis.kdd.data.Tuple;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
 import org.geworkbench.util.pathwaydecoder.bayes.BayesUtil;
 import org.geworkbench.util.pathwaydecoder.bayes.discretizers.LogDiscretizer;
-import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
 
 import java.io.File;
 import java.io.FileWriter;

@@ -1,7 +1,7 @@
 package org.geworkbench.bison.model.clusters;
 
-import org.geworkbench.bison.util.DefaultIdentifiable;
 import org.apache.commons.collections15.map.HashedMap;
+import org.geworkbench.bison.util.DefaultIdentifiable;
 
 import java.lang.reflect.Array;
 import java.util.*;

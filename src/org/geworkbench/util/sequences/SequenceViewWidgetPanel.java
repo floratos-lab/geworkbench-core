@@ -1,16 +1,15 @@
 package org.geworkbench.util.sequences;
 
-import org.geworkbench.util.patterns.CSMatchedHMMSeqPattern;
-import org.geworkbench.util.patterns.CSMatchedSeqPattern;
-import org.geworkbench.util.patterns.FlexiblePattern;
-import org.geworkbench.util.patterns.PatternOperations;
-import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 import org.geworkbench.bison.datastructure.biocollections.DSCollection;
-import org.geworkbench.bison.datastructure.bioobjects.sequence.CSSequence;
+import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import org.geworkbench.bison.datastructure.complex.pattern.DSMatchedPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeqPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSSeqRegistration;
+import org.geworkbench.util.patterns.CSMatchedHMMSeqPattern;
+import org.geworkbench.util.patterns.CSMatchedSeqPattern;
+import org.geworkbench.util.patterns.FlexiblePattern;
+import org.geworkbench.util.patterns.PatternOperations;
 
 import javax.swing.*;
 import java.awt.*;

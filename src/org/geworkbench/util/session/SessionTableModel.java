@@ -1,7 +1,5 @@
 package org.geworkbench.util.session;
 
-import org.geworkbench.util.SwingWorker;
-
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.text.NumberFormat;

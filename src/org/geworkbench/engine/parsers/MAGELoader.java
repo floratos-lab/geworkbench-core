@@ -1,19 +1,18 @@
 package org.geworkbench.engine.parsers;
 
-import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
-import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
-import org.geworkbench.bison.parsers.resources.MAGEResource;
-import org.geworkbench.bison.parsers.resources.MAGEResource2;
-import org.geworkbench.bison.parsers.MAGEParser;
-import org.geworkbench.bison.parsers.NCIParser;
-
-import java.util.List;
-import java.util.ArrayList;
-
 import MAGE.BioAssay;
 import MAGE.DerivedBioAssay;
 import MAGE.MeasuredBioAssay;
 import gov.nih.nci.mageom.bean.BioAssay.BioAssayImpl;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
+import org.geworkbench.bison.parsers.MAGEParser;
+import org.geworkbench.bison.parsers.NCIParser;
+import org.geworkbench.bison.parsers.resources.MAGEResource;
+import org.geworkbench.bison.parsers.resources.MAGEResource2;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author John Watkinson

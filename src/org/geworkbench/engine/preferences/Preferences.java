@@ -1,8 +1,8 @@
 package org.geworkbench.engine.preferences;
 
-import java.util.List;
-import java.util.ArrayList;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author John Watkinson

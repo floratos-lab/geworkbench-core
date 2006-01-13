@@ -1,7 +1,6 @@
 package org.geworkbench.util.visualproperties;
 
 import org.geworkbench.bison.datastructure.complex.panels.CSPanel;
-import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 
 import javax.swing.*;
 import java.awt.*;

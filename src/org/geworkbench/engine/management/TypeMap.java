@@ -11,7 +11,7 @@ import java.util.HashMap;
  * A HashMap that supports polymorphism. So, if there is an entry for java.lang.Number, but not for java.lang.Float,
  * then passing in java.lang.Float the get statement will return the java.lang.Number entry.
  */
-public class TypeMap <T> extends HashMap<Class, T> {
+public class TypeMap<T> extends HashMap<Class, T> {
 
     public TypeMap() {
         super();
@@ -25,6 +25,17 @@ public class TypeMap <T> extends HashMap<Class, T> {
         T result = null;
         while ((result == null) && (type != null)) {
             result = super.get(type);
+            if (result != null) {
+                return result;
+            } else {
+                Class[] interfaces = type.getInterfaces();
+                for (int i = 0; i < interfaces.length; i++) {
+                    result = super.get(interfaces[i]);
+                    if (result != null) {
+                        return result;
+                    }
+                }
+            }
             type = type.getSuperclass();
         }
         return result;

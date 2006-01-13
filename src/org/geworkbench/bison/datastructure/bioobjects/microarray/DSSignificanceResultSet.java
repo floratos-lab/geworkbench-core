@@ -1,9 +1,8 @@
 package org.geworkbench.bison.datastructure.bioobjects.microarray;
 
-import org.geworkbench.bison.datastructure.properties.DSNamed;
-import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
+import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 
 /**

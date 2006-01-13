@@ -1,6 +1,8 @@
 package org.geworkbench.util.sequences;
 
 import Jama.Matrix;
+import org.geworkbench.bison.datastructure.biocollections.sequences.CSSequenceSet;
+import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 import polgara.soapPD_wsdl.SoapPDPortType;
 
 import java.io.BufferedWriter;
@@ -10,9 +12,6 @@ import java.util.HashMap;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.geworkbench.bison.datastructure.biocollections.sequences.CSSequenceSet;
-import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 
 /**
  * <p>Title: Preliminary class written to calculate sequence entropy and profileHMMs</p>

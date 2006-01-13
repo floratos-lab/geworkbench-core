@@ -1,8 +1,5 @@
 package org.geworkbench.util.patterns;
 
-import org.geworkbench.util.patterns.SequentialPatternSource;
-import org.geworkbench.util.SwingWorker;
-import org.geworkbench.util.patterns.CSMatchedSeqPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeqPattern;
 
 import javax.swing.table.AbstractTableModel;

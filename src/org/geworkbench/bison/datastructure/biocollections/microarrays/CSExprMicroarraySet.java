@@ -1,13 +1,15 @@
 package org.geworkbench.bison.datastructure.biocollections.microarrays;
 
-import org.geworkbench.bison.util.RandomNumberGenerator;
-import org.geworkbench.bison.util.Range;
-import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
-import org.geworkbench.bison.annotation.*;
+import org.geworkbench.bison.annotation.CSAnnotationContext;
+import org.geworkbench.bison.annotation.CSAnnotationContextManager;
+import org.geworkbench.bison.annotation.DSAnnotationContext;
+import org.geworkbench.bison.annotation.DSAnnotationContextManager;
 import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
+import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.*;
-import org.geworkbench.bison.util.*;
+import org.geworkbench.bison.util.RandomNumberGenerator;
+import org.geworkbench.bison.util.Range;
 
 import javax.swing.*;
 import java.io.*;
@@ -49,10 +51,6 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
         addDescription("Microarray experiment");
         DSAnnotationContext<DSMicroarray> context = CSAnnotationContextManager.getInstance().getCurrentContext(this);
         CSAnnotationContext.initializePhenotypeContext(context);
-    }
-
-    public ImageIcon getIcon() {
-        return Icons.DATASET_ICON;
     }
 
     public File getFile() {

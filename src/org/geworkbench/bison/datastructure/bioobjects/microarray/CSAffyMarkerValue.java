@@ -5,10 +5,7 @@ import org.geworkbench.bison.parsers.NCIParseContext;
 
 import java.io.ObjectStreamField;
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
-import java.text.DecimalFormat;
-import org.geworkbench.bison.datastructure.bioobjects.microarray.CSExpressionMarkerValue;
 
 
 /**

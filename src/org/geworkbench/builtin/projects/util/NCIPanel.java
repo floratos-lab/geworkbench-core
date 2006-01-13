@@ -1,6 +1,5 @@
 package org.geworkbench.builtin.projects.util;
 
-import org.geworkbench.bison.parsers.resources.MAGEResource2;
 import gov.nih.nci.mageom.bean.BioAssay.BioAssayImpl;
 import gov.nih.nci.mageom.bean.BioAssay.DerivedBioAssayImpl;
 import gov.nih.nci.mageom.bean.BioAssay.MeasuredBioAssayImpl;
@@ -12,6 +11,7 @@ import gov.nih.nci.mageom.search.SearchResult;
 import gov.nih.nci.mageom.util.BioAssayDatumData;
 import gov.nih.nci.mageom.util.OntologyEntryData;
 import gov.nih.nci.mageom.util.ReporterRelatedData;
+import org.geworkbench.bison.parsers.resources.MAGEResource2;
 import org.geworkbench.builtin.projects.LoadData;
 
 import javax.swing.*;

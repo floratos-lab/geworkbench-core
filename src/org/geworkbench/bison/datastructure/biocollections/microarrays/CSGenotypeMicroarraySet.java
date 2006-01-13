@@ -1,20 +1,19 @@
 package org.geworkbench.bison.datastructure.biocollections.microarrays;
 
+import org.geworkbench.bison.annotation.CSAnnotationContext;
+import org.geworkbench.bison.annotation.CSAnnotationContextManager;
+import org.geworkbench.bison.annotation.DSAnnotationContext;
+import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
+import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.genotype.CSGenotypeMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.genotype.GenotypeColorContext;
-import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSGenotypicMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMutableMarkerValue;
-import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
-import org.geworkbench.bison.util.*;
 import org.geworkbench.bison.parsers.resources.Resource;
-import org.geworkbench.bison.annotation.CSAnnotationContextManager;
-import org.geworkbench.bison.annotation.CSAnnotationContext;
-import org.geworkbench.bison.annotation.DSAnnotationContext;
+import org.geworkbench.bison.util.RandomNumberGenerator;
 
-import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,10 +46,6 @@ public class CSGenotypeMicroarraySet extends CSMicroarraySet<DSMicroarray> imple
         //        addObject(DSRangeMarker.class, CSGenotypeMarker.class);
         addDescription("Genotype data");
         type = snpType;
-    }
-
-    public ImageIcon getIcon() {
-        return Icons.DATASET_ICON;
     }
 
     public File getFile() {

@@ -1,7 +1,7 @@
 package org.geworkbench.engine.cascript;
 
+import java.io.InputStream;
 import java.util.HashMap;
-import java.io.*;
 import java.util.Properties;
 
 /**

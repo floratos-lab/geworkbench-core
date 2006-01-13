@@ -1,7 +1,7 @@
 package org.geworkbench.engine.skin;
 
-import org.geworkbench.engine.config.GUIFramework;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.engine.config.GUIFramework;
 
 import javax.swing.*;
 import java.awt.*;

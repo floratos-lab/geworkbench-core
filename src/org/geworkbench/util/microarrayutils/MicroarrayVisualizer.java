@@ -1,18 +1,8 @@
 package org.geworkbench.util.microarrayutils;
 
-import org.geworkbench.events.ImageSnapshotEvent;
-import org.geworkbench.events.ProjectEvent;
-import org.geworkbench.util.associationdiscovery.cluster.CSMatchedMatrixPattern;
-import org.geworkbench.events.AdjacencyMatrixEvent;
-import org.geworkbench.events.MarkerSelectedEvent;
-import org.geworkbench.events.SubpanelChangedEvent;
-import org.geworkbench.builtin.projects.ProjectPanel;
-import org.geworkbench.builtin.projects.ProjectSelection;
-import org.geworkbench.bison.datastructure.biocollections.classification.phenotype.CSClassCriteria;
-import org.geworkbench.engine.management.Publish;
-import org.geworkbench.engine.management.Subscribe;
 import org.geworkbench.bison.annotation.DSCriteria;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.biocollections.classification.phenotype.CSClassCriteria;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.views.CSMicroarraySetView;
 import org.geworkbench.bison.datastructure.biocollections.views.DSMicroarraySetView;
@@ -20,6 +10,14 @@ import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
+import org.geworkbench.builtin.projects.ProjectPanel;
+import org.geworkbench.builtin.projects.ProjectSelection;
+import org.geworkbench.engine.management.Publish;
+import org.geworkbench.engine.management.Subscribe;
+import org.geworkbench.events.ImageSnapshotEvent;
+import org.geworkbench.events.MarkerSelectedEvent;
+import org.geworkbench.events.ProjectEvent;
+import org.geworkbench.util.associationdiscovery.cluster.CSMatchedMatrixPattern;
 
 import javax.swing.*;
 import java.awt.*;

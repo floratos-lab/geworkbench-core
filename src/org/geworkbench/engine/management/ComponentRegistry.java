@@ -1,18 +1,18 @@
 package org.geworkbench.engine.management;
 
 import net.sf.cglib.proxy.*;
-import org.geworkbench.engine.config.PluginDescriptor;
-import org.geworkbench.util.Util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.geworkbench.engine.config.PluginDescriptor;
 import org.geworkbench.engine.config.VisualPlugin;
+import org.geworkbench.util.Util;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.Method;
-import java.util.*;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.lang.reflect.Method;
 import java.net.URLClassLoader;
+import java.util.*;
 
 /**
  * Component registry implementation.

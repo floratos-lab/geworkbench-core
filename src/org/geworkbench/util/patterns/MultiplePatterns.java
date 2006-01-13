@@ -1,8 +1,5 @@
 package org.geworkbench.util.patterns;
 
-import org.geworkbench.util.patterns.*;
-import org.geworkbench.util.patterns.CSMatchedSeqPattern;
-
 import java.util.ArrayList;
 
 /**

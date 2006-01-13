@@ -1,36 +1,33 @@
 package org.geworkbench.builtin.projects;
 
-import org.geworkbench.bison.util.colorcontext.ColorContext;
-import org.geworkbench.engine.parsers.FileFormat;
-import org.geworkbench.engine.parsers.InputFileFormatException;
-import org.geworkbench.engine.parsers.MAGELoader;
-import org.geworkbench.engine.parsers.CaArrayLoader;
-import org.geworkbench.bison.parsers.resources.MAGEResource2;
-import org.geworkbench.bison.util.RandomNumberGenerator;
-import org.geworkbench.util.SaveImage;
-import org.geworkbench.events.CommentsEvent;
-import org.geworkbench.engine.parsers.microarray.DataSetFileFormat;
-import org.geworkbench.engine.parsers.patterns.PatternFileFormat;
-import org.geworkbench.util.PropertiesMonitor;
-import org.geworkbench.engine.management.Publish;
-import org.geworkbench.engine.management.Subscribe;
-import org.geworkbench.engine.management.Script;
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.bison.datastructure.biocollections.views.CSMicroarraySetView;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
+import org.geworkbench.bison.datastructure.biocollections.views.CSMicroarraySetView;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
+import org.geworkbench.bison.datastructure.properties.DSNamed;
+import org.geworkbench.bison.parsers.resources.MAGEResource2;
+import org.geworkbench.bison.util.RandomNumberGenerator;
+import org.geworkbench.bison.util.colorcontext.ColorContext;
 import org.geworkbench.engine.config.MenuListener;
 import org.geworkbench.engine.config.VisualPlugin;
+import org.geworkbench.engine.management.Publish;
+import org.geworkbench.engine.management.Script;
+import org.geworkbench.engine.management.Subscribe;
+import org.geworkbench.engine.management.TypeMap;
+import org.geworkbench.engine.parsers.CaArrayLoader;
+import org.geworkbench.engine.parsers.FileFormat;
+import org.geworkbench.engine.parsers.InputFileFormatException;
+import org.geworkbench.engine.parsers.MAGELoader;
+import org.geworkbench.engine.parsers.microarray.DataSetFileFormat;
+import org.geworkbench.engine.parsers.patterns.PatternFileFormat;
 import org.geworkbench.engine.preferences.GlobalPreferences;
-import org.geworkbench.events.ImageSnapshotEvent;
-import org.geworkbench.events.MicroarrayNameChangeEvent;
-import org.geworkbench.events.NormalizationEvent;
-import org.geworkbench.events.ProjectEvent;
-import org.geworkbench.events.SingleValueEditEvent;
+import org.geworkbench.events.*;
+import org.geworkbench.util.PropertiesMonitor;
+import org.geworkbench.util.SaveImage;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -56,28 +53,17 @@ import java.util.HashMap;
 
 public class ProjectPanel implements VisualPlugin, MenuListener {
 
+    private static TypeMap<ImageIcon> iconMap = new TypeMap<ImageIcon>();
+
+    static {
+        DefaultIconAssignments.initializeDefaultIconAssignments();
+    }
+
+    // Initialize default icons
+
     protected LoadData loadData = new LoadData(this);
 
     private ProjectSelection selection = new ProjectSelection(this);
-
-    static protected HashMap<DSDataSet, DSPanel> dataPanels = new HashMap<DSDataSet, DSPanel>();
-    static protected HashMap<DSDataSet, DSPanel<DSGeneMarker>> markerPanels = new HashMap<DSDataSet, DSPanel<DSGeneMarker>>();
-
-    static public DSPanel getDataPanel(DSDataSet set) {
-        return dataPanels.get(set);
-    }
-
-    static public DSPanel<DSGeneMarker> getMarkerPanel(DSDataSet set) {
-        return markerPanels.get(set);
-    }
-
-    static public void setDataPanel(DSDataSet set, DSPanel panel) {
-        dataPanels.put(set, panel);
-    }
-
-    static public void setMarkerPanel(DSDataSet set, DSPanel<DSGeneMarker> panel) {
-        markerPanels.put(set, panel);
-    }
 
     // The undo buffer
     ProjectTreeNode undoNode = null;
@@ -250,6 +236,19 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
      */
     public void jSaveMenuItem_actionPerformed(ActionEvent e) {
         saveAsFile();
+    }
+
+    public static ImageIcon getIconForType(Class<? extends DSNamed> type) {
+        ImageIcon icon = iconMap.get(type);
+        if (icon == null) {
+            return Icons.GENERIC_ICON;
+        } else {
+            return icon;
+        }
+    }
+
+    public static void setIconForType(Class<? extends DSNamed> type, ImageIcon icon) {
+        iconMap.put(type, icon);
     }
 
     boolean saveAsFile() {

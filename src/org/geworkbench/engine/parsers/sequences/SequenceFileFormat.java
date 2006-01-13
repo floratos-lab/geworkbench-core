@@ -1,11 +1,12 @@
 package org.geworkbench.engine.parsers.sequences;
 
-import org.geworkbench.engine.parsers.microarray.DataSetFileFormat;
-import org.geworkbench.bison.datastructure.biocollections.sequences.CSSequenceSet;
-import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
+import org.geworkbench.bison.datastructure.biocollections.sequences.CSSequenceSet;
+import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 import org.geworkbench.bison.parsers.resources.Resource;
+import org.geworkbench.engine.parsers.InputFileFormatException;
+import org.geworkbench.engine.parsers.microarray.DataSetFileFormat;
 
 import javax.swing.filechooser.FileFilter;
 import java.io.BufferedReader;
@@ -13,7 +14,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
-import org.geworkbench.engine.parsers.InputFileFormatException;
 
 /**
  * <p>Title: SequenceFileFormat</p>

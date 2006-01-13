@@ -1,11 +1,8 @@
 package org.geworkbench.bison.annotation;
 
-import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
-import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
+import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.datastructure.properties.DSNamed;
-
-import java.util.List;
 
 /**
  * This defines the contract for a context of <i>annotations</i>, <i>labels</i> and <i>classifications</i> for a

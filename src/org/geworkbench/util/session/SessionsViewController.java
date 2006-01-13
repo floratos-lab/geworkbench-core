@@ -1,6 +1,5 @@
 package org.geworkbench.util.session;
 
-import org.geworkbench.events.SessionConnectEvent;
 import org.geworkbench.util.session.dialog.SessionsViewDialog;
 
 import javax.swing.*;

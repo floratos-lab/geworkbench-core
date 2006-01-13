@@ -1,7 +1,7 @@
 package org.geworkbench.bison.datastructure.complex.panels;
 
-import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.bison.datastructure.properties.DSNamed;
+import org.geworkbench.bison.util.RandomNumberGenerator;
 
 import java.util.ArrayList;
 import java.util.Collection;

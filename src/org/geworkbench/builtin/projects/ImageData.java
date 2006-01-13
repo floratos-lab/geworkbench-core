@@ -1,8 +1,8 @@
 package org.geworkbench.builtin.projects;
 
-import org.geworkbench.bison.util.RandomNumberGenerator;
-import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
+import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
+import org.geworkbench.bison.util.RandomNumberGenerator;
 
 import javax.swing.*;
 import java.io.File;
@@ -59,10 +59,6 @@ public class ImageData extends CSAncillaryDataSet {
 
     public String getDataSetName() {
         return imageFile.getName();
-    }
-
-    public ImageIcon getIcon() {
-        return new ImageIcon(getClass().getResource("image16x16.gif"));
     }
 
     public File getFile() {

@@ -3,11 +3,11 @@ package org.geworkbench.util.session;
 import globus.soapPD_wsdl.*;
 import globus.soapPD_wsdl.holders.*;
 import org.apache.axis.types.UnsignedInt;
-import org.geworkbench.util.associationdiscovery.cluster.hierarchical.Node;
-import org.geworkbench.util.remote.GlobusConnection;
-import org.geworkbench.util.patterns.CSMatchedHMMSeqPattern;
 import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.CSSequence;
+import org.geworkbench.util.associationdiscovery.cluster.hierarchical.Node;
+import org.geworkbench.util.patterns.CSMatchedHMMSeqPattern;
+import org.geworkbench.util.remote.GlobusConnection;
 
 import javax.xml.rpc.holders.ByteArrayHolder;
 import javax.xml.rpc.holders.DoubleHolder;

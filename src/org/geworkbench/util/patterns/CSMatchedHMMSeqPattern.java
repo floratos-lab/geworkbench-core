@@ -1,7 +1,6 @@
 package org.geworkbench.util.patterns;
 
 import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
-import org.geworkbench.bison.datastructure.bioobjects.sequence.CSSequence;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import org.geworkbench.bison.datastructure.complex.pattern.CSMatchedPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.DSMatchedPattern;

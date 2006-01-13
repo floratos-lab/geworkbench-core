@@ -1,13 +1,12 @@
 package org.geworkbench.util.session;
 
 import org.apache.axis.types.UnsignedInt;
-import org.geworkbench.util.associationdiscovery.cluster.hierarchical.Node;
-import org.geworkbench.util.remote.Connection;
-import org.geworkbench.util.patterns.CSMatchedHMMSeqPattern;
-import org.geworkbench.util.patterns.CSMatchedSeqPattern;
 import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.CSSequence;
-import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
+import org.geworkbench.util.associationdiscovery.cluster.hierarchical.Node;
+import org.geworkbench.util.patterns.CSMatchedHMMSeqPattern;
+import org.geworkbench.util.patterns.CSMatchedSeqPattern;
+import org.geworkbench.util.remote.Connection;
 import polgara.soapPD_wsdl.HMMLoci;
 import polgara.soapPD_wsdl.LoginToken;
 import polgara.soapPD_wsdl.Parameters;

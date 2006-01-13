@@ -1,7 +1,5 @@
 package org.geworkbench.events;
 
-import org.geworkbench.events.*;
-
 import java.util.EventListener;
 
 /**

@@ -1,8 +1,5 @@
 package org.geworkbench.util.sequences;
 
-import org.geworkbench.events.SequenceDiscoveryTableEvent;
-import org.geworkbench.util.PropertiesMonitor;
-import org.geworkbench.util.sequences.SequenceViewWidgetPanel;
 import org.geworkbench.bison.datastructure.biocollections.Collection;
 import org.geworkbench.bison.datastructure.biocollections.DSCollection;
 import org.geworkbench.bison.datastructure.biocollections.sequences.CSSequenceSet;
@@ -10,6 +7,9 @@ import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSe
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import org.geworkbench.bison.datastructure.complex.pattern.DSMatchedPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSSeqRegistration;
+import org.geworkbench.events.SequenceDiscoveryTableEvent;
+import org.geworkbench.util.PropertiesMonitor;
+import org.geworkbench.util.patterns.PatternTableModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,8 +19,6 @@ import java.awt.event.InputMethodEvent;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.util.HashMap;
-import org.geworkbench.util.patterns.PatternTableModel;
-import org.geworkbench.bison.datastructure.bioobjects.sequence.CSSequence;
 
 /**
  * <p>Widget provides all GUI services for sequence panel displays.</p>

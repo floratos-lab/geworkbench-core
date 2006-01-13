@@ -1,7 +1,5 @@
 package org.geworkbench.engine.config.events;
 
-import org.geworkbench.util.BaseException;
-
 /**
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: First Genetic Trust, Inc.</p>

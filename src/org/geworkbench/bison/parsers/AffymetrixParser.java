@@ -1,8 +1,7 @@
 package org.geworkbench.bison.parsers;
 
-import org.geworkbench.bison.datastructure.bioobjects.microarray.DSAffyMarkerValue;
-import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSAffyMarkerValue;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 
 import java.util.*;
 

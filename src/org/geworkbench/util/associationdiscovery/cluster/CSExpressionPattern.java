@@ -1,10 +1,10 @@
 package org.geworkbench.util.associationdiscovery.cluster;
 
-import org.geworkbench.bison.util.Normal;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.complex.pattern.matrix.CSPValued;
 import org.geworkbench.bison.util.DSPValue;
+import org.geworkbench.bison.util.Normal;
 
 /**
  * <p>Title: caWorkbench</p>

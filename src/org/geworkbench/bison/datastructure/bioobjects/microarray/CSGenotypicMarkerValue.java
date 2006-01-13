@@ -1,7 +1,7 @@
 package org.geworkbench.bison.datastructure.bioobjects.microarray;
 
-import org.geworkbench.bison.util.Range;
 import org.geworkbench.bison.datastructure.bioobjects.markers.genotype.CSGenotypeMarker;
+import org.geworkbench.bison.util.Range;
 
 import java.awt.*;
 import java.io.Serializable;

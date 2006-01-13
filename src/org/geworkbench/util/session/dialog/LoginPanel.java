@@ -1,8 +1,7 @@
 package org.geworkbench.util.session.dialog;
 
-import org.geworkbench.util.session.LoginPanelModel;
 import org.geworkbench.events.LoginPanelModelEvent;
-import org.geworkbench.events.LoginPanelModelListener;
+import org.geworkbench.util.session.LoginPanelModel;
 
 import javax.swing.*;
 import javax.swing.border.Border;

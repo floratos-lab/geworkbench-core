@@ -5,18 +5,17 @@ import com.Ostermiller.util.CSVParser;
 import com.Ostermiller.util.ExcelCSVParser;
 import com.Ostermiller.util.LabeledCSVParser;
 import org.geworkbench.bison.util.RandomNumberGenerator;
-import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.ExampleFilter;
+import org.geworkbench.engine.config.UILauncher;
+import org.geworkbench.util.ProgressBar;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.net.URL;
-
-import org.geworkbench.engine.config.UILauncher;
-
-import java.util.*;
-
-import org.geworkbench.util.ProgressBar;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Vector;
 
 /**
  * <p>Title: caWorkbench 3.0</p>

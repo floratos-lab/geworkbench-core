@@ -1,10 +1,10 @@
 package org.geworkbench.analysis;
 
-import org.geworkbench.bison.util.DefaultIdentifiable;
 import org.geworkbench.bison.datastructure.properties.CSDescribable;
 import org.geworkbench.bison.model.analysis.Analysis;
 import org.geworkbench.bison.model.analysis.ParamValidationResults;
 import org.geworkbench.bison.model.analysis.ParameterPanel;
+import org.geworkbench.bison.util.DefaultIdentifiable;
 import org.geworkbench.engine.management.ComponentObjectInputStream;
 
 import java.io.*;

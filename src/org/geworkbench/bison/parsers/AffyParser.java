@@ -1,10 +1,10 @@
 package org.geworkbench.bison.parsers;
 
-import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSAffyMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
+import org.geworkbench.bison.util.RandomNumberGenerator;
 
 import java.util.*;
 

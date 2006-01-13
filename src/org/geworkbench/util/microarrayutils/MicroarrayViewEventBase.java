@@ -1,13 +1,5 @@
 package org.geworkbench.util.microarrayutils;
 
-import org.geworkbench.events.MicroarraySetViewEvent;
-import org.geworkbench.events.ProjectEvent;
-import org.geworkbench.events.GeneSelectorEvent;
-import org.geworkbench.events.PhenotypeSelectorEvent;
-import org.geworkbench.events.SubpanelChangedEvent;
-import org.geworkbench.engine.management.Asynchronous;
-import org.geworkbench.engine.management.Publish;
-import org.geworkbench.engine.management.Subscribe;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.views.CSMicroarraySetView;
@@ -16,6 +8,12 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.engine.config.VisualPlugin;
+import org.geworkbench.engine.management.Asynchronous;
+import org.geworkbench.engine.management.Publish;
+import org.geworkbench.engine.management.Subscribe;
+import org.geworkbench.events.GeneSelectorEvent;
+import org.geworkbench.events.MicroarraySetViewEvent;
+import org.geworkbench.events.SubpanelChangedEvent;
 
 import javax.swing.*;
 import java.awt.*;

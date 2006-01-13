@@ -1,11 +1,11 @@
 package org.geworkbench.bison.datastructure.bioobjects.microarray;
 
+import org.geworkbench.bison.parsers.GenepixParseContext;
+import org.geworkbench.bison.parsers.NCIParseContext;
+
 import java.io.ObjectStreamField;
 import java.io.Serializable;
 import java.util.HashMap;
-
-import org.geworkbench.bison.parsers.GenepixParseContext;
-import org.geworkbench.bison.parsers.NCIParseContext;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>

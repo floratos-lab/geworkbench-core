@@ -1,15 +1,15 @@
 package org.geworkbench.engine.config;
 
-import org.geworkbench.util.Debug;
+import org.geworkbench.engine.config.rules.*;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.engine.management.ComponentResource;
-import org.geworkbench.engine.config.rules.*;
+import org.geworkbench.util.Debug;
 
 import javax.help.HelpSet;
 import javax.swing.*;
 import java.awt.event.ActionListener;
-import java.util.*;
 import java.net.URL;
+import java.util.*;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>

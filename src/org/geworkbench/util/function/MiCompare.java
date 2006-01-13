@@ -2,8 +2,8 @@ package org.geworkbench.util.function;
 
 import cern.colt.list.DoubleArrayList;
 import cern.jet.stat.Descriptive;
-import org.geworkbench.util.pathwaydecoder.GeneGeneRelationship;
 import org.geworkbench.util.network.GeneNetworkEdgeImpl;
+import org.geworkbench.util.pathwaydecoder.GeneGeneRelationship;
 
 public class MiCompare {
     public MiCompare() {

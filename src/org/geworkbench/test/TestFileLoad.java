@@ -1,10 +1,9 @@
 package org.geworkbench.test;
 
 import junit.framework.TestCase;
-import org.geworkbench.engine.parsers.ExpressionFileFormat;
-import org.geworkbench.engine.parsers.microarray.DataSetFileFormat;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
+import org.geworkbench.engine.parsers.microarray.DataSetFileFormat;
 
 import java.io.File;
 

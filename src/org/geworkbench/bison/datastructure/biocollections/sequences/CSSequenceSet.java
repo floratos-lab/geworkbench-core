@@ -1,21 +1,17 @@
 package org.geworkbench.bison.datastructure.biocollections.sequences;
 
-import org.geworkbench.bison.util.RandomNumberGenerator;
-import org.geworkbench.bison.util.Icons;
-import org.geworkbench.bison.datastructure.bioobjects.markers.SequenceMarker;
-import org.geworkbench.engine.parsers.sequences.SequenceResource;
 import org.geworkbench.bison.datastructure.biocollections.CSDataSet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
+import org.geworkbench.bison.datastructure.bioobjects.markers.SequenceMarker;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.CSSequence;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import org.geworkbench.bison.datastructure.complex.panels.CSSequentialItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
-import org.geworkbench.bison.parsers.resources.Resource;
+import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
+import org.geworkbench.bison.util.RandomNumberGenerator;
 
-import javax.swing.*;
 import java.io.*;
 import java.util.HashMap;
-import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 
 /**
  * <p>Title: </p>
@@ -29,7 +25,6 @@ import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 
 public class CSSequenceSet<T extends DSSequence> extends CSDataSet<T> implements DSSequenceSet<T> {
 
-    static public ImageIcon icon = Icons.SEQUENCE_ICON;
     static private HashMap databases = new HashMap();
     private boolean dirty = false;
     private boolean isDNA = true;
@@ -234,10 +229,6 @@ public DSSequenceSet getActiveSequenceSet(DSPanel<? extends DSGeneMarker> marker
         } else {
             return label;
         }
-    }
-
-    public ImageIcon getIcon() {
-        return icon;
     }
 
     static public CSSequenceSet getSequenceDB(File file) {

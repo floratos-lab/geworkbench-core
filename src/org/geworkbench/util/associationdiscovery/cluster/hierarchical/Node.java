@@ -1,6 +1,5 @@
 package org.geworkbench.util.associationdiscovery.cluster.hierarchical;
 
-import org.geworkbench.util.patterns.CSMatchedHMMSeqPattern;
 import org.geworkbench.util.patterns.CSMatchedSeqPattern;
 
 /**

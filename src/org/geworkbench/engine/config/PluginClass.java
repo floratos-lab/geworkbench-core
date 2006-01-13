@@ -1,7 +1,5 @@
 package org.geworkbench.engine.config;
 
-import org.geworkbench.engine.config.rules.PluginObject;
-
 /**
  * <p>Title: Sequence and Pattern Plugin</p>
  * <p>Description: </p>

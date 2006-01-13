@@ -1,14 +1,12 @@
 package org.geworkbench.bison.datastructure.biocollections;
 
-import org.geworkbench.bison.util.DefaultIdentifiable;
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.datastructure.complex.panels.CSSequentialItemList;
 import org.geworkbench.bison.datastructure.properties.CSDescribable;
 import org.geworkbench.bison.datastructure.properties.CSExtendable;
-import org.geworkbench.bison.util.*;
 import org.geworkbench.bison.parsers.resources.Resource;
+import org.geworkbench.bison.util.DefaultIdentifiable;
 
-import javax.swing.*;
 import java.io.File;
 import java.util.HashMap;
 
@@ -163,16 +161,6 @@ public class CSDataSet <T extends DSBioObject> extends CSSequentialItemList<T> i
      */
     public File getFile() {
         return file;
-    }
-
-    /**
-     * A descriptive icon for this data set.
-     *
-     * @return the icon image.
-     * @todo - watkin - This is a very implementation-specific method. Should not be defined here.
-     */
-    public ImageIcon getIcon() {
-        return Icons.DATASET_ICON;
     }
 
     /**

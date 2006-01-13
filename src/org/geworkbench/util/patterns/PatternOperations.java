@@ -2,7 +2,6 @@ package org.geworkbench.util.patterns;
 
 import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeqPattern;
-import org.geworkbench.util.patterns.CSMatchedSeqPattern;
 import polgara.soapPD_wsdl.SOAPOffset;
 
 import java.awt.*;

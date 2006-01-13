@@ -8,7 +8,6 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.CSAffyMarkerVal
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSGenepixMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
-import org.geworkbench.bison.parsers.NCIParseContext;
 
 import java.util.HashMap;
 import java.util.List;

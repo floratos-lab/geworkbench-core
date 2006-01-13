@@ -1,8 +1,6 @@
 package org.geworkbench.util.patterns;
 
 import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
-import org.geworkbench.util.patterns.CSMatchedSeqPattern;
-import org.geworkbench.util.patterns.PatternFilter;
 
 import javax.swing.*;
 import java.awt.*;

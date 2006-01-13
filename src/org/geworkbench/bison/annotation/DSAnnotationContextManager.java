@@ -1,6 +1,5 @@
 package org.geworkbench.bison.annotation;
 
-import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.properties.DSNamed;
 

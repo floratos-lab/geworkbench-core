@@ -1,9 +1,9 @@
 package org.geworkbench.bison;
 
-import java.io.InputStream;
-import java.util.Properties;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Properties;
 import java.util.Set;
 
 /**

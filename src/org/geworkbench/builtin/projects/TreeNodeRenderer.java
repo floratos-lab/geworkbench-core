@@ -1,16 +1,12 @@
 package org.geworkbench.builtin.projects;
 
-import org.geworkbench.builtin.projects.ImageNode;
-import org.geworkbench.builtin.projects.MicroarraySetNode;
-import org.geworkbench.builtin.projects.ProjectNodeOld;
-import org.geworkbench.bison.util.Icons;
-import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
+import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import java.awt.*;
-import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
@@ -115,11 +111,11 @@ public class TreeNodeRenderer extends DefaultTreeCellRenderer {
         } else {
             if (value.getClass() == DataSetNode.class) {
                 DSDataSet df = ((DataSetNode) value).dataFile;
-                ImageIcon icon = df.getIcon();
+                ImageIcon icon = ProjectPanel.getIconForType(df.getClass());
                 if (icon != null) {
                     setIcon(icon);
                 } else {
-                    setIcon(Icons.DATASET_ICON);
+                    setIcon(Icons.MICROARRAYS_ICON);
                 }
                 String[] descriptions = df.getDescriptions();
                 if (df != null && (df instanceof DSMicroarraySet)){
@@ -135,7 +131,7 @@ public class TreeNodeRenderer extends DefaultTreeCellRenderer {
                 }
             } else if (value.getClass() == DataSetSubNode.class) {
                 DSAncillaryDataSet adf = ((DataSetSubNode) value)._aDataSet;
-                ImageIcon icon = adf.getIcon();
+                ImageIcon icon = ProjectPanel.getIconForType(adf.getClass());
                 if (icon != null) {
                     setIcon(icon);
                 } else {

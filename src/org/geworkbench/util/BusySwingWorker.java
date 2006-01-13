@@ -1,8 +1,8 @@
 package org.geworkbench.util;
 
-import org.geworkbench.bison.util.Icons;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.geworkbench.builtin.projects.Icons;
 
 import javax.swing.*;
 import java.awt.*;

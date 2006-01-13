@@ -1,16 +1,16 @@
 package org.geworkbench.bison.annotation;
 
-import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
+import org.apache.commons.collections15.MapIterator;
+import org.apache.commons.collections15.map.ListOrderedMap;
+import org.apache.commons.collections15.set.ListOrderedSet;
 import org.geworkbench.bison.datastructure.complex.panels.CSPanel;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
+import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.datastructure.properties.DSNamed;
-import org.apache.commons.collections15.map.ListOrderedMap;
-import org.apache.commons.collections15.MapIterator;
-import org.apache.commons.collections15.set.ListOrderedSet;
 
-import java.util.*;
-import java.lang.ref.WeakReference;
 import java.awt.*;
+import java.lang.ref.WeakReference;
+import java.util.*;
 
 /**
  * @author John Watkinson

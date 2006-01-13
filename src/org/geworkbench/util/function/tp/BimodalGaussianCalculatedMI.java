@@ -3,7 +3,6 @@ package org.geworkbench.util.function.tp;
 import org.geworkbench.util.function.MultivariateGaussianBimodal;
 import org.geworkbench.util.function.functionParameters.bimodalGaussianParams.BimodalGaussianParamsBase;
 import org.geworkbench.util.function.functionParameters.bimodalGaussianParams.BimodalGaussianParamsFactory;
-import org.geworkbench.util.pathwaydecoder.GeneGeneRelationship;
 import org.geworkbench.util.network.GeneNetworkEdgeImpl;
 
 public class BimodalGaussianCalculatedMI {

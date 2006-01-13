@@ -1,19 +1,18 @@
 package org.geworkbench.util.threading;
 
 /*
- * $Id: SwingWorker.java,v 1.1 2006-01-12 21:19:13 mhall Exp $
+ * $Id: SwingWorker.java,v 1.2 2006-01-13 22:48:38 watkin Exp $
  *
  * Copyright © 2005 Sun Microsystems, Inc. All rights
  * reserved. Use is subject to license terms.
  */
 
+import javax.swing.*;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-
 import java.util.concurrent.*;
-import java.util.concurrent.locks.*;
-
-import javax.swing.SwingUtilities;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * An abstract class to perform lengthy GUI-interacting tasks in a
@@ -188,7 +187,7 @@ import javax.swing.SwingUtilities;
  * {@link java.util.concurrent.Executor} for execution.
  *
  * @author Igor Kushnirskiy
- * @version $Revision: 1.1 $ $Date: 2006-01-12 21:19:13 $
+ * @version $Revision: 1.2 $ $Date: 2006-01-13 22:48:38 $
  *
  * @param <T> the result type returned by this {@code SwingWorker's}
  *        {@code doInBackground} and {@code get} methods

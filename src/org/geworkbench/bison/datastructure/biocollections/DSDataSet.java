@@ -5,11 +5,8 @@ import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.properties.DSDescribable;
 import org.geworkbench.bison.datastructure.properties.DSExtendable;
 import org.geworkbench.bison.datastructure.properties.DSNamed;
-import org.geworkbench.bison.util.DSAnnotLabel;
-import org.geworkbench.bison.util.DSAnnotValue;
 import org.geworkbench.bison.parsers.resources.Resource;
 
-import javax.swing.*;
 import java.io.File;
 import java.io.Serializable;
 
@@ -24,14 +21,6 @@ public interface DSDataSet <T extends DSBioObject> extends DSDescribable, DSName
      * @return the data set name.
      */
     public String getDataSetName();
-
-    /**
-     * A descriptive icon for this data set.
-     *
-     * @return the icon image.
-     * @todo - watkin - This is a very implementation-specific method. Should not be defined here.
-     */
-    public ImageIcon getIcon();
 
     /**
      * The underlying file associated with this data set.

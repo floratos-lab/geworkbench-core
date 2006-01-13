@@ -4,7 +4,6 @@ package org.geworkbench.engine.parsers;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
-import org.geworkbench.engine.parsers.*;
 
 import javax.swing.filechooser.FileFilter;
 import java.io.BufferedWriter;

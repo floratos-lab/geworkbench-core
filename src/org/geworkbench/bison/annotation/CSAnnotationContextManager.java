@@ -1,8 +1,8 @@
 package org.geworkbench.bison.annotation;
 
+import org.apache.commons.collections15.set.ListOrderedSet;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.properties.DSNamed;
-import org.apache.commons.collections15.set.ListOrderedSet;
 
 import java.util.Iterator;
 import java.util.WeakHashMap;

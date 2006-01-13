@@ -1,14 +1,11 @@
 package org.geworkbench.builtin.projects.comments;
 
-import org.geworkbench.events.ProjectEvent;
-import org.geworkbench.events.ImageSnapshotEvent;
-import org.geworkbench.events.CommentsEvent;
+import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.engine.config.VisualPlugin;
+import org.geworkbench.engine.management.AcceptTypes;
 import org.geworkbench.engine.management.Publish;
 import org.geworkbench.engine.management.Subscribe;
-import org.geworkbench.engine.management.AcceptTypes;
-import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
-import org.geworkbench.engine.config.VisualPlugin;
+import org.geworkbench.events.CommentsEvent;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

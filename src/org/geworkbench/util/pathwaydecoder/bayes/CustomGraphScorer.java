@@ -2,8 +2,8 @@ package org.geworkbench.util.pathwaydecoder.bayes;
 
 import edu.ksu.cis.bnj.bbn.BBNGraph;
 import edu.ksu.cis.kdd.data.Table;
-import org.geworkbench.util.pathwaydecoder.bayes.discretizers.LogDiscretizer;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
+import org.geworkbench.util.pathwaydecoder.bayes.discretizers.LogDiscretizer;
 
 import java.io.File;
 import java.util.Iterator;

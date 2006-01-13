@@ -1,8 +1,8 @@
 package org.geworkbench.builtin.projects;
 
+import org.geworkbench.bison.annotation.CSAnnotationContextManager;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
-import org.geworkbench.bison.annotation.CSAnnotationContextManager;
 
 import java.io.IOException;
 

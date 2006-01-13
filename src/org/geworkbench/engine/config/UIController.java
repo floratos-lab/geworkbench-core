@@ -1,6 +1,5 @@
 package org.geworkbench.engine.config;
 
-import org.geworkbench.util.Debug;
 import org.apache.commons.digester.Digester;
 import org.geworkbench.engine.config.events.*;
 import org.geworkbench.engine.config.rules.*;

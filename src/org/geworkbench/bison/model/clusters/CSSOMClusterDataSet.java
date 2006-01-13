@@ -1,11 +1,8 @@
 package org.geworkbench.bison.model.clusters;
 
-import org.geworkbench.bison.datastructure.biocollections.CSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.views.DSDataSetView;
-import org.geworkbench.bison.util.Icons;
 
-import javax.swing.*;
 import java.io.File;
 
 /**
@@ -16,10 +13,6 @@ public class CSSOMClusterDataSet extends CSAncillaryDataSet implements DSSOMClus
     private int rows, columns;
     private SOMCluster[][] clusters;
     private DSDataSetView parentSet;
-
-    public ImageIcon getIcon() {
-        return Icons.SOM_ICON;
-    }
 
     public CSSOMClusterDataSet(SOMCluster[][] clusters, String name, DSDataSetView dataSetView) {
         super(dataSetView.getDataSet(), name);

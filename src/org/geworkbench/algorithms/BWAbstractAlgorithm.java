@@ -1,8 +1,8 @@
 package org.geworkbench.algorithms;
 
-import org.geworkbench.util.SwingWorker;
 import org.geworkbench.bison.algorithm.AlgorithmEvent;
 import org.geworkbench.bison.algorithm.AlgorithmEventListener;
+import org.geworkbench.util.SwingWorker;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;

@@ -1,7 +1,5 @@
 package org.geworkbench.util.pathwaydecoder;
 
-import org.geworkbench.util.pathwaydecoder.*;
-
 import java.util.Comparator;
 
 /**

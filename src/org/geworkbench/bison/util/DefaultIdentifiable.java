@@ -1,7 +1,5 @@
 package org.geworkbench.bison.util;
 
-import org.geworkbench.util.*;
-
 import java.io.ObjectStreamField;
 import java.io.Serializable;
 import java.util.HashMap;

@@ -1,8 +1,8 @@
 package org.geworkbench.bison.datastructure.complex.panels;
 
-import org.geworkbench.bison.util.DefaultIdentifiable;
 import org.geworkbench.bison.datastructure.properties.CSDescribable;
 import org.geworkbench.bison.datastructure.properties.DSNamed;
+import org.geworkbench.bison.util.DefaultIdentifiable;
 
 /**
  * Default implementation of FinalPanel.

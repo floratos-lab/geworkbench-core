@@ -1,10 +1,10 @@
 package org.geworkbench.builtin.projects;
 
-import org.geworkbench.events.ProjectEvent;
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
+import org.geworkbench.events.ProjectEvent;
 
 /**
  * <p>Title: Sequence and Pattern Plugin</p>

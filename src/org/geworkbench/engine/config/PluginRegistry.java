@@ -1,6 +1,5 @@
 package org.geworkbench.engine.config;
 
-import org.geworkbench.util.Debug;
 import org.geworkbench.engine.config.events.BroadcastEventRegistry;
 import org.geworkbench.engine.config.events.EventSource;
 

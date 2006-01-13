@@ -1,11 +1,11 @@
 package org.geworkbench.bison.testing.clusters;
 
 import junit.framework.TestCase;
-import org.geworkbench.bison.model.clusters.DefaultHierCluster;
 import org.geworkbench.bison.model.clusters.Cluster;
+import org.geworkbench.bison.model.clusters.DefaultHierCluster;
 
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Test default hierarchical cluster.

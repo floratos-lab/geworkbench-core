@@ -1,13 +1,11 @@
 package org.geworkbench.bison.datastructure.bioobjects.sequence;
 
+import org.geworkbench.algorithms.BWAbstractAlgorithm;
+import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
-import org.geworkbench.bison.util.Icons;
 
-import javax.swing.*;
 import java.io.File;
-import org.geworkbench.algorithms.BWAbstractAlgorithm;
 
 public class CSAlignmentResultSet extends CSAncillaryDataSet implements DSAlignmentResultSet {
 
@@ -17,9 +15,6 @@ public class CSAlignmentResultSet extends CSAncillaryDataSet implements DSAlignm
         fastaFile = new File(inputFile);
         //System.out.println("in construtor" + resultFile.getAbsolutePath());
     }
-
-    //private static ImageIcon icon = new ImageIcon("share/images/blast.gif");
-    static private ImageIcon icon = Icons.ALIGNMENT_ICON;
 
     private String label = "Blast_Result";
     private File fastaFile = null;
@@ -46,20 +41,6 @@ public class CSAlignmentResultSet extends CSAncillaryDataSet implements DSAlignm
      */
     public boolean isDirty() {
         return false;
-    }
-
-    public void setIcon(ImageIcon icon) {
-        this.icon = icon;
-    }
-
-    /**
-     * getIcon
-     *
-     * @return ImageIcon
-     * @todo Implement this medusa.components.projects.IDataSet method
-     */
-    public ImageIcon getIcon() {
-        return icon;
     }
 
     /**

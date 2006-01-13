@@ -1,11 +1,8 @@
 package org.geworkbench.bison.model.clusters;
 
-import org.geworkbench.bison.datastructure.biocollections.CSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.views.DSDataSetView;
-import org.geworkbench.bison.util.Icons;
 
-import javax.swing.*;
 import java.io.File;
 
 /**
@@ -15,10 +12,6 @@ public class CSHierClusterDataSet extends CSAncillaryDataSet implements DSHierCl
 
     private HierCluster[] clusters;
     private DSDataSetView parentSet;
-
-    public ImageIcon getIcon() {
-        return Icons.DENDOGRAM_ICON;
-    }
 
     public CSHierClusterDataSet(HierCluster[] clusters, String name, DSDataSetView dataSetView) {
         super(dataSetView.getDataSet(), name);

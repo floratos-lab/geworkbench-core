@@ -1,11 +1,11 @@
 package org.geworkbench.bison.testing;
 
+import junit.framework.TestCase;
 import org.geworkbench.bison.annotation.*;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
-import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
-import junit.framework.TestCase;
+import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 
 /**
  * @author John Watkinson

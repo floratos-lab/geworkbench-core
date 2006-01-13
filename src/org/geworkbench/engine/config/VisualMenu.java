@@ -1,6 +1,5 @@
 package org.geworkbench.engine.config;
 
-import org.geworkbench.engine.builder.*;
 import org.geworkbench.engine.builder.VisualBuilder;
 
 import java.awt.event.ActionEvent;
