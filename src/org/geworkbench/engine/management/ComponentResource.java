@@ -35,6 +35,8 @@ public class ComponentResource {
      */
     private String dir;
 
+    private URL baseURL;
+
     /**
      * The class loader for the resource.
      */
@@ -71,10 +73,8 @@ public class ComponentResource {
         this.classLoader = classLoader;
         File classesDir = new File(dir + '/' + CLASSES_DIR);
         if (classesDir.exists()) {
-            URL baseURL = classesDir.toURI().toURL();
+            baseURL = classesDir.toURI().toURL();
             log.debug("Adding " + baseURL + " to classpath.");
-            // Create ClassSearcher based on classes path
-            classSearcher = new ClassSearcher(new URL[]{baseURL});
         }
     }
 
@@ -84,11 +84,9 @@ public class ComponentResource {
         List<URL> urls = new ArrayList<URL>();
         File classesDir = new File(dir + '/' + CLASSES_DIR);
         if (classesDir.exists()) {
-            URL baseURL = classesDir.toURI().toURL();
+            baseURL = classesDir.toURI().toURL();
             log.debug("Adding " + baseURL + " to classpath.");
             urls.add(baseURL);
-            // Create ClassSearcher based on classes path
-            classSearcher = new ClassSearcher(new URL[]{baseURL});
         }
 
         // Do libs
@@ -131,6 +129,12 @@ public class ComponentResource {
      * Gets the class searcher for the component resource.
      */
     public ClassSearcher getClassSearcher() {
+        if (classSearcher == null) {
+            if (baseURL != null) {
+                log.debug("Building class searcher for '" + getName() + "'...");
+                classSearcher = new ClassSearcher(new URL[]{baseURL});
+            }
+        }
         return classSearcher;
     }
 
