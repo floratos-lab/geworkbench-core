@@ -287,4 +287,13 @@ public class CSMicroarray implements DSMicroarray, Serializable {
     public void resize(int size) {
         markerArray = new CSMarkerValue[size];
     }
+
+    public float[] getRawMarkerData() {
+        DSMutableMarkerValue[] values = getMarkerValues();
+        float[] data = new float[values.length];
+        for (int j = 0; j < values.length; j++) {
+            data[j] = (float) values[j].getValue();
+        }
+        return data;
+    }
 }

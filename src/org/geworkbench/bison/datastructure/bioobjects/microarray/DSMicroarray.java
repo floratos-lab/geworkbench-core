@@ -99,4 +99,6 @@ public interface DSMicroarray extends DSBioObject {
      * Resize the number of features to a new value. This destroys all previous values
      */
     void resize(int size);
+
+    float[] getRawMarkerData();
 }

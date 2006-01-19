@@ -2,6 +2,10 @@ package org.geworkbench.util.svm;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.geworkbench.bison.algorithm.classification.Classifier;
+import org.geworkbench.bison.datastructure.properties.DSNamed;
+import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -484,6 +488,10 @@ public class SupportVectorMachine {
         float[] t = {a, b};
         boolean result = evaluate(t);
         System.out.println("(" + a + ", " + b + "): " + (result ? "case" : "control"));
+    }
+
+    public SVMPhenotypeClassifier getClassifier(DSDataSet parent, String label) {
+        return new SVMPhenotypeClassifier(parent, label, alpha, trainingClassifications, kernel, trainingSet, b);
     }
 
     public static void main(String[] args) {
