@@ -59,7 +59,7 @@ public class SupportVectorMachine {
             for (int i = 0; i < n; i++) {
                 dot += a[i] * b[i];
             }
-            return Math.pow(dot + 1, 2);
+            return (dot + 1) * (dot + 1);
         }
 
         public String toString() {
@@ -76,7 +76,7 @@ public class SupportVectorMachine {
             double dot = 0;
             for (int i = 0; i < n; i++) {
                 float temp = a[i] - b[i];
-                dot += Math.pow(temp, 2);
+                dot += temp * temp;
             }
             // 2 is standing in for 2*width^2 for now based on a value I saw specified in another RBF implementation, this
             // will have to be a parameter at some point
@@ -87,6 +87,29 @@ public class SupportVectorMachine {
             return "Radial Basis Function";
         }
     };
+
+    private KernelFunctionCache cache;
+
+    private class KernelFunctionCache {
+
+        private float[][] cache;
+
+        public KernelFunctionCache(int n) {
+            cache = new float[n][n];
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    cache[i][j] = Float.NaN;
+                }
+            }
+        }
+
+        public float getKernelEval(int i1, int i2) {
+            if (Float.isNaN(cache[i1][i2])) {
+                cache[i1][i2] = (float)(kernel.eval(trainingSet.get(i1), trainingSet.get(i2)));
+            }
+            return cache[i1][i2];
+        }
+    }
 
     public SupportVectorMachine(List<float[]> caseList, List<float[]> controlList, KernelFunction kernel, float lambdaFactor) throws ClassifierException {
         this.lambda = lambdaFactor;
@@ -99,6 +122,7 @@ public class SupportVectorMachine {
             throw new ClassifierException("Must have at least one control.");
         }
         n = caseSize + controlSize;
+        cache = new KernelFunctionCache(n);
         trainingSet = new ArrayList<float[]>(n);
         trainingSet.addAll(caseList);
         trainingSet.addAll(controlList);
@@ -241,7 +265,7 @@ public class SupportVectorMachine {
     }
 
     private double biasedKernelEval(int i1, int i2) {
-        double bias = 0;
+//        double bias = 0;
         // Bias computation eliminated for now - watkin
 //        if (i1 == i2) {
 //            if (trainingClassifications[i1] == 1) {
@@ -250,7 +274,8 @@ public class SupportVectorMachine {
 //                bias = lambda / nNeg;
 //            }
 //        }
-        return kernel.eval(trainingSet.get(i1), trainingSet.get(i2)) + bias;
+//        return kernel.eval(trainingSet.get(i1), trainingSet.get(i2)) + bias;
+        return cache.getKernelEval(i1, i2);
     }
 
     private boolean takeStep(int i1, int i2) {

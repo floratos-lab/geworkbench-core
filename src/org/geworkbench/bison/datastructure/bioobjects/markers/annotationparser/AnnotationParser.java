@@ -629,10 +629,10 @@ public class AnnotationParser {
             }
         }
         pb.stop();
-        SerilizeGoTermData();
+        serializeGoTermData();
     }
 
-    public static void SerilizeGoTermData() {
+    public static void serializeGoTermData() {
         String indexfilename = indx.getName();
         if (indexfilename != null) {
 
@@ -675,9 +675,6 @@ public class AnnotationParser {
                 createGoAffytable();
             }
             catch (IOException ex) {
-                ex.printStackTrace();
-            }
-            catch (HeadlessException ex) {
                 ex.printStackTrace();
             }
         } else if (askIfNotFound) {
