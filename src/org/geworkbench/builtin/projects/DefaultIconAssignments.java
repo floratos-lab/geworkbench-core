@@ -7,6 +7,7 @@ import org.geworkbench.bison.datastructure.bioobjects.sequence.DSAlignmentResult
 import org.geworkbench.bison.datastructure.complex.pattern.ParmsDataSet;
 import org.geworkbench.bison.model.clusters.DSHierClusterDataSet;
 import org.geworkbench.bison.model.clusters.DSSOMClusterDataSet;
+import org.geworkbench.bison.algorithm.classification.Classifier;
 import org.geworkbench.util.pathwaydecoder.mutualinformation.AdjacencyMatrixDataSet;
 
 /**
@@ -24,5 +25,6 @@ public class DefaultIconAssignments {
         ProjectPanel.setIconForType(DSSignificanceResultSet.class, Icons.SIGNIFICANCE_ICON);
         ProjectPanel.setIconForType(ImageData.class, Icons.IMAGE_ICON);
         ProjectPanel.setIconForType(ParmsDataSet.class, Icons.PATTERN_ICON);
+        ProjectPanel.setIconForType(Classifier.class, Icons.CLASSIFIER_ICON);
     }
 }

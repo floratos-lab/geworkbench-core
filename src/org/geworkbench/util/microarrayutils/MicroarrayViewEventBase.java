@@ -86,7 +86,7 @@ public class MicroarrayViewEventBase implements VisualPlugin {
      *
      * @param e GeneSelectorEvent
      */
-    @Subscribe(Asynchronous.class) public void receive(GeneSelectorEvent e, Object source) {
+    @Subscribe public void receive(GeneSelectorEvent e, Object source) {
         if (e.getPanel() != null && e.getPanel().size() > 0) {
             activatedMarkers = e.getPanel().activeSubset();
         }
