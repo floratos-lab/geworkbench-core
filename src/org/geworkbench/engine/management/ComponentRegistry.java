@@ -213,7 +213,7 @@ public class ComponentRegistry {
     // Holds the listener componentRegistry.
     private TypeMap<List> listeners;
     // Holds lists of components that are registered to accept specified types.
-    private TypeMap<List<Class>> acceptors;
+    private HashMap<Class, List<Class>> acceptors;
     // Executor Service for asynchronous event dispatching.
     private Map<Class, SynchModel> synchModels;
     // List of the components themselves.
@@ -225,7 +225,7 @@ public class ComponentRegistry {
 
     private ComponentRegistry() {
         listeners = new TypeMap<List>();
-        acceptors = new TypeMap<List<Class>>();
+        acceptors = new HashMap<Class, List<Class>>();
         synchModels = new HashMap<Class, SynchModel>();
         components = new ArrayList();
         idToDescriptor = new HashMap<String, PluginDescriptor>();
@@ -294,12 +294,19 @@ public class ComponentRegistry {
         if (type == null) {
             return new HashSet<Class>(acceptors.get(null));
         }
+        log.debug("getAcceptors for " + type.toString());
         Set<Class> targetTypes = acceptors.keySet();
         Set<Class> subscribers = new HashSet<Class>();
         for (Class<?> targetType : targetTypes) {
             if (targetType != null) {
+                log.debug("TargetType: " + targetType.toString());
                 if (targetType.isAssignableFrom(type)) {
-                    subscribers.addAll(acceptors.get(targetType));
+                    log.debug("is assignable.");
+                    List<Class> results = acceptors.get(targetType);
+                    for (Class aClass : results) {
+                        log.debug("Found: " + aClass.toString());
+                    }
+                    subscribers.addAll(results);
                 }
             }
         }

@@ -165,5 +165,8 @@
     <!--<plugin id="Example" name="Example" class="org.geworkbench.components.example.ExampleComponent" source="example">-->
         <!--<gui-area name="VisualArea"/>-->
     <!--</plugin>-->
+    <plugin id="Classifier" name="Classifier" class="org.geworkbench.components.analysis.classification.ClassificationRunnerPlugin" source="analysis">
+        <gui-area name="CommandArea"/>
+    </plugin>
     <plugin id="SVMNormalizedMatrixFilter" name="SVM Format" class="org.geworkbench.engine.parsers.SVMNormalizedMatrixFileFormat"/>
 </geaw-config>

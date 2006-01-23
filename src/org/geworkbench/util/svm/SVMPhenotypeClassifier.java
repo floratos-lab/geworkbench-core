@@ -27,10 +27,12 @@ public class SVMPhenotypeClassifier extends Classifier<DSMicroarray> {
 
     public String classify(DSMicroarray array) {
         double v = discriminant(array.getRawMarkerData());
+        // Case == 1, Control == -1
         if (v < 0) {
-            return getClassifications()[0];
-        } else {
+            // Not in case 1
             return getClassifications()[1];
+        } else {
+            return getClassifications()[0];
         }
     }
 
