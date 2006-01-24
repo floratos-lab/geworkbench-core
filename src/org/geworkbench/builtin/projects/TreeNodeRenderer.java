@@ -26,7 +26,7 @@ public class TreeNodeRenderer extends DefaultTreeCellRenderer {
     /**
      * Current <code>ProjectNodeOld</code> selection
      */
-    public ProjectNodeOld projectNodeSelection = null;
+    public ProjectNode projectNodeSelection = null;
     /**
      * Current <code>ImageNode</code> selection
      */

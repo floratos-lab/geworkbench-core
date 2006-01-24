@@ -1,6 +1,7 @@
 package org.geworkbench.builtin.projects;
 
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -16,12 +17,16 @@ import java.io.Serializable;
  * @version 1.0
  */
 
-public class ProjectNode extends org.geworkbench.builtin.projects.ProjectNodeOld implements Serializable {
+public class ProjectNode extends ProjectTreeNode implements Serializable {
     DataSetNode dataSetNodeSelection = null;
     DataSetSubNode dataSetSubNodeSelection = null;
 
+    /**
+     * current <code>MicroarraySetNode</code> selection
+     */
+    MicroarraySetNode microarraySetNodeSelection = null;
+
     ProjectNode(Object nodeName) {
-        super(nodeName);
         setUserObject(nodeName);
     }
 
@@ -39,5 +44,23 @@ public class ProjectNode extends org.geworkbench.builtin.projects.ProjectNodeOld
         } catch (ArrayIndexOutOfBoundsException aiobe) {
             aiobe.printStackTrace();
         }
+    }
+
+    /**
+     * Gets the <code>MicroarraySet</code> in the current
+     * <code>MicroarraySetNode</code> selection
+     *
+     * @return <code>MicroarraySet</code> in the current
+     *         <code>MicroarraySetNode</code> selection
+     */
+    public DSMicroarraySet getSelectedMicroarray() {
+        return microarraySetNodeSelection.getMicroarraySet();
+    }
+
+    /**
+     * To keep a track of the current <code>MicroarraySetNode</code> selection
+     */
+    public class JMAProject implements Serializable {
+        MicroarraySetNode microarraySetSelection = null;
     }
 }

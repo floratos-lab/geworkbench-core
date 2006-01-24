@@ -1059,7 +1059,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                 }
             }
             setNodeSelection(parentNode);
-            publishProjectEvent(new ProjectEvent(ProjectEvent.CLEARED, null));
+            publishProjectEvent(new ProjectEvent(ProjectEvent.CLEARED, null, parentNode));
             return;
         } else if (parentNode.getChildCount() > 0 && parentNode instanceof ProjectNode) {
             setNodeSelection((DataSetNode) parentNode.getChildAt(0));
@@ -1242,7 +1242,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
      */
     protected void fireNodeSelectionEvent(ProjectTreeNode node) {
         if (node != null && node != root) {
-            publishProjectEvent(new ProjectEvent(node instanceof ProjectNode ? "Project Node Selected" : "Microarray Node Selected", projectRenderer.microarraySetNodeSelection == null ? null : projectRenderer.microarraySetNodeSelection.getMicroarraySet()));
+            publishProjectEvent(new ProjectEvent(node instanceof ProjectNode ? "Project Node Selected" : "Microarray Node Selected", projectRenderer.microarraySetNodeSelection == null ? null : projectRenderer.microarraySetNodeSelection.getMicroarraySet(), projectRenderer.microarraySetNodeSelection));
             sendCommentsEvent(node);
         }
     }
@@ -1435,7 +1435,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         // currently selectd in the project panel.
         DSDataSet currentDS = (selection != null ? selection.getDataSet() : null);
         if (currentDS != null && currentDS instanceof DSMicroarraySet && (DSMicroarraySet) currentDS == sourceMA) {
-            publishProjectEvent(new ProjectEvent(ProjectEvent.SELECTED, sourceMA));
+            publishProjectEvent(new ProjectEvent(ProjectEvent.SELECTED, sourceMA, selectedNode));
         }
     }
 
@@ -1466,7 +1466,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         DSDataSet currentDS = (selection != null ? selection.getDataSet() : null);
 
         if (currentDS != null && currentDS instanceof DSMicroarraySet && (DSMicroarraySet) currentDS == sourceMA) {
-            publishProjectEvent(new ProjectEvent(ProjectEvent.SELECTED, sourceMA));
+            publishProjectEvent(new ProjectEvent(ProjectEvent.SELECTED, sourceMA, selectedNode));
         }
     }
 
@@ -1482,7 +1482,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
             selectedNode = null;
         }
 
-        publishProjectEvent(new ProjectEvent(ProjectEvent.CLEARED, null));
+        publishProjectEvent(new ProjectEvent(ProjectEvent.CLEARED, null, null));
         selection.clearNodeSelections();
     }
 

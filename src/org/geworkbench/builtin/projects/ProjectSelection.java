@@ -193,9 +193,9 @@ public class ProjectSelection {
         if (selectedDataSetNode != null) {
             if (selectedDataSetNode.dataFile instanceof DSMicroarraySet) {
                 maSet = (DSMicroarraySet) selectedDataSetNode.dataFile;
-                panel.publishProjectEvent(new ProjectEvent(message, maSet));
+                panel.publishProjectEvent(new ProjectEvent(message, maSet, selectedDataSetNode));
             } else {
-                panel.publishProjectEvent(new ProjectEvent(message, selectedDataSetNode.dataFile));
+                panel.publishProjectEvent(new ProjectEvent(message, selectedDataSetNode.dataFile, selectedDataSetNode));
             }
             panel.sendCommentsEvent(selectedDataSetNode);
         }
@@ -203,7 +203,7 @@ public class ProjectSelection {
 
     public void throwSubNodeEvent(String message) {
         if ((selectedDataSetSubNode != null) && (selectedDataSetSubNode._aDataSet != null)) {
-            panel.publishProjectEvent(new ProjectEvent(message, selectedDataSetSubNode._aDataSet));
+            panel.publishProjectEvent(new ProjectEvent(message, selectedDataSetSubNode._aDataSet, selectedDataSetSubNode));
         }
     }
 }
