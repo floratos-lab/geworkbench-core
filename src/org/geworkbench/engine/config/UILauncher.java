@@ -53,7 +53,7 @@ public class UILauncher implements AnnotationParserListener {
     public static final String DEVELOPMENT_FLAG = "-dev";
     private static final String DEFAULT_COMPONENTS_DIR = "components";
     private static final String COMPONENTS_DIR_PROPERTY = "components.dir";
-    private static final String DEFAULT_GEAR_DIR = "gears";
+    private static final String DEFAULT_GEAR_DIR = DEFAULT_COMPONENTS_DIR;
 
     static {
         splash = new org.geworkbench.util.SplashBitmap(SplashBitmap.class.getResource("splashscreen.png"));

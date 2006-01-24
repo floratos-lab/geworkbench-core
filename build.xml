@@ -18,7 +18,7 @@
         <property name="src" value="src"/>
         <!-- Directory for releases -->
         <property name="dist" value="dist"/>
-        <!-- Directory for releases -->
+        <!-- Directory for developer kit releases -->
         <property name="dev" value="devkit"/>
         <!-- Source directory for resources -->
         <property name="res" value="res"/>
@@ -100,27 +100,44 @@
     <!-- ===================================================================== -->
     <!-- DEV  -->
     <!-- ===================================================================== -->
-    <target name="dev" depends="compile" description="Builds a developer kit (zip file).">
+    <target name="dev" depends="compile,javadoc" description="Builds a developer kit (zip file).">
         <delete dir="${dev}"/>
         <mkdir dir="${dev}"/>
         <mkdir dir="${dev}/components"/>
         <mkdir dir="${dev}/conf"/>
         <mkdir dir="${dev}/core"/>
         <mkdir dir="${dev}/sampleData"/>
-        <copy todir="${dev}/lib">
+        <copy todir="${dev}/libraries">
             <fileset dir="${lib}"/>
         </copy>
         <copy todir="${dev}/components">
             <fileset dir="${components}">
-                <include name="alignment/**/*"/>
-                <include name="analysis/**/*"/>
-                <include name="analysis/**/*"/>
-                <include name="annotations/**/*"/>
-                <include name="associationdiscovery/**/*"/>
-                <include name="clustering/**/*"/>
-                <include name="colormosaic/**/*"/>
-                <include name="discovery/**/*"/>
-                <include name="example/**/*"/>
+                <include name="analysis/classes/**/*"/>
+                <include name="analysis/lib/**/*"/>
+                <include name="clustering/classes/**/*"/>
+                <include name="clustering/lib/**/*"/>
+                <include name="colormosaic/classes/**/*"/>
+                <include name="colormosaic/lib/**/*"/>
+                <include name="example/classes/**/*"/>
+                <include name="example/lib/**/*"/>
+                <include name="filtering/classes/**/*"/>
+                <include name="filtering/lib/**/*"/>
+                <include name="hierarchicalclustering/classes/**/*"/>
+                <include name="hierarchicalclustering/lib/**/*"/>
+                <include name="microarrays/classes/**/*"/>
+                <include name="microarrays/lib/**/*"/>
+                <include name="normalization/classes/**/*"/>
+                <include name="normalization/lib/**/*"/>
+                <include name="plots/classes/**/*"/>
+                <include name="plots/lib/**/*"/>
+                <include name="selectors/classes/**/*"/>
+                <include name="selectors/lib/**/*"/>
+                <include name="sequences/classes/**/*"/>
+                <include name="sequences/lib/**/*"/>
+                <include name="versioninfo/classes/**/*"/>
+                <include name="versioninfo/lib/**/*"/>
+                <include name="viewers/classes/**/*"/>
+                <include name="viewers/lib/**/*"/>
             </fileset>
         </copy>
         <copy todir="${dev}/sampleData">
@@ -134,6 +151,16 @@
                 <include name="21162 ras7-4000markers.gpr"/>
             </fileset>
         </copy>
+        <copy todir="${dev}/docs">
+            <fileset dir="${docs}"/>           
+        </copy>
+        <copy todir="${dev}/conf" file="${conf}/minimal.xml"/>
+        <copy todir="${dev}/conf" file="${conf}/application.properties"/>
+        <copy file="devBuild.xml" tofile="${dev}/build.xml"/>
+        <copy todir="${dev}" file="java.policy"/>
+        <copy todir="${dev}" file="makeGear.bat"/>
+        <mkdir dir="${dev}/src"/>
+        <mkdir dir="${dev}/lib"/>
         <jar destfile="${dev}/core/geworkbench-core.jar">
             <fileset dir="${classes}"/>
         </jar>
@@ -208,7 +235,7 @@
         </java>
     </target>
     <!-- ====================================================================== -->
-    <!-- RUN -->
+    <!-- RUN SILENT -->
     <!-- ====================================================================== -->
     <target name="run-silent" depends="compile" description="Runs geWorkbench.">
         <java fork="true" classname="org.geworkbench.engine.config.UILauncher">
@@ -325,6 +352,6 @@
     <target name="gear" depends="init" description="Create a .gear file out of a component. Specify a directory containing a component like -Dcomponent=name">
         <property name="component" value=""/>
         <echo message="Going to create .gear file out of directory: ${components}/${component}"></echo>
-        <zip destfile="${component}.gear" basedir="${components}" includes="${component}/classes/**,${component}/lib/**"/>
+        <zip destfile="${component}.gear" basedir="${components}/${component}" includes="classes/**,lib/**"/>
     </target>
 </project>

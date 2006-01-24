@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<project name="geWorkBench" default="compile">
+    <!-- ===================================================================== -->
+    <!-- INIT  -->
+    <!-- ===================================================================== -->
+    <target name="init" description="Initializes the build environment.">
+        <!-- NAME OF COMPONENT -->
+        <property name="component" value="noname"/>
+        <!-- DEBUG setting -->
+        <property name="debug" value="on"/>
+        <!-- The components directory -->
+        <property name="components" value="components"/>
+        <!-- Build paths -->
+        <property name="classes" value="${components}/${component}/classes"/>
+        <property name="libs" value="${components}/${component}/lib"/>
+        <property name="conf" value="conf"/>
+        <!-- Temp directory -->
+        <property name="temp" value="temp"/>
+        <!-- Java Source -->
+        <property name="src" value="src"/>
+        <!-- Developer libs -->
+        <property name="lib" value="lib"/>
+        <!-- Directory for Javadoc -->
+        <property name="docs" value="javadocs"/>
+        <!-- The executable libs -->
+        <property name="core" value="core"/>
+        <property name="supportLibs" value="libraries"/>
+    </target>
+    <!-- ===================================================================== -->
+    <!-- PREPARE  -->
+    <!-- ===================================================================== -->
+    <target name="prepare" depends="init" description="Prepares for compilation.">
+        <mkdir dir="${classes}"/>
+        <path id="classpath">
+            <fileset dir="${lib}">
+                <include name="**/*.jar"/>
+            </fileset>
+            <fileset dir="${core}">
+                <include name="**/*.jar"/>
+            </fileset>
+            <fileset dir="${supportLibs}">
+                <include name="**/*.jar"/>
+            </fileset>
+        </path>
+        <!-- Classpath for running -->
+        <path id="run.classpath">
+            <pathelement location="${conf}"/>
+            <fileset dir="${core}">
+                <include name="**/*.jar"/>
+            </fileset>
+            <fileset dir="${supportLibs}">
+                <include name="**/*.jar"/>
+            </fileset>
+        </path>
+    </target>
+
+    <!-- ===================================================================== -->
+    <!-- COMPILE  -->
+    <!-- ===================================================================== -->
+    <target name="compile" depends="prepare" description="Compiles core and component .java source code.">
+        <javac srcdir="${src}" destdir="${classes}" debug="${debug}" source="1.5" target="1.5" memorymaximumsize="256M" fork="true">
+            <classpath>
+                <path refid="classpath"/>
+            </classpath>
+        </javac>
+        <copy todir="${classes}">
+            <fileset dir="${src}">
+                <exclude name="CVS"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+        <copy todir="${libs}">
+            <fileset dir="${lib}">
+                <exclude name="CVS"/>
+                <exclude name="**/*.jar"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- ===================================================================== -->
+    <!-- CLEAN  -->
+    <!-- ===================================================================== -->
+    <target name="clean" description="Clean all build and run products." depends="init">
+        <delete dir="${classes}"/>
+        <delete dir="${temp}"/>
+    </target>
+    <!-- ====================================================================== -->
+    <!-- JAVADOC -->
+    <!-- ====================================================================== -->
+    <target name="javadoc" depends="prepare" description="Creates javadocs for core only.">
+        <javadoc maxmemory="256M" destdir="${docs}" packagenames="*">
+            <classpath refid="classpath"/>
+            <packageset dir="${src}" defaultexcludes="yes"/>
+        </javadoc>
+    </target>
+    <!-- ====================================================================== -->
+    <!-- RUN -->
+    <!-- ====================================================================== -->
+    <target name="run" depends="compile" description="Runs geWorkbench.">
+        <java fork="true" classname="org.geworkbench.engine.config.UILauncher">
+            <jvmarg value="-Xmx384M"/>
+            <jvmarg value="-Djava.library.path=lib"/>
+            <classpath refid="run.classpath"/>
+            <arg value="minimal.xml"/>
+        </java>
+    </target>
+    <!-- ====================================================================== -->
+    <!-- RUN -->
+    <!-- ====================================================================== -->
+    <target name="run-silent" depends="compile" description="Runs geWorkbench with no debug output.">
+        <java fork="true" classname="org.geworkbench.engine.config.UILauncher">
+            <jvmarg value="-Xmx384M"/>
+            <jvmarg value="-Djava.library.path=lib"/>
+            <redirector output="NUL"/>
+            <classpath refid="run.classpath"/>
+            <arg value="minimal.xml"/>
+        </java>
+    </target>
+
+    <target name="gear" depends="init" description="Create a .gear file out of a component. Specify a directory containing a component like -Dcomponent=name">
+        <property name="component" value=""/>
+        <echo message="Going to create .gear file out of directory: ${components}/${component}"></echo>
+        <zip destfile="${component}.gear" basedir="${components}" includes="${component}/classes/**,${component}/lib/**"/>
+    </target>
+</project>

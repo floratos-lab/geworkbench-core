@@ -128,7 +128,7 @@ public class Skin extends GUIFramework {
         if (!foundSize) {
             guiWidth = (int) (dim.getWidth() * 0.9);
             guiHeight = (int) (dim.getHeight() * 0.9);
-            this.setLocation((dim.width - this.getWidth()) / 2, (dim.height - this.getHeight()) / 2);
+            this.setLocation((dim.width - guiWidth) / 2, (dim.height - guiHeight) / 2);
         }
         setSize(new Dimension(guiWidth, guiHeight));
         this.setTitle(System.getProperty("application.title"));
