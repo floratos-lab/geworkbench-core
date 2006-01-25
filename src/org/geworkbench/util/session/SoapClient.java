@@ -1,19 +1,23 @@
 package org.geworkbench.util.session;
 
-import org.apache.axis.client.Call;
-import org.apache.axis.client.Service;
-import org.apache.axis.encoding.ser.JAFDataHandlerDeserializerFactory;
-import org.apache.axis.encoding.ser.JAFDataHandlerSerializerFactory;
-import org.apache.axis.utils.Options;
+import java.io.File;
+import java.net.URL;
+import java.util.Date;
+import java.util.StringTokenizer;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
-import java.io.File;
-import java.net.URL;
-import java.util.Date;
-import java.util.StringTokenizer;
+
+import org.apache.axis.client.Call;
+import org.apache.axis.client.Service;
+import org.apache.axis.encoding.ser.JAFDataHandlerDeserializerFactory;
+import org.apache.axis.encoding.ser.JAFDataHandlerSerializerFactory;
+import org.apache.axis.utils.Options;
+import org.geworkbench.bison.datastructure.biocollections.sequences.
+        CSSequenceSet;
+import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 
 public class SoapClient {
 
@@ -22,17 +26,13 @@ public class SoapClient {
     private String serverURL;
     private String cmd;
     private String inputfile;
-    private static long TIMEGAP = 120000;
-
-    // private PropertiesMonitor pm = new PropertiesMonitor("config.ini");
-
-    //private String DEFAULT_URL = pm.get("blast_server", "http://adgate.cu-genome.org:9000/glue/urn:cmd.wsdl");
-
+    private CSSequenceSet sequenceDB;
+    private static long TIMEGAP = 20000;
     private final String DEFAULT_OUTPUTFILE = "testout.txt";
     private String outputfile;
-    static final String stringURL =
+    static final String STRINGURL =
             "http://adparacel.cu-genome.org/axis/servlet/AxisServlet";
-    private String url = stringURL;
+    private String url = STRINGURL;
 
     Options opts = null;
 
@@ -65,11 +65,7 @@ public class SoapClient {
                               javax.xml.rpc.ParameterMode.IN);
 
             call.setReturnType(qnameAttachment);
-            //System.out.println("In download is the result: " + filename);
             Object result = call.invoke(new Object[] {filename.trim()});
-            // System.out.println("In download is the result: " + result.toString());
-            //s = "c:/axis/downloaded.txt";
-
             ((DataHandler) result).writeTo(new java.io.FileOutputStream(
                     getLocalFileName(filename)));
         } catch (Exception e) {
@@ -106,9 +102,7 @@ public class SoapClient {
 
             call.setReturnType(org.apache.axis.Constants.XSD_STRING);
             Object result = call.invoke(new Object[] {checkstatus});
-            // System.out.println("New In checkJobStatus is the result: " +
-            //                  result.toString());
-            return result.toString();
+             return result.toString();
 
         } catch (Exception e) {
             System.out.println(e + "at getServerInof");
@@ -150,6 +144,68 @@ public class SoapClient {
             e.printStackTrace();
         }
         return null;
+
+    }
+
+    /**
+     * This method sends Sequence text as an attachment then
+     * receives a boolean value as a return.
+     *
+     * @param The sequenceDB.
+     * @return True if sent successfully.
+     */
+    public String submitFile(CSSequenceSet sequences) throws Exception {
+        boolean doTheDIME = false;
+
+        //Create the data for the attached file.
+        if (sequences == null) {
+            return null;
+        }
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < sequences.getSequenceNo(); i++) {
+            DSSequence s = sequences.getSequence(i);
+            sb.append(">" + s.getLabel() + "\n" + s.getSequence() + "\n");
+
+        }
+
+        DataHandler dhSource = new DataHandler(sb.toString(), "text/plain");
+
+        Service service = new Service();
+
+        Call call = (Call) service.createCall();
+
+        call.setTargetEndpointAddress(new URL(serverURL)); //Set the target service host and service location,
+
+        call.setOperationName(new QName("urn:SequenceAlignmentService",
+                                        "upload")); //This is the target services method to invoke.
+
+        QName qnameAttachment = new QName("urn:SequenceAlignmentService",
+                                          "DataHandler");
+        QName qnamereturntype = new QName("urn:SequenceAlignmentService",
+                                          "String");
+
+        call.registerTypeMapping(dhSource.getClass(), //Add serializer for attachment.
+                                 qnameAttachment,
+                                 JAFDataHandlerSerializerFactory.class,
+                                 JAFDataHandlerDeserializerFactory.class);
+
+        call.addParameter("source", qnameAttachment, ParameterMode.IN); //Add the file.
+
+        //call.setReturnType(qnameAttachment);
+        //call.setReturnType(qnamereturntype);
+        call.setReturnType(org.apache.axis.Constants.XSD_STRING);
+        //  call.setUsername(opts.getUser());
+
+        // call.setPassword(opts.getPassword());
+
+        if (doTheDIME) {
+            call.setProperty(call.ATTACHMENT_ENCAPSULATION_FORMAT,
+                             call.ATTACHMENT_ENCAPSULATION_FORMAT_DIME);
+
+        }
+        Object result = call.invoke(new Object[] {dhSource});
+
+        return (String) result;
 
     }
 
@@ -205,54 +261,7 @@ public class SoapClient {
         Object result = call.invoke(new Object[] {dhSource});
 
         return (String) result;
-        // return ((BooleanHolder)result).value;// booleanValue() ;
-        /*
-                Object ret = call.invoke(new Object[]{
-                    dhSource
-                }
-                ); //Add the attachment.
 
-                if (null == ret) {
-                    System.out.println("Received null ");
-                    throw new AxisFault("", "Received null", null, null);
-                }
-
-                if (ret instanceof String) {
-         System.out.println("Received problem response from server: " + ret);
-                    throw new AxisFault("", (String) ret, null, null);
-                }
-
-                if (!(ret instanceof DataHandler)) {
-                    //The wrong type of object that what was expected.
-         System.out.println("Received problem response from server:" +
-                                       ret.getClass().getLabel());
-         throw new AxisFault("", "Received problem response from server:" +
-         ret.getClass().getLabel(), null, null);
-
-                }
-                //Still here, so far so good.
-                //Now lets brute force compare the source attachment
-                // to the one we received.
-                DataHandler rdh = (DataHandler) ret;
-
-                //From here we'll just treat the data resource as file.
-                String receivedfileName = rdh.getLabel();//Get the filename.
-
-                if (receivedfileName == null) {
-                    System.err.println("Could not get the file name.");
-         throw new AxisFault("", "Could not get the file name.", null, null);
-                }
-
-
-                System.out.println("Going to compare the files.....");
-                boolean retv = compareFiles(filename, receivedfileName);
-
-                java.io.File receivedFile = new java.io.File(receivedfileName);
-
-                receivedFile.delete();
-
-                return retv;
-         }*/
     }
 
     /**
@@ -265,90 +274,9 @@ public class SoapClient {
                 "sequence.server.endpoint");
 
         if (serverURL == null) {
-            serverURL = stringURL;
+            serverURL = STRINGURL;
         }
     }
-
-    /**
-     * This method sends all the files in a directory.
-     *  @param The directory that is the source to send.
-     *  @return True if sent and compared.
-     */
-
-
-    /**
-     * Give a single file to send or name a directory
-     * to send an array of attachments of the files in
-     * that directory.
-     */
-    /* public static void main(String args[]) {
-         try {
-             args = new String[] {
-                 "c:/axis/protein.fasta"};
-             Options opts = new Options(args);
-             SoapClient echoattachment = new SoapClient(opts);
-
-             args = opts.getRemainingArgs();
-             int argpos = 0;
-
-             if (args == null || args.length == 0) {
-                 System.err.println("Need a file or directory argument.");
-                 System.exit(8);
-             }
-
-             boolean doTheDIME = false;
-             if (args[0].trim().equalsIgnoreCase("+FDR")) {
-                 doTheDIME = true;
-                 ++argpos;
-             }
-
-             if (argpos >= args.length) {
-                 System.err.println("Need a file or directory argument.");
-                 System.exit(8);
-             }
-
-             String argFile = args[argpos];
-
-             java.io.File source = new java.io.File(argFile);
-
-             if (!source.exists()) {
-     System.err.println("Error \"" + argFile + "\" does not exist!");
-                 System.exit(8);
-             }
-
-             if (true) {
-
-                 System.out.println("Attachment sent ok!!");
-
-                 String uploadedFile = echoattachment.submitFile(argFile);
-                 String outputFile = "outputFolder/Output" +
-                     new Random().nextInt();
-                 echoattachment.submitJob(
-                     "pb blastall -p blastp -d ncbi/pdbaa   ",
-
-                     uploadedFile, outputFile);
-
-                 while (!echoattachment.isJobFinished(outputFile)) {
-                     Thread.sleep(TIMEGAP);
-                     System.out.println(new Date());
-                 }
-                 ;
-                 //   echoattachment.getServerInfo("pb status");
-                 //outputFile = "Output1380658754";
-                 // outputFile = "http://amdec-bioinfo.cu-genome.org/html/index.html";
-                 echoattachment.getFile(outputFile);
-
-                 System.out.println(outputFile + "end ok!");
-             }
-
-         }
-         catch (Exception e) {
-             System.err.println(e);
-             e.printStackTrace();
-         }
-         System.exit(18);
-     }
-     */
 
 
     public String getSession(String s) {
@@ -403,8 +331,7 @@ public class SoapClient {
 
             call.setReturnType(org.apache.axis.Constants.XSD_BOOLEAN);
             Object result = call.invoke(new Object[] {getDesFileName(jobNumber)});
-            // System.out.println("New In checkJobStatus is the result: " +
-            //                    result.toString());
+
             return new Boolean(result.toString()).booleanValue();
         } catch (Exception e) {
             System.out.println(e);
@@ -415,6 +342,10 @@ public class SoapClient {
 
     public String getOutputfile() {
         return new File(outputfile).getAbsolutePath();
+    }
+
+    public CSSequenceSet getSequenceDB() {
+        return sequenceDB;
     }
 
     /**
@@ -456,9 +387,53 @@ public class SoapClient {
         return getServerInfo("pb status");
     }
 
-    public void startRun(boolean enableHTML) throws Exception {
+    public void startRun(boolean enableHTML, CSSequenceSet sequences) {
+        //String uploadedFile = submitFile(sequences);
+        try {
+            String uploadedFile = submitFile(sequences);
+            if (enableHTML) {
+                if (!cmd.matches(" -T T")) {
+                    cmd += " -T T ";
+                }
 
-        String uploadedFile = submitFile(inputfile);
+            } else {
+                if (cmd.matches(" -T T")) {
+                    cmd = cmd.replaceAll(" -T T", " -T F ");
+                    //System.out.println("replaced");
+                } else if (!cmd.matches(" -T F")) {
+                    cmd += "-T F";
+                }
+
+                outputfile += ".txt";
+            }
+
+            submitJob(cmd, uploadedFile, outputfile);
+
+        } catch (Exception e) {
+
+            //e.printStackTrace();
+
+        } while (!isJobFinished(getFileName(outputfile))) {
+            try {
+                Thread.sleep(TIMEGAP);
+            } catch (InterruptedException ie) {
+                ie.printStackTrace();
+            }
+
+        }
+
+        getFile(getFileName(outputfile));
+
+
+    }
+
+    public void startRun(boolean enableHTML) throws Exception {
+        String uploadedFile = "";
+        if (sequenceDB != null) {
+            uploadedFile = submitFile(sequenceDB);
+        } else {
+            uploadedFile = submitFile(inputfile);
+        }
         try {
             if (enableHTML) {
                 if (!cmd.matches(" -T T")) {
@@ -475,13 +450,10 @@ public class SoapClient {
 
                 outputfile += ".txt";
             }
-            //System.out.println(cmd + "  before submitJob " + uploadedFile +
-            //                   " output" + outputfile);
+
             submitJob(cmd, uploadedFile, outputfile);
 
         } catch (Exception e) {
-
-            //e.printStackTrace();
 
         } while (!isJobFinished(getFileName(outputfile))) {
             try {
@@ -491,10 +463,8 @@ public class SoapClient {
             }
 
         }
-        //System.out.println("Your query is ended at " + new Date() + outputfile);
-        getFile(getFileName(outputfile));
 
-        // System.out.println("Your query is ended at " + new Date());
+        getFile(getFileName(outputfile));
 
     }
 
@@ -616,6 +586,10 @@ public class SoapClient {
 
         }
         return tempFolder + getFileName(path);
+    }
+
+    public void setSequenceDB(CSSequenceSet sequenceDB) {
+        this.sequenceDB = sequenceDB;
     }
 
 }
