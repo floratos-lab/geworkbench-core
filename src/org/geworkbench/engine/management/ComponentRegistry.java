@@ -655,7 +655,7 @@ public class ComponentRegistry {
                         }
                         thisdir.mkdir();
                         try {
-                            List files = Util.unZip(file.getAbsolutePath(), thisdir.getAbsolutePath());
+                            Util.unZip(file.getAbsolutePath(), thisdir.getAbsolutePath());
                             ComponentResource resource = new ComponentResource(thisdir.getPath(), true);
                             nameToComponentResource.put(thisdir.getName(), resource);
                             log.trace("Added " + thisdir.getName() + " to resource locations. ("+thisdir.getPath()+")");
