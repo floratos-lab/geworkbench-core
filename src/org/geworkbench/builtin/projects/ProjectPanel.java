@@ -552,7 +552,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         if (path != null) {
             ProjectTreeNode mNode = (ProjectTreeNode) path.getLastPathComponent();
             selection.setMenuNode(mNode);
-            if (e.isMetaDown()) {
+            if (e.isMetaDown() || e.getClickCount() >= 2) {
                 if (!isPathSelected(path)) {
                     // Force selection of this path
                     projectTree.setSelectionPath(path);
@@ -1771,8 +1771,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                 jProjectTree_mouseClicked(e);
             }
 
-        });
-        projectTree.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(MouseEvent e) {
                 jProjectTree_mouseReleased(e);
             }
