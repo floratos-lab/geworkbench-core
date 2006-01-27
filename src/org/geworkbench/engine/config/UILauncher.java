@@ -145,19 +145,25 @@ public class UILauncher implements AnnotationParserListener {
             }
         }
         try {
-            if (lookAndFeelArg != null) {
-                if ("native".equals(lookAndFeelArg)) {
-                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                } else if ("plastic".equals(lookAndFeelArg)) {
+            if (System.getProperty("os.name").toUpperCase().indexOf("WINDOWS") == -1) {
+                // If we're not on windows, then use native look and feel no matter what
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } else {
+
+                if (lookAndFeelArg != null) {
+                    if ("native".equals(lookAndFeelArg)) {
+                        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                    } else if ("plastic".equals(lookAndFeelArg)) {
+                        PlasticLookAndFeel.setMyCurrentTheme(new SkyBlue());
+                        UIManager.setLookAndFeel("com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
+                    } else {
+                        UIManager.setLookAndFeel(lookAndFeelArg);
+                    }
+                } else {
+                    // Default to plastic.
                     PlasticLookAndFeel.setMyCurrentTheme(new SkyBlue());
                     UIManager.setLookAndFeel("com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
-                } else {
-                    UIManager.setLookAndFeel(lookAndFeelArg);
                 }
-            } else {
-                // Default to plastic.
-                PlasticLookAndFeel.setMyCurrentTheme(new SkyBlue());
-                UIManager.setLookAndFeel("com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
             }
         } catch (Exception e) {
             System.out.println("Problem applying look and feel:");
