@@ -1214,7 +1214,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         selection.setNodeSelection(node);
         projectTree.setSelectionPath(new TreePath(node.getPath()));
         // todo - watkin - replace with a more appropriate event firing
-        projectTreeModel.nodeStructureChanged(node);
+        // projectTreeModel.nodeStructureChanged(node);
     }
 
     public ProjectSelection getSelection() {
