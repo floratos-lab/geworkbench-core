@@ -6,6 +6,7 @@ import org.geworkbench.bison.datastructure.properties.DSNamed;
 
 import java.util.Iterator;
 import java.util.WeakHashMap;
+import java.io.Serializable;
 
 /**
  * @author John Watkinson
@@ -163,7 +164,7 @@ public class CSAnnotationContextManager implements DSAnnotationContextManager {
         }
     }
 
-    public static class SerializableContexts {
+    public static class SerializableContexts implements Serializable {
         private ListOrderedSet<DSAnnotationContext> contexts;
         private String current;
 

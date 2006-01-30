@@ -11,11 +11,12 @@ import org.geworkbench.bison.datastructure.properties.DSNamed;
 import java.awt.*;
 import java.lang.ref.WeakReference;
 import java.util.*;
+import java.io.Serializable;
 
 /**
  * @author John Watkinson
  */
-public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationContext<T> {
+public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationContext<T>, Serializable {
 
     public static final String SELECTION = "Selection";
 
@@ -49,7 +50,7 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
         context.setDefaultClass(CLASS_CONTROL);
     }
 
-    private class Label implements Cloneable {
+    private class Label implements Cloneable, Serializable {
 
         public String name;
         public DSPanel<T> panel;
@@ -111,7 +112,7 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
      * Stored as a weak reference so that this context can be released by the GC when the item list is GCed.
      * @see CSAnnotationContextManager#contextMap
      */
-    private WeakReference<DSItemList<T>> itemListReference;
+    private transient WeakReference<DSItemList<T>> itemListReference;
 
     private ListOrderedMap<DSAnnotationType, HashMap<T, ?>> annotations;
     private ListOrderedMap<String, Label> labels;
