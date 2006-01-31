@@ -305,10 +305,10 @@
             <report format="frames" todir="${junitreport}"/>
         </junitreport>
     </target>
+
   <!-- ====================================================================== -->
   <!-- Prepare a clean file for depositing to NCI CVS -->
   <!-- ====================================================================== -->
-
  <target name="createResource" depends="clean" description="Creating a new folder for depositing...">
         <delete dir="../cleanResource"/>
         <mkdir dir="../cleanResource"/>

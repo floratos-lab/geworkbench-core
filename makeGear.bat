@@ -1,1 +1,0 @@
-ant -Dcomponent=%1 gear
