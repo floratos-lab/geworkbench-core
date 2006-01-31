@@ -30,6 +30,8 @@
         <property name="components" value="components"/>
         <!-- Release info -->
         <property name="release.file" value="${dist}/${app}-${version}"/>
+        <!-- Release info -->
+        <property name="devkit.file" value="${dist}/devkit-${app}-${version}"/>
         <!-- Location to write reports -->
         <property name="reports" value="reports"/>
     </target>
@@ -163,7 +165,13 @@
         <mkdir dir="${dev}/lib"/>
         <jar destfile="${dev}/core/geworkbench-core.jar">
             <fileset dir="${classes}"/>
+            <manifest>
+                <attribute name="core-version" value="${version}"/>
+            </manifest>
         </jar>
+        <zip destfile="${devkit.file}.zip" >
+            <fileset dir="devkit"/>
+        </zip>
     </target>
 
     <!-- ===================================================================== -->
@@ -352,6 +360,10 @@
     <target name="gear" depends="init" description="Create a .gear file out of a component. Specify a directory containing a component like -Dcomponent=name">
         <property name="component" value=""/>
         <echo message="Going to create .gear file out of directory: ${components}/${component}"></echo>
-        <zip destfile="${component}.gear" basedir="${components}/${component}" includes="classes/**,lib/**"/>
+        <jar destfile="${component}.gear" basedir="${components}/${component}" includes="classes/**,lib/**">
+            <manifest>
+                <attribute name="core-version" value="${version}"/>
+            </manifest>
+        </jar>
     </target>
 </project>

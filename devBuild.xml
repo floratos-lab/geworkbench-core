@@ -120,6 +120,6 @@
     <target name="gear" depends="init" description="Create a .gear file out of a component. Specify a directory containing a component like -Dcomponent=name">
         <property name="component" value=""/>
         <echo message="Going to create .gear file out of directory: ${components}/${component}"></echo>
-        <zip destfile="${component}.gear" basedir="${components}" includes="${component}/classes/**,${component}/lib/**"/>
+        <jar destfile="${component}.gear" basedir="${components}/${component}" includes="classes/**,lib/**" manifest="core/geworkbench-core.jar"/>
     </target>
 </project>
