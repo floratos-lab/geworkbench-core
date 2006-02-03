@@ -146,6 +146,7 @@
     <path>[lib/jgraphpad.jar]</path>
     <path>[lib/collections-generic-4.0.jar]</path>
     <path>[lib/forms-1.0.5.jar]</path>
+    <path>src/org/geworkbench/builtin/projects</path>
   </class>
   <source>
     <path>components/alignment/src</path>
@@ -175,5 +176,5 @@
     <path>components/viewers/src</path>
     <path>src</path>
   </source>
-  <lastmodsaved>1138987364885</lastmodsaved>
+  <lastmodsaved>1138207386219</lastmodsaved>
 </library>

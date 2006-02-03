@@ -3,7 +3,7 @@
   <!--JBuilder Library Definition File-->
   <fullname>associationdiscovery</fullname>
   <class>
-    <path>[../components/associationdiscovery/lib/gw2.jar]</path>
+    <path>[components/associationdiscovery/lib/gw2.jar]</path>
   </class>
-  <lastmodsaved>1138988409010</lastmodsaved>
+  <lastmodsaved>1124999261940</lastmodsaved>
 </library>

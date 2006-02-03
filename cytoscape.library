@@ -3,7 +3,7 @@
   <!--JBuilder Library Definition File-->
   <fullname>cytoscape</fullname>
   <class>
-    <path>[../components/cytoscape/lib/cytoscape.jar]</path>
+    <path>[components/cytoscape/lib/cytoscape.jar]</path>
   </class>
-  <lastmodsaved>1138988449573</lastmodsaved>
+  <lastmodsaved>1125001410986</lastmodsaved>
 </library>

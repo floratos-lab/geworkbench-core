@@ -3,7 +3,7 @@
   <!--JBuilder Library Definition File-->
   <fullname>analysis</fullname>
   <class>
-    <path>[../components/analysis/lib/JSciCore.jar]</path>
+    <path>[components/analysis/lib/JSciCore.jar]</path>
   </class>
-  <lastmodsaved>1138988363620</lastmodsaved>
+  <lastmodsaved>1124999196877</lastmodsaved>
 </library>
