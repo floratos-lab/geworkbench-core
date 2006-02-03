@@ -3,7 +3,7 @@
   <!--JBuilder Library Definition File-->
   <fullname>promoter</fullname>
   <class>
-    <path>[components/promoter/lib/biojava-1.3.1.jar]</path>
+    <path>[../components/promoter/lib/biojava-1.3.1.jar]</path>
   </class>
-  <lastmodsaved>1125001114424</lastmodsaved>
+  <lastmodsaved>1138988429885</lastmodsaved>
 </library>

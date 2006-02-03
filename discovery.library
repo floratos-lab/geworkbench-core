@@ -3,7 +3,7 @@
   <!--JBuilder Library Definition File-->
   <fullname>discovery</fullname>
   <class>
-    <path>[components/discovery/lib/xmlsec.jar]</path>
+    <path>[../components/discovery/lib/xmlsec.jar]</path>
   </class>
-  <lastmodsaved>1126198064546</lastmodsaved>
+  <lastmodsaved>1138988467120</lastmodsaved>
 </library>

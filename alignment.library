@@ -3,11 +3,11 @@
   <!--JBuilder Library Definition File-->
   <fullname>alignment</fullname>
   <class>
-    <path>[components/alignment/lib/biojava-1.3.1.jar]</path>
-    <path>[components/alignment/lib/ogsa-samples.jar]</path>
-    <path>[components/alignment/lib/progtutorial_BlastClient.jar]</path>
-    <path>[components/alignment/lib/progtutorial_BlastService-stub.jar]</path>
-    <path>[lib/xmlsec.jar]</path>
+    <path>[../components/alignment/lib/biojava-1.3.1.jar]</path>
+    <path>../components/alignment/lib/CVS</path>
+    <path>[../components/alignment/lib/ogsa-samples.jar]</path>
+    <path>[../components/alignment/lib/progtutorial_BlastClient.jar]</path>
+    <path>[../components/alignment/lib/progtutorial_BlastService-stub.jar]</path>
   </class>
-  <lastmodsaved>1126207601781</lastmodsaved>
+  <lastmodsaved>1138988335198</lastmodsaved>
 </library>
