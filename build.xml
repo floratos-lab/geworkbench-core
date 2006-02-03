@@ -160,7 +160,6 @@
         <copy todir="${dev}/conf" file="${conf}/application.properties"/>
         <copy file="devBuild.xml" tofile="${dev}/build.xml"/>
         <copy todir="${dev}" file="java.policy"/>
-        <copy todir="${dev}" file="makeGear.bat"/>
         <mkdir dir="${dev}/src"/>
         <mkdir dir="${dev}/lib"/>
         <jar destfile="${dev}/core/geworkbench-core.jar">
