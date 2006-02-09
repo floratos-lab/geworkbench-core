@@ -35,7 +35,6 @@ import org.geworkbench.events.SubpanelChangedEvent;
 
 /**
  * @author unattributable
- * @version $Id:
  */
 public abstract class MicroarrayViewEventBase implements VisualPlugin {
 
@@ -109,8 +108,8 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
     @Subscribe
     @SuppressWarnings("unchecked")
     public void receive( org.geworkbench.events.ProjectEvent e, Object source ) {
-        
-        log.debug("Source object " + source);
+
+        log.debug( "Source object " + source );
 
         if ( e.getMessage().equals( org.geworkbench.events.ProjectEvent.CLEARED ) ) {
             refMASet = null;
@@ -136,8 +135,8 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
      */
     @Subscribe
     public void receive( GeneSelectorEvent e, Object source ) {
-        
-        log.debug("Source object " + source);
+
+        log.debug( "Source object " + source );
 
         if ( e.getPanel() != null && e.getPanel().size() > 0 ) {
 
@@ -170,9 +169,9 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
     @Subscribe
     @SuppressWarnings("unchecked")
     public void receive( org.geworkbench.events.PhenotypeSelectorEvent e, Object source ) {
-        
-        log.debug("Source object " + source);
-        
+
+        log.debug( "Source object " + source );
+
         if ( e.getTaggedItemSetTree() != null )
 
         activatedArrays = e.getTaggedItemSetTree().activeSubset();
