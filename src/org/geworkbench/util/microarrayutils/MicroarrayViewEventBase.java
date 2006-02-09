@@ -176,7 +176,6 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 
         activatedArrays = e.getTaggedItemSetTree().activeSubset();
 
-        // refreshMaSetView();
     }
 
     /**
@@ -224,11 +223,6 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
         jToolBar3.add( numMarkersSelectedLabel );
         mainPanel.add( jToolBar3, java.awt.BorderLayout.SOUTH );
 
-        // TODO remove these two ... they are defined above.
-        // jToolBar3.add(chkShowArrays, null);
-        // jToolBar3.add(chkActivateMarkers, null);
-        // mainPanel.add(jToolBar3, BorderLayout.SOUTH);
-
         activateMarkers = chkActivateMarkers.isSelected();
         activateArrays = chkShowArrays.isSelected();
     }
@@ -238,7 +232,6 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
      */
     void chkShowArrays_actionPerformed( ActionEvent e ) {
         activateArrays = ( ( JCheckBox ) e.getSource() ).isSelected();
-        // refreshMaSetView();
     }
 
     /**
@@ -246,7 +239,6 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
      */
     void chkActivateMarkers_actionPerformed( ActionEvent e ) {
         activateMarkers = ( ( JCheckBox ) e.getSource() ).isSelected();
-        // refreshMaSetView();
     }
 
     /**
