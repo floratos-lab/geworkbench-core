@@ -177,8 +177,8 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
      * @param b
      */
     private void enablePlotButton( boolean b ) {
-        numMarkersSelectedLabel.setEnabled( false );
-        plotButton.setEnabled( false );
+        numMarkersSelectedLabel.setEnabled( b );
+        plotButton.setEnabled( b );
 
     }
 
