@@ -140,6 +140,7 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 
         if ( e.getPanel() != null && e.getPanel().size() > 0 ) {
 
+            enablePlotButton( true );
             numMarkersSelectedLabel.setText( markerLabelPrefix + e.getPanel().size() );
 
             // TODO keshav - in efforts to keep this consistent with the rest of the application at this time, I have
@@ -154,11 +155,26 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
             activatedMarkers = e.getPanel().activeSubset();
         }
 
+        else {
+            log.debug( "Conditions not met.  Disabling plot button ..." );
+            enablePlotButton( false );
+        }
+
         // Part of the TODO above. Make sure you "uncomment this if you uncomment that".
         // else {
         // chkActivateMarkers.setEnabled( false );
         // }
         // refreshMaSetView();
+    }
+
+    /**
+     * Either enables or disables the plot button based on whether or not the "Selection" box is checked.
+     * 
+     * @param b
+     */
+    private void enablePlotButton( boolean b ) {
+        numMarkersSelectedLabel.setEnabled( b );
+        plotButton.setEnabled( b );
     }
 
     /**
@@ -216,6 +232,7 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
         // chkShowArrays.setEnabled( false );
 
         plotButton.addActionListener( new MicroarrayViewPanelBase_plotButton_actionAdapter( this ) );
+        enablePlotButton( false );
 
         jToolBar3.add( chkShowArrays, null );
         jToolBar3.add( chkActivateMarkers, null );
