@@ -2,6 +2,10 @@ package org.geworkbench.builtin.projects.remoteresources;
 
 import java.io.*;
 import java.util.ArrayList;
+import org.apache.axis.client.Service;
+import java.net.URL;
+import org.apache.axis.client.Call;
+import javax.xml.namespace.QName;
 
 /**
  * <p>Title: </p>
@@ -46,7 +50,8 @@ public class RemoteResourceManager {
      */
     protected void init() {
         RemoteResource rr = new RemoteResource("caARRAY",
-                                               "caarray-mageom-server.nci.nih.gov", "8080", "http:",
+                                               "caarray-mageom-server.nci.nih.gov",
+                                               "8080", "http:",
                                                "KustagiM", "Tbf38!a");
 
 //        # caARRAY username/password
@@ -84,6 +89,51 @@ public class RemoteResourceManager {
             ex.printStackTrace();
 
         }
+
+    }
+
+    /**
+     * Init the existed resources from a Index service.
+     * @param url name
+     */
+    protected boolean init(String urlname) {
+        try {
+            urlname =  "http://adparacel.cu-genome.org/axis/servlet/AxisServlet";
+            Service service = new Service();
+
+            Call call = (Call) service.createCall();
+
+            call.setTargetEndpointAddress(new URL(urlname));
+            call.setOperationName(new QName("urn:downloadfileService",
+                                            "getServerInfo")); //This is the target services method to invoke.
+
+            call.addParameter("testParam", org.apache.axis.Constants.XSD_STRING,
+                              javax.xml.rpc.ParameterMode.IN);
+
+            call.setReturnType(org.apache.axis.Constants.XSD_STRING);
+            String cmd = "pb statis";
+            Object result = call.invoke(new Object[] {cmd});
+            String[] lists = result.toString().split(",");
+            if (lists != null) {
+                for (String s : lists) {
+                    String[] cols = s.split(",");
+                    if (cols != null && cols.length > 0) {
+                        RemoteResource rr = RemoteResource.createNewInstance(
+                                cols);
+                        if (rr != null) {
+                            existedResources.add(rr);
+
+                        }
+                    }
+
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println(e + "RemoteResourceManager.init" + urlname);
+            e.printStackTrace();
+        }
+        return false;
 
     }
 
@@ -167,9 +217,9 @@ public class RemoteResourceManager {
      */
     public boolean addRemoteResource(RemoteResource newResource) {
         if (existedResources.contains(newResource)) {
-           deleteRemoteResource(newResource);
+            deleteRemoteResource(newResource);
         }
-         return existedResources.add(newResource);
+        return existedResources.add(newResource);
     }
 
     /**

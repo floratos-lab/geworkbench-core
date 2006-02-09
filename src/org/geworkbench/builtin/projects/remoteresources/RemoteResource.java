@@ -23,7 +23,7 @@ public class RemoteResource {
     private String DEFAULTPROTOCAL = "http";
     private String shortname;
     private String uri;
-    private int portnumber = 8;
+    private int portnumber = 80;
     public RemoteResource() {
         try {
             jbInit();

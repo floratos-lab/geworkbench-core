@@ -65,6 +65,12 @@ public class LoadData extends JDialog {
     private JPanel mergePanel;
     private RemoteResourceDialog remoteResourceDialog;
     private JPanel remoteControlPanel;
+    private JTabbedPane lowTabPane;
+    private JPanel caArrayIndexServicePanel;
+    private final String DEFAULTINDEXURL = "http://adgate.cu-genome.org:8080";
+    private String indexURL = DEFAULTINDEXURL;
+    private JTextField indexField;
+    private JButton updateIndexButton;
 
 
     /**
@@ -102,7 +108,14 @@ public class LoadData extends JDialog {
             e.printStackTrace();
         }
     }
-
+    public LoadData() {
+       // parentProjectPanel = new ProjectPanel();
+        try {
+            jbInit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     public void setDirectory(String directory) {
         jFileChooser1.setCurrentDirectory(new File(directory));
     }
@@ -118,6 +131,7 @@ public class LoadData extends JDialog {
         //change it to false in order to provide a progress bar for loading remote data.
         this.setModal(false);
         this.getContentPane().setLayout(borderLayout1);
+
         jPanel1.setLayout(gridLayout1);
         jPanel2.setLayout(flowLayout1);
         jPanel3.setLayout(flowLayout2);
@@ -199,26 +213,47 @@ public class LoadData extends JDialog {
             }
         });
         jComboBox1.setPreferredSize(new Dimension(50, 19));
-        this.getContentPane().add(lowerPanel, BorderLayout.SOUTH);
+
         mergePanel = new JPanel();
         mergePanel.setLayout(new BoxLayout(mergePanel, BoxLayout.X_AXIS));
         mergeCheckBox = new JCheckBox("Merge Files", false);
 
         //jComboBox1 = new JComboBox(remoteResourceDialog.getResourceNames());
         //jComboBox1 = new JComboBox(new String[]{"TEST"});
-
         jPanel10.add(jComboBox1);
         jPanel10.add(openRemoteResourceButton);
         jPanel10.add(addButton);
         jPanel10.add(editButton);
         jPanel10.add(deleteButton);
         remoteControlPanel = new JPanel();
-        lowerPanel.add(mergePanel);
+        //lowerPanel.add(mergePanel);
         mergePanel.add(mergeCheckBox);
         mergePanel.add(Box.createGlue());
         lowerPanel.add(jPanel1);
         //lowerPanel.add(jPanel10);
+        lowTabPane = new JTabbedPane();
+        lowTabPane.add(lowerPanel, "Main");
+        caArrayIndexServicePanel = new JPanel();
+        lowTabPane.add(caArrayIndexServicePanel, "caARRAY Index Service");
+        lowTabPane.setSelectedIndex(0);
+        indexField = new JTextField (indexURL);
+        updateIndexButton = new JButton("Update");
+        caArrayIndexServicePanel.add(indexField);
+        caArrayIndexServicePanel.add(updateIndexButton);
 
+        updateIndexButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                lowTabPane.setSelectedIndex(0);
+                jRadioButton8.setSelected(true);
+                 remoteResourceDialog.updateResource(indexField.getText());
+                addRemotePanel_actionPerformed(e);
+            }
+        });
+
+        // this.getContentPane().add(lowerPanel, BorderLayout.SOUTH);
+       this.getContentPane().add(lowTabPane, BorderLayout.SOUTH);
+       //Merge Merge panel and Jpanel 1 in 1 line.
+       jPanel1.add(mergePanel);
         jPanel1.add(jPanel2, null);
         jPanel2.add(jRadioButton1, null);
         //removed by XQ

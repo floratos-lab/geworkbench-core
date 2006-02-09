@@ -305,6 +305,11 @@ public class RemoteResourceDialog extends JDialog {
         return null;
     }
 
+    public boolean updateResource(String urlname){
+
+        return remoteResourceManager.init(urlname);
+
+    }
     public String getCurrentResourceName() {
         return currentResourceName;
     }
