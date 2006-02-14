@@ -19,15 +19,15 @@ public class CSAlignmentResultSet extends CSAncillaryDataSet implements DSAlignm
     private String label = "Blast_Result";
     private File fastaFile = null;
     private File resultFile = null;
-    //Just add the new algorithm varible to get the job status show at the project panel.
-    private BWAbstractAlgorithm algorithm = null;
-    public BWAbstractAlgorithm getAlgorithm() {
-        return algorithm;
-    };
-
-    public void setAlgorithm(BWAbstractAlgorithm _algorithm) {
-        algorithm = _algorithm;
-    }
+//    //Just add the new algorithm varible to get the job status show at the project panel.
+//    private BWAbstractAlgorithm algorithm = null;
+//    public BWAbstractAlgorithm getAlgorithm() {
+//        return algorithm;
+//    };
+//
+//    public void setAlgorithm(BWAbstractAlgorithm _algorithm) {
+//        algorithm = _algorithm;
+//    }
 
     public void setResultFile(String outputFilename) {
         resultFile = new File(outputFilename);
