@@ -24,6 +24,7 @@ public class RemoteResource {
     private String shortname;
     private String uri;
     private int portnumber = 80;
+    private boolean editable = true;
     public RemoteResource() {
         try {
             jbInit();
@@ -99,6 +100,10 @@ public class RemoteResource {
         this.portnumber = portnumber;
     }
 
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -121,6 +126,10 @@ public class RemoteResource {
 
     public int getPortnumber() {
         return portnumber;
+    }
+
+    public boolean isEditable() {
+        return editable;
     }
 
     /**
