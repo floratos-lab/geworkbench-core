@@ -35,7 +35,7 @@ import org.geworkbench.events.SubpanelChangedEvent;
 
 /**
  * @author unattributable
- * @version $Id: MicroarrayViewEventBase.java,v 1.11 2006-02-13 21:58:16 keshav Exp $
+ * @version $Id: MicroarrayViewEventBase.java,v 1.12 2006-02-14 23:19:16 keshav Exp $
  */
 public abstract class MicroarrayViewEventBase implements VisualPlugin {
 
@@ -286,6 +286,20 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
         dataSetView.useItemPanel( activateArrays );
         // dataSetView.setMicroarraySet(this.refMASet);
         return dataSetView;
+    }
+
+    /**
+     * @return
+     */
+    public DSMicroarraySetView<DSGeneMarker, DSMicroarray> getMaSetView() {
+        return maSetView;
+    }
+
+    /**
+     * @param maSetView
+     */
+    public void setMaSetView( DSMicroarraySetView<DSGeneMarker, DSMicroarray> maSetView ) {
+        this.maSetView = maSetView;
     }
 
 }
