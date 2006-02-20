@@ -113,7 +113,10 @@ public class RemoteResourceManager {
             call.setReturnType(org.apache.axis.Constants.XSD_STRING);
             String cmd = "pb statis";
             Object result = call.invoke(new Object[] {cmd});
-            String[] lists = result.toString().split(",");
+
+            String testResult = "NCI, http, www.adgate.com,6555! CNN, http,//www.cnn.com,666! NBC, http, www.nbc.com, 5555";
+//            String[] lists = result.toString().split("!");
+            String[] lists = testResult.split("!");
             if (lists != null) {
                 for (String s : lists) {
                     String[] cols = s.split(",");
@@ -121,6 +124,7 @@ public class RemoteResourceManager {
                         RemoteResource rr = RemoteResource.createNewInstance(
                                 cols);
                         if (rr != null) {
+                            rr.setEditable(false);
                             existedResources.add(rr);
 
                         }

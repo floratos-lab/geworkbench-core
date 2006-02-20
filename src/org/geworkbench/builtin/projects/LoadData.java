@@ -67,7 +67,7 @@ public class LoadData extends JDialog {
     private JPanel remoteControlPanel;
     private JTabbedPane lowTabPane;
     private JPanel caArrayIndexServicePanel;
-    private final String DEFAULTINDEXURL = "http://adgate.cu-genome.org:8080";
+    private final String DEFAULTINDEXURL = "http://156.145.29.52:8080/ogsa/services/edu/columbia/CaARRAYIndexService";
     private String indexURL = DEFAULTINDEXURL;
     private JTextField indexField;
     private JButton updateIndexButton;
@@ -246,6 +246,7 @@ public class LoadData extends JDialog {
                 lowTabPane.setSelectedIndex(0);
                 jRadioButton8.setSelected(true);
                  remoteResourceDialog.updateResource(indexField.getText());
+                 updateExistedResources();
                 addRemotePanel_actionPerformed(e);
             }
         });
@@ -519,16 +520,17 @@ public class LoadData extends JDialog {
     }
 
     public void addRemotePanel(){
-       if (jPanel8.isConnectionSuccess()) {
+     //  if (jPanel8.isConnectionSuccess()) {
             this.getContentPane().remove(jPanel6);
             this.getContentPane().remove(jPanel4);
             this.getContentPane().add(jPanel8, BorderLayout.CENTER);
             this.validate();
             this.repaint();
-        }
+  //      }
 
     }
     private void addRemotePanel_actionPerformed(ActionEvent e) {
+        addRemotePanel();
         lowerPanel.add(jPanel10);
         this.validate();
         this.repaint();

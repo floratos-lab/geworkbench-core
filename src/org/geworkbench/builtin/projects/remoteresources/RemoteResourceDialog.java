@@ -267,6 +267,21 @@ public class RemoteResourceDialog extends JDialog {
             jComboBox1.setSelectedItem(rr.getConnectProtocal());
             shortnameTextField.setText(rr.getShortname());
             jTextField3.setText(new Integer(rr.getPortnumber()).toString());
+            boolean editable = rr.isEditable();
+
+            jTextField3.setEditable(editable);
+            jTextField2.setEditable(editable);
+            shortnameTextField.setEditable(editable);
+            jComboBox1.setEditable(editable);
+            if (!editable) {
+
+                shortnameTextField.setToolTipText(
+                        "Shortname cannot be changed if it is from Index service");
+                jTextField2.setToolTipText(
+                        "URL cannot be changed if it is from Index service");
+                jTextField3.setToolTipText(
+                        "Port number cannot be changed if it is from Index service");
+            }
         }
     }
 
@@ -307,7 +322,10 @@ public class RemoteResourceDialog extends JDialog {
 
     public boolean updateResource(String urlname){
 
-        return remoteResourceManager.init(urlname);
+        if(remoteResourceManager.init(urlname)){
+            return true;
+        }
+        return false;
 
     }
     public String getCurrentResourceName() {

@@ -71,9 +71,12 @@ public class RemoteResource {
         if (columns.length == 6) {
             return new RemoteResource(columns[0], columns[1], columns[2],
                                       columns[3], columns[4], columns[5]);
-        } else {
-            return null;
+        } else if(columns.length == 4) {
+         return    new RemoteResource(columns[0], columns[2], columns[1],
+                                      columns[3], "", "");
         }
+        return null;
+
     }
 
     public void setUsername(String username) {
