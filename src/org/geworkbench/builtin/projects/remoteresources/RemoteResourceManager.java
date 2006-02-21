@@ -6,6 +6,9 @@ import org.apache.axis.client.Service;
 import java.net.URL;
 import org.apache.axis.client.Call;
 import javax.xml.namespace.QName;
+import edu.columbia.stubs.CaARRAYIndexService.service.*;
+import edu.columbia.stubs.CaARRAYIndexService.CaARRAYIndexPortType;
+
 
 /**
  * <p>Title: </p>
@@ -52,7 +55,7 @@ public class RemoteResourceManager {
         RemoteResource rr = new RemoteResource("caARRAY",
                                                "caarray-mageom-server.nci.nih.gov",
                                                "8080", "http:",
-                                               "KustagiM", "Tbf38!a");
+                                               "PUBLIC", "");
 
 //        # caARRAY username/password
 //caarray.mage.user=KustagiM
@@ -98,25 +101,41 @@ public class RemoteResourceManager {
      */
     protected boolean init(String urlname) {
         try {
-            urlname =  "http://adparacel.cu-genome.org/axis/servlet/AxisServlet";
-            Service service = new Service();
+//            urlname =  "http://adparacel.cu-genome.org/axis/servlet/AxisServlet";
+//            Service service = new Service();
+//
+//            Call call = (Call) service.createCall();
+//
+//            call.setTargetEndpointAddress(new URL(urlname));
+//            call.setOperationName(new QName("urn:downloadfileService",
+//                                            "getServerInfo")); //This is the target services method to invoke.
+//
+//            call.addParameter("testParam", org.apache.axis.Constants.XSD_STRING,
+//                              javax.xml.rpc.ParameterMode.IN);
+//
+//            call.setReturnType(org.apache.axis.Constants.XSD_STRING);
+            URL GSH = new java.net.URL(urlname);
 
-            Call call = (Call) service.createCall();
+            String cmd = "caARRAY";
+            //Object result = call.invoke(new Object[] {cmd});
+            CaARRAYIndexServiceGridLocator caArrayServiceLocator = new
+                    CaARRAYIndexServiceGridLocator();
 
-            call.setTargetEndpointAddress(new URL(urlname));
-            call.setOperationName(new QName("urn:downloadfileService",
-                                            "getServerInfo")); //This is the target services method to invoke.
+            CaARRAYIndexPortType caARRAYPortType = caArrayServiceLocator.
+                    getCaARRAYIndexPort(GSH); //getsequenceAlignmentPort(GSH);// getSequenceAlignmentPort(GSH);
 
-            call.addParameter("testParam", org.apache.axis.Constants.XSD_STRING,
-                              javax.xml.rpc.ParameterMode.IN);
+            // Call remote method 'add'
 
-            call.setReturnType(org.apache.axis.Constants.XSD_STRING);
-            String cmd = "pb statis";
-            Object result = call.invoke(new Object[] {cmd});
+            String test = (String) caARRAYPortType.getServer(cmd);
+// The result is setup directly for testing.
+            //The access from outside of CU need be figured out.
 
-            String testResult = "NCI, http, www.adgate.com,6555! CNN, http,//www.cnn.com,666! NBC, http, www.nbc.com, 5555";
+            // String test  = "NCI, http, www.adgate.com,6555! CNN, http,//www.cnn.com,666! NBC, http, www.nbc.com, 5555";
 //            String[] lists = result.toString().split("!");
-            String[] lists = testResult.split("!");
+            if (test == null) {
+                return false;
+            }
+            String[] lists = test.split("!");
             if (lists != null) {
                 for (String s : lists) {
                     String[] cols = s.split(",");
@@ -246,7 +265,8 @@ public class RemoteResourceManager {
                              + cloumnseparator + s.getPortnumber()
                              + cloumnseparator + s.getConnectProtocal()
                              + cloumnseparator + s.getUsername()
-                             + cloumnseparator + s.getPassword());
+                             + cloumnseparator + s.getPassword()
+                             + cloumnseparator + s.isEditable());
                 writer.newLine();
             }
 

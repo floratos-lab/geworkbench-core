@@ -236,6 +236,11 @@ public class RemoteResourceDialog extends JDialog {
         rr.setPassword(new String(jPasswordField1.getPassword()).trim());
         rr.setUsername(jTextField1.getText().trim());
         rr.setUri(url);
+        if(jTextField2.getToolTipText()!=null && jTextField2.getToolTipText().length()>10){
+
+
+            rr.setEditable(false);
+        }
         try {
             int portnum = new Integer(jTextField3.getText().trim()).intValue();
             rr.setPortnumber(portnum);

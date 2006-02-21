@@ -50,33 +50,49 @@ public class RemoteResource {
     public RemoteResource(String shortname, String url, String port,
                           String protocal,
                           String user, String passwd) {
-        uri = url;
-        connectProtocol = protocal;
-        username = user;
-        password = passwd;
-        this.shortname = shortname;
+        uri = url.trim();
+        connectProtocol = protocal.trim();
+        username = user.trim();
+        password = passwd.trim();
+        this.shortname = shortname.trim();
         try {
-            if (new Integer(port).intValue() != 0) {
+            if (new Integer(port.trim()).intValue() != 0) {
                 portnumber = new Integer(port).intValue();
             }
         } catch (NumberFormatException e) {
             //e.printStackTrace();
             portnumber = 80;
         }
+        this.editable = true;
         ;
     }
 
 
     public static RemoteResource createNewInstance(String[] columns) {
-        if (columns.length == 6) {
+        if (columns.length == 7) {
+            return new RemoteResource(columns[0], columns[1], columns[2],
+                                      columns[3], columns[4], columns[5], columns[6]);
+        } else if (columns.length == 6) {
             return new RemoteResource(columns[0], columns[1], columns[2],
                                       columns[3], columns[4], columns[5]);
-        } else if(columns.length == 4) {
-         return    new RemoteResource(columns[0], columns[2], columns[1],
-                                      columns[3], "", "");
+        } else if (columns.length == 4) {
+                    return new RemoteResource(columns[0], columns[2], columns[1],
+                                      columns[3], "", "", "false");
         }
         return null;
 
+    }
+
+    /**
+     * RemoteResource
+     */
+    public RemoteResource(String shortname, String url, String port,
+                          String protocal,
+                          String user, String passwd, String editableStr
+) {
+        this(shortname, url, port, protocal, user, passwd);
+
+        this.editable = new Boolean(editableStr.trim()).booleanValue();
     }
 
     public void setUsername(String username) {
@@ -146,6 +162,7 @@ public class RemoteResource {
         username = rResource.username;
         password = rResource.password;
         connectProtocol = rResource.connectProtocol;
+        editable =rResource.editable;
     }
 
     /**
