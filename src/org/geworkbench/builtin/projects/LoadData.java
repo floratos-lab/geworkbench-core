@@ -65,12 +65,16 @@ public class LoadData extends JDialog {
     private JPanel mergePanel;
     private RemoteResourceDialog remoteResourceDialog;
     private JPanel remoteControlPanel;
+
     private JTabbedPane lowTabPane;
     private JPanel caArrayIndexServicePanel;
     private final String DEFAULTINDEXURL = "http://156.145.29.52:8080/ogsa/services/edu/columbia/CaARRAYIndexService";
+    //private final String DEFAULTINDEXURL = "http://splashgrid.cu-genome.org/ogsa/services/edu/columbia/CaARRAYIndexService";
+
     private String indexURL = DEFAULTINDEXURL;
     private JTextField indexField;
     private JButton updateIndexButton;
+
 
 
     /**
