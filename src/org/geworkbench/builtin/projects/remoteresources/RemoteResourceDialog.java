@@ -329,6 +329,11 @@ public class RemoteResourceDialog extends JDialog {
 
         if(remoteResourceManager.init(urlname)){
             return true;
+        }else{
+            JOptionPane.showMessageDialog(this, "The caARRAY Index Service is not accessable.",
+                                         "Error",
+                                         JOptionPane.ERROR_MESSAGE);
+
         }
         return false;
 
