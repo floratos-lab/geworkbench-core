@@ -76,8 +76,8 @@ public class RemoteResource {
             return new RemoteResource(columns[0], columns[1], columns[2],
                                       columns[3], columns[4], columns[5]);
         } else if (columns.length == 4) {
-                    return new RemoteResource(columns[0], columns[2], columns[1],
-                                      columns[3], "", "", "false");
+                    return new RemoteResource(columns[0], columns[2], columns[3],
+                                      columns[1], "", "", "false");
         }
         return null;
 
