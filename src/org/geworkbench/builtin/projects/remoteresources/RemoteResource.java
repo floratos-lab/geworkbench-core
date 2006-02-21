@@ -57,7 +57,7 @@ public class RemoteResource {
         this.shortname = shortname.trim();
         try {
             if (new Integer(port.trim()).intValue() != 0) {
-                portnumber = new Integer(port).intValue();
+                portnumber = new Integer(port.trim()).intValue();
             }
         } catch (NumberFormatException e) {
             //e.printStackTrace();
