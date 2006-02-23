@@ -1,11 +1,12 @@
 package org.geworkbench.builtin.projects.remoteresources;
 
-import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EtchedBorder;
 
 
 /**
@@ -33,6 +34,7 @@ public class RemoteResourceDialog extends JDialog {
     private String currentUser;
     private String currentPassword;
     private static String previousResourceName;
+    private static boolean dirty = false;
     public RemoteResourceDialog() {
         try {
             jbInit();
@@ -200,6 +202,10 @@ public class RemoteResourceDialog extends JDialog {
         this.currentPassword = currentPassword;
     }
 
+    public void setDirty(boolean dirty) {
+        this.dirty = dirty;
+    }
+
     public void setUser(String user) {
         this.currentUser = user;
     }
@@ -279,13 +285,15 @@ public class RemoteResourceDialog extends JDialog {
             shortnameTextField.setEditable(editable);
             jComboBox1.setEditable(editable);
             if (!editable) {
-
+                jLabel1.setText("The Info Is From caARRAYIndex Service.");
                 shortnameTextField.setToolTipText(
                         "Shortname cannot be changed if it is from Index service");
                 jTextField2.setToolTipText(
                         "URL cannot be changed if it is from Index service");
                 jTextField3.setToolTipText(
                         "Port number cannot be changed if it is from Index service");
+            }else{
+                jLabel1.setText("The Info Is From Local Users.");
             }
         }
     }
@@ -298,7 +306,7 @@ public class RemoteResourceDialog extends JDialog {
             }
             remoteResourceManager.addRemoteResource(rr);
             remoteResourceManager.saveToFile();
-
+            dirty = true;
             dispose();
         }
 
@@ -321,6 +329,7 @@ public class RemoteResourceDialog extends JDialog {
                                           title,
                                           option,
                                           initialValue);
+
         dialog.setVisible(true);
         return null;
     }
@@ -354,6 +363,10 @@ public class RemoteResourceDialog extends JDialog {
         return currentUser;
     }
 
+    public boolean isDirty() {
+        return dirty;
+    }
+
     /**Set up system.property
      * setupCurrentResource
      */
@@ -376,6 +389,7 @@ public class RemoteResourceDialog extends JDialog {
 
 
     public void jButton6_actionPerformed(ActionEvent e) {
+        //dirty = false;
         dispose();
     }
 

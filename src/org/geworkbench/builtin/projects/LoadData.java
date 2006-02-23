@@ -68,13 +68,13 @@ public class LoadData extends JDialog {
 
     private JTabbedPane lowTabPane;
     private JPanel caArrayIndexServicePanel;
-    private final String DEFAULTINDEXURL = "http://156.145.29.52/ogsa/services/edu/columbia/CaARRAYIndexService";
+    private final String DEFAULTINDEXURL =
+            "http://156.145.29.52/ogsa/services/edu/columbia/CaARRAYIndexService";
     //private final String DEFAULTINDEXURL = "http://splashgrid.cu-genome.org/ogsa/services/edu/columbia/CaARRAYIndexService";
 
     private String indexURL = DEFAULTINDEXURL;
     private JTextField indexField;
     private JButton updateIndexButton;
-
 
 
     /**
@@ -112,14 +112,16 @@ public class LoadData extends JDialog {
             e.printStackTrace();
         }
     }
+
     public LoadData() {
-       // parentProjectPanel = new ProjectPanel();
+        // parentProjectPanel = new ProjectPanel();
         try {
             jbInit();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     public void setDirectory(String directory) {
         jFileChooser1.setCurrentDirectory(new File(directory));
     }
@@ -240,25 +242,31 @@ public class LoadData extends JDialog {
         caArrayIndexServicePanel = new JPanel();
         lowTabPane.add(caArrayIndexServicePanel, "caARRAY Index Service");
         lowTabPane.setSelectedIndex(0);
-        indexField = new JTextField (indexURL);
+        indexField = new JTextField(indexURL);
         updateIndexButton = new JButton("Update");
         caArrayIndexServicePanel.add(indexField);
         caArrayIndexServicePanel.add(updateIndexButton);
 
         updateIndexButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                lowTabPane.setSelectedIndex(0);
+
+                String previousIndexURL = indexURL;
+                if(remoteResourceDialog.updateResource(indexField.getText())){
+                    lowTabPane.setSelectedIndex(0);
                 jRadioButton8.setSelected(true);
-                 remoteResourceDialog.updateResource(indexField.getText());
-                 updateExistedResources();
-                addRemotePanel_actionPerformed(e);
+                    updateExistedResources();
+                    addRemotePanel_actionPerformed(e);
+
+                }else{
+                    indexField.setText(previousIndexURL);
+                }
             }
         });
 
         // this.getContentPane().add(lowerPanel, BorderLayout.SOUTH);
-       this.getContentPane().add(lowTabPane, BorderLayout.SOUTH);
-       //Merge Merge panel and Jpanel 1 in 1 line.
-       jPanel1.add(mergePanel);
+        this.getContentPane().add(lowTabPane, BorderLayout.SOUTH);
+        //Merge Merge panel and Jpanel 1 in 1 line.
+        jPanel1.add(mergePanel);
         jPanel1.add(jPanel2, null);
         jPanel2.add(jRadioButton1, null);
         //removed by XQ
@@ -506,14 +514,29 @@ public class LoadData extends JDialog {
     }
 
     private void mageButtonSelection_actionPerformed(ActionEvent e) {
-        String currentResourceName = resourceModel.getSelectedItem().toString().trim();
-        remoteResourceDialog.setupSystemPropertyForCurrentResource(currentResourceName);
+        String currentResourceName = resourceModel.getSelectedItem().toString().
+                                     trim();
+        remoteResourceDialog.setupSystemPropertyForCurrentResource(
+                currentResourceName);
         jPanel8.setUrl(remoteResourceDialog.getCurrentURL());
         jPanel8.setUser(remoteResourceDialog.getCurrentUser());
         jPanel8.setPasswd(remoteResourceDialog.getCurrentPassword());
+
         jPanel8.setParentPanel(this);
         jPanel8.setCurrentResourceName(currentResourceName);
-       jPanel8.getExperiments(e);
+        if (remoteResourceDialog.getCurrentUser() == null ||
+            remoteResourceDialog.getCurrentUser().length() == 0) {
+            JOptionPane.showMessageDialog(null,
+                                          "The User name field is empty. Please check again.",
+                                          "RemoteResource Error",
+                                          JOptionPane.ERROR_MESSAGE);
+            return;
+
+        }
+        if (remoteResourceDialog.isDirty()) {
+            jPanel8.setExperimentsLoaded(false);
+        }
+        jPanel8.getExperiments(e);
 //       if (jPanel8.isConnectionSuccess()) {
 //            this.getContentPane().remove(jPanel6);
 //            this.getContentPane().remove(jPanel4);
@@ -523,16 +546,17 @@ public class LoadData extends JDialog {
 //        }
     }
 
-    public void addRemotePanel(){
-     //  if (jPanel8.isConnectionSuccess()) {
-            this.getContentPane().remove(jPanel6);
-            this.getContentPane().remove(jPanel4);
-            this.getContentPane().add(jPanel8, BorderLayout.CENTER);
-            this.validate();
-            this.repaint();
-  //      }
+    public void addRemotePanel() {
+        //  if (jPanel8.isConnectionSuccess()) {
+        this.getContentPane().remove(jPanel6);
+        this.getContentPane().remove(jPanel4);
+        this.getContentPane().add(jPanel8, BorderLayout.CENTER);
+        this.validate();
+        this.repaint();
+        //      }
 
     }
+
     private void addRemotePanel_actionPerformed(ActionEvent e) {
         addRemotePanel();
         lowerPanel.add(jPanel10);

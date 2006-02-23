@@ -124,14 +124,9 @@ public class RemoteResourceManager {
             CaARRAYIndexPortType caARRAYPortType = caArrayServiceLocator.
                     getCaARRAYIndexPort(GSH); //getsequenceAlignmentPort(GSH);// getSequenceAlignmentPort(GSH);
 
-            // Call remote method 'add'
 
             String test = (String) caARRAYPortType.getServer(cmd);
-// The result is setup directly for testing.
-            //The access from outside of CU need be figured out.
 
-            // String test  = "NCI, http, www.adgate.com,6555! CNN, http,//www.cnn.com,666! NBC, http, www.nbc.com, 5555";
-//            String[] lists = result.toString().split("!");
             if (test == null) {
                 return false;
             }
@@ -155,7 +150,7 @@ public class RemoteResourceManager {
 
         } catch (Exception e) {
             System.out.println(e + "RemoteResourceManager.init" + urlname);
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         return false;
 
