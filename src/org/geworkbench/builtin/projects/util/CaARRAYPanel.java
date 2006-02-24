@@ -1,39 +1,32 @@
 package org.geworkbench.builtin.projects.util;
 
-import gov.nih.nci.common.search.Directable;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
+
+import javax.swing.*;
+import javax.swing.Timer;
+import javax.swing.border.Border;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.*;
+
+import gov.nih.nci.common.search.*;
 import gov.nih.nci.common.search.SearchCriteria;
 import gov.nih.nci.common.search.SearchResult;
 import gov.nih.nci.common.search.session.SecureSession;
 import gov.nih.nci.common.search.session.SecureSessionFactory;
 import gov.nih.nci.mageom.domain.BioAssay.BioAssay;
-import gov.nih.nci.mageom.domain.BioAssay.impl.BioAssayImpl;
-import gov.nih.nci.mageom.domain.BioAssay.impl.DerivedBioAssayImpl;
-import gov.nih.nci.mageom.domain.BioAssay.impl.MeasuredBioAssayImpl;
+import gov.nih.nci.mageom.domain.BioAssay.impl.*;
 import gov.nih.nci.mageom.domain.BioAssayData.BioAssayData;
 import gov.nih.nci.mageom.domain.Description.Description;
 import gov.nih.nci.mageom.domain.Experiment.Experiment;
 import gov.nih.nci.mageom.domain.Experiment.impl.ExperimentImpl;
-import gov.nih.nci.mageom.search.Experiment.ExperimentSearchCriteria;
 import gov.nih.nci.mageom.search.SearchCriteriaFactory;
+import gov.nih.nci.mageom.search.Experiment.ExperimentSearchCriteria;
 import org.geworkbench.bison.parsers.resources.CaArrayResource;
 import org.geworkbench.builtin.projects.LoadData;
 import org.geworkbench.util.ProgressBar;
-
-import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeSelectionModel;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.util.Collections;
-import java.util.Observer;
-import java.util.Vector;
 
 
 /**
@@ -1113,6 +1106,10 @@ public class CaARRAYPanel extends JPanel implements Observer {
         return parentPanel;
     }
 
+    public boolean isExperimentsLoaded() {
+        return experimentsLoaded;
+    }
+
     public void setConnectionSuccess(boolean isConnectionSuccess) {
         this.connectionSuccess = isConnectionSuccess;
     }
@@ -1140,5 +1137,9 @@ public class CaARRAYPanel extends JPanel implements Observer {
 
     public void setParentPanel(LoadData parentPanel) {
         this.parentPanel = parentPanel;
+    }
+
+    public void setExperimentsLoaded(boolean experimentsLoaded) {
+        this.experimentsLoaded = experimentsLoaded;
     }
 }
