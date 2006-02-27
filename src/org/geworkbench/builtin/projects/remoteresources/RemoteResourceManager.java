@@ -124,12 +124,13 @@ public class RemoteResourceManager {
             CaARRAYIndexPortType caARRAYPortType = caArrayServiceLocator.
                     getCaARRAYIndexPort(GSH); //getsequenceAlignmentPort(GSH);// getSequenceAlignmentPort(GSH);
 
-
             String test = (String) caARRAYPortType.getServer(cmd);
 
             if (test == null) {
                 return false;
             }
+            removeIndexResources();
+
             String[] lists = test.split("!");
             if (lists != null) {
                 for (String s : lists) {
@@ -149,11 +150,27 @@ public class RemoteResourceManager {
             return true;
 
         } catch (Exception e) {
-            System.out.println(e + "RemoteResourceManager.init" + urlname);
+            //System.out.println(e + "RemoteResourceManager.init" + urlname);
             //e.printStackTrace();
         }
         return false;
 
+    }
+
+    public void removeIndexResources() {
+        int size = existedResources.size();
+        ArrayList<RemoteResource>
+                newExistedResources = new ArrayList<RemoteResource>();
+        boolean[] removeIndex = new boolean[size];
+        for (int i = 0; i < existedResources.size(); i++) {
+            RemoteResource rr = existedResources.get(i);
+            removeIndex[i] = rr.isEditable();
+            if (rr.isEditable()) {
+                newExistedResources.add(rr);
+            }
+
+        }
+        existedResources = newExistedResources;
     }
 
     /**
