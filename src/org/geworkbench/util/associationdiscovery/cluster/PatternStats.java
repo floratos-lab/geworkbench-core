@@ -2,16 +2,17 @@ package org.geworkbench.util.associationdiscovery.cluster;
 
 import distributions.ChiSquareDistribution;
 import org.geworkbench.bison.datastructure.biocollections.classification.phenotype.CSClassCriteria;
-import org.geworkbench.bison.datastructure.biocollections.classification.phenotype.DSClassCriteria;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMutableMarkerValue;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
-import org.geworkbench.bison.util.CSCriterionManager;
 
 import java.util.*;
+import org.geworkbench.bison.annotation.CSAnnotationContextManager;
+import org.geworkbench.bison.annotation.DSAnnotationContext;
+import org.geworkbench.bison.annotation.DSCriterion;
 
 /**
  * <p>Title: Plug And Play</p>
@@ -29,18 +30,18 @@ public class PatternStats extends CSMatchedMatrixPattern {
     static private ChiSquareDistribution distribution = new ChiSquareDistribution(1);
     static private int chipNo = 0;
     static private int geneNo = 0;
-
+    
     class JPolyGene {
         int count = 1;
         String label = null;
         double frequency = 0.0;
     }
-
+    
     private HashMap phenotype = new HashMap();
     private HashMap control = new HashMap();
     private double phNo = 0;
     private double bgNo = 0;
-
+    
     public PatternStats(CSMatchedMatrixPattern aPattern) {
         super(aPattern.getPattern());
         matches = aPattern.matches();
@@ -48,20 +49,20 @@ public class PatternStats extends CSMatchedMatrixPattern {
         zScore = aPattern.getPValue();
         bkMatches = aPattern.bkMatches;
     }
-
+        
     public void createContingencyTable(DSMicroarraySet chips) {
         // This routine creates a contingency table for all the
         // different incarnations of a polygenic genotype
         // or haplotype, both in the phenotype and control set.
         // todo - watkin - refactor to use CSAnnotationContext
-        DSClassCriteria classCriteria = CSCriterionManager.getClassCriteria(chips);
-        if (!classCriteria.isUnsupervised()) {
+        CSAnnotationContextManager manager = CSAnnotationContextManager.getInstance();
+        DSAnnotationContext<DSMicroarray> context = manager.getCurrentContext(chips);
+        
+        if (!context.isUnsupervised()) {
             // Compute only if phenotype and controls are defined
-            DSItemList<DSBioObject> cases = classCriteria.getTaggedItems(CSClassCriteria.cases);
-            for (DSBioObject bioObject : cases) {
-
-                if (bioObject instanceof DSMicroarray) {
-
+            DSItemList<DSMicroarray> cases = context.getItemsWithLabel(CSClassCriteria.cases.toString());
+            for (DSBioObject bioObject : cases) {               
+                if (bioObject instanceof DSMicroarray) {                    
                     DSMicroarray chip = (DSMicroarray) bioObject;
                     if (chip.enabled()) {
                         String polygene = "";
@@ -96,7 +97,7 @@ public class PatternStats extends CSMatchedMatrixPattern {
                 }
             }
             // Repeat same procedure for controls
-            DSItemList<DSBioObject> controls = classCriteria.getTaggedItems(CSClassCriteria.controls);
+            DSItemList<DSMicroarray> controls = context.getItemsWithLabel(CSClassCriteria.controls.toString());
             for (DSBioObject bioObject : controls) {
                 if (bioObject instanceof DSMicroarray) {
                     DSMicroarray chip = (DSMicroarray) bioObject;
@@ -129,7 +130,7 @@ public class PatternStats extends CSMatchedMatrixPattern {
             }
         }
     }
-
+    
     public void printContingencyTable(DSMicroarraySet chips) {
         createContingencyTable(chips);
         Set phKeys = phenotype.keySet();
@@ -154,7 +155,7 @@ public class PatternStats extends CSMatchedMatrixPattern {
             }
         }
     }
-
+    
     public double getPValue(DSMicroarraySet chips, boolean print) {
         createContingencyTable(chips);
         Set phKeys = phenotype.keySet();
@@ -195,52 +196,50 @@ public class PatternStats extends CSMatchedMatrixPattern {
         double pvalue = 1 - distribution.getCDF(chi2);
         return pvalue;
     }
-
-    public static double getPValue(CSMatchedMatrixPattern pattern, DSMicroarraySet chips, boolean print) {
-        /*
-            createContingencyTable(chips);
-            Set phKeys   = phenotype.keySet();
-            Set coKeys   = phenotype.keySet();
-            HashSet keys = new HashSet(phKeys);
-            keys.addAll(coKeys);
-            Iterator it = keys.iterator();
-            double chi2  = 0;
-            double vPh   = 0;
-            double vBk   = 0;
-            double dgrNo = 0;
-            while(it.hasNext()) {
-              String polygene = (String)it.next();
-              JPolyGene value1   = (JPolyGene)phenotype.get(polygene);
-              if(value1 == null) {
+    
+    public double getPValue(CSMatchedMatrixPattern pattern, DSMicroarraySet chips, boolean print) {
+        createContingencyTable(chips);
+        Set phKeys   = phenotype.keySet();
+        Set coKeys   = phenotype.keySet();
+        HashSet keys = new HashSet(phKeys);
+        keys.addAll(coKeys);
+        Iterator it = keys.iterator();
+        double chi2  = 0;
+        double vPh   = 0;
+        double vBk   = 0;
+        double dgrNo = 0;
+        while(it.hasNext()) {
+            String polygene = (String)it.next();
+            JPolyGene value1   = (JPolyGene)phenotype.get(polygene);
+            if(value1 == null) {
                 vPh = 0;
-              } else {
+            } else {
                 vPh = value1.count;
-              }
-              JPolyGene value2   = (JPolyGene)control.get(polygene);
-              if(value2 == null) {
+            }
+            JPolyGene value2   = (JPolyGene)control.get(polygene);
+            if(value2 == null) {
                 vBk = 0;
-              } else {
+            } else {
                 vBk = value2.count;
-              }
-              if(vPh + vBk > 1) {
+            }
+            if(vPh + vBk > 1) {
                 double expectedPh = (vPh + vBk)*phNo/(phNo+bgNo);
                 double expectedBk = (vPh + vBk)*bgNo/(phNo+bgNo);
                 chi2    += Math.pow(Math.abs(vPh - expectedPh),2.0)/expectedPh;
                 chi2    += Math.pow(Math.abs(vBk - expectedBk),2.0)/expectedBk;
                 dgrNo++;
-              }
             }
-            distribution.setDegrees((int)dgrNo - 1);
-            if(print) {
-              System.out.println("Chi2 = "+chi2+" Deegrees: " + (dgrNo - 1));
-            }
-            double pvalue = 1 - distribution.getCDF(chi2);
-            */
-        double pvalue = 1;
+        }
+        distribution.setDegrees((int)dgrNo - 1);
+        if(print) {
+            System.out.println("Chi2 = "+chi2+" Deegrees: " + (dgrNo - 1));
+        }
+        double pvalue = 1 - distribution.getCDF(chi2);
+//        double pvalue = 1;
         return pvalue;
     }
-
-
+    
+    
     public void print(int i) {
         Set phKeys = phenotype.keySet();
         Set coKeys = phenotype.keySet();
