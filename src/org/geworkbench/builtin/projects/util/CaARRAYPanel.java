@@ -507,7 +507,9 @@ public class CaARRAYPanel extends JPanel implements Observer {
                 sess.start(user, passwd);
                 ExperimentSearchCriteria esc = SearchCriteriaFactory.
                                                new_EXPERIMENT_EXPERIMENT_SC();
-                esc.setSessionId(sess.getSessionId());
+                String sessID = sess.getSessionId();
+                System.out.println(url + " the sessionID is:"+ sessID);
+                esc.setSessionId(sessID);
                 SearchResult results = esc.search();
                  progressBar.setMessage("Retrieving data...");
                 Experiment[] result = (Experiment[]) results.getResultSet();

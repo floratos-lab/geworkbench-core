@@ -251,18 +251,19 @@ public class LoadData extends JDialog {
             public void actionPerformed(ActionEvent e) {
 
                 String previousIndexURL = indexURL;
-                if(remoteResourceDialog.updateResource(indexField.getText())){
+                if (remoteResourceDialog.updateResource(indexField.getText())) {
                     lowTabPane.setSelectedIndex(0);
-                jRadioButton8.setSelected(true);
-                    updateExistedResources();
+                    jRadioButton8.setSelected(true);
+                    updateExistedResourcesGUI();
                     addRemotePanel_actionPerformed(e);
 
-                }else{
+                } else {
                     indexField.setText(previousIndexURL);
                 }
             }
         });
-
+//Automatically update the caARRAY informtion from one grid service.
+        autoUpdateIndexService();
         // this.getContentPane().add(lowerPanel, BorderLayout.SOUTH);
         this.getContentPane().add(lowTabPane, BorderLayout.SOUTH);
         //Merge Merge panel and Jpanel 1 in 1 line.
@@ -341,7 +342,7 @@ public class LoadData extends JDialog {
         });
         this.getContentPane().setSize(new Dimension(683, 450));
         this.setTitle("Open File");
-        this.updateExistedResources();
+        this.updateExistedResourcesGUI();
         pack();
     }
 
@@ -389,7 +390,7 @@ public class LoadData extends JDialog {
      */
     void displayRemoteResourceDialog(int option) {
         RemoteResourceDialog.showDialog(this, null, option, null);
-        updateExistedResources();
+        updateExistedResourcesGUI();
     }
 
     /**
@@ -405,14 +406,14 @@ public class LoadData extends JDialog {
         } else {
             RemoteResourceDialog.showDialog(this, null, option, null);
         }
-        updateExistedResources();
+        updateExistedResourcesGUI();
     }
 
     /**
      * updateExistedResources, should be called after any button related to
      * remoteresource is clicked.
      */
-    private void updateExistedResources() {
+    private void updateExistedResourcesGUI() {
         String[] resources = remoteResourceDialog.getResourceNames();
         if (resources != null) {
             resourceModel.removeAllElements();
@@ -498,6 +499,24 @@ public class LoadData extends JDialog {
             dispose();
         }
     }
+
+
+    /**
+     * Automatically update the RemoteResources Information from an Index service.
+     *
+     *
+     */
+    private void autoUpdateIndexService() {
+        if (remoteResourceDialog != null &&
+            (remoteResourceDialog.updateResource(indexURL))) {
+
+            updateExistedResourcesGUI();
+        }
+
+        this.validate();
+        this.repaint();
+    }
+
 
     /**
      * Responds to the user selection to see the remote files.

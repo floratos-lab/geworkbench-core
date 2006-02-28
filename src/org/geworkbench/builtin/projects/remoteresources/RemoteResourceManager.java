@@ -218,7 +218,11 @@ public class RemoteResourceManager {
      * @return boolean
      */
     public boolean deleteRemoteResource(RemoteResource rResource) {
-        return existedResources.remove(rResource);
+        if(existedResources.remove(rResource)){
+            saveToFile();
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -228,6 +232,7 @@ public class RemoteResourceManager {
      */
     public boolean deleteRemoteResource(int rResourceIndex) {
         if (existedResources.remove(rResourceIndex) != null) {
+            saveToFile();
             return true;
         }
         return false;
