@@ -84,7 +84,7 @@ public class CSGenotypicMarkerValue extends CSMarkerValue implements Serializabl
         if (allele1 == 0) {
             value = 0;
         } else {
-            value = ((float)allele0) / allele1;
+            value = allele0 << 16 + allele1;        
         }
         this.allele0 = (short)allele0;
         this.allele1 = (short)allele1;
