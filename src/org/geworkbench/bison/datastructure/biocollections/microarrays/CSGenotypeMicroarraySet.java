@@ -267,12 +267,17 @@ public class CSGenotypeMicroarraySet extends CSMicroarraySet<DSMicroarray> imple
                             markerVector.add(currGeneId, mi);
                         }
                         markerVector.get(currGeneId).setDescription(token);
+                        boolean pValueExists = ((st.countTokens() - 2) > microarrayNo);
                         token = st.nextToken();
                         markerVector.get(currGeneId).setLabel(token);
                         while (st.hasMoreTokens()) {
                             DSMutableMarkerValue marker = (DSMutableMarkerValue) get(i).getMarkerValue(currGeneId);
                             String value = st.nextToken();
-                            String status = st.nextToken();
+                            String status = null;
+                            if (pValueExists)
+                                status = st.nextToken();
+                            else
+                                status = "P";
                             if ((type == snpType) || (type == alleleType)) {
                                 parse(marker, value, status);
                                 //markerVector.get(currGeneId).check(marker, false);
