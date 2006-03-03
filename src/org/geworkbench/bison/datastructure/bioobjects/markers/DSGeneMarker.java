@@ -5,6 +5,7 @@ import org.geworkbench.bison.datastructure.properties.DSUnigene;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * <p>Title: Sequence and Pattern Plugin</p>
@@ -18,7 +19,7 @@ import java.io.IOException;
  *          The accession should be the universal identifier of this data. This should be compatible with caBIO representation
  */
 
-public interface DSGeneMarker extends Comparable, DSSequential, Cloneable {
+public interface DSGeneMarker extends Comparable, DSSequential, Cloneable, Serializable {
 
     static final int AFFY_TYPE = 0;
     static final int GENEPIX_TYPE = 1;

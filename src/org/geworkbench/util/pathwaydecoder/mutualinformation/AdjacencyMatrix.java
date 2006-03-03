@@ -36,7 +36,7 @@ import java.util.Map.Entry;
  * @version 1.0
  */
 
-public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMatrix {
+public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMatrix, Serializable {
 
     static public boolean MIlibraryLoaded = false;
     static final public int HIGH = 1;

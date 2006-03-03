@@ -91,6 +91,7 @@ public class CaARRAYParser {
      * @return
      */
     public DSMicroarray getMicroarray(int ser, BioAssay bioAssayImpl, CSExprMicroarraySet maSet) {
+          microarray = null;
         CaARRAYParseContext context = new CaARRAYParseContext(columnsToUse);
         HashMap contextData = context.getColumnsToUse();
         try {
@@ -128,14 +129,17 @@ public class CaARRAYParser {
                         maSet.getMarkers().get(z).setLabel(de[z].getName());
                         maSet.getMarkers().get(z).setDescription(de[z].getIdentifier());
                     }
-                    microarray = new CSMicroarray(ser, markerNo, bioAssayImpl.getName(), null, null, true, DSMicroarraySet.geneExpType);
-                    microarray.setLabel("Derived:" + bioAssayImpl.getIdentifier());
+
                 }
+                microarray = new CSMicroarray(ser, markerNo, bioAssayImpl.getName(), null, null, true, DSMicroarraySet.geneExpType);
+                    microarray.setLabel("Derived:" + bioAssayImpl.getIdentifier());
                 for (int i = 0; i < markerNo; i++) {
                     if (bdv instanceof BioDataCubeImpl) {
                         Object[][][] cube = ((BioDataCubeImpl) bdv).getCube();
+
                         for (int j = 0; j < qTypes.length; j++) {
-                            Object val = getCubeValue(cube, ser, i, j, ((BioDataCubeImpl) bdv).getOrder());
+                            //Object val = getCubeValue(cube, ser, i, j, ((BioDataCubeImpl) bdv).getOrder());//
+                            Object val = getCubeValue(cube, 0, i, j, ((BioDataCubeImpl) bdv).getOrder());
                             if (qTypes[j].getIdentifier().equalsIgnoreCase("Affymetrix:QuantitationType:CHPSignal") && (val instanceof Double)) {
                                 ((DSMutableMarkerValue) microarray.getMarkerValue(i)).setValue(((Double) val).doubleValue());
                                 break;
@@ -174,7 +178,7 @@ public class CaARRAYParser {
                     }
                     microarray = new CSMicroarray(ser, markerNo, bioAssayImpl.getName(), null, null, true, DSMicroarraySet.geneExpType);
                     microarray.setLabel("Measured:" + bioAssayImpl.getName());
-                }
+                     }
                 Object[][][] cube = ((BioDataCubeImpl) bdv).getCube();
                 for (int i = 0; i < markerNo; i++) {
                     if (bdv instanceof BioDataCubeImpl) {
@@ -192,6 +196,7 @@ public class CaARRAYParser {
             System.out.println("Error getting reporter data for bioassay: " + e.getMessage());
             e.printStackTrace();
         }
+
         return microarray;
     }
 

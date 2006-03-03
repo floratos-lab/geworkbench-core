@@ -5,6 +5,7 @@ import org.geworkbench.bison.util.DefaultIdentifiable;
 
 import java.lang.reflect.Array;
 import java.util.*;
+import java.io.Serializable;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
@@ -15,11 +16,11 @@ import java.util.*;
  * @author First Genetic Trust
  * @version 1.0
  */
-public abstract class AbstractCluster implements Cluster {
+public abstract class AbstractCluster implements Cluster, Serializable {
     /**
      * Holds all children of this <code>Cluster</code>
      */
-    protected Vector<Cluster> children = new Vector<Cluster>();
+    protected ArrayList<Cluster> children = new ArrayList<Cluster>();
     /**
      * Reference to <code>Cluster</code> which contains this <code>Cluster</code>
      * as a child

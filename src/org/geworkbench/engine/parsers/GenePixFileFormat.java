@@ -103,6 +103,7 @@ public class GenePixFileFormat extends DataSetFileFormat {
             throw new org.geworkbench.engine.parsers.InputFileFormatException("GenepixFileFormat::getMArraySet - " + "Attempting to open a file that does not comply with the " + "Genepix format.");
         try {
             microarraySet = new CSExprMicroarraySet();
+            microarraySet.setFile(file);
             List ctu = new ArrayList();
             ctu.add("Block");
             ctu.add("Column");

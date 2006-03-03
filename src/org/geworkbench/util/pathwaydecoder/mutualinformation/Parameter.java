@@ -1,6 +1,8 @@
 package org.geworkbench.util.pathwaydecoder.mutualinformation;
 
-public class Parameter {
+import java.io.Serializable;
+
+public class Parameter implements Serializable {
     public Parameter() {
     }
 

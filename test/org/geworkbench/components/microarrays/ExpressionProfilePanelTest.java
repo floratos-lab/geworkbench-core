@@ -16,73 +16,74 @@ import org.geworkbench.events.MicroarraySetViewEvent;
 
 /**
  * @author keshav
- * @version $Id: ExpressionProfilePanelTest.java,v 1.1 2006-02-14 23:19:46 keshav Exp $
  */
 public class ExpressionProfilePanelTest extends BaseTestCase {
 
-    protected final Log log = LogFactory.getLog( getClass() );
+	protected final Log log = LogFactory.getLog(getClass());
+	private ExpressionProfilePanel expp = null;
 
-    private ExpressionProfilePanel expp = null;
+	/**
+	 * Makes it evident that if there is a problem with the invocation
+	 * ExpressionProfilePanel, the test will show this.
+	 * 
+	 * @throws Exception
+	 */
+	protected void setUp() throws Exception {
 
-    /**
-     * Makes it evident that if there is a problem with the invocation ExpressionProfilePanel, the test will show this.
-     * 
-     * @throws Exception
-     */
-    protected void setUp() throws Exception {
+		expp = new ExpressionProfilePanel();
 
-        expp = new ExpressionProfilePanel();
+	}
 
-    }
+	/*
+	 * @see TestCase#tearDown()
+	 */
+	protected void tearDown() throws Exception {
 
-    /*
-     * @see TestCase#tearDown()
-     */
-    protected void tearDown() throws Exception {
+		expp = null;
+	}
 
-        expp = null;
-    }
+	/**
+	 * Tests to make sure the widgets are loaded as expected.
+	 */
+	public void testJbInit() {
 
-    /**
-     * Tests to make sure the widgets are loaded as expected.
-     */
-    public void testJbInit() {
+		assertNotNull(expp.getGraphPanel());
+		assertNotNull(expp.getGraph());
+		assertNotNull(expp.getChart());
 
-        assertNotNull( expp.getGraphPanel() );
-        assertNotNull( expp.getGraph() );
-        assertNotNull( expp.getChart() );
+	}
 
-    }
+	/**
+	 * 
+	 * 
+	 */
+	@SuppressWarnings("unchecked")
+	public void testFireModelEventChangedWithMaSetView() {
 
-    /**
-     * 
-     * 
-     */
-    @SuppressWarnings("unchecked")
-    public void testFireModelEventChangedWithMaSetView() {
+		expp.setMaSetView(new CSMicroarraySetView(new CSMicroarraySet()));
+		expp.fireModelChangedEvent(new MicroarraySetViewEvent(new Object()));
 
-        expp.setMaSetView( new CSMicroarraySetView( new CSMicroarraySet() ) );
-        expp.fireModelChangedEvent( new MicroarraySetViewEvent( new Object() ) );
+		log.debug("Panel has " + expp.getGraphPanel().getComponentCount()
+				+ " components.");
 
-        log.debug( "Panel has " + expp.getGraphPanel().getComponentCount() + " components." );
+		assertEquals(expp.getGraphPanel().getComponentCount(), 0);
 
-        assertEquals( expp.getGraphPanel().getComponentCount(), 0 );
+	}
 
-    }
+	/**
+	 * 
+	 * 
+	 */
+	@SuppressWarnings("unchecked")
+	public void testFireModelEventChangedWithoutMaSetView() {
 
-    /**
-     * 
-     * 
-     */
-    @SuppressWarnings("unchecked")
-    public void testFireModelEventChangedWithoutMaSetView() {
+		expp.fireModelChangedEvent(new MicroarraySetViewEvent(new Object()));
 
-        expp.fireModelChangedEvent( new MicroarraySetViewEvent( new Object() ) );
+		log.debug("Panel has " + expp.getGraphPanel().getComponentCount()
+				+ " component.");
 
-        log.debug( "Panel has " + expp.getGraphPanel().getComponentCount() + " component." );
+		assertEquals(expp.getGraphPanel().getComponentCount(), 1);
 
-        assertEquals( expp.getGraphPanel().getComponentCount(), 1 );
-
-    }
+	}
 
 }

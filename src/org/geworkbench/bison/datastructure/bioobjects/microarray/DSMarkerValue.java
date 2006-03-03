@@ -1,5 +1,7 @@
 package org.geworkbench.bison.datastructure.bioobjects.microarray;
 
+import java.io.Serializable;
+
 /**
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: First Genetic Trust Inc.</p>
@@ -13,7 +15,7 @@ package org.geworkbench.bison.datastructure.bioobjects.microarray;
  * technology. Technology-specific data points can be added by extending this
  * class.
  */
-public interface DSMarkerValue extends Comparable {
+public interface DSMarkerValue extends Comparable, Serializable {
 
     /**
      * Return the signal measurement for this spot. For 2-channel data, this is

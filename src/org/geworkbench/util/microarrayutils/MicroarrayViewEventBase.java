@@ -2,7 +2,7 @@ package org.geworkbench.util.microarrayutils;
 
 /*
  * The geworkbench project
- * 
+ *
  * Copyright (c) 2006 Columbia University
  *
  */
@@ -11,6 +11,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -25,6 +26,8 @@ import org.geworkbench.bison.datastructure.biocollections.views.CSMicroarraySetV
 import org.geworkbench.bison.datastructure.biocollections.views.DSMicroarraySetView;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
+import org.geworkbench.bison.datastructure.complex.panels.CSPanel;
+import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.engine.config.VisualPlugin;
 import org.geworkbench.engine.management.Publish;
@@ -35,258 +38,254 @@ import org.geworkbench.events.SubpanelChangedEvent;
 
 /**
  * @author unattributable
- * @version $Id: MicroarrayViewEventBase.java,v 1.12 2006-02-14 23:19:16 keshav Exp $
+ * @see VisualPlugin
  */
 public abstract class MicroarrayViewEventBase implements VisualPlugin {
 
-    private Log log = LogFactory.getLog( this.getClass() );
+	private Log log = LogFactory.getLog(this.getClass());
 
-    /**
-     * The reference microarray set.
-     */
-    protected DSMicroarraySet<DSMicroarray> refMASet = null;
+	/**
+	 * The reference microarray set.
+	 */
+	protected DSMicroarraySet<DSMicroarray> refMASet = null;
+	protected DSMicroarraySetView<DSGeneMarker, DSMicroarray> maSetView = null;
+	protected boolean onlyActivatedMarkers = false;
+	protected boolean onlyActivatedArrays = false;
+	protected JCheckBox chkAllMarkers = new JCheckBox("All Markers", true);
+	protected JCheckBox chkAllArrays = new JCheckBox("All Arrays", true);
+	protected JButton plotButton = new JButton("Plot");
+	private final String markerLabelPrefix = "  Markers: ";
+	protected JLabel numMarkersSelectedLabel = new JLabel(markerLabelPrefix);
+	protected JPanel mainPanel;
+	protected JToolBar jToolBar3;
+	protected DSPanel<DSGeneMarker> markers = null;
+	protected DSPanel<DSGeneMarker> activatedMarkers = null;
+	protected DSItemList<? extends DSGeneMarker> uniqueMarkers = null;
+	protected DSPanel activatedArrays = null;
+	private DefaultListModel ls2 = new DefaultListModel();
+	private boolean isPlotRefresh = false;
 
-    protected DSMicroarraySetView<DSGeneMarker, DSMicroarray> maSetView = null;
+	/**
+	 *
+	 *
+	 */
+	public MicroarrayViewEventBase() {
+		try {
+			jbInit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-    protected boolean activateMarkers = false;
+	}
 
-    protected boolean activateArrays = false;
+	/**
+	 * getComponent
+	 *
+	 * @return Component
+	 */
+	public Component getComponent() {
+		return mainPanel;
+	}
 
-    protected JCheckBox chkActivateMarkers = new JCheckBox( "Activated Markers" );
+	/**
+	 * @param event
+	 * @return SubpanelChangedEvent
+	 */
+	@Publish
+	public SubpanelChangedEvent publishSubpanelChangedEvent(
+			org.geworkbench.events.SubpanelChangedEvent event) {
+		return event;
+	}
 
-    protected JCheckBox chkShowArrays = new JCheckBox( "Activated Arrays" );
+	/**
+	 * receiveProjectSelection
+	 *
+	 * @param e
+	 *            ProjectEvent
+	 */
+	@Subscribe
+	@SuppressWarnings("unchecked")
+	public void receive(org.geworkbench.events.ProjectEvent e, Object source) {
 
-    protected JButton plotButton = new JButton( "Plot" );
+		log.debug("Source object " + source);
 
-    private final String markerLabelPrefix = "  Markers: ";
+		if (e.getMessage().equals(org.geworkbench.events.ProjectEvent.CLEARED)) {
+			refMASet = null;
+			fireModelChangedEvent(null);
+		} else {
+			DSDataSet dataSet = e.getDataSet();
+			if (dataSet instanceof DSMicroarraySet) {
+				if (refMASet != dataSet) {
+					this.refMASet = (DSMicroarraySet) dataSet;
+					// panels are now invalid
+					activatedArrays = null;
+					activatedMarkers = null;
+					uniqueMarkers = null;
+				}
+			}
+			refreshMaSetView();
+		}
+	}
 
-    protected JLabel numMarkersSelectedLabel = new JLabel( markerLabelPrefix );
+	/**
+	 * geneSelectorAction
+	 *
+	 * @param e
+	 *            GeneSelectorEvent
+	 */
+	@Subscribe
+	@SuppressWarnings("unchecked")
+	public void receive(GeneSelectorEvent e, Object source) {
 
-    protected JPanel mainPanel;
+		log.debug("Source object " + source);
 
-    protected JToolBar jToolBar3;
+		markers = e.getPanel();
+		activatedMarkers = new CSPanel();
+		if (markers != null && markers.size() > 0) {
 
-    protected DSPanel<? extends DSGeneMarker> activatedMarkers = null;
+            ls2.clear();
+			for (int j = 0; j < markers.panels().size(); j++) {
+				DSPanel<DSGeneMarker> mrk = markers.panels().get(j);
+				if (mrk.isActive()) {
+					for (int i = 0; i < mrk.size(); i++) {
+						if (!ls2.contains(mrk.get(i))) {
+							ls2.addElement(mrk.get(i));
+						}
+						activatedMarkers.add(mrk.get(i));
 
-    protected DSPanel activatedArrays = null;
+					}
 
-    /**
-     * 
-     * 
-     */
-    public MicroarrayViewEventBase() {
-        try {
-            jbInit();
-        } catch ( Exception e ) {
-            e.printStackTrace();
-        }
+				}
+			}
+			markers = activatedMarkers;
 
-    }
+			numMarkersSelectedLabel.setText(markerLabelPrefix
+					+ activatedMarkers.size());
 
-    /**
-     * getComponent
-     * 
-     * @return Component
-     */
-    public Component getComponent() {
-        return mainPanel;
-    }
+		}
 
-    /**
-     * @param event
-     * @return SubpanelChangedEvent
-     */
-    @Publish
-    public SubpanelChangedEvent publishSubpanelChangedEvent( org.geworkbench.events.SubpanelChangedEvent event ) {
-        return event;
-    }
+		else
+			numMarkersSelectedLabel.setText(markerLabelPrefix);
 
-    /**
-     * receiveProjectSelection
-     * 
-     * @param e ProjectEvent
-     */
-    @Subscribe
-    @SuppressWarnings("unchecked")
-    public void receive( org.geworkbench.events.ProjectEvent e, Object source ) {
+		refreshMaSetView();
+	}
 
-        log.debug( "Source object " + source );
+	/**
+	 * phenotypeSelectorAction
+	 *
+	 * @param e
+	 *            PhenotypeSelectorEvent
+	 */
+	@Subscribe
+	@SuppressWarnings("unchecked")
+	public void receive(org.geworkbench.events.PhenotypeSelectorEvent e,
+			Object source) {
 
-        if ( e.getMessage().equals( org.geworkbench.events.ProjectEvent.CLEARED ) ) {
-            refMASet = null;
-            fireModelChangedEvent( null );
-        } else {
-            DSDataSet dataSet = e.getDataSet();
-            if ( dataSet instanceof DSMicroarraySet ) {
-                if ( refMASet != dataSet ) {
-                    this.refMASet = ( DSMicroarraySet ) dataSet;
-                    // panels are now invalid
-                    activatedArrays = null;
-                    activatedMarkers = null;
-                }
-            }
-            refreshMaSetView();
-        }
-    }
+		log.debug("Source object " + source);
 
-    /**
-     * geneSelectorAction
-     * 
-     * @param e GeneSelectorEvent
-     */
-    @Subscribe
-    public void receive( GeneSelectorEvent e, Object source ) {
+		if (e.getTaggedItemSetTree() != null)
 
-        log.debug( "Source object " + source );
+			activatedArrays = e.getTaggedItemSetTree().activeSubset();
 
-        if ( e.getPanel() != null && e.getPanel().size() > 0 ) {
+		refreshMaSetView();
 
-            enablePlotButton( true );
-            numMarkersSelectedLabel.setText( markerLabelPrefix + e.getPanel().size() );
+	}
 
-            // TODO keshav - in efforts to keep this consistent with the rest of
-            // the application at this time, I have
-            // not enabled this.
-            // The idea, however, is here ... we do not want to have checkboxes
-            // enabled if the user has not selected
-            // anything from
-            // the panels. On a larger scale, we may want to rethink these
-            // checkboxes altogether ... too many button
-            // clicks for
-            // an end user!
-            // if ( !chkActivateMarkers.isEnabled() )
-            // chkActivateMarkers.setEnabled( true );
+	/**
+	 * Refreshes the chart view.
+	 */
+	@SuppressWarnings("unchecked")
+	protected void refreshMaSetView() {
+		maSetView = getDataSetView();
+		uniqueMarkers = maSetView.getUniqueMarkers();
 
-            activatedMarkers = e.getPanel().activeSubset();
-        }
+		fireModelChangedEvent(null);
+	}
 
-        else {
-            enablePlotButton( false );
-        }
+	/**
+	 * @param event
+	 */
+	protected void fireModelChangedEvent(MicroarraySetViewEvent event) {
 
-        // Part of the TODO above. Make sure you "uncomment this if you
-        // uncomment that".
-        // else {
-        // chkActivateMarkers.setEnabled( false );
-        // }
-        // refreshMaSetView();
-    }
+	}
 
-    /**
-     * Enables or disables the plot button.
-     * 
-     * @param b
-     */
-    private void enablePlotButton( boolean b ) {
-        numMarkersSelectedLabel.setEnabled( b );
-        plotButton.setEnabled( b );
+	/**
+	 * @throws Exception
+	 */
+	protected void jbInit() throws Exception {
+		mainPanel = new JPanel();
 
-    }
+		jToolBar3 = new JToolBar();
+		chkAllMarkers.setToolTipText("");
 
-    /**
-     * phenotypeSelectorAction
-     * 
-     * @param e PhenotypeSelectorEvent
-     */
-    @Subscribe
-    @SuppressWarnings("unchecked")
-    public void receive( org.geworkbench.events.PhenotypeSelectorEvent e, Object source ) {
+		BorderLayout borderLayout2 = new BorderLayout();
+		mainPanel.setLayout(borderLayout2);
 
-        log.debug( "Source object " + source );
+		chkAllMarkers
+				.addActionListener(new MicroarrayViewPanelBase_chkActivateMarkers_actionAdapter(
+						this));
+		chkAllArrays
+				.addActionListener(new MicroarrayViewPanelBase_chkShowArrays_actionAdapter(
+						this));
 
-        if ( e.getTaggedItemSetTree() != null )
+		jToolBar3.add(chkAllArrays, null);
+		jToolBar3.add(chkAllMarkers, null);
 
-        activatedArrays = e.getTaggedItemSetTree().activeSubset();
+		mainPanel.add(jToolBar3, java.awt.BorderLayout.SOUTH);
 
-    }
+		onlyActivatedMarkers = !chkAllMarkers.isSelected();
+		onlyActivatedArrays = !chkAllArrays.isSelected();
+	}
 
-    /**
-     * Refreshes the chart view.
-     */
-    @SuppressWarnings("unchecked")
-    protected void refreshMaSetView() {
-        maSetView = getDataSetView();
-        fireModelChangedEvent( null );
-    }
+	/**
+	 * @param e
+	 */
+	void chkShowArrays_actionPerformed(ActionEvent e) {
+		onlyActivatedArrays = !((JCheckBox) e.getSource()).isSelected();
 
-    /**
-     * @param event TODO Why is this here ... does nothing ... more importantly, why is it ever called?
-     */
-    protected void fireModelChangedEvent( MicroarraySetViewEvent event ) {
+		refreshMaSetView();
+	}
 
-    }
+	/**
+	 * @param e
+	 */
+	void chkActivateMarkers_actionPerformed(ActionEvent e) {
+		onlyActivatedMarkers = !((JCheckBox) e.getSource()).isSelected();
 
-    /**
-     * @throws Exception
-     */
-    protected void jbInit() throws Exception {
-        mainPanel = new JPanel();
+		refreshMaSetView();
+	}
 
-        jToolBar3 = new JToolBar();
-        chkActivateMarkers.setToolTipText( "" );
+	/**
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public DSMicroarraySetView getDataSetView() {
+		DSMicroarraySetView dataSetView = new CSMicroarraySetView(this.refMASet);
+		if (activatedMarkers != null && activatedMarkers.panels().size() > 0)
+			dataSetView.setMarkerPanel(activatedMarkers);
+		if (activatedArrays != null && activatedArrays.panels().size() > 0)
+			dataSetView.setItemPanel(activatedArrays);
+		dataSetView.useMarkerPanel(onlyActivatedMarkers);
+		dataSetView.useItemPanel(onlyActivatedArrays);
 
-        BorderLayout borderLayout2 = new BorderLayout();
-        mainPanel.setLayout( borderLayout2 );
+		return dataSetView;
+	}
 
-        chkActivateMarkers.addActionListener( new MicroarrayViewPanelBase_chkActivateMarkers_actionAdapter( this ) );
-        chkShowArrays.addActionListener( new MicroarrayViewPanelBase_chkShowArrays_actionAdapter( this ) );
+	/**
+	 *
+	 * @return
+	 */
+	public boolean isPlotRefresh() {
+		return isPlotRefresh;
+	}
 
-        // TODO see the "to do" listed in the receive method above ... if that
-        // is uncommented, make sure to uncomment
-        // this
-        // as well.
-        // chkActivateMarkers.setEnabled( false );
-        // chkShowArrays.setEnabled( false );
-
-        plotButton.addActionListener( new MicroarrayViewPanelBase_plotButton_actionAdapter( this ) );
-        enablePlotButton( false );
-
-        jToolBar3.add( chkShowArrays, null );
-        jToolBar3.add( chkActivateMarkers, null );
-        jToolBar3.add( plotButton );
-        jToolBar3.add( numMarkersSelectedLabel );
-        mainPanel.add( jToolBar3, java.awt.BorderLayout.SOUTH );
-
-        activateMarkers = chkActivateMarkers.isSelected();
-        activateArrays = chkShowArrays.isSelected();
-    }
-
-    /**
-     * @param e
-     */
-    void chkShowArrays_actionPerformed( ActionEvent e ) {
-        activateArrays = ( ( JCheckBox ) e.getSource() ).isSelected();
-    }
-
-    /**
-     * @param e
-     */
-    void chkActivateMarkers_actionPerformed( ActionEvent e ) {
-        activateMarkers = ( ( JCheckBox ) e.getSource() ).isSelected();
-    }
-
-    /**
-     * @param e
-     */
-    void plotButton_actionPerformed( ActionEvent e ) {
-        refreshMaSetView();
-    }
-
-    /**
-     * @return
-     */
-    @SuppressWarnings("unchecked")
-    public DSMicroarraySetView getDataSetView() {
-        DSMicroarraySetView dataSetView = new CSMicroarraySetView( this.refMASet );
-        if ( activatedMarkers != null && activatedMarkers.panels().size() > 0 )
-            dataSetView.setMarkerPanel( activatedMarkers );
-        if ( activatedArrays != null && activatedArrays.panels().size() > 0 )
-            dataSetView.setItemPanel( activatedArrays );
-        dataSetView.useMarkerPanel( activateMarkers );
-        dataSetView.useItemPanel( activateArrays );
-        // dataSetView.setMicroarraySet(this.refMASet);
-        return dataSetView;
-    }
+	/**
+	 *
+	 * @param isPlotRefresh
+	 */
+	public void setPlotRefresh(boolean isPlotRefresh) {
+		this.isPlotRefresh = isPlotRefresh;
+	}
 
     /**
      * @return
@@ -307,64 +306,47 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 /**
  * @author unattributable
  */
-class MicroarrayViewPanelBase_chkShowArrays_actionAdapter implements java.awt.event.ActionListener {
+class MicroarrayViewPanelBase_chkShowArrays_actionAdapter implements
+		java.awt.event.ActionListener {
 
-    private Log log = LogFactory.getLog( this.getClass() );
+	private Log log = LogFactory.getLog(this.getClass());
 
-    MicroarrayViewEventBase adaptee;
+	MicroarrayViewEventBase adaptee;
 
-    MicroarrayViewPanelBase_chkShowArrays_actionAdapter( MicroarrayViewEventBase adaptee ) {
-        this.adaptee = adaptee;
-    }
+	MicroarrayViewPanelBase_chkShowArrays_actionAdapter(
+			MicroarrayViewEventBase adaptee) {
+		this.adaptee = adaptee;
+	}
 
-    /**
-     * 
-     */
-    public void actionPerformed( ActionEvent e ) {
-        log.debug( "ActionEvent " + e );
-        adaptee.chkShowArrays_actionPerformed( e );
-        adaptee.getComponent().repaint();
-    }
+	/**
+	 *
+	 */
+	public void actionPerformed(ActionEvent e) {
+		log.debug("ActionEvent " + e);
+		adaptee.chkShowArrays_actionPerformed(e);
+		adaptee.getComponent().repaint();
+	}
 }
 
 /**
  * @author unattributable
  */
-class MicroarrayViewPanelBase_chkActivateMarkers_actionAdapter implements java.awt.event.ActionListener {
+class MicroarrayViewPanelBase_chkActivateMarkers_actionAdapter implements
+		java.awt.event.ActionListener {
 
-    private Log log = LogFactory.getLog( this.getClass() );
+	private Log log = LogFactory.getLog(this.getClass());
 
-    MicroarrayViewEventBase adaptee;
+	MicroarrayViewEventBase adaptee;
 
-    MicroarrayViewPanelBase_chkActivateMarkers_actionAdapter( MicroarrayViewEventBase adaptee ) {
-        this.adaptee = adaptee;
-    }
+	MicroarrayViewPanelBase_chkActivateMarkers_actionAdapter(
+			MicroarrayViewEventBase adaptee) {
+		this.adaptee = adaptee;
+	}
 
-    public void actionPerformed( ActionEvent e ) {
-        log.debug( "actionPerformed " + e );
+	public void actionPerformed(ActionEvent e) {
+		log.debug("actionPerformed " + e);
 
-        adaptee.chkActivateMarkers_actionPerformed( e );
-        adaptee.getComponent().repaint();
-    }
-}
-
-/**
- * @author keshav
- */
-class MicroarrayViewPanelBase_plotButton_actionAdapter implements java.awt.event.ActionListener {
-
-    private Log log = LogFactory.getLog( this.getClass() );
-
-    MicroarrayViewEventBase adaptee;
-
-    MicroarrayViewPanelBase_plotButton_actionAdapter( MicroarrayViewEventBase adaptee ) {
-        this.adaptee = adaptee;
-    }
-
-    public void actionPerformed( ActionEvent e ) {
-        log.debug( "actionPerformed " + e );
-
-        adaptee.plotButton_actionPerformed( e );
-        adaptee.getComponent().repaint();
-    }
+		adaptee.chkActivateMarkers_actionPerformed(e);
+		adaptee.getComponent().repaint();
+	}
 }

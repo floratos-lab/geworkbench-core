@@ -71,6 +71,8 @@ public class Skin extends GUIFramework {
     private ReferenceMap<DSDataSet, String> visualLastSelected = new ReferenceMap<DSDataSet, String>();
     private ReferenceMap<DSDataSet, String> commandLastSelected = new ReferenceMap<DSDataSet, String>();
     private ReferenceMap<DSDataSet, String> selectionLastSelected = new ReferenceMap<DSDataSet, String>();
+    private ArrayList<DockableImpl> visualDockables = new ArrayList<DockableImpl>();
+    private ArrayList<DockableImpl> commandDockables = new ArrayList<DockableImpl>();
     private DSDataSet currentDataSet;
     private boolean tabSwappingMode = false;
     public static final String APP_SIZE_FILE = "appCoords.txt";
@@ -220,6 +222,11 @@ public class Skin extends GUIFramework {
         }
         final JDialog dialog = new JDialog();
         final DialogResult dialogResult = new DialogResult();
+        dialog.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                dialogResult.cancelled = true;
+            }
+        });
         final JAutoList autoList = new JAutoList(model) {
             protected void keyPressed(KeyEvent event) {
                 if (event.getKeyChar() == '\n') {
@@ -492,42 +499,57 @@ public class Skin extends GUIFramework {
         private JFrame frame = null;
 
         private void docker_actionPerformed(ActionEvent e) {
+            log.debug("Action performed.");
             String areaName = getVisualArea(this.getPlugin());
             DefaultDockingPort port = (DefaultDockingPort) areas.get(areaName);
             if (docked) {
-                port.undock(wrapper);
-                port.reevaluateContainerTree();
-                port.revalidate();
-                docker.setIcon(dock_grey);
-                docker.setRolloverIcon(dock);
-                docker.setPressedIcon(dock_active);
-                docker.setSelected(false);
-                frame = new JFrame(description);
-                frame.setUndecorated(false);
-                frame.addWindowListener(new WindowAdapter() {
-                    public void windowClosing(WindowEvent we) {
-                        remove_actionPerformed(we);
-                    }
-                });
-                frame.getContentPane().setLayout(new BorderLayout());
-                frame.getContentPane().add(wrapper, BorderLayout.CENTER);
-                frame.pack();
-                frame.setVisible(true);
-                docked = false;
+                undock(port);
                 return;
             } else {
-                if (frame != null) {
-                    docker.setIcon(undock_grey);
-                    docker.setRolloverIcon(undock);
-                    docker.setPressedIcon(undock_active);
-                    docker.setSelected(false);
-                    port.dock(this, DockingPort.CENTER_REGION);
-                    port.reevaluateContainerTree();
-                    port.revalidate();
-                    docked = true;
-                    frame.getContentPane().remove(wrapper);
-                    frame.dispose();
+                redock(port);
+            }
+        }
+
+        public void undock(final DefaultDockingPort port) {
+            log.debug("Undocking.");
+            port.undock(wrapper);
+            port.reevaluateContainerTree();
+            port.revalidate();
+            port.repaint();
+            docker.setIcon(dock_grey);
+            docker.setRolloverIcon(dock);
+            docker.setPressedIcon(dock_active);
+            docker.setSelected(false);
+            docker.repaint();
+            frame = new JFrame(description);
+            frame.setUndecorated(false);
+            frame.addWindowListener(new WindowAdapter() {
+                public void windowClosing(WindowEvent we) {
+                    redock(port);
                 }
+            });
+            frame.getContentPane().setLayout(new BorderLayout());
+            frame.getContentPane().add(wrapper, BorderLayout.CENTER);
+            frame.pack();
+            frame.setVisible(true);
+            frame.repaint();
+            docked = false;
+            return;
+        }
+
+        public void redock(DefaultDockingPort port) {
+            if (frame != null) {
+                log.debug("Redocking " + plugin);
+                docker.setIcon(undock_grey);
+                docker.setRolloverIcon(undock);
+                docker.setPressedIcon(undock_active);
+                docker.setSelected(false);
+                port.dock(this, DockingPort.CENTER_REGION);
+                port.reevaluateContainerTree();
+                port.revalidate();
+                docked = true;
+                frame.getContentPane().remove(wrapper);
+                frame.dispose();
             }
         }
 
@@ -578,6 +600,7 @@ public class Skin extends GUIFramework {
         public void dockingCompleted() {
             dockingFinished(this);
         }
+
     }
 
     private class ComponentProvider extends ComponentProviderAdapter {
@@ -642,20 +665,20 @@ public class Skin extends GUIFramework {
             acceptors.addAll(ComponentRegistry.getRegistry().getAcceptors(type.getClass()));
         }
         if (type == null) {
-            log.debug("Default acceptors found:");
+            log.trace("Default acceptors found:");
         } else {
-            log.debug("Found the following acceptors for type " + type.getClass());
+            log.trace("Found the following acceptors for type " + type.getClass());
         }
         for (Iterator iterator = acceptors.iterator(); iterator.hasNext();) {
             Object o = iterator.next();
-            log.debug(o.toString());
+            log.trace(o.toString());
         }
 
         // Set up Visual Area
         tabSwappingMode = true;
-        addAppropriateComponents(acceptors, GUIFramework.VISUAL_AREA);
+        addAppropriateComponents(acceptors, GUIFramework.VISUAL_AREA, visualDockables);
         selectLastComponent(GUIFramework.VISUAL_AREA, visualLastSelected.get(type));
-        addAppropriateComponents(acceptors, GUIFramework.COMMAND_AREA);
+        addAppropriateComponents(acceptors, GUIFramework.COMMAND_AREA, commandDockables);
         selectLastComponent(GUIFramework.COMMAND_AREA, commandLastSelected.get(type));
         selectLastComponent(GUIFramework.SELECTION_AREA, selectionLastSelected.get(type));
         tabSwappingMode = false;
@@ -663,8 +686,12 @@ public class Skin extends GUIFramework {
         contentPane.repaint();
     }
 
-    private void addAppropriateComponents(Set acceptors, String screenRegion) {
+    private void addAppropriateComponents(Set acceptors, String screenRegion, ArrayList<DockableImpl> dockables) {
         DefaultDockingPort port = (DefaultDockingPort) areas.get(screenRegion);
+        for (DockableImpl dockable : dockables) {
+            dockable.redock(port);
+        }
+        dockables.clear();
         port.removeAll();
 //            JTabbedPane visualpane = (JTabbedPane) ((DockingPort) areas.get(GUIFramework.VISUAL_AREA)).getDockedComponent();
 //            visualpane.removeAll();
@@ -675,7 +702,7 @@ public class Skin extends GUIFramework {
             if (visualRegistry.get(component).equals(screenRegion)) {
                 Class mainclass = mainComponentClass.get(component);
                 if (acceptors.contains(mainclass)) {
-                    log.debug("Found component in visual area to show: " + mainclass.toString());
+                    log.trace("Found component in visual area to show: " + mainclass.toString());
                     PluginDescriptor desc = ComponentRegistry.getRegistry().getDescriptorForPluginClass(mainclass);
                     tabsToAdd.put(desc.getPreferredOrder(), component);
                 }
@@ -684,7 +711,9 @@ public class Skin extends GUIFramework {
         for (Integer tabIndex : tabsToAdd.keySet()) {
             PluginDescriptor desc = ComponentRegistry.getRegistry().getDescriptorForPluginClass(mainComponentClass.get(tabsToAdd.get(tabIndex)));
             Component component = tabsToAdd.get(tabIndex);
-            port.dock(new DockableImpl(component, desc.getLabel()), DockingPort.CENTER_REGION);
+            DockableImpl dockable = new DockableImpl(component, desc.getLabel());
+            dockables.add(dockable);
+            port.dock(dockable, DockingPort.CENTER_REGION);
         }
         port.invalidate();
     }

@@ -8,6 +8,9 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.complex.panels.CSPanel;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
+import org.geworkbench.bison.datastructure.complex.panels.CSItemList;
+
+import java.io.Serializable;
 
 
 /**
@@ -23,7 +26,7 @@ import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
  * @author Adam Margolin
  * @version 3.0
  */
-public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray> extends CSDataSetView<Q> implements DSMicroarraySetView<T, Q> {
+public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray> extends CSDataSetView<Q> implements DSMicroarraySetView<T, Q>, Serializable {
     //    DSMicroarraySet<DSMicroarray> dataSet = null;
 
     /**
@@ -55,6 +58,25 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
             }
         } else {
             return markerPanel;
+        }
+    }
+
+    public DSItemList<T> getUniqueMarkers() {
+        if (useMarkerPanel && markerPanel.size() > 0) {
+            CSItemList<T> itemList = new CSItemList<T>();
+            for (int i = 0; i < markerPanel.size(); i++) {
+                T t = markerPanel.get(i);
+                if (!itemList.contains(t)) {
+                    itemList.add(t);
+                }
+            }
+            return itemList;
+        } else {
+            if (dataSet == null) {
+                return null;
+            } else {
+                return (DSItemList) ((DSMicroarraySet) dataSet).getMarkers();
+            }
         }
     }
 

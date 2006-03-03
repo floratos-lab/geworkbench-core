@@ -7,6 +7,8 @@ import org.geworkbench.bison.datastructure.complex.panels.CSPanel;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 
+import java.io.Serializable;
+
 /**
  * <p>Title: caWorkbench</p>
  * <p/>
@@ -20,7 +22,7 @@ import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
  * @author Adam Margolin
  * @version 3.0
  */
-public class CSDataSetView <Q extends DSBioObject> implements DSDataSetView<Q> {
+public class CSDataSetView <Q extends DSBioObject> implements DSDataSetView<Q>, Serializable {
 
     DSDataSet<Q> dataSet;
 

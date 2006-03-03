@@ -30,6 +30,8 @@ public interface DSDataSet <T extends DSBioObject> extends DSDescribable, DSName
      */
     public File getFile();
 
+    public void setFile(File file);
+
     /**
      * Writes the data set to the provided filename.
      *

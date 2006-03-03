@@ -163,6 +163,10 @@ public class CSDataSet <T extends DSBioObject> extends CSSequentialItemList<T> i
         return file;
     }
 
+    public void setFile(File file) {
+        this.file = file;
+    }
+
     /**
      * The name of data set.
      *

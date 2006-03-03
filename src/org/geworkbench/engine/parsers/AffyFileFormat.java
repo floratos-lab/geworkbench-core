@@ -151,6 +151,7 @@ public class AffyFileFormat extends DataSetFileFormat {
             reader.close();
             parser.getMicroarray().setLabel(file.getName());
             microarraySet.add(0, parser.getMicroarray());
+            microarraySet.setFile(file);
         } catch (Exception e) {
             e.printStackTrace();
         }

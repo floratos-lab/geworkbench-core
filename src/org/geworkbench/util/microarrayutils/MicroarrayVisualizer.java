@@ -10,6 +10,7 @@ import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
+import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.builtin.projects.ProjectPanel;
 import org.geworkbench.builtin.projects.ProjectSelection;
 import org.geworkbench.engine.management.Publish;
@@ -48,6 +49,7 @@ public abstract class MicroarrayVisualizer {
     protected CSClassCriteria classCriteria = null;
     protected DSPanel<DSGeneMarker> markerPanel;
     protected DSPanel<DSBioObject> mArrayPanel;
+    protected DSItemList<DSGeneMarker> uniqueMarkers = null;
 
     public MicroarrayVisualizer() {
         try {
@@ -76,6 +78,10 @@ public abstract class MicroarrayVisualizer {
         mainPanel.setLayout(borderLayout);
     }
 
+    public DSItemList<DSGeneMarker> getUniqueMarkers() {
+        return uniqueMarkers;
+    }
+
     public final void changeMicroArraySet(DSMicroarraySet<DSMicroarray> maSet) {
         dataSetView.setMicroarraySet(maSet);
         reset();
@@ -97,7 +103,7 @@ public abstract class MicroarrayVisualizer {
      * a red component.
      */
     protected void reset() {
-
+        uniqueMarkers = dataSetView.getUniqueMarkers();
     }
 
     public void notifyPatternSelection(CSMatchedMatrixPattern[] selectedPatterns) {
@@ -132,6 +138,7 @@ public abstract class MicroarrayVisualizer {
 
     public void showAllMarkers(boolean showAll) {
         dataSetView.useMarkerPanel(!showAll);
+        uniqueMarkers = dataSetView.getUniqueMarkers();
         repaint();
     }
 

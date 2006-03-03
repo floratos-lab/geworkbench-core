@@ -69,4 +69,6 @@ public interface DSMicroarraySetView <T extends DSGeneMarker, Q extends DSMicroa
     public DSItemList<T> allMarkers();
 
     public Q get(int index);
+
+    DSItemList<T> getUniqueMarkers();
 }

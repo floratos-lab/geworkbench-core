@@ -301,7 +301,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
 
             this.validate();
             this.repaint();
-        }else if(currentResourceName.equals(previousResourceName)){
+        }else if(currentResourceName.equals(previousResourceName) && experimentsLoaded){
 
             if(parentPanel!=null){
                 parentPanel.addRemotePanel();

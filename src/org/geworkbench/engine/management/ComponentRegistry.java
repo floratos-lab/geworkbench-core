@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URLClassLoader;
 import java.util.*;
 
@@ -378,8 +379,13 @@ public class ComponentRegistry {
                             System.out.println("- Object: " + object);
                             System.out.println("- Called: " + profile);
                             System.out.println("-------------------------------");
-                            e.printStackTrace();
-                        }
+							if (e instanceof InvocationTargetException) {
+								InvocationTargetException ite = (InvocationTargetException) e;
+								ite.getTargetException().printStackTrace();
+							} else {
+								e.printStackTrace();
+							}
+						}
                     }
                 };
                 SynchModel synchModel = getSynchModel(profile.getSynchModelType());

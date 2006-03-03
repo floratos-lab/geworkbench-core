@@ -34,7 +34,7 @@
 	</plugin>
 	<plugin id="genepixFilter" name="Genepix File Format" class="org.geworkbench.engine.parsers.GenePixFileFormat"/>
 	<plugin id="genotypicFilter" name="Genotypic File Format" class="org.geworkbench.engine.parsers.genotype.GenotypicFileFormat"/>
-	<plugin id="goPanel" name="Go Term Panel" class="org.geworkbench.components.goterms.GOPanel" source="goterms">
+	<plugin id="goPanel" name="Gene Ontology" class="org.geworkbench.components.goterms.GOPanel" source="goterms">
 		<gui-area name="VisualArea"/>
 	</plugin>
 	<plugin id="gseaPanel" name="GSEA" class="org.geworkbench.components.GSEA.GSEA" source="gsea">
@@ -47,7 +47,7 @@
 	</plugin>
 	-->
 	<!-- New Gene Panel implementation -->
-	<plugin id="genePanel" name="Gene Panel" class="org.geworkbench.components.selectors.GenePanel" source="selectors">
+	<plugin id="genePanel" name="Markers" class="org.geworkbench.components.selectors.GenePanel" source="selectors">
 		<gui-area name="SelectionArea"/>
 	</plugin>
 	<plugin id="hierarchicalClusteringPanel" name="Dendrogram" class="org.geworkbench.components.hierarchicalclustering.HierClusterViewAppComponent" source="hierarchicalclustering">
@@ -81,13 +81,13 @@
 	<plugin id="pathwayPanel" name="caBIO Pathways" class="org.geworkbench.components.annotations.PathwayPanel" source="annotations">
 		<gui-area name="VisualArea"/>
 	</plugin>
-	<plugin id="tabularMicroarrayPanel" name="Tabular Microarray Panel" class="org.geworkbench.components.microarrays.TabularMicroarrayPanel" source="microarrays">
+	<plugin id="tabularMicroarrayPanel" name="Tabular Microarray Viewer" class="org.geworkbench.components.microarrays.TabularMicroarrayPanel" source="microarrays">
 		<gui-area name="VisualArea"/>
 	</plugin>
 	<!--<plugin id="phenotypePanel" name="Phenotype Panel" class="org.geworkbench.components.selectors.PropertyTagSelectorPanel" source="selectors">-->
 		<!--<gui-area name="SelectionArea"/>-->
 	<!--</plugin>-->
-    <plugin id="phenotypePanel2" name="Phenotype Panel" class="org.geworkbench.components.selectors.PhenotypePanel" source="selectors">
+    <plugin id="phenotypePanel2" name="Arrays/Phenotypes" class="org.geworkbench.components.selectors.PhenotypePanel" source="selectors">
         <gui-area name="SelectionArea"/>
     </plugin>
 	<!-- plugin id="hierarchicalClusteringAnalysis" name="Hierachical Clustering Analysis" class="org.geworkbench.components.clustering.HierClustAnalysis" source="clustering"/ -->
@@ -104,10 +104,10 @@
 	<plugin id="preferences" name="preferences" class="org.geworkbench.engine.config.PreferencesMenu"/>
 	<plugin id="sessionManager" name="Session Mgr" class="org.geworkbench.util.session.SessionAppComponent"/>
 	<plugin id="versioninfo" name="Version Infomation" class="org.geworkbench.components.versioninfo.VersionInfoComponent" source="versioninfo"/>
-    <plugin id="promoterPanel" name="Promoter Panel" class="org.geworkbench.components.promoter.PromoterView" source="promoter">
+    <plugin id="promoterPanel" name="Promoter" class="org.geworkbench.components.promoter.PromoterView" source="promoter">
         <gui-area name="VisualArea"/>
     </plugin>
-	<plugin id="sequencePanel" name="Sequence Panel" class="org.geworkbench.components.sequences.SequenceViewAppComponent" source="sequences">
+	<plugin id="sequencePanel" name="Sequence" class="org.geworkbench.components.sequences.SequenceViewAppComponent" source="sequences">
 		<gui-area name="VisualArea"/>
 	</plugin>
 	<plugin id="SequenceRetriever" name="Sequence Retriever" class="org.geworkbench.components.sequenceretriever.SequenceRetriever" source="sequenceretriever">
@@ -122,7 +122,7 @@
 	<plugin id="SyntenyVisualization" name="Synteny" class="org.geworkbench.components.alignment.synteny.SyntenyViewAppComponent" source="alignment">
 		<gui-area name="VisualArea"/>
 	</plugin>
-	<plugin id="microarrayPanel" name="Microarray Panel" class="org.geworkbench.components.microarrays.MicroarrayPanel" source="microarrays">
+	<plugin id="microarrayPanel" name="Microarray Viewer" class="org.geworkbench.components.microarrays.MicroarrayPanel" source="microarrays">
 		<gui-area name="VisualArea"/>
 		<!-- An example 'subscription' directive: Set enabled to 'No' to prevent subscription for certain type. -->
 		<subscription type="org.geworkbench.events.ProjectEvent" enabled="Yes"/>
@@ -140,7 +140,7 @@
 	<plugin id="commentsPanel" name="Dataset Annotation" class="org.geworkbench.builtin.projects.comments.CommentsPanel">
 		<gui-area name="CommandArea"/>
 	</plugin>
-	<plugin id="filteringPanel" name="Filtering Panel" class="org.geworkbench.components.analysis.FilteringPanel" source="analysis">
+	<plugin id="filteringPanel" name="Filtering" class="org.geworkbench.components.analysis.FilteringPanel" source="analysis">
 		<gui-area name="CommandArea"/>
 	</plugin>
 	<plugin id="historyPanel" name="Dataset History" class="org.geworkbench.builtin.projects.history.HistoryPanel">
@@ -158,7 +158,7 @@
 	<plugin id="syntenyParameters" name="Synteny Parameters" class="org.geworkbench.components.alignment.panels.SyntenyParameters" source="alignment">
 		<gui-area name="CommandArea"/>
 	</plugin>
-	<plugin id="normalizationPanel" name="Normalization Panel" class="org.geworkbench.components.analysis.NormalizationPanel" source="analysis">
+	<plugin id="normalizationPanel" name="Normalization" class="org.geworkbench.components.analysis.NormalizationPanel" source="analysis">
 		<gui-area name="CommandArea"/>
 	</plugin>
     <!-- Example Component -->
@@ -168,5 +168,10 @@
     <plugin id="Classifier" name="Classifier" class="org.geworkbench.components.analysis.classification.ClassificationRunnerPlugin" source="analysis">
         <gui-area name="CommandArea"/>
     </plugin>
-    <plugin id="SVMNormalizedMatrixFilter" name="SVM Format" class="org.geworkbench.engine.parsers.SVMNormalizedMatrixFileFormat"/>
+    <!--<plugin id="SVMNormalizedMatrixFilter" name="SVM Format" class="org.geworkbench.engine.parsers.SVMNormalizedMatrixFileFormat"/>-->
+<!-- -->
+    <!--<plugin id="test" name="Test Component" class="test.TestComponent" source="test">-->
+        <!--<gui-area name="VisualArea"/>-->
+    <!--</plugin>-->
+<!-- -->
 </geaw-config>

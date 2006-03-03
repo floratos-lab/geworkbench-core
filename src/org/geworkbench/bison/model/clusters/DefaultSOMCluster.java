@@ -1,6 +1,7 @@
 package org.geworkbench.bison.model.clusters;
 
 import java.util.Vector;
+import java.io.Serializable;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
@@ -12,7 +13,7 @@ import java.util.Vector;
  * @author First Genetic Trust
  * @version 1.0
  */
-public class DefaultSOMCluster extends AbstractCluster implements SOMCluster {
+public class DefaultSOMCluster extends AbstractCluster implements SOMCluster, Serializable {
     /**
      * Contains the Grid Representative cof the Grid this <code>SOMCluster</code>
      * represents

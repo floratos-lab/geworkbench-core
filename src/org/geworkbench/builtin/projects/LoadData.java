@@ -251,19 +251,18 @@ public class LoadData extends JDialog {
             public void actionPerformed(ActionEvent e) {
 
                 String previousIndexURL = indexURL;
-                if (remoteResourceDialog.updateResource(indexField.getText())) {
+                if(remoteResourceDialog.updateResource(indexField.getText())){
                     lowTabPane.setSelectedIndex(0);
-                    jRadioButton8.setSelected(true);
+                jRadioButton8.setSelected(true);
                     updateExistedResourcesGUI();
                     addRemotePanel_actionPerformed(e);
 
-                } else {
+                }else{
                     indexField.setText(previousIndexURL);
                 }
             }
         });
-//Automatically update the caARRAY informtion from one grid service.
-        autoUpdateIndexService();
+
         // this.getContentPane().add(lowerPanel, BorderLayout.SOUTH);
         this.getContentPane().add(lowTabPane, BorderLayout.SOUTH);
         //Merge Merge panel and Jpanel 1 in 1 line.

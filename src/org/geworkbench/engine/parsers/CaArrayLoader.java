@@ -31,12 +31,14 @@ public class CaArrayLoader {
             gov.nih.nci.mageom.domain.BioAssay.BioAssay bap = assays[i];
             DSMicroarray ar = null;
             if (bap != null) {
+
                 ar = parser.getMicroarray(arrays, bap, maSet);
             }
             if (ar != null) {
                 maSet.add(arrays++, ar);
             }
         }
+
 
         return maSet;
     }

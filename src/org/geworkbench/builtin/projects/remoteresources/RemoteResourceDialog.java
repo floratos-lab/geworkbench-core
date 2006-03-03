@@ -285,7 +285,7 @@ public class RemoteResourceDialog extends JDialog {
             shortnameTextField.setEditable(editable);
             jComboBox1.setEditable(editable);
             if (!editable) {
-                jLabel1.setText("The Info Is From caARRAYIndex Service.");
+                jLabel1.setText("The Details Come From the caARRAY Index Service.");
                 shortnameTextField.setToolTipText(
                         "Shortname cannot be changed if it is from Index service");
                 jTextField2.setToolTipText(
@@ -293,7 +293,7 @@ public class RemoteResourceDialog extends JDialog {
                 jTextField3.setToolTipText(
                         "Port number cannot be changed if it is from Index service");
             }else{
-                jLabel1.setText("The Info Is From Local Users.");
+                jLabel1.setText("The Details Come From Local Users.");
             }
         }
     }

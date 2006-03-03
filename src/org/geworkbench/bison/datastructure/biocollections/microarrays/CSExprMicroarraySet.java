@@ -29,7 +29,6 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
 
     private HashMap properties = new HashMap();
     private ArrayList descriptions = new ArrayList();
-    private File file = null;
 
     private org.geworkbench.bison.parsers.DataParseContext dataContext = new org.geworkbench.bison.parsers.DataParseContext();
 
