@@ -94,7 +94,7 @@ public class CaARRAYParser {
           microarray = null;
         CaARRAYParseContext context = new CaARRAYParseContext(columnsToUse);
         HashMap contextData = context.getColumnsToUse();
-        try {
+        try {//System.out.println("In caARRAYPASSER " +  bioAssayImpl.getIdentifier());
             if (bioAssayImpl instanceof DerivedBioAssayImpl) {
                 DerivedBioAssayData[] dbd = ((DerivedBioAssayImpl) bioAssayImpl).getDerivedBioAssayData();
                 DesignElementDimension ded = null;

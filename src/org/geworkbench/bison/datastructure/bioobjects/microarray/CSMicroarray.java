@@ -268,7 +268,13 @@ public class CSMicroarray implements DSMicroarray, Serializable {
     }
 
     public DSMutableMarkerValue getMarkerValue(int i) {
-        return markerArray[i];
+        try{
+            return markerArray[i];
+        }catch(ArrayIndexOutOfBoundsException e){
+            CSMarkerValue newAbsentValue = new CSExpressionMarkerValue();
+            newAbsentValue.setAbsent();
+            return newAbsentValue;
+        }
     }
 
     public DSMicroarray deepCopy() {

@@ -1,17 +1,18 @@
 package org.geworkbench.builtin.projects;
 
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.*;
+
+import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+
 import org.geworkbench.builtin.projects.remoteresources.RemoteResourceDialog;
 import org.geworkbench.builtin.projects.util.CaARRAYPanel;
 import org.geworkbench.builtin.projects.util.NCIPanel;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.engine.parsers.FileFormat;
-
-import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.*;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
@@ -103,6 +104,7 @@ public class LoadData extends JDialog {
     JButton deleteButton = new JButton();
     BoxLayout boxLayout21;
     JButton openRemoteResourceButton = new JButton();
+    private boolean merge;
 
     public LoadData(ProjectPanel parent) {
         parentProjectPanel = parent;
@@ -128,6 +130,10 @@ public class LoadData extends JDialog {
 
     public void setFormat(String format) {
         this.format = format;
+    }
+
+    public void setMerge(boolean merge) {
+        this.merge = merge;
     }
 
     private void jbInit() throws Exception {
@@ -223,7 +229,12 @@ public class LoadData extends JDialog {
         mergePanel = new JPanel();
         mergePanel.setLayout(new BoxLayout(mergePanel, BoxLayout.X_AXIS));
         mergeCheckBox = new JCheckBox("Merge Files", false);
+        mergeCheckBox.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        merge = mergeCheckBox.isSelected();
 
+                    }
+        });
         //jComboBox1 = new JComboBox(remoteResourceDialog.getResourceNames());
         //jComboBox1 = new JComboBox(new String[]{"TEST"});
         jPanel10.add(jComboBox1);
@@ -656,5 +667,9 @@ public class LoadData extends JDialog {
     public void openRemoteResourceButton_actionPerformed(ActionEvent e) {
         mageButtonSelection_actionPerformed(e);
 
+    }
+
+    public boolean isMerge() {
+        return merge;
     }
 }
