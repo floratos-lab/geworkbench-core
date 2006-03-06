@@ -232,8 +232,7 @@ public class LoadData extends JDialog {
         mergeCheckBox.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         merge = mergeCheckBox.isSelected();
-
-                    }
+                                         }
         });
         //jComboBox1 = new JComboBox(remoteResourceDialog.getResourceNames());
         //jComboBox1 = new JComboBox(new String[]{"TEST"});
