@@ -171,7 +171,11 @@ public class CSGeneMarker implements DSGeneMarker, Serializable {
     }
 
     public String getShortName() {
-        return AnnotationParser.getGeneName(label);
+        String name = AnnotationParser.getGeneName(label);
+        if(name == null) {
+            return label;
+        }
+        return name;
     }
 
     public boolean isEquivalent(DSGeneMarker i) {
