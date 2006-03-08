@@ -564,17 +564,17 @@ public class ComponentRegistry {
     public Method getScriptMethodByNameAndParameters(Class componentType, String methodName, Class[] c) {
         Method[] methods = getMethodsForComponentType(componentType);
         Method retValue = null;
-        for ( Method method : methods) {
+        LOOP: for ( Method method : methods) {
             if (method.getName().equals(methodName)) {
                 Class[] k = method.getParameterTypes();
                 if (k != null && c != null && k.length == c.length) {
                     for (int j = 0; j < k.length; j++) {
                         if (!(k[j].isAssignableFrom(c[j]))) {
-                            break;
+                            continue LOOP;
                         }
                     }
+                    retValue = method;
                 }
-                retValue = method;
             }
         }
         return retValue;
