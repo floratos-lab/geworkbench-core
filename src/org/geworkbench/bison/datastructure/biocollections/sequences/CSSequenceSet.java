@@ -71,7 +71,7 @@ public class CSSequenceSet<T extends DSSequence> extends CSDataSet<T> implements
 
     public T getSequence(int i) {
         if ((this.size() == 0) && (file != null)) {
-            readFASTAfile(file);
+            readFASTAFile(file);
         }
         if (i < this.size() && i >= 0) {
             return this.get(i);
@@ -82,7 +82,7 @@ public class CSSequenceSet<T extends DSSequence> extends CSDataSet<T> implements
 
     public T getSequence(DSGeneMarker marker) {
     if ((this.size() == 0) && (file != null)) {
-        readFASTAfile(file);
+        readFASTAFile(file);
     }
     if (markerList.contains(marker)) {
         int i = markerList.indexOf(marker);
@@ -93,7 +93,7 @@ public class CSSequenceSet<T extends DSSequence> extends CSDataSet<T> implements
 }
 
 public DSSequenceSet getActiveSequenceSet(DSPanel<? extends DSGeneMarker> markerPanel){
-    DSSequenceSet sequenceDB = new CSSequenceSet();
+    CSSequenceSet sequenceDB = new CSSequenceSet();
     if(markerPanel!=null && markerPanel.size()>0){
         for(DSGeneMarker marker: markerPanel){
 
@@ -102,6 +102,7 @@ public DSSequenceSet getActiveSequenceSet(DSPanel<? extends DSGeneMarker> marker
                 sequenceDB.addASequence(newSequence);
             }
         }
+        sequenceDB.setFASTAFile(file);
     }
     return sequenceDB;
 }
@@ -118,11 +119,11 @@ public DSSequenceSet getActiveSequenceSet(DSPanel<? extends DSGeneMarker> marker
 
     public static DSSequenceSet createFASTAfile(File file) {
         CSSequenceSet seqDB = new CSSequenceSet();
-        seqDB.readFASTAfile(file);
+        seqDB.readFASTAFile(file);
         return seqDB;
     }
 
-    public void readFASTAfile(File inputFile) {
+    public void readFASTAFile(File inputFile) {
         file = inputFile;
         label = file.getName();
 
@@ -235,7 +236,7 @@ public DSSequenceSet getActiveSequenceSet(DSPanel<? extends DSGeneMarker> marker
         CSSequenceSet sequenceDB = (CSSequenceSet) databases.get(file.getPath());
         if (sequenceDB == null) {
             sequenceDB = new CSSequenceSet();
-            sequenceDB.readFASTAfile(file);
+            sequenceDB.readFASTAFile(file);
         }
         return sequenceDB;
     }
@@ -246,7 +247,7 @@ public DSSequenceSet getActiveSequenceSet(DSPanel<? extends DSGeneMarker> marker
 
     public void setFASTAFile(File f) {
         file = f;
-        readFASTAfile(file);
+
     }
 
     public String getLabel() {

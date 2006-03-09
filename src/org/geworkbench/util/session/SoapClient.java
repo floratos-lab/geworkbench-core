@@ -25,9 +25,8 @@ public class SoapClient {
     private String username = "amdecweb";
     private String serverURL;
     private String cmd;
-    private String inputfile;
     private CSSequenceSet sequenceDB;
-    private static long TIMEGAP = 20000;
+    private static long TIMEGAP = 50000;
     private final String DEFAULT_OUTPUTFILE = "testout.txt";
     private String outputfile;
     static final String STRINGURL =
@@ -154,7 +153,7 @@ public class SoapClient {
      * @param The sequenceDB.
      * @return True if sent successfully.
      */
-    public String submitFile(CSSequenceSet sequences) throws Exception {
+    public String submitSequenceDB(CSSequenceSet sequences) throws Exception {
         boolean doTheDIME = false;
 
         //Create the data for the attached file.
@@ -355,27 +354,10 @@ public class SoapClient {
      * @return String
      */
     public String getInputFileName() {
-        return inputfile;
+        return null;
     }
 
-    public static void mainOld(String[] args) throws Exception {
-        SoapClient sc = new SoapClient("blastn", "ncbi/nt",
-                                       "C:/cvsProject/test.fasta");
-        if (args.length < 4) {
-            System.out.println("Please check the number of your arguments.\n" + "The correct usage:\n java SoapClient UserName \"yourFirstPartOfQuery\" inputFile outputFile");
-            //System.exit(1);
-        } else {
-            sc.username = args[0];
 
-            sc.cmd = args[1];
-            sc.inputfile = "C:/cvsProject/" + args[2].trim();
-            sc.outputfile = args[3];
-
-        }
-
-        sc.startRun(true);
-
-    }
 
     /**
      * getBlastServerInfo
@@ -390,7 +372,7 @@ public class SoapClient {
     public void startRun(boolean enableHTML, CSSequenceSet sequences) {
         //String uploadedFile = submitFile(sequences);
         try {
-            String uploadedFile = submitFile(sequences);
+            String uploadedFile = submitSequenceDB(sequences);
             if (enableHTML) {
                 if (!cmd.matches(" -T T")) {
                     cmd += " -T T ";
@@ -430,9 +412,9 @@ public class SoapClient {
     public void startRun(boolean enableHTML) throws Exception {
         String uploadedFile = "";
         if (sequenceDB != null) {
-            uploadedFile = submitFile(sequenceDB);
-        } else {
-            uploadedFile = submitFile(inputfile);
+            uploadedFile = submitSequenceDB(sequenceDB);
+//        } else if(inputfile!=null){
+//            uploadedFile = submitFile(inputfile);
         }
         try {
             if (enableHTML) {
@@ -477,7 +459,7 @@ public class SoapClient {
      */
     public void startRun() throws Exception {
 
-        String uploadedFile = submitFile(inputfile);
+        String uploadedFile = submitSequenceDB(sequenceDB);;
         try {
 
             System.out.println(cmd + "  before submitJob " + uploadedFile +
@@ -518,19 +500,19 @@ public class SoapClient {
      *
      * @param cmd1 String
      */
-    public SoapClient(String program, String dbName, String input) {
+    public SoapClient(String program, String dbName ) {
         this();
 
         cmd = "pb blastall -p " + program + "   -d   " + dbName;
-        inputfile = input;
+
         outputfile = DEFAULT_OUTPUTFILE;
     }
 
-    public SoapClient(String program, String dbName, String input,
+    public SoapClient(String program, String dbName,
                       String output) {
         this();
         cmd = "pb blastall -p " + program + "   -d   " + dbName;
-        inputfile = input;
+
         outputfile = output;
     }
 
@@ -543,7 +525,7 @@ public class SoapClient {
         } else if (program.startsWith("hmm")) {
             cmd = "btk " + program + " ";
         }
-        inputfile = input;
+
         outputfile = output;
     }
 

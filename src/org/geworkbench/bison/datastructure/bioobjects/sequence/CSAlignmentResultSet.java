@@ -13,7 +13,7 @@ public class CSAlignmentResultSet extends CSAncillaryDataSet implements DSAlignm
         super(dataSet, "BLAST Result");
         resultFile = new File(fileName);
         fastaFile = new File(inputFile);
-        //System.out.println("in construtor" + resultFile.getAbsolutePath());
+
     }
 
     private String label = "Blast_Result";
