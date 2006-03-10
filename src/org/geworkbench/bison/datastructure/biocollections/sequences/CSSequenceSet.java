@@ -132,11 +132,12 @@ public DSSequenceSet getActiveSequenceSet(DSPanel<? extends DSGeneMarker> marker
             T sequence = null;
             String data = new String();
             String s = reader.readLine();
-            int id = 0;
+            int num = 0;
             while (reader.ready()) {
                 if (s.trim().length() == 0) {
 
                 } else if (s.startsWith(">")) {
+                    num++;
                     if (sequence != null) {
                         sequence.setSequence(data);
                         addASequence(sequence);
@@ -159,6 +160,7 @@ public DSSequenceSet getActiveSequenceSet(DSPanel<? extends DSGeneMarker> marker
         }
         parseMarkers();
         databases.put(file.getPath(), this);
+        addDescription("# of sequences: " + size());
     }
 
     public void parseMarkers() {

@@ -192,7 +192,7 @@ public class JAutoList extends JPanel {
             }
         }
         handlePostSearch();
-        return !lastSearchFailed;
+        return!lastSearchFailed;
     }
 
     /**
@@ -282,6 +282,21 @@ public class JAutoList extends JPanel {
 
     public int getHighlightedIndex() {
         return list.getSelectedIndex();
+    }
+
+    /**
+     * Set the highlightedIndex automatically.
+     * @param theIndex int
+     * @return boolean
+     */
+    public boolean setHighlightedIndex(int theIndex) {
+        if (model != null && model.getSize() > theIndex) {
+            list.setSelectedIndex(theIndex);
+            list.scrollRectToVisible(list.getCellBounds(theIndex, theIndex));
+
+            return true;
+        }
+        return false;
     }
 
     public boolean isPrefixMode() {

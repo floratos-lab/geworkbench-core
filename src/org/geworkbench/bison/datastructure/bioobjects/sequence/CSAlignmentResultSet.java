@@ -16,7 +16,7 @@ public class CSAlignmentResultSet extends CSAncillaryDataSet implements DSAlignm
 
     }
 
-    private String label = "Blast_Result";
+
     private File fastaFile = null;
     private File resultFile = null;
 //    //Just add the new algorithm varible to get the job status show at the project panel.
