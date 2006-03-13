@@ -18,6 +18,8 @@ import org.geworkbench.util.pathwaydecoder.bayes.BDEScoreDirPrior;
 import org.geworkbench.util.pathwaydecoder.bayes.BayesSLFactory;
 import org.geworkbench.util.pathwaydecoder.bayes.BayesUtil;
 import org.geworkbench.util.pathwaydecoder.bayes.discretizers.LogDiscretizer;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.logging.Log;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,6 +39,8 @@ import java.util.Map.Entry;
  */
 
 public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMatrix, Serializable {
+
+    static Log log = LogFactory.getLog(AdjacencyMatrix.class);
 
     static public boolean MIlibraryLoaded = false;
     static final public int HIGH = 1;
@@ -1488,6 +1492,7 @@ public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMa
                 int geneBId = geneBKey.intValue();
                 float mi = this.get(geneAId, geneBId);
                 // remove the edge between geneA and geneB
+                log.debug("Setting interaction between "+geneAId+" and "+geneBId+" to "+(-Math.abs(mi)));
                 this.add(geneAId, geneBId, -Math.abs(mi));
                 // GW compatible
                 // subclass -> this.changeInteractionType2Strength(geneAId, geneBId, -Math.abs(mi));

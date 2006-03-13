@@ -25,9 +25,10 @@
 	<plugin id="detectionCall" name="Affy Detection Call Filter" class="org.geworkbench.components.filtering.AffyDetectionCallFilter" source="filtering"/>
 	<plugin id="expressionFileFilter" name="Exp. Format" class="org.geworkbench.engine.parsers.ExpressionFileFormat"/>
 	<plugin id="rmaExpressFileFilter" name="RMA Express Format" class="org.geworkbench.engine.parsers.RMAExpressFileFormat"/>
-	<plugin id="columnMajorFileFilter" name="Column Major Format" class="org.geworkbench.engine.parsers.ColumnMajorFormat"/>
-	<plugin id="expressionProfilePanel" name="Expression Profiles" class="org.geworkbench.components.microarrays.ExpressionProfilePanel" source="microarrays">
-		<gui-area name="VisualArea"/>
+    <plugin id="columnMajorFileFilter" name="Column Major Format" class="org.geworkbench.engine.parsers.ColumnMajorFormat"/>
+    <plugin id="pdbFileFilter" name="PDB Structure Format" class="org.geworkbench.engine.parsers.PDBFileFormat"/>
+    <plugin id="expressionProfilePanel" name="Expression Profiles" class="org.geworkbench.components.microarrays.ExpressionProfilePanel" source="microarrays">
+        <gui-area name="VisualArea"/>
 	</plugin>
 	<plugin id="expressionThreshold" name="Expression Threshold Filter" class="org.geworkbench.components.filtering.ExpressionThresholdFilter" source="filtering"/>
 	<plugin id="EVDPanel" name="Expression Value Distribution" class="org.geworkbench.components.microarrays.EVDPanel" source="microarrays">
@@ -38,9 +39,9 @@
 	<plugin id="goPanel" name="Gene Ontology" class="org.geworkbench.components.goterms.GOPanel" source="goterms">
 		<gui-area name="VisualArea"/>
 	</plugin>
-	<plugin id="goMiner" name="GO Miner" class="gov.nih.nci.lmp.gominer.workbench.GOMinerPanel" source="gominer">
-		<gui-area name="VisualArea"/>
-	</plugin>
+	<!--<plugin id="goMiner" name="GO Miner" class="gov.nih.nci.lmp.gominer.workbench.GOMinerPanel" source="gominer">-->
+		<!--<gui-area name="VisualArea"/>-->
+	<!--</plugin>-->
 	<plugin id="gseaPanel" name="GSEA" class="org.geworkbench.components.GSEA.GSEA" source="gsea">
 		<gui-area name="VisualArea"/>
 	</plugin>
@@ -169,6 +170,9 @@
 	<!--<plugin id="Example" name="Example" class="org.geworkbench.components.example.ExampleComponent" source="example">-->
 	<!--<gui-area name="VisualArea"/>-->
 	<!--</plugin>-->
+	<plugin id="Jmol" name="Jmol" class="org.geworkbench.components.jmol.JmolComponent" source="jmol">
+    	<gui-area name="VisualArea"/>
+	</plugin>
 	<plugin id="Classifier" name="Classifier" class="org.geworkbench.components.analysis.classification.ClassificationRunnerPlugin" source="analysis">
 		<gui-area name="CommandArea"/>
 	</plugin>
