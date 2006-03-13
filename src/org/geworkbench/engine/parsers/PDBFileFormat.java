@@ -50,7 +50,12 @@ public class PDBFileFormat extends DataSetFileFormat {
     }
 
     public DSDataSet getDataFile(File file) {
-        DSProteinStructure dataSet = new CSProteinStructure(null, "Protein Structure");
+        String name = file.getName();
+        int index = name.lastIndexOf('.');
+        if (index != -1) {
+            name = name.substring(0, index);
+        }
+        DSProteinStructure dataSet = new CSProteinStructure(null, name);
         dataSet.setFile(file);
         return dataSet;
     }
