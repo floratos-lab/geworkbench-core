@@ -441,7 +441,8 @@ public class SoapClient {
             try {
                 Thread.sleep(TIMEGAP);
             } catch (InterruptedException ie) {
-                ie.printStackTrace();
+                //ie.printStackTrace();
+                System.out.println("In SoapClient" + ie);
             }
 
         }
