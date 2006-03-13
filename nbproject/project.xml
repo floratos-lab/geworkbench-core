@@ -391,7 +391,7 @@
             </compilation-unit>
             <compilation-unit>
                 <package-root>components/filtering/src</package-root>
-                <classpath mode="compile">components/filtering/classes;classes</classpath>
+                <classpath mode="compile">classes;components/filtering/classes</classpath>
                 <source-level>1.5</source-level>
             </compilation-unit>
             <compilation-unit>
