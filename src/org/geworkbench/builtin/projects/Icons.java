@@ -21,5 +21,6 @@ public class Icons {
     public static ImageIcon ALIGNMENT_ICON = new ImageIcon(Icons.class.getResource("alignment16x16.gif"));
     public static ImageIcon SIGNIFICANCE_ICON = new ImageIcon(Icons.class.getResource("significance16x16.gif"));
     public static ImageIcon CLASSIFIER_ICON = new ImageIcon(Icons.class.getResource("classifier16x16.gif"));
+    public static ImageIcon STRUCTURE_ICON = new ImageIcon(Icons.class.getResource("structure16x16.gif"));
     public static ImageIcon BUSY_ICON = new ImageIcon(Icons.class.getResource("busy.gif"));
 }
