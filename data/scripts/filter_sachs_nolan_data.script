@@ -1,10 +1,11 @@
 void main(){
     module columnMajorFileFilter cmff;
     module projectWindow pw;
-    pw.loadDataSet("data/sachs_nolan_1.xls", cmff);
+    pw.loadDataSet("data/sachs_nolan_3.xls", cmff);
     datatype DSDataSet data = pw.getDataSet();
     module deviationFilter df; 
     module missingValuesFilter mvf;
-    df.mask(data, 3, false, false);
+    df.mask(data, 3, false, true);
     mvf.filter(data, 0, false);
+    mvf.prune(data, 600);
 }
