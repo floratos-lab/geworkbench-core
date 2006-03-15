@@ -1,16 +1,24 @@
 package org.geworkbench.analysis;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.properties.CSDescribable;
 import org.geworkbench.bison.model.analysis.Analysis;
 import org.geworkbench.bison.model.analysis.ParamValidationResults;
 import org.geworkbench.bison.model.analysis.ParameterPanel;
 import org.geworkbench.bison.util.DefaultIdentifiable;
 import org.geworkbench.engine.management.ComponentObjectInputStream;
-
-import java.io.*;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
 
 
 /**
@@ -28,6 +36,9 @@ import java.util.Vector;
  * @version 1.0
  */
 public abstract class AbstractAnalysis implements Analysis, Serializable, java.util.Observer {
+	
+	private Log log = LogFactory.getLog(this.getClass());
+	
     public static final int AFFY_DETECTION_CALL_FILTER = 0;
     public static final int MISSING_VALUES_FILTER_TYPE = 1;
     public static final int DEVIATION_BASED_FILTER_TYPE = 2;
@@ -88,7 +99,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable, java.u
      */
     DefaultIdentifiable analysisId = new DefaultIdentifiable();
 
-    protected boolean stopAlgorithm;
+    public boolean stopAlgorithm;
 
     /**
      * Default Constructor
@@ -292,6 +303,9 @@ public abstract class AbstractAnalysis implements Analysis, Serializable, java.u
     }
 
     public void update(java.util.Observable ob, Object o) {
+    	
+    	log.debug("initiated close");
+    	
         stopAlgorithm = true;
     }
 
