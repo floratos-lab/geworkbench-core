@@ -263,7 +263,7 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 		DSMicroarraySetView dataSetView = new CSMicroarraySetView(this.refMASet);
 		if (activatedMarkers != null && activatedMarkers.panels().size() > 0)
 			dataSetView.setMarkerPanel(activatedMarkers);
-		if (activatedArrays != null && activatedArrays.panels().size() > 0)
+		if (activatedArrays != null && activatedArrays.panels().size() > 0 && activatedArrays.size() > 0)
 			dataSetView.setItemPanel(activatedArrays);
 		dataSetView.useMarkerPanel(onlyActivatedMarkers);
 		dataSetView.useItemPanel(onlyActivatedArrays);
