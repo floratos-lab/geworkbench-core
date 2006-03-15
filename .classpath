@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="_all/|annotation/|components/alignment/src/|components/analysis/src/|components/annotations/src/|components/associationdiscovery/src/|components/cascript/src/|components/clustering/src/|components/colormosaic/src/|components/cytoscape/src/|components/discovery/src/|components/example/src/|components/filtering/src/|components/gominer/src/|components/goterms/src/|components/gsea/src/|components/hierarchicalclustering/src/|components/microarrays/src/|components/normalization/src/|components/pathwaydecoder/src/|components/patterns/src/|components/plots/src/|components/poshistogram/src/|components/promoter/src/|components/selectors/src/|components/sequenceretriever/src/|components/sequences/src/|components/versioninfo/src/|components/viewers/src/|src/|bin/|conf/|test/" kind="src" path=""/>
+	<classpathentry excluding="_all/|annotation/|components/alignment/src/|components/analysis/src/|components/annotations/src/|components/associationdiscovery/src/|components/cascript/src/|components/clustering/src/|components/colormosaic/src/|components/cytoscape/src/|components/discovery/src/|components/example/src/|components/filtering/src/|components/gominer/src/|components/goterms/src/|components/gsea/src/|components/hierarchicalclustering/src/|components/microarrays/src/|components/normalization/src/|components/pathwaydecoder/src/|components/patterns/src/|components/plots/src/|components/poshistogram/src/|components/promoter/src/|components/selectors/src/|components/sequenceretriever/src/|components/sequences/src/|components/versioninfo/src/|components/viewers/src/|src/|bin/|conf/|test/|components/jmol/src/" kind="src" path=""/>
+	<classpathentry kind="src" path="components/jmol/src"/>
 	<classpathentry output="test-classes" kind="src" path="test"/>
 	<classpathentry kind="src" path="conf"/>
 	<classpathentry kind="src" path="_all"/>
@@ -162,5 +163,15 @@
 	<classpathentry kind="lib" path="components/sequenceretriever/lib/ensj-30.2.jar"/>
 	<classpathentry kind="lib" path="components/sequenceretriever/lib/mysql-connector-java-3.0.16-ga-bin.jar"/>
 	<classpathentry kind="lib" path="components/sequenceretriever/lib/mysql-connector-java-3.0.8-stable-bin.jar"/>
+	<classpathentry kind="lib" path="components/jmol/lib/Acme.jar"/>
+	<classpathentry kind="lib" path="components/jmol/lib/commons-cli-1.0.jar"/>
+	<classpathentry kind="lib" path="components/jmol/lib/gnujaxp.jar"/>
+	<classpathentry kind="lib" path="components/jmol/lib/gnujaxp-onlysax.jar"/>
+	<classpathentry kind="lib" path="components/jmol/lib/itext-0.94.jar"/>
+	<classpathentry kind="lib" path="components/jmol/lib/jmol2cdk.jar"/>
+	<classpathentry kind="lib" path="components/jmol/lib/jmolappletcdk.jar"/>
+	<classpathentry kind="lib" path="components/jmol/lib/netscape.jar"/>
+	<classpathentry kind="lib" path="components/jmol/lib/saxon.jar"/>
+	<classpathentry kind="lib" path="components/jmol/lib/vecmath1.2-1.14.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
