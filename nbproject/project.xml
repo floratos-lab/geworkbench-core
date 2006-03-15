@@ -157,6 +157,11 @@
                     <type>java</type>
                     <location>components/gominer/src</location>
                 </source-folder>
+                <source-folder>
+                    <label>components\jmol\src</label>
+                    <type>java</type>
+                    <location>components/jmol/src</location>
+                </source-folder>
             </folders>
             <ide-actions>
                 <action name="build">
@@ -317,6 +322,10 @@
                     <source-folder style="packages">
                         <label>components\gominer\src</label>
                         <location>components/gominer/src</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>components\jmol\src</label>
+                        <location>components/jmol/src</location>
                     </source-folder>
                     <source-file>
                         <location>build.xml</location>
@@ -486,6 +495,11 @@
             <compilation-unit>
                 <package-root>components/gominer/src</package-root>
                 <classpath mode="compile">classes;components/gominer/lib/gominer.jar</classpath>
+                <source-level>1.5</source-level>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>components/jmol/src</package-root>
+                <classpath mode="compile">components/jmol/lib/Acme.jar;components/jmol/lib/commons-cli-1.0.jar;components/jmol/lib/itext-0.94.jar;components/jmol/lib/jmol2cdk.jar;components/jmol/lib/jmolappletcdk.jar;components/jmol/lib/vecmath1.2-1.14.jar;components/jmol/lib/plugin.jar;classes;components/jmol/classes</classpath>
                 <source-level>1.5</source-level>
             </compilation-unit>
         </java-data>
