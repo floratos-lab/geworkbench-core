@@ -97,7 +97,7 @@ public class ColumnMajorFormat extends DataSetFileFormat {
             POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(file));
             HSSFWorkbook hssfWorkbook = new HSSFWorkbook(fs);
             HSSFSheet hssfSheet = hssfWorkbook.getSheetAt(0);
-            parseSheet(hssfSheet, maSet);
+            parseSheet(hssfSheet, maSet, file.getName());
         } catch (FileNotFoundException fnfe){
             fnfe.printStackTrace();
         } catch (IOException ioe){
@@ -140,7 +140,7 @@ public class ColumnMajorFormat extends DataSetFileFormat {
         }
     }
     
-    void parseSheet(HSSFSheet sheet, DSMicroarraySet<DSMicroarray> maSet) {
+    void parseSheet(HSSFSheet sheet, DSMicroarraySet<DSMicroarray> maSet, String filename) {
         phenotypeNo = 0;
         microarrayNo = sheet.getLastRowNum() - sheet.getFirstRowNum() - 1;
         markerNo = sheet.getRow(0).getLastCellNum() - sheet.getRow(0).getFirstCellNum();
@@ -158,8 +158,8 @@ public class ColumnMajorFormat extends DataSetFileFormat {
         for (int i = 0; i < microarrayNo; i++){
             row = sheet.getRow(i + 1);
             CSMicroarray array = (CSMicroarray)maSet.get(i);
-            array.setLabel("Array: " + i);
-            array.setName("Array: " + i);
+            array.setLabel(filename + " :" + i);
+            array.setName(filename + " :" + i);
             array.setSerial(i);
             //maSet.set(i, array);
             cellCount = 0;
