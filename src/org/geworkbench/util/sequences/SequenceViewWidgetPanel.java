@@ -1,19 +1,18 @@
 package org.geworkbench.util.sequences;
 
+import java.awt.*;
+import java.util.Iterator;
+
+import javax.swing.JPanel;
+import javax.swing.JViewport;
+
 import org.geworkbench.bison.datastructure.biocollections.DSCollection;
 import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import org.geworkbench.bison.datastructure.complex.pattern.DSMatchedPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeqPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSSeqRegistration;
-import org.geworkbench.util.patterns.CSMatchedHMMSeqPattern;
-import org.geworkbench.util.patterns.CSMatchedSeqPattern;
-import org.geworkbench.util.patterns.FlexiblePattern;
-import org.geworkbench.util.patterns.PatternOperations;
-
-import javax.swing.*;
-import java.awt.*;
-import java.util.Iterator;
+import org.geworkbench.util.patterns.*;
 
 /**
  * <p>Title: </p>
@@ -31,6 +30,7 @@ public class SequenceViewWidgetPanel extends JPanel {
     final int yStep = 12;
     double scale = 1.0;
     int maxLen = 1;
+    int maxSeqLen = 1;
     //ArrayList  selectedPatterns   = null;
     DSCollection<DSMatchedPattern<DSSequence,
             DSSeqRegistration>> selectedPatterns = null;
@@ -71,7 +71,7 @@ public class SequenceViewWidgetPanel extends JPanel {
         if (sequenceDB != null) {
             int rowId = -1;
             int[] rows = {};
-            int maxLn = sequenceDB.getMaxLength();
+            //int maxLn = sequenceDB.getMaxLength();
             int seqNo = sequenceDB.getSequenceNo();
             if (sequenceDB.getSequenceNo() == 0) {
                 if (selectedPatterns != null) {
@@ -91,7 +91,8 @@ public class SequenceViewWidgetPanel extends JPanel {
             }
             scale = Math.min(5.0,
                              (double) (this.getWidth() - 20 - xOff) /
-                             (double) maxLn);
+                             (double) maxSeqLen);
+           // System.out.println("IN SVWPanel: " + scale + maxSeqLen);
             g.clearRect(0, 0, getWidth(), getHeight());
             // draw the patterns
             g.setFont(f);
@@ -110,7 +111,7 @@ public class SequenceViewWidgetPanel extends JPanel {
                         int seqId = pat.getId(locusId);
                         if (seqId > lastSeqId) {
                             rowId++;
-                            drawSequence(g, rowId, seqId, maxLn);
+                            drawSequence(g, rowId, seqId, maxSeqLen);
                             lastSeqId = seqId;
                         }
                         drawPattern(g, rowId, locusId, pat, r,
@@ -127,7 +128,7 @@ public class SequenceViewWidgetPanel extends JPanel {
                         int seqId = tl.seqId;
                         rowId++;
                         if (seqId > lastSeqId) {
-                            drawSequence(g, rowId, seqId, maxLn);
+                            drawSequence(g, rowId, seqId, maxSeqLen);
                             lastSeqId = seqId;
                         }
                         CSMatchedSeqPattern p0 = (CSMatchedSeqPattern) fp.
@@ -145,7 +146,7 @@ public class SequenceViewWidgetPanel extends JPanel {
             } else {
                 for (int seqId = 0; seqId < seqNo; seqId++) {
                     rowId++;
-                    drawSequence(g, seqId, seqId, maxLn);
+                    drawSequence(g, seqId, seqId, maxSeqLen);
                 }
                 if (selectedPatterns != null) {
                     for (int row = 0; row < selectedPatterns.size(); row++) {
@@ -215,6 +216,10 @@ public class SequenceViewWidgetPanel extends JPanel {
         showAll = all;
     }
 
+    public void setMaxSeqLen(int maxSeqLen) {
+        this.maxSeqLen = maxSeqLen;
+    }
+
     void drawSequence(Graphics g, int rowId, int seqId, double len) {
         String lab = ">seq " + seqId;
         if (sequenceDB.getSequenceNo() > 0) {
@@ -269,5 +274,9 @@ public class SequenceViewWidgetPanel extends JPanel {
             g.draw3DRect(xa, y - 2, xb - xa, 4, false);
         }
         return false;
+    }
+
+    public int getMaxSeqLen() {
+        return maxSeqLen;
     }
 }
