@@ -208,7 +208,6 @@
       <module fileurl="file://$PROJECT_DIR$/components/gsea/gsea.iml" filepath="$PROJECT_DIR$/components/gsea/gsea.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/hierarchicalclustering/hierarchicalclustering.iml" filepath="$PROJECT_DIR$/components/hierarchicalclustering/hierarchicalclustering.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/jmol/jmol.iml" filepath="$PROJECT_DIR$/components/jmol/jmol.iml" />
-      <module fileurl="file://$PROJECT_DIR$/components/jmol/jmol.iml" filepath="$PROJECT_DIR$/components/jmol/jmol.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/microarrays/microarrays.iml" filepath="$PROJECT_DIR$/components/microarrays/microarrays.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/normalization/normalization.iml" filepath="$PROJECT_DIR$/components/normalization/normalization.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/pathwaydecoder/pathwaydecoder.iml" filepath="$PROJECT_DIR$/components/pathwaydecoder/pathwaydecoder.iml" />
