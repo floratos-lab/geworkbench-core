@@ -1,4 +1,4 @@
-Thank you for your interest in geWorkbench.
+Thank you for your interest in geWorkbench!
 
 Instructions on using the geWorkbench SDK are available here:
 
