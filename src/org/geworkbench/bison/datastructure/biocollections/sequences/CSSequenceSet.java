@@ -289,7 +289,7 @@ public DSSequenceSet getActiveSequenceSet(DSPanel<? extends DSGeneMarker> marker
         int newIndex = 0;
         initIndexArray();
         for (int i = 0; i < included.length; i++) {
-            if (included[i]) {
+            if (i<this.size() && included[i]) {
                 newDB.addASequence(getSequence(i));
                 matchIndex[i] = newIndex;
                 reverseIndex[newIndex] = i;

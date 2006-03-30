@@ -84,7 +84,7 @@ public class SupportVectorMachine {
             }
             // 2 is standing in for 2*width^2 for now based on a value I saw specified in another RBF implementation, this
             // will have to be a parameter at some point
-            return Math.exp(-dot / 2);
+            return Math.exp(-dot);
         }
 
         public String toString() {
@@ -429,7 +429,7 @@ public class SupportVectorMachine {
         // Initialize error cache
         errorCache = new float[n];
         for (int i = 0; i < n; i++) {
-            computeError(i);
+            errorCache[i] = computeError(i);
         }
         int numChanged = 0;
         boolean examineAll = true;
@@ -463,6 +463,8 @@ public class SupportVectorMachine {
             }
             //            log.debug("  Step: " + steps + ", Changed: " + numChanged);
         }
+        // todo - b value not properly computed
+        // b = 0;
         log.debug("... done, total steps: " + steps + ".");
     }
 

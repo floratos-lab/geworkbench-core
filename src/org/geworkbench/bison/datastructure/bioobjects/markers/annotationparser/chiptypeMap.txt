@@ -1,5 +1,4 @@
 231307_at, HG-U133_Plus_2
-"Genepix" ,Genepix
 "Other" ,Other
 200594_x_at,HG_U133A
 1415670_at,Mouse430_2
