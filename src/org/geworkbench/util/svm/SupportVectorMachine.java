@@ -3,6 +3,9 @@ package org.geworkbench.util.svm;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.util.TrainingTask;
+import org.geworkbench.util.ClassifierException;
+import org.geworkbench.util.TrainingProgressListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +14,7 @@ import java.util.Random;
 /**
  * @author John Watkinson
  */
-public class SupportVectorMachine {
+public class SupportVectorMachine implements TrainingTask {
 
     private static final float DEFAULT_EPSILON = 0.001f;
 

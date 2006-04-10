@@ -10,7 +10,7 @@ import java.io.File;
 /**
  * Implementing classifiers are able to run classifications on objects.
  */
-public abstract class Classifier<T extends DSNamed> extends CSAncillaryDataSet {
+public abstract class Classifier extends CSAncillaryDataSet {
 
     String[] classifications;
 
@@ -22,10 +22,10 @@ public abstract class Classifier<T extends DSNamed> extends CSAncillaryDataSet {
     /**
      * Runs a classification on the given object.
      *
-     * @param object the object to classify.
+     * @param data the data to classify.
      * @return a classification of the given object from the list returned by {@link org.geworkbench.bison.algorithm.classification.Classifier#getClassifications()}
      */
-    public abstract String classify(T object);
+    public abstract String classify(float[] data);
 
     public String[] getClassifications() {
         return classifications;

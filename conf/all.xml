@@ -97,7 +97,7 @@
 	</plugin>
 	<!-- plugin id="hierarchicalClusteringAnalysis" name="Hierachical Clustering Analysis" class="org.geworkbench.components.clustering.HierClustAnalysis" source="clustering"/ -->
 	<plugin id="fastHierarchicalClusteringAnalysis" name="Fast Hierachical Clustering Analysis" class="org.geworkbench.components.clustering.FastHierClustAnalysis" source="clustering"/>
-	<plugin id="svmClassifier" name="SVM Classifier" class="org.geworkbench.components.analysis.classification.svm.SVMAnalysis" source="analysis"/>
+	<plugin id="svmClassifier" name="SVM Classifier" class="org.geworkbench.components.analysis.classification.svm.SVMTraining" source="analysis"/>
 	<!--plugin id="jniHierarchicalClusteringAnalysis" name="JNI Hierachical Clustering Analysis" class="org.geworkbench.components.clustering.JniHierClustAnalysis"/-->
 	<plugin id="somAnalysis" name="SOM Analysis" class="org.geworkbench.components.clustering.SOMAnalysis" source="clustering"/>
 	<plugin id="tTestAnalysis" name="t Test Analysis" class="org.geworkbench.components.analysis.clustering.TtestAnalysis" source="analysis"/>

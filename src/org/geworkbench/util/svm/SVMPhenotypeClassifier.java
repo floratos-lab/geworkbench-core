@@ -7,7 +7,7 @@ import org.geworkbench.bison.algorithm.classification.Classifier;
 import java.util.List;
 import java.util.ArrayList;
 
-public class SVMPhenotypeClassifier extends Classifier<DSMicroarray> {
+public class SVMPhenotypeClassifier extends Classifier {
 
     private float[] alpha;
     private int[] trainingClassifications;
@@ -25,8 +25,8 @@ public class SVMPhenotypeClassifier extends Classifier<DSMicroarray> {
         this.b = b;
     }
 
-    public String classify(DSMicroarray array) {
-        double v = discriminant(array.getRawMarkerData());
+    public String classify(float[] data) {
+        double v = discriminant(data);
         // Case == 1, Control == -1
         if (v < 0) {
             // Not in case 1

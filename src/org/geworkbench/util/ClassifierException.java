@@ -1,4 +1,4 @@
-package org.geworkbench.util.svm;
+package org.geworkbench.util;
 
 /**
  * Used by classifiers to indicate an exception.

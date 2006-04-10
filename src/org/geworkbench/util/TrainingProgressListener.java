@@ -1,4 +1,4 @@
-package org.geworkbench.util.svm;
+package org.geworkbench.util;
 
 /**
  * Implemented by objects that want to be notified of progress in a classifier's training, usually for display on the GUI
