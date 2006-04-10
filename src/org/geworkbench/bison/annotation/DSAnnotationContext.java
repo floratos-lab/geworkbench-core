@@ -358,12 +358,20 @@ public interface DSAnnotationContext<T extends DSNamed> extends DSAnnotationSour
     public String removeClassFromLabel(String label);
 
     /**
-     * Retrieves all items for the a class. Note that each item will only appear once
+     * Retrieves all items for the class. Note that each item will only appear once
      * in the resulting panel, even if it holds two or more labels, each of which is associated with the given class.
      * @param clazz the class for which to retrieve items.
      * @return a panel with the same name as the class, containing the items in the class.
      */
     public DSPanel<T> getItemsForClass(String clazz);
+
+    /**
+     * Retrieves all items for the class that are in activated panels. Note that each item will only appear once
+     * in the resulting panel, even if it holds two or more labels, each of which is associated with the given class.
+     * @param clazz the class for which to retrieve items.
+     * @return a panel with the same name as the class, containing the items in the class.
+     */
+    public DSPanel<T> getActivatedItemsForClass(String clazz);
 
     /**
      * Renames a label.

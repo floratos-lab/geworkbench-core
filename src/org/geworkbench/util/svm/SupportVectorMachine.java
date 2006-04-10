@@ -2,10 +2,7 @@ package org.geworkbench.util.svm;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.geworkbench.bison.algorithm.classification.Classifier;
-import org.geworkbench.bison.datastructure.properties.DSNamed;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,10 +26,12 @@ public class SupportVectorMachine {
     private double convergenceThreshold;
 
     private float[] alpha;
-    private float lambda;
+    private float gamma;
     private double b;
     private int n;
     private int nPos, nNeg;
+
+    private boolean useBias = true;
 
     private boolean cancelled = false;
 
@@ -92,6 +91,26 @@ public class SupportVectorMachine {
         }
     };
 
+    public static KernelFunction getRadialBasisKernel(final float gamma) {
+        return new KernelFunction() {
+            public double eval(float[] a, float[] b) {
+                int n = a.length;
+                double dot = 0;
+                for (int i = 0; i < n; i++) {
+                    float temp = a[i] - b[i];
+                    dot += temp * temp;
+                }
+                // 2 is standing in for 2*width^2 for now based on a value I saw specified in another RBF implementation, this
+                // will have to be a parameter at some point
+                return Math.exp(-gamma * dot);
+            }
+
+            public String toString() {
+                return "Radial Basis Function";
+            }
+        };
+    }
+
     private KernelFunctionCache cache;
 
     private class KernelFunctionCache {
@@ -109,14 +128,14 @@ public class SupportVectorMachine {
 
         public float getKernelEval(int i1, int i2) {
             if (Float.isNaN(cache[i1][i2])) {
-                cache[i1][i2] = (float)(kernel.eval(trainingSet.get(i1), trainingSet.get(i2)));
+                cache[i1][i2] = (float) (kernel.eval(trainingSet.get(i1), trainingSet.get(i2)));
             }
             return cache[i1][i2];
         }
     }
 
-    public SupportVectorMachine(List<float[]> caseList, List<float[]> controlList, KernelFunction kernel, float lambdaFactor) throws ClassifierException {
-        this.lambda = lambdaFactor;
+    public SupportVectorMachine(List<float[]> caseList, List<float[]> controlList, KernelFunction kernel, float gamma) throws ClassifierException {
+        this.gamma = gamma;
         int caseSize = caseList.size();
         if (caseSize == 0) {
             throw new ClassifierException("Must have at least one case.");
@@ -142,7 +161,12 @@ public class SupportVectorMachine {
                 nNeg++;
             }
         }
-        this.kernel = kernel;
+        if (kernel == RADIAL_BASIS_KERNEL) {
+            useBias = false;
+            this.kernel = getRadialBasisKernel(gamma);
+        } else {
+            this.kernel = kernel;
+        }
     }
 
     public void buildSupportVectors(int maxIterations, double convergenceThreshold) {
@@ -459,12 +483,13 @@ public class SupportVectorMachine {
                 examineAll = true;
             }
             if (trainingProgressListener != null) {
-                trainingProgressListener.stepUpdate("step "+steps, numChanged);
+                trainingProgressListener.stepUpdate("step " + steps, numChanged);
             }
             //            log.debug("  Step: " + steps + ", Changed: " + numChanged);
         }
-        // todo - b value not properly computed
-        // b = 0;
+        if (!useBias) {
+            b = 0;
+        }
         log.debug("... done, total steps: " + steps + ".");
     }
 

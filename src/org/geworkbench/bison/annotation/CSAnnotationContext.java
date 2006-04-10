@@ -677,6 +677,33 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
         return panel;
     }
 
+    public DSPanel<T> getActivatedItemsForClass(String clazz) {
+        ListOrderedSet<T> items = new ListOrderedSet<T>();
+        // Include all unclassified labels as well
+        int n = getNumberOfLabels();
+        for (int i = 0; i < n; i++) {
+            String label = getLabel(i);
+            if (clazz.equals(getClassForLabel(label)) && isLabelActive(label)) {
+                items.addAll(getItemsWithLabel(label));
+            }
+        }
+        DSPanel<T> panel = new CSPanel<T>(clazz);
+        for (Iterator<T> iterator = items.iterator(); iterator.hasNext();) {
+            panel.add(iterator.next());
+        }
+        // If this is the default class, then also include unlabeled items
+        if (clazz.equals(defaultClass)) {
+            DSItemList<T> allItems = itemListReference.get();
+            for (int i = 0; i < allItems.size(); i++) {
+                T item = allItems.get(i);
+                if (getLabelsForItem(item).length == 0) {
+                    panel.add(item);
+                }
+            }
+        }
+        return panel;
+    }
+
     public boolean equals(Object obj) {
         if (obj instanceof DSAnnotationContext) {
             DSAnnotationContext other = (DSAnnotationContext) obj;
