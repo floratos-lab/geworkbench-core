@@ -520,8 +520,8 @@ public class SupportVectorMachine implements TrainingTask {
         System.out.println("(" + a + ", " + b + "): " + (result ? "case" : "control"));
     }
 
-    public SVMPhenotypeClassifier getClassifier(DSDataSet parent, String label) {
-        return new SVMPhenotypeClassifier(parent, label, alpha, trainingClassifications, kernel, trainingSet, b);
+    public SVMClassifier getClassifier(DSDataSet parent, String label) {
+        return new SVMClassifier(parent, label, alpha, trainingClassifications, kernel, trainingSet, b);
     }
 
     public static void main(String[] args) {

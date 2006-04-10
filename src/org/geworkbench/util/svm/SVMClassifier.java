@@ -7,7 +7,7 @@ import org.geworkbench.bison.algorithm.classification.Classifier;
 import java.util.List;
 import java.util.ArrayList;
 
-public class SVMPhenotypeClassifier extends Classifier {
+public class SVMClassifier extends Classifier {
 
     private float[] alpha;
     private int[] trainingClassifications;
@@ -15,8 +15,8 @@ public class SVMPhenotypeClassifier extends Classifier {
     private List<float[]> trainingSet;
     private double b;
 
-    public SVMPhenotypeClassifier(DSDataSet parent, String label, float[] alpha,
-                                  int[] trainingClassifications, KernelFunction kernel, List<float[]> trainingSet, double b) {
+    public SVMClassifier(DSDataSet parent, String label, float[] alpha,
+                         int[] trainingClassifications, KernelFunction kernel, List<float[]> trainingSet, double b) {
         super(parent, label, new String[]{"case", "control"});
         this.alpha = alpha;
         this.trainingClassifications = trainingClassifications;
@@ -27,7 +27,7 @@ public class SVMPhenotypeClassifier extends Classifier {
 
     public String classify(float[] data) {
         double v = discriminant(data);
-        // Case == 1, Control == -1
+        // > 0: Case, < 0: Control
         if (v < 0) {
             // Not in case 1
             return getClassifications()[1];
