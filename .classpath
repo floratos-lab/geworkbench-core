@@ -173,5 +173,6 @@
 	<classpathentry kind="lib" path="components/jmol/lib/netscape.jar"/>
 	<classpathentry kind="lib" path="components/jmol/lib/saxon.jar"/>
 	<classpathentry kind="lib" path="components/jmol/lib/vecmath1.2-1.14.jar"/>
+	<classpathentry kind="lib" path="components/analysis/lib/smlr.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
