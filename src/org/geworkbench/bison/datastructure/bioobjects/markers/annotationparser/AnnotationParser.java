@@ -4,6 +4,8 @@ import com.Ostermiller.util.CSVParse;
 import com.Ostermiller.util.CSVParser;
 import com.Ostermiller.util.ExcelCSVParser;
 import com.Ostermiller.util.LabeledCSVParser;
+import org.apache.commons.collections15.map.ListOrderedMap;
+import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.engine.config.UILauncher;
 import org.geworkbench.util.ProgressBar;
@@ -12,10 +14,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Vector;
+import java.util.*;
+import java.util.List;
 
 /**
  * <p>Title: caWorkbench 3.0</p>
@@ -700,5 +700,137 @@ public class AnnotationParser {
         } else {
             return;
         }
+    }
+
+    // Custom annotations loaded by the user (not necessarily Affy)
+
+    private static class CustomAnnotations {
+
+        public CustomAnnotations() {
+            annotations = new ListOrderedMap<String, Map<String, String>>();
+        }
+
+        private ListOrderedMap<String, Map<String, String>> annotations;
+    }
+
+    private static HashMap<DSDataSet, CustomAnnotations> customAnnotations = new HashMap<DSDataSet, CustomAnnotations>();
+
+    private static ListOrderedMap<String, Map<String, String>> getCustomAnnots(DSDataSet dataSet) {
+        CustomAnnotations annots = customAnnotations.get(dataSet);
+        if (annots == null) {
+            annots = new CustomAnnotations();
+            customAnnotations.put(dataSet, annots);
+        }
+        return annots.annotations;
+    }
+
+    /**
+     * Takes a file in CSV format and parses out custom annotations. The first row has the annotation names
+     * starting in column 2. The first column has the dataset item names starting in row 2. For example, for a
+     * marker annotation file:
+     * <table>
+     * <tr><td>(blank)</td><td>Gene Name</td><td>Pathway</td></tr>
+     * <tr><td>1973_s_at</td><td>MYC</td><td>Example // KEGG</td></tr>
+     * <tr><td>1974_s_at</td><td>TP53</td><td>Example // KEGG</td></tr>
+     * </table>
+     * etc.
+     *
+     * @param file    the file in CSV format.
+     * @param dataSet the data set to annotate.
+     * @return true if sucessfully parsed, false otherwise.
+     */
+    public static boolean parseCustomAnnotations(File file, DSDataSet dataSet) {
+        try {
+            ListOrderedMap<String, Map<String, String>> customAnnots = getCustomAnnots(dataSet);
+            String[][] data = CSVParser.parse(new FileReader(file));
+            int columns = data[0].length - 1;
+            for (int i = 0; i < columns; i++) {
+                int c = i + 1;
+                String header = data[0][c];
+                Map<String, String> map = customAnnots.get(header);
+                if (map == null) {
+                    map = new HashMap<String, String>();
+                    customAnnots.put(header, map);
+                }
+                for (int j = 1; j < data.length; j++) {
+                    map.put(data[j][0], data[j][c]);
+                }
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Gets a set of the names of all custom annotations.
+     *
+     * @param dataSet the data set for which to find annotations.
+     */
+    public static Set<String> getCustomAnnotations(DSDataSet dataSet) {
+        ListOrderedMap<String, Map<String, String>> customAnnots = getCustomAnnots(dataSet);
+        return customAnnots.keySet();
+    }
+
+    /**
+     * Gets a custom annotation value.
+     *
+     * @param annotation the annotation name
+     * @param item       the item name for which to find a value
+     * @param dataSet    the data set for which to look up the annotation
+     */
+    public static String getCustomAnnotationValue(String annotation, String item, DSDataSet dataSet) {
+        ListOrderedMap<String, Map<String, String>> customAnnots = getCustomAnnots(dataSet);
+        Map<String, String> map = customAnnots.get(annotation);
+        if (map == null) {
+            return null;
+        } else {
+            return map.get(item);
+        }
+    }
+
+    /**
+     * Gets a grouping of the items in the dataset by annotation.
+     *
+     * @param annotation          the annotation by which to group.
+     * @param annotationSeparator the separator sequence to use if the annotation can have compound values ('///' for Affy annotations).
+     * @param dataSet             the data set for which to look up annotations.
+     * @return a map of all annotation values to the list of item names that have that value.
+     */
+    public static Map<String, List<String>> getCustomAnnotationGroupings(String annotation, String annotationSeparator, DSDataSet dataSet) {
+        ListOrderedMap<String, Map<String, String>> customAnnots = getCustomAnnots(dataSet);
+        Map<String, List<String>> groups = new HashMap<String, List<String>>();
+        Map<String, String> map = customAnnots.get(annotation);
+        if (map == null) {
+            return null;
+        } else {
+            Set<String> keys = map.keySet();
+            for (String key : keys) {
+                String values = map.get(key);
+                int index = values.indexOf(annotationSeparator);
+                if (index == -1) {
+                    String value = values.trim();
+                    List<String> group = groups.get(value);
+                    if (group == null) {
+                        group = new ArrayList<String>();
+                        groups.put(value, group);
+                    }
+                    group.add(key);
+                } else {
+                    StringTokenizer st = new StringTokenizer(values, annotationSeparator);
+                    while (st.hasMoreTokens()) {
+                        String value = st.nextToken().trim();
+                        List<String> group = groups.get(value);
+                        if (group == null) {
+                            group = new ArrayList<String>();
+                            groups.put(value, group);
+                        }
+                        group.add(key);
+                    }
+                }
+            }
+        }
+        return groups;
     }
 }

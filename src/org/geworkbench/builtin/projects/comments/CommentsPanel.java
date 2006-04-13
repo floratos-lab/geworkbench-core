@@ -1,16 +1,22 @@
 package org.geworkbench.builtin.projects.comments;
 
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.engine.config.VisualPlugin;
 import org.geworkbench.engine.management.AcceptTypes;
 import org.geworkbench.engine.management.Publish;
 import org.geworkbench.engine.management.Subscribe;
 import org.geworkbench.events.CommentsEvent;
+import org.geworkbench.events.ProjectEvent;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.io.File;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
@@ -78,6 +84,42 @@ import java.awt.*;
         });
         commentsPanel.add(jScrollPane1, BorderLayout.CENTER);
         jScrollPane1.getViewport().add(commentsTextArea, null);
+        JButton loadCustomButton = new JButton("Load Custom Data Annotations...");
+        JPanel loadPanel = new JPanel();
+        loadPanel.setLayout(new BoxLayout(loadPanel, BoxLayout.X_AXIS));
+        loadPanel.add(loadCustomButton);
+        commentsPanel.add(loadPanel, BorderLayout.SOUTH);
+        loadCustomButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                loadCustomAnnotations();
+            }
+        });
+    }
+
+    private void loadCustomAnnotations() {
+        JFileChooser fc = new JFileChooser(".");
+        javax.swing.filechooser.FileFilter filter = new FileFilter() {
+
+            public String getDescription() {
+                return "Comma Separated Values Files";
+            }
+
+            public boolean accept(File f) {
+                boolean returnVal = false;
+                if (f.isDirectory() || f.getName().toLowerCase().endsWith(".csv")) {
+                    return true;
+                }
+                return returnVal;
+            }
+
+        };
+        fc.setFileFilter(filter);
+        fc.setDialogTitle("Open Marker Set");
+        int choice = fc.showOpenDialog(commentsPanel.getParent());
+        if (choice == JFileChooser.APPROVE_OPTION) {
+            // Load custom annotations in annotation parser
+            AnnotationParser.parseCustomAnnotations(fc.getSelectedFile(), dataSet);
+        }
     }
 
     public Component getComponent() {
@@ -114,6 +156,10 @@ import java.awt.*;
         commentsTextArea.setText(event.getText());
         commentsTextArea.setCaretPosition(0);
         liveMode = true;
+    }
+
+    @Subscribe public void receive(ProjectEvent event, Object source) {
+        dataSet = event.getDataSet();
     }
 
     /**
