@@ -142,7 +142,12 @@ public class PluginDescriptor extends IdentifiableImpl implements Comparable {
     private void instantiate() {
         ComponentRegistry componentRegistry = ComponentRegistry.getRegistry();
         try {
+            ClassLoader defaultClassLoader = Thread.currentThread().getContextClassLoader();
+            if (resource != null) {
+                Thread.currentThread().setContextClassLoader(resource.getClassLoader());
+            }
             plugin = componentRegistry.createComponent(pluginClass, this);
+            Thread.currentThread().setContextClassLoader(defaultClassLoader);
         } catch (Exception e) {
             throw new RuntimeException("Failed to instantiate plugin:" + pluginClass, e);
         }
