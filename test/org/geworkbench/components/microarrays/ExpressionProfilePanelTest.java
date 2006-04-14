@@ -66,7 +66,7 @@ public class ExpressionProfilePanelTest extends BaseTestCase {
 		log.debug("Panel has " + expp.getGraphPanel().getComponentCount()
 				+ " components.");
 
-		assertEquals(expp.getGraphPanel().getComponentCount(), 0);
+		assertEquals(expp.getGraphPanel().getComponentCount(), 1);
 
 	}
 
