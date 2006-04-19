@@ -56,14 +56,6 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
         return file;
     }
 
-    public void put(Object key, Object value) {
-        properties.put(key, value);
-    }
-
-    public Object get(Object key) {
-        return properties.get(key);
-    }
-
     public String[] getDescriptions() {
         String[] descr = new String[descriptions.size()];
         for (int i = 0; i < descriptions.size(); i++) {

@@ -808,26 +808,15 @@ public class AnnotationParser {
             Set<String> keys = map.keySet();
             for (String key : keys) {
                 String values = map.get(key);
-                int index = values.indexOf(annotationSeparator);
-                if (index == -1) {
-                    String value = values.trim();
+                String[] tokens = values.split("///");
+                for (int i = 0; i < tokens.length; i++) {
+                    String value = tokens[i].trim();
                     List<String> group = groups.get(value);
                     if (group == null) {
                         group = new ArrayList<String>();
                         groups.put(value, group);
                     }
                     group.add(key);
-                } else {
-                    StringTokenizer st = new StringTokenizer(values, annotationSeparator);
-                    while (st.hasMoreTokens()) {
-                        String value = st.nextToken().trim();
-                        List<String> group = groups.get(value);
-                        if (group == null) {
-                            group = new ArrayList<String>();
-                            groups.put(value, group);
-                        }
-                        group.add(key);
-                    }
                 }
             }
         }
