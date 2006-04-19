@@ -800,6 +800,9 @@ public class AnnotationParser {
      */
     public static Map<String, List<String>> getCustomAnnotationGroupings(String annotation, String annotationSeparator, DSDataSet dataSet) {
         ListOrderedMap<String, Map<String, String>> customAnnots = getCustomAnnots(dataSet);
+        if (annotationSeparator == null) {
+            annotationSeparator = "///";
+        }
         Map<String, List<String>> groups = new HashMap<String, List<String>>();
         Map<String, String> map = customAnnots.get(annotation);
         if (map == null) {
@@ -808,7 +811,7 @@ public class AnnotationParser {
             Set<String> keys = map.keySet();
             for (String key : keys) {
                 String values = map.get(key);
-                String[] tokens = values.split("///");
+                String[] tokens = values.split(annotationSeparator);
                 for (int i = 0; i < tokens.length; i++) {
                     String value = tokens[i].trim();
                     List<String> group = groups.get(value);
