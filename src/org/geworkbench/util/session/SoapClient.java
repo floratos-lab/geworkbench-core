@@ -1,15 +1,13 @@
 package org.geworkbench.util.session;
 
+
 import java.io.File;
 import java.net.URL;
-import java.util.Date;
 import java.util.StringTokenizer;
-
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
-
 import org.apache.axis.client.Call;
 import org.apache.axis.client.Service;
 import org.apache.axis.encoding.ser.JAFDataHandlerDeserializerFactory;
@@ -19,6 +17,9 @@ import org.geworkbench.bison.datastructure.biocollections.sequences.
         CSSequenceSet;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 
+
+
+
 public class SoapClient {
 
     //default username;
@@ -26,14 +27,17 @@ public class SoapClient {
     private String serverURL;
     private String cmd;
     private CSSequenceSet sequenceDB;
-    private static long TIMEGAP = 50000;
+    private static long TIMEGAP = 4000;
     private final String DEFAULT_OUTPUTFILE = "testout.txt";
     private String outputfile;
     static final String STRINGURL =
             "http://adparacel.cu-genome.org/axis/servlet/AxisServlet";
     private String url = STRINGURL;
 
-    Options opts = null;
+
+
+    private String blastServerInfo;
+    private String inputFileName;
 
     /**
      * getFile
@@ -74,10 +78,7 @@ public class SoapClient {
 
     }
 
-    public SoapClient(Options opts) {
-        this();
-        this.opts = opts;
-    }
+
 
     /**
      * getServerInfo
@@ -101,7 +102,7 @@ public class SoapClient {
 
             call.setReturnType(org.apache.axis.Constants.XSD_STRING);
             Object result = call.invoke(new Object[] {checkstatus});
-             return result.toString();
+            return result.toString();
 
         } catch (Exception e) {
             System.out.println(e + "at getServerInof");
@@ -190,12 +191,8 @@ public class SoapClient {
 
         call.addParameter("source", qnameAttachment, ParameterMode.IN); //Add the file.
 
-        //call.setReturnType(qnameAttachment);
-        //call.setReturnType(qnamereturntype);
         call.setReturnType(org.apache.axis.Constants.XSD_STRING);
-        //  call.setUsername(opts.getUser());
 
-        // call.setPassword(opts.getPassword());
 
         if (doTheDIME) {
             call.setProperty(call.ATTACHMENT_ENCAPSULATION_FORMAT,
@@ -275,6 +272,7 @@ public class SoapClient {
         if (serverURL == null) {
             serverURL = STRINGURL;
         }
+
     }
 
 
@@ -347,6 +345,10 @@ public class SoapClient {
         return sequenceDB;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
     /**
      * getInputFileName
      *
@@ -356,7 +358,6 @@ public class SoapClient {
     public String getInputFileName() {
         return null;
     }
-
 
 
     /**
@@ -369,45 +370,14 @@ public class SoapClient {
         return getServerInfo("pb status");
     }
 
-    public void startRun(boolean enableHTML, CSSequenceSet sequences) {
-        //String uploadedFile = submitFile(sequences);
-        try {
-            String uploadedFile = submitSequenceDB(sequences);
-            if (enableHTML) {
-                if (!cmd.matches(" -T T")) {
-                    cmd += " -T T ";
-                }
-
-            } else {
-                if (cmd.matches(" -T T")) {
-                    cmd = cmd.replaceAll(" -T T", " -T F ");
-                    //System.out.println("replaced");
-                } else if (!cmd.matches(" -T F")) {
-                    cmd += "-T F";
-                }
-
-                outputfile += ".txt";
-            }
-
-            submitJob(cmd, uploadedFile, outputfile);
-
-        } catch (Exception e) {
-
-            //e.printStackTrace();
-
-        } while (!isJobFinished(getFileName(outputfile))) {
-            try {
-                Thread.sleep(TIMEGAP);
-            } catch (InterruptedException ie) {
-                ie.printStackTrace();
-            }
-
-        }
-
-        getFile(getFileName(outputfile));
-
-
+    public String getServerURL() {
+        return serverURL;
     }
+
+    public String getCmd() {
+        return cmd;
+    }
+
 
     public void startRun(boolean enableHTML) throws Exception {
         String uploadedFile = "";
@@ -419,18 +389,10 @@ public class SoapClient {
         try {
             if (enableHTML) {
                 if (!cmd.matches(" -T T")) {
+                    //make sure the result is in HTML format.
                     cmd += " -T T ";
                 }
 
-            } else {
-                if (cmd.matches(" -T T")) {
-                    cmd = cmd.replaceAll(" -T T", " -T F ");
-                    //System.out.println("replaced");
-                } else if (!cmd.matches(" -T F")) {
-                    cmd += "-T F";
-                }
-
-                outputfile += ".txt";
             }
 
             submitJob(cmd, uploadedFile, outputfile);
@@ -460,7 +422,7 @@ public class SoapClient {
      */
     public void startRun() throws Exception {
 
-        String uploadedFile = submitSequenceDB(sequenceDB);;
+        String uploadedFile = submitSequenceDB(sequenceDB); ;
         try {
 
             System.out.println(cmd + "  before submitJob " + uploadedFile +
@@ -483,25 +445,15 @@ public class SoapClient {
 
         getFile(getFileName(outputfile));
 
-        System.out.println("Your query is ended at " + new Date());
-
     }
 
-    /**
-     * getCMD
-     *
-     * @return String
-     */
-    public String getCMD() {
-        return cmd;
-    }
 
     /**
      * SoapClient different constructors
      *
      * @param cmd1 String
      */
-    public SoapClient(String program, String dbName ) {
+    public SoapClient(String program, String dbName) {
         this();
 
         cmd = "pb blastall -p " + program + "   -d   " + dbName;
@@ -574,5 +526,32 @@ public class SoapClient {
     public void setSequenceDB(CSSequenceSet sequenceDB) {
         this.sequenceDB = sequenceDB;
     }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setBlastServerInfo(String blastServerInfo) {
+        this.blastServerInfo = blastServerInfo;
+    }
+
+    public void setInputFileName(String inputFileName) {
+        this.inputFileName = inputFileName;
+    }
+
+    public void setOutputfile(String outputfile) {
+        this.outputfile = outputfile;
+    }
+
+    public void setServerURL(String serverURL) {
+        this.serverURL = serverURL;
+    }
+
+    public void setCmd(String cmd) {
+        if(cmd!=null){
+            this.cmd = cmd;
+        }
+    }
+
 
 }
