@@ -18,8 +18,6 @@ import org.geworkbench.bison.datastructure.biocollections.sequences.
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 
 
-
-
 public class SoapClient {
 
     //default username;
@@ -33,7 +31,6 @@ public class SoapClient {
     static final String STRINGURL =
             "http://adparacel.cu-genome.org/axis/servlet/AxisServlet";
     private String url = STRINGURL;
-
 
 
     private String blastServerInfo;
@@ -77,7 +74,6 @@ public class SoapClient {
         return null;
 
     }
-
 
 
     /**
@@ -140,8 +136,8 @@ public class SoapClient {
 
             return result.toString();
         } catch (Exception e) {
-            System.out.println(e);
-            e.printStackTrace();
+            System.out.println("Cannot connect with server: " + e);
+
         }
         return null;
 
@@ -192,7 +188,6 @@ public class SoapClient {
         call.addParameter("source", qnameAttachment, ParameterMode.IN); //Add the file.
 
         call.setReturnType(org.apache.axis.Constants.XSD_STRING);
-
 
         if (doTheDIME) {
             call.setProperty(call.ATTACHMENT_ENCAPSULATION_FORMAT,
@@ -379,7 +374,7 @@ public class SoapClient {
     }
 
 
-    public void startRun(boolean enableHTML) throws Exception {
+    public boolean startRun(boolean enableHTML) throws Exception {
         String uploadedFile = "";
         if (sequenceDB != null) {
             uploadedFile = submitSequenceDB(sequenceDB);
@@ -395,11 +390,15 @@ public class SoapClient {
 
             }
 
-            submitJob(cmd, uploadedFile, outputfile);
+            if(submitJob(cmd, uploadedFile, outputfile)==null){
+                //fail to submit job.
+                return false;
+            }
 
         } catch (Exception e) {
 
-        } while (!isJobFinished(getFileName(outputfile))) {
+        }
+        while (!isJobFinished(getFileName(outputfile))) {
             try {
                 Thread.sleep(TIMEGAP);
             } catch (InterruptedException ie) {
@@ -410,7 +409,7 @@ public class SoapClient {
         }
 
         getFile(getFileName(outputfile));
-
+        return true;
     }
 
     /**
@@ -548,7 +547,7 @@ public class SoapClient {
     }
 
     public void setCmd(String cmd) {
-        if(cmd!=null){
+        if (cmd != null) {
             this.cmd = cmd;
         }
     }
