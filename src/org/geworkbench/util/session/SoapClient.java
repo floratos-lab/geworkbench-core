@@ -40,9 +40,9 @@ public class SoapClient {
      * getFile
      *
      * @param filename String
-     * @return DataHandler
+     * @return boolean
      */
-    public DataHandler getFile(String filename) {
+    public boolean getFile(String filename) {
 
         try {
 
@@ -56,8 +56,8 @@ public class SoapClient {
 
             QName qnameAttachment = new QName("urn:downloadfileService",
                                               "DataHandler");
-            String s = "http://amdec-bioinfo.cu-genome.org/html/index.html";
-            call.registerTypeMapping((new DataHandler(new URL(s))).getClass(), //Add serializer for attachment.
+
+            call.registerTypeMapping((new DataHandler(new URL(STRINGURL))).getClass(), //Add serializer for attachment.
                                      qnameAttachment,
                                      JAFDataHandlerSerializerFactory.class,
                                      JAFDataHandlerDeserializerFactory.class);
@@ -69,9 +69,11 @@ public class SoapClient {
             ((DataHandler) result).writeTo(new java.io.FileOutputStream(
                     getLocalFileName(filename)));
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            System.out.println("ERROR in SoapClient.getFile()");
+            return false;
         }
-        return null;
+        return true;
 
     }
 
@@ -378,10 +380,9 @@ public class SoapClient {
         String uploadedFile = "";
         if (sequenceDB != null) {
             uploadedFile = submitSequenceDB(sequenceDB);
-//        } else if(inputfile!=null){
-//            uploadedFile = submitFile(inputfile);
-        }
+     }
         try {
+            //Below code should be moved into AlgorithmMatcher.
             if (enableHTML) {
                 if (!cmd.matches(" -T T")) {
                     //make sure the result is in HTML format.
@@ -408,8 +409,8 @@ public class SoapClient {
 
         }
 
-        getFile(getFileName(outputfile));
-        return true;
+        return getFile(getFileName(outputfile));
+
     }
 
     /**
