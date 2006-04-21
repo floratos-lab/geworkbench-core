@@ -37,7 +37,7 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
     RMAExpressFilter maFilter = null;
 
     public RMAExpressFileFormat() {
-        formatName = "RMA Express Output Format";
+        formatName = "Tab-Delimited Text File";
         maFilter = new RMAExpressFilter();
         Arrays.sort(maExtensions);
     }
@@ -74,7 +74,7 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
         maSet.setLabel(fileName);
         try {
             BufferedReader in = new BufferedReader(new FileReader(file));
-            if (in  != null) {
+            if (in != null) {
                 String header = in.readLine();
                 if (header == null) {
                     throw new Exception("File is empty.");
@@ -92,19 +92,26 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
                 String line = in.readLine();
                 int m = 0;
                 while (line != null) {
-                    StringTokenizer st = new StringTokenizer(line, "\t", false);
-                    int length = st.countTokens();
-                    if (length != (n+1)) {
-                        throw new Exception("Could not parse line #" + (m + 1) + ": '" + line + "'.");
+                    String[] tokens = line.split("\t");
+                    int length = tokens.length;
+                    if (length != (n + 1)) {
+                        System.out.println("Warning: Could not parse line #" + (m + 1) + ". Line should have " + (n+1) + " lines, has " + length + ".");
                     }
-                    String markerName = st.nextToken();
+                    String markerName = tokens[0];
                     CSExpressionMarker marker = new CSExpressionMarker(m);
                     marker.setLabel(markerName);
                     maSet.getMarkerVector().add(m, marker);
                     for (int i = 0; i < n; i++) {
-                        String valString = st.nextToken();
-                        float value = Float.parseFloat(valString);
-                        values[i].add(value);
+                        String valString = "";
+                        if ((i + 1) < tokens.length) {
+                            valString = tokens[i + 1];
+                        }
+                        if (valString.trim().length() == 0) {
+                            values[i].add(Float.NaN);
+                        } else {
+                            float value = Float.parseFloat(valString);
+                            values[i].add(value);
+                        }
                     }
                     m++;
                     line = in.readLine();
@@ -116,8 +123,13 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
                     CSMicroarray array = new CSMicroarray(i, m, arrayName, null, null, false, DSMicroarraySet.affyTxtType);
                     maSet.add(array);
                     for (int j = 0; j < m; j++) {
-                        CSExpressionMarkerValue markerValue = new CSExpressionMarkerValue(values[i].get(j));
-                        markerValue.setPresent();
+                        Float v = values[i].get(j);
+                        CSExpressionMarkerValue markerValue = new CSExpressionMarkerValue(v);
+                        if (v.isNaN()) {
+                            markerValue.setMissing(true);
+                        } else {
+                            markerValue.setPresent();
+                        }
                         array.setMarkerValue(j, markerValue);
                     }
                 }
@@ -169,7 +181,7 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
     class RMAExpressFilter extends FileFilter {
 
         public String getDescription() {
-            return "RMA Express Processed File";
+            return "Tab-Delimited Text (RMA Express)";
         }
 
         public boolean accept(File f) {

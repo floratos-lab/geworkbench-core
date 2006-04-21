@@ -747,13 +747,19 @@ public class AnnotationParser {
             for (int i = 0; i < columns; i++) {
                 int c = i + 1;
                 String header = data[0][c];
-                Map<String, String> map = customAnnots.get(header);
-                if (map == null) {
-                    map = new HashMap<String, String>();
+//                Map<String, String> map = customAnnots.get(header);
+//                if (map == null) {
+                // Always replace map for now
+                    Map<String,String> map = new HashMap<String, String>();
                     customAnnots.put(header, map);
-                }
+//                }
                 for (int j = 1; j < data.length; j++) {
-                    map.put(data[j][0], data[j][c]);
+                    String existing = map.get(data[j][0]);
+                    if (existing == null) {
+                        map.put(data[j][0], data[j][c]);
+                    } else {
+                        map.put(data[j][0], existing + " /// " + data[j][c]);
+                    }
                 }
             }
             return true;
