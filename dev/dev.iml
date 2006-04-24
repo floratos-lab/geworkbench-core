@@ -35,6 +35,7 @@
     <orderEntry type="module" module-name="gsea" />
     <orderEntry type="module" module-name="example" />
     <orderEntry type="module" module-name="jmol" />
+    <orderEntry type="module" module-name="tprofiler" />
     <orderEntryProperties />
   </component>
 </module>
