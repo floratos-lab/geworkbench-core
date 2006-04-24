@@ -37,9 +37,9 @@
 	<plugin id="goPanel" name="Gene Ontology" class="org.geworkbench.components.goterms.GOPanel" source="goterms">
 		<gui-area name="VisualArea"/>
 	</plugin>
-	<plugin id="gseaPanel" name="GSEA" class="org.geworkbench.components.GSEA.GSEA" source="gsea">
+	<!--<plugin id="gseaPanel" name="GSEA" class="org.geworkbench.components.GSEA.GSEA" source="gsea">
 		<gui-area name="VisualArea"/>
-	</plugin>
+	</plugin>-->
 	<plugin id="GenepixFlagsFilter" name="Genepix Flag Filter" class="org.geworkbench.components.filtering.GenepixFlagsFilter" source="filtering"/>
 	<!--
 	<plugin id="genePanel" name="Gene Panel" class="org.geworkbench.components.selectors.GenericMarkerSelectorPanel">
@@ -99,7 +99,8 @@
 	<plugin id="thresholdNormalizer" name="Threshold Normalizer" class="org.geworkbench.components.normalization.ThresholdNormalizer" source="normalization"/>
 	<plugin id="QuantileNormalizer" name="Quantile Normalizer" class="org.geworkbench.components.normalization.QuantileNormalizer" source="normalization"/>
 	<plugin id="TwoChannelFilter" name="Genepix Filter" class="org.geworkbench.components.filtering.GenepixExpressionThresholdFilter" source="filtering"/>
-	<plugin id="visualBuilder" name="visualBuilder" class="org.geworkbench.engine.config.VisualMenu"/>
+	<!--<plugin id="visualBuilder" name="visualBuilder" class="org.geworkbench.engine.config.VisualMenu"/>
+	-->
 	<plugin id="preferences" name="preferences" class="org.geworkbench.engine.config.PreferencesMenu"/>
 	<plugin id="sessionManager" name="Session Mgr" class="org.geworkbench.util.session.SessionAppComponent"/>
 	<plugin id="versioninfo" name="Version Infomation" class="org.geworkbench.components.versioninfo.VersionInfoComponent" source="versioninfo"/>
@@ -129,13 +130,13 @@
 	<plugin id="analysisPanel" name="Analysis" class="org.geworkbench.components.analysis.AnalysisPanel" source="analysis">
 		<gui-area name="CommandArea"/>
 	</plugin>
-	<plugin id="associationPanel" name="Associations" class="org.geworkbench.components.associationdiscovery.PatternDiscoveryPanel" source="associationdiscovery">
-		<gui-area name="CommandArea"/>
+	<!--<plugin id="associationPanel" name="Associations" class="org.geworkbench.components.associationdiscovery.PatternDiscoveryPanel" source="associationdiscovery">
+		<gui-area name="CommandArea"/> 
 		<use-module name="patternDiscoveryAlgorithm" id="patternDiscoveryAlgorithm"/>
-	</plugin>
-	<plugin id="cascriptPanel" name="caSCRIPT" class="org.geworkbench.components.cascript.CaSCRIPTEditor" source="cascript">
+	</plugin>-->
+	<!--<plugin id="cascriptPanel" name="caSCRIPT" class="org.geworkbench.components.cascript.CaSCRIPTEditor" source="cascript">
 		<gui-area name="CommandArea"/>
-	</plugin>
+	</plugin>-->
 	<plugin id="commentsPanel" name="Dataset Annotation" class="org.geworkbench.builtin.projects.comments.CommentsPanel">
 		<gui-area name="CommandArea"/>
 	</plugin>

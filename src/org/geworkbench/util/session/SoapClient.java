@@ -16,6 +16,7 @@ import org.apache.axis.utils.Options;
 import org.geworkbench.bison.datastructure.biocollections.sequences.
         CSSequenceSet;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
+import java.io.IOException;
 
 
 public class SoapClient {
@@ -25,7 +26,7 @@ public class SoapClient {
     private String serverURL;
     private String cmd;
     private CSSequenceSet sequenceDB;
-    private static long TIMEGAP = 4000;
+    public static long TIMEGAP = 4000;
     private final String DEFAULT_OUTPUTFILE = "testout.txt";
     private String outputfile;
     static final String STRINGURL =
@@ -57,7 +58,8 @@ public class SoapClient {
             QName qnameAttachment = new QName("urn:downloadfileService",
                                               "DataHandler");
 
-            call.registerTypeMapping((new DataHandler(new URL(STRINGURL))).getClass(), //Add serializer for attachment.
+            call.registerTypeMapping((new DataHandler(new URL(STRINGURL))).
+                                     getClass(), //Add serializer for attachment.
                                      qnameAttachment,
                                      JAFDataHandlerSerializerFactory.class,
                                      JAFDataHandlerDeserializerFactory.class);
@@ -69,7 +71,7 @@ public class SoapClient {
             ((DataHandler) result).writeTo(new java.io.FileOutputStream(
                     getLocalFileName(filename)));
         } catch (Exception e) {
-            //e.printStackTrace();
+
             System.out.println("ERROR in SoapClient.getFile()");
             return false;
         }
@@ -103,7 +105,7 @@ public class SoapClient {
             return result.toString();
 
         } catch (Exception e) {
-            System.out.println(e + "at getServerInof");
+            System.out.println(e + "at SoapClient.getServerInfo()");
         }
 
         return "";
@@ -137,6 +139,9 @@ public class SoapClient {
                                         destinationFile});
 
             return result.toString();
+        } catch (IOException ex) {
+
+
         } catch (Exception e) {
             System.out.println("Cannot connect with server: " + e);
 
@@ -380,7 +385,7 @@ public class SoapClient {
         String uploadedFile = "";
         if (sequenceDB != null) {
             uploadedFile = submitSequenceDB(sequenceDB);
-     }
+        }
         try {
             //Below code should be moved into AlgorithmMatcher.
             if (enableHTML) {
@@ -391,15 +396,14 @@ public class SoapClient {
 
             }
 
-            if(submitJob(cmd, uploadedFile, outputfile)==null){
+            if (submitJob(cmd, uploadedFile, outputfile) == null) {
                 //fail to submit job.
                 return false;
             }
 
         } catch (Exception e) {
 
-        }
-        while (!isJobFinished(getFileName(outputfile))) {
+        } while (!isJobFinished(getFileName(outputfile))) {
             try {
                 Thread.sleep(TIMEGAP);
             } catch (InterruptedException ie) {
