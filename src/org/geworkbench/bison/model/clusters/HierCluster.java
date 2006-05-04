@@ -11,7 +11,7 @@ package org.geworkbench.bison.model.clusters;
  * Defines a Generalization of a <code>Cluster</code> that would be obtained from a Hierarchical Clustering Analysis
  * 
  * @author First Genetic Trust
- * @version $Id: HierCluster.java,v 1.2 2006-03-03 18:00:58 mhall Exp $
+ * @version $Id: HierCluster.java,v 1.3 2006-05-04 18:27:32 floratos Exp $
  */
 public interface HierCluster extends Cluster, Comparable {
     /**
@@ -25,6 +25,8 @@ public interface HierCluster extends Cluster, Comparable {
      * Returns the Height of this node
      * 
      * @return height
+     * @todo - aris - The node height seems like something that should not be explicitly handled, 
+     *      rather it should be set by the Cluster.addnode() method.
      */
     public double getHeight();
 
@@ -44,10 +46,12 @@ public interface HierCluster extends Cluster, Comparable {
     public int getDepth();
 
     /**
-     * Returns the combinatorial depth of this node in the Hierachical cluster tree i.e. the number of nodes including
-     * this node to be traversed to get to a leaf node
+     * Sets the combinatorial depth of this node in the Hierachical cluster tree
      * 
      * @param depth tree depth
+     *
+     * @todo - aris - The node depth seems like something that should not be explicitly handled, 
+     *      rather it should be set by the Cluster.addnode() method.
      */
     public void setDepth( int depth );
 
