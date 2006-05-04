@@ -88,7 +88,6 @@ public class DefaultHierCluster extends AbstractCluster implements HierCluster,
 	public void addNode(HierCluster hc, int index) {
 		if (hc != null && index >= 0) {
 			children.add(index, hc);
-			assert children.size() <= 2;
 			maxHeight = Math.max(maxHeight, hc.getMaxHeight());
 			((AbstractCluster) hc).parent = this;
 		}
