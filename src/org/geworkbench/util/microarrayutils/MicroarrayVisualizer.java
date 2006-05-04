@@ -75,6 +75,8 @@ public abstract class MicroarrayVisualizer {
     }
 
     private void jbInit() throws Exception {
+        dataSetView.useMarkerPanel(true);
+        dataSetView.useItemPanel(true);
         mainPanel.setLayout(borderLayout);
     }
 

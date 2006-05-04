@@ -49,10 +49,10 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 	 */
 	protected DSMicroarraySet<DSMicroarray> refMASet = null;
 	protected DSMicroarraySetView<DSGeneMarker, DSMicroarray> maSetView = null;
-	protected boolean onlyActivatedMarkers = false;
-	protected boolean onlyActivatedArrays = false;
-	protected JCheckBox chkAllMarkers = new JCheckBox("All Markers", true);
-	protected JCheckBox chkAllArrays = new JCheckBox("All Arrays", true);
+	protected boolean onlyActivatedMarkers = true;
+	protected boolean onlyActivatedArrays = true;
+	protected JCheckBox chkAllMarkers = new JCheckBox("All Markers", false);
+	protected JCheckBox chkAllArrays = new JCheckBox("All Arrays", false);
 	protected JButton plotButton = new JButton("Plot");
 	private final String markerLabelPrefix = "  Markers: ";
 	protected JLabel numMarkersSelectedLabel = new JLabel(markerLabelPrefix);

@@ -1444,6 +1444,17 @@ public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMa
          */
     }
 
+    private int emptyUniID = -1;
+
+    private int getUniID(DSGeneMarker marker) {
+        int id = marker.getUnigene().getUnigeneId();
+        if (id == -1) {
+            // Ensure a unique, but degenerate, unigene ID is returned if none is found
+            id = --emptyUniID;
+        }
+        return id;
+    }
+
     /**
      * cleanFirstNeighbors
      *

@@ -62,7 +62,7 @@ public class PathwayDecoderUtil <T extends DSGeneMarker,Q extends DSMicroarray> 
                     // as an AffyId or other gene label identifier
                     for (int i = 0; i < markerNo; i++) {
                         DSGeneMarker mi = maSet.getMarkers().get(i);
-                        if ((mi.getLabel().equalsIgnoreCase(markerLabel)) || (mi.getDescription().toLowerCase().equals(markerLabel))) {
+                        if ((mi.getLabel().equalsIgnoreCase(markerLabel)) || ((mi.getDescription() != null) && markerLabel.equals(mi.getDescription().toLowerCase()))) {
                             markers.add(mi);
                         }
                     }

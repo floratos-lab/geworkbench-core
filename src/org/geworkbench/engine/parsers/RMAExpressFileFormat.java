@@ -4,9 +4,11 @@ import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
+import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSExpressionMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.parsers.resources.Resource;
 import org.geworkbench.engine.parsers.microarray.DataSetFileFormat;
 
@@ -145,6 +147,24 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
                     AnnotationParser.matchChipType("Unknown", true);
                 } else {
                     maSet.setCompatibilityLabel(result);
+                }
+                for (DSGeneMarker marker : maSet.getMarkerVector()) {
+                    String token = marker.getLabel();
+                    String[] locusResult = AnnotationParser.getInfo(token, AnnotationParser.LOCUSLINK);
+                    String locus = " ";
+                    if ((locusResult != null) && (!locusResult[0].equals(""))) {
+                        locus = locusResult[0];
+                    }
+                    if (locus.compareTo(" ") != 0) {
+                        marker.setGeneId(Integer.parseInt(locus));
+                    }
+                    String[] geneNames = AnnotationParser.getInfo(token, AnnotationParser.ABREV);
+                    if (geneNames != null) {
+                        marker.setGeneName(geneNames[0]);
+                    }
+
+                    marker.getUnigene().set(token);
+
                 }
             }
         } catch (Exception e) {
