@@ -24,7 +24,7 @@ public interface Cluster extends Iterator, DSIdentifiable {
     public Cluster getParent();
 
     /**
-     * Adds <code>newCode</code> as a child of this node.
+     * Adds <code>newCluster</code> as a child of this node.
      */
     public void addNode(Cluster newCluster);
 
