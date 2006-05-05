@@ -155,7 +155,8 @@
 	<plugin id="splash" name="Pattern Discovery" class="org.geworkbench.components.discovery.SequenceDiscoveryViewAppComponent" source="discovery">
 		<gui-area name="CommandArea"/>
 	</plugin>
-	<plugin id="syntenyParameters" name="Synteny Parameters" class="org.geworkbench.components.alignment.panels.SyntenyParameters" source="alignment">
+	<plugin id="syntenyParameters" name="Synteny Parameters" class="org.geworkbench.components.alignment.synteny.SyntenyParameters" source="alignment">
+ 
 		<gui-area name="CommandArea"/>
 	</plugin>
 	<plugin id="normalizationPanel" name="Normalization" class="org.geworkbench.components.analysis.NormalizationPanel" source="analysis">
