@@ -1,14 +1,18 @@
 package org.geworkbench.util.patterns;
 
-import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
+import org.geworkbench.bison.datastructure.biocollections.sequences.
+        DSSequenceSet;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import org.geworkbench.bison.datastructure.complex.pattern.CSMatchedPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.DSMatchedPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.DSPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.DSPatternMatch;
-import org.geworkbench.bison.datastructure.complex.pattern.sequence.CSSeqPatternMatch;
-import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeqPattern;
-import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSSeqRegistration;
+import org.geworkbench.bison.datastructure.complex.pattern.sequence.
+        CSSeqPatternMatch;
+import org.geworkbench.bison.datastructure.complex.pattern.sequence.
+        DSMatchedSeqPattern;
+import org.geworkbench.bison.datastructure.complex.pattern.sequence.
+        DSSeqRegistration;
 import polgara.soapPD_wsdl.SOAPOffset;
 import polgara.soapPD_wsdl.holders.ArrayOfSOAPOffsetHolder;
 
@@ -30,11 +34,17 @@ import java.util.regex.Matcher;
  */
 
 
-public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence, DSSeqRegistration> implements DSMatchedSeqPattern, DSPattern<DSSequence, DSSeqRegistration> {
+public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence,
+        DSSeqRegistration> implements DSMatchedSeqPattern, DSPattern<DSSequence,
+        DSSeqRegistration> {
 
-    static java.util.regex.Pattern headerPattern = java.util.regex.Pattern.compile("\\[\\d+\\]\\s+(\\S+)\\s+\\[(\\d+)\\D*(\\d+)\\D*(\\d+)\\D*(\\d+\\.?\\d*E?\\d*)\\]");
-    static java.util.regex.Pattern locusPattern = java.util.regex.Pattern.compile("\\[(\\d+)\\D*(\\d+)\\]");
-    static java.util.regex.Pattern offsetPattern = java.util.regex.Pattern.compile("([a-zA-Z]|\\.|\\[[^\\]]+\\])");
+    static java.util.regex.Pattern headerPattern = java.util.regex.Pattern.
+            compile("\\[\\d+\\]\\s+(\\S+)\\s+\\[(\\d+)\\D*(\\d+)\\D*(\\d+)\\D*(\\d+\\.?\\d*E?\\d*)\\]");
+    static java.util.regex.Pattern locusPattern = java.util.regex.Pattern.
+                                                  compile(
+            "\\[(\\d+)\\D*(\\d+)\\]");
+    static java.util.regex.Pattern offsetPattern = java.util.regex.Pattern.
+            compile("([a-zA-Z]|\\.|\\[[^\\]]+\\])");
 
     public IntHolder idNo = new IntHolder();
     public IntHolder seqNo = new IntHolder();
@@ -180,8 +190,7 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence, DSSeqRegis
             } else {
                 i_1++;
             }
-        }
-        while (i_0 < base.length) {
+        } while (i_0 < base.length) {
             complement[j++] = base[i_0++];
         }
         int[] finalComplement = new int[j];
@@ -228,7 +237,8 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence, DSSeqRegis
     public void write(BufferedWriter writer) throws IOException {
         writer.write(ascii);
         writer.write("\t");
-        writer.write("[" + getSeqNo() + "," + getSupport() + "," + getLength() + "," + getPValue() + "]\t");
+        writer.write("[" + getSeqNo() + "," + getSupport() + "," + getLength() +
+                     "," + getPValue() + "]\t");
         for (int j = 0; j < getSupport(); j++) {
             int id = getId(j);
             int dx = getOffset(j);
@@ -249,10 +259,13 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence, DSSeqRegis
     }
 
     private int get32BitUnsignedInt(byte[] bytes, int offset) {
-        return org.geworkbench.util.BinaryEncodeDecode.decodeUnsignedInt32(bytes, offset);
+        return org.geworkbench.util.BinaryEncodeDecode.decodeUnsignedInt32(
+                bytes, offset);
     }
 
-    ArrayList<DSPatternMatch<DSSequence, DSSeqRegistration>> matches = new ArrayList<DSPatternMatch<DSSequence, DSSeqRegistration>>();
+    ArrayList<DSPatternMatch<DSSequence,
+            DSSeqRegistration>> matches = new ArrayList<DSPatternMatch<
+                                          DSSequence, DSSeqRegistration>>();
 
     public DSPatternMatch<DSSequence, DSSeqRegistration> get(int i) {
         if (matches.size() > i) {
@@ -280,10 +293,15 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence, DSSeqRegis
         return rand_hash;
     }
 
-    public List<DSPatternMatch<DSSequence, DSSeqRegistration>> match(DSSequence object, double p) {
-        List<DSPatternMatch<DSSequence, DSSeqRegistration>> matchResults = new ArrayList<DSPatternMatch<DSSequence, DSSeqRegistration>>();
+    public List<DSPatternMatch<DSSequence,
+            DSSeqRegistration>> match(DSSequence object, double p) {
+        List<DSPatternMatch<DSSequence,
+                DSSeqRegistration>>
+                matchResults = new ArrayList<DSPatternMatch<DSSequence,
+                               DSSeqRegistration>>();
         for (DSPatternMatch<DSSequence, DSSeqRegistration> match : matches) {
-            if (match.getObject().equals(object) && match.getRegistration().getPValue() > p) {
+            if (match.getObject().equals(object) &&
+                match.getRegistration().getPValue() > p) {
                 matchResults.add(match);
             }
         }
@@ -292,8 +310,12 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence, DSSeqRegis
 
     public DSSeqRegistration match(DSSequence object) {
         DSSeqRegistration result = new DSSeqRegistration();
-        DSMatchedPattern<DSSequence, DSSeqRegistration> matchResults = new CSMatchedPattern<DSSequence, DSSeqRegistration>(this);
-        for (DSPatternMatch<DSSequence, ? extends DSSeqRegistration> match : matches) {
+        DSMatchedPattern<DSSequence,
+                DSSeqRegistration>
+                matchResults = new CSMatchedPattern<DSSequence,
+                               DSSeqRegistration>(this);
+        for (DSPatternMatch<DSSequence,
+             ? extends DSSeqRegistration> match : matches) {
             if (match.getObject().equals(object)) {
                 match.getRegistration().setPValue(0.0);
                 return match.getRegistration();
@@ -312,12 +334,14 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence, DSSeqRegis
 
     public DSSequence getObject(int i) throws IndexOutOfBoundsException {
         if ((seqDB != null) && (i < getSupport())) {
+            System.out.println("IN CSMATHCEDSP" + i + " " + getId(i) + getSupport());
             return seqDB.getSequence(this.getId(i));
         }
         throw new IndexOutOfBoundsException();
     }
 
-    public DSSeqRegistration getRegistration(int i) throws IndexOutOfBoundsException {
+    public DSSeqRegistration getRegistration(int i) throws
+            IndexOutOfBoundsException {
         if (i < getSupport()) {
             DSSeqRegistration seqReg = new DSSeqRegistration();
             seqReg.x1 = getOffset(i);

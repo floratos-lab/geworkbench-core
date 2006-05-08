@@ -35,6 +35,9 @@ public class PatternOperations {
     }
 
 
+    static public void setPatternColor(Integer integer, Color c){
+        colorPatternMap.put(integer, c);
+    }
     static public Color getPatternColor(int i) {
         if (colors.isEmpty()) {
             colors.addAll(store);

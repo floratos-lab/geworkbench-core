@@ -223,7 +223,7 @@ public class SequencePatternDisplayPanel extends JPanel {
      * @param cols    int
      * @param display Display
      */
-    private void drawPattern(Graphics g, DSPatternMatch<DSSequence, DSSeqRegistration> sp, Rectangle r, double xscale, double yscale, int cols, Display dp) {
+  private void drawPattern(Graphics g, DSPatternMatch<DSSequence, DSSeqRegistration> sp, Rectangle r, double xscale, double yscale, int cols, Display dp) {
         int length = sp.getRegistration().length();
         int offset = sp.getRegistration().x1;
         int x = (int) ((6 + offset % cols) * xscale);
@@ -335,6 +335,7 @@ public class SequencePatternDisplayPanel extends JPanel {
     public int getSeqDx(int x) {
         double scale = Math.min(5.0, (double) (this.getWidth() - 20 - xOff) / (double) sequenceDB.getMaxLength());
         int seqDx = (int) ((double) (x - xOff) / scale);
+        System.out.println("IN SPDP" +  scale + seqDx + " " + x + " " + xOff);
         return seqDx;
     }
 
