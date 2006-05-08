@@ -1,10 +1,12 @@
 package org.geworkbench.util.promoter;
 
-import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
+import org.geworkbench.bison.datastructure.biocollections.sequences.
+        DSSequenceSet;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import org.geworkbench.bison.datastructure.complex.pattern.DSPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.DSPatternMatch;
-import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSSeqRegistration;
+import org.geworkbench.bison.datastructure.complex.pattern.sequence.
+        DSSeqRegistration;
 import org.geworkbench.util.promoter.pattern.Display;
 
 import javax.swing.*;
@@ -40,7 +42,12 @@ public class SequencePatternDisplayPanel extends JPanel {
     int selected = 0;
     DSSequenceSet sequenceDB = null;
     HashMap patternDisplay = new HashMap();
-    Hashtable<DSPattern<DSSequence, DSSeqRegistration>, List<DSPatternMatch<DSSequence, DSSeqRegistration>>> patternMatches = new Hashtable<DSPattern<DSSequence, DSSeqRegistration>, List<DSPatternMatch<DSSequence, DSSeqRegistration>>>();
+    Hashtable<DSPattern<DSSequence, DSSeqRegistration>,
+            List<DSPatternMatch<DSSequence,
+            DSSeqRegistration>>> patternMatches = new Hashtable<DSPattern<
+                                                  DSSequence, DSSeqRegistration>,
+                                                  List<DSPatternMatch<
+                                                  DSSequence, DSSeqRegistration>>>();
     JPanel jinfoPanel = null;
 
     public void setInfoPanel(JPanel jinfoPanel) {
@@ -85,14 +92,16 @@ public class SequencePatternDisplayPanel extends JPanel {
         sequenceDB = seqDB;
         repaint();
     }
-//Reset, added by xq.
-    public void initialize( ) {
 
-           patternMatches.clear();
-           patternDisplay.clear();
-           sequenceDB = null;
-           repaint();
+//Reset, added by xq.
+    public void initialize() {
+
+        patternMatches.clear();
+        patternDisplay.clear();
+        sequenceDB = null;
+        repaint();
     }
+
     public void flipIsText() {
 
         isText = !isText;
@@ -114,11 +123,12 @@ public class SequencePatternDisplayPanel extends JPanel {
             int maxLn = sequenceDB.getMaxLength();
             int seqNo = sequenceDB.getSequenceNo();
 
-            scale = Math.min(5.0, (double) (this.getWidth() - 20 - xOff) / (double) maxLn);
+            scale = Math.min(5.0,
+                             (double) (this.getWidth() - 20 - xOff) / (double) maxLn);
             g.clearRect(0, 0, getWidth(), getHeight());
             // draw the patterns
             g.setFont(f);
-            JViewport scroller = (JViewport) this.getParent();
+            JViewport scroller = (JViewport)this.getParent();
             Rectangle r = new Rectangle();
             r = scroller.getViewRect();
 
@@ -128,9 +138,12 @@ public class SequencePatternDisplayPanel extends JPanel {
             }
 
             for (DSPattern pattern : patternMatches.keySet()) {
-                List<DSPatternMatch<DSSequence, DSSeqRegistration>> matches = patternMatches.get(pattern);
+                List<DSPatternMatch<DSSequence,
+                        DSSeqRegistration>>
+                        matches = patternMatches.get(pattern);
                 if ((matches != null) && (matches.size() > 0)) {
-                    drawPattern(g, matches, r, (Display) patternDisplay.get(pattern));
+                    drawPattern(g, matches, r,
+                                (Display) patternDisplay.get(pattern));
                 }
 
             }
@@ -138,7 +151,7 @@ public class SequencePatternDisplayPanel extends JPanel {
             setPreferredSize(new Dimension(this.getWidth() - yOff, maxY));
             revalidate();
 
-        }else{
+        } else {
 
         }
 
@@ -151,7 +164,10 @@ public class SequencePatternDisplayPanel extends JPanel {
 
             if (theone != null) {
                 Font f = new Font("Courier New", Font.PLAIN, 11);
-                ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                ((Graphics2D) g).setRenderingHint(RenderingHints.
+                                                  KEY_ANTIALIASING,
+                                                  RenderingHints.
+                                                  VALUE_ANTIALIAS_ON);
                 FontMetrics fm = g.getFontMetrics(f);
                 String asc = theone.getSequence();
                 Rectangle2D r2d = fm.getStringBounds(asc, g);
@@ -161,7 +177,7 @@ public class SequencePatternDisplayPanel extends JPanel {
                 int cols = (int) (width / xscale) - 8;
                 int rowId = 0;
                 g.setFont(f);
-                JViewport scroller = (JViewport) this.getParent();
+                JViewport scroller = (JViewport)this.getParent();
                 Rectangle r = scroller.getViewRect();
                 String lab = theone.getLabel();
                 int y = yOff + (int) (rowId * yscale);
@@ -192,13 +208,18 @@ public class SequencePatternDisplayPanel extends JPanel {
                     g.drawString(onepiece, (int) (6 * xscale), y + 3);
                 }
                 for (DSPattern pattern : patternMatches.keySet()) {
-                    List<DSPatternMatch<DSSequence, DSSeqRegistration>> matches = patternMatches.get(pattern);
+                    List<DSPatternMatch<DSSequence,
+                            DSSeqRegistration>>
+                            matches = patternMatches.get(pattern);
                     if (matches != null) {
                         for (int i = 0; i < matches.size(); i++) {
-                            DSPatternMatch<DSSequence, DSSeqRegistration> match = matches.get(i);
+                            DSPatternMatch<DSSequence,
+                                    DSSeqRegistration> match = matches.get(i);
                             DSSequence sequence = match.getObject();
                             if (sequence.getSerial() == selected) {
-                                drawPattern(g, match, r, xscale, yscale, cols, (Display) patternDisplay.get(pattern));
+                                drawPattern(g, match, r, xscale, yscale, cols,
+                                            (Display) patternDisplay.get(
+                                        pattern));
                             }
                         }
                     }
@@ -223,7 +244,9 @@ public class SequencePatternDisplayPanel extends JPanel {
      * @param cols    int
      * @param display Display
      */
-  private void drawPattern(Graphics g, DSPatternMatch<DSSequence, DSSeqRegistration> sp, Rectangle r, double xscale, double yscale, int cols, Display dp) {
+    private void drawPattern(Graphics g, DSPatternMatch<DSSequence,
+                             DSSeqRegistration> sp, Rectangle r, double xscale,
+                             double yscale, int cols, Display dp) {
         int length = sp.getRegistration().length();
         int offset = sp.getRegistration().x1;
         int x = (int) ((6 + offset % cols) * xscale);
@@ -234,26 +257,26 @@ public class SequencePatternDisplayPanel extends JPanel {
         if (offset % cols + length <= cols) {
             switch (dp.getShape()) {
 
-                case 0:
-                    g.drawRect(x, y - height / 2, xb, height);
-                    break;
+            case 0:
+                g.drawRect(x, y - height / 2, xb, height);
+                break;
 
-                case 1:
-                    g.drawRoundRect(x, y - height / 2, xb, height, 2, 2);
-                    ;
-                    break;
-                case 2:
-                    g.draw3DRect(x, y - height / 2, xb, height, false);
-                    ;
-                    break;
+            case 1:
+                g.drawRoundRect(x, y - height / 2, xb, height, 2, 2);
+                ;
+                break;
+            case 2:
+                g.draw3DRect(x, y - height / 2, xb, height, false);
+                ;
+                break;
 
-                case 3:
-                    g.drawOval(x, y - height / 2, xb, height);
-                    ;
-                    break;
+            case 3:
+                g.drawOval(x, y - height / 2, xb, height);
+                ;
+                break;
 
-                default:
-                    g.draw3DRect(x, y - height / 2, xb, height, false);
+            default:
+                g.draw3DRect(x, y - height / 2, xb, height, false);
 
             }
         } else {
@@ -262,47 +285,74 @@ public class SequencePatternDisplayPanel extends JPanel {
             int k = (offset + length) / cols - offset / cols;
             switch (dp.getShape()) {
 
-                case 0:
+            case 0:
 
-                    g.drawRect(x, y - height / 2, endx - x, height);
-                    for (int i = 1; i < k; i++) {
-                        g.drawRect(startx, y - height / 2 + (int) (i * yscale), endx - startx, height);
-                    }
-                    g.drawRect(startx, yOff + (int) ((1 + ((offset + length) / cols)) * yscale) - height / 2, (int) (((offset + length) % cols) * xscale), height);
-                    break;
+                g.drawRect(x, y - height / 2, endx - x, height);
+                for (int i = 1; i < k; i++) {
+                    g.drawRect(startx, y - height / 2 + (int) (i * yscale),
+                               endx - startx, height);
+                }
+                g.drawRect(startx,
+                           yOff + (int) ((1 + ((offset + length) / cols)) * yscale) -
+                           height / 2,
+                           (int) (((offset + length) % cols) * xscale), height);
+                break;
 
-                case 1:
+            case 1:
 
-                    g.drawRoundRect(x, y - height / 2, endx - x, height, 2, height / 2);
-                    for (int i = 1; i < k; i++) {
-                        g.drawRoundRect(startx, y - height / 2 + (int) (i * yscale), endx - startx, height, 2, height / 2);
-                    }
-                    g.drawRoundRect(startx, yOff + (int) ((1 + ((offset + length) / cols)) * yscale) - height / 2, (int) (((offset + length) % cols) * xscale), height, 2, height / 2);
-                    break;
+                g.drawRoundRect(x, y - height / 2, endx - x, height, 2,
+                                height / 2);
+                for (int i = 1; i < k; i++) {
+                    g.drawRoundRect(startx, y - height / 2 + (int) (i * yscale),
+                                    endx - startx, height, 2, height / 2);
+                }
+                g.drawRoundRect(startx,
+                                yOff +
+                                (int) ((1 + ((offset + length) / cols)) * yscale) -
+                                height / 2,
+                                (int) (((offset + length) % cols) * xscale),
+                                height, 2, height / 2);
+                break;
 
-                case 2:
-                    g.draw3DRect(x, y - height / 2, endx - x, height, true);
-                    for (int i = 1; i < k; i++) {
-                        g.draw3DRect(startx, y - height / 2 + (int) (i * yscale), endx - startx, height, true);
-                    }
-                    g.draw3DRect(startx, yOff + (int) ((1 + ((offset + length) / cols)) * yscale) - height / 2, (int) (((offset + length) % cols) * xscale), height, true);
-                    break;
+            case 2:
+                g.draw3DRect(x, y - height / 2, endx - x, height, true);
+                for (int i = 1; i < k; i++) {
+                    g.draw3DRect(startx, y - height / 2 + (int) (i * yscale),
+                                 endx - startx, height, true);
+                }
+                g.draw3DRect(startx,
+                             yOff +
+                             (int) ((1 + ((offset + length) / cols)) * yscale) -
+                             height / 2,
+                             (int) (((offset + length) % cols) * xscale),
+                             height, true);
+                break;
 
-                case 3:
-                    g.drawOval(x, y - height / 2, endx - x, height);
-                    for (int i = 1; i < k; i++) {
-                        g.drawOval(startx, y - height / 2 + (int) (i * yscale), endx - startx, height);
-                    }
-                    g.drawOval(startx, yOff + (int) ((1 + ((offset + length) / cols)) * yscale) - height / 2, (int) (((offset + length) % cols) * xscale), height);
-                    break;
+            case 3:
+                g.drawOval(x, y - height / 2, endx - x, height);
+                for (int i = 1; i < k; i++) {
+                    g.drawOval(startx, y - height / 2 + (int) (i * yscale),
+                               endx - startx, height);
+                }
+                g.drawOval(startx,
+                           yOff + (int) ((1 + ((offset + length) / cols)) * yscale) -
+                           height / 2,
+                           (int) (((offset + length) % cols) * xscale), height);
+                break;
 
-                default:
-                    g.draw3DRect(x, y - height / 2, endx - x, height, true);
-                    for (int i = 1; i < k; i++) {
-                        g.draw3DRect(startx, y - height / 2 + (int) (i * yscale), endx - startx, height, true);
-                    }
-                    g.draw3DRect(startx, yOff + (int) ((1 + ((offset + length) / cols)) * yscale) - height / 2, (int) (((offset + length) % cols) * xscale), height, true);
-                    break;
+            default:
+                g.draw3DRect(x, y - height / 2, endx - x, height, true);
+                for (int i = 1; i < k; i++) {
+                    g.draw3DRect(startx, y - height / 2 + (int) (i * yscale),
+                                 endx - startx, height, true);
+                }
+                g.draw3DRect(startx,
+                             yOff +
+                             (int) ((1 + ((offset + length) / cols)) * yscale) -
+                             height / 2,
+                             (int) (((offset + length) % cols) * xscale),
+                             height, true);
+                break;
 
             }
         }
@@ -333,9 +383,11 @@ public class SequencePatternDisplayPanel extends JPanel {
     }
 
     public int getSeqDx(int x) {
-        double scale = Math.min(5.0, (double) (this.getWidth() - 20 - xOff) / (double) sequenceDB.getMaxLength());
+        double scale = Math.min(5.0,
+                                (double) (this.getWidth() - 20 - xOff) /
+                                (double) sequenceDB.getMaxLength());
         int seqDx = (int) ((double) (x - xOff) / scale);
-        System.out.println("IN SPDP" +  scale + seqDx + " " + x + " " + xOff);
+        System.out.println("IN SPDP" + scale + seqDx + " " + x + " " + xOff);
         return seqDx;
     }
 
@@ -405,18 +457,24 @@ public class SequencePatternDisplayPanel extends JPanel {
 
     }
 
-    private void mouseOverText(MouseEvent e) throws ArrayIndexOutOfBoundsException {
+    private void mouseOverText(MouseEvent e) throws
+            ArrayIndexOutOfBoundsException {
 
-        if (sequenceDB == null) return;
+        if (sequenceDB == null) {
+            return;
+        }
         int x1 = e.getX();
         int y1 = e.getY();
 
         Font f = new Font("Courier New", Font.PLAIN, 11);
         Graphics g = this.getGraphics();
-        ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                                          RenderingHints.VALUE_ANTIALIAS_ON);
         FontMetrics fm = g.getFontMetrics(f);
-        if (sequenceDB.getSequence(selected) == null || sequenceDB.getSequence(selected).getSequence() == null)
+        if (sequenceDB.getSequence(selected) == null ||
+            sequenceDB.getSequence(selected).getSequence() == null) {
             return;
+        }
         String asc = sequenceDB.getSequence(selected).getSequence();
 
         Rectangle2D r2d = fm.getStringBounds(asc, g);
@@ -425,19 +483,23 @@ public class SequencePatternDisplayPanel extends JPanel {
         int width = this.getWidth();
         int cols = (int) (width / xscale) - 8;
 
-        int dis = (int) ((int) ((y1 - yOff - 1) / yscale) * cols + x1 / xscale - 5);
+        int dis = (int) ((int) ((y1 - yOff - 1) / yscale) * cols + x1 / xscale -
+                         5);
         if (sequenceDB.getSequence(selected) != null) {
-            if (((y1 - yOff - 1) / yscale > 0) && (dis > 0) && (dis <= sequenceDB.getSequence(selected).length())) {
+            if (((y1 - yOff - 1) / yscale > 0) && (dis > 0) &&
+                (dis <= sequenceDB.getSequence(selected).length())) {
                 this.setToolTipText("" + dis);
             }
         }
 
         String display = "";
         for (DSPattern pattern : patternMatches.keySet()) {
-            List<DSPatternMatch<DSSequence, DSSeqRegistration>> matches = patternMatches.get(pattern);
+            List<DSPatternMatch<DSSequence,
+                    DSSeqRegistration>> matches = patternMatches.get(pattern);
             if ((matches != null) && (matches.size() > 0)) {
                 for (int i = 0; i < matches.size(); i++) {
-                    DSPatternMatch<DSSequence, DSSeqRegistration> match = matches.get(i);
+                    DSPatternMatch<DSSequence,
+                            DSSeqRegistration> match = matches.get(i);
                     DSSequence sequence = match.getObject();
                     if (selected == sequence.getSerial()) {
                         DSSeqRegistration reg = match.getRegistration();
@@ -451,11 +513,14 @@ public class SequencePatternDisplayPanel extends JPanel {
         }
     }
 
-    private void mouseOverGraph(MouseEvent e) throws ArrayIndexOutOfBoundsException {
+    private void mouseOverGraph(MouseEvent e) throws
+            ArrayIndexOutOfBoundsException {
         int y = e.getY();
         int seqid = getSeqId(y);
         int x = e.getX();
-        if (sequenceDB == null) return;
+        if (sequenceDB == null) {
+            return;
+        }
         int off = this.getSeqDx(x);
         if (sequenceDB.getSequence(seqid) != null) {
             if ((off <= sequenceDB.getSequence(seqid).length()) && (off > 0)) {
@@ -464,10 +529,12 @@ public class SequencePatternDisplayPanel extends JPanel {
         }
 
         for (DSPattern pattern : patternMatches.keySet()) {
-            List<DSPatternMatch<DSSequence, DSSeqRegistration>> matches = patternMatches.get(pattern);
+            List<DSPatternMatch<DSSequence,
+                    DSSeqRegistration>> matches = patternMatches.get(pattern);
             if (matches != null) {
                 for (int i = 0; i < matches.size(); i++) {
-                    DSPatternMatch<DSSequence, DSSeqRegistration> match = matches.get(i);
+                    DSPatternMatch<DSSequence,
+                            DSSeqRegistration> match = matches.get(i);
                     DSSequence sequence = match.getObject();
                     if (sequence.getSerial() == seqid) {
                         DSSeqRegistration reg = match.getRegistration();
@@ -495,7 +562,8 @@ public class SequencePatternDisplayPanel extends JPanel {
         if (jinfoPanel != null) {
             Graphics g = jinfoPanel.getGraphics();
             Font f = new Font("Courier New", Font.PLAIN, 11);
-            ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                                              RenderingHints.VALUE_ANTIALIAS_ON);
             g.clearRect(0, 0, jinfoPanel.getWidth(), jinfoPanel.getHeight());
             g.setFont(f);
             g.drawString(display, 10, 20);
@@ -503,8 +571,10 @@ public class SequencePatternDisplayPanel extends JPanel {
         }
     }
 
-    public void addAPattern(DSPattern<DSSequence, DSSeqRegistration> pt, Display dis, List<DSPatternMatch<DSSequence, DSSeqRegistration>> matches) {
-        if(pt!= null && dis !=null && matches!=null){
+    public void addAPattern(DSPattern<DSSequence, DSSeqRegistration> pt,
+                            Display dis, List<DSPatternMatch<DSSequence,
+                            DSSeqRegistration>> matches) {
+        if (pt != null && dis != null && matches != null) {
             patternDisplay.put(pt, dis);
             patternMatches.put(pt, matches);
             repaint();
@@ -518,7 +588,9 @@ public class SequencePatternDisplayPanel extends JPanel {
 
     }
 
-    public Hashtable<DSPattern<DSSequence, DSSeqRegistration>, List<DSPatternMatch<DSSequence, DSSeqRegistration>>> getPatternMatches() {
+    public Hashtable<DSPattern<DSSequence, DSSeqRegistration>,
+            List<DSPatternMatch<DSSequence,
+            DSSeqRegistration>>> getPatternMatches() {
         return patternMatches;
     }
 
@@ -534,10 +606,13 @@ public class SequencePatternDisplayPanel extends JPanel {
      * @param matches IGetPatternMatchCollection
      * @param r       Rectangle
      */
-    private boolean drawPattern(Graphics g, List<DSPatternMatch<DSSequence, DSSeqRegistration>> matches, Rectangle r, Display dp) {
+    private boolean drawPattern(Graphics g, List<DSPatternMatch<DSSequence,
+                                DSSeqRegistration>> matches, Rectangle r,
+                                Display dp) {
         if (matches != null) {
             for (int i = 0; i < matches.size(); i++) {
-                DSPatternMatch<DSSequence, DSSeqRegistration> match = matches.get(i);
+                DSPatternMatch<DSSequence,
+                        DSSeqRegistration> match = matches.get(i);
                 DSSequence sequence = match.getObject();
                 DSSeqRegistration reg = match.getRegistration();
                 int y = yOff + sequence.getSerial() * yStep;
@@ -556,27 +631,27 @@ public class SequencePatternDisplayPanel extends JPanel {
                     int height = (int) (dp.getHeight() * yStep);
                     switch (dp.getShape()) {
 
-                        case 0:
-                            g.drawRect(xa, y - height / 2, xb, height);
-                            g.fillRect(xa, y - height / 2, xb, height);
-                            break;
+                    case 0:
+                        g.drawRect(xa, y - height / 2, xb, height);
+                        g.fillRect(xa, y - height / 2, xb, height);
+                        break;
 
-                        case 1:
-                            g.drawRoundRect(xa, y - height / 2, xb, height, 2, 2);
-                            ;
-                            break;
-                        case 2:
-                            g.draw3DRect(xa, y - height / 2, xb, height, true);
-                            ;
-                            break;
+                    case 1:
+                        g.drawRoundRect(xa, y - height / 2, xb, height, 2, 2);
+                        ;
+                        break;
+                    case 2:
+                        g.draw3DRect(xa, y - height / 2, xb, height, true);
+                        ;
+                        break;
 
-                        case 3:
-                            g.drawOval(xa, y - height / 2, xb, height);
-                            ;
-                            break;
+                    case 3:
+                        g.drawOval(xa, y - height / 2, xb, height);
+                        ;
+                        break;
 
-                        default:
-                            g.draw3DRect(xa, y - height / 2, xb, height, false);
+                    default:
+                        g.draw3DRect(xa, y - height / 2, xb, height, false);
 
                     }
 

@@ -80,13 +80,14 @@ public class SequenceViewWidgetPanel extends JPanel {
                            boolean isLineView) {
         selectedPatterns = matches;
         sequenceDB = seqDB;
+        lineView = isLineView;
         repaint();
     }
 
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-         if (lineView) {
+        if (lineView) {
             if (!singleSequenceView) {
                 paintText(g);
             } else {
@@ -236,7 +237,8 @@ public class SequenceViewWidgetPanel extends JPanel {
                                     if (hitSeq != null &&
                                         ((DSSequence) tempSequence).equals(
                                                 hitSeq)) {
-                                        int patternLength = pattern.toString().length();
+                                        int patternLength = pattern.toString().
+                                                length();
                                         int p = pattern.getLength();
                                         drawPattern(g, sp, xscale,
                                                 yscale, eachSeqStartRowNum[i],
@@ -263,7 +265,6 @@ public class SequenceViewWidgetPanel extends JPanel {
 
     private void paintSingleSequence(Graphics g) {
         if (sequenceDB != null) {
-            System.out.println("psinglesequence" + selected);
             selected = Math.min(selected, sequenceDB.size() - 1);
             DSSequence theone = sequenceDB.getSequence(selected);
             int rowId = 0;
@@ -567,8 +568,11 @@ public class SequenceViewWidgetPanel extends JPanel {
                                         if (showAll) {
                                             int newIndex[] = sequenceDB.
                                                     getMatchIndex();
-//                                            System.out.println(newIndex + " is null? in svwp");
+//                                            System.out.println(newIndex +
+//                                                    " is null? in svwp" +
+//                                                    sequenceDB.size());
                                             if (newIndex != null &&
+                                                seqId < sequenceDB.size() &&
                                                 newIndex[seqId] != -1) {
 
                                                 if (drawPattern(g,
@@ -581,19 +585,22 @@ public class SequenceViewWidgetPanel extends JPanel {
                                                     break;
                                                 }
                                             } else {
-                                                System.out.println(
-                                                        "Something wrong here" +
-                                                        locusId);
+//                                                System.out.println(
+//                                                        "Something wrong here" +
+//                                                        locusId);
                                             }
 
                                         } else {
-                                            if (drawPattern(g, seqId, locusId,
-                                                    pat,
-                                                    r,
-                                                    PatternOperations.
-                                                    getPatternColor(
-                                                    row))) {
-                                                break;
+                                            if (seqId < sequenceDB.size()) {
+                                                if (drawPattern(g, seqId,
+                                                        locusId,
+                                                        pat,
+                                                        r,
+                                                        PatternOperations.
+                                                        getPatternColor(
+                                                        row))) {
+                                                    break;
+                                                }
                                             }
                                         }
                                     }
@@ -671,7 +678,7 @@ public class SequenceViewWidgetPanel extends JPanel {
                              double yscale, int yBase, int cols, Color color,
                              String highlight) {
 
-        int length = sp.getRegistration().length();//very strange, the length is incorrect.
+        int length = sp.getRegistration().length(); //very strange, the length is incorrect.
         length = highlight.length();
         int offset = sp.getRegistration().x1;
         int x = (int) ((6 + offset % cols) * xscale);
@@ -759,6 +766,7 @@ public class SequenceViewWidgetPanel extends JPanel {
                 selected = getSeqId(y);
 
             } else {
+
                 int y = e.getY();
                 selected = getSeqId(y);
             }
@@ -952,7 +960,7 @@ public class SequenceViewWidgetPanel extends JPanel {
             DSSequence sequence = sequenceDB.getSequence(selected);
             String asc = sequence.getSequence();
             displayInfo = "Length of " + sequence.getLabel() + ": " +
-                              sequence.length();
+                          sequence.length();
             Rectangle2D r2d = fm.getStringBounds(asc, g);
             double xscale = (r2d.getWidth() + 3) / (double) (asc.length());
             double yscale = 1.3 * r2d.getHeight();

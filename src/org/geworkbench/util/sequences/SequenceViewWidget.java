@@ -62,6 +62,7 @@ public class SequenceViewWidget extends JPanel {
     private int prevSeqId = 0;
     private int prevSeqDx = 0;
     private DSSequenceSet sequenceDB = new CSSequenceSet();
+    private DSSequenceSet orgSequenceDB = new CSSequenceSet();
     private DSSequenceSet displaySequenceDB = new CSSequenceSet();
     //Layouts
     private GridBagLayout gridBagLayout1 = new GridBagLayout();
@@ -89,8 +90,7 @@ public class SequenceViewWidget extends JPanel {
     private JTextField jSequenceSummaryTextField = new JTextField();
     private boolean isLineView = true; //true is for LineView.
     protected CSSequenceSet activeSequenceDB = null;
-    protected boolean allMarkers = true;
-    protected JCheckBox chkAllMarkers = new JCheckBox("All Markers");
+    protected boolean subsetMarkerOn = true;
     protected DSPanel<? extends DSGeneMarker> activatedMarkers = null;
 
     public SequenceViewWidget() {
@@ -193,10 +193,10 @@ public class SequenceViewWidget extends JPanel {
         } else {
             DSDataSet dataSet = e.getDataSet();
             if (dataSet instanceof DSSequenceSet) {
-                if (sequenceDB != dataSet) {
-                    this.sequenceDB = (DSSequenceSet) dataSet;
+                if (orgSequenceDB != dataSet) {
+                    this.orgSequenceDB = (DSSequenceSet) dataSet;
 
-                    activatedMarkers = null;
+                    // activatedMarkers = null;
                 }
             }
             //refreshMaSetView();
@@ -209,7 +209,7 @@ public class SequenceViewWidget extends JPanel {
      *
      * @param e GeneSelectorEvent
      */
-   public void sequenceDBUpdate(GeneSelectorEvent e ) {
+    public void sequenceDBUpdate(GeneSelectorEvent e) {
         if (e.getPanel() != null && e.getPanel().size() > 0) {
             activatedMarkers = e.getPanel().activeSubset();
         } else {
@@ -221,7 +221,8 @@ public class SequenceViewWidget extends JPanel {
 
     protected void refreshMaSetView() {
         getDataSetView();
-        fireModelChangedEvent(null);
+        repaint();
+        //fireModelChangedEvent(null);
     }
 
     protected void fireModelChangedEvent(MicroarraySetViewEvent event) {
@@ -235,35 +236,36 @@ public class SequenceViewWidget extends JPanel {
 //    }
 
     void chkActivateMarkers_actionPerformed(ActionEvent e) {
-        allMarkers = !((JCheckBox) e.getSource()).isSelected();
+        subsetMarkerOn = !((JCheckBox) e.getSource()).isSelected();
         refreshMaSetView();
     }
 
     public void getDataSetView() {
-        allMarkers = !chkAllMarkers.isSelected();
-        if (allMarkers) {
+        subsetMarkerOn = !jAllSequenceCheckBox.isSelected();
+        if (subsetMarkerOn) {
             if (activatedMarkers != null &&
                 activatedMarkers.size() > 0) {
 
-                if (allMarkers && (sequenceDB != null)) {
+                if (subsetMarkerOn && (orgSequenceDB != null)) {
                     // createActivatedSequenceSet();
                     activeSequenceDB = (CSSequenceSet) ((CSSequenceSet)
-                            sequenceDB).
+                            orgSequenceDB).
                                        getActiveSequenceSet(activatedMarkers);
 
                 }
 
-            } else if (sequenceDB != null) {
+            } else if (orgSequenceDB != null) {
 
-                activeSequenceDB = (CSSequenceSet) sequenceDB;
+                activeSequenceDB = (CSSequenceSet) orgSequenceDB;
             }
 
-        } else if (sequenceDB != null) {
-            activeSequenceDB = (CSSequenceSet)sequenceDB;
+        } else if (orgSequenceDB != null) {
+            activeSequenceDB = (CSSequenceSet) orgSequenceDB;
         }
-//        if(activeSequenceDB!=null){
-//            sequenceDB = activeSequenceDB;
-//        }
+        if (activeSequenceDB != null) {
+            sequenceDB = activeSequenceDB;
+            initPanel();
+        }
     }
 
 
@@ -278,7 +280,7 @@ public class SequenceViewWidget extends JPanel {
         // CSSequenceSet sdb = e.getSequenceDB();
 
         if (sequenceDB != null) {
-            seqViewWPanel.setMaxSeqLen(sequenceDB.getMaxLength());
+            seqViewWPanel.setMaxSeqLen(orgSequenceDB.getMaxLength());
 
             if (showAllBtn.isSelected()) {
                 DSSequenceSet db = sequenceDB.createSubSetSequenceDB(
@@ -482,10 +484,6 @@ public class SequenceViewWidget extends JPanel {
                         }
                     }
                 }
-
-//           jPanel1.setPreferredSize(new Dimension(jPanel1.getWidth(), jPanel1.getHeight()));
-//           revalidate();
-
                 prevSeqId = seqId;
                 prevSeqDx = seqDx;
             } else {
@@ -578,8 +576,10 @@ public class SequenceViewWidget extends JPanel {
 
 
     public void setSequenceDB(DSSequenceSet db) {
+        orgSequenceDB = db;
         sequenceDB = db;
         displaySequenceDB = db;
+        refreshMaSetView();
         //selectedPatterns = new ArrayList();
         if (sequenceDB != null) {
             seqViewWPanel.setMaxSeqLen(sequenceDB.getMaxLength());
@@ -652,14 +652,9 @@ public class SequenceViewWidget extends JPanel {
 
     public void jViewComboBox_actionPerformed(ActionEvent e) {
 
-        if (jViewComboBox.getSelectedItem().equals(LINEVIEW)) {
-
-            isLineView = true;
-        } else {
-            isLineView = false;
-        }
-        seqViewWPanel.setlineView(isLineView);
-        seqViewWPanel.initialize(selectedPatterns, sequenceDB, isLineView);
+        initPanel();
+//        seqViewWPanel.setlineView(isLineView);
+//        seqViewWPanel.initialize(selectedPatterns, sequenceDB, isLineView);
     }
 
     public void seqViewWPanel_mouseMoved(MouseEvent e) {
@@ -669,12 +664,14 @@ public class SequenceViewWidget extends JPanel {
 
     }
 
+    public boolean initPanel() {
+        isLineView = jViewComboBox.getSelectedItem().equals(LINEVIEW);
+        seqViewWPanel.initialize(selectedPatterns, sequenceDB, isLineView);
+        return true;
+    }
+
     public void jAllSequenceCheckBox_actionPerformed(ActionEvent e) {
-        if (jAllSequenceCheckBox.isSelected()) {
 
-        } else {
-
-        }
         refreshMaSetView();
         //repaint();
     }

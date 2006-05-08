@@ -334,7 +334,7 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence,
 
     public DSSequence getObject(int i) throws IndexOutOfBoundsException {
         if ((seqDB != null) && (i < getSupport())) {
-            System.out.println("IN CSMATHCEDSP" + i + " " + getId(i) + getSupport());
+//            System.out.println("IN CSMATHCEDSP" + i + " " + getId(i) + getSupport());
             return seqDB.getSequence(this.getId(i));
         }
         throw new IndexOutOfBoundsException();
