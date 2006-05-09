@@ -192,7 +192,7 @@ public class SequenceViewWidgetPanel extends JPanel {
                                 int newIndex[] = sequenceDB.
                                                  getMatchIndex();
                                 //                                            System.out.println(newIndex + " is null? in svwp");
-                                if (newIndex != null &&
+                                if (newIndex != null && seqId< sequenceDB.size()&&
                                     newIndex[seqId] != -1) {
                                     for (int i = 0; i < sequenceDB.size(); i++) {
                                         DSSequence tempSequence = (DSSequence)
