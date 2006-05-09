@@ -319,7 +319,7 @@ public class SequenceViewWidget extends JPanel {
 
                                     System.out.println(
                                             "Check at SVWidget: mismatch");
-                                    return included;
+                                   // return included;
 
                                 }
                             }

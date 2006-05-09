@@ -47,6 +47,7 @@ public class SequenceViewWidgetPanel extends JPanel {
     boolean showAll = false;
     private boolean lineView;
     private boolean singleSequenceView;
+    private final static Color SEQUENCEBACKGROUDCOLOR = Color.BLACK;
 
     public SequenceViewWidgetPanel() {
         try {
@@ -136,7 +137,7 @@ public class SequenceViewWidgetPanel extends JPanel {
                     }
 
                     String lab = theone.getLabel();
-                    g.setColor(Color.black);
+                    g.setColor(SEQUENCEBACKGROUDCOLOR);
                     //            if (lab.length() > 10) {
                     //                g.drawString(lab.substring(0, 10), 2, y + 3);
                     //            }
@@ -192,7 +193,7 @@ public class SequenceViewWidgetPanel extends JPanel {
                                 int newIndex[] = sequenceDB.
                                                  getMatchIndex();
                                 //                                            System.out.println(newIndex + " is null? in svwp");
-                                if (newIndex != null && seqId< sequenceDB.size()&&
+                                if (newIndex != null && seqId < sequenceDB.size() &&
                                     newIndex[seqId] != -1) {
                                     for (int i = 0; i < sequenceDB.size(); i++) {
                                         DSSequence tempSequence = (DSSequence)
@@ -288,7 +289,7 @@ public class SequenceViewWidgetPanel extends JPanel {
                 Rectangle r = scroller.getViewRect();
                 String lab = theone.getLabel();
                 y += (int) (rowId * yscale);
-                g.setColor(Color.black);
+                g.setColor(SEQUENCEBACKGROUDCOLOR);
                 //            if (lab.length() > 10) {
                 //                g.drawString(lab.substring(0, 10), 2, y + 3);
                 //            }
@@ -643,7 +644,7 @@ public class SequenceViewWidgetPanel extends JPanel {
         }
         int y = yOff + rowId * yStep;
         int x = xOff + (int) (len * scale);
-        g.setColor(Color.black);
+        g.setColor(SEQUENCEBACKGROUDCOLOR);
         if (lab.length() > 10) {
             g.drawString(lab.substring(0, 10), 4, y + 3);
         } else {
@@ -654,6 +655,7 @@ public class SequenceViewWidgetPanel extends JPanel {
 
     boolean drawPattern(Graphics g, int rowId, int locusId,
                         CSMatchedSeqPattern pat, Rectangle r, Color color) {
+
         int y = yOff + rowId * yStep;
         if (y > r.y) {
             if (y > r.y + r.height) {
@@ -684,30 +686,64 @@ public class SequenceViewWidgetPanel extends JPanel {
         int x = (int) ((6 + offset % cols) * xscale);
         double y = ((yBase + 2 + (offset / cols)) * yscale);
         int xb = (int) (length * xscale);
-        g.setColor(color);
-        int height = (int) (1.3 * yscale);
-        // g.clearRect();
-        g.drawString(highlight, x, (int) (y - 1 * yscale + yOff + 3));
-        if (offset % cols + length <= cols) {
 
+        int height = (int) (1.3 * yscale);
+
+        DSSequence hitSeq = sp.getObject();
+        String hitSeqStr = hitSeq.getSequence().substring(offset,
+                offset + length);
+        if (offset % cols + length <= cols) {
+            g.clearRect(x, (int) y - height / 2, xb, height);
+              g.setColor(SEQUENCEBACKGROUDCOLOR);
+            g.drawString(hitSeqStr,
+                         x, (int) (y - 1 * yscale + yOff + 3));
+            g.setColor(color);
+            g.drawString(highlight, x, (int) (y - 1 * yscale + yOff + 3));
             g.draw3DRect(x, (int) y - height / 2, xb, height, false);
 
         } else {
+
             int startx = (int) (6 * xscale);
             int endx = (int) ((cols + 6) * xscale);
             int k = (offset + length) / cols - offset / cols;
-
+            g.clearRect(x, (int) y - height / 2, endx - x, height);
+            g.setColor(SEQUENCEBACKGROUDCOLOR);
+            g.drawString(hitSeqStr.substring(0, cols - offset % cols), x,
+                         (int) (y - 1 * yscale + yOff + 3));
+            g.setColor(color);
+            g.drawString(highlight.substring(0, cols - offset % cols), x,
+                           (int) (y - 1 * yscale + yOff + 3));
             g.draw3DRect(x, (int) y - height / 2, endx - x, height, true);
             for (int i = 1; i < k; i++) {
+                g.clearRect(startx, (int) (y - height / 2 + (i * yscale)),
+                            endx - startx, height);
+                g.setColor(SEQUENCEBACKGROUDCOLOR);
+                           g.drawString(hitSeqStr.substring(cols - offset % cols + (k-1)*cols, cols - offset % cols + k*cols), startx,
+                                        (int) (y + (k - 1) * yscale + yOff + 3));
+                           g.setColor(color);
+                           g.drawString(highlight.substring(cols - offset % cols + (k-1)*cols, cols - offset % cols + k*cols), startx,
+                          (int) (y + (k - 1) * yscale + yOff + 3));
                 g.draw3DRect(startx, (int) (y - height / 2 + (i * yscale)),
                              endx - startx, height, true);
             }
+            g.clearRect(startx,
+                        (int) (y - height / 2 + (k * yscale)),
+                        (int) (((offset + length) % cols) * xscale),
+                        height
+                    );
+            g.setColor(SEQUENCEBACKGROUDCOLOR);
+            g.drawString(hitSeqStr.substring(cols - offset % cols + (k-1)*cols), startx,
+                         (int) (y + (k - 1) * yscale + yOff + 3));
+            g.setColor(color);
+            g.drawString(highlight.substring(cols - offset % cols), startx,
+                          (int) (y + (k - 1) * yscale + yOff + 3));
             g.draw3DRect(startx,
                          (int) (y - height / 2 + (k * yscale)),
                          (int) (((offset + length) % cols) * xscale),
                          height, true);
 
         }
+        //g.drawString(highlight, x, (int) (y - 1 * yscale + yOff + 3));
     }
 
 
@@ -827,7 +863,7 @@ public class SequenceViewWidgetPanel extends JPanel {
 //                  Rectangle r = scroller.getViewRect();
 //                  String lab = theone.getLabel();
 //                  int y = yOff + (int) (rowId * yscale);
-//                  g.setColor(Color.black);
+//                  g.setColor(SEQUENCEBACKGROUDCOLOR);
 //                  //            if (lab.length() > 10) {
 //                  //                g.drawString(lab.substring(0, 10), 2, y + 3);
 //                  //            }
