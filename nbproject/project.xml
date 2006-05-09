@@ -360,7 +360,7 @@
             </compilation-unit>
             <compilation-unit>
                 <package-root>components/analysis/src</package-root>
-                <classpath mode="compile">components/alignment/classes;components/analysis/lib/JSciCore.jar;classes;lib/forms-1.0.5.jar</classpath>
+                <classpath mode="compile">components/alignment/classes;components/analysis/lib/JSciCore.jar;classes;lib/forms-1.0.5.jar;components/analysis/lib/smlr.jar</classpath>
                 <source-level>1.5</source-level>
             </compilation-unit>
             <compilation-unit>
