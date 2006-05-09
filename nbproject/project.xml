@@ -425,7 +425,7 @@
             </compilation-unit>
             <compilation-unit>
                 <package-root>components/pathwaydecoder/src</package-root>
-                <classpath mode="compile">components/pathwaydecoder/classes;components/pathwaydecoder/lib/jgraphpad.jar;components/pathwaydecoder/lib/mutualinfo.jar;classes;lib/jgraph.jar;lib/jcommon-1.0.0-rc1.jar;lib/jfreechart-1.0.0-rc1.jar;lib/distributions.jar;lib/Simulation_libs/colt.jar;lib/Simulation_libs/mpiJava.jar;lib/axis.jar;lib/jaxrpc.jar;lib/jgraphpad.jar</classpath>
+                <classpath mode="compile">components/pathwaydecoder/classes;components/pathwaydecoder/lib/jgraphpad.jar;components/pathwaydecoder/lib/mutualinfo.jar;classes;lib/jgraph.jar;lib/jcommon-1.0.0-rc1.jar;lib/jfreechart-1.0.0-rc1.jar;lib/distributions.jar;lib/Simulation_libs/colt.jar;lib/Simulation_libs/mpiJava.jar;lib/axis.jar;lib/jaxrpc.jar;lib/jgraphpad.jar;lib/collections-generic-4.0.jar;lib/commons-beanutils.jar;lib/commons-collections.jar;lib/commons-digester.jar;lib/commons-discovery.jar;lib/commons-logging.jar;lib/commons-math-1.0.jar</classpath>
                 <source-level>1.5</source-level>
             </compilation-unit>
             <compilation-unit>
