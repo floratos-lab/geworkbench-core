@@ -150,8 +150,8 @@ public class RemoteResourceManager {
             return true;
 
         } catch (Exception e) {
-            //System.out.println(e + "RemoteResourceManager.init" + urlname);
-            //e.printStackTrace();
+             System.out.println(e + "RemoteResourceManager.init" + urlname);
+             e.printStackTrace();
         }
         return false;
 

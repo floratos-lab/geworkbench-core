@@ -387,7 +387,7 @@ public class SequencePatternDisplayPanel extends JPanel {
                                 (double) (this.getWidth() - 20 - xOff) /
                                 (double) sequenceDB.getMaxLength());
         int seqDx = (int) ((double) (x - xOff) / scale);
-        System.out.println("IN SPDP" + scale + seqDx + " " + x + " " + xOff);
+
         return seqDx;
     }
 

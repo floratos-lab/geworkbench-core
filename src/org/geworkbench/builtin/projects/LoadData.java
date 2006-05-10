@@ -69,9 +69,10 @@ public class LoadData extends JDialog {
 
     private JTabbedPane lowTabPane;
     private JPanel caArrayIndexServicePanel;
-    private final String DEFAULTINDEXURL =
-            "http://156.145.29.52/ogsa/services/edu/columbia/CaARRAYIndexService";
-    //private final String DEFAULTINDEXURL = "http://splashgrid.cu-genome.org/ogsa/services/edu/columbia/CaARRAYIndexService";
+//    private final String DEFAULTINDEXURL =
+//            "http://156.145.29.52/ogsa/services/edu/columbia/CaARRAYIndexService";
+//
+     private final String DEFAULTINDEXURL = "http://gridgate.genomecenter.columbia.edu:18080/ogsa/services/edu/columbia/CaARRAYIndexService";
 
     private String indexURL = DEFAULTINDEXURL;
     private JTextField indexField;

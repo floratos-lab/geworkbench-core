@@ -162,10 +162,13 @@ public class SequenceViewWidget extends JPanel {
         this.add(jPanel1, BorderLayout.SOUTH);
         this.add(seqScrollPane, BorderLayout.CENTER);
         this.add(jToolBar1, BorderLayout.NORTH);
-        jToolBar1.add(showAllBtn, null);
-        jToolBar1.add(jAllSequenceCheckBox);
         jToolBar1.add(jViewLabel);
         jToolBar1.add(jViewComboBox);
+        jToolBar1.add(showAllBtn);
+        jToolBar1.add(jAllSequenceCheckBox);
+
+
+        jToolBar1.addSeparator(  );
         jToolBar1.add(jSequenceSummaryTextField);
         jViewComboBox.addItem(LINEVIEW);
         jViewComboBox.addItem(FULLVIEW);
