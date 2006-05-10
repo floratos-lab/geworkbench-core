@@ -66,14 +66,9 @@ public class LoadData extends JDialog {
     private JPanel mergePanel;
     private RemoteResourceDialog remoteResourceDialog;
     private JPanel remoteControlPanel;
-
     private JTabbedPane lowTabPane;
     private JPanel caArrayIndexServicePanel;
-//    private final String DEFAULTINDEXURL =
-//            "http://156.145.29.52/ogsa/services/edu/columbia/CaARRAYIndexService";
-//
-     private final String DEFAULTINDEXURL = "http://gridgate.genomecenter.columbia.edu:18080/ogsa/services/edu/columbia/CaARRAYIndexService";
-
+    private final String DEFAULTINDEXURL = "http://gridgate.genomecenter.columbia.edu:18080/ogsa/services/edu/columbia/CaARRAYIndexService";
     private String indexURL = DEFAULTINDEXURL;
     private JTextField indexField;
     private JButton updateIndexButton;
@@ -109,6 +104,14 @@ public class LoadData extends JDialog {
 
     public LoadData(ProjectPanel parent) {
         parentProjectPanel = parent;
+        indexURL = System.getProperties().getProperty(
+            "globus.url") + System.getProperties().getProperty(
+                "caarray.indexservice");
+
+        if (indexURL == null) {
+            indexURL = DEFAULTINDEXURL;
+        }
+
         try {
             jbInit();
         } catch (Exception e) {
