@@ -6,7 +6,9 @@
  */
 package org.geworkbench.builtin.projects;
 
+import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
@@ -20,10 +22,11 @@ import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.skin.Workbench;
 
 /**
- * Test cases for ProjectPanel.  Tests the functionality of saving and loading workspaces.
+ * Test cases for ProjectPanel. Tests the functionality of saving and loading
+ * workspaces.
  * 
  * @author keshav
- *
+ * 
  */
 public class ProjectPanelTest extends BaseTestCase {
 	private Log log = LogFactory.getLog(this.getClass());
@@ -124,7 +127,8 @@ public class ProjectPanelTest extends BaseTestCase {
 		/* create the child node DataSetNode */
 		File file = new File("data/web100.exp");
 
-		ProjectTreeNode dataSetNode = new DataSetNode(file);
+		// ProjectTreeNode dataSetNode = new DataSetNode(file);
+		ProjectTreeNode dataSetNode = new DataSetNode(file.getName());
 
 		/* add child nodes */
 		projectNode.add(dataSetNode);
@@ -136,10 +140,10 @@ public class ProjectPanelTest extends BaseTestCase {
 				.serialize("test/org/geworkbench/builtin/projects/target/test3.wsp");
 
 	}
-	
+
 	/**
 	 * 
-	 *
+	 * 
 	 */
 	public void testSerializeWithoutProjectTreeNode() {
 		log.debug("4. WITHOUT PROJECTTREENODE");
@@ -205,35 +209,39 @@ public class ProjectPanelTest extends BaseTestCase {
 	 * 
 	 * 
 	 */
-	// public void testXmlEncode(){//TODO added method to ProjectPanl locally,
-	// but have not committed this yet so I will not include this in the test
-	// suite.
-	// /* project selection */
-	// GeawConfigObject.setGuiWindow(new Workbench());
-	// ProjectSelection projectSelection = new ProjectSelection(projectPanel);
-	//
-	// /* set the root (parent node) to the new project */
-	// ProjectNode projectNode = new ProjectNode("A New Test Project");
-	//
-	// /* create the child node DataSetNode */
-	// File file = new File("data/web100.exp");
-	// DSDataSet dataSet = new CSDataSet();
-	// dataSet.setFile(file);
-	// ProjectTreeNode dataSetNode = new DataSetNode(dataSet);
-	//
-	// /* add child nodes */
-	// projectNode.add(dataSetNode);
-	// /* add parent to project */
-	// projectPanel.addToProject(projectNode, true);
-	//
-	// try {
-	// projectPanel.xmlEncode("test/org/geworkbench/builtin/projects/target/test1.xml.wsp");
-	// } catch (FileNotFoundException e) {
-	// e.printStackTrace();
-	// }
-	//		
-	// projectPanel.openXMLWorkspace_actionPerformed(new ActionEvent(this, 0,
-	// "Test Action Event"));
-	//
-	// }
+	public void testXmlEncode() {// TODO added method to ProjectPanl locally,
+		// but have not committed this yet so I will not include this in the
+		// test
+		// suite.
+		/* project selection */
+		GeawConfigObject.setGuiWindow(new Workbench());
+		ProjectSelection projectSelection = new ProjectSelection(projectPanel);
+
+		/* set the root (parent node) to the new project */
+		ProjectNode projectNode = new ProjectNode("A New Test Project");
+
+		/* create the child node DataSetNode */
+		File file = new File("data/web100.exp");
+		DSDataSet dataSet = new CSDataSet();
+		dataSet.setFile(file);
+		ProjectTreeNode dataSetNode = new DataSetNode(dataSet);
+		// dataSetNode.setParent(projectNode);
+
+		/* add child nodes */
+		projectNode.add(dataSetNode);
+		/* add parent to project */
+		projectPanel.addToProject(projectNode, true);
+
+		try {
+			projectPanel
+					.xmlEncode("test/org/geworkbench/builtin/projects/target/test1.xml.wsp");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		 projectPanel.openXMLWorkspace_actionPerformed(new ActionEvent(this,
+		 0,
+		 "Test Action Event"));
+
+	}
 }
