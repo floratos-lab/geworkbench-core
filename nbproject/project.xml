@@ -360,7 +360,7 @@
             </compilation-unit>
             <compilation-unit>
                 <package-root>components/analysis/src</package-root>
-                <classpath mode="compile">components/alignment/classes;components/analysis/lib/JSciCore.jar;classes;lib/forms-1.0.5.jar;components/analysis/lib/smlr.jar</classpath>
+                <classpath mode="compile">components/alignment/classes;components/analysis/lib/JSciCore.jar;classes;lib/forms-1.0.5.jar;components/analysis/lib/smlr.jar;lib/collections-generic-4.0.jar;lib/commons-beanutils.jar;lib/commons-collections.jar;lib/commons-digester.jar;lib/commons-discovery.jar;lib/commons-logging.jar;lib/commons-math-1.0.jar</classpath>
                 <source-level>1.5</source-level>
             </compilation-unit>
             <compilation-unit>
