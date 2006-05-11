@@ -8,7 +8,7 @@ import java.util.Properties;
  * @author Behrooz Badii
  * CasDataTypeImport is used to create a list of objects that are supported by CasDataPlug
  */
-class CasDataTypeImport extends HashMap {
+public class CasDataTypeImport extends HashMap {
     public CasDataTypeImport() {
         initialize();
     }
