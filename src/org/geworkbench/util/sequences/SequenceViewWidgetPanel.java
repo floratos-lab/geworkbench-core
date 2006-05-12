@@ -3,6 +3,8 @@ package org.geworkbench.util.sequences;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
+import java.util.HashMap;
+import java.util.TreeSet;
 
 import javax.swing.JPanel;
 import javax.swing.JViewport;
@@ -10,11 +12,10 @@ import javax.swing.JViewport;
 import org.geworkbench.bison.datastructure.biocollections.DSCollection;
 import org.geworkbench.bison.datastructure.biocollections.sequences.
         DSSequenceSet;
+import org.geworkbench.bison.datastructure.bioobjects.sequence.CSSequence;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import org.geworkbench.bison.datastructure.complex.pattern.DSMatchedPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.DSPatternMatch;
-import org.geworkbench.bison.datastructure.complex.pattern.sequence.
-        DSMatchedSeqPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.
         DSSeqRegistration;
 import org.geworkbench.util.patterns.*;
@@ -44,10 +45,19 @@ public class SequenceViewWidgetPanel extends JPanel {
     DSCollection<DSMatchedPattern<DSSequence,
             DSSeqRegistration>> selectedPatterns = null;
     DSSequenceSet sequenceDB = null;
+    HashMap<CSSequence,
+            PatternSequenceDisplayUtil> sequencePatternmatches;
     boolean showAll = false;
     private boolean lineView;
     private boolean singleSequenceView;
     private final static Color SEQUENCEBACKGROUDCOLOR = Color.BLACK;
+    private double yBasescale;
+    private int xBaseCols;
+    private int[] eachSeqStartRowNum;
+    private double xBasescale;
+    private int seqXclickPoint = 0;
+    private DSSequence selectedSequence;
+
 
     public SequenceViewWidgetPanel() {
         try {
@@ -59,6 +69,17 @@ public class SequenceViewWidgetPanel extends JPanel {
 
 
     void jbInit() throws Exception {
+
+    }
+
+    public void initialize(HashMap<CSSequence,
+                           PatternSequenceDisplayUtil> patternSeqMatches,
+                           DSSequenceSet seqDB,
+                           boolean isLineView) {
+        sequencePatternmatches = patternSeqMatches;
+        sequenceDB = seqDB;
+        lineView = isLineView;
+        repaint();
 
     }
 
@@ -113,7 +134,7 @@ public class SequenceViewWidgetPanel extends JPanel {
             double yscale = 0.1;
             int cols = 1;
             boolean setupScale = true;
-            int[] eachSeqStartRowNum = new int[sequenceDB.size()];
+            eachSeqStartRowNum = new int[sequenceDB.size()];
             int seqId = 0;
             Font f = new Font("Courier New", Font.PLAIN, 11);
             ((Graphics2D) g).setRenderingHint(RenderingHints.
@@ -129,10 +150,14 @@ public class SequenceViewWidgetPanel extends JPanel {
                     Rectangle2D r2d = fm.getStringBounds(asc, g);
                     int width = this.getWidth();
 
+                    //Set up scales.
                     if (setupScale) {
                         xscale = (r2d.getWidth() + 3) / (double) (asc.length());
                         yscale = 1.3 * r2d.getHeight();
+                        yBasescale = yscale;
                         cols = (int) (width / xscale) - 8;
+                        xBaseCols = cols;
+                        xBasescale = xscale;
                         setupScale = false;
                     }
 
@@ -148,7 +173,7 @@ public class SequenceViewWidgetPanel extends JPanel {
                     int begin = 0 - cols;
                     int end = 0;
                     eachSeqStartRowNum[seqId] = rowId;
-                    seqId++;
+
                     while (end < asc.length()) {
                         rowId++;
 
@@ -161,102 +186,39 @@ public class SequenceViewWidgetPanel extends JPanel {
                             onepiece = asc.substring(begin, end);
 
                         }
+                        g.setColor(SEQUENCEBACKGROUDCOLOR);
                         g.drawString(onepiece, (int) (6 * xscale), (int) y);
                         y += 1 * yscale;
                     }
                     rowId++;
-                }
-            } //end processing sequences.
-            //start draw patterns
 
-
-            if (selectedPatterns != null) {
-                for (int row = 0; row < selectedPatterns.size(); row++) {
-                    DSMatchedSeqPattern pattern = (DSMatchedSeqPattern)
-                                                  selectedPatterns.get(row);
-                    PatternOperations.setPatternColor(new Integer(pattern.
-                            hashCode()),
-                            PatternOperations.
-                            getPatternColor(row));
-
-                    if (pattern != null) {
-
-                        for (int locusId = 0;
-                                           locusId < pattern.getSupport();
-                                           locusId++) {
-                            seqId = ((CSMatchedSeqPattern) pattern).getId(
-                                    locusId);
-                            DSPatternMatch<DSSequence,
-                                    DSSeqRegistration> sp = pattern.get(locusId);
-
-                            if (showAll) {
-                                int newIndex[] = sequenceDB.
-                                                 getMatchIndex();
-                                //                                            System.out.println(newIndex + " is null? in svwp");
-                                if (newIndex != null && seqId < sequenceDB.size() &&
-                                    newIndex[seqId] != -1) {
-                                    for (int i = 0; i < sequenceDB.size(); i++) {
-                                        DSSequence tempSequence = (DSSequence)
-                                                sequenceDB.get(i);
-                                        DSSequence hitSeq = sp.getObject();
-                                        if (hitSeq != null &&
-                                            ((DSSequence) tempSequence).equals(
-                                                hitSeq)) {
-                                            int length = sp.getRegistration().
-                                                    length();
-                                            int offsetpoint = sp.
-                                                    getRegistration().x1;
-                                            int xPoint = (int) ((6 +
-                                                    offsetpoint % cols) *
-                                                    xscale);
-                                            int yPoint = (int) ((
-                                                    eachSeqStartRowNum[i] + 2) *
-                                                    yscale) + yOff + 2;
-                                            g.setColor(PatternOperations.
-                                                    getPatternColor(
-                                                    row));
-
-                                            drawPattern(g, sp, xscale,
-                                                    yscale,
-                                                    eachSeqStartRowNum[i], cols,
-                                                    PatternOperations.
-                                                    getPatternColor(
-                                                    row), pattern.getASCII());
-                                            break;
-
-                                        }
-                                    }
+                    if (sequencePatternmatches != null) {
+                        PatternSequenceDisplayUtil psd = sequencePatternmatches.
+                                get(
+                                        theone);
+                        TreeSet<PatternLocations>
+                                patternsPerSequence = psd.getTreeSet();
+                        if (patternsPerSequence != null &&
+                            patternsPerSequence.size() > 0) {
+                            for (PatternLocations pl : patternsPerSequence) {
+                                DSSeqRegistration reg = pl.getRegistration();
+                                if (reg != null) {
+                                    drawPattern(g, theone, reg.x1, xscale,
+                                                yscale,
+                                                eachSeqStartRowNum[seqId], cols,
+                                                PatternOperations.
+                                                getPatternColor(pl.getHashcode()),
+                                                pl.getAscii());
 
                                 }
-
-                            } else {
-
-                                for (int i = 0; i < sequenceDB.size(); i++) {
-                                    DSSequence tempSequence = (DSSequence)
-                                            sequenceDB.get(i);
-                                    DSSequence hitSeq = sp.getObject();
-                                    if (hitSeq != null &&
-                                        ((DSSequence) tempSequence).equals(
-                                                hitSeq)) {
-                                        int patternLength = pattern.toString().
-                                                length();
-                                        int p = pattern.getLength();
-                                        drawPattern(g, sp, xscale,
-                                                yscale, eachSeqStartRowNum[i],
-                                                cols, PatternOperations.
-                                                getPatternColor(
-                                                row), pattern.getASCII());
-                                        break;
-
-                                    }
-                                }
-
                             }
                         }
-
                     }
+                    seqId++; //
                 }
-            }
+
+            } //end processing sequences.
+
             int maxY = (int) y + yOff;
             setPreferredSize(new Dimension(this.getWidth() - yOff, maxY));
             revalidate();
@@ -283,24 +245,21 @@ public class SequenceViewWidgetPanel extends JPanel {
                 double yscale = 1.3 * r2d.getHeight();
                 int width = this.getWidth();
                 int cols = (int) (width / xscale) - 8;
-
                 g.setFont(f);
                 JViewport scroller = (JViewport)this.getParent();
                 Rectangle r = scroller.getViewRect();
                 String lab = theone.getLabel();
                 y += (int) (rowId * yscale);
                 g.setColor(SEQUENCEBACKGROUDCOLOR);
-                //            if (lab.length() > 10) {
-                //                g.drawString(lab.substring(0, 10), 2, y + 3);
-                //            }
-                //            else {
-                g.drawString(lab, 2, y + 3);
-                //            }
+                if (lab.length() > 10) {
+                    g.drawString(lab.substring(0, 10), 2, y + 3);
+                } else {
+                    g.drawString(lab, 2, y + 3);
+                }
 
                 int begin = 0 - cols;
                 int end = 0;
 
-                //rowId++; //uncom by xq
                 while (end < asc.length()) {
                     rowId++;
                     y = yOff + (int) (rowId * yscale);
@@ -316,81 +275,23 @@ public class SequenceViewWidgetPanel extends JPanel {
                     }
                     g.drawString(onepiece, (int) (6 * xscale), y + 3);
                 }
+                if (sequencePatternmatches != null) {
+                    PatternSequenceDisplayUtil psd = sequencePatternmatches.get(
+                            theone);
+                    TreeSet<PatternLocations>
+                            patternsPerSequence = psd.getTreeSet();
+                    if (patternsPerSequence != null &&
+                        patternsPerSequence.size() > 0) {
+                        for (PatternLocations pl : patternsPerSequence) {
+                            DSSeqRegistration reg = pl.getRegistration();
+                            if (reg != null) {
+                                drawPattern(g, theone, reg.x1, xscale,
+                                            yscale, 0, cols,
+                                            PatternOperations.
+                                            getPatternColor(pl.getHashcode()),
+                                            pl.getAscii());
 
-                if (selectedPatterns != null) {
-                    for (int row = 0; row < selectedPatterns.size(); row++) {
-                        DSMatchedSeqPattern pattern = (DSMatchedSeqPattern)
-                                selectedPatterns.get(row);
-                        PatternOperations.setPatternColor(new Integer(pattern.
-                                hashCode()),
-                                PatternOperations.
-                                getPatternColor(row));
-                        int seqId = 0;
-                        if (pattern != null) {
-
-                            for (int locusId = 0;
-                                               locusId < pattern.getSupport();
-                                               locusId++) {
-                                seqId = ((CSMatchedSeqPattern) pattern).getId(
-                                        locusId);
-                                DSPatternMatch<DSSequence,
-                                        DSSeqRegistration>
-                                        sp = pattern.get(locusId);
-
-                                if (showAll) {
-                                    int newIndex[] = sequenceDB.
-                                            getMatchIndex();
-                                    if (newIndex != null &&
-                                        newIndex[seqId] != -1) {
-                                        DSSequence hitSeq = sp.getObject();
-                                        if (hitSeq != null &&
-                                            theone.equals(
-                                                hitSeq)) {
-                                            Color c = PatternOperations.
-                                                    getPatternColor(
-                                                    row);
-
-                                            g.setColor(c);
-
-                                            drawPattern(g, sp, xscale,
-                                                    yscale,
-                                                    0,
-                                                    cols,
-                                                    c, pattern.getASCII());
-                                            break;
-
-                                        }
-
-                                    }
-
-                                } else {
-
-                                    for (int i = 0; i < sequenceDB.size(); i++) {
-
-                                        DSSequence hitSeq = sp.getObject();
-                                        if (hitSeq != null &&
-                                            theone.equals(
-                                                hitSeq)) {
-                                            Color c = PatternOperations.
-                                                    getPatternColor(
-                                                    row);
-
-                                            g.setColor(c);
-
-                                            drawPattern(g, sp, xscale,
-                                                    yscale,
-                                                    0,
-                                                    cols,
-                                                    c, pattern.getASCII());
-
-                                            break;
-
-                                        }
-                                    }
-
-                                }
                             }
-
                         }
                     }
                 }
@@ -403,6 +304,144 @@ public class SequenceViewWidgetPanel extends JPanel {
         }
     }
 
+//    private void paintSingleSequence(Graphics g) {
+//        if (sequenceDB != null) {
+//            selected = Math.min(selected, sequenceDB.size() - 1);
+//            DSSequence theone = sequenceDB.getSequence(selected);
+//            int rowId = 0;
+//            int y = yOff;
+//            if (theone != null) {
+//                Font f = new Font("Courier New", Font.PLAIN, 11);
+//                ((Graphics2D) g).setRenderingHint(RenderingHints.
+//                                                  KEY_ANTIALIASING,
+//                                                  RenderingHints.
+//                                                  VALUE_ANTIALIAS_ON);
+//                FontMetrics fm = g.getFontMetrics(f);
+//                String asc = theone.getSequence();
+//                Rectangle2D r2d = fm.getStringBounds(asc, g);
+//                double xscale = (r2d.getWidth() + 3) / (double) (asc.length());
+//                double yscale = 1.3 * r2d.getHeight();
+//                int width = this.getWidth();
+//                int cols = (int) (width / xscale) - 8;
+//
+//                g.setFont(f);
+//                JViewport scroller = (JViewport)this.getParent();
+//                Rectangle r = scroller.getViewRect();
+//                String lab = theone.getLabel();
+//                y += (int) (rowId * yscale);
+//                g.setColor(SEQUENCEBACKGROUDCOLOR);
+//                //            if (lab.length() > 10) {
+//                //                g.drawString(lab.substring(0, 10), 2, y + 3);
+//                //            }
+//                //            else {
+//                g.drawString(lab, 2, y + 3);
+//                //            }
+//
+//                int begin = 0 - cols;
+//                int end = 0;
+//
+//                //rowId++; //uncom by xq
+//                while (end < asc.length()) {
+//                    rowId++;
+//                    y = yOff + (int) (rowId * yscale);
+//
+//                    begin = end;
+//                    end += cols;
+//                    String onepiece = "";
+//                    if (end > asc.length()) {
+//                        onepiece = asc.substring(begin, asc.length());
+//                    } else {
+//                        onepiece = asc.substring(begin, end);
+//
+//                    }
+//                    g.drawString(onepiece, (int) (6 * xscale), y + 3);
+//                }
+//
+//                if (selectedPatterns != null) {
+//                    for (int row = 0; row < selectedPatterns.size(); row++) {
+//                        DSMatchedSeqPattern pattern = (DSMatchedSeqPattern)
+//                                selectedPatterns.get(row);
+//                        PatternOperations.setPatternColor(new Integer(pattern.
+//                                hashCode()),
+//                                PatternOperations.
+//                                getPatternColor(row));
+//                        int seqId = 0;
+//                        if (pattern != null) {
+//
+//                            for (int locusId = 0;
+//                                               locusId < pattern.getSupport();
+//                                               locusId++) {
+//                                seqId = ((CSMatchedSeqPattern) pattern).getId(
+//                                        locusId);
+//                                DSPatternMatch<DSSequence,
+//                                        DSSeqRegistration>
+//                                        sp = pattern.get(locusId);
+//
+//                                if (showAll) {
+//                                    int newIndex[] = sequenceDB.
+//                                            getMatchIndex();
+//                                    if (newIndex != null &&
+//                                        newIndex[seqId] != -1) {
+//                                        DSSequence hitSeq = sp.getObject();
+//                                        if (hitSeq != null &&
+//                                            theone.equals(
+//                                                hitSeq)) {
+//                                            Color c = PatternOperations.
+//                                                    getPatternColor(
+//                                                    row);
+//
+//                                            g.setColor(c);
+//
+//                                            drawPattern(g, sp, xscale,
+//                                                    yscale,
+//                                                    0,
+//                                                    cols,
+//                                                    c, pattern.getASCII());
+//                                            break;
+//
+//                                        }
+//
+//                                    }
+//
+//                                } else {
+//
+//                                    for (int i = 0; i < sequenceDB.size(); i++) {
+//
+//                                        DSSequence hitSeq = sp.getObject();
+//                                        if (hitSeq != null &&
+//                                            theone.equals(
+//                                                hitSeq)) {
+//                                            Color c = PatternOperations.
+//                                                    getPatternColor(
+//                                                    row);
+//
+//                                            g.setColor(c);
+//
+//                                            drawPattern(g, sp, xscale,
+//                                                    yscale,
+//                                                    0,
+//                                                    cols,
+//                                                    c, pattern.getASCII());
+//
+//                                            break;
+//
+//                                        }
+//                                    }
+//
+//                                }
+//                            }
+//
+//                        }
+//                    }
+//                }
+//
+//                int maxY = y + yOff;
+//                setPreferredSize(new Dimension(this.getWidth() - yOff, maxY));
+//                revalidate();
+//
+//            }
+//        }
+//    }
     private void paintGraphic(Graphics g) {
         Font f = new Font("Courier New", Font.PLAIN, 10);
         if (sequenceDB != null) {
@@ -460,32 +499,16 @@ public class SequenceViewWidgetPanel extends JPanel {
     }
 
 //For Line view.
-    public void paintText(Graphics g) {
+
+    private void paintText(Graphics g) {
         Font f = new Font("Courier New", Font.PLAIN, 10);
 
         if (sequenceDB != null) {
             int rowId = -1;
-            int[] rows = {};
 
             //int maxSeqLen = sequenceDB.getMaxLength();
             int seqNo = sequenceDB.getSequenceNo();
 
-            if (sequenceDB.getSequenceNo() == 0) {
-                if (selectedPatterns != null) {
-                    for (int row = 0; row < selectedPatterns.size(); row++) {
-                        DSMatchedSeqPattern pattern = (DSMatchedSeqPattern)
-                                selectedPatterns.get(row);
-                        if (pattern instanceof CSMatchedSeqPattern) {
-                            CSMatchedSeqPattern pat = (CSMatchedSeqPattern)
-                                    pattern;
-                            if ((pat != null) && (pat.getSupport() > 0)) {
-                                seqNo = Math.max(seqNo,
-                                                 pat.getId(pat.getSupport() - 1));
-                            }
-                        }
-                    }
-                }
-            }
             scale = Math.min(5.0,
                              (double) (this.getWidth() - 20 - xOff) /
                              (double) maxSeqLen);
@@ -496,126 +519,159 @@ public class SequenceViewWidgetPanel extends JPanel {
             JViewport scroller = (JViewport)this.getParent();
             Rectangle r = new Rectangle();
             r = scroller.getViewRect();
-            if ((rows.length == 1) && showAll && (selectedPatterns != null)) {
-//                int patId = rows[0];
-//                DSMatchedSeqPattern pattern = (DSMatchedSeqPattern)
-//                                              selectedPatterns.get(patId);
-//                if (pattern instanceof CSMatchedSeqPattern ||
-//                    pattern instanceof CSMatchedHMMSeqPattern) {
-//                    CSMatchedSeqPattern pat = (CSMatchedSeqPattern) pattern;
-//                    int lastSeqId = -1;
-//                    for (int locusId = 0; locusId < pat.getSupport(); locusId++) {
-//                        int seqId = pat.getId(locusId);
-//                        if (seqId > lastSeqId) {
-//                            rowId++;
-//                            drawSequence(g, rowId, seqId, maxSeqLen);
-//                            lastSeqId = seqId;
-//                        }
-//                        drawPattern(g, rowId, locusId, pat, r,
-//                                    PatternOperations.getPatternColor(pat.
-//                                hashCode()));
-//                    }
-//                } else if (pattern instanceof FlexiblePattern) {
-//                    FlexiblePattern fp = (FlexiblePattern) pattern;
-//                    int lastSeqId = -1;
-//                    Iterator it = fp.mLocus.iterator();
-//                    while (it.hasNext()) {
-//                        FlexiblePattern.TwoLocus tl = (FlexiblePattern.TwoLocus)
-//                                it.next();
-//                        int seqId = tl.seqId;
-//                        rowId++;
-//                        if (seqId > lastSeqId) {
-//                            drawSequence(g, rowId, seqId, maxSeqLen);
-//                            lastSeqId = seqId;
-//                        }
-//                        CSMatchedSeqPattern p0 = (CSMatchedSeqPattern) fp.
-//                                                 patterns.get(0);
-//                        CSMatchedSeqPattern p1 = (CSMatchedSeqPattern) fp.
-//                                                 patterns.get(1);
-//                        drawFlexiPattern(g, rowId, tl.dx0, p0, r,
-//                                         PatternOperations.getPatternColor(p0.
-//                                hashCode()));
-//                        drawFlexiPattern(g, rowId, tl.dx1, p1, r,
-//                                         PatternOperations.getPatternColor(p1.
-//                                hashCode()));
-//                    }
-//                }
-            } else {
+            if (true) {
                 for (int seqId = 0; seqId < seqNo; seqId++) {
                     rowId++;
                     drawSequence(g, seqId, seqId, maxSeqLen);
-                }
-                if (selectedPatterns != null) {
-                    for (int row = 0; row < selectedPatterns.size(); row++) {
-                        DSMatchedSeqPattern pattern = (DSMatchedSeqPattern)
-                                selectedPatterns.get(row);
-                        PatternOperations.setPatternColor(new Integer(pattern.
-                                hashCode()),
-                                PatternOperations.getPatternColor(row));
-
-                        if (pattern != null) {
-                            if (pattern.getClass().isAssignableFrom(
-                                    CSMatchedSeqPattern.class) ||
-                                pattern.getClass().isAssignableFrom(
-                                        CSMatchedHMMSeqPattern.class)) {
-                                CSMatchedSeqPattern pat = (CSMatchedSeqPattern)
-                                        pattern;
-                                if (pattern != null) {
-                                    for (int locusId = 0;
-                                            locusId < pattern.getSupport();
-                                            locusId++) {
-                                        int seqId = pat.getId(locusId);
-
-                                        if (showAll) {
-                                            int newIndex[] = sequenceDB.
-                                                    getMatchIndex();
-//                                            System.out.println(newIndex +
-//                                                    " is null? in svwp" +
-//                                                    sequenceDB.size());
-                                            if (newIndex != null &&
-                                                seqId < sequenceDB.size() &&
-                                                newIndex[seqId] != -1) {
-
-                                                if (drawPattern(g,
-                                                        newIndex[seqId],
-                                                        locusId, pat,
-                                                        r,
-                                                        PatternOperations.
-                                                        getPatternColor(
-                                                        row))) {
-                                                    break;
-                                                }
-                                            } else {
-//                                                System.out.println(
-//                                                        "Something wrong here" +
-//                                                        locusId);
-                                            }
-
-                                        } else {
-                                            if (seqId < sequenceDB.size()) {
-                                                if (drawPattern(g, seqId,
-                                                        locusId,
-                                                        pat,
-                                                        r,
-                                                        PatternOperations.
-                                                        getPatternColor(
-                                                        row))) {
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                    }
+                    CSSequence sequence = (CSSequence) sequenceDB.get(seqId);
+                    if (sequencePatternmatches != null) {
+                        PatternSequenceDisplayUtil psd = sequencePatternmatches.
+                                get(sequence);
+                        TreeSet<PatternLocations>
+                                patternsPerSequence = psd.getTreeSet();
+                        if (patternsPerSequence != null &&
+                            patternsPerSequence.size() > 0) {
+                            for (PatternLocations pl : patternsPerSequence) {
+                                DSSeqRegistration reg = pl.getRegistration();
+                                if (reg != null) {
+                                    drawPattern(g, seqId, reg.x1, reg.length(),
+                                                r,
+                                                PatternOperations.
+                                                getPatternColor(pl.getHashcode()));
                                 }
                             }
                         }
                     }
+
                 }
+
             }
             int maxY = (rowId + 1) * yStep + yOff;
             setPreferredSize(new Dimension(this.getWidth() - yOff, maxY));
             revalidate();
         }
     }
+
+
+//    private void paintText(Graphics g) {
+//        Font f = new Font("Courier New", Font.PLAIN, 10);
+//
+//        if (sequenceDB != null) {
+//            int rowId = -1;
+//            int[] rows = {};
+//
+//            //int maxSeqLen = sequenceDB.getMaxLength();
+//            int seqNo = sequenceDB.getSequenceNo();
+//
+//            if (sequenceDB.getSequenceNo() == 0) {
+//                //Don't make sense here. xq
+////                if (selectedPatterns != null) {
+////                    for (int row = 0; row < selectedPatterns.size(); row++) {
+////                        DSMatchedSeqPattern pattern = (DSMatchedSeqPattern)
+////                                selectedPatterns.get(row);
+////                        if (pattern instanceof CSMatchedSeqPattern) {
+////                            CSMatchedSeqPattern pat = (CSMatchedSeqPattern)
+////                                    pattern;
+////                            if ((pat != null) && (pat.getSupport() > 0)) {
+////                                seqNo = Math.max(seqNo,
+////                                                 pat.getId(pat.getSupport() - 1));
+////                            }
+////                        }
+////                    }
+////                }
+//            }
+//            scale = Math.min(5.0,
+//                             (double) (this.getWidth() - 20 - xOff) /
+//                             (double) maxSeqLen);
+//            // System.out.println("IN SVWPanel: " + scale + maxSeqLen);
+//            g.clearRect(0, 0, getWidth(), getHeight());
+//            // draw the patterns
+//            g.setFont(f);
+//            JViewport scroller = (JViewport)this.getParent();
+//            Rectangle r = new Rectangle();
+//            r = scroller.getViewRect();
+//            if ((rows.length == 1) && showAll && (selectedPatterns != null)) {
+//
+//            } else {
+//                for (int seqId = 0; seqId < seqNo; seqId++) {
+//                    rowId++;
+//                    drawSequence(g, seqId, seqId, maxSeqLen);
+//                }
+//                if (selectedPatterns != null) {
+//                    for (int row = 0; row < selectedPatterns.size(); row++) {
+//                        DSMatchedSeqPattern pattern = (DSMatchedSeqPattern)
+//                                selectedPatterns.get(row);
+//                        PatternOperations.setPatternColor(new Integer(pattern.
+//                                hashCode()),
+//                                PatternOperations.getPatternColor(row));
+//
+//                        if (pattern != null) {
+//                            if (pattern.getClass().isAssignableFrom(
+//                                    CSMatchedSeqPattern.class) ||
+//                                pattern.getClass().isAssignableFrom(
+//                                        CSMatchedHMMSeqPattern.class)) {
+//                                CSMatchedSeqPattern pat = (CSMatchedSeqPattern)
+//                                        pattern;
+//                                if (pattern != null) {
+//                                    for (int locusId = 0;
+//                                            locusId < pattern.getSupport();
+//                                            locusId++) {
+//                                        int seqId = pat.getId(locusId);
+//
+//                                        if (showAll) {
+//                                            int newIndex[] = sequenceDB.
+//                                                    getMatchIndex();
+////                                            System.out.println(newIndex +
+////                                                    " is null? in svwp" +
+////                                                    sequenceDB.size());
+//                                            if (newIndex != null &&
+//                                                seqId < newIndex.length &&
+//                                                newIndex[seqId] != -1) {
+//                                                System.out.println(
+//                                                        "SVWP PAINT PATTEN: " +
+//                                                        seqId + " " +
+//                                                        newIndex[seqId] +
+//                                                        locusId);
+//                                                if (drawPattern(g,
+//                                                        newIndex[seqId],
+//                                                        locusId, pat,
+//                                                        r,
+//                                                        PatternOperations.
+//                                                        getPatternColor(
+//                                                        row))) {
+//                                                    break;
+//                                                }
+//                                            } else {
+////                                                System.out.println(
+////                                                        "Something wrong here" +
+////                                                        locusId);
+//                                            }
+//
+//                                        } else {
+//                                            if (seqId < sequenceDB.size()) {
+//                                                if (drawPattern(g, seqId,
+//                                                        locusId,
+//                                                        pat,
+//                                                        r,
+//                                                        PatternOperations.
+//                                                        getPatternColor(
+//                                                        row))) {
+//                                                    break;
+//                                                }
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//            int maxY = (rowId + 1) * yStep + yOff;
+//            setPreferredSize(new Dimension(this.getWidth() - yOff, maxY));
+//            revalidate();
+//        }
+//    }
 
     void setShowAll(boolean all) {
         showAll = all;
@@ -632,6 +688,14 @@ public class SequenceViewWidgetPanel extends JPanel {
 
     public void setDisplayInfo(String displayInfo) {
         this.displayInfo = displayInfo;
+    }
+
+    public void setSeqXclickPoint(int seqXclickPoint) {
+        this.seqXclickPoint = seqXclickPoint;
+    }
+
+    public void setSelectedSequence(DSSequence selectedSequence) {
+        this.selectedSequence = selectedSequence;
     }
 
     void drawSequence(Graphics g, int rowId, int seqId, double len) {
@@ -675,6 +739,25 @@ public class SequenceViewWidgetPanel extends JPanel {
         return false;
     }
 
+    boolean drawPattern(Graphics g, int rowId, int xStart, int length,
+                        Rectangle r, Color color) {
+
+        int y = yOff + rowId * yStep;
+        if (y > r.y) {
+            if (y > r.y + r.height) {
+                return true;
+            }
+            double x0 = xStart;
+            double dx = length;
+            int xa = xOff + (int) (x0 * scale) + 1;
+            int xb = xa + (int) (dx * scale) - 1;
+            g.setColor(color);
+            g.draw3DRect(xa, y - 2, xb - xa, 4, false);
+        }
+        return false;
+    }
+
+
     private void drawPattern(Graphics g, DSPatternMatch<DSSequence,
                              DSSeqRegistration> sp, double xscale,
                              double yscale, int yBase, int cols, Color color,
@@ -694,7 +777,7 @@ public class SequenceViewWidgetPanel extends JPanel {
                 offset + length);
         if (offset % cols + length <= cols) {
             g.clearRect(x, (int) y - height / 2, xb, height);
-              g.setColor(SEQUENCEBACKGROUDCOLOR);
+            g.setColor(SEQUENCEBACKGROUDCOLOR);
             g.drawString(hitSeqStr,
                          x, (int) (y - 1 * yscale + yOff + 3));
             g.setColor(color);
@@ -712,17 +795,23 @@ public class SequenceViewWidgetPanel extends JPanel {
                          (int) (y - 1 * yscale + yOff + 3));
             g.setColor(color);
             g.drawString(highlight.substring(0, cols - offset % cols), x,
-                           (int) (y - 1 * yscale + yOff + 3));
+                         (int) (y - 1 * yscale + yOff + 3));
             g.draw3DRect(x, (int) y - height / 2, endx - x, height, true);
             for (int i = 1; i < k; i++) {
                 g.clearRect(startx, (int) (y - height / 2 + (i * yscale)),
                             endx - startx, height);
                 g.setColor(SEQUENCEBACKGROUDCOLOR);
-                           g.drawString(hitSeqStr.substring(cols - offset % cols + (k-1)*cols, cols - offset % cols + k*cols), startx,
-                                        (int) (y + (k - 1) * yscale + yOff + 3));
-                           g.setColor(color);
-                           g.drawString(highlight.substring(cols - offset % cols + (k-1)*cols, cols - offset % cols + k*cols), startx,
-                          (int) (y + (k - 1) * yscale + yOff + 3));
+                g.drawString(hitSeqStr.substring(cols - offset % cols +
+                                                 (k - 1) * cols,
+                                                 cols - offset % cols +
+                                                 k * cols), startx,
+                             (int) (y + (k - 1) * yscale + yOff + 3));
+                g.setColor(color);
+                g.drawString(highlight.substring(cols - offset % cols +
+                                                 (k - 1) * cols,
+                                                 cols - offset % cols +
+                                                 k * cols), startx,
+                             (int) (y + (k - 1) * yscale + yOff + 3));
                 g.draw3DRect(startx, (int) (y - height / 2 + (i * yscale)),
                              endx - startx, height, true);
             }
@@ -732,11 +821,12 @@ public class SequenceViewWidgetPanel extends JPanel {
                         height
                     );
             g.setColor(SEQUENCEBACKGROUDCOLOR);
-            g.drawString(hitSeqStr.substring(cols - offset % cols + (k-1)*cols), startx,
+            g.drawString(hitSeqStr.substring(cols - offset % cols +
+                                             (k - 1) * cols), startx,
                          (int) (y + (k - 1) * yscale + yOff + 3));
             g.setColor(color);
             g.drawString(highlight.substring(cols - offset % cols), startx,
-                          (int) (y + (k - 1) * yscale + yOff + 3));
+                         (int) (y + (k - 1) * yscale + yOff + 3));
             g.draw3DRect(startx,
                          (int) (y - height / 2 + (k * yscale)),
                          (int) (((offset + length) % cols) * xscale),
@@ -746,6 +836,85 @@ public class SequenceViewWidgetPanel extends JPanel {
         //g.drawString(highlight, x, (int) (y - 1 * yscale + yOff + 3));
     }
 
+//changed for the simplifed use,should replace the above method.
+
+
+    private void drawPattern(Graphics g, DSSequence hitSeq, int offset,
+                             double xscale,
+                             double yscale, int yBase, int cols, Color color,
+                             String highlight) {
+
+        int length = 0; //sp.getRegistration().length(); //very strange, the length is incorrect.
+        length = highlight.length();
+        // int offset = sp.getRegistration().x1;
+        int x = (int) ((6 + offset % cols) * xscale);
+        double y = ((yBase + 2 + (offset / cols)) * yscale);
+        int xb = (int) (length * xscale);
+
+        int height = (int) (1.3 * yscale);
+
+        String hitSeqStr = hitSeq.getSequence().substring(offset,
+                offset + length);
+        if (offset % cols + length <= cols) {
+            g.clearRect(x, (int) y - height / 2, xb, height);
+            g.setColor(SEQUENCEBACKGROUDCOLOR);
+            g.drawString(hitSeqStr,
+                         x, (int) (y - 1 * yscale + yOff + 3));
+            g.setColor(color);
+            g.drawString(highlight, x, (int) (y - 1 * yscale + yOff + 3));
+            g.draw3DRect(x, (int) y - height / 2, xb, height, false);
+
+        } else {
+
+            int startx = (int) (6 * xscale);
+            int endx = (int) ((cols + 6) * xscale);
+            int k = (offset + length) / cols - offset / cols;
+            g.clearRect(x, (int) y - height / 2, endx - x, height);
+            g.setColor(SEQUENCEBACKGROUDCOLOR);
+            g.drawString(hitSeqStr.substring(0, cols - offset % cols), x,
+                         (int) (y - 1 * yscale + yOff + 3));
+            g.setColor(color);
+            g.drawString(highlight.substring(0, cols - offset % cols), x,
+                         (int) (y - 1 * yscale + yOff + 3));
+            g.draw3DRect(x, (int) y - height / 2, endx - x, height, true);
+            for (int i = 1; i < k; i++) {
+                g.clearRect(startx, (int) (y - height / 2 + (i * yscale)),
+                            endx - startx, height);
+                g.setColor(SEQUENCEBACKGROUDCOLOR);
+                g.drawString(hitSeqStr.substring(cols - offset % cols +
+                                                 (k - 1) * cols,
+                                                 cols - offset % cols +
+                                                 k * cols), startx,
+                             (int) (y + (k - 1) * yscale + yOff + 3));
+                g.setColor(color);
+                g.drawString(highlight.substring(cols - offset % cols +
+                                                 (k - 1) * cols,
+                                                 cols - offset % cols +
+                                                 k * cols), startx,
+                             (int) (y + (k - 1) * yscale + yOff + 3));
+                g.draw3DRect(startx, (int) (y - height / 2 + (i * yscale)),
+                             endx - startx, height, true);
+            }
+            g.clearRect(startx,
+                        (int) (y - height / 2 + (k * yscale)),
+                        (int) (((offset + length) % cols) * xscale),
+                        height
+                    );
+            g.setColor(SEQUENCEBACKGROUDCOLOR);
+            g.drawString(hitSeqStr.substring(cols - offset % cols +
+                                             (k - 1) * cols), startx,
+                         (int) (y + (k - 1) * yscale + yOff + 3));
+            g.setColor(color);
+            g.drawString(highlight.substring(cols - offset % cols), startx,
+                         (int) (y + (k - 1) * yscale + yOff + 3));
+            g.draw3DRect(startx,
+                         (int) (y - height / 2 + (k * yscale)),
+                         (int) (((offset + length) % cols) * xscale),
+                         height, true);
+
+        }
+        //g.drawString(highlight, x, (int) (y - 1 * yscale + yOff + 3));
+    }
 
     /**
      *
@@ -795,21 +964,100 @@ public class SequenceViewWidgetPanel extends JPanel {
         return displayInfo;
     }
 
-    void this_mouseClicked(MouseEvent e) {
+    public int getSeqXclickPoint() {
+        return seqXclickPoint;
+    }
+
+    public DSSequence getSelectedSequence() {
+        return selectedSequence;
+    }
+
+    private int getSeqDx(int x) {
+
+        int seqDx = (int) ((double) (x - xOff) / scale);
+        return seqDx;
+    }
+
+    public void this_mouseClicked(MouseEvent e) {
+        setTranslatedParameters(e);
+
         if (e.getClickCount() == 2) {
-            if (!lineView) {
-                int y = e.getY();
-                selected = getSeqId(y);
 
-            } else {
-
-                int y = e.getY();
-                selected = getSeqId(y);
-            }
             this.flipLineView();
             this.repaint();
         }
 
+    }
+
+    /**
+     * getTranslatedParameters
+     *
+     * @param e MouseEvent
+     */
+    public void setTranslatedParameters(MouseEvent e) {
+        int y = e.getY();
+        int x = e.getX();
+
+        if (!lineView) {
+            selected = getSeqIdInFullView(y);
+            seqXclickPoint = (int) ((int) ((y - yOff - 1 -
+                                            ((double) eachSeqStartRowNum[
+                                             selected]) *
+                                            yBasescale) / yBasescale) *
+                                    xBaseCols +
+                                    x / xBasescale -
+                                    5);
+
+        } else {
+            if (!singleSequenceView) {
+                selected = getSeqId(y);
+                seqXclickPoint = getSeqDx(x);
+
+            } else {
+
+                seqXclickPoint = (int) ((int) ((y - yOff - 1) / yBasescale) *
+                                        xBaseCols +
+                                        x / xBasescale -
+                                        5);
+            }
+        }
+          selectedSequence = sequenceDB.getSequence(selected);
+        if (selectedSequence != null) {
+            displayInfo = "For sequence " + selectedSequence.getLabel() + ", total length: " +
+                          selectedSequence.length();
+            if(sequencePatternmatches!=null){
+                PatternSequenceDisplayUtil psu = sequencePatternmatches.get(
+                        selectedSequence);
+                if (psu != null && psu.getTreeSet() != null) {
+                    displayInfo += ", pattern number: " + psu.getTreeSet().size();
+                }
+            }
+            if ((seqXclickPoint <= selectedSequence.length()) &&
+                (seqXclickPoint > 0)) {
+                this.setToolTipText("" + seqXclickPoint);
+                displayInfo += ". Current location: " + seqXclickPoint;
+            }
+        }
+
+    }
+
+    /**
+     * getSeqIdInFullView
+     *
+     * @param y int
+     * @return int
+     */
+    private int getSeqIdInFullView(int y) {
+        double yBase = (y - yOff - 3) / yBasescale + 1;
+        if (eachSeqStartRowNum != null) {
+            for (int i = 0; i < eachSeqStartRowNum.length; i++) {
+                if (eachSeqStartRowNum[i] > yBase) {
+                    return Math.max(0, i - 1);
+                }
+
+            }
+        }
+        return eachSeqStartRowNum.length - 1;
     }
 
     public void flipLineView() {
@@ -822,17 +1070,17 @@ public class SequenceViewWidgetPanel extends JPanel {
         return seqId;
     }
 
-    public int getSeqDx(int x) {
-        double scale = Math.min(5.0,
-                                (double) (this.getWidth() - 20 - xOff) /
-                                (double) sequenceDB.getMaxLength());
-        int seqDx = (int) ((double) (x - xOff) / scale);
+//    public int getSeqDx(int x) {
+//        double scale = Math.min(5.0,
+//                                (double) (this.getWidth() - 20 - xOff) /
+//                                (double) sequenceDB.getMaxLength());
+//        int seqDx = (int) ((double) (x - xOff) / scale);
+//
+//        return seqDx;
+//    }
 
-        return seqDx;
-    }
-
-    void this_mouseMoved(MouseEvent e) {
-
+    public void this_mouseMoved(MouseEvent e) {
+         setTranslatedParameters(e);
         if (!lineView) {
             mouseOverFullView(e);
         } else {
@@ -965,7 +1213,7 @@ public class SequenceViewWidgetPanel extends JPanel {
             ArrayIndexOutOfBoundsException {
         int y = e.getY();
         int x = e.getX();
-        displayInfo = "";
+        //displayInfo = "";
         if (!singleSequenceView) {
             int seqid = getSeqId(y);
 
@@ -975,11 +1223,11 @@ public class SequenceViewWidgetPanel extends JPanel {
             int off = this.getSeqDx(x);
             DSSequence sequence = sequenceDB.getSequence(seqid);
             if (sequence != null) {
-                displayInfo = "Length of " + sequence.getLabel() + ": " +
-                              sequence.length();
+//                displayInfo = "Length of " + sequence.getLabel() + ": " +
+//                              sequence.length();
                 if ((off <= sequenceDB.getSequence(seqid).length()) && (off > 0)) {
                     this.setToolTipText("" + off);
-                    displayInfo += ". Current location: " + off;
+                  //  displayInfo += ". Current location: " + off;
                 }
             }
         } else {
