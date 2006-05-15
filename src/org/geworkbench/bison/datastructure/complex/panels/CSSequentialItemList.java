@@ -8,6 +8,11 @@ import org.geworkbench.bison.datastructure.properties.DSSequential;
 public class CSSequentialItemList<T extends DSSequential> extends CSItemList<T> {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = -8308605657087399359L;
+
+	/**
      * Create a new CSSequentialItemList.
      */
     public CSSequentialItemList() {
