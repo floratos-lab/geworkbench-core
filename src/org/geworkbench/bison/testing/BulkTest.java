@@ -133,7 +133,7 @@ import java.util.List;
  * interpret bulk test methods.
  *
  * @author Matt Hall, John Watkinson, Paul Jack
- * @version $Id: BulkTest.java,v 1.3 2005-08-30 20:38:21 mhall Exp $
+ * @version $Id: BulkTest.java,v 1.4 2006-05-15 17:26:26 mkustagi Exp $
  */
 public class BulkTest extends TestCase implements Cloneable {
 
@@ -418,7 +418,7 @@ class BulkTestSuiteMaker {
     private static BulkTest makeTestCase(Class c, Method m) {
         Constructor con = getTestCaseConstructor(c);
         try {
-            return (BulkTest) con.newInstance(new String[]{m.getName()});
+            return (BulkTest) con.newInstance(m.getName());
         } catch (InvocationTargetException e) {
             e.printStackTrace();
             throw new RuntimeException(); // FIXME;
