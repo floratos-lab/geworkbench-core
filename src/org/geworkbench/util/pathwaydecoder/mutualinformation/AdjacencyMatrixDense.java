@@ -11,7 +11,11 @@ import java.util.HashMap;
 import java.util.StringTokenizer;
 
 public class AdjacencyMatrixDense extends AdjacencyMatrix {
-    HashMap keyMapping = new HashMap();
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2432506724727143930L;
+	HashMap keyMapping = new HashMap();
     float[][] matrix;
 
     public AdjacencyMatrixDense() {

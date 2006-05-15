@@ -14,7 +14,11 @@ import java.util.EventObject;
 
 public class AlgorithmEvent extends EventObject {
 
-    public static final int algorithmTimeTick = -2;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -2005206404971429403L;
+	public static final int algorithmTimeTick = -2;
     public static final int algorithmCompleted = -1;
     public static final int algorithmUndefined = 0;
     /**

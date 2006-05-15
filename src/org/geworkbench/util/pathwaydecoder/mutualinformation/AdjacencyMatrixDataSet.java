@@ -12,7 +12,11 @@ import java.io.File;
  */
 public class AdjacencyMatrixDataSet extends CSAncillaryDataSet implements DSAncillaryDataSet {
 
-    private AdjacencyMatrix matrix;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6835973287728524201L;
+	private AdjacencyMatrix matrix;
     private int geneId;
     private double threshold;
     private int depth;

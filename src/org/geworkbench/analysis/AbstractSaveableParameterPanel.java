@@ -27,7 +27,11 @@ import java.io.IOException;
  * </UL>
  */
 public class AbstractSaveableParameterPanel extends ParameterPanel {
-    String name = null;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 4513020172986430772L;
+	String name = null;
 
     public AbstractSaveableParameterPanel() {
         setName("Parameters");
