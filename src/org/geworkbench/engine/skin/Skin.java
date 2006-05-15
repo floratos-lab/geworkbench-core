@@ -78,6 +78,36 @@ public class Skin extends GUIFramework {
     public static final String APP_SIZE_FILE = "appCoords.txt";
     public static final String TEMP_DIR_PROPERTY = "temporary.files.directory";
 
+    public String getVisualLastSelected(DSDataSet dataSet) {
+        return visualLastSelected.get(dataSet);
+    }
+
+    public String getCommandLastSelected(DSDataSet dataSet) {
+        return commandLastSelected.get(dataSet);
+    }
+
+    public String getSelectionLastSelected(DSDataSet dataSet) {
+        return selectionLastSelected.get(dataSet);
+    }
+
+    public void setVisualLastSelected(DSDataSet dataSet, String component) {
+        if (component != null) {
+            visualLastSelected.put(dataSet, component);
+        }
+    }
+
+    public void setCommandLastSelected(DSDataSet dataSet, String component) {
+        if (component != null) {
+            commandLastSelected.put(dataSet, component);
+        }
+    }
+
+    public void setSelectionLastSelected(DSDataSet dataSet, String component) {
+        if (component != null) {
+            selectionLastSelected.put(dataSet, component);
+        }
+    }
+
     public Skin() {
         registerAreas();
         fixedComponents = new HashSet<String>();

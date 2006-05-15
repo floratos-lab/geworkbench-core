@@ -16,6 +16,7 @@ import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.bison.util.colorcontext.ColorContext;
 import org.geworkbench.engine.config.MenuListener;
 import org.geworkbench.engine.config.VisualPlugin;
+import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.management.Publish;
 import org.geworkbench.engine.management.Script;
 import org.geworkbench.engine.management.Subscribe;
@@ -27,6 +28,7 @@ import org.geworkbench.engine.parsers.MAGELoader;
 import org.geworkbench.engine.parsers.microarray.DataSetFileFormat;
 import org.geworkbench.engine.parsers.patterns.PatternFileFormat;
 import org.geworkbench.engine.preferences.GlobalPreferences;
+import org.geworkbench.engine.skin.Skin;
 import org.geworkbench.events.*;
 import org.geworkbench.util.PropertiesMonitor;
 import org.geworkbench.util.SaveImage;
@@ -237,6 +239,50 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
         jProjectMenu.addSeparator();
         jProjectMenu.add(jRemoveProjectItem);
+    }
+
+    public void populateFromSaveTree(SaveTree saveTree) {
+        java.util.List<DataSetSaveNode> projects = saveTree.getNodes();
+        ProjectTreeNode selectedNode = null;
+        for (DataSetSaveNode project : projects) {
+            ProjectNode projectNode = new ProjectNode(project.getName());
+            addToProject(projectNode, true);
+            selection.setNodeSelection(projectNode);
+            // Add data sets next
+            java.util.List<DataSetSaveNode> dataSets = project.getChildren();
+            for (DataSetSaveNode dataNode : dataSets) {
+                setComponents(dataNode);
+                DSDataSet dataSet = dataNode.getDataSet();
+                addDataSetNode(dataSet, true);
+                if (dataSet == saveTree.getSelected()) {
+                    selectedNode = selection.getSelectedNode();
+                }
+                // Add ancillary data sets
+                java.util.List<DataSetSaveNode> ancSets = dataNode.getChildren();
+                for (DataSetSaveNode ancNode : ancSets) {
+                    setComponents(ancNode);
+                    DSAncillaryDataSet ancSet = (DSAncillaryDataSet) ancNode.getDataSet();
+                    addDataSetSubNode(ancSet);
+                    if (ancSet == saveTree.getSelected()) {
+                        selectedNode = selection.getSelectedNode();
+                    }
+                    selection.setNodeSelection((ProjectTreeNode) selection.getSelectedDataSetSubNode().getParent());
+                }
+                selection.setNodeSelection((ProjectTreeNode) selection.getSelectedDataSetNode().getParent());
+            }
+        }
+        // Set final selection
+        projectTree.scrollPathToVisible(new TreePath(selectedNode));
+        //serialize("default.ws");
+        projectTree.setSelectionPath(new TreePath(selectedNode.getPath()));
+        selection.setNodeSelection(selectedNode);
+    }
+
+    private void setComponents(DataSetSaveNode saveNode) {
+        Skin skin = (Skin) GeawConfigObject.getGuiWindow();
+        skin.setVisualLastSelected(saveNode.getDataSet(), saveNode.getVisualSelected());
+        skin.setCommandLastSelected(saveNode.getDataSet(), saveNode.getCommandSelected());
+        skin.setSelectionLastSelected(saveNode.getDataSet(), saveNode.getSelectionSelected());
     }
 
     /**
@@ -501,10 +547,12 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         try {
             FileInputStream in = new FileInputStream(filename);
             ObjectInputStream s = new ObjectInputStream(in);
-            root = (ProjectTreeNode) s.readObject();
-            selection.clearNodeSelections();
-            projectTreeModel = new DefaultTreeModel(root);
-            projectTree.setModel(projectTreeModel);
+            SaveTree saveTree = (SaveTree) s.readObject();
+            populateFromSaveTree(saveTree);
+//            root = (ProjectTreeNode) s.readObject();
+//            selection.clearNodeSelections();
+//            projectTreeModel = new DefaultTreeModel(root);
+//            projectTree.setModel(projectTreeModel);
         } catch (ClassNotFoundException ex) {
             System.err.println("Error: " + ex);
         } catch (IOException ex) {
@@ -1658,7 +1706,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         try {
             FileOutputStream f = new FileOutputStream(filename);
             ObjectOutput s = new ObjectOutputStream(f);
-            s.writeObject(root);
+            SaveTree saveTree = new SaveTree(this, getDataSet());
+            s.writeObject(saveTree);
             s.flush();
         } catch (IOException ex) {
             System.err.println("Error: " + ex);
@@ -2034,14 +2083,16 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
             try {
                 FileInputStream in = new FileInputStream(wsFilename);
                 ObjectInputStream s = new ObjectInputStream(in);
-                ProjectTreeNode tempNode = (ProjectTreeNode) s.readObject();
-                // Clean up local structures and notify interested components to clean
-                // themselves up.
+                SaveTree saveTree = (SaveTree) s.readObject();
                 clear();
-                root = tempNode;
-                projectRenderer.clearNodeSelections();
-                projectTreeModel = new DefaultTreeModel(root);
-                projectTree.setModel(projectTreeModel);
+                populateFromSaveTree(saveTree);
+//                ProjectTreeNode tempNode = (ProjectTreeNode) s.readObject();
+//                // Clean up local structures and notify interested components to clean
+//                // themselves up.
+//                root = tempNode;
+//                projectRenderer.clearNodeSelections();
+//                projectTreeModel = new DefaultTreeModel(root);
+//                projectTree.setModel(projectTreeModel);
             } catch (Exception exc) {
                 exc.printStackTrace();
                 JOptionPane.showMessageDialog(null,
