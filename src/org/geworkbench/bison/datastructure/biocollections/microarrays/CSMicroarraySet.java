@@ -30,6 +30,11 @@ import java.util.*;
 
 public class CSMicroarraySet<T extends DSMicroarray> extends CSDataSet<T> implements DSMicroarraySet<T> {
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = -8604116507886706853L;
+
+	/**
      * Constant designating the Affymetrix platform. This is the value return by
      * calls to method <code>getPlatforType()</code>.
      */
