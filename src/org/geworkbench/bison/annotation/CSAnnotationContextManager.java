@@ -165,7 +165,11 @@ public class CSAnnotationContextManager implements DSAnnotationContextManager {
     }
 
     public static class SerializableContexts implements Serializable {
-        private ListOrderedSet<DSAnnotationContext> contexts;
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = -8930177139134699811L;
+		private ListOrderedSet<DSAnnotationContext> contexts;
         private String current;
 
         public SerializableContexts(ListOrderedSet<DSAnnotationContext> contexts, String current) {

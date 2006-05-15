@@ -5,7 +5,11 @@ package org.geworkbench.engine.preferences;
  */
 public class ChoiceField extends Field {
 
-    String[] allowedValues;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -2954745796506584166L;
+	String[] allowedValues;
     int selection;
 
     public ChoiceField(String fieldName, String[] allowedValues) {

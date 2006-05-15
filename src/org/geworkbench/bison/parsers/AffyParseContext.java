@@ -17,6 +17,10 @@ import java.util.Map;
  */
 public class AffyParseContext implements Serializable {
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7299827979956398558L;
+	/**
      * List of possible column names from input file that can be parsed
      */
     public static final String[] columnNames = {"Probe Set Name", "Stat Pairs", "Stat Pairs Used", "Signal", "Detection", "Detection p-value", "Stat Common Pairs", "Signal Log Ratio", "Signal Log Ratio Low", "Signal Log Ratio High", "Change", "Change p-value", "Positive", "Negative", "Pairs", "Pairs Used", "Pairs InAvg", "Log Avg", "Pos/Neg", "Avg Diff", "Abs Call", "Inc", "Dec", "Inc Ratio", "Dec Ratio", "Pos Change", "Neg Change", "Inc/Dec", "DPos-DNeg Ratio", "Log Avg Ratio Change", "Diff Call", "Avg Diff Change", "B=A", "Fold Change", "Sort Score"};

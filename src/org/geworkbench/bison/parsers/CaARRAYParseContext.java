@@ -19,6 +19,10 @@ import java.util.List;
  */
 public class CaARRAYParseContext implements Serializable {
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = -8488906498506345286L;
+	/**
      * Lists the names of the attributes that can appear as quantitation
      * types.
      */

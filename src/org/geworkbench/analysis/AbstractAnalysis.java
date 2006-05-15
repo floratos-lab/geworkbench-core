@@ -335,7 +335,12 @@ public abstract class AbstractAnalysis implements Analysis, Serializable, java.u
      * stored in the variable <code>indices</code>.
      */
     static class Tuple implements Serializable {
-        protected String className = null;
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = -8967255706305280349L;
+		
+		protected String className = null;
         protected String parameterName = null;
 
         public Tuple(String cn, String pn) {

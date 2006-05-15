@@ -40,7 +40,12 @@ import java.util.Map.Entry;
 
 public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMatrix, Serializable {
 
-    static Log log = LogFactory.getLog(AdjacencyMatrix.class);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -4163326138016520666L;
+
+	static Log log = LogFactory.getLog(AdjacencyMatrix.class);
 
     static public boolean MIlibraryLoaded = false;
     static final public int HIGH = 1;

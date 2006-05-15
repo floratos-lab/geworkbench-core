@@ -25,6 +25,10 @@ public class DataSetNode extends ProjectTreeNode {
 	private static final long serialVersionUID = 1423608759523479212L;
 	
 	public DSDataSet dataFile = null;
+    
+    DataSetNode(String filename) {
+        
+    }
 
     DataSetNode(DSDataSet df) {
         dataFile = df;
