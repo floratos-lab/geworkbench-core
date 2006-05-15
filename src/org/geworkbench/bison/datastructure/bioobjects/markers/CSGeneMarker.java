@@ -18,7 +18,12 @@ import java.io.*;
 
 public class CSGeneMarker implements DSGeneMarker, Serializable {
 
-    protected String label = null;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -8778666154593978009L;
+	
+	protected String label = null;
     protected String description = null;
     protected String abrev = null;
     protected int markerId = 0;

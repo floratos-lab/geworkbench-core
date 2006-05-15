@@ -20,8 +20,15 @@ import java.util.HashMap;
  */
 public class CSGenepixMarkerValue extends CSMarkerValue implements
         DSGenepixMarkerValue, Serializable {
+	
+	
 
-    // Computation methods
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6311145011982195192L;
+
+	// Computation methods
     public enum ComputeSignalMethod {
         COMPUTE_MEAN_635_532,
         COMPUTE_MEDIAN_635_532,

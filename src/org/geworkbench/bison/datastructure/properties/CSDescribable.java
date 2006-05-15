@@ -16,6 +16,10 @@ import java.util.Vector;
  */
 public class CSDescribable implements DSDescribable, Serializable {
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6319385247916227865L;
+	/**
      * Contains the description strings.
      */
     protected Vector descriptions = new Vector();

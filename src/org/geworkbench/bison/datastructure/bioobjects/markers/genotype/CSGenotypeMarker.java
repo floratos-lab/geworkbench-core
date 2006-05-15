@@ -22,7 +22,12 @@ import java.util.HashMap;
  */
 
 public class CSGenotypeMarker extends CSGeneMarker implements Serializable, DSRangeMarker {
-    protected org.geworkbench.bison.util.Range range = new org.geworkbench.bison.util.Range();
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1232922167498738546L;
+	
+	protected org.geworkbench.bison.util.Range range = new org.geworkbench.bison.util.Range();
     protected boolean isSNP = true;
     protected boolean isGT = true;
     protected double phX = 0;

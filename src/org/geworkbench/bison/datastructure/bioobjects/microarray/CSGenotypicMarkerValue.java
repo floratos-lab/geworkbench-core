@@ -20,6 +20,11 @@ import java.text.DecimalFormat;
 public class CSGenotypicMarkerValue extends CSMarkerValue implements Serializable, DSGenotypicMarkerValue {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = -2543764301206664390L;
+
+	/**
      * Formats values to be displayed
      */
     protected static DecimalFormat formatter = new DecimalFormat("##.##");

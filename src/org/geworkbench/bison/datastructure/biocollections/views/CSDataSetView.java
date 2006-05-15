@@ -24,7 +24,12 @@ import java.io.Serializable;
  */
 public class CSDataSetView <Q extends DSBioObject> implements DSDataSetView<Q>, Serializable {
 
-    DSDataSet<Q> dataSet;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -4914776743321648850L;
+
+	DSDataSet<Q> dataSet;
 
     /**
      * Contains the active microarrays, organized as a DSPanel.

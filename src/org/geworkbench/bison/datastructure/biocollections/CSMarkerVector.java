@@ -24,7 +24,12 @@ import java.util.Vector;
 public class CSMarkerVector extends CSSequentialItemList<DSGeneMarker> implements
         DSItemList<DSGeneMarker> {
 
-    // watkin -- changed these hashvectors to not enforce uniqueness. They were slow to the point of unusability.
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7674561735987333555L;
+	
+	// watkin -- changed these hashvectors to not enforce uniqueness. They were slow to the point of unusability.
     // Uniqueness is not a requirement of these data structures anyways.
     HashVector<Integer,
             DSGeneMarker> geneIdMap = new HashVector<Integer, DSGeneMarker>(false);

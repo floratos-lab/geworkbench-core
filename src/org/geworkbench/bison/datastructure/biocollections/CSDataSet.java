@@ -14,7 +14,12 @@ import java.util.HashMap;
  * An abstract implementation of {@link DSDataSet}.
  */
 public class CSDataSet <T extends DSBioObject> extends CSSequentialItemList<T> implements DSDataSet<T> {
-    protected boolean dirty = true;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 229744827492977524L;
+	
+	protected boolean dirty = true;
     protected File file = null;
     protected String label = new String("Unnamed Data Set");
     protected String absPath = null;

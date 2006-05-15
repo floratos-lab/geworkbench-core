@@ -31,7 +31,12 @@ import java.util.Vector;
  */
 
 public class CSGenotypeMicroarraySet extends CSMicroarraySet<DSMicroarray> implements Serializable {
-    //static private ImageIcon icon      = new ImageIcon(MicroarrayDataSet.class.getResource("ma.gif"));
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 7538912536316139225L;
+	
+	//static private ImageIcon icon      = new ImageIcon(MicroarrayDataSet.class.getResource("ma.gif"));
     private HashMap properties = new HashMap();
     private ArrayList descriptions = new ArrayList();
     private String label = "Undefined";

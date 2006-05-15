@@ -98,7 +98,12 @@ public class CSExtendable implements DSExtendable, Serializable {
      * @version 1.0
      */
     class Name implements Serializable {
-        String name = null;
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = -8944377806778847094L;
+		
+		String name = null;
         boolean uniqueValue = false;
         Vector values = null;
 

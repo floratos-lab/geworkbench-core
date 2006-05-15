@@ -34,6 +34,11 @@ import java.util.Vector;
 public class CSGenepixMicroarraySet extends CSMicroarraySet<DSMicroarray> implements Serializable {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2274694280941138579L;
+
+	/**
      * Instantiates a Genepix-type micorarray set from local file following
      * the Genepix .gpr format.
      *

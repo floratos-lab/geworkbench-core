@@ -22,7 +22,11 @@ public class CSMicroarray implements DSMicroarray, Serializable {
     //        new ObjectStreamField("maSet", DSMicroarraySet.class)
     //    };
 
-    //protected DSMicroarraySet microarraySet = null;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -1624438489587615570L;
+	//protected DSMicroarraySet microarraySet = null;
     /**
      * Microarray type, defined in DSMicroarraySet
      */

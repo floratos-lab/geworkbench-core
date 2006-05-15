@@ -30,6 +30,11 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
     //    DSMicroarraySet<DSMicroarray> dataSet = null;
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1452815738190971373L;
+
+	/**
      * Contains the active markers, organized as a DSPanel.
      */
     protected DSPanel<T> markerPanel = new CSPanel<T>("");
