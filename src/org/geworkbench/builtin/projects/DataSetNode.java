@@ -17,8 +17,14 @@ import java.io.IOException;
  */
 
 public class DataSetNode extends ProjectTreeNode {
-    public DSDataSet dataFile = null;
-
+	
+	
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1423608759523479212L;
+	
+	public DSDataSet dataFile = null;
 
     DataSetNode(DSDataSet df) {
         dataFile = df;
