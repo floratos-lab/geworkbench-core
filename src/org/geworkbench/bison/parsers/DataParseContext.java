@@ -21,6 +21,10 @@ public class DataParseContext implements Serializable {
      */
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = -3486797732138045524L;
+	/**
      * The marker type (e.g., genotype, gene expression, etc)
      */
     public int type = 0;

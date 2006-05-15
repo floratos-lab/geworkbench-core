@@ -34,7 +34,11 @@ import java.util.Map;
 public class CSClassCriteria extends CSPanel<DSBioObject> implements DSClassCriteria {
 
     private static class ClassCriterion implements Serializable {
-        // This map is used to store the available annotation values. Note that this
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = -8421014531342095735L;
+		// This map is used to store the available annotation values. Note that this
         // allows new values to be registered and assigned on the fly
         public HashMap<DSAnnotValue, ImageIcon> annotValues = new HashMap<DSAnnotValue, ImageIcon>();
         public HashMap<DSAnnotValue, DSPanel<DSBioObject>> annotPanels = new HashMap<DSAnnotValue, DSPanel<DSBioObject>>();

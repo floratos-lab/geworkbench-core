@@ -27,7 +27,11 @@ import java.util.*;
 
 public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implements Serializable {
 
-    private HashMap properties = new HashMap();
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6763897988197502601L;
+	private HashMap properties = new HashMap();
     private ArrayList descriptions = new ArrayList();
 
     private org.geworkbench.bison.parsers.DataParseContext dataContext = new org.geworkbench.bison.parsers.DataParseContext();

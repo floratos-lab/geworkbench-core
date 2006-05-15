@@ -18,7 +18,12 @@ import java.io.Serializable;
  */
 public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationContext<T>, Serializable {
 
-    public static final String SELECTION = "Selection";
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 8064184768541031268L;
+
+	public static final String SELECTION = "Selection";
 
     public static final String CLASS_CASE = "Case";
     public static final String CLASS_CONTROL = "Control";

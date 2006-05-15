@@ -13,7 +13,11 @@ import java.io.Serializable;
  */
 
 public class Range implements Serializable {
-    public double min = Double.MAX_VALUE;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6422699987423693588L;
+	public double min = Double.MAX_VALUE;
     public double max = Double.MIN_VALUE;
     public Normal norm = new Normal();
 

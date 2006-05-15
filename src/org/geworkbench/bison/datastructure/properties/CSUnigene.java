@@ -19,7 +19,11 @@ import java.util.ArrayList;
  * @version 1.0
  */
 public class CSUnigene implements DSUnigene, Serializable {
-    public static ArrayList<String> organisms = new ArrayList<String>();
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1738760385691617771L;
+	public static ArrayList<String> organisms = new ArrayList<String>();
 
     static {
         organisms.add("Bt");

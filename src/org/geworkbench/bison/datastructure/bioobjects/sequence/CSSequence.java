@@ -19,7 +19,12 @@ import java.util.regex.Matcher;
 
 public class CSSequence implements DSSequence, Serializable {
 
-    private final static ObjectStreamField[] serialPersistentFields = 
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -8710506841571301285L;
+
+	private final static ObjectStreamField[] serialPersistentFields = 
     {
         new ObjectStreamField("isDNA", boolean.class), 
         new ObjectStreamField("label", String.class), 

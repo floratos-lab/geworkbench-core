@@ -16,6 +16,10 @@ import java.text.DecimalFormat;
 public class CSExpressionMarkerValue extends CSMarkerValue implements DSAffyMarkerValue, Serializable {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2927802879210446294L;
+	/**
      * Formats values to be displayed
      */
     protected static DecimalFormat formatter = new DecimalFormat("##.##");

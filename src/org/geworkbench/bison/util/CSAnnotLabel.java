@@ -7,7 +7,11 @@ import java.io.Serializable;
  */
 public class CSAnnotLabel implements DSAnnotLabel, Serializable {
 
-    private Object object;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7099255143060473513L;
+	private Object object;
 
     /**
      * Creates a new annotation label.

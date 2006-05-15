@@ -143,7 +143,12 @@ public class Workbench extends GUIFramework {
     }
 
     class InternalFrameManager extends DefaultDesktopManager {
-        protected Rectangle getBoundsForIconOf(JInternalFrame f) {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 2900471008648317706L;
+
+		protected Rectangle getBoundsForIconOf(JInternalFrame f) {
             minimizedFrameCount++;
             if (column * 40 >= 300) {
                 column = 0;

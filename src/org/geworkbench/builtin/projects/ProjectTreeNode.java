@@ -15,7 +15,11 @@ import java.io.Serializable;
  */
 public class ProjectTreeNode extends DefaultMutableTreeNode implements Serializable {
 
-    private String description = "";
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6368086703128743579L;
+	private String description = "";
 
     /**
      * Default Constructor
