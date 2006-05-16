@@ -519,14 +519,15 @@ public class SequenceViewWidgetPanel extends JPanel {
             JViewport scroller = (JViewport)this.getParent();
             Rectangle r = new Rectangle();
             r = scroller.getViewRect();
-            if (true) {
-                for (int seqId = 0; seqId < seqNo; seqId++) {
-                    rowId++;
-                    drawSequence(g, seqId, seqId, maxSeqLen);
-                    CSSequence sequence = (CSSequence) sequenceDB.get(seqId);
-                    if (sequencePatternmatches != null) {
-                        PatternSequenceDisplayUtil psd = sequencePatternmatches.
-                                get(sequence);
+
+            for (int seqId = 0; seqId < seqNo; seqId++) {
+                rowId++;
+                drawSequence(g, seqId, seqId, maxSeqLen);
+                CSSequence sequence = (CSSequence) sequenceDB.get(seqId);
+                if (sequencePatternmatches != null) {
+                    PatternSequenceDisplayUtil psd = sequencePatternmatches.
+                            get(sequence);
+                    if (psd != null) {
                         TreeSet<PatternLocations>
                                 patternsPerSequence = psd.getTreeSet();
                         if (patternsPerSequence != null &&
@@ -534,7 +535,8 @@ public class SequenceViewWidgetPanel extends JPanel {
                             for (PatternLocations pl : patternsPerSequence) {
                                 DSSeqRegistration reg = pl.getRegistration();
                                 if (reg != null) {
-                                    drawPattern(g, seqId, reg.x1, reg.length(),
+                                    drawPattern(g, seqId, reg.x1,
+                                                reg.length(),
                                                 r,
                                                 PatternOperations.
                                                 getPatternColor(pl.getHashcode()));
@@ -542,10 +544,9 @@ public class SequenceViewWidgetPanel extends JPanel {
                             }
                         }
                     }
-
                 }
-
             }
+
             int maxY = (rowId + 1) * yStep + yOff;
             setPreferredSize(new Dimension(this.getWidth() - yOff, maxY));
             revalidate();
@@ -858,10 +859,11 @@ public class SequenceViewWidgetPanel extends JPanel {
         if (offset % cols + length <= cols) {
             g.clearRect(x, (int) y - height / 2, xb, height);
             g.setColor(SEQUENCEBACKGROUDCOLOR);
-            g.drawString(hitSeqStr,
+            g.drawString(hitSeqStr.toUpperCase(),
                          x, (int) (y - 1 * yscale + yOff + 3));
             g.setColor(color);
-            g.drawString(highlight, x, (int) (y - 1 * yscale + yOff + 3));
+            g.drawString(highlight.toUpperCase(), x,
+                         (int) (y - 1 * yscale + yOff + 3));
             g.draw3DRect(x, (int) y - height / 2, xb, height, false);
 
         } else {
@@ -871,10 +873,12 @@ public class SequenceViewWidgetPanel extends JPanel {
             int k = (offset + length) / cols - offset / cols;
             g.clearRect(x, (int) y - height / 2, endx - x, height);
             g.setColor(SEQUENCEBACKGROUDCOLOR);
-            g.drawString(hitSeqStr.substring(0, cols - offset % cols), x,
+            g.drawString(hitSeqStr.substring(0, cols - offset % cols).
+                         toUpperCase(), x,
                          (int) (y - 1 * yscale + yOff + 3));
             g.setColor(color);
-            g.drawString(highlight.substring(0, cols - offset % cols), x,
+            g.drawString(highlight.substring(0, cols - offset % cols).
+                         toUpperCase(), x,
                          (int) (y - 1 * yscale + yOff + 3));
             g.draw3DRect(x, (int) y - height / 2, endx - x, height, true);
             for (int i = 1; i < k; i++) {
@@ -884,13 +888,15 @@ public class SequenceViewWidgetPanel extends JPanel {
                 g.drawString(hitSeqStr.substring(cols - offset % cols +
                                                  (k - 1) * cols,
                                                  cols - offset % cols +
-                                                 k * cols), startx,
+                                                 k * cols).toUpperCase(),
+                             startx,
                              (int) (y + (k - 1) * yscale + yOff + 3));
                 g.setColor(color);
                 g.drawString(highlight.substring(cols - offset % cols +
                                                  (k - 1) * cols,
                                                  cols - offset % cols +
-                                                 k * cols), startx,
+                                                 k * cols).toUpperCase(),
+                             startx,
                              (int) (y + (k - 1) * yscale + yOff + 3));
                 g.draw3DRect(startx, (int) (y - height / 2 + (i * yscale)),
                              endx - startx, height, true);
@@ -902,10 +908,12 @@ public class SequenceViewWidgetPanel extends JPanel {
                     );
             g.setColor(SEQUENCEBACKGROUDCOLOR);
             g.drawString(hitSeqStr.substring(cols - offset % cols +
-                                             (k - 1) * cols), startx,
+                                             (k - 1) * cols).toUpperCase(),
+                         startx,
                          (int) (y + (k - 1) * yscale + yOff + 3));
             g.setColor(color);
-            g.drawString(highlight.substring(cols - offset % cols), startx,
+            g.drawString(highlight.substring(cols - offset % cols).toUpperCase(),
+                         startx,
                          (int) (y + (k - 1) * yscale + yOff + 3));
             g.draw3DRect(startx,
                          (int) (y - height / 2 + (k * yscale)),
@@ -1000,14 +1008,15 @@ public class SequenceViewWidgetPanel extends JPanel {
 
         if (!lineView) {
             selected = getSeqIdInFullView(y);
-            seqXclickPoint = (int) ((int) ((y - yOff - 1 -
-                                            ((double) eachSeqStartRowNum[
-                                             selected]) *
-                                            yBasescale) / yBasescale) *
-                                    xBaseCols +
-                                    x / xBasescale -
-                                    5);
-
+            if (selected < eachSeqStartRowNum.length) {
+                seqXclickPoint = (int) ((int) ((y - yOff - 1 -
+                                                ((double) eachSeqStartRowNum[
+                                                 selected]) *
+                                                yBasescale) / yBasescale) *
+                                        xBaseCols +
+                                        x / xBasescale -
+                                        5);
+            }
         } else {
             if (!singleSequenceView) {
                 selected = getSeqId(y);
@@ -1021,11 +1030,14 @@ public class SequenceViewWidgetPanel extends JPanel {
                                         5);
             }
         }
-          selectedSequence = sequenceDB.getSequence(selected);
+        if (selected < sequenceDB.size()) {
+            selectedSequence = sequenceDB.getSequence(selected);
+        }
         if (selectedSequence != null) {
-            displayInfo = "For sequence " + selectedSequence.getLabel() + ", total length: " +
+            displayInfo = "For sequence " + selectedSequence.getLabel() +
+                          ", total length: " +
                           selectedSequence.length();
-            if(sequencePatternmatches!=null){
+            if (sequencePatternmatches != null) {
                 PatternSequenceDisplayUtil psu = sequencePatternmatches.get(
                         selectedSequence);
                 if (psu != null && psu.getTreeSet() != null) {
@@ -1080,7 +1092,7 @@ public class SequenceViewWidgetPanel extends JPanel {
 //    }
 
     public void this_mouseMoved(MouseEvent e) {
-         setTranslatedParameters(e);
+        setTranslatedParameters(e);
         if (!lineView) {
             mouseOverFullView(e);
         } else {
@@ -1227,7 +1239,7 @@ public class SequenceViewWidgetPanel extends JPanel {
 //                              sequence.length();
                 if ((off <= sequenceDB.getSequence(seqid).length()) && (off > 0)) {
                     this.setToolTipText("" + off);
-                  //  displayInfo += ". Current location: " + off;
+                    //  displayInfo += ". Current location: " + off;
                 }
             }
         } else {

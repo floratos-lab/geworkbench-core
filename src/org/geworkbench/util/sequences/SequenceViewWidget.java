@@ -146,7 +146,8 @@ public class SequenceViewWidget extends JPanel {
                 showAllBtn_actionPerformed(e);
             }
         });
-        jAllSequenceCheckBox.setSelected(true);
+        jAllSequenceCheckBox.setToolTipText("Click to display all sequences.");
+        jAllSequenceCheckBox.setSelected(false);
         jAllSequenceCheckBox.setText("All Sequences");
         jAllSequenceCheckBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -166,6 +167,7 @@ public class SequenceViewWidget extends JPanel {
                 jViewComboBox_actionPerformed(e);
             }
         });
+        jViewComboBox.setToolTipText("Select a view to display results.");
         this.add(jPanel1, BorderLayout.SOUTH);
         this.add(seqScrollPane, BorderLayout.CENTER);
         this.add(jToolBar1, BorderLayout.NORTH);
