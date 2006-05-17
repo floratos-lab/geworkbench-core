@@ -433,8 +433,7 @@ public class SequenceViewWidget extends JPanel {
                                 double x2 = ((double) patLength) *
                                             scale;
                                 g.setColor(PatternOperations.
-                                           getPatternColor(new Integer(pl.
-                                        getHashcode())));
+                                           getPatternColor(new Integer(pl.getIdForDisplay())));
                                 g.drawRect((int) x1, 2, (int) x2, 23);
                                 g.drawString("|",
                                              (int) x1, (int) (20 + yscale));

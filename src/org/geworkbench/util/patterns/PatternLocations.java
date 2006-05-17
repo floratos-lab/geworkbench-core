@@ -17,7 +17,7 @@ import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSSeqRegistr
 public class PatternLocations implements Comparable{
         private String ascii;
         private  DSSeqRegistration registration;
-        private int hashcode;
+        private int idForDisplay;
         private String patternType;
         private final String DEFAULTTYPE = "splash";
 
@@ -32,8 +32,8 @@ public class PatternLocations implements Comparable{
             patternType = DEFAULTTYPE;
         }
 
-    public int getHashcode() {
-        return hashcode;
+    public int getIdForDisplay() {
+        return idForDisplay;
     }
 
     public String getAscii() {
@@ -49,7 +49,7 @@ public class PatternLocations implements Comparable{
     }
 
     public void setHashcode(int hashcode) {
-        this.hashcode = hashcode;
+        this.idForDisplay = hashcode;
     }
 
     public void setAscii(String ascii) {

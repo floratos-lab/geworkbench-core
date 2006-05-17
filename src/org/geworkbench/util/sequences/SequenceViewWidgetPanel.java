@@ -207,7 +207,7 @@ public class SequenceViewWidgetPanel extends JPanel {
                                                 yscale,
                                                 eachSeqStartRowNum[seqId], cols,
                                                 PatternOperations.
-                                                getPatternColor(pl.getHashcode()),
+                                                getPatternColor(pl.getIdForDisplay()),
                                                 pl.getAscii());
 
                                 }
@@ -288,7 +288,7 @@ public class SequenceViewWidgetPanel extends JPanel {
                                 drawPattern(g, theone, reg.x1, xscale,
                                             yscale, 0, cols,
                                             PatternOperations.
-                                            getPatternColor(pl.getHashcode()),
+                                            getPatternColor(pl.getIdForDisplay()),
                                             pl.getAscii());
 
                             }
@@ -539,7 +539,7 @@ public class SequenceViewWidgetPanel extends JPanel {
                                                 reg.length(),
                                                 r,
                                                 PatternOperations.
-                                                getPatternColor(pl.getHashcode()));
+                                                getPatternColor(pl.getIdForDisplay()));
                                 }
                             }
                         }
