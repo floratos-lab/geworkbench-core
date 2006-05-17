@@ -20,7 +20,12 @@ import java.util.Vector;
 
 public class ImageData extends CSAncillaryDataSet {
 
-    private File imageFile = null;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 3899156889448935110L;
+	
+	private File imageFile = null;
     private ImageIcon image = null;
     private Vector descriptions = new Vector();
     private String name = null;
