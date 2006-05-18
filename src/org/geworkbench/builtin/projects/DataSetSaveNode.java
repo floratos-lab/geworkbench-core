@@ -16,6 +16,10 @@ import java.util.List;
  */
 public class DataSetSaveNode implements Serializable {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 2094279433020194290L;
     private String name;
     private DSDataSet dataSet;
     private String visualSelected;

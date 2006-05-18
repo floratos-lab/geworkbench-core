@@ -1,18 +1,23 @@
 package org.geworkbench.bison.datastructure.complex.panels;
 
-import org.geworkbench.bison.datastructure.properties.DSNamed;
-import org.geworkbench.bison.util.RandomNumberGenerator;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
 
+import org.geworkbench.bison.datastructure.properties.DSNamed;
+import org.geworkbench.bison.util.RandomNumberGenerator;
+
 /**
  * A default {@link DSItemList} implementation that is backed by an ArrayList and a HashMap.
  */
 public class CSItemList <T extends DSNamed> extends ArrayList<T> implements DSItemList<T> {
-
+    
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -8885836819661037974L;
+    
     String id = RandomNumberGenerator.getID();
     //use Hashtable to not allow null keys
     protected Hashtable<String, T> objectMap = new Hashtable<String, T>();

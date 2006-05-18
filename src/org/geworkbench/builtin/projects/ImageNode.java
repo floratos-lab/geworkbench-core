@@ -15,6 +15,10 @@ import javax.swing.*;
 //ProjectTreeNode
 public class ImageNode extends  DataSetSubNode {
     /**
+     * 
+     */
+    private static final long serialVersionUID = 1741751707465515060L;
+    /**
      * <code>ImageIcon</code> that this <code>ImageNode</code> refers to
      */
     public ImageIcon image;
