@@ -6,9 +6,6 @@ import java.util.List;
 
 import javax.swing.tree.DefaultTreeModel;
 
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
@@ -18,8 +15,6 @@ import org.geworkbench.engine.skin.Skin;
  * @author John Watkinson
  */
 public class SaveTree implements Serializable {
-	
-	transient private Log log = LogFactory.getLog(this.getClass());
 	
 	/**
 	 * 
@@ -54,12 +49,18 @@ public class SaveTree implements Serializable {
             if (treeNode instanceof DataSetNode) {
                 DataSetNode childNode = (DataSetNode) treeNode;
                 dataSet = childNode.dataFile;
-            } else if (treeNode instanceof DataSetSubNode) {
+            }
+            else if (treeNode instanceof ImageNode) {
+            	ImageNode childNode = (ImageNode) treeNode;
+                dataSet = childNode._aDataSet;
+                if (dataSet.getID() == null)
+                	dataSet.setID(RandomNumberGenerator.getID());
+            }
+            else if (treeNode instanceof DataSetSubNode) {
                 DataSetSubNode childNode = (DataSetSubNode) treeNode;
                 dataSet = childNode._aDataSet;
-                if (dataSet.getID() == null){
+                if (dataSet.getID() == null)
                 	dataSet.setID(RandomNumberGenerator.getID());
-                }
             }
            
             DataSetSaveNode childSave = new DataSetSaveNode(dataSet);
