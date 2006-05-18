@@ -1,20 +1,30 @@
 package org.geworkbench.builtin.projects;
 
-import org.apache.commons.collections15.map.ListOrderedMap;
-import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.engine.config.rules.GeawConfigObject;
-import org.geworkbench.engine.skin.Skin;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeNode;
-import java.io.Serializable;
-import java.util.List;
-import java.util.ArrayList;
+
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.util.RandomNumberGenerator;
+import org.geworkbench.engine.config.rules.GeawConfigObject;
+import org.geworkbench.engine.skin.Skin;
 
 /**
  * @author John Watkinson
  */
 public class SaveTree implements Serializable {
+	
+	transient private Log log = LogFactory.getLog(this.getClass());
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2534917305724421302L;
 
     List<DataSetSaveNode> nodes;
     private DSDataSet selected;
@@ -47,7 +57,11 @@ public class SaveTree implements Serializable {
             } else if (treeNode instanceof DataSetSubNode) {
                 DataSetSubNode childNode = (DataSetSubNode) treeNode;
                 dataSet = childNode._aDataSet;
+                if (dataSet.getID() == null){
+                	dataSet.setID(RandomNumberGenerator.getID());
+                }
             }
+           
             DataSetSaveNode childSave = new DataSetSaveNode(dataSet);
             childSave.setCommandSelected(skin.getCommandLastSelected(dataSet));
             childSave.setSelectionSelected(skin.getSelectionLastSelected(dataSet));
