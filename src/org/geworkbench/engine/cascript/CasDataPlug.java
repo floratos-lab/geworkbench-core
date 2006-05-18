@@ -10,7 +10,7 @@ import java.io.PrintWriter;
  * @author Behrooz Badii - badiib@gmail.com
  */
 
-class CasDataPlug extends CasDataType {
+public class CasDataPlug extends CasDataType {
     public CasDataPlug() {
     }
 
@@ -31,7 +31,7 @@ class CasDataPlug extends CasDataType {
         var = variable;
     }
 
-    CasDataPlug(String n, String t, CasDataTypeImport C) {
+    public CasDataPlug(String n, String t, CasDataTypeImport C) {
         //CDTI = C;
         name = n;
         type = t;
