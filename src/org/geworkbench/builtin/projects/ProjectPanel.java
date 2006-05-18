@@ -1,11 +1,53 @@
 package org.geworkbench.builtin.projects;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
+import java.util.Enumeration;
+import java.util.HashMap;
+
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.JTree;
+import javax.swing.SwingConstants;
+import javax.swing.ToolTipManager;
+import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
+
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.bison.datastructure.biocollections.microarrays.
-        DSMicroarraySet;
-import org.geworkbench.bison.datastructure.biocollections.views.
-        CSMicroarraySetView;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
+import org.geworkbench.bison.datastructure.biocollections.views.CSMicroarraySetView;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
@@ -29,23 +71,14 @@ import org.geworkbench.engine.parsers.microarray.DataSetFileFormat;
 import org.geworkbench.engine.parsers.patterns.PatternFileFormat;
 import org.geworkbench.engine.preferences.GlobalPreferences;
 import org.geworkbench.engine.skin.Skin;
-import org.geworkbench.events.*;
+import org.geworkbench.events.CommentsEvent;
+import org.geworkbench.events.ImageSnapshotEvent;
+import org.geworkbench.events.MicroarrayNameChangeEvent;
+import org.geworkbench.events.NormalizationEvent;
+import org.geworkbench.events.ProjectEvent;
+import org.geworkbench.events.SingleValueEditEvent;
 import org.geworkbench.util.PropertiesMonitor;
 import org.geworkbench.util.SaveImage;
-
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.tree.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.io.*;
-import java.util.Enumeration;
-import java.util.HashMap;
-import org.geworkbench.bison.datastructure.biocollections.microarrays.
-        CSMicroarraySet;
 
 /**
  * <p>Title: Plug And Play</p>
@@ -58,7 +91,7 @@ import org.geworkbench.bison.datastructure.biocollections.microarrays.
  */
 
 public class ProjectPanel implements VisualPlugin, MenuListener {
-
+	
     private static TypeMap<ImageIcon> iconMap = new TypeMap<ImageIcon>();
 
     static {
@@ -261,7 +294,15 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                 java.util.List<DataSetSaveNode> ancSets = dataNode.getChildren();
                 for (DataSetSaveNode ancNode : ancSets) {
                     setComponents(ancNode);
-                    DSAncillaryDataSet ancSet = (DSAncillaryDataSet) ancNode.getDataSet();
+                    
+                    DSAncillaryDataSet ancSet = null;
+                    if (ancNode.getDataSet() instanceof ImageData){
+                    	ancSet = (ImageData) ancNode.getDataSet();
+                    }
+                    else{
+                    	ancSet = (DSAncillaryDataSet) ancNode.getDataSet();
+                    }
+                    
                     addDataSetSubNode(ancSet);
                     if (ancSet == saveTree.getSelected()) {
                         selectedNode = selection.getSelectedNode();
@@ -499,9 +540,15 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                 }
             }
         }
-
+        
+        DataSetSubNode node = null;
+        if (_ancDataSet instanceof ImageData){
+        	node = new ImageNode(((ImageData)_ancDataSet).getImageIcon());
+        }
+        else{
+        	node = new DataSetSubNode(_ancDataSet);
+        }
         // Inserts the new node and sets the menuNode and other variables to point to it
-        DataSetSubNode node = new DataSetSubNode(_ancDataSet);
         projectTreeModel.insertNodeInto(node, dNode, dNode.getChildCount());
         // Make sure the user can see the lovely new node.
         projectTree.scrollPathToVisible(new TreePath(node));
