@@ -49,6 +49,7 @@ import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarr
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.views.CSMicroarraySetView;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
+import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
@@ -80,6 +81,24 @@ import org.geworkbench.events.SingleValueEditEvent;
 import org.geworkbench.util.PropertiesMonitor;
 import org.geworkbench.util.SaveImage;
 
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.tree.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.io.*;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.geworkbench.bison.datastructure.biocollections.microarrays.
+        CSMicroarraySet;
+import org.apache.commons.collections15.map.ListOrderedMap;
+import com.Ostermiller.util.CSVPrinter;
+
 /**
  * <p>Title: Plug And Play</p>
  * <p>Description: Dynamic Proxy Implementation of enGenious</p>
@@ -91,7 +110,7 @@ import org.geworkbench.util.SaveImage;
  */
 
 public class ProjectPanel implements VisualPlugin, MenuListener {
-	
+
     private static TypeMap<ImageIcon> iconMap = new TypeMap<ImageIcon>();
 
     static {
@@ -129,6 +148,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
     private JMenuItem jRemoveSubItem = new JMenuItem();
     private JMenuItem jRenameSubItem = new JMenuItem();
     private JMenuItem jEditItem = new JMenuItem();
+    private JMenuItem jViewAnnotations = new JMenuItem();
 
     /**
      * added by XQ 4/7/04
@@ -253,12 +273,67 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                 }
             }
         });
+        jViewAnnotations.setText("View Annotations");
+        jViewAnnotations.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (selection.getSelectedNode() instanceof DataSetNode) {
+                    DSDataSet ds = selection.getDataSet();
+                    ListOrderedMap<String, Map<String, String>> annots = AnnotationParser.getAllAnnotationsForDataSet(ds);
+                    if (annots == null) {
+                        JOptionPane.showMessageDialog(null,
+                                "There are no annotations loaded for this dataset.",
+                                "Unable to View",
+                                JOptionPane.INFORMATION_MESSAGE);
+                        return;
+                    }
+                    File tempAnnot = new File("annotations-temp.csv");
+                    try {
+                        CSVPrinter csvout = new CSVPrinter(new BufferedOutputStream(new FileOutputStream(tempAnnot)));
+                        // Output labels
+                        Map<String, String> firstSet = (Map<String, String>) annots.values().iterator().next();
+                        csvout.print(AnnotationParser.PROBE_SET_ID);
+                        for (String header : firstSet.keySet()) {
+                            csvout.print(header);
+                        }
+                        csvout.println();
+                        for (String id : annots.keySet()) {
+                            csvout.print(id);
+                            Map<String, String> entries = annots.get(id);
+                            for (String annotation : entries.values()) {
+                                csvout.print(annotation);
+                            }
+                            csvout.println();
+                        }
+                        csvout.flush();
+                        csvout.close();
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
+
+                    GlobalPreferences prefs = GlobalPreferences.getInstance();
+                    String editor = prefs.getTextEditor();
+                    if (editor == null) {
+                        System.out.println("No editor configured.");
+                    } else {
+                        String[] args = {editor,
+                                        tempAnnot.getAbsolutePath()};
+                        try {
+                            Runtime.getRuntime().exec(args);
+                        } catch (IOException e1) {
+                            System.out.println("Error opening editor:");
+                            e1.printStackTrace();
+                        }
+                    }
+                }
+            }
+        });
 
         dataSetMenu.add(jSaveMenuItem);
         dataSetMenu.addSeparator();
         dataSetMenu.add(jRenameMenuItem);
         dataSetMenu.add(jRemoveDatasetItem);
         dataSetMenu.add(jEditItem);
+        dataSetMenu.add(jViewAnnotations);
 
         dataSetSubMenu.add(jRenameSubItem);
         dataSetSubMenu.add(jRemoveSubItem);
@@ -294,7 +369,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                 java.util.List<DataSetSaveNode> ancSets = dataNode.getChildren();
                 for (DataSetSaveNode ancNode : ancSets) {
                     setComponents(ancNode);
-                    
+
                     DSAncillaryDataSet ancSet = null;
                     if (ancNode.getDataSet() instanceof ImageData){
                     	ancSet = (ImageData) ancNode.getDataSet();
@@ -302,7 +377,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                     else{
                     	ancSet = (DSAncillaryDataSet) ancNode.getDataSet();
                     }
-                    
+
                     addDataSetSubNode(ancSet);
                     if (ancSet == saveTree.getSelected()) {
                         selectedNode = selection.getSelectedNode();
@@ -540,7 +615,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                 }
             }
         }
-        
+
         DataSetSubNode node = null;
         if (_ancDataSet instanceof ImageData){
         	node = new ImageNode(((ImageData)_ancDataSet).getImageIcon());

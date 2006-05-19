@@ -201,7 +201,7 @@ public class StanfordExpressionFormat extends DataSetFileFormat {
         } else {
             if (mArraySet.getCompatibilityLabel() == null) {
                 String[] st = line.split("\t");
-                String chiptype = AnnotationParser.matchChipType(st[0], false);
+                String chiptype = AnnotationParser.matchChipType(mArraySet, st[0], false);
                 if (chiptype != null) {
                     mArraySet.setCompatibilityLabel(chiptype);
                 }

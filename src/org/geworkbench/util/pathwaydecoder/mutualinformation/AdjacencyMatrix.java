@@ -565,10 +565,10 @@ public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMa
      * @param serial int
      */
     public void addMarkerName(int serial) {
-        String tmp = maSet.getMarkers().get(serial).toString();
-        int s1 = tmp.indexOf("(") + 1;
-        int s2 = tmp.indexOf(")");
-        String genename = tmp.substring(s1, s2);
+        String genename = maSet.getMarkers().get(serial).getGeneName();
+//        int s1 = tmp.indexOf("(") + 1;
+//        int s2 = tmp.indexOf(")");
+//        String genename = tmp.substring(s1, s2);
         // System.out.println("addMarkerName "+ description);
         keyMapping.put(new Integer(serial), genename);
     }

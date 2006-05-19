@@ -2,6 +2,8 @@ package org.geworkbench.bison.datastructure.properties;
 
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -19,8 +21,11 @@ import java.util.ArrayList;
  * @version 1.0
  */
 public class CSUnigene implements DSUnigene, Serializable {
+
+    static Log log = LogFactory.getLog(CSUnigene.class);
+
     /**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1738760385691617771L;
 	public static ArrayList<String> organisms = new ArrayList<String>();
@@ -127,9 +132,13 @@ public class CSUnigene implements DSUnigene, Serializable {
             String unigeneid = unigeneIds[0];
             if (unigeneid.length() > 1) {
                 String unigene = unigeneid.substring(unigeneid.indexOf('.') + 1, unigeneid.length());
-                unigeneId = Integer.parseInt(unigene);
-                String org = unigeneid.substring(0, unigeneid.indexOf('.'));
-                organism = (organisms.indexOf(org));
+                try {
+                    unigeneId = Integer.parseInt(unigene);
+                    String org = unigeneid.substring(0, unigeneid.indexOf('.'));
+                    organism = (organisms.indexOf(org));
+                } catch (NumberFormatException e) {
+                    log.debug(unigene+" had no valid Entrez Gene (Locus Link)");
+                }
             }
         } else {
             unigeneIds = AnnotationParser.getInfo(label, AnnotationParser.UNIGENE);

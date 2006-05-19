@@ -138,13 +138,13 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
                 // Set chip-type
                 String result = null;
                 for (int i = 0; i < m; i++) {
-                    result = AnnotationParser.matchChipType(maSet.getMarkerVector().get(i).getLabel(), false);
+                    result = AnnotationParser.matchChipType(maSet, maSet.getMarkerVector().get(i).getLabel(), false);
                     if (result != null) {
                         break;
                     }
                 }
                 if (result == null) {
-                    AnnotationParser.matchChipType("Unknown", true);
+                    AnnotationParser.matchChipType(maSet, "Unknown", true);
                 } else {
                     maSet.setCompatibilityLabel(result);
                 }

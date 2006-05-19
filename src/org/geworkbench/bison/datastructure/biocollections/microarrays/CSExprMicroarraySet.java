@@ -10,6 +10,8 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.A
 import org.geworkbench.bison.datastructure.bioobjects.microarray.*;
 import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.bison.util.Range;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.swing.*;
 import java.io.*;
@@ -27,8 +29,10 @@ import java.util.*;
 
 public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implements Serializable {
 
+    static Log log = LogFactory.getLog(CSExprMicroarraySet.class);
+
     /**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 6763897988197502601L;
 	private HashMap properties = new HashMap();
@@ -117,10 +121,10 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
                 }
             }
             rm.reader.close();
-            if (this.getCompatibilityLabel() == null) {
-                JOptionPane.showMessageDialog(null, "Can't recognize the chiptype of the file.");
-                AnnotationParser.callUserDefinedAnnotation();
-            }
+//            if (this.getCompatibilityLabel() == null) {
+//                JOptionPane.showMessageDialog(null, "Can't recognize the chiptype of the file.");
+//                AnnotationParser.callUserDefinedAnnotation(this);
+//            }
         } catch (InterruptedIOException iioe) {
             iioe.printStackTrace();
             loadingCancelled = true;
@@ -288,7 +292,11 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
                         markerVector.get(currGeneId).getUnigene().set(token);
 
                         if (locus.compareTo(" ") != 0) {
-                            markerVector.get(currGeneId).setGeneId(Integer.parseInt(locus));
+                            try {
+                                markerVector.get(currGeneId).setGeneId(Integer.parseInt(locus));
+                            } catch (NumberFormatException e) {
+                                log.debug("Invalid locus link for gene "+currGeneId);
+                            }
                         }
 
                         String[] geneNames = AnnotationParser.getInfo(token, AnnotationParser.ABREV);
@@ -354,7 +362,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
                     } else if (line.charAt(0) != '\t') {
                         if (mArraySet.getCompatibilityLabel() == null) {
                             String token = line.substring(0, startindx);
-                            String chiptype = AnnotationParser.matchChipType(token, false);
+                            String chiptype = AnnotationParser.matchChipType(mArraySet, token, false);
                             if (chiptype != null) {
                                 mArraySet.setCompatibilityLabel(chiptype);
                             }
