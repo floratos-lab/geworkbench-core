@@ -268,6 +268,25 @@ public class AnnotationParser {
 //        }
     }
 
+    static public String getInfoAsString(String affyID, String fieldID) {
+        String[] result = getInfo(affyID, fieldID);
+
+        String info = " ";
+        if (result == null) {
+            return affyID;
+        }
+
+        if (result.length > 0) {
+            info = result[0];
+            for (int i = 1; i < result.length; i++) {
+                info += "/" + result[i];
+            }
+        }
+
+        return info;
+    }
+
+
     //used to parse info from raw go data
     private static String parseGo(String godata) {
         String result = "";

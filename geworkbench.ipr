@@ -204,6 +204,7 @@
       <module fileurl="file://$PROJECT_DIR$/components/example/example.iml" filepath="$PROJECT_DIR$/components/example/example.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/filtering/filtering.iml" filepath="$PROJECT_DIR$/components/filtering/filtering.iml" />
       <module fileurl="file://$PROJECT_DIR$/geworkbench.iml" filepath="$PROJECT_DIR$/geworkbench.iml" />
+      <module fileurl="file://$PROJECT_DIR$/components/gominer/gominer.iml" filepath="$PROJECT_DIR$/components/gominer/gominer.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/goterms/goterms.iml" filepath="$PROJECT_DIR$/components/goterms/goterms.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/gsea/gsea.iml" filepath="$PROJECT_DIR$/components/gsea/gsea.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/hierarchicalclustering/hierarchicalclustering.iml" filepath="$PROJECT_DIR$/components/hierarchicalclustering/hierarchicalclustering.iml" />
