@@ -1,5 +1,5 @@
 /*
- * $Id: LED.java,v 1.1 2006-05-24 19:24:51 mkustagi Exp $
+ * $Id: LED.java,v 1.2 2006-05-24 19:31:59 mkustagi Exp $
  *
  * Copyright (c) 1999 Per Jensen.
  * <pj@image.dk>
@@ -43,7 +43,7 @@ public class LED extends JComponent implements Runnable {
     private boolean enabled = true;
     private boolean blink = false;
     private Thread t;
-    
+    private Color deeperGreen = new Color(0, 225, 25);
     
     /**
      * Create a LED which switches between red and gray.<BR>
@@ -55,7 +55,7 @@ public class LED extends JComponent implements Runnable {
      */
     
     public LED() {
-        this(new Color(255, 0, 0),new Color(0, 240, 15),500);
+        this(Color.red, new Color(0, 225, 25), 500);
     }
     
     /**
@@ -143,7 +143,7 @@ public class LED extends JComponent implements Runnable {
         try {
             while ( true ){
                 if ( !goOn ) {
-                    c = Color.gray;
+                    c = deeperGreen;
                     repaint();
                     break;
                 }
