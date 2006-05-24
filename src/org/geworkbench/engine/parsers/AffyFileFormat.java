@@ -5,6 +5,7 @@ import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
+import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
 import org.geworkbench.bison.parsers.AffymetrixParser;
 import org.geworkbench.bison.parsers.resources.AffyResource;
@@ -126,6 +127,7 @@ public class AffyFileFormat extends DataSetFileFormat {
             microarraySet.setLabel(file.getName());
             microarraySet.setCompatibilityLabel("MAS");
             microarraySet.initialize(1, v.size());
+            String chiptype = AnnotationParser.matchChipType(microarraySet, "dummymarker", false);
             CSMarkerVector markerVector = (CSMarkerVector) microarraySet.getMarkers();
             int count = 0;
             for (Iterator it = v.iterator(); it.hasNext();) {
