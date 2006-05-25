@@ -2,6 +2,9 @@ package org.geworkbench.engine.management;
 
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Enumeration;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * A classloader that allows class definitions in the component to override those of the parent.
@@ -32,6 +35,14 @@ public class ComponentClassLoader extends URLClassLoader {
         return loadClass(name, true);
     }
 
+    public URL getResource(String name) {
+        URL url = findResource(name);
+        if (url == null) {
+            url = super.getResource(name);
+        }
+        return url;
+    }
+
     /**
      * Attempts to load the class in this classloader before deferring to parent.
      */
@@ -59,4 +70,6 @@ public class ComponentClassLoader extends URLClassLoader {
         }
         return type;
     }
+
+
 }
