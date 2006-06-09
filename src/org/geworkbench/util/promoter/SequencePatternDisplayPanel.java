@@ -18,6 +18,8 @@ import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import org.geworkbench.util.sequences.SequenceViewWidgetPanel;
+import org.geworkbench.util.sequences.SequenceViewWidget;
 
 /**
  * <p>Title: </p>
@@ -29,7 +31,7 @@ import java.util.List;
  * @version 1.0
  */
 
-public class SequencePatternDisplayPanel extends JPanel {
+public class SequencePatternDisplayPanel extends SequenceViewWidget{
     final int xOff = 60;
     final int yOff = 20;
     final int xStep = 5;
@@ -48,10 +50,10 @@ public class SequencePatternDisplayPanel extends JPanel {
                                                   DSSequence, DSSeqRegistration>,
                                                   List<DSPatternMatch<
                                                   DSSequence, DSSeqRegistration>>>();
-    JPanel jinfoPanel = null;
+    JPanel jinfoPanel = new JPanel();
 
     public void setInfoPanel(JPanel jinfoPanel) {
-        this.jinfoPanel = jinfoPanel;
+       // this.jinfoPanel = jinfoPanel;
     }
 
     public JPanel getInfoPanel() {
@@ -86,7 +88,10 @@ public class SequencePatternDisplayPanel extends JPanel {
     }
 
     public void initialize(DSSequenceSet seqDB) {
+        super.setSequenceDB(seqDB);
+        //super.initialize(null, seqDB);
         //        selectedPatterns = ar;
+
         patternMatches.clear();
         patternDisplay.clear();
         sequenceDB = seqDB;
@@ -109,11 +114,11 @@ public class SequencePatternDisplayPanel extends JPanel {
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if (isText) {
-            paintText(g);
-        } else {
-            paintGraphic(g);
-        }
+//        if (isText) {
+//            paintText(g);
+//        } else {
+//            paintGraphic(g);
+//        }
     }
 
     private void paintGraphic(Graphics g) {
@@ -433,7 +438,7 @@ public class SequencePatternDisplayPanel extends JPanel {
     //    }
 
     //
-    void this_mouseClicked(MouseEvent e) {
+    public void this_mouseClicked(MouseEvent e) {
         if (e.getClickCount() == 2) {
             if (!isText) {
                 int y = e.getY();
@@ -446,7 +451,7 @@ public class SequencePatternDisplayPanel extends JPanel {
 
     }
 
-    void this_mouseMoved(MouseEvent e) {
+    public void this_mouseMoved(MouseEvent e) {
         if (!isText) {
             mouseOverGraph(e);
         } else {
@@ -557,18 +562,18 @@ public class SequencePatternDisplayPanel extends JPanel {
     }
 
     private void displayInfo(String display) {
-
+//disabled.
         //                                this.setToolTipText(display);
-        if (jinfoPanel != null) {
-            Graphics g = jinfoPanel.getGraphics();
-            Font f = new Font("Courier New", Font.PLAIN, 11);
-            ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                                              RenderingHints.VALUE_ANTIALIAS_ON);
-            g.clearRect(0, 0, jinfoPanel.getWidth(), jinfoPanel.getHeight());
-            g.setFont(f);
-            g.drawString(display, 10, 20);
-
-        }
+//        if (jinfoPanel != null) {
+//            Graphics g = jinfoPanel.getGraphics();
+//            Font f = new Font("Courier New", Font.PLAIN, 11);
+//            ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+//                                              RenderingHints.VALUE_ANTIALIAS_ON);
+//            g.clearRect(0, 0, jinfoPanel.getWidth(), jinfoPanel.getHeight());
+//            g.setFont(f);
+//            g.drawString(display, 10, 20);
+//
+//        }
     }
 
     public void addAPattern(DSPattern<DSSequence, DSSeqRegistration> pt,

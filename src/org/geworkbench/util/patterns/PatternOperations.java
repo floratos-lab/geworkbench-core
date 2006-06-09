@@ -103,7 +103,13 @@ public class PatternOperations {
             p.ascii = ascii;
         }
     }
-
+    /**
+     * A utility to create a match between a sequence with all available patterns within the sequence.
+     *
+     * @param patterns DSCollection
+     * @param sequenceDB DSSequenceSet
+     * @return HashMap
+     */
     public static HashMap<CSSequence,
             PatternSequenceDisplayUtil> processPatterns(DSCollection<
             DSMatchedPattern<DSSequence,
@@ -149,7 +155,7 @@ public class PatternOperations {
                                 PatternLocations pl = new PatternLocations(
                                         pattern.
                                         getASCII(), reg);
-                                pl.setHashcode(pattern.hashCode());
+                                pl.setIDForDisplay(pattern.hashCode());
                                 pu.addPattern(pl);
 
                             }

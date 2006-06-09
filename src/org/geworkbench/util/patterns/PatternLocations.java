@@ -19,7 +19,8 @@ public class PatternLocations implements Comparable{
         private  DSSeqRegistration registration;
         private int idForDisplay;
         private String patternType;
-        private final String DEFAULTTYPE = "splash";
+        public final String DEFAULTTYPE = "splash";
+        public final String TFTYPE = "TFBS";
 
         public PatternLocations(String _ascii){
             ascii = _ascii;
@@ -48,7 +49,7 @@ public class PatternLocations implements Comparable{
         return registration;
     }
 
-    public void setHashcode(int hashcode) {
+    public void setIDForDisplay(int hashcode) {
         this.idForDisplay = hashcode;
     }
 

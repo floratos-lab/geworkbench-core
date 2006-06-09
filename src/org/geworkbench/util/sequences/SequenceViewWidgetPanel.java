@@ -71,7 +71,13 @@ public class SequenceViewWidgetPanel extends JPanel {
     void jbInit() throws Exception {
 
     }
-
+    /**
+     * New Initialization method. It should be used as a main entry point. Others initialization method
+     * should be disabled or replaced.
+     * @param patternSeqMatches HashMap
+     * @param seqDB DSSequenceSet
+     * @param isLineView boolean
+     */
     public void initialize(HashMap<CSSequence,
                            PatternSequenceDisplayUtil> patternSeqMatches,
                            DSSequenceSet seqDB,
@@ -85,11 +91,11 @@ public class SequenceViewWidgetPanel extends JPanel {
 
 
     //public void initialize(ArrayList patterns, CSSequenceSet seqDB) {
-    public void initialize(DSCollection<DSMatchedPattern<DSSequence,
-                           DSSeqRegistration>> matches, DSSequenceSet seqDB) {
-
-        initialize(matches, seqDB, true);
-    }
+//    public void initialize(DSCollection<DSMatchedPattern<DSSequence,
+//                           DSSeqRegistration>> matches, DSSequenceSet seqDB) {
+//
+//        initialize(matches, seqDB, true);
+//    }
 
     /**
      * THe inistialization of the panel.
@@ -97,14 +103,14 @@ public class SequenceViewWidgetPanel extends JPanel {
      * @param seqDB DSSequenceSet
      * @param isLineView boolean
      */
-    public void initialize(DSCollection<DSMatchedPattern<DSSequence,
-                           DSSeqRegistration>> matches, DSSequenceSet seqDB,
-                           boolean isLineView) {
-        selectedPatterns = matches;
-        sequenceDB = seqDB;
-        lineView = isLineView;
-        repaint();
-    }
+//    public void initialize(DSCollection<DSMatchedPattern<DSSequence,
+//                           DSSeqRegistration>> matches, DSSequenceSet seqDB,
+//                           boolean isLineView) {
+//        selectedPatterns = matches;
+//        sequenceDB = seqDB;
+//        lineView = isLineView;
+//        repaint();
+//    }
 
 
     public void paintComponent(Graphics g) {
@@ -442,61 +448,61 @@ public class SequenceViewWidgetPanel extends JPanel {
 //            }
 //        }
 //    }
-    private void paintGraphic(Graphics g) {
-        Font f = new Font("Courier New", Font.PLAIN, 10);
-        if (sequenceDB != null) {
-            int rowId = -1;
-
-            int seqNo = sequenceDB.getSequenceNo();
-
-            scale = Math.min(5.0,
-                             (double) (this.getWidth() - 20 - xOff) /
-                             (double) maxSeqLen);
-            g.clearRect(0, 0, getWidth(), getHeight());
-            // draw the patterns
-            g.setFont(f);
-            JViewport scroller = (JViewport)this.getParent();
-            Rectangle r = new Rectangle();
-            r = scroller.getViewRect();
-
-            for (int seqId = 0; seqId < seqNo; seqId++) {
-                rowId++;
-                drawSequence(g, seqId, seqId, maxSeqLen);
-            }
-
-            //  for (DSPattern pattern : patternMatches.keySet()) {
-            // List<DSPatternMatch<DSSequence, DSSeqRegistration>> matches = selectedPatterns;
-
-            if ((selectedPatterns != null) && (selectedPatterns.size() > 0)) {
-                for (Object pattern : selectedPatterns) {
-                    CSMatchedSeqPattern pat = (CSMatchedSeqPattern) pattern;
-                    int lastSeqId = -1;
-                    for (int locusId = 0; locusId < pat.getSupport(); locusId++) {
-                        int seqId = pat.getId(locusId);
-                        if (seqId > lastSeqId) {
-                            rowId++;
-                            //   drawSequence(g, rowId, seqId, maxSeqLen);
-                            lastSeqId = seqId;
-                        }
-                        drawPattern(g, rowId, locusId, pat, r,
-                                    PatternOperations.getPatternColor(pat.
-                                hashCode()));
-                    }
-
-                }
-                // drawPattern(g, selectedPatterns, r, (Display) patternDisplay.get(pattern));
-            }
-
-            //   }
-            int maxY = (seqNo + 1) * yStep + yOff;
-            setPreferredSize(new Dimension(this.getWidth() - yOff, maxY));
-            revalidate();
-
-        } else {
-
-        }
-
-    }
+//    private void paintGraphic(Graphics g) {
+//        Font f = new Font("Courier New", Font.PLAIN, 10);
+//        if (sequenceDB != null) {
+//            int rowId = -1;
+//
+//            int seqNo = sequenceDB.getSequenceNo();
+//
+//            scale = Math.min(5.0,
+//                             (double) (this.getWidth() - 20 - xOff) /
+//                             (double) maxSeqLen);
+//            g.clearRect(0, 0, getWidth(), getHeight());
+//            // draw the patterns
+//            g.setFont(f);
+//            JViewport scroller = (JViewport)this.getParent();
+//            Rectangle r = new Rectangle();
+//            r = scroller.getViewRect();
+//
+//            for (int seqId = 0; seqId < seqNo; seqId++) {
+//                rowId++;
+//                drawSequence(g, seqId, seqId, maxSeqLen);
+//            }
+//
+//            //  for (DSPattern pattern : patternMatches.keySet()) {
+//            // List<DSPatternMatch<DSSequence, DSSeqRegistration>> matches = selectedPatterns;
+//
+//            if ((selectedPatterns != null) && (selectedPatterns.size() > 0)) {
+//                for (Object pattern : selectedPatterns) {
+//                    CSMatchedSeqPattern pat = (CSMatchedSeqPattern) pattern;
+//                    int lastSeqId = -1;
+//                    for (int locusId = 0; locusId < pat.getSupport(); locusId++) {
+//                        int seqId = pat.getId(locusId);
+//                        if (seqId > lastSeqId) {
+//                            rowId++;
+//                            //   drawSequence(g, rowId, seqId, maxSeqLen);
+//                            lastSeqId = seqId;
+//                        }
+//                        drawPattern(g, rowId, locusId, pat, r,
+//                                    PatternOperations.getPatternColor(pat.
+//                                hashCode()));
+//                    }
+//
+//                }
+//                // drawPattern(g, selectedPatterns, r, (Display) patternDisplay.get(pattern));
+//            }
+//
+//            //   }
+//            int maxY = (seqNo + 1) * yStep + yOff;
+//            setPreferredSize(new Dimension(this.getWidth() - yOff, maxY));
+//            revalidate();
+//
+//        } else {
+//
+//        }
+//
+//    }
 
 //For Line view.
 
@@ -1008,7 +1014,7 @@ public class SequenceViewWidgetPanel extends JPanel {
 
         if (!lineView) {
             selected = getSeqIdInFullView(y);
-            if (selected < eachSeqStartRowNum.length) {
+            if (eachSeqStartRowNum!= null && selected < eachSeqStartRowNum.length) {
                 seqXclickPoint = (int) ((int) ((y - yOff - 1 -
                                                 ((double) eachSeqStartRowNum[
                                                  selected]) *
@@ -1068,8 +1074,9 @@ public class SequenceViewWidgetPanel extends JPanel {
                 }
 
             }
+            return eachSeqStartRowNum.length - 1;
         }
-        return eachSeqStartRowNum.length - 1;
+        return 0;
     }
 
     public void flipLineView() {

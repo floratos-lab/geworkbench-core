@@ -185,7 +185,7 @@ public class SequenceViewWidget extends JPanel {
         if (sequenceDB != null) {
             seqViewWPanel.setMaxSeqLen(sequenceDB.getMaxLength());
         }
-        seqViewWPanel.initialize(selectedPatterns, sequenceDB);
+      //  seqViewWPanel.initialize(selectedPatterns, sequenceDB);
         seqScrollPane.getViewport().add(seqViewWPanel, null);
         seqViewWPanel.setShowAll(showAllBtn.isSelected());
     }
@@ -275,22 +275,6 @@ public class SequenceViewWidget extends JPanel {
 
     public void patternSelectionHasChanged(SequenceDiscoveryTableEvent e) {
         setPatterns(e.getPatternMatchCollection());
-//        if (sequenceDB != null) {
-//            seqViewWPanel.setMaxSeqLen(orgSequenceDB.getMaxLength());
-//
-//            if (showAllBtn.isSelected()) {
-//                DSSequenceSet db = sequenceDB.createSubSetSequenceDB(
-//                        createTempDBIndex());
-//
-//                db.setMatchIndex(sequenceDB.getMatchIndex());
-//
-//                seqViewWPanel.initialize(selectedPatterns, db, isLineView);
-//            } else {
-//                seqViewWPanel.initialize(selectedPatterns, sequenceDB,
-//                                         isLineView);
-//            }
-//            showPatterns();
-//        }
         refreshMaSetView();
 
     }
@@ -378,7 +362,7 @@ public class SequenceViewWidget extends JPanel {
             Graphics g = jPanel1.getGraphics();
             g.clearRect(0, 0, jPanel1.getWidth(), jPanel1.getHeight());
             g.setFont(font);
-            if ((seqDx >= 0) && (seqDx < sequence.length())) {
+            if (sequence!= null && (seqDx >= 0) && (seqDx < sequence.length())) {
                 //turn anti alising on
                 ((Graphics2D) g).setRenderingHint(RenderingHints.
                                                   KEY_ANTIALIASING,
@@ -516,7 +500,7 @@ public class SequenceViewWidget extends JPanel {
         //selectedPatterns = new ArrayList();
         if (sequenceDB != null) {
             seqViewWPanel.setMaxSeqLen(sequenceDB.getMaxLength());
-            seqViewWPanel.initialize(null, db);
+      //      seqViewWPanel.initialize(null, db);
             selectedPatterns.clear();
             repaint();
         }
@@ -551,8 +535,8 @@ public class SequenceViewWidget extends JPanel {
                 seqViewWPanel.setMaxSeqLen(sequenceDB.getMaxLength());
                 displaySequenceDB = sequenceDB;
                 seqViewWPanel.setShowAll(false);
-                seqViewWPanel.initialize(selectedPatterns, sequenceDB,
-                                         isLineView);
+//                seqViewWPanel.initialize(selectedPatterns, sequenceDB,
+//                                         isLineView);
 
             }
 
@@ -602,7 +586,6 @@ public class SequenceViewWidget extends JPanel {
                         displaySequenceDB.addASequence(sequence);
                     }
                 }
-
             }
             if (onlyShowPattern) {
                 seqViewWPanel.initialize(patternSeqMatches, displaySequenceDB,
@@ -610,7 +593,6 @@ public class SequenceViewWidget extends JPanel {
             } else {
                 seqViewWPanel.initialize(patternSeqMatches, sequenceDB,
                                          isLineView);
-
             }
 
         } else {
@@ -618,8 +600,8 @@ public class SequenceViewWidget extends JPanel {
                 seqViewWPanel.setMaxSeqLen(sequenceDB.getMaxLength());
                 displaySequenceDB = sequenceDB;
                 seqViewWPanel.setShowAll(false);
-                seqViewWPanel.initialize(selectedPatterns, sequenceDB,
-                                         isLineView);
+//                seqViewWPanel.initialize(selectedPatterns, sequenceDB,
+//                                         isLineView);
                 showAllBtn.setSelected(false);
 
             } else {
