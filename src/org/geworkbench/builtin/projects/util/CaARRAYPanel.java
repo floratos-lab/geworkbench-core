@@ -362,7 +362,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
                                           JOptionPane.WARNING_MESSAGE);
         }
 
-        if(merge && arrayNumber > 1 && caArrayResources!=null){
+        if (merge && arrayNumber > 1 && caArrayResources != null) {
             parent.parentProjectPanel.remoteFileOpenAction(caArrayResources);
         }
 
@@ -607,6 +607,14 @@ public class CaARRAYPanel extends JPanel implements Observer {
                 if (result != null) {
                     totalexpNum = result.length;
 
+                } else {
+                    JOptionPane.showMessageDialog(null,
+                                                  "No Data is available from the server.",
+                                                  "Open File Error",
+                                                  JOptionPane.ERROR_MESSAGE);
+                    done = true;
+                    return;
+
                 }
                 for (int x = 0; x < result.length; x++) {
                     if (result[x] instanceof ExperimentImpl) {
@@ -644,7 +652,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
                 if (experiments == null) {
                     connectionSuccess = false;
                     JOptionPane.showMessageDialog(null,
-                                                  "Unable to connect to server.",
+                                                  "No Data is available from the server.",
                                                   "Open File Error",
                                                   JOptionPane.ERROR_MESSAGE);
                     done = true;
