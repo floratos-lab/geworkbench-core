@@ -19,6 +19,10 @@ import org.geworkbench.bison.datastructure.complex.pattern.DSPatternMatch;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import org.geworkbench.bison.datastructure.biocollections.DSCollection;
 import org.geworkbench.bison.datastructure.complex.pattern.DSMatchedPattern;
+import java.util.List;
+import org.geworkbench.components.promoter.TranscriptionFactor;
+import org.geworkbench.bison.datastructure.complex.pattern.DSPattern;
+import java.util.Set;
 
 /**
  * <p>Title: </p>
@@ -103,6 +107,7 @@ public class PatternOperations {
             p.ascii = ascii;
         }
     }
+
     /**
      * A utility to create a match between a sequence with all available patterns within the sequence.
      *
@@ -114,6 +119,65 @@ public class PatternOperations {
             PatternSequenceDisplayUtil> processPatterns(DSCollection<
             DSMatchedPattern<DSSequence,
             DSSeqRegistration>> patterns, DSSequenceSet sequenceDB) {
+        return processPatterns(patterns, sequenceDB,
+                               PatternLocations.DEFAULTTYPE);
+
+    }
+
+    public static void addTFMatches(HashMap<CSSequence,
+                                    PatternSequenceDisplayUtil> existedPatterns,
+                                    List<DSPatternMatch<DSSequence,
+                                    DSSeqRegistration>>
+                                    matches, DSPattern tf) {
+        if (matches == null) {
+            return;
+        }
+        if (existedPatterns == null) {
+            existedPatterns = new HashMap<CSSequence,
+                              PatternSequenceDisplayUtil>();
+
+        }
+
+        for (DSPatternMatch<DSSequence, DSSeqRegistration> sp : matches) {
+            DSSequence hitSeq = sp.getObject();
+            DSSeqRegistration reg = sp.getRegistration();
+            if (existedPatterns.containsKey(hitSeq)) {
+                PatternSequenceDisplayUtil pu = (
+                        PatternSequenceDisplayUtil)
+                                                existedPatterns.get(hitSeq);
+                PatternLocations pl = new PatternLocations(
+                        tf, reg);
+                pl.setPatternType(PatternLocations.TFTYPE);
+                pl.setIDForDisplay(tf.hashCode());
+                pu.addPattern(pl);
+
+            } else {
+                PatternSequenceDisplayUtil pu = new PatternSequenceDisplayUtil((
+                        CSSequence) hitSeq);
+                PatternLocations pl = new PatternLocations(
+                        tf, reg);
+                pl.setPatternType(PatternLocations.TFTYPE);
+                pl.setIDForDisplay(tf.hashCode());
+                pu.addPattern(pl);
+                existedPatterns.put((CSSequence) hitSeq, pu);
+            }
+        }
+
+    }
+
+
+    /**
+     * A utility to create a match between a sequence with all available patterns within the sequence.
+     * @param patterns DSCollection
+     * @param sequenceDB DSSequenceSet
+     * @param patternType String
+     * @return HashMap
+     */
+    public static HashMap<CSSequence,
+            PatternSequenceDisplayUtil> processPatterns(DSCollection<
+            DSMatchedPattern<DSSequence,
+            DSSeqRegistration>> patterns, DSSequenceSet sequenceDB,
+            String patternType) {
         if (patterns != null && sequenceDB != null) {
             HashMap<CSSequence,
                     PatternSequenceDisplayUtil>
@@ -155,6 +219,7 @@ public class PatternOperations {
                                 PatternLocations pl = new PatternLocations(
                                         pattern.
                                         getASCII(), reg);
+                                pl.setPatternType(patternType);
                                 pl.setIDForDisplay(pattern.hashCode());
                                 pu.addPattern(pl);
 
@@ -171,6 +236,35 @@ public class PatternOperations {
         return null;
     }
 
+
+    public static HashMap<CSSequence,
+            PatternSequenceDisplayUtil> merge(HashMap<CSSequence,
+                                              PatternSequenceDisplayUtil>
+                                              seqPatterns, HashMap<CSSequence,
+                                              PatternSequenceDisplayUtil>
+                                              tfPatterns) {
+        if (seqPatterns == null) {
+            return tfPatterns;
+        }
+        if (tfPatterns == null) {
+            return seqPatterns;
+        }
+        HashMap<CSSequence,
+                PatternSequenceDisplayUtil>
+                allPatterns = new HashMap<CSSequence,
+                              PatternSequenceDisplayUtil>(seqPatterns);
+
+        Set<CSSequence> keySet = tfPatterns.keySet();
+        for (CSSequence keySeq : keySet) {
+            if (allPatterns.containsKey(keySeq)) {
+                PatternSequenceDisplayUtil newPu = tfPatterns.get(keySeq);
+                allPatterns.get(keySeq).mergePatternSequenceDisplayUtil(newPu);
+            }
+        }
+
+        return allPatterns;
+
+    }
     /*
        public int intersection(Pattern p0, Pattern p1) {
       // creates the intersection of two patterns

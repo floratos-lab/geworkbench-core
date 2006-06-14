@@ -1,6 +1,8 @@
 package org.geworkbench.util.patterns;
 
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSSeqRegistration;
+import org.geworkbench.components.promoter.TranscriptionFactor;
+import org.geworkbench.bison.datastructure.complex.pattern.DSPattern;
 
 /**
  * <p>Title: </p>
@@ -19,8 +21,16 @@ public class PatternLocations implements Comparable{
         private  DSSeqRegistration registration;
         private int idForDisplay;
         private String patternType;
-        public final String DEFAULTTYPE = "splash";
-        public final String TFTYPE = "TFBS";
+       // private  DSPattern pattern;
+        public static final String DEFAULTTYPE = "splash";
+        public static final String TFTYPE = "TFBS";
+
+        public PatternLocations(DSPattern tf, DSSeqRegistration _registration){
+
+            //this.pattern = tf;
+            registration = _registration;
+           ascii = tf.toString();
+        }
 
         public PatternLocations(String _ascii){
             ascii = _ascii;
