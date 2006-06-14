@@ -20,7 +20,6 @@ import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import org.geworkbench.bison.datastructure.biocollections.DSCollection;
 import org.geworkbench.bison.datastructure.complex.pattern.DSMatchedPattern;
 import java.util.List;
-import org.geworkbench.components.promoter.TranscriptionFactor;
 import org.geworkbench.bison.datastructure.complex.pattern.DSPattern;
 import java.util.Set;
 

@@ -1,25 +1,28 @@
 package org.geworkbench.util.promoter;
 
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.geom.Rectangle2D;
+import java.util.*;
+import java.util.List;
+
+import javax.swing.*;
+import javax.swing.event.MouseInputAdapter;
+
 import org.geworkbench.bison.datastructure.biocollections.sequences.
         DSSequenceSet;
+import org.geworkbench.bison.datastructure.bioobjects.sequence.CSSequence;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import org.geworkbench.bison.datastructure.complex.pattern.DSPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.DSPatternMatch;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.
         DSSeqRegistration;
+import org.geworkbench.util.patterns.PatternOperations;
+import org.geworkbench.util.patterns.PatternSequenceDisplayUtil;
 import org.geworkbench.util.promoter.pattern.Display;
-
-import javax.swing.*;
-import javax.swing.event.MouseInputAdapter;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.geom.Rectangle2D;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
-import org.geworkbench.util.sequences.SequenceViewWidgetPanel;
 import org.geworkbench.util.sequences.SequenceViewWidget;
+import org.geworkbench.bison.datastructure.biocollections.sequences.CSSequenceSet;
 
 /**
  * <p>Title: </p>
@@ -31,7 +34,7 @@ import org.geworkbench.util.sequences.SequenceViewWidget;
  * @version 1.0
  */
 
-public class SequencePatternDisplayPanel extends SequenceViewWidget{
+public class SequencePatternDisplayPanel extends SequenceViewWidget {
     final int xOff = 60;
     final int yOff = 20;
     final int xStep = 5;
@@ -42,6 +45,8 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget{
     int maxLen = 1;
 
     int selected = 0;
+    private boolean displayTF = true;
+    private boolean displaySeqPattern = true;
     DSSequenceSet sequenceDB = null;
     HashMap patternDisplay = new HashMap();
     Hashtable<DSPattern<DSSequence, DSSeqRegistration>,
@@ -50,10 +55,20 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget{
                                                   DSSequence, DSSeqRegistration>,
                                                   List<DSPatternMatch<
                                                   DSSequence, DSSeqRegistration>>>();
+    public HashMap<CSSequence,
+            PatternSequenceDisplayUtil> patternTFMatches = new HashMap<
+            CSSequence,
+            PatternSequenceDisplayUtil>();
+    HashMap<CSSequence,
+            PatternSequenceDisplayUtil>
+            patternSeqMatches = new HashMap<CSSequence,
+                                PatternSequenceDisplayUtil>();
+
+
     JPanel jinfoPanel = new JPanel();
 
     public void setInfoPanel(JPanel jinfoPanel) {
-       // this.jinfoPanel = jinfoPanel;
+        // this.jinfoPanel = jinfoPanel;
     }
 
     public JPanel getInfoPanel() {
@@ -69,8 +84,40 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget{
         }
     }
 
+    public void addToolBarButton(AbstractButton jbutton) {
+        jToolBar1.add(jbutton);
+        repaint();
+    }
+
+    /**
+     * Transform the patterns to patternsUtil class.
+     * Child class should override this method.
+     */
+    public void updatePatternSeqMatches() {
+        patternSeqMatches = PatternOperations.processPatterns(selectedPatterns,
+                sequenceDB);
+        if (displayTF) {
+            if (displaySeqPattern) {
+                patternLocationsMatches = PatternOperations.merge(
+                        patternSeqMatches, patternTFMatches);
+            } else {
+                patternLocationsMatches = patternTFMatches;
+            }
+        } else {
+            if (displaySeqPattern) {
+                patternLocationsMatches = patternSeqMatches;
+            } else {
+           //     patternLocationsMatches = null;
+            }
+
+        }
+
+        //patternLocationsMatches
+    }
+
     void jbInit() throws Exception {
 
+        super.removeButtons(SequenceViewWidget.NONBASIC);
         this.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 this_mouseClicked(e);
@@ -95,6 +142,7 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget{
         patternMatches.clear();
         patternDisplay.clear();
         sequenceDB = seqDB;
+
         repaint();
     }
 
@@ -106,6 +154,17 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget{
         sequenceDB = null;
         repaint();
     }
+
+//    /**
+//      * Initate the Panel, which should be used as the entry point.
+//      * @return boolean
+//      */
+//     public boolean initPanelView() {
+//         updatePatternSeqMatches();
+//         super.initPanelView();
+//         return true;
+//     }
+
 
     public void flipIsText() {
 
@@ -129,7 +188,8 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget{
             int seqNo = sequenceDB.getSequenceNo();
 
             scale = Math.min(5.0,
-                             (double) (this.getWidth() - 20 - xOff) / (double) maxLn);
+                             (double) (this.getWidth() - 20 - xOff) /
+                             (double) maxLn);
             g.clearRect(0, 0, getWidth(), getHeight());
             // draw the patterns
             g.setFont(f);
@@ -298,7 +358,8 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget{
                                endx - startx, height);
                 }
                 g.drawRect(startx,
-                           yOff + (int) ((1 + ((offset + length) / cols)) * yscale) -
+                           yOff +
+                           (int) ((1 + ((offset + length) / cols)) * yscale) -
                            height / 2,
                            (int) (((offset + length) % cols) * xscale), height);
                 break;
@@ -313,7 +374,8 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget{
                 }
                 g.drawRoundRect(startx,
                                 yOff +
-                                (int) ((1 + ((offset + length) / cols)) * yscale) -
+                                (int) ((1 + ((offset + length) / cols)) *
+                                       yscale) -
                                 height / 2,
                                 (int) (((offset + length) % cols) * xscale),
                                 height, 2, height / 2);
@@ -340,7 +402,8 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget{
                                endx - startx, height);
                 }
                 g.drawOval(startx,
-                           yOff + (int) ((1 + ((offset + length) / cols)) * yscale) -
+                           yOff +
+                           (int) ((1 + ((offset + length) / cols)) * yscale) -
                            height / 2,
                            (int) (((offset + length) % cols) * xscale), height);
                 break;
@@ -579,12 +642,30 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget{
     public void addAPattern(DSPattern<DSSequence, DSSeqRegistration> pt,
                             Display dis, List<DSPatternMatch<DSSequence,
                             DSSeqRegistration>> matches) {
-        if (pt != null && dis != null && matches != null) {
-            patternDisplay.put(pt, dis);
-            patternMatches.put(pt, matches);
-            repaint();
+//        if (pt != null && dis != null && matches != null) {
+//            patternDisplay.put(pt, dis);
+//            patternMatches.put(pt, matches);
+//            repaint();
+//        }
+        if (patternTFMatches == null) {
+            patternTFMatches = new HashMap<
+                               CSSequence,
+                               PatternSequenceDisplayUtil>();
+
         }
+        PatternOperations.addTFMatches(patternTFMatches, matches, pt);
+        initPanelView();
     }
+
+//    public void addAPattern(DSPattern<DSSequence, DSSeqRegistration> pt,
+//                            Display dis, List<DSPatternMatch<DSSequence,
+//                            DSSeqRegistration>> matches) {
+//        if (pt != null && dis != null && matches != null) {
+//            patternDisplay.put(pt, dis);
+//            patternMatches.put(pt, matches);
+//            repaint();
+//        }
+//    }
 
     public void removePattern(DSPattern<DSSequence, DSSeqRegistration> pt) {
         patternMatches.remove(pt);
@@ -601,6 +682,18 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget{
 
     public HashMap getPatternDisplay() {
         return patternDisplay;
+    }
+
+    public boolean isDisplaySeqPattern() {
+        return displaySeqPattern;
+    }
+
+    public boolean isDisplayTF() {
+        return displayTF;
+    }
+
+    public HashMap getPatternTFMatches() {
+        return patternTFMatches;
     }
 
     /**
@@ -676,4 +769,15 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget{
         repaint();
     }
 
+    public void setDisplaySeqPattern(boolean displaySeqPattern) {
+        this.displaySeqPattern = displaySeqPattern;
+    }
+
+    public void setDisplayTF(boolean displayTF) {
+        this.displayTF = displayTF;
+    }
+
+    public void setPatternTFMatches(HashMap patternTFMatches) {
+        this.patternTFMatches = patternTFMatches;
+    }
 }

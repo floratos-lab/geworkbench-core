@@ -1,51 +1,33 @@
 package org.geworkbench.util.sequences;
 
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.geom.Rectangle2D;
+import java.beans.PropertyChangeEvent;
+import java.util.HashMap;
+import java.util.TreeSet;
+
+import javax.swing.*;
+
+import org.geworkbench.bison.datastructure.biocollections.*;
 import org.geworkbench.bison.datastructure.biocollections.Collection;
-import org.geworkbench.bison.datastructure.biocollections.DSCollection;
 import org.geworkbench.bison.datastructure.biocollections.sequences.
         CSSequenceSet;
 import org.geworkbench.bison.datastructure.biocollections.sequences.
         DSSequenceSet;
+import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
+import org.geworkbench.bison.datastructure.bioobjects.sequence.CSSequence;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
+import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.datastructure.complex.pattern.DSMatchedPattern;
-import org.geworkbench.bison.datastructure.complex.pattern.DSPatternMatch;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.
         DSMatchedSeqPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.
         DSSeqRegistration;
-import org.geworkbench.events.SequenceDiscoveryTableEvent;
-import org.geworkbench.util.PropertiesMonitor;
-import org.geworkbench.util.patterns.CSMatchedSeqPattern;
-import org.geworkbench.util.patterns.PatternOperations;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.InputMethodEvent;
-import java.awt.event.MouseEvent;
-import java.awt.geom.Rectangle2D;
-import java.beans.PropertyChangeEvent;
-import java.util.HashMap;
-import java.awt.event.MouseMotionAdapter;
-import java.awt.event.MouseAdapter;
-import javax.swing.event.MouseInputAdapter;
-import org.geworkbench.events.GeneSelectorEvent;
-import org.geworkbench.events.MicroarraySetViewEvent;
 import org.geworkbench.engine.management.Subscribe;
-import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.engine.management.Asynchronous;
-import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
-import org.geworkbench.bison.datastructure.biocollections.views.
-        DSMicroarraySetView;
-import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
-import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
-import org.geworkbench.bison.datastructure.biocollections.microarrays.
-        DSMicroarraySet;
-import org.geworkbench.bison.datastructure.bioobjects.sequence.CSSequence;
-import org.geworkbench.util.patterns.PatternSequenceDisplayUtil;
-import java.util.TreeSet;
-import org.geworkbench.util.patterns.PatternLocations;
+import org.geworkbench.events.*;
+import org.geworkbench.util.PropertiesMonitor;
+import org.geworkbench.util.patterns.*;
 
 /**
  * <p>Widget provides all GUI services for sequence panel displays.</p>
@@ -68,8 +50,8 @@ public class SequenceViewWidget extends JPanel {
     private DSSequenceSet sequenceDB = new CSSequenceSet();
     private DSSequenceSet orgSequenceDB = new CSSequenceSet();
     private DSSequenceSet displaySequenceDB = new CSSequenceSet();
-    HashMap<CSSequence,
-            PatternSequenceDisplayUtil> patternSeqMatches;
+    public HashMap<CSSequence,
+            PatternSequenceDisplayUtil> patternLocationsMatches;
     //Layouts
     private GridBagLayout gridBagLayout1 = new GridBagLayout();
     private GridBagLayout gridBagLayout2 = new GridBagLayout();
@@ -80,13 +62,13 @@ public class SequenceViewWidget extends JPanel {
     private JPanel jPanel1 = new JPanel();
     private JScrollPane seqScrollPane = new JScrollPane();
 
-    private SequenceViewWidgetPanel seqViewWPanel = new SequenceViewWidgetPanel();
-    private DSCollection<DSMatchedPattern<DSSequence,
+    public SequenceViewWidgetPanel seqViewWPanel = new SequenceViewWidgetPanel();
+    public DSCollection<DSMatchedPattern<DSSequence,
             DSSeqRegistration>>
             selectedPatterns = new Collection<DSMatchedPattern<DSSequence,
                                DSSeqRegistration>>();
     private PropertiesMonitor propertiesMonitor = null; //debug
-    private JToolBar jToolBar1 = new JToolBar();
+    public JToolBar jToolBar1 = new JToolBar();
     private JToggleButton showAllBtn = new JToggleButton();
     private JCheckBox jAllSequenceCheckBox = new JCheckBox();
     private JLabel jViewLabel = new JLabel();
@@ -99,6 +81,7 @@ public class SequenceViewWidget extends JPanel {
     protected CSSequenceSet activeSequenceDB = null;
     protected boolean subsetMarkerOn = true;
     protected DSPanel<? extends DSGeneMarker> activatedMarkers = null;
+    public static final String NONBASIC = "NONBASIC";
 
     public SequenceViewWidget() {
         try {
@@ -185,9 +168,25 @@ public class SequenceViewWidget extends JPanel {
         if (sequenceDB != null) {
             seqViewWPanel.setMaxSeqLen(sequenceDB.getMaxLength());
         }
-      //  seqViewWPanel.initialize(selectedPatterns, sequenceDB);
+        //  seqViewWPanel.initialize(selectedPatterns, sequenceDB);
         seqScrollPane.getViewport().add(seqViewWPanel, null);
         seqViewWPanel.setShowAll(showAllBtn.isSelected());
+    }
+
+    /**
+     * cleanButtons
+     *
+     * @param aString String
+     */
+    public void removeButtons(String aString) {
+
+        if (aString.equals(NONBASIC)) {
+            jToolBar1.remove(showAllBtn);
+            jToolBar1.remove(jAllSequenceCheckBox);
+            jToolBar1.remove(jSequenceSummaryTextField);
+            repaint();
+
+        }
     }
 
 
@@ -255,11 +254,9 @@ public class SequenceViewWidget extends JPanel {
                     activeSequenceDB = (CSSequenceSet) ((CSSequenceSet)
                             orgSequenceDB).
                                        getActiveSequenceSet(activatedMarkers);
-
                 }
 
             } else if (orgSequenceDB != null) {
-
                 activeSequenceDB = (CSSequenceSet) orgSequenceDB;
             }
 
@@ -278,53 +275,6 @@ public class SequenceViewWidget extends JPanel {
         refreshMaSetView();
 
     }
-
-
-    /**
-     * Create a boolean list to define which sequences will be included in the new DataSet.
-     * @return boolean[]
-     */
-
-    public boolean[] createTempDBIndex() {
-        int size = sequenceDB.getSequenceNo();
-        boolean[] included = new boolean[size];
-        for (int i = 0; i < size; i++) {
-            included[i] = false;
-        }
-        if (selectedPatterns != null) {
-
-            for (int row = 0; row < selectedPatterns.size(); row++) {
-                DSMatchedSeqPattern pattern = (DSMatchedSeqPattern)
-                                              selectedPatterns.get(row);
-                // Pattern pattern = (Pattern) selectedPatterns.get(row);
-                if (pattern != null) {
-                    //   if (pattern.getClass().isAssignableFrom(PatternImpl.class)) {
-                    if (pattern instanceof CSMatchedSeqPattern) {
-
-                        if (pattern != null) {
-                            for (int locusId = 0;
-                                               locusId < pattern.getSupport();
-                                               locusId++) {
-
-                                int seqId = ((CSMatchedSeqPattern) pattern).
-                                            getId(locusId);
-                                if (seqId < size) {
-
-                                    included[seqId] = true;
-                                } else {
-
-
-
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return included;
-    }
-
 
     /**
      * Update the detail of sequence.
@@ -362,7 +312,7 @@ public class SequenceViewWidget extends JPanel {
             Graphics g = jPanel1.getGraphics();
             g.clearRect(0, 0, jPanel1.getWidth(), jPanel1.getHeight());
             g.setFont(font);
-            if (sequence!= null && (seqDx >= 0) && (seqDx < sequence.length())) {
+            if (sequence != null && (seqDx >= 0) && (seqDx < sequence.length())) {
                 //turn anti alising on
                 ((Graphics2D) g).setRenderingHint(RenderingHints.
                                                   KEY_ANTIALIASING,
@@ -395,8 +345,8 @@ public class SequenceViewWidget extends JPanel {
                     paintPoint += 40;
                 }
 
-                if (patternSeqMatches != null) {
-                    PatternSequenceDisplayUtil psd = patternSeqMatches.
+                if (patternLocationsMatches != null) {
+                    PatternSequenceDisplayUtil psd = patternLocationsMatches.
                             get(sequence);
                     TreeSet<PatternLocations>
                             patternsPerSequence = psd.getTreeSet();
@@ -417,7 +367,8 @@ public class SequenceViewWidget extends JPanel {
                                 double x2 = ((double) patLength) *
                                             scale;
                                 g.setColor(PatternOperations.
-                                           getPatternColor(new Integer(pl.getIdForDisplay())));
+                                           getPatternColor(new Integer(pl.
+                                        getIdForDisplay())));
                                 g.drawRect((int) x1, 2, (int) x2, 23);
                                 g.drawString("|",
                                              (int) x1, (int) (20 + yscale));
@@ -432,6 +383,36 @@ public class SequenceViewWidget extends JPanel {
                                         seqReg.length() + 1).toString(),
                                              (int) (x1 + x2 - scale),
                                              (int) (20 + 2 * yscale));
+                                if (pl.getPatternType().equals(PatternLocations.
+                                        TFTYPE)) {
+
+                                    g.setColor(SequenceViewWidgetPanel.
+                                               DRECTIONCOLOR);
+
+                                    int shape = 3;
+                                    int[] xi = new int[shape];
+                                    int[] yi = new int[shape];
+                                    if (registration.strand == 0) {
+                                        xi[0] = xi[1] = (int)x1;
+                                        yi[0] = 0;
+                                        yi[1] = 4;
+                                        xi[2] = xi[0] + 2;
+                                        yi[2] =   2;
+                                        // g.drawPolyline(xi, yi, addtionalPoint);
+                                    } else {
+                                        xi[0] = xi[1] = (int) (x1 + x2);
+                                        yi[0] = 0;
+                                        yi[1] = 4;
+                                        xi[2] = xi[0] - 2;
+                                        yi[2] =  2;
+
+                                    }
+
+                                    g.drawPolygon(xi, yi, shape);
+                                    g.fillPolygon(xi, yi, shape);
+
+
+                                }
 
                             }
 
@@ -500,7 +481,7 @@ public class SequenceViewWidget extends JPanel {
         //selectedPatterns = new ArrayList();
         if (sequenceDB != null) {
             seqViewWPanel.setMaxSeqLen(sequenceDB.getMaxLength());
-      //      seqViewWPanel.initialize(null, db);
+            //      seqViewWPanel.initialize(null, db);
             selectedPatterns.clear();
             repaint();
         }
@@ -561,11 +542,22 @@ public class SequenceViewWidget extends JPanel {
     }
 
     /**
+     * Transform the patterns to patternsUtil class.
+     * Child class should override this method.
+     */
+    public void updatePatternSeqMatches() {
+        patternLocationsMatches = PatternOperations.processPatterns(
+                selectedPatterns,
+                sequenceDB);
+
+    }
+
+    /**
      * Initate the Panel, which should be used as the entry point.
      * @return boolean
      */
     public boolean initPanelView() {
-
+        updatePatternSeqMatches();
         isLineView = jViewComboBox.getSelectedItem().equals(LINEVIEW);
         onlyShowPattern = showAllBtn.isSelected();
         HashMap<CSSequence,
@@ -575,12 +567,13 @@ public class SequenceViewWidget extends JPanel {
         if (onlyShowPattern) {
             displaySequenceDB = new CSSequenceSet();
         }
-        patternSeqMatches = PatternOperations.processPatterns(selectedPatterns,
-                sequenceDB);
-        if (patternSeqMatches != null && sequenceDB != null) {
+
+        //if (patternLocationsMatches != null && sequenceDB != null) {
+        if (patternLocationsMatches != null && sequenceDB != null) {
             for (int i = 0; i < sequenceDB.size(); i++) {
                 DSSequence sequence = sequenceDB.getSequence(i);
-                PatternSequenceDisplayUtil pdu = patternSeqMatches.get(sequence);
+                PatternSequenceDisplayUtil pdu = patternLocationsMatches.get(
+                        sequence);
                 if (onlyShowPattern) {
                     if (pdu.hasPattern()) {
                         displaySequenceDB.addASequence(sequence);
@@ -588,10 +581,11 @@ public class SequenceViewWidget extends JPanel {
                 }
             }
             if (onlyShowPattern) {
-                seqViewWPanel.initialize(patternSeqMatches, displaySequenceDB,
+                seqViewWPanel.initialize(patternLocationsMatches,
+                                         displaySequenceDB,
                                          isLineView);
             } else {
-                seqViewWPanel.initialize(patternSeqMatches, sequenceDB,
+                seqViewWPanel.initialize(patternLocationsMatches, sequenceDB,
                                          isLineView);
             }
 
@@ -603,6 +597,9 @@ public class SequenceViewWidget extends JPanel {
 //                seqViewWPanel.initialize(selectedPatterns, sequenceDB,
 //                                         isLineView);
                 showAllBtn.setSelected(false);
+                seqViewWPanel.initialize(patternLocationsMatches,
+                                         displaySequenceDB,
+                                         isLineView);
 
             } else {
                 seqViewWPanel.removeAll();

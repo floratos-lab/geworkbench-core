@@ -28,6 +28,18 @@ public class PatternSequenceDisplayUtil{
        public void addPattern(PatternLocations pl){
            treeSet.add(pl);
        }
+       public void mergePatternSequenceDisplayUtil(PatternSequenceDisplayUtil newPu){
+           if(newPu==null){
+               return;
+           }
+           if(treeSet==null){
+               treeSet = new TreeSet<PatternLocations>();
+           }
+           TreeSet<PatternLocations> newTreeSet = newPu.getTreeSet();
+           for(PatternLocations pl: newTreeSet){
+               treeSet.add(pl);
+           }
+       }
        public boolean hasPattern(){
            return !treeSet.isEmpty();
        }

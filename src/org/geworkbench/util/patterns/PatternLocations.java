@@ -1,7 +1,6 @@
 package org.geworkbench.util.patterns;
 
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSSeqRegistration;
-import org.geworkbench.components.promoter.TranscriptionFactor;
 import org.geworkbench.bison.datastructure.complex.pattern.DSPattern;
 
 /**
