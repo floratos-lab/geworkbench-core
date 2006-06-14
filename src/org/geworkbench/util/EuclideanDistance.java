@@ -27,7 +27,7 @@ public class EuclideanDistance implements Distance {
         int n = Math.min(a.length, b.length);
         for (int i = 0; i < n; ++i) {
             double t = a[i] - b[i];
-            // The following is a very efficient replacement for Double.isNaN(t).
+            // The following is a very efficient replacement for !Double.isNaN(t).
             if (t == t) {
                 d += t * t;
             }

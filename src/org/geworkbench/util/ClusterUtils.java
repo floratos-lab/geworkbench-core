@@ -6,6 +6,7 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.model.clusters.HierCluster;
 import org.geworkbench.bison.model.clusters.MarkerHierCluster;
 import org.geworkbench.bison.model.clusters.MicroarrayHierCluster;
+import org.geworkbench.bison.model.clusters.TestHierCluster;
 
 /**
  * @author John Watkinson
@@ -27,6 +28,8 @@ public class ClusterUtils {
                 System.out.println("" + h.getHeight() + " (" + ((MarkerHierCluster) h).getMarkerInfo().getLabel() + ")");
             } else if (h instanceof MicroarrayHierCluster) {
                 System.out.println("" + h.getHeight() + " (" + ((MicroarrayHierCluster) h).getMicroarray().getLabel() + ")");
+            } else if (h instanceof TestHierCluster) {
+                System.out.println("" + h.getHeight() + " (" + ((TestHierCluster) h).getItem() + ")");
             }
         } else {
             printClusterHelper(depth + 1, h.getNode(0));

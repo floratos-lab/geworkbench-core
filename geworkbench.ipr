@@ -219,6 +219,7 @@
       <module fileurl="file://$PROJECT_DIR$/components/selectors/selectors.iml" filepath="$PROJECT_DIR$/components/selectors/selectors.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/sequenceretriever/sequenceretriever.iml" filepath="$PROJECT_DIR$/components/sequenceretriever/sequenceretriever.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/sequences/sequences.iml" filepath="$PROJECT_DIR$/components/sequences/sequences.iml" />
+      <module fileurl="file://$PROJECT_DIR$/components/simulation/simulation.iml" filepath="$PROJECT_DIR$/components/simulation/simulation.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/tprofiler/tprofiler.iml" filepath="$PROJECT_DIR$/components/tprofiler/tprofiler.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/versioninfo/versioninfo.iml" filepath="$PROJECT_DIR$/components/versioninfo/versioninfo.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/viewers/viewers.iml" filepath="$PROJECT_DIR$/components/viewers/viewers.iml" />

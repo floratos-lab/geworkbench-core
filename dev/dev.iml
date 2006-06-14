@@ -36,6 +36,7 @@
     <orderEntry type="module" module-name="example" />
     <orderEntry type="module" module-name="jmol" />
     <orderEntry type="module" module-name="tprofiler" />
+    <orderEntry type="module" module-name="simulation" />
     <orderEntryProperties />
   </component>
 </module>
