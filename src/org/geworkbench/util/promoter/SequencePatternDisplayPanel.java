@@ -107,7 +107,7 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget {
             if (displaySeqPattern) {
                 patternLocationsMatches = patternSeqMatches;
             } else {
-           //     patternLocationsMatches = null;
+                patternLocationsMatches = null;
             }
 
         }

@@ -182,7 +182,7 @@ public class SequenceViewWidget extends JPanel {
 
         if (aString.equals(NONBASIC)) {
             jToolBar1.remove(showAllBtn);
-            jToolBar1.remove(jAllSequenceCheckBox);
+            //jToolBar1.remove(jAllSequenceCheckBox);
             jToolBar1.remove(jSequenceSummaryTextField);
             repaint();
 

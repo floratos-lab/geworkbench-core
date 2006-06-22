@@ -178,59 +178,65 @@ public class PatternOperations {
             DSSeqRegistration>> patterns, DSSequenceSet sequenceDB,
             String patternType) {
         if (patterns != null && sequenceDB != null) {
-            HashMap<CSSequence,
-                    PatternSequenceDisplayUtil>
-                    sequencePatternMatches = new HashMap<CSSequence,
-                                             PatternSequenceDisplayUtil>();
-            PatternSequenceDisplayUtil[] patternsSequenceList = new
-                    PatternSequenceDisplayUtil[sequenceDB.size()];
-            for (int i = 0; i < sequenceDB.size(); i++) {
-                patternsSequenceList[i] = new PatternSequenceDisplayUtil((
-                        CSSequence) sequenceDB.get(i));
-                sequencePatternMatches.put((CSSequence) sequenceDB.get(i),
-                                           patternsSequenceList[i]);
-            }
+            try{
+                HashMap<CSSequence,
+                        PatternSequenceDisplayUtil>
+                        sequencePatternMatches = new HashMap<CSSequence,
+                                                 PatternSequenceDisplayUtil>();
 
-            if (patterns != null) {
-                for (int row = 0; row < patterns.size(); row++) {
-                    DSMatchedSeqPattern pattern = (DSMatchedSeqPattern)
-                                                  patterns.get(row);
+                PatternSequenceDisplayUtil[] patternsSequenceList = new
+                        PatternSequenceDisplayUtil[sequenceDB.size()];
+                for (int i = 0; i < sequenceDB.size(); i++) {
+                    patternsSequenceList[i] = new PatternSequenceDisplayUtil((
+                            CSSequence) sequenceDB.get(i));
+                    sequencePatternMatches.put((CSSequence) sequenceDB.get(i),
+                                               patternsSequenceList[i]);
+                }
 
-                    if (pattern != null) {
-                        PatternOperations.setPatternColor(new Integer(pattern.
-                                hashCode()),
-                                PatternOperations.
-                                getPatternColor(row));
-                        for (int locusId = 0;
-                                           locusId < pattern.getSupport();
-                                           locusId++) {
-                            int seqId = ((CSMatchedSeqPattern) pattern).getId(
-                                    locusId);
-                            DSPatternMatch<DSSequence,
-                                    DSSeqRegistration> sp = pattern.get(locusId);
+                if (patterns != null) {
+                    for (int row = 0; row < patterns.size(); row++) {
+                        DSMatchedSeqPattern pattern = (DSMatchedSeqPattern)
+                                patterns.get(row);
 
-                            DSSequence hitSeq = sp.getObject();
-                            DSSeqRegistration reg = sp.getRegistration();
-                            if (sequencePatternMatches.containsKey(hitSeq)) {
-                                PatternSequenceDisplayUtil pu = (
-                                        PatternSequenceDisplayUtil)
-                                        sequencePatternMatches.get(hitSeq);
-                                PatternLocations pl = new PatternLocations(
-                                        pattern.
-                                        getASCII(), reg);
-                                pl.setPatternType(patternType);
-                                pl.setIDForDisplay(pattern.hashCode());
-                                pu.addPattern(pl);
+                        if (pattern != null) {
+                            PatternOperations.setPatternColor(new Integer(
+                                    pattern.
+                                    hashCode()),
+                                    PatternOperations.
+                                    getPatternColor(row));
+                            for (int locusId = 0;
+                                               locusId < pattern.getSupport();
+                                               locusId++) {
+                                int seqId = ((CSMatchedSeqPattern) pattern).
+                                            getId(
+                                        locusId);
+                                DSPatternMatch<DSSequence,
+                                        DSSeqRegistration>
+                                        sp = pattern.get(locusId);
+
+                                DSSequence hitSeq = sp.getObject();
+                                DSSeqRegistration reg = sp.getRegistration();
+                                if (sequencePatternMatches.containsKey(hitSeq)) {
+                                    PatternSequenceDisplayUtil pu = (
+                                            PatternSequenceDisplayUtil)
+                                            sequencePatternMatches.get(hitSeq);
+                                    PatternLocations pl = new PatternLocations(
+                                            pattern.
+                                            getASCII(), reg);
+                                    pl.setPatternType(patternType);
+                                    pl.setIDForDisplay(pattern.hashCode());
+                                    pu.addPattern(pl);
+
+                                }
 
                             }
 
                         }
-
                     }
                 }
-            }
 
-            return sequencePatternMatches;
+                return sequencePatternMatches;
+            }catch (Exception e){e.printStackTrace();}
         }
         return null;
     }
