@@ -1086,32 +1086,29 @@ public class SequenceViewWidgetPanel extends JPanel {
             g.setColor(color);
 
             g.draw3DRect(x, (int) y - height / 2 + 2, xb, height, false);
-            g.setColor(DRECTIONCOLOR );
+            g.setColor(DRECTIONCOLOR);
 
             int shape = 3;
             int[] xi = new int[shape];
-           int[] yi = new int[shape];
-           if (strand == 0) {
-               xi[0] = xi[1] = x;
-               yi[0] = (int) y - height / 2 - 2;
-               yi[1] = (int) y - height / 2 + 6;
-               xi[2] = xi[0] + 4;
-               yi[2] = (int) y - height / 2 + 2;
-               // g.drawPolyline(xi, yi, addtionalPoint);
-           } else {
-               xi[0] = xi[1] = x + xb;
-               yi[0] = (int) y - height / 2 - 2;
-               yi[1] = (int) y - height / 2 + 6;
-               xi[2] = xi[0] - 4;
-               yi[2] = (int) y - height / 2 + 2;
+            int[] yi = new int[shape];
+            if (strand == 0) {
+                xi[0] = xi[1] = x;
+                yi[0] = (int) y - height / 2 - 2;
+                yi[1] = (int) y - height / 2 + 6;
+                xi[2] = xi[0] + 4;
+                yi[2] = (int) y - height / 2 + 2;
+                // g.drawPolyline(xi, yi, addtionalPoint);
+            } else {
+                xi[0] = xi[1] = x + xb;
+                yi[0] = (int) y - height / 2 - 2;
+                yi[1] = (int) y - height / 2 + 6;
+                xi[2] = xi[0] - 4;
+                yi[2] = (int) y - height / 2 + 2;
 
-           }
+            }
 
-           g.drawPolygon(xi, yi, shape);
-           g.fillPolygon(xi, yi, shape);
-
-
-
+            g.drawPolygon(xi, yi, shape);
+            g.fillPolygon(xi, yi, shape);
 
         } else {
 
@@ -1125,34 +1122,32 @@ public class SequenceViewWidgetPanel extends JPanel {
                          (int) (y - 1 * yscale + yOff + 3));
             g.setColor(color);
 
-            g.draw3DRect(x, (int) y - height / 2 +2, endx - x, height, true);
+            g.draw3DRect(x, (int) y - height / 2 + 2, endx - x, height, true);
             g.setColor(SEQUENCEBACKGROUDCOLOR);
 
-            g.setColor(DRECTIONCOLOR );
+            g.setColor(DRECTIONCOLOR);
 
-         int shape = 3;
-         int[] xi = new int[shape];
-        int[] yi = new int[shape];
-        if (strand == 0) {
-            xi[0] = xi[1] = x;
-            yi[0] = (int) y - height / 2 - 2;
-            yi[1] = (int) y - height / 2 + 6;
-            xi[2] = xi[0] + 4;
-            yi[2] = (int) y - height / 2 + 2;
-            // g.drawPolyline(xi, yi, addtionalPoint);
-        } else {
-            xi[0] = xi[1] = x + xb;
-            yi[0] = (int) y - height / 2 - 2;
-            yi[1] = (int) y - height / 2 + 6;
-            xi[2] = xi[0] - 4;
-            yi[2] = (int) y - height / 2 + 2;
+            int shape = 3;
+            int[] xi = new int[shape];
+            int[] yi = new int[shape];
+            if (strand == 0) {
+                xi[0] = xi[1] = x;
+                yi[0] = (int) y - height / 2 - 2;
+                yi[1] = (int) y - height / 2 + 6;
+                xi[2] = xi[0] + 4;
+                yi[2] = (int) y - height / 2 + 2;
+                // g.drawPolyline(xi, yi, addtionalPoint);
+            } else {
+                xi[0] = xi[1] = x + xb;
+                yi[0] = (int) y - height / 2 - 2;
+                yi[1] = (int) y - height / 2 + 6;
+                xi[2] = xi[0] - 4;
+                yi[2] = (int) y - height / 2 + 2;
 
-        }
+            }
 
-        g.drawPolygon(xi, yi, shape);
-        g.fillPolygon(xi, yi, shape);
-
-
+            g.drawPolygon(xi, yi, shape);
+            g.fillPolygon(xi, yi, shape);
 
             for (int i = 1; i < k; i++) {
                 g.clearRect(startx, (int) (y - height / 2 + (i * yscale)),
@@ -1522,23 +1517,7 @@ public class SequenceViewWidgetPanel extends JPanel {
             }
 
         }
-//       for (DSPattern pattern : patternMatches.keySet()) {
-//           List<DSPatternMatch<DSSequence, DSSeqRegistration>> matches = patternMatches.get(pattern);
-//           if (matches != null) {
-//               for (int i = 0; i < matches.size(); i++) {
-//                   DSPatternMatch<DSSequence, DSSeqRegistration> match = matches.get(i);
-//                   DSSequence sequence = match.getObject();
-//                   if (sequence.getSerial() == seqid) {
-//                       DSSeqRegistration reg = match.getRegistration();
-//                       if ((off > reg.x1 - 5) && (off < reg.x2 + 4)) {
-//
-//                           //displayInfo(pattern.toString());
-//
-//                       }
-//                   }
-//               }
-//           }
-//       }
+
     }
 
     /**

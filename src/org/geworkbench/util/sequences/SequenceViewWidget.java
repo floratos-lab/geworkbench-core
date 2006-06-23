@@ -285,7 +285,7 @@ public class SequenceViewWidget extends JPanel {
         seqViewWPanel.this_mouseClicked(e);
         DSSequence selectedSequence = seqViewWPanel.getSelectedSequence();
         int xStartPoint = seqViewWPanel.getSeqXclickPoint();
-
+        System.out.println(xStartPoint + " JDM " + selectedSequence);
         final Font font = new Font("Courier", Font.BOLD, 10);
         // Get the mouse position
         int x = e.getX();
@@ -332,6 +332,7 @@ public class SequenceViewWidget extends JPanel {
                 double xscale = (r2d.getWidth() + 3) /
                                 (double) (seqLength);
                 double yscale = 0.6 * r2d.getHeight();
+                System.out.println("seqAscii=" + seqAscii);
                 g.drawString(seqAscii, 10, 20);
                 int paintPoint = 0;
                 while (paintPoint < seqLength) {
@@ -348,6 +349,9 @@ public class SequenceViewWidget extends JPanel {
                 if (patternLocationsMatches != null) {
                     PatternSequenceDisplayUtil psd = patternLocationsMatches.
                             get(sequence);
+                    if (psd == null) {
+                        return;
+                    }
                     TreeSet<PatternLocations>
                             patternsPerSequence = psd.getTreeSet();
                     if (patternsPerSequence != null &&
@@ -393,24 +397,23 @@ public class SequenceViewWidget extends JPanel {
                                     int[] xi = new int[shape];
                                     int[] yi = new int[shape];
                                     if (registration.strand == 0) {
-                                        xi[0] = xi[1] = (int)x1;
+                                        xi[0] = xi[1] = (int) x1;
                                         yi[0] = 0;
                                         yi[1] = 4;
                                         xi[2] = xi[0] + 2;
-                                        yi[2] =   2;
+                                        yi[2] = 2;
                                         // g.drawPolyline(xi, yi, addtionalPoint);
                                     } else {
                                         xi[0] = xi[1] = (int) (x1 + x2);
                                         yi[0] = 0;
                                         yi[1] = 4;
                                         xi[2] = xi[0] - 2;
-                                        yi[2] =  2;
+                                        yi[2] = 2;
 
                                     }
 
                                     g.drawPolygon(xi, yi, shape);
                                     g.fillPolygon(xi, yi, shape);
-
 
                                 }
 
