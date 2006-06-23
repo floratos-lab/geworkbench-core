@@ -655,6 +655,7 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget {
         }
         PatternOperations.addTFMatches(patternTFMatches, matches, pt);
         initPanelView();
+
     }
 
 //    public void addAPattern(DSPattern<DSSequence, DSSeqRegistration> pt,

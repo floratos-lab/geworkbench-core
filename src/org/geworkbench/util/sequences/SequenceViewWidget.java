@@ -160,7 +160,7 @@ public class SequenceViewWidget extends JPanel {
         jToolBar1.add(jAllSequenceCheckBox);
 
         jToolBar1.addSeparator();
-        jToolBar1.add(jSequenceSummaryTextField);
+        //jToolBar1.add(jSequenceSummaryTextField);
         jViewComboBox.addItem(LINEVIEW);
         jViewComboBox.addItem(FULLVIEW);
 
@@ -285,7 +285,6 @@ public class SequenceViewWidget extends JPanel {
         seqViewWPanel.this_mouseClicked(e);
         DSSequence selectedSequence = seqViewWPanel.getSelectedSequence();
         int xStartPoint = seqViewWPanel.getSeqXclickPoint();
-        System.out.println(xStartPoint + " JDM " + selectedSequence);
         final Font font = new Font("Courier", Font.BOLD, 10);
         // Get the mouse position
         int x = e.getX();
@@ -294,7 +293,6 @@ public class SequenceViewWidget extends JPanel {
         // the mouse position
         int seqId = getSeqId(y);
         int seqDx = getSeqDx(x);
-
         // int seqId = getSeqId(y);
         if (sequenceDB != null) {
             for (int i = 0; i < sequenceDB.size(); i++) {
@@ -332,7 +330,6 @@ public class SequenceViewWidget extends JPanel {
                 double xscale = (r2d.getWidth() + 3) /
                                 (double) (seqLength);
                 double yscale = 0.6 * r2d.getHeight();
-                System.out.println("seqAscii=" + seqAscii);
                 g.drawString(seqAscii, 10, 20);
                 int paintPoint = 0;
                 while (paintPoint < seqLength) {
