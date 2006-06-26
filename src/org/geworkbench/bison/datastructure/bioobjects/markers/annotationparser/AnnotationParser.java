@@ -3,6 +3,8 @@ package org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser;
 import com.Ostermiller.util.CSVParser;
 import com.Ostermiller.util.LabeledCSVParser;
 import org.apache.commons.collections15.map.ListOrderedMap;
+import org.apache.commons.collections15.MultiMap;
+import org.apache.commons.collections15.multimap.MultiHashMap;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
@@ -326,19 +328,42 @@ public class AnnotationParser {
 //        return null;
 //    }
 
-    public static HashMap<String, Vector<String>> getGotable() {
+    static MultiMap<String, String> GOIDToAffy = null;
+    static MultiMap<String, String> affyToGOID = null;
+
+    public static MultiMap<String, String> getGotable() {
+        if (GOIDToAffy != null) {
+            return GOIDToAffy;
+        }
         try {
             ListOrderedMap<String, Map<String, String>> annots = getAllAnnotationsForDataSet(currentDataSet);
-            HashMap<String, Vector<String>> GOIDToAffy = new HashMap<String, Vector<String>>();
-            HashMap<String, Vector<String>> affyToGOID = new HashMap<String, Vector<String>>();
+            GOIDToAffy = new MultiHashMap<String, String>();
+            affyToGOID = new MultiHashMap<String, String>();
             for (String marker : annots.keySet()) {
+                marker = marker.trim();
+                log.debug("Adding go terms for marker "+marker);
                 String bio = annots.get(marker).get(GENE_ONTOLOGY_BIOLOGICAL_PROCESS);
                 Vector<String> goIds = getGOIds(bio);
+                for (int i = 0; i < goIds.size(); i++) {
+                    String goId = goIds.elementAt(i).trim();
+                    affyToGOID.put(marker, goId);
+                    GOIDToAffy.put(goId, marker);
+                }
                 String cell = annots.get(marker).get(GENE_ONTOLOGY_CELLULAR_COMPONENT);
-                goIds.addAll(getGOIds(cell));
+                Vector<String> cellIds = getGOIds(cell);
+                for (int i = 0; i < cellIds.size(); i++) {
+                    String goId = cellIds.elementAt(i).trim();
+                    affyToGOID.put(marker, goId);
+                    GOIDToAffy.put(goId, marker);
+                }
                 String molecular = annots.get(marker).get(GENE_ONTOLOGY_MOLECULAR_FUNCTION);
-                goIds.addAll(getGOIds(molecular));
-                affyToGOID.put(marker, goIds);
+                Vector<String> molIds = getGOIds(molecular);
+                for (int i = 0; i < molIds.size(); i++) {
+                    String goId = molIds.elementAt(i).trim();
+                    affyToGOID.put(marker, goId);
+                    GOIDToAffy.put(goId, marker);
+                }
+//                affyToGOID.put(marker, goIds);
             }
             // todo: Make this return the correct map, I think we need affyToGOID here
             return GOIDToAffy;
