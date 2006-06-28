@@ -37,6 +37,7 @@
     <orderEntry type="module" module-name="jmol" />
     <orderEntry type="module" module-name="tprofiler" />
     <orderEntry type="module" module-name="simulation" />
+    <orderEntry type="module" module-name="matrixreduce" />
     <orderEntryProperties />
   </component>
 </module>

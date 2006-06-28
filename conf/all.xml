@@ -18,6 +18,9 @@
 	<plugin id="colorMosaicPanel" name="Color Mosaic" class="org.geworkbench.components.colormosaic.ColorMosaicPanel" source="colormosaic">
 		<gui-area name="VisualArea"/>
 	</plugin>
+    <plugin id="tprofilerView" name="T-Profiler Results" class="org.geworkbench.components.tprofiler.TProfilerVisualComponent" source="tprofiler">
+        <gui-area name="VisualArea"/>
+    </plugin>
 	<plugin id="cytoscapePanel" name="Cytoscape" class="org.geworkbench.components.cytoscape.CytoscapeWidget" source="cytoscape">
 		<gui-area name="VisualArea"/>
 	</plugin>
@@ -95,8 +98,11 @@
 	<plugin id="phenotypePanel2" name="Arrays/Phenotypes" class="org.geworkbench.components.selectors.PhenotypePanel" source="selectors">
 		<gui-area name="SelectionArea"/>
 	</plugin>
-	<!-- plugin id="hierarchicalClusteringAnalysis" name="Hierachical Clustering Analysis" class="org.geworkbench.components.clustering.HierClustAnalysis" source="clustering"/ -->
+	<!--<plugin id="hierarchicalClusteringAnalysis" name="Hierachical Clustering Analysis" class="org.geworkbench.components.clustering.HierClustAnalysis" source="clustering"/>-->
 	<plugin id="fastHierarchicalClusteringAnalysis" name="Fast Hierachical Clustering Analysis" class="org.geworkbench.components.clustering.FastHierClustAnalysis" source="clustering"/>
+
+    <plugin id="matrixReduce" name="Matrix Reduce" class="org.geworkbench.components.matrixreduce.MatrixReduceAnalysis" source="matrixreduce"/>
+
 	<plugin id="svmClassifier" name="SVM Classifier" class="org.geworkbench.components.analysis.classification.svm.SVMTraining" source="analysis"/>
 	<plugin id="smlrClassifier" name="SMLR Classifier" class="org.geworkbench.components.analysis.classification.smlr.SMLRTraining" source="analysis"/>
 	<!--plugin id="jniHierarchicalClusteringAnalysis" name="JNI Hierachical Clustering Analysis" class="org.geworkbench.components.clustering.JniHierClustAnalysis"/-->
@@ -178,9 +184,23 @@
 		<gui-area name="CommandArea"/>
 	</plugin>
 	<plugin id="SVMNormalizedMatrixFilter" name="SVM Format" class="org.geworkbench.engine.parsers.SVMNormalizedMatrixFileFormat"/>
-	<!-- -->
-	<!--<plugin id="test" name="Test Component" class="test.TestComponent" source="test">-->
+    <plugin id="tprofilerPanel" name="T-Profiler" class="org.geworkbench.components.tprofiler.TProfiler" source="tprofiler">
+        <gui-area name="CommandArea"/>
+    </plugin>
+    <plugin id="Simulation" name="Simulation" class="org.geworkbench.components.simulation.SimulationWidget" source="simulation">
+        <gui-area name="VisualArea"/>
+    </plugin>
+
+	<!--<plugin id="test" name="GenePattern" class="org.genepattern.geworkbench.GPGEPlugin" source="genepattern">-->
 	<!--<gui-area name="VisualArea"/>-->
 	<!--</plugin>-->
-	<!-- -->
+	<!--<plugin id="test" name="GenePattern" class="org.genepattern.geworkbench.TestPlugin" source="genepattern">-->
+	<!--<gui-area name="VisualArea"/>-->
+	<!--</plugin>-->
+
+    <!-- Matrix Reduce -->
+    <plugin id="matrixReduceViewer" name="Matrix Reduce Viewer" class="org.geworkbench.components.matrixreduce.MatrixReduceViewer" source="matrixreduce">
+        <gui-area name="VisualArea"/>
+    </plugin>
+
 </geaw-config>

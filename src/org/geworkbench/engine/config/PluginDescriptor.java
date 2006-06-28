@@ -121,17 +121,21 @@ public class PluginDescriptor extends IdentifiableImpl implements Comparable {
                 System.out.println("Warning: Resource '" + resourceName + "' for component '" + someName + "' not found.");
             }
         }
+        ClassLoader defaultClassLoader = Thread.currentThread().getContextClassLoader();
         try {
             if (resource == null) {
                 pluginClass = Class.forName(className);
                 loader = pluginClass.getClassLoader();
             } else {
                 loader = resource.getClassLoader();
+                Thread.currentThread().setContextClassLoader(resource.getClassLoader());
                 pluginClass = loader.loadClass(className);
             }
             instantiate();
         } catch (ClassNotFoundException e) {
             throw new org.geworkbench.util.BaseRuntimeException("Could not instantiate plugin: " + className, e);
+        } finally {
+            Thread.currentThread().setContextClassLoader(defaultClassLoader);
         }
     }
 
@@ -141,15 +145,16 @@ public class PluginDescriptor extends IdentifiableImpl implements Comparable {
 
     private void instantiate() {
         ComponentRegistry componentRegistry = ComponentRegistry.getRegistry();
+        ClassLoader defaultClassLoader = Thread.currentThread().getContextClassLoader();
         try {
-            ClassLoader defaultClassLoader = Thread.currentThread().getContextClassLoader();
             if (resource != null) {
                 Thread.currentThread().setContextClassLoader(resource.getClassLoader());
             }
             plugin = componentRegistry.createComponent(pluginClass, this);
-            Thread.currentThread().setContextClassLoader(defaultClassLoader);
         } catch (Exception e) {
             throw new RuntimeException("Failed to instantiate plugin:" + pluginClass, e);
+        } finally {
+            Thread.currentThread().setContextClassLoader(defaultClassLoader);
         }
     }
 
