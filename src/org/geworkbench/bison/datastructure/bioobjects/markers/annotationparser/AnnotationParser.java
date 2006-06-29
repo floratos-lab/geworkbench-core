@@ -27,7 +27,7 @@ public class AnnotationParser {
 
     static Log log = LogFactory.getLog(AnnotationParser.class);
 
-    public static final String version = "30";
+    public static final String version = "31";
     // when you change file format etc. this version number need to be changed so that the old file will be deleted.
     static int counter = 0;
 
@@ -59,6 +59,7 @@ public class AnnotationParser {
     public static HashMap chiptypeMap = new HashMap();
     private static ArrayList<String> chipTypes = new ArrayList<String>();
     public static final String DEFAULT_CHIPTYPE = "HG_U95Av2";
+    public static Map<String, ListOrderedMap<String, Vector<String>>> geneNameMap = new HashMap<String, ListOrderedMap<String, Vector<String>>>();
 
     static {
         if (systempDir == null) {
@@ -88,7 +89,6 @@ public class AnnotationParser {
                 str = br2.readLine();
                 while (str != null) {
                     String[] data = str.split(",");
-//                    indexfileMap.put(data[0].trim(), data[1].trim());
                     str = br2.readLine();
                 }
                 br2.close();
@@ -97,7 +97,6 @@ public class AnnotationParser {
         catch (Exception e) {
             e.printStackTrace();
         }
-//        setChipType("HG_U95Av2");
     }
 
     public static DSDataSet getCurrentDataSet() {
@@ -136,32 +135,6 @@ public class AnnotationParser {
         return loadAnnotationData(chiptype, annotationData);
     }
 
-//    public static void clearAll() throws IOException {
-//        File temp = new File(tmpDir +
-//                chiptyemapfilename);
-//        for (Iterator it = indexfileMap.entrySet().iterator();
-//             it.hasNext();) {
-//            String file = (String) it.next();
-//            File idex = new File(tmpDir +
-//                    file);
-//            if (idex.exists()) {
-//                idex.delete();
-//            }
-//            if (file != null) {
-//                file = file.substring(0,
-//                        file.indexOf('.'));
-//            }
-//            File path = new File(tmpDir + file + ".go");
-//            if (path.exists()) {
-//                path.delete();
-//            }
-//        }
-//        if (temp.exists()) {
-//            temp.delete();
-//        }
-//        indexfileMap.clear();
-//    }
-
     private static boolean loadAnnotationData(String chipType) {
         File datafile = new File(chipType + "_annot.csv");
         return loadAnnotationData(chipType, datafile);
@@ -171,7 +144,6 @@ public class AnnotationParser {
         if (datafile.exists()) { //data file is found
             try {
                 ListOrderedMap<String, Map<String, String>> annots = new ListOrderedMap<String, Map<String, String>>();
-//                String[][] data = CSVParser.parse(new FileReader(datafile));
                 LabeledCSVParser parser = new LabeledCSVParser(new CSVParser(new BufferedInputStream(new FileInputStream(datafile))));
                 String[] labels = parser.getLabels();
                 while (parser.getLine() != null) {
@@ -183,23 +155,8 @@ public class AnnotationParser {
                     }
                     annots.put(affyId, values);
                 }
-//                int columns = data[0].length - 1;
-//                for (int i = 0; i < columns; i++) {
-//                    int c = i + 1;
-//                    String header = data[0][c];
-//                    // Always replace map for now
-//                    Map<String, String> map = new HashMap<String, String>();
-//                    annots.put(header, map);
-//                    for (int j = 1; j < data.length; j++) {
-//                        String existing = map.get(data[j][0]);
-//                        if (existing == null) {
-//                            map.put(data[j][0], data[j][c]);
-//                        } else {
-//                            map.put(data[j][0], existing + " /// " + data[j][c]);
-//                        }
-//                    }
-//                }
                 chipTypeToAnnotations.put(chipType, annots);
+                populateGeneNameMap(chipType);
                 return true;
             } catch (Exception e) {
                 log.error("", e);
@@ -210,6 +167,23 @@ public class AnnotationParser {
         }
     }
 
+    private static void populateGeneNameMap(String chipType) {
+        if (chipType != null){
+            for (String affyid : chipTypeToAnnotations.get(chipType).keySet()) {
+                String geneName = getGeneName(affyid.trim());
+                if (geneName != null){
+                    if (geneNameMap.get(chipType) == null)
+                        geneNameMap.put(chipType, new ListOrderedMap<String, Vector<String>>());
+                    Vector<String> ids = geneNameMap.get(chipType).get(geneName.trim());
+                    if (ids == null)
+                        ids = new Vector<String>();
+                    ids.add(affyid.trim());
+                    geneNameMap.get(chipType).put(geneName.trim(), ids);
+                }
+            }
+        }
+    }
+    
     private static File createFilewithID() {
 
         String tempString = "annotationParser" +
@@ -259,15 +233,6 @@ public class AnnotationParser {
             }
             return null;
         }
-//        if (data != null) {
-//            String[] info = null;
-//            String inf = data.split("/////")[fieldID];
-//
-//            info = inf.split("\t");
-//            return info;
-//        } else {
-//            return null;
-//        }
     }
 
     static public String getInfoAsString(String affyID, String fieldID) {
@@ -307,27 +272,6 @@ public class AnnotationParser {
         return result;
     }
 
-//    /**
-//     * Get AffyIDs related to Goterm
-//     *
-//     * @param Unigene
-//     * @return AffyIDs
-//     */
-//    public static String[] fromGoToAffy(String goName) {
-//        if (goes == null) {
-//            createGoAffytable();
-//        }
-//        if (goes != null) {
-//            Vector<String> ids = (Vector<String>) goes.get(goName);
-//            if (ids == null) {
-//                return null;
-//            } else {
-//                return (String[]) ids.toArray();
-//            }
-//        }
-//        return null;
-//    }
-
     static MultiMap<String, String> GOIDToAffy = null;
     static MultiMap<String, String> affyToGOID = null;
 
@@ -363,7 +307,6 @@ public class AnnotationParser {
                     affyToGOID.put(marker, goId);
                     GOIDToAffy.put(goId, marker);
                 }
-//                affyToGOID.put(marker, goIds);
             }
             // todo: Make this return the correct map, I think we need affyToGOID here
             return GOIDToAffy;
@@ -398,74 +341,6 @@ public class AnnotationParser {
         }
         return goIds;
     }
-
-//    //create go term table that refers go term to affyid
-//    private static void createGoAffytable(String chipType) {
-//        if (chipType != null && !chipType.equalsIgnoreCase("")) {
-//
-//            String indexfilename = "new";
-//            if (indexfilename != null) {
-//
-//                indexfilename = indexfilename.substring(0,
-//                        indexfilename.indexOf('.'));
-//            }
-//            File path = new File(tmpDir + indexfilename + ".go");
-//
-//            if (path.exists()) {
-//                try {
-//                    ObjectInputStream ob = new ObjectInputStream(new
-//                            FileInputStream(
-//                            path));
-//                    goes = (Gotable) ob.readObject();
-//                    ob.close();
-//                }
-//                catch (ClassNotFoundException ex) {
-//                    ex.printStackTrace();
-//                }
-//                catch (IOException ex) {
-//                    ex.printStackTrace();
-//                }
-//            } else {
-//                createNewGoTable(chipType);
-//            }
-//        }
-//    }
-
-//    private static void createNewGoTable(String chipType) {
-//        goes = new Gotable();
-//        ProgressBar pb = ProgressBar.create(ProgressBar.BOUNDED_TYPE);
-//        pb.setTitle("Processing Go Term index file...");
-//        pb.setMessage("Processing Go Term index file...");
-//        pb.setBounds(new ProgressBar.IncrementModel(0, affyIDs.keySet().size(), 0, affyIDs.keySet().size(), 1));
-//        pb.start();
-//        pb.updateTo(0f);
-//
-//        int count = 0;
-//        for (Iterator ids = affyIDs.keySet().iterator(); ids.hasNext();
-//                ) {
-//            String id = (String) ids.next();
-//            String[] info = getInfo(id, AnnotationParser.GOTERM);
-//            pb.setMessage("Processing probe");
-//            pb.updateTo(count++);
-//            if (UILauncher.splash.isVisible()) {
-//                UILauncher.splash.setProgressBarString(
-//                        "Processing probe:" + count++);
-//            }
-//            for (int i = 0; i < info.length; i++) {
-//                if (info[i] != null) {
-//                    String goid = info[i].split("::")[0];
-//                    Vector<String> hs = ((Vector<String>) goes.get(goid) == null) ? new Vector<String>() : (Vector<String>) goes.get(goid);
-//                    hs.add(id);
-//                    goes.put(goid, hs);
-//                }
-//            }
-//        }
-//        pb.stop();
-//    }
-
-//    static class Gotable
-//            extends HashMap implements Serializable {
-//    }
 
     public static String matchChipType(DSDataSet dataset, String id, boolean askIfNotFound) {
         String chip = (String) chiptypeMap.get(id);
@@ -508,15 +383,12 @@ public class AnnotationParser {
             File userAnnotations = chooser.getSelectedFile();
             String chipType = "User Defined";
             return userAnnotations;
-//            loadAnnotationData(chipType, userAnnotations);
-//            datasetToChipTypes.put(dataset, chipType);
         } else {
             return null;
         }
     }
 
     // Custom annotations loaded by the user (not necessarily Affy)
-
     private static class CustomAnnotations {
 
         public CustomAnnotations() {
@@ -560,12 +432,8 @@ public class AnnotationParser {
             for (int i = 0; i < columns; i++) {
                 int c = i + 1;
                 String header = data[0][c];
-//                Map<String, String> map = customAnnots.get(header);
-//                if (map == null) {
-                // Always replace map for now
                 Map<String, String> map = new HashMap<String, String>();
                 customAnnots.put(header, map);
-//                }
                 for (int j = 1; j < data.length; j++) {
                     String existing = map.get(data[j][0]);
                     if (existing == null) {
