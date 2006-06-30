@@ -1,6 +1,7 @@
 package org.geworkbench.engine.parsers;
 
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
 import org.geworkbench.bison.parsers.resources.Resource;
 
 import javax.swing.filechooser.FileFilter;
@@ -65,6 +66,19 @@ public abstract class FileFormat {
      * @return The corresponding <code>MicroarraySet</code> object.
      */
     public abstract DSMicroarraySet getMArraySet(File file) throws InputFileFormatException;
+
+    /**
+     * Generates and returns a <code>MicrorarraySet</code> from the designated
+     * argument. In <code>file</code> does not conform to the format, returns
+     * <code>null</code>.
+     *
+     * @param file The file containing the input data.
+     * @param maSet The set to load the data in
+     * @return The corresponding <code>MicroarraySet</code> object.
+     */
+    public void getMArraySet(File file, CSExprMicroarraySet maSet) throws InputFileFormatException {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Return the list of extensions (if any) for the files following this

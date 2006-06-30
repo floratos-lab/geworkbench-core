@@ -97,13 +97,14 @@ public class AffyFileFormat extends DataSetFileFormat {
      * @throws InputFileFormatException When the input file deviates from the
      *                                  Affy format.
      */
-    public DSMicroarraySet getMArraySet(File file) throws InputFileFormatException {
+
+    public void getMArraySet(File file, CSExprMicroarraySet maSet) throws InputFileFormatException {
         // Check that the file is OK before starting allocating space for it.
         if (!checkFormat(file))
             throw new InputFileFormatException("AffyFileFormat::getMArraySet - " + "Attempting to open a file that does not comply with the " + "Affy format.");
         try {
             // microarraySet = new CSExprMicroarraySet((AffyResource) getResource(file));
-            microarraySet = new CSExprMicroarraySet();
+            microarraySet = maSet;
             List ctu = new ArrayList();
             ctu.add("Probe Set Name");
             ctu.add("Avg Diff");
@@ -127,7 +128,7 @@ public class AffyFileFormat extends DataSetFileFormat {
             microarraySet.setLabel(file.getName());
             microarraySet.setCompatibilityLabel("MAS");
             microarraySet.initialize(1, v.size());
-            String chiptype = AnnotationParser.matchChipType(microarraySet, "dummymarker", false);
+//            String chiptype = AnnotationParser.matchChipType(microarraySet, "dummymarker", false);
             CSMarkerVector markerVector = (CSMarkerVector) microarraySet.getMarkers();
             int count = 0;
             for (Iterator it = v.iterator(); it.hasNext();) {
@@ -157,8 +158,6 @@ public class AffyFileFormat extends DataSetFileFormat {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return microarraySet;
     }
 
     /**
@@ -175,6 +174,21 @@ public class AffyFileFormat extends DataSetFileFormat {
             ife.printStackTrace();
         }
         return ds;
+    }
+
+    public DSMicroarraySet getMArraySet(File file) throws InputFileFormatException {
+        CSExprMicroarraySet maSet = new CSExprMicroarraySet();
+        getMArraySet(file, maSet);
+        if (maSet.loadingCancelled)
+            return null;
+        return maSet;
+    }
+
+    public DSDataSet getDataFile(File file, String compatibilityLabel) throws InputFileFormatException {
+        CSExprMicroarraySet maSet = new CSExprMicroarraySet();
+        maSet.setCompatibilityLabel(compatibilityLabel);
+        getMArraySet(file, maSet);
+        return maSet;
     }
 
     /**

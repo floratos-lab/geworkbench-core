@@ -97,6 +97,8 @@ import java.util.Map;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.
         CSMicroarraySet;
 import org.apache.commons.collections15.map.ListOrderedMap;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import com.Ostermiller.util.CSVPrinter;
 
 /**
@@ -110,6 +112,8 @@ import com.Ostermiller.util.CSVPrinter;
  */
 
 public class ProjectPanel implements VisualPlugin, MenuListener {
+
+    static Log log = LogFactory.getLog(ProjectPanel.class);
 
     private static TypeMap<ImageIcon> iconMap = new TypeMap<ImageIcon>();
 
@@ -1116,8 +1120,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                     String mergedName = null;
                     if (dataSetFiles.length == 1) {
                         try {
-                            dataSets[0] = ((DataSetFileFormat) inputFormat).
-                                          getDataFile(dataSetFiles[0]);
+                            dataSets[0] = ((DataSetFileFormat) inputFormat).getDataFile(dataSetFiles[0]);
                         } catch (InputFileFormatException iffe) {
                             // Let the user know that there was a problem parsing the file.
                             JOptionPane.showMessageDialog(null,
@@ -1138,11 +1141,21 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 //                            }
 //                        }
 //                        if (!cancelled) {
+                        String chipType = null;
                         for (int i = 0; i < dataSetFiles.length; i++) {
                             File dataSetFile = dataSetFiles[i];
                             try {
-                                dataSets[i] = ((DataSetFileFormat) inputFormat).
-                                              getDataFile(dataSetFile);
+                                if (chipType == null) {
+                                    dataSets[i] = ((DataSetFileFormat) inputFormat).getDataFile(dataSetFile);
+                                    chipType = dataSets[i].getCompatibilityLabel();
+                                } else {
+                                    try {
+                                        dataSets[i] = ((DataSetFileFormat) inputFormat).getDataFile(dataSetFile, chipType);
+                                    } catch (UnsupportedOperationException e) {
+                                        log.warn("This data type doesn't support chip type overrides, will have to ask user again.");
+                                        dataSets[i] = ((DataSetFileFormat) inputFormat).getDataFile(dataSetFile);
+                                    }
+                                }
                             } catch (InputFileFormatException iffe) {
                                 // Let the user know that there was a problem parsing the file.
                                 JOptionPane.showMessageDialog(null,

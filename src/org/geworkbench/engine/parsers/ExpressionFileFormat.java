@@ -54,20 +54,30 @@ public class ExpressionFileFormat extends DataSetFileFormat {
         return true;
     }
 
-    public DSDataSet getDataFile(File file) {
-        return (DSDataSet) getMArraySet(file);
+    public DSDataSet getDataFile(File file, String compatibilityLabel) throws InputFileFormatException {
+        CSExprMicroarraySet maSet = new CSExprMicroarraySet();
+        maSet.setCompatibilityLabel(compatibilityLabel);
+        getMArraySet(file, maSet);
+        return maSet;
     }
 
     public DSMicroarraySet getMArraySet(File file) {
         CSExprMicroarraySet maSet = new CSExprMicroarraySet();
-        try {
-            maSet.read(file);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        getMArraySet(file, maSet);
         if (maSet.loadingCancelled)
             return null;
         return maSet;
+    }
+
+    public void getMArraySet(File file, CSExprMicroarraySet maSet) {
+        try {
+            maSet.read(file);
+        } catch (Exception e) {
+        }
+    }
+
+    public DSDataSet getDataFile(File file) {
+        return (DSDataSet) getMArraySet(file);
     }
 
     public List getOptions() {

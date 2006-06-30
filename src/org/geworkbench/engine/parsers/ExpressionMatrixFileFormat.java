@@ -58,15 +58,25 @@ public class ExpressionMatrixFileFormat extends DataSetFileFormat {
         return (DSDataSet) getMArraySet(file);
     }
 
+
+    public DSDataSet getDataFile(File file, String compatibilityLabel) throws InputFileFormatException {
+        CSExprMicroarraySet maSet = new CSExprMicroarraySet();
+        maSet.setCompatibilityLabel(compatibilityLabel);
+        getMArraySet(file, maSet);
+        return maSet;
+    }
+
     public DSMicroarraySet getMArraySet(File file) {
         CSExprMicroarraySet maSet = new CSExprMicroarraySet();
+        getMArraySet(file, maSet);
+        return maSet;
+    }
+
+    public void getMArraySet(File file, CSExprMicroarraySet maSet) {
         try {
             maSet.read(file);
         } catch (Exception e) {
         }
-        if (maSet.loadingCancelled)
-            return null;
-        return maSet;
     }
 
     public List getOptions() {

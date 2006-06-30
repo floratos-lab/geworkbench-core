@@ -362,9 +362,11 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
                     } else if (line.charAt(0) != '\t') {
                         if (mArraySet.getCompatibilityLabel() == null) {
                             String token = line.substring(0, startindx);
-                            String chiptype = AnnotationParser.matchChipType(mArraySet, token, false);
-                            if (chiptype != null) {
-                                mArraySet.setCompatibilityLabel(chiptype);
+                            if (mArraySet.getCompatibilityLabel() == null) {
+                                String chiptype = AnnotationParser.matchChipType(mArraySet, token, false);
+                                if (chiptype != null) {
+                                    mArraySet.setCompatibilityLabel(chiptype);
+                                }
                             }
                         }
                         markerNo++;

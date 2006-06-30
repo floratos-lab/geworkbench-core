@@ -21,5 +21,8 @@ public abstract class DataSetFileFormat extends FileFormat {
   public DataSetFileFormat() {
   }
   abstract public DSDataSet getDataFile(File file) throws InputFileFormatException;
+  public DSDataSet getDataFile(File file, String compatibilityLabel) throws InputFileFormatException, UnsupportedOperationException {
+      throw new UnsupportedOperationException();
+  }
   abstract public DSDataSet getDataFile(File[] files) throws InputFileFormatException;
 }
