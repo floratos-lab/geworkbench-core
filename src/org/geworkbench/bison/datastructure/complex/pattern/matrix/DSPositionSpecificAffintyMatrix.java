@@ -20,6 +20,8 @@ public interface DSPositionSpecificAffintyMatrix extends DSBioObject, DSPValued 
 
     String getConsensusSequence();
 
+    double[][] getScores();
+
     void setPsamImage(ImageIcon image);
 
     void setExperiment(String experiment);
@@ -27,5 +29,7 @@ public interface DSPositionSpecificAffintyMatrix extends DSBioObject, DSPValued 
     void setSeedSequence(String seedSequence);
 
     void setConsensusSequence(String consensusSequence);
+
+    void setScores(double[][] scores);
 
 }

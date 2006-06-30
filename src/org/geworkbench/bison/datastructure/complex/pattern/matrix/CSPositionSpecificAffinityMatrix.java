@@ -12,6 +12,7 @@ public class CSPositionSpecificAffinityMatrix implements DSPositionSpecificAffin
     private String seedSequence;
     private String consensusSequence;
     private double pValue;
+    private double[][] scores;
 
     public ImageIcon getPsamImage() {
         return psamImage;
@@ -43,6 +44,14 @@ public class CSPositionSpecificAffinityMatrix implements DSPositionSpecificAffin
 
     public void setConsensusSequence(String consensusSequence) {
         this.consensusSequence = consensusSequence;
+    }
+
+    public double[][] getScores() {
+        return scores;
+    }
+
+    public void setScores(double[][] scores) {
+        this.scores = scores;
     }
 
     public void addNameValuePair(String name, Object value) {
