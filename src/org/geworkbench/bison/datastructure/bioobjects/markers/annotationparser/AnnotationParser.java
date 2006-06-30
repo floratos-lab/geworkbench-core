@@ -183,7 +183,7 @@ public class AnnotationParser {
             }
         }
     }
-    
+
     private static File createFilewithID() {
 
         String tempString = "annotationParser" +
@@ -229,7 +229,7 @@ public class AnnotationParser {
             return field.split(MAIN_DELIMITER);
         } catch (Exception e) {
             if (affyID != null) {
-                log.warn("Error getting info for affyId (" + affyID + "):" + e);
+                log.debug("Error getting info for affyId (" + affyID + "):" + e);
             }
             return null;
         }
