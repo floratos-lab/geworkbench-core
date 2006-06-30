@@ -167,6 +167,11 @@
                     <type>java</type>
                     <location>components/interactions/src</location>
                 </source-folder>
+                <source-folder>
+                    <label>components\simulation\src</label>
+                    <type>java</type>
+                    <location>components/simulation/src</location>
+                </source-folder>
             </folders>
             <ide-actions>
                 <action name="build">
@@ -335,6 +340,10 @@
                     <source-folder style="packages">
                         <label>components\interactions\src</label>
                         <location>components/interactions/src</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>components\simulation\src</label>
+                        <location>components/simulation/src</location>
                     </source-folder>
                     <source-file>
                         <location>build.xml</location>
@@ -514,6 +523,11 @@
             <compilation-unit>
                 <package-root>components/interactions/src</package-root>
                 <classpath mode="compile">classes;components/interactions/lib/activation.jar;components/interactions/lib/axis-ant.jar;components/interactions/lib/axis.jar;components/interactions/lib/classes12.jar;components/interactions/lib/commons-discovery-0.2.jar;components/interactions/lib/commons-logging-1.0.4.jar;components/interactions/lib/jaxrpc.jar;components/interactions/lib/log4j-1.2.8.jar;components/interactions/lib/mail.jar;components/interactions/lib/saaj.jar;components/interactions/lib/swing-layout-1.0.jar;components/interactions/lib/wsdl4j-1.5.1.jar</classpath>
+                <source-level>1.5</source-level>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>components/simulation/src</package-root>
+                <classpath mode="compile">classes;components/simulation/lib/cytoscape.jar;components/simulation/lib/layout.jar;components/simulation/lib/swing-layout-1.0.1.jar;components/simulation/lib/yLayouts.jar</classpath>
                 <source-level>1.5</source-level>
             </compilation-unit>
         </java-data>
