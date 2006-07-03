@@ -120,7 +120,11 @@ public class SequenceViewWidgetPanel extends JPanel {
             if (!singleSequenceView) {
                 paintText(g);
             } else {
-                paintSingleSequence(g);
+                if (selected < sequenceDB.size()) {
+                    paintSingleSequence(g);
+                } else {
+                    paintText(g);
+                }
             }
         } else {
             paintFullView(g);
@@ -257,7 +261,8 @@ public class SequenceViewWidgetPanel extends JPanel {
 
     private void paintSingleSequence(Graphics g) {
         if (sequenceDB != null) {
-            selected = Math.min(selected, sequenceDB.size() - 1);
+
+           selected = Math.min(selected, sequenceDB.size() - 1);
             DSSequence theone = sequenceDB.getSequence(selected);
             int rowId = 0;
             int y = yOff;
@@ -1273,6 +1278,8 @@ public class SequenceViewWidgetPanel extends JPanel {
         }
         if (sequenceDB != null && selected < sequenceDB.size()) {
             selectedSequence = sequenceDB.getSequence(selected);
+        } else {
+            selectedSequence = null;
         }
         if (selectedSequence != null) {
             displayInfo = "For sequence " + selectedSequence.getLabel() +
@@ -1290,6 +1297,8 @@ public class SequenceViewWidgetPanel extends JPanel {
                 this.setToolTipText("" + seqXclickPoint);
                 displayInfo += ". Current location: " + seqXclickPoint;
             }
+        }{
+            this.setToolTipText(null);
         }
 
     }

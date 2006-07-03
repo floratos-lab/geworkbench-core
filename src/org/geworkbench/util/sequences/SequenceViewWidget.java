@@ -284,6 +284,11 @@ public class SequenceViewWidget extends JPanel {
     void jDisplayPanel_mouseClicked(MouseEvent e) {
         seqViewWPanel.this_mouseClicked(e);
         DSSequence selectedSequence = seqViewWPanel.getSelectedSequence();
+        if (selectedSequence == null) {
+            Graphics g = jPanel1.getGraphics();
+            g.clearRect(0, 0, jPanel1.getWidth(), jPanel1.getHeight());
+            return;
+        }
         int xStartPoint = seqViewWPanel.getSeqXclickPoint();
         final Font font = new Font("Courier", Font.BOLD, 10);
         // Get the mouse position
