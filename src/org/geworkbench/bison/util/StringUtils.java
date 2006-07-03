@@ -33,6 +33,15 @@ public class StringUtils {
         return sb.toString();
     }
 
+    public static String reverseString(String s) {
+        int m = s.length();
+        char[] r = new char[m];
+        for (int i = 0; i < m; i++) {
+            r[i] = s.charAt(m - i - 1);
+        }
+        return new String(r);
+    }    
+
     public static void main(String[] args) {
         String test = ">one<two<A>three><>four<five/>";
         System.out.println("Result: " + filter(test, "(<.*?>)|[<>]"));
