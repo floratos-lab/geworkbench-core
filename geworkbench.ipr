@@ -310,6 +310,7 @@
         <root url="jar://$PROJECT_DIR$/lib/collections-generic-4.0.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/forms-1.0.5.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/swing-layout-1.0.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/JRclient-RF503.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
