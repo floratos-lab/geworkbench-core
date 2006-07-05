@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="_all/|annotation/|components/alignment/src/|components/analysis/src/|components/annotations/src/|components/associationdiscovery/src/|components/cascript/src/|components/clustering/src/|components/colormosaic/src/|components/cytoscape/src/|components/discovery/src/|components/example/src/|components/filtering/src/|components/gominer/src/|components/goterms/src/|components/gsea/src/|components/hierarchicalclustering/src/|components/microarrays/src/|components/normalization/src/|components/pathwaydecoder/src/|components/patterns/src/|components/plots/src/|components/poshistogram/src/|components/promoter/src/|components/selectors/src/|components/sequenceretriever/src/|components/sequences/src/|components/versioninfo/src/|components/viewers/src/|src/|bin/|conf/|test/|components/jmol/src/|components/tprofiler/src/|components/simulation/src/" kind="src" path=""/>
+	<classpathentry excluding="_all/|annotation/|components/alignment/src/|components/analysis/src/|components/annotations/src/|components/associationdiscovery/src/|components/cascript/src/|components/clustering/src/|components/colormosaic/src/|components/cytoscape/src/|components/discovery/src/|components/example/src/|components/filtering/src/|components/gominer/src/|components/goterms/src/|components/gsea/src/|components/hierarchicalclustering/src/|components/microarrays/src/|components/normalization/src/|components/pathwaydecoder/src/|components/patterns/src/|components/plots/src/|components/poshistogram/src/|components/promoter/src/|components/selectors/src/|components/sequenceretriever/src/|components/sequences/src/|components/versioninfo/src/|components/viewers/src/|src/|bin/|conf/|test/|components/jmol/src/|components/tprofiler/src/|components/simulation/src/|components/interactions/src/|components/matrixreduce/src/" kind="src" path=""/>
+	<classpathentry kind="src" path="components/matrixreduce/src"/>
+	<classpathentry kind="src" path="components/interactions/src"/>
 	<classpathentry kind="src" path="components/simulation/src"/>
 	<classpathentry kind="src" path="components/tprofiler/src"/>
 	<classpathentry kind="src" path="components/jmol/src"/>
@@ -38,10 +40,8 @@
 	<classpathentry kind="src" path="components/versioninfo/src"/>
 	<classpathentry kind="src" path="components/viewers/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/activation.jar"/>
 	<classpathentry kind="lib" path="lib/antlr-2.7.5.jar"/>
 	<classpathentry kind="lib" path="lib/ArrayExpress.jar"/>
-	<classpathentry kind="lib" path="lib/axis.jar"/>
 	<classpathentry kind="lib" path="lib/bcel-5.1.jar"/>
 	<classpathentry kind="lib" path="lib/caBIO.jar"/>
 	<classpathentry kind="lib" path="lib/cglib-nodep-2.1.jar"/>
@@ -86,13 +86,10 @@
 	<classpathentry kind="lib" path="lib/poi-scratchpad-2.5.1-final-20040804.jar"/>
 	<classpathentry kind="lib" path="lib/polgara.jar"/>
 	<classpathentry kind="lib" path="lib/puretls.jar"/>
-	<classpathentry kind="lib" path="lib/saaj.jar"/>
 	<classpathentry kind="lib" path="lib/sjsxp.jar"/>
 	<classpathentry kind="lib" path="lib/stax-1.2.0_rc1-dev.jar"/>
 	<classpathentry kind="lib" path="lib/weka.jar"/>
-	<classpathentry kind="lib" path="lib/wsdl4j.jar"/>
 	<classpathentry kind="lib" path="lib/xml-apis.jar"/>
-	<classpathentry kind="lib" path="lib/xmlsec.jar"/>
 	<classpathentry kind="lib" path="plugins/control.jar"/>
 	<classpathentry kind="lib" path="components/alignment/lib/biojava-1.3.1.jar"/>
 	<classpathentry kind="lib" path="components/alignment/lib/ogsa-samples.jar"/>
@@ -182,5 +179,17 @@
 	<classpathentry kind="lib" path="components/simulation/lib/swing-layout-1.0.1.jar"/>
 	<classpathentry kind="lib" path="components/simulation/lib/yLayouts.jar"/>
 	<classpathentry kind="lib" path="components/alignment/lib/progtutorial_CaARRAYIndexService-stub.jar"/>
+	<classpathentry kind="lib" path="components/interactions/lib/activation.jar"/>
+	<classpathentry kind="lib" path="components/interactions/lib/axis.jar"/>
+	<classpathentry kind="lib" path="components/interactions/lib/axis-ant.jar"/>
+	<classpathentry kind="lib" path="components/interactions/lib/classes12.jar"/>
+	<classpathentry kind="lib" path="components/interactions/lib/commons-discovery-0.2.jar"/>
+	<classpathentry kind="lib" path="components/interactions/lib/jaxrpc.jar"/>
+	<classpathentry kind="lib" path="components/interactions/lib/saaj.jar"/>
+	<classpathentry kind="lib" path="components/interactions/lib/swing-layout-1.0.jar"/>
+	<classpathentry kind="lib" path="components/interactions/lib/wsdl4j-1.5.1.jar"/>
+	<classpathentry kind="lib" path="lib/JRclient-RF503.jar"/>
+	<classpathentry kind="lib" path="components/matrixreduce/lib/chart-0.1.jar"/>
+	<classpathentry kind="lib" path="components/pathwaydecoder/lib/LED.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
