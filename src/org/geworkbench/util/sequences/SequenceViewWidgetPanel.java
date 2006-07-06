@@ -262,7 +262,7 @@ public class SequenceViewWidgetPanel extends JPanel {
     private void paintSingleSequence(Graphics g) {
         if (sequenceDB != null) {
 
-           selected = Math.min(selected, sequenceDB.size() - 1);
+            selected = Math.min(selected, sequenceDB.size() - 1);
             DSSequence theone = sequenceDB.getSequence(selected);
             int rowId = 0;
             int y = yOff;
@@ -312,36 +312,38 @@ public class SequenceViewWidgetPanel extends JPanel {
                 if (sequencePatternmatches != null) {
                     PatternSequenceDisplayUtil psd = sequencePatternmatches.get(
                             theone);
-                    TreeSet<PatternLocations>
-                            patternsPerSequence = psd.getTreeSet();
-                    if (patternsPerSequence != null &&
-                        patternsPerSequence.size() > 0) {
-                        for (PatternLocations pl : patternsPerSequence) {
-                            DSSeqRegistration reg = pl.getRegistration();
-                            if (reg != null) {
+                    if (psd != null) {
+                        TreeSet<PatternLocations>
+                                patternsPerSequence = psd.getTreeSet();
+                        if (patternsPerSequence != null &&
+                            patternsPerSequence.size() > 0) {
+                            for (PatternLocations pl : patternsPerSequence) {
+                                DSSeqRegistration reg = pl.getRegistration();
+                                if (reg != null) {
 
-                                if (pl.getPatternType().equals(
-                                        PatternLocations.DEFAULTTYPE)) {
-                                    drawPattern(g, theone, reg.x1, xscale,
+                                    if (pl.getPatternType().equals(
+                                            PatternLocations.DEFAULTTYPE)) {
+                                        drawPattern(g, theone, reg.x1, xscale,
                                                 yscale, 0, cols,
                                                 PatternOperations.
                                                 getPatternColor(pl.
-                                            getIdForDisplay()),
+                                                getIdForDisplay()),
                                                 pl.getAscii());
 
-                                } else if (pl.getPatternType().equals(
-                                        PatternLocations.TFTYPE)) {
-                                    drawPattern(g, theone, reg.x1,
+                                    } else if (pl.getPatternType().equals(
+                                            PatternLocations.TFTYPE)) {
+                                        drawPattern(g, theone, reg.x1,
                                                 Math.abs(reg.x1 - reg.x2),
                                                 xscale,
                                                 yscale, 0, cols,
                                                 PatternOperations.
                                                 getPatternColor(pl.
-                                            getIdForDisplay()),
+                                                getIdForDisplay()),
                                                 reg.strand);
 
-                                }
+                                    }
 
+                                }
                             }
                         }
                     }
@@ -1230,7 +1232,10 @@ public class SequenceViewWidgetPanel extends JPanel {
         int seqDx = (int) ((double) (x - xOff) / scale);
         return seqDx;
     }
-
+    /**
+     * Handle Mouse clicks.
+     * @param e MouseEvent
+     */
     public void this_mouseClicked(MouseEvent e) {
         setTranslatedParameters(e);
 
@@ -1243,7 +1248,70 @@ public class SequenceViewWidgetPanel extends JPanel {
     }
 
     /**
-     * getTranslatedParameters
+     * Set up the coresponding parameters when mouse moves.
+     * @param e MouseEvent
+     */
+    public void setMouseMoveParameters(MouseEvent e) {
+        int y = e.getY();
+        int x = e.getX();
+        int mouseSelected = -1;
+        int mouseMovePoint = -1;
+        DSSequence mouseSelectedSequence;
+        if (!lineView) {
+            mouseSelected = getSeqIdInFullView(y);
+            if (eachSeqStartRowNum != null &&
+                mouseSelected < eachSeqStartRowNum.length) {
+                mouseMovePoint = (int) ((int) ((y - yOff - 1 -
+                                                ((double) eachSeqStartRowNum[
+                                                 mouseSelected]) *
+                                                yBasescale) / yBasescale) *
+                                        xBaseCols +
+                                        x / xBasescale -
+                                        5);
+            }
+        } else {
+            if (!singleSequenceView) {
+                mouseSelected = getSeqId(y);
+                mouseMovePoint = getSeqDx(x);
+
+            } else {
+
+                mouseMovePoint = (int) ((int) ((y - yOff - 1) / yBasescale) *
+                                        xBaseCols +
+                                        x / xBasescale -
+                                        5);
+            }
+        }
+        if (sequenceDB != null && selected < sequenceDB.size()) {
+            mouseSelectedSequence = sequenceDB.getSequence(mouseSelected);
+        } else {
+            mouseSelectedSequence = null;
+        }
+        if (mouseSelectedSequence != null) {
+            displayInfo = "For sequence " + mouseSelectedSequence.getLabel() +
+                          ", total length: " +
+                          mouseSelectedSequence.length();
+            if (sequencePatternmatches != null) {
+                PatternSequenceDisplayUtil psu = sequencePatternmatches.get(
+                        mouseSelectedSequence);
+                if (psu != null && psu.getTreeSet() != null) {
+                    displayInfo += ", pattern number: " + psu.getTreeSet().size();
+                }
+            }
+            if ((mouseMovePoint <= mouseSelectedSequence.length()) &&
+                (mouseMovePoint > 0)) {
+                this.setToolTipText("" + mouseMovePoint);
+                displayInfo += ". Current location: " + mouseMovePoint;
+            }
+        }
+        {
+            this.setToolTipText(null);
+        }
+
+    }
+
+    /**
+     * Set up coresponding parameters when a mouse click happens.
      *
      * @param e MouseEvent
      */
@@ -1297,7 +1365,8 @@ public class SequenceViewWidgetPanel extends JPanel {
                 this.setToolTipText("" + seqXclickPoint);
                 displayInfo += ". Current location: " + seqXclickPoint;
             }
-        }{
+        }
+        {
             this.setToolTipText(null);
         }
 
@@ -1333,17 +1402,8 @@ public class SequenceViewWidgetPanel extends JPanel {
         return seqId;
     }
 
-//    public int getSeqDx(int x) {
-//        double scale = Math.min(5.0,
-//                                (double) (this.getWidth() - 20 - xOff) /
-//                                (double) sequenceDB.getMaxLength());
-//        int seqDx = (int) ((double) (x - xOff) / scale);
-//
-//        return seqDx;
-//    }
-
     public void this_mouseMoved(MouseEvent e) {
-        setTranslatedParameters(e);
+        setMouseMoveParameters(e);
         if (!lineView) {
             mouseOverFullView(e);
         } else {
@@ -1353,76 +1413,8 @@ public class SequenceViewWidgetPanel extends JPanel {
 
     }
 
-//   private void paintText(Graphics g) throws ArrayIndexOutOfBoundsException {
-//
-//          if (sequenceDB != null) {
-//              DSSequence theone = sequenceDB.getSequence(selected);
-//
-//              if (theone != null) {
-//                  Font f = new Font("Courier New", Font.PLAIN, 11);
-//                  ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-//                  FontMetrics fm = g.getFontMetrics(f);
-//                  String asc = theone.getSequence();
-//                  Rectangle2D r2d = fm.getStringBounds(asc, g);
-//                  double xscale = (r2d.getWidth() + 3) / (double) (asc.length());
-//                  double yscale = 1.3 * r2d.getHeight();
-//                  int width = this.getWidth();
-//                  int cols = (int) (width / xscale) - 8;
-//                  int rowId = 0;
-//                  g.setFont(f);
-//                  JViewport scroller = (JViewport) this.getParent();
-//                  Rectangle r = scroller.getViewRect();
-//                  String lab = theone.getLabel();
-//                  int y = yOff + (int) (rowId * yscale);
-//                  g.setColor(SEQUENCEBACKGROUDCOLOR);
-//                  //            if (lab.length() > 10) {
-//                  //                g.drawString(lab.substring(0, 10), 2, y + 3);
-//                  //            }
-//                  //            else {
-//                  g.drawString(lab, 2, y + 3);
-//                  //            }
-//
-//                  int begin = 0 - cols;
-//                  int end = 0;
-//                  //            rowId++;
-//                  while (end < asc.length()) {
-//                      rowId++;
-//                      y = yOff + (int) (rowId * yscale);
-//
-//                      begin = end;
-//                      end += cols;
-//                      String onepiece = "";
-//                      if (end > asc.length()) {
-//                          onepiece = asc.substring(begin, asc.length());
-//                      } else {
-//                          onepiece = asc.substring(begin, end);
-//
-//                      }
-//                      g.drawString(onepiece, (int) (6 * xscale), y + 3);
-//                  }
-//                  for (DSPattern pattern : patternMatches.keySet()) {
-//                      List<DSPatternMatch<DSSequence, DSSeqRegistration>> matches = patternMatches.get(pattern);
-//                      if (matches != null) {
-//                          for (int i = 0; i < matches.size(); i++) {
-//                              DSPatternMatch<DSSequence, DSSeqRegistration> match = matches.get(i);
-//                              DSSequence sequence = match.getObject();
-//                              if (sequence.getSerial() == selected) {
-//                                  drawPattern(g, match, r, xscale, yscale, cols, (Display) patternDisplay.get(pattern));
-//                              }
-//                          }
-//                      }
-//                  }
-//
-//                  int maxY = y + yOff;
-//                  setPreferredSize(new Dimension(this.getWidth() - yOff, maxY));
-//                  revalidate();
-//
-//              }
-//          }
-//    }
     private void mouseOverFullView(MouseEvent e) throws
             ArrayIndexOutOfBoundsException {
-
         if (sequenceDB == null) {
             return;
         }
@@ -1452,24 +1444,6 @@ public class SequenceViewWidgetPanel extends JPanel {
                 this.setToolTipText("" + dis);
             }
         }
-
-        String display = "";
-//       for (DSMatchedPattern pattern : selectedPatterns) {
-//           List<DSPatternMatch<DSSequence, DSSeqRegistration>> matches = selectedPatterns.get(pattern);
-//           if ((matches != null) && (matches.size() > 0)) {
-//               for (int i = 0; i < matches.size(); i++) {
-//                   DSPatternMatch<DSSequence, DSSeqRegistration> match = matches.get(i);
-//                   DSSequence sequence = match.getObject();
-//                   if (selected == sequence.getSerial()) {
-//                       DSSeqRegistration reg = match.getRegistration();
-//                       if (dis >= reg.x1 && dis <= reg.x2) {
-//                           display = "Pattern:" + pattern;
-//                           //displayInfo(display);
-//                       }
-//                   }
-//               }
-//           }
-//       }
     }
 
     private void mouseOverLineView(MouseEvent e) throws
@@ -1486,12 +1460,9 @@ public class SequenceViewWidgetPanel extends JPanel {
             int off = this.getSeqDx(x);
             DSSequence sequence = sequenceDB.getSequence(seqid);
             if (sequence != null) {
-//                displayInfo = "Length of " + sequence.getLabel() + ": " +
-//                              sequence.length();
-                if ((off <= sequenceDB.getSequence(seqid).length()) && (off > 0)) {
+                 if ((off <= sequenceDB.getSequence(seqid).length()) && (off > 0)) {
                     this.setToolTipText("" + off);
-                    //  displayInfo += ". Current location: " + off;
-                }
+                 }
             }
         } else {
 
