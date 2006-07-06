@@ -901,8 +901,6 @@ public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMa
                         StringTokenizer tr = new StringTokenizer(line, "\t: ");
                         String geneAccess = new String(tr.nextToken());
                         int geneId1 = Integer.parseInt(tr.nextToken());
-
-                        //HACK
                         String geneName = (String) keyMapping.get(new Integer(geneId1));
                         geneId1 = -1;
                         if (geneName != null) {
@@ -921,9 +919,10 @@ public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMa
                                         bar.setValue(geneId1);
                                     }
                                     int geneId2 = Integer.parseInt(tr.nextToken());
-
-                                    //HACK
                                     String geneName2 = (String) keyMapping.get(new Integer(geneId2));
+                                    if (geneName2 == null){
+                                        geneName2 = microarraySet.getMarkers().get(geneId2).getLabel();
+                                    }
                                     geneId2 = -1;
                                     if (geneName2 != null) {
                                         DSGeneMarker m = microarraySet.getMarkers().get(geneName2);
