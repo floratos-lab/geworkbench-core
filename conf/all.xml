@@ -28,6 +28,7 @@
 	<plugin id="detectionCall" name="Affy Detection Call Filter" class="org.geworkbench.components.filtering.AffyDetectionCallFilter" source="filtering"/>
 	<plugin id="expressionFileFilter" name="Exp. Format" class="org.geworkbench.engine.parsers.ExpressionFileFormat"/>
 	<plugin id="rmaExpressFileFilter" name="RMA Express Format" class="org.geworkbench.engine.parsers.RMAExpressFileFormat"/>
+	<plugin id="gcrmaViaRCELLoader" name="GCRMA Via R CEL Loader" class="org.geworkbench.engine.parsers.GCRMAViaRFormat"/>
     <plugin id="columnMajorFileFilter" name="Column Major Format" class="org.geworkbench.engine.parsers.ColumnMajorFormat"/>
     <plugin id="pdbFileFilter" name="PDB Structure Format" class="org.geworkbench.engine.parsers.PDBFileFormat"/>
     <plugin id="expressionProfilePanel" name="Expression Profiles" class="org.geworkbench.components.microarrays.ExpressionProfilePanel" source="microarrays">
@@ -204,10 +205,6 @@
     </plugin>
 
     <plugin id="interactions" name="Interactions" class="interactions.InteractionsUserInterface" source="interactions">
-        <gui-area name="VisualArea"/>
-    </plugin>
-
-    <plugin id="aracne" name="Aracne" class="org.geworkbench.components.pathwaydecoder.ARACNE" source="pathwaydecoder">
         <gui-area name="VisualArea"/>
     </plugin>
 
