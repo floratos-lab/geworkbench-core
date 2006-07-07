@@ -126,7 +126,10 @@ public class AffyFileFormat extends DataSetFileFormat {
 
             Vector v = parser.getAccessions();
             microarraySet.setLabel(file.getName());
-            microarraySet.setCompatibilityLabel("MAS");
+            if (microarraySet.getCompatibilityLabel() == null || microarraySet.getCompatibilityLabel().equals("")) {
+                microarraySet.setCompatibilityLabel(AnnotationParser.matchChipType(maSet, "", false));
+            }
+//            microarraySet.setCompatibilityLabel("MAS");
             microarraySet.initialize(1, v.size());
 //            String chiptype = AnnotationParser.matchChipType(microarraySet, "dummymarker", false);
             CSMarkerVector markerVector = (CSMarkerVector) microarraySet.getMarkers();
