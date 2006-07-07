@@ -81,6 +81,12 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
                 if (header == null) {
                     throw new Exception("File is empty.");
                 }
+                while (header != null && header.startsWith("#")) {
+                    header = in.readLine();
+                }
+                if (header == null) {
+                    throw new Exception("File is empty or consists of only comments.");
+                }
                 StringTokenizer headerTokenizer = new StringTokenizer(header, "\t", false);
                 int n = headerTokenizer.countTokens();
                 if (n <= 1) {
@@ -111,7 +117,12 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
                         if (valString.trim().length() == 0) {
                             values[i].add(Float.NaN);
                         } else {
-                            float value = Float.parseFloat(valString);
+                            float value = Float.NaN;
+                            try {
+                                value = Float.parseFloat(valString);
+                            } catch (NumberFormatException nfe) {
+
+                            }
                             values[i].add(value);
                         }
                     }

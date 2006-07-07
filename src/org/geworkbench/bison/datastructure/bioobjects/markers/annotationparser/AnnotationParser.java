@@ -197,7 +197,8 @@ public class AnnotationParser {
             ListOrderedMap<String, Map<String, String>> annots = getAllAnnotationsForDataSet(currentDataSet);
             return annots.get(id).get(GENE_SYMBOL);
         } catch (Exception e) {
-            log.warn("Problem getting gene name, returning id. (AffyID: " + id+")");
+            // watkin - removed because it crippled components with repeated logging
+            // log.warn("Problem getting gene name, returning id. (AffyID: " + id+")");
             return id;
         }
     }
