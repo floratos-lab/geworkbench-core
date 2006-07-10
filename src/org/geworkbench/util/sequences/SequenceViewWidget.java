@@ -26,9 +26,8 @@ import org.geworkbench.bison.datastructure.complex.pattern.sequence.
         DSSeqRegistration;
 import org.geworkbench.engine.management.Subscribe;
 import org.geworkbench.events.*;
-import org.geworkbench.util.PropertiesMonitor;
-import org.geworkbench.util.patterns.*;
 import org.geworkbench.util.Util;
+import org.geworkbench.util.patterns.*;
 
 /**
  * <p>Widget provides all GUI services for sequence panel displays.</p>
@@ -65,7 +64,8 @@ public class SequenceViewWidget extends JPanel {
     private JButton leftShiftButton = new JButton();
     private JButton rightShiftButton = new JButton();
     private JScrollPane seqScrollPane = new JScrollPane();
-    public SequenceViewWidgetPanel seqViewWPanel = new SequenceViewWidgetPanel();
+    protected SequenceViewWidgetPanel seqViewWPanel = new
+            SequenceViewWidgetPanel();
     public DSCollection<DSMatchedPattern<DSSequence,
             DSSeqRegistration>>
             selectedPatterns = new Collection<DSMatchedPattern<DSSequence,
@@ -425,6 +425,10 @@ public class SequenceViewWidget extends JPanel {
         return sequenceDB;
     }
 
+    public SequenceViewWidgetPanel getSeqViewWPanel() {
+        return seqViewWPanel;
+    }
+
     public boolean isDirection() {
         return goLeft;
     }
@@ -562,7 +566,7 @@ public class SequenceViewWidget extends JPanel {
                 return;
 
             }
-            if (xStartPoint < 0) {
+            if (xStartPoint < 0 || xStartPoint >= selectedSequence.length()) {
                 rightShiftButton.setEnabled(false);
                 leftShiftButton.setEnabled(false);
                 return;
@@ -594,7 +598,6 @@ public class SequenceViewWidget extends JPanel {
             DSSequence sequence = selectedSequence;
             // Check if we are clicking on a new sequence
             if ((seqId >= 0) && (seqId != prevSeqId) || (seqDx != prevSeqDx)) {
-                //Graphics g = sequencedetailPanel.getGraphics();
                 g.clearRect(0, 0, sequencedetailPanel.getWidth(),
                             sequencedetailPanel.getHeight());
                 g.setFont(font);
@@ -687,19 +690,20 @@ public class SequenceViewWidget extends JPanel {
                                         int shape = 3;
                                         int[] xi = new int[shape];
                                         int[] yi = new int[shape];
+                                        int triangleSize = 8;
                                         if (registration.strand == 0) {
                                             xi[0] = xi[1] = (int) x1;
-                                            yi[0] = 0;
-                                            yi[1] = 4;
-                                            xi[2] = xi[0] + 2;
-                                            yi[2] = 2;
+                                            yi[0] = 2;
+                                            yi[1] = 2 + triangleSize;
+                                            xi[2] = xi[0] + triangleSize / 2;
+                                            yi[2] = 2 + triangleSize / 2;
                                             // g.drawPolyline(xi, yi, addtionalPoint);
                                         } else {
                                             xi[0] = xi[1] = (int) (x1 + x2);
-                                            yi[0] = 0;
-                                            yi[1] = 4;
-                                            xi[2] = xi[0] - 2;
-                                            yi[2] = 2;
+                                            yi[0] = 2;
+                                            yi[1] = 2 + triangleSize;
+                                            xi[2] = xi[0] - triangleSize / 2;
+                                            yi[2] = 2 + triangleSize / 2;
 
                                         }
 

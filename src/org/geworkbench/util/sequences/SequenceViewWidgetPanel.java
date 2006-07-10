@@ -1,13 +1,13 @@
 package org.geworkbench.util.sequences;
 
 import java.awt.*;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.TreeSet;
 
-import javax.swing.JPanel;
-import javax.swing.JViewport;
+import javax.swing.*;
 
 import org.geworkbench.bison.datastructure.biocollections.DSCollection;
 import org.geworkbench.bison.datastructure.biocollections.sequences.
@@ -17,6 +17,7 @@ import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import org.geworkbench.bison.datastructure.complex.pattern.DSMatchedPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.
         DSSeqRegistration;
+import org.geworkbench.events.ImageSnapshotEvent;
 import org.geworkbench.util.patterns.*;
 import org.geworkbench.util.promoter.pattern.Display;
 
@@ -57,8 +58,8 @@ public class SequenceViewWidgetPanel extends JPanel {
     private double xBasescale;
     private int seqXclickPoint = 0;
     private DSSequence selectedSequence;
-
-
+    private JPopupMenu itemListPopup = new JPopupMenu();
+    JMenuItem imageSnapshotItem = new JMenuItem("Image Snapshot");
     public SequenceViewWidgetPanel() {
         try {
             jbInit();
@@ -69,7 +70,37 @@ public class SequenceViewWidgetPanel extends JPanel {
 
 
     void jbInit() throws Exception {
+        itemListPopup = new JPopupMenu();
+        //imageSnapshotItem = new JMenuItem("Image Snapshot");
+        //itemListPopup.add(imageSnapshotItem);
+        //itemListPopup.add(saveItem);
+        imageSnapshotItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                createImageSnapshot();
+            }
 
+        });
+    }
+
+    public void addMenuItem(JMenuItem item) {
+        itemListPopup.add(item);
+        repaint();
+    }
+
+    public org.geworkbench.events.ImageSnapshotEvent
+            createImageSnapshot() {
+        Dimension panelSize = this.getSize();
+        BufferedImage image = new BufferedImage(panelSize.width,
+                                                panelSize.height,
+                                                BufferedImage.TYPE_INT_RGB);
+        Graphics g = image.getGraphics();
+        this.paint(g);
+        ImageIcon icon = new ImageIcon(image, "Promoter Snapshot");
+        org.geworkbench.events.ImageSnapshotEvent event = new org.geworkbench.
+                events.ImageSnapshotEvent("Promoter Snapshot", icon,
+                                          org.geworkbench.events.
+                                          ImageSnapshotEvent.Action.SAVE);
+        return event;
     }
 
     /**
@@ -1232,11 +1263,21 @@ public class SequenceViewWidgetPanel extends JPanel {
         int seqDx = (int) ((double) (x - xOff) / scale);
         return seqDx;
     }
+
     /**
      * Handle Mouse clicks.
      * @param e MouseEvent
      */
-    public void this_mouseClicked(MouseEvent e) {
+    public void this_mouseClicked(final MouseEvent e) {
+        if (e.isMetaDown()) {
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    itemListPopup.show(e.getComponent(), e.getX(), e.getY());
+                }
+            });
+
+            return;
+        }
         setTranslatedParameters(e);
 
         if (e.getClickCount() == 2) {
@@ -1460,9 +1501,10 @@ public class SequenceViewWidgetPanel extends JPanel {
             int off = this.getSeqDx(x);
             DSSequence sequence = sequenceDB.getSequence(seqid);
             if (sequence != null) {
-                 if ((off <= sequenceDB.getSequence(seqid).length()) && (off > 0)) {
-                    this.setToolTipText("" + off);
-                 }
+                if ((off <= sequenceDB.getSequence(seqid).length()) && (off > 0)) {
+                    String texttip = getTipInfo(sequence, off);
+                    this.setToolTipText(texttip);
+                }
             }
         } else {
 
@@ -1491,13 +1533,52 @@ public class SequenceViewWidgetPanel extends JPanel {
                 if (x >= 6 * xscale && x <= (cols + 6) * xscale &&
                     ((y - yOff - 1) / yscale > 0) && (dis > 0) &&
                     (dis <= sequenceDB.getSequence(selected).length())) {
-                    this.setToolTipText("" + dis);
-                    displayInfo += ". Current location: " + dis;
-                }
-            }
 
+                    String texttip = getTipInfo(sequence, dis);
+                    this.setToolTipText(texttip);
+
+                    //  this.setToolTipText("" + dis);
+                }
+                displayInfo += ". Current location: " + dis;
+            }
         }
 
+    }
+
+    /**
+     * getTipInfo
+     *
+     * @param sequence DSSequence
+     * @param off int
+     * @return String
+     */
+    private String getTipInfo(DSSequence sequence, int off) {
+        String tip = "" + off ;
+        if (sequencePatternmatches != null) {
+            PatternSequenceDisplayUtil psd = sequencePatternmatches.
+                                             get(sequence);
+            if (psd != null) {
+                TreeSet<PatternLocations>
+                        patternsPerSequence = psd.getTreeSet();
+                if (patternsPerSequence != null &&
+                    patternsPerSequence.size() > 0) {
+                    for (PatternLocations pl : patternsPerSequence) {
+                        DSSeqRegistration reg = pl.getRegistration();
+                        if (reg != null && reg.x1 <= off && reg.x2 >= off) {
+                            if (pl.getPatternType().equals(
+                                    PatternLocations.DEFAULTTYPE)) {
+                                tip = tip + " " + pl.getAscii() + "<" + reg.x1 + "," + reg.x2 + "> " ;
+                            } else if (pl.getPatternType().equals(
+                                    PatternLocations.TFTYPE)) {
+                               tip = tip + " " + pl.getAscii() + "<" + reg.x1 + "," + reg.x2 + "> " ;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return tip;
     }
 
     /**

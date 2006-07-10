@@ -26,7 +26,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import org.geworkbench.engine.management.Publish;
 import java.awt.image.BufferedImage;
-import org.geworkbench.components.promoter.PromoterViewPanel;
+
 
 /**
  * <p>Title: </p>

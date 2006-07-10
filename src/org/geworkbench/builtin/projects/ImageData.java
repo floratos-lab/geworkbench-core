@@ -21,10 +21,10 @@ import java.util.Vector;
 public class ImageData extends CSAncillaryDataSet {
 
     /**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 3899156889448935110L;
-	
+
 	private File imageFile = null;
     private ImageIcon image = null;
     private Vector descriptions = new Vector();
@@ -63,7 +63,10 @@ public class ImageData extends CSAncillaryDataSet {
     }
 
     public String getDataSetName() {
-        return imageFile.getName();
+        if(imageFile!=null){
+            return imageFile.getName();
+        }
+        return null;
     }
 
     public File getFile() {
