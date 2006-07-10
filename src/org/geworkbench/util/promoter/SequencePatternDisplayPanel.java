@@ -22,7 +22,11 @@ import org.geworkbench.util.patterns.PatternOperations;
 import org.geworkbench.util.patterns.PatternSequenceDisplayUtil;
 import org.geworkbench.util.promoter.pattern.Display;
 import org.geworkbench.util.sequences.SequenceViewWidget;
-import org.geworkbench.bison.datastructure.biocollections.sequences.CSSequenceSet;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import org.geworkbench.engine.management.Publish;
+import java.awt.image.BufferedImage;
+import org.geworkbench.components.promoter.PromoterViewPanel;
 
 /**
  * <p>Title: </p>
@@ -63,9 +67,10 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget {
             PatternSequenceDisplayUtil>
             patternSeqMatches = new HashMap<CSSequence,
                                 PatternSequenceDisplayUtil>();
-
-
     JPanel jinfoPanel = new JPanel();
+//    JPopupMenu itemListPopup = new JPopupMenu();
+
+//
 
     public void setInfoPanel(JPanel jinfoPanel) {
         // this.jinfoPanel = jinfoPanel;
@@ -86,6 +91,12 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget {
 
     public void addToolBarButton(AbstractButton jbutton) {
         jToolBar1.add(jbutton);
+        repaint();
+    }
+
+    public void addMenuItem(JMenuItem saveItem) {
+        //outsource the save functionto PromoterViewPanel.
+        seqViewWPanel.addMenuItem(saveItem);
         repaint();
     }
 
@@ -118,20 +129,31 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget {
     void jbInit() throws Exception {
 
         super.removeButtons(SequenceViewWidget.NONBASIC);
-        this.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                this_mouseClicked(e);
-            }
+//        saveItem.addActionListener(new ActionListener() {
+//            public void actionPerformed(ActionEvent e) {
+//                createImageSnapshot();
+//            }
+//
+//        });
 
-        });
-        this.addMouseMotionListener(new MouseInputAdapter() {
+    //    addMenuItem(saveItem);
 
-            public void mouseMoved(MouseEvent e) {
-                this_mouseMoved(e);
-            }
+    }
 
-        });
-
+    public org.geworkbench.events.ImageSnapshotEvent
+            createImageSnapshot() {
+        Dimension panelSize = seqViewWPanel.getSize();
+        BufferedImage image = new BufferedImage(panelSize.width,
+                                                panelSize.height,
+                                                BufferedImage.TYPE_INT_RGB);
+        Graphics g = image.getGraphics();
+        seqViewWPanel.paint(g);
+        ImageIcon icon = new ImageIcon(image, "Promoter");
+        org.geworkbench.events.ImageSnapshotEvent event = new org.geworkbench.
+                events.ImageSnapshotEvent("Promoter Snapshot", icon,
+                                          org.geworkbench.events.
+                                          ImageSnapshotEvent.Action.SAVE);
+        return event;
     }
 
     public void initialize(DSSequenceSet seqDB) {
@@ -145,6 +167,7 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget {
 
         repaint();
     }
+
 
 //Reset, added by xq.
     public void initialize() {
@@ -501,128 +524,147 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget {
     //    }
 
     //
-    public void this_mouseClicked(MouseEvent e) {
-        if (e.getClickCount() == 2) {
-            if (!isText) {
-                int y = e.getY();
-                selected = getSeqId(y);
-
-            }
-            this.flipIsText();
-            this.repaint();
-        }
-
-    }
-
-    public void this_mouseMoved(MouseEvent e) {
-        if (!isText) {
-            mouseOverGraph(e);
-        } else {
-
-            mouseOverText(e);
-
-        }
-
-    }
-
-    private void mouseOverText(MouseEvent e) throws
-            ArrayIndexOutOfBoundsException {
-
-        if (sequenceDB == null) {
-            return;
-        }
-        int x1 = e.getX();
-        int y1 = e.getY();
-
-        Font f = new Font("Courier New", Font.PLAIN, 11);
-        Graphics g = this.getGraphics();
-        ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                                          RenderingHints.VALUE_ANTIALIAS_ON);
-        FontMetrics fm = g.getFontMetrics(f);
-        if (sequenceDB.getSequence(selected) == null ||
-            sequenceDB.getSequence(selected).getSequence() == null) {
-            return;
-        }
-        String asc = sequenceDB.getSequence(selected).getSequence();
-
-        Rectangle2D r2d = fm.getStringBounds(asc, g);
-        double xscale = (r2d.getWidth() + 3) / (double) (asc.length());
-        double yscale = 1.3 * r2d.getHeight();
-        int width = this.getWidth();
-        int cols = (int) (width / xscale) - 8;
-
-        int dis = (int) ((int) ((y1 - yOff - 1) / yscale) * cols + x1 / xscale -
-                         5);
-        if (sequenceDB.getSequence(selected) != null) {
-            if (((y1 - yOff - 1) / yscale > 0) && (dis > 0) &&
-                (dis <= sequenceDB.getSequence(selected).length())) {
-                this.setToolTipText("" + dis);
-            }
-        }
-
-        String display = "";
-        for (DSPattern pattern : patternMatches.keySet()) {
-            List<DSPatternMatch<DSSequence,
-                    DSSeqRegistration>> matches = patternMatches.get(pattern);
-            if ((matches != null) && (matches.size() > 0)) {
-                for (int i = 0; i < matches.size(); i++) {
-                    DSPatternMatch<DSSequence,
-                            DSSeqRegistration> match = matches.get(i);
-                    DSSequence sequence = match.getObject();
-                    if (selected == sequence.getSerial()) {
-                        DSSeqRegistration reg = match.getRegistration();
-                        if (dis >= reg.x1 && dis <= reg.x2) {
-                            display = "Pattern:" + pattern;
-                            displayInfo(display);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private void mouseOverGraph(MouseEvent e) throws
-            ArrayIndexOutOfBoundsException {
-        int y = e.getY();
-        int seqid = getSeqId(y);
-        int x = e.getX();
-        if (sequenceDB == null) {
-            return;
-        }
-        int off = this.getSeqDx(x);
-        if (sequenceDB.getSequence(seqid) != null) {
-            if ((off <= sequenceDB.getSequence(seqid).length()) && (off > 0)) {
-                this.setToolTipText("" + off);
-            }
-        }
-
-        for (DSPattern pattern : patternMatches.keySet()) {
-            List<DSPatternMatch<DSSequence,
-                    DSSeqRegistration>> matches = patternMatches.get(pattern);
-            if (matches != null) {
-                for (int i = 0; i < matches.size(); i++) {
-                    DSPatternMatch<DSSequence,
-                            DSSeqRegistration> match = matches.get(i);
-                    DSSequence sequence = match.getObject();
-                    if (sequence.getSerial() == seqid) {
-                        DSSeqRegistration reg = match.getRegistration();
-                        if ((off > reg.x1 - 5) && (off < reg.x2 + 4)) {
-                            /**
-                             * todo need to make it more generalize
-                             */
-                            //                            display = "Pattern:" + pattern + " " +
-                            //                                "possible hit per 1 kb:" +
-                            //                                ( (TranscriptionFactor) pattern).getMatrix().
-                            //                                getRandom();
-
-                            displayInfo(pattern.toString());
-
-                        }
-                    }
-                }
-            }
-        }
-    }
+//    public void this_mouseClicked(MouseEvent e) {
+//        if (e.isMetaDown()) {
+//            elementRightClicked(e);
+//            return;
+//        }
+//
+//        if (e.getClickCount() == 2) {
+//            if (!isText) {
+//                int y = e.getY();
+//                selected = getSeqId(y);
+//
+//            }
+//            this.flipIsText();
+//            this.repaint();
+//        }
+//
+//    }
+//
+//    /**
+//     * elementRightClicked
+//     *
+//     * @param e MouseEvent
+//     */
+//    private void elementRightClicked(final MouseEvent e) {
+//        SwingUtilities.invokeLater(new Runnable() {
+//            public void run() {
+//                itemListPopup.show(e.getComponent(), e.getX(), e.getY());
+//            }
+//        });
+//
+//    }
+//
+//    public void this_mouseMoved(MouseEvent e) {
+//        if (!isText) {
+//            mouseOverGraph(e);
+//        } else {
+//
+//            mouseOverText(e);
+//
+//        }
+//
+//    }
+//
+//    private void mouseOverText(MouseEvent e) throws
+//            ArrayIndexOutOfBoundsException {
+//
+//        if (sequenceDB == null) {
+//            return;
+//        }
+//        int x1 = e.getX();
+//        int y1 = e.getY();
+//
+//        Font f = new Font("Courier New", Font.PLAIN, 11);
+//        Graphics g = this.getGraphics();
+//        ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+//                                          RenderingHints.VALUE_ANTIALIAS_ON);
+//        FontMetrics fm = g.getFontMetrics(f);
+//        if (sequenceDB.getSequence(selected) == null ||
+//            sequenceDB.getSequence(selected).getSequence() == null) {
+//            return;
+//        }
+//        String asc = sequenceDB.getSequence(selected).getSequence();
+//
+//        Rectangle2D r2d = fm.getStringBounds(asc, g);
+//        double xscale = (r2d.getWidth() + 3) / (double) (asc.length());
+//        double yscale = 1.3 * r2d.getHeight();
+//        int width = this.getWidth();
+//        int cols = (int) (width / xscale) - 8;
+//
+//        int dis = (int) ((int) ((y1 - yOff - 1) / yscale) * cols + x1 / xscale -
+//                         5);
+//        if (sequenceDB.getSequence(selected) != null) {
+//            if (((y1 - yOff - 1) / yscale > 0) && (dis > 0) &&
+//                (dis <= sequenceDB.getSequence(selected).length())) {
+//                this.setToolTipText("" + dis);
+//            }
+//        }
+//
+//        String display = "";
+//        for (DSPattern pattern : patternMatches.keySet()) {
+//            List<DSPatternMatch<DSSequence,
+//                    DSSeqRegistration>> matches = patternMatches.get(pattern);
+//            if ((matches != null) && (matches.size() > 0)) {
+//                for (int i = 0; i < matches.size(); i++) {
+//                    DSPatternMatch<DSSequence,
+//                            DSSeqRegistration> match = matches.get(i);
+//                    DSSequence sequence = match.getObject();
+//                    if (selected == sequence.getSerial()) {
+//                        DSSeqRegistration reg = match.getRegistration();
+//                        if (dis >= reg.x1 && dis <= reg.x2) {
+//                            display = "Pattern:" + pattern;
+//                            displayInfo(display);
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+//
+//    private void mouseOverGraph(MouseEvent e) throws
+//            ArrayIndexOutOfBoundsException {
+//        int y = e.getY();
+//        int seqid = getSeqId(y);
+//        int x = e.getX();
+//        if (sequenceDB == null) {
+//            return;
+//        }
+//        int off = this.getSeqDx(x);
+//        if (sequenceDB.getSequence(seqid) != null) {
+//            if ((off <= sequenceDB.getSequence(seqid).length()) && (off > 0)) {
+//                this.setToolTipText("" + off);
+//            }
+//        }
+//
+//        for (DSPattern pattern : patternMatches.keySet()) {
+//            List<DSPatternMatch<DSSequence,
+//                    DSSeqRegistration>> matches = patternMatches.get(pattern);
+//            if (matches != null) {
+//                for (int i = 0; i < matches.size(); i++) {
+//                    DSPatternMatch<DSSequence,
+//                            DSSeqRegistration> match = matches.get(i);
+//                    DSSequence sequence = match.getObject();
+//                    if (sequence.getSerial() == seqid) {
+//                        DSSeqRegistration reg = match.getRegistration();
+//                        if ((off > reg.x1 - 5) && (off < reg.x2 + 4)) {
+//                            /**
+//                             * todo need to make it more generalize
+//                             */
+//                            //                            display = "Pattern:" + pattern + " " +
+//                            //                                "possible hit per 1 kb:" +
+//                            //                                ( (TranscriptionFactor) pattern).getMatrix().
+//                            //                                getRandom();
+//
+//                            displayInfo(pattern.toString());
+//
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     private void displayInfo(String display) {
 //disabled.
