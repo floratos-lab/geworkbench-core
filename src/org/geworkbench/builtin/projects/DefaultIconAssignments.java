@@ -3,6 +3,7 @@ package org.geworkbench.builtin.projects;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSSignificanceResultSet;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSProbeIntensityArray;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSAlignmentResultSet;
 import org.geworkbench.bison.datastructure.bioobjects.structure.DSProteinStructure;
 import org.geworkbench.bison.datastructure.complex.pattern.ParmsDataSet;
@@ -30,5 +31,6 @@ public class DefaultIconAssignments {
         ProjectPanel.setIconForType(Classifier.class, Icons.CLASSIFIER_ICON);
         ProjectPanel.setIconForType(DSProteinStructure.class, Icons.STRUCTURE_ICON);
         ProjectPanel.setIconForType(DSMatrixReduceSet.class, Icons.PSAM_ICON);
+        ProjectPanel.setIconForType(DSProbeIntensityArray.class, Icons.CEL_ICON);
     }
 }

@@ -196,6 +196,7 @@
       <module fileurl="file://$PROJECT_DIR$/components/annotations/annotations.iml" filepath="$PROJECT_DIR$/components/annotations/annotations.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/associationdiscovery/associationdiscovery.iml" filepath="$PROJECT_DIR$/components/associationdiscovery/associationdiscovery.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/cascript/cascript.iml" filepath="$PROJECT_DIR$/components/cascript/cascript.iml" />
+      <module fileurl="file://$PROJECT_DIR$/components/celprocessing/celprocessing.iml" filepath="$PROJECT_DIR$/components/celprocessing/celprocessing.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/clustering/clustering.iml" filepath="$PROJECT_DIR$/components/clustering/clustering.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/colormosaic/colormosaic.iml" filepath="$PROJECT_DIR$/components/colormosaic/colormosaic.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/cytoscape/cytoscape.iml" filepath="$PROJECT_DIR$/components/cytoscape/cytoscape.iml" />
@@ -311,6 +312,7 @@
         <root url="jar://$PROJECT_DIR$/lib/forms-1.0.5.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/swing-layout-1.0.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/JRclient-RF503.jar!/" />
+        <root url="jar://C:/code/workbook/lib/AffxFusion.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

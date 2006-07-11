@@ -38,7 +38,7 @@ public class GCRMAViaRFormat extends DataSetFileFormat {
     GCRMAViaRFormat.RMAExpressFilter maFilter = null;
 
     public GCRMAViaRFormat() {
-        formatName = "CEL File";
+        formatName = "CEL Files";
         maFilter = new GCRMAViaRFormat.RMAExpressFilter();
         Arrays.sort(maExtensions);
     }
@@ -177,7 +177,7 @@ public class GCRMAViaRFormat extends DataSetFileFormat {
     class RMAExpressFilter extends FileFilter {
 
         public String getDescription() {
-            return "CEL File (For GCRMA via R processing)";
+            return "CEL Files (For batch GCRMA via R processing)";
         }
 
         public boolean accept(File f) {
