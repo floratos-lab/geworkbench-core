@@ -29,6 +29,7 @@
 	<plugin id="expressionFileFilter" name="Exp. Format" class="org.geworkbench.engine.parsers.ExpressionFileFormat"/>
 	<plugin id="rmaExpressFileFilter" name="RMA Express Format" class="org.geworkbench.engine.parsers.RMAExpressFileFormat"/>
 	<plugin id="gcrmaViaRCELLoader" name="GCRMA Via R CEL Loader" class="org.geworkbench.engine.parsers.GCRMAViaRFormat"/>
+	<plugin id="CELLoader" name="CEL File Loader" class="org.geworkbench.engine.parsers.CELFileFormat"/>
     <plugin id="columnMajorFileFilter" name="Column Major Format" class="org.geworkbench.engine.parsers.ColumnMajorFormat"/>
     <plugin id="pdbFileFilter" name="PDB Structure Format" class="org.geworkbench.engine.parsers.PDBFileFormat"/>
     <plugin id="expressionProfilePanel" name="Expression Profiles" class="org.geworkbench.components.microarrays.ExpressionProfilePanel" source="microarrays">
@@ -181,6 +182,9 @@
 	<plugin id="Jmol" name="Jmol" class="org.geworkbench.components.jmol.JmolComponent" source="jmol">
     	<gui-area name="VisualArea"/>
 	</plugin>
+	<plugin id="CELImageViewer" name="CELImageViewer" class="org.geworkbench.components.celprocessing.CELImageViewerComponent" source="celprocessing">
+    	<gui-area name="VisualArea"/>
+	</plugin>
 	<plugin id="Classifier" name="Classifier" class="org.geworkbench.components.analysis.classification.ClassificationRunnerPlugin" source="analysis">
 		<gui-area name="CommandArea"/>
 	</plugin>
@@ -192,8 +196,8 @@
         <gui-area name="VisualArea"/>
     </plugin>
 
-	<plugin id="genepattern" name="GenePattern" class="org.genepattern.geworkbench.GPGEPlugin" source="genepattern">
-	<gui-area name="VisualArea"/>
+    <plugin id="genepattern" name="GenePattern" class="org.genepattern.geworkbench.GPGEPlugin" source="genepattern">
+	    <gui-area name="VisualArea"/>
 	</plugin>
 
     <!-- Matrix Reduce -->
@@ -204,7 +208,6 @@
     <plugin id="interactions" name="Interactions" class="interactions.InteractionsUserInterface" source="interactions">
         <gui-area name="VisualArea"/>
     </plugin>
-<!---->
     <plugin id="aracne" name="Aracne" class="org.geworkbench.components.pathwaydecoder.ARACNE" source="pathwaydecoder">
         <gui-area name="VisualArea"/>
     </plugin>
