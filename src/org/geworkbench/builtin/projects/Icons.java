@@ -24,4 +24,5 @@ public class Icons {
     public static ImageIcon STRUCTURE_ICON = new ImageIcon(Icons.class.getResource("structure16x16.gif"));
     public static ImageIcon PSAM_ICON = new ImageIcon(Icons.class.getResource("psam16x16.gif"));
     public static ImageIcon BUSY_ICON = new ImageIcon(Icons.class.getResource("busy.gif"));
+    public static ImageIcon CEL_ICON = new ImageIcon(Icons.class.getResource("cel16x16.gif"));
 }
