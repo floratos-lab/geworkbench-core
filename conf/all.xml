@@ -204,7 +204,9 @@
     <plugin id="matrixReduceViewer" name="Matrix Reduce Viewer" class="org.geworkbench.components.matrixreduce.MatrixReduceViewer" source="matrixreduce">
         <gui-area name="VisualArea"/>
     </plugin>
-
+    <plugin id="networkBrowser" name="Network Browser" class="org.geworkbench.components.pathwaydecoder.GeneNetworkPanel" source="pathwaydecoder">
+        <gui-area name="VisualArea"/>
+    </plugin>
     <plugin id="interactions" name="Interactions" class="interactions.InteractionsUserInterface" source="interactions">
         <gui-area name="VisualArea"/>
     </plugin>
