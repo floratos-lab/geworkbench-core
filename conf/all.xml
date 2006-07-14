@@ -196,9 +196,9 @@
         <gui-area name="VisualArea"/>
     </plugin>
 
-    <plugin id="genepattern" name="GenePattern" class="org.genepattern.geworkbench.GPGEPlugin" source="genepattern">
-	    <gui-area name="VisualArea"/>
-	</plugin>
+    <!--<plugin id="genepattern" name="GenePattern" class="org.genepattern.geworkbench.GPGEPlugin" source="genepattern">-->
+	    <!--<gui-area name="VisualArea"/>-->
+	<!--</plugin>-->
 
     <!-- Matrix Reduce -->
     <plugin id="matrixReduceViewer" name="Matrix Reduce Viewer" class="org.geworkbench.components.matrixreduce.MatrixReduceViewer" source="matrixreduce">
