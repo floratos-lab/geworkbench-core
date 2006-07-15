@@ -56,7 +56,7 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
     public DSItemList<T> markers() {
         if (dataSet instanceof DSMicroarraySet) {
             // todo Why is this size > 0 requirement here? Should probably be changed to return markerPanel if boolean is set no matter what
-            if (useMarkerPanel && markerPanel.size() > 0) {
+            if (markerPanel != null && useMarkerPanel && markerPanel.size() > 0) {
                 return markerPanel;
             } else {
                 return (DSItemList) ((DSMicroarraySet) dataSet).getMarkers();
