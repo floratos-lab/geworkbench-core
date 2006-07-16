@@ -447,10 +447,10 @@ public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMa
                 histogram[bin]++;
                          }
              */
-            HashMap row = (HashMap) geneRows.get(new Integer(geneId1));
+            HashMap row = (HashMap) geneInteractionRows.get(new Integer(geneId1));
             if (row == null) {
                 row = new HashMap();
-                geneRows.put(new Integer(geneId1), row);
+                geneInteractionRows.put(new Integer(geneId1), row);
             }
             row.put(new Integer(geneId2), interaction);
         }
