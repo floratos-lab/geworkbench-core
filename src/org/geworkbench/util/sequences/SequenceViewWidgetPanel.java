@@ -863,8 +863,8 @@ public class SequenceViewWidgetPanel extends JPanel {
         int y = yOff + rowId * yStep;
         int x = xOff + (int) (len * scale);
         g.setColor(SEQUENCEBACKGROUDCOLOR);
-        if (lab.length() > 10) {
-            g.drawString(lab.substring(0, 10), 4, y + 3);
+        if (lab.length() > 9) {
+            g.drawString(lab.substring(0, 9), 4, y + 3);
         } else {
             g.drawString(lab, 4, y + 3);
         }
