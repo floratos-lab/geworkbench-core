@@ -1,6 +1,6 @@
 package org.geworkbench.util;
 
-import org.geworkbench.components.clustering.HierarchicalClusteringTest;
+import org.geworkbench.components.cluster.HierarchicalClusteringTest;
 
 import junit.framework.TestCase;
 
