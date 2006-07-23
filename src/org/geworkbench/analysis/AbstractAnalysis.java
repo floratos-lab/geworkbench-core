@@ -63,6 +63,8 @@ public abstract class AbstractAnalysis implements Analysis, Serializable, java.u
     public static final int HOUSEKEEPINGGENES_VALUE_NORMALIZER_TYPE = 21;
     public static final int GENEPIX_FlAGS_FILTER_TYPE = 22;
     public static final int QUANTILE_NORMALIZER_TYPE = 23;
+    public static final int ALLELIC_FREQUENCY_TYPE = 24;
+    
     /**
      * The parameters panel to be use from within the AnalysisPane in order
      * to collect the analysis parameters from the user.
