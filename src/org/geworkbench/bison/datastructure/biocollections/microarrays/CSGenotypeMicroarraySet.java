@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 
 /**
  * <p>Title: Sequence and Pattern Plugin</p>
@@ -65,6 +66,11 @@ public class CSGenotypeMicroarraySet extends CSMicroarraySet<DSMicroarray> imple
         return properties.get(key);
     }
 
+    public double getValue(DSGeneMarker marker, int maIndex) {
+        double value = get(maIndex).getMarkerValue(marker.getSerial()).getValue();
+        return value;
+    }
+    
     public void setResource(Resource resource) {
         maResource = (Resource) resource;
     }
@@ -168,7 +174,7 @@ public class CSGenotypeMicroarraySet extends CSMicroarraySet<DSMicroarray> imple
         int currGeneId = 0;
         int currMicroarrayId = 0;
         Vector phenotypes = new Vector();
-
+        
         void executeLine(String line, DSMicroarraySet<? extends DSBioObject> mArraySet) {
             CSAnnotationContextManager manager = CSAnnotationContextManager.getInstance();
             StringTokenizer st = new StringTokenizer(line, "\t\n\r");
@@ -266,15 +272,13 @@ public class CSGenotypeMicroarraySet extends CSMicroarraySet<DSMicroarray> imple
                         currMicroarrayId++;
                     } else {
                         int i = 0;
-                        if (markerVector.get(currGeneId) == null) {
-                            CSGenotypeMarker mi = new CSGenotypeMarker(currGeneId);
-                            mi.reset(currGeneId, microarrayNo, microarrayNo);
-                            markerVector.add(currGeneId, mi);
-                        }
-                        markerVector.get(currGeneId).setDescription(token);
                         boolean pValueExists = ((st.countTokens() - 2) > microarrayNo);
                         token = st.nextToken();
-                        markerVector.get(currGeneId).setLabel(token);
+                        CSGenotypeMarker mi = new CSGenotypeMarker(currGeneId);
+                        mi.setDescription(token);
+                        mi.setLabel(token);
+                        mi.reset(currGeneId, microarrayNo, microarrayNo);
+                        markerVector.add(currGeneId, mi);
                         while (st.hasMoreTokens()) {
                             DSMutableMarkerValue marker = (DSMutableMarkerValue) get(i).getMarkerValue(currGeneId);
                             String value = st.nextToken();
@@ -283,7 +287,8 @@ public class CSGenotypeMicroarraySet extends CSMicroarraySet<DSMicroarray> imple
                                 status = st.nextToken();
                             else
                                 status = "P";
-                            if ((type == snpType) || (type == alleleType)) {
+                            if ((type == snpType)) {
+                               ((CSGenotypicMarkerValue)marker).isGT = false;
                                 parse(marker, value, status);
                                 //markerVector.get(currGeneId).check(marker, false);
                             } else {
