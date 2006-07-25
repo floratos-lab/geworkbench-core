@@ -62,7 +62,6 @@ public class HierarchicalClusteringTest extends BaseTestCase {
 
 	public HierarchicalClusteringTest() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	HierCluster clusterE, clusterS, clusterC;
@@ -160,11 +159,12 @@ public class HierarchicalClusteringTest extends BaseTestCase {
 
 	/**
 	 * 
-	 * @param s
+	 * used for older version and commented function at the end of this class
 	 */
 	//public HierarchicalClusteringTest(String s) {
-	//super(s);//FIXME does nothing
+	//super(s);//
 	//}
+	
 	/**
 	 * 
 	 * @throws Exception
@@ -716,7 +716,6 @@ public class HierarchicalClusteringTest extends BaseTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		// TODO Auto-generated method stub
 
 	}
 
