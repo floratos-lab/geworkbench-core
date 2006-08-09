@@ -45,7 +45,7 @@ public class SequenceViewWidget extends JPanel {
     private final int yOff = 20;
     private final int xStep = 5;
     private final int yStep = 14;
-    private int prevSeqId = 0;
+    private int prevSeqId = -1;
     private int prevSeqDx = 0;
     private DSSequenceSet sequenceDB = new CSSequenceSet();
     private DSSequenceSet orgSequenceDB = new CSSequenceSet();
