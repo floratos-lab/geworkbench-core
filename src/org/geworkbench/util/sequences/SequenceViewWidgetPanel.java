@@ -321,6 +321,10 @@ public class SequenceViewWidgetPanel extends JPanel {
                 } else {
                     g.drawString(lab, 2, y + 3);
                 }
+                 int x0 = (int)(10*xscale);
+                 int x = x0 + (int) (theone.length() * scale);
+
+                 g.drawLine(x0, y, x, y);
 
                 int begin = 0 - cols;
                 int end = 0;
@@ -1565,12 +1569,14 @@ public class SequenceViewWidgetPanel extends JPanel {
                     for (PatternLocations pl : patternsPerSequence) {
                         DSSeqRegistration reg = pl.getRegistration();
                         if (reg != null && reg.x1 <= off && reg.x2 >= off) {
+                            int x1 = reg.x1 + 1;
+                            int x2 = reg.x2 + 1;
                             if (pl.getPatternType().equals(
                                     PatternLocations.DEFAULTTYPE)) {
-                                tip = tip + " " + pl.getAscii() + "<" + reg.x1 + "," + reg.x2 + "> " ;
+                                tip = tip + " " + pl.getAscii() + "<" +  x1 + "," +  x2 + "> " ;
                             } else if (pl.getPatternType().equals(
                                     PatternLocations.TFTYPE)) {
-                               tip = tip + " " + pl.getAscii() + "<" + reg.x1 + "," + reg.x2 + "> " ;
+                               tip = tip + " " + pl.getAscii() + "<" +  x1  + "," +  x2 + "> " ;
                             }
                         }
                     }

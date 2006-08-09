@@ -662,6 +662,10 @@ public class SequenceViewWidget extends JPanel {
                                                 10;
                                     double x2 = ((double) patLength) *
                                                 scale;
+                                    if (pl.getPatternType().equals(
+                                            PatternLocations.TFTYPE)) {
+                                        x2 = Math.abs(registration.x2 - registration.x1)*scale;
+                                    }
                                     g.setColor(PatternOperations.
                                                getPatternColor(new Integer(pl.
                                             getIdForDisplay())));
