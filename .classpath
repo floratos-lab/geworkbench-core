@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry excluding="_all/|annotation/|components/alignment/src/|components/analysis/src/|components/annotations/src/|components/associationdiscovery/src/|components/cascript/src/|components/clustering/src/|components/colormosaic/src/|components/cytoscape/src/|components/discovery/src/|components/example/src/|components/filtering/src/|components/gominer/src/|components/goterms/src/|components/gsea/src/|components/hierarchicalclustering/src/|components/microarrays/src/|components/normalization/src/|components/pathwaydecoder/src/|components/patterns/src/|components/plots/src/|components/poshistogram/src/|components/promoter/src/|components/selectors/src/|components/sequenceretriever/src/|components/sequences/src/|components/versioninfo/src/|components/viewers/src/|src/|bin/|conf/|test/|components/jmol/src/|components/tprofiler/src/|components/simulation/src/|components/interactions/src/|components/matrixreduce/src/|components/celprocessing/src/|components/genepattern/classes/|components/genepattern/classes/org/|components/genepattern/classes/org/|components/genepattern/classes/|components/genepattern/classes/|components/genepattern/src/" kind="src" path=""/>
-	<classpathentry kind="src" path="components/genepattern/src"/>
 	<classpathentry kind="src" path="components/celprocessing/src"/>
 	<classpathentry kind="src" path="components/matrixreduce/src"/>
 	<classpathentry kind="src" path="components/interactions/src"/>
@@ -25,7 +24,6 @@
 	<classpathentry kind="src" path="components/discovery/src"/>
 	<classpathentry kind="src" path="components/example/src"/>
 	<classpathentry kind="src" path="components/filtering/src"/>
-	<classpathentry kind="src" path="components/gominer/src"/>
 	<classpathentry kind="src" path="components/goterms/src"/>
 	<classpathentry kind="src" path="components/gsea/src"/>
 	<classpathentry kind="src" path="components/hierarchicalclustering/src"/>
@@ -157,7 +155,6 @@
 	<classpathentry kind="lib" path="components/associationdiscovery/lib/gw2.jar"/>
 	<classpathentry kind="lib" path="components/cytoscape/lib/cytoscape.jar"/>
 	<classpathentry kind="lib" path="components/discovery/lib/xmlsec.jar"/>
-	<classpathentry kind="lib" path="components/gominer/lib/gominer.jar"/>
 	<classpathentry kind="lib" path="components/gsea/lib/gsea.jar"/>
 	<classpathentry kind="lib" path="components/pathwaydecoder/lib/mutualinfo.jar"/>
 	<classpathentry kind="lib" path="components/promoter/lib/biojava-1.3.1.jar"/>
@@ -183,7 +180,6 @@
 	<classpathentry kind="lib" path="components/alignment/lib/progtutorial_CaARRAYIndexService-stub.jar"/>
 	<classpathentry kind="lib" path="components/interactions/lib/activation.jar"/>
 	<classpathentry kind="lib" path="components/interactions/lib/axis.jar"/>
-	<classpathentry kind="lib" path="components/genepattern/lib/axis.jar"/>
 	<classpathentry kind="lib" path="components/interactions/lib/axis-ant.jar"/>
 	<classpathentry kind="lib" path="components/interactions/lib/classes12.jar"/>
 	<classpathentry kind="lib" path="components/interactions/lib/commons-discovery-0.2.jar"/>
