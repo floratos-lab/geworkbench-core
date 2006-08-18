@@ -20,25 +20,29 @@ import java.util.regex.Matcher;
 public class CSSequence implements DSSequence, Serializable {
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = -8710506841571301285L;
+     *
+     */
+    private static final long serialVersionUID = -8710506841571301285L;
 
-	private final static ObjectStreamField[] serialPersistentFields = 
-    {
-        new ObjectStreamField("isDNA", boolean.class), 
-        new ObjectStreamField("label", String.class), 
-        new ObjectStreamField("sequence", String.class),
-        new ObjectStreamField("descriptions", CSDescribable.class),
-        new ObjectStreamField("extend", CSExtendable.class),
-        new ObjectStreamField("id", String.class),
-        new ObjectStreamField("serial", int.class),
-        new ObjectStreamField("isEnabled", boolean.class)
+    private final static ObjectStreamField[] serialPersistentFields = {
+            new ObjectStreamField("isDNA", boolean.class),
+            new ObjectStreamField("label", String.class),
+            new ObjectStreamField("sequence", String.class),
+            new ObjectStreamField("descriptions", CSDescribable.class),
+            new ObjectStreamField("extend", CSExtendable.class),
+            new ObjectStreamField("id", String.class),
+            new ObjectStreamField("serial", int.class),
+            new ObjectStreamField("isEnabled", boolean.class)
     };
 
-    static final String[] repeats = {"(at){5,}", "a{7,}", "c{7,}", "g{7,}", "t{7,}"};
-    static final java.util.regex.Pattern[] repeatPattern = new java.util.regex.Pattern[repeats.length];
-    static java.util.regex.Pattern dnaPattern = java.util.regex.Pattern.compile("[^#acgtnxACGTNX]");
+    static final String[] repeats = {"(at){5,}", "a{7,}", "c{7,}", "g{7,}",
+                                    "t{7,}"};
+    static final java.util.regex.Pattern[] repeatPattern = new java.util.regex.
+            Pattern[repeats.length];
+
+   // add 'E' in the list because the promoter panel local cache has lots of E for exon sequences.
+    static java.util.regex.Pattern dnaPattern = java.util.regex.Pattern.compile(
+            "[^#acgtnxACGTNXE]");
 
     private String id = "";
     private int serial = -1;
@@ -71,12 +75,14 @@ public class CSSequence implements DSSequence, Serializable {
         return sequence;
     }
 
-    public CSSequence getSubSequence(int from, int to){
-        if (from >= 0 && to >= 0 && from < sequence.length() && to < sequence.length())
+    public CSSequence getSubSequence(int from, int to) {
+        if (from >= 0 && to >= 0 && from < sequence.length() &&
+            to < sequence.length()) {
             return new CSSequence(getLabel(), getSequence().substring(from, to));
+        }
         return null;
     }
-    
+
     public void setLabel(String l) {
         label = l;
     }
@@ -178,4 +184,34 @@ public class CSSequence implements DSSequence, Serializable {
         }
         sequence = new String(tokens);
     }
+
+    public static String reverseString(String s) {
+        if(s==null){
+            return null;
+        }
+        int m = s.length();
+        char[] r = new char[m];
+        for (int i = 0; i < m; i++) {
+            r[i] = getComplementChar(s.charAt(m - i - 1));
+        }
+        return new String(r);
+    }
+
+    private static char getComplementChar(char originChr) {
+        if (originChr == 'A' || originChr == 'a') {
+            return 'T';
+        } else if (originChr == 'T' || originChr == 't') {
+            return 'A';
+        }
+        if (originChr == 'G' || originChr == 'g') {
+            return 'C';
+        }
+        if (originChr == 'C' || originChr == 'c') {
+            return 'G';
+        } else {
+            return originChr;
+        }
+
+    }
+
 }

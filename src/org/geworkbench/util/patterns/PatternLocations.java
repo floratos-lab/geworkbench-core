@@ -17,6 +17,16 @@ import org.geworkbench.bison.datastructure.complex.pattern.DSPattern;
  */
 public class PatternLocations implements Comparable{
         private String ascii;
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    private String displayName;
         private  DSSeqRegistration registration;
         private int idForDisplay;
         private String patternType;
@@ -28,11 +38,14 @@ public class PatternLocations implements Comparable{
 
             //this.pattern = tf;
             registration = _registration;
+
            ascii = tf.toString();
+            displayName = ascii;
         }
 
         public PatternLocations(String _ascii){
             ascii = _ascii;
+            displayName = ascii;
             patternType = DEFAULTTYPE;
 
         }

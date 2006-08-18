@@ -1,4 +1,4 @@
-package org.geworkbench.util.sequences;
+ package org.geworkbench.util.sequences;
 
 /**
  * <p>Title: Bioworks</p>

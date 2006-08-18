@@ -309,7 +309,7 @@ public class SequenceViewWidget extends JPanel {
 
     }
 
-    void updateBottomPanel() {
+    public void updateBottomPanel() {
 
         DSSequence selectedSequence = seqViewWPanel.getSelectedSequence();
         if (selectedSequence == null) {
