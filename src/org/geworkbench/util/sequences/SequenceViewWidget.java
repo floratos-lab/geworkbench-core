@@ -314,8 +314,10 @@ public class SequenceViewWidget extends JPanel {
         DSSequence selectedSequence = seqViewWPanel.getSelectedSequence();
         if (selectedSequence == null) {
             Graphics g = sequencedetailPanel.getGraphics();
+            if(g!=null){
             g.clearRect(0, 0, sequencedetailPanel.getWidth(),
                         sequencedetailPanel.getHeight());
+            }
             return;
         }
         if (goLeft) {

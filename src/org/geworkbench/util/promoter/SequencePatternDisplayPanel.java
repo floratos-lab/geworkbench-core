@@ -164,7 +164,7 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget {
         patternMatches.clear();
         patternDisplay.clear();
         sequenceDB = seqDB;
-        super.updateBottomPanel();
+        updateBottomPanel();
         repaint();
     }
 
