@@ -7,6 +7,7 @@ import java.util.Vector;
 
 import org.geworkbench.bison.datastructure.bioobjects.sequence.CSSequence;
 import org.geworkbench.util.sequences.GeneChromosomeMatcher;
+import com.mysql.jdbc.Driver;
 
 /**
  * <p>Title: </p>
