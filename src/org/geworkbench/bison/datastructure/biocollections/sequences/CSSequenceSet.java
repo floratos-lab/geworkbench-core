@@ -303,12 +303,13 @@ public DSSequenceSet getActiveSequenceSet(DSPanel<? extends DSGeneMarker> marker
 
     public void writeToFile(String fileName) {
         file = new File(fileName);
+        String lineBreak = System.getProperty("line.separator");
         try {
             BufferedWriter out = new BufferedWriter(new FileWriter(file));
             for (int i = 0; i < this.getSequenceNo(); i++) {
                 T s = this.getSequence(i);
-                out.write(">" + s.getLabel() + "\n");
-                out.write(s.getSequence() + "\n");
+                out.write(">" + s.getLabel() + lineBreak);
+                out.write(s.getSequence() + lineBreak);
             }
             out.close();
         } catch (IOException ex) {
