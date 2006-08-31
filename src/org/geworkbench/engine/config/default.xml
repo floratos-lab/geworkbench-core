@@ -7,8 +7,8 @@
 	<plugin id="projectWindow" name="Project Panel" class="org.geworkbench.builtin.projects.ProjectPanel">
 		<gui-area name="ProjectArea"/>
 	</plugin>
-	<plugin id="AffyExcelTXTFilter" name="Exp1. Format" class="org.geworkbench.engine.parsers.AffyExcelTXTFileFormat"/>
-	<plugin id="affyFilter" name="Affy File Format" class="org.geworkbench.engine.parsers.AffyFileFormat"/>
+	<plugin id="AffyExcelTXTFilter" name="Exp1. Format" class="org.geworkbench.components.parsers.AffyExcelTXTFileFormat"/>
+	<plugin id="affyFilter" name="Affy File Format" class="org.geworkbench.components.parsers.AffyFileFormat"/>
 	<plugin id="annotationsPanel" name="Marker Annotations" class="org.geworkbench.components.annotations.AnnotationsPanel" source="annotations">
 		<gui-area name="VisualArea"/>
 	</plugin>
@@ -20,7 +20,7 @@
 	</plugin>
 	<plugin id="deviationFilter" name="Deviation Filter" class="org.geworkbench.components.filtering.DeviationBasedFilter" source="filtering"/>
 	<plugin id="detectionCall" name="Affy Detection Call Filter" class="org.geworkbench.components.filtering.AffyDetectionCallFilter" source="filtering"/>
-	<plugin id="expressionFileFilter" name="Exp. Format" class="org.geworkbench.engine.parsers.ExpressionFileFormat"/>
+	<plugin id="expressionFileFilter" name="Exp. Format" class="org.geworkbench.components.parsers.ExpressionFileFormat"/>
 	<plugin id="expressionProfilePanel" name="Expression Profiles" class="org.geworkbench.components.microarrays.ExpressionProfilePanel" source="microarrays">
 		<gui-area name="VisualArea"/>
 	</plugin>
@@ -28,8 +28,8 @@
 	<plugin id="EVDPanel" name="Expression Value Distribution" class="org.geworkbench.components.microarrays.EVDPanel" source="microarrays">
 		<gui-area name="VisualArea"/>
 	</plugin>
-	<plugin id="genepixFilter" name="Genepix File Format" class="org.geworkbench.engine.parsers.GenePixFileFormat"/>
-	<plugin id="genotypicFilter" name="Genotypic File Format" class="org.geworkbench.engine.parsers.genotype.GenotypicFileFormat"/>
+	<plugin id="genepixFilter" name="Genepix File Format" class="org.geworkbench.components.parsers.GenePixFileFormat"/>
+	<plugin id="genotypicFilter" name="Genotypic File Format" class="org.geworkbench.components.parsers.genotype.GenotypicFileFormat"/>
 	<plugin id="GenepixFlagsFilter" name="Genepix Flag Filter" class="org.geworkbench.components.filtering.GenepixFlagsFilter" source="filtering"/>
 	<!--
 	<plugin id="genePanel" name="Gene Panel" class="org.geworkbench.components.selectors.GenericMarkerSelectorPanel">
@@ -53,8 +53,8 @@
 	<plugin id="MicroarrayCenteringNormalizer" name="Microarray Centering Normalizer" class="org.geworkbench.components.normalization.MicroarrayCenteringNormalizer" source="normalization"/>
 	<plugin id="missingValueNorm" name="Missing Values" class="org.geworkbench.components.normalization.MissingValueNormalizer" source="normalization"/>
 	<plugin id="missingValuesFilter" name="Missing Values Filter" class="org.geworkbench.components.filtering.MissingValuesFilter" source="filtering"/>
-	<plugin id="sequenceFileFilter" name="FASTA Format" class="org.geworkbench.engine.parsers.sequences.SequenceFileFormat"/>
-	<plugin id="patternFilter" name="SPLASH Patterns" class="org.geworkbench.engine.parsers.patterns.PatternFileFormat"/>
+	<plugin id="sequenceFileFilter" name="FASTA Format" class="org.geworkbench.components.parsers.sequences.SequenceFileFormat"/>
+	<plugin id="patternFilter" name="SPLASH Patterns" class="org.geworkbench.components.parsers.patterns.PatternFileFormat"/>
 	<plugin id="scatterPlot" name="Scatter Plot" class="org.geworkbench.components.plots.ScatterPlot" source="plots">
 		<gui-area name="VisualArea"/>
 	</plugin>

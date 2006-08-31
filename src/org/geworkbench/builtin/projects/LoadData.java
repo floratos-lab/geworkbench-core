@@ -12,7 +12,7 @@ import org.geworkbench.builtin.projects.remoteresources.RemoteResourceDialog;
 import org.geworkbench.builtin.projects.util.CaARRAYPanel;
 import org.geworkbench.builtin.projects.util.NCIPanel;
 import org.geworkbench.engine.management.ComponentRegistry;
-import org.geworkbench.engine.parsers.FileFormat;
+import org.geworkbench.components.parsers.FileFormat;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
@@ -372,8 +372,7 @@ public class LoadData extends JDialog {
          }
          }
          **/
-        supportedInputFormats = ComponentRegistry.getRegistry().getModules(org.
-                geworkbench.engine.parsers.FileFormat.class);
+        supportedInputFormats = ComponentRegistry.getRegistry().getModules(org.geworkbench.components.parsers.FileFormat.class);
 
         // Setup the file chooser options.
         jFileChooser1.resetChoosableFileFilters();
@@ -495,7 +494,7 @@ public class LoadData extends JDialog {
                                 mergeCheckBox.isSelected());
                         dispose();
                         return;
-                    } catch (org.geworkbench.engine.parsers.
+                    } catch (org.geworkbench.components.parsers.
                              InputFileFormatException iffe) {
                         // Let the user know that there was a problem parsing the file.
                         JOptionPane.showMessageDialog(null,

@@ -17,8 +17,8 @@
     <plugin id="filteringPanel" name="Filtering Panel" class="org.geworkbench.components.analysis.FilteringPanel">
         <gui-area name="CommandArea"/>
     </plugin>
-    <plugin id="genotypicFilter" name="Genotypic File Format" class="org.geworkbench.engine.parsers.genotype.GenotypicFileFormat"/>
-    <plugin id="affyFilter" name="Affy File Format" class="org.geworkbench.engine.parsers.AffyFileFormat"/>
+    <plugin id="genotypicFilter" name="Genotypic File Format" class="org.geworkbench.components.parsers.genotype.GenotypicFileFormat"/>
+    <plugin id="affyFilter" name="Affy File Format" class="org.geworkbench.components.parsers.AffyFileFormat"/>
     <plugin id="expressionProfilePanel" name="Expression Profiles" class="org.geworkbench.components.microarrays.ExpressionProfilePanel">
         <gui-area name="VisualArea"/>
     </plugin>
@@ -35,7 +35,7 @@
     <plugin id="sequencePanel" name="Sequence Panel" class="org.geworkbench.components.sequences.SequenceViewAppComponent">
         <gui-area name="VisualArea"/>
     </plugin>
-    <plugin id="AffyExcelTXTFilter" name="Exp1. Format" class="org.geworkbench.engine.parsers.AffyExcelTXTFileFormat"/>
+    <plugin id="AffyExcelTXTFilter" name="Exp1. Format" class="org.geworkbench.components.parsers.AffyExcelTXTFileFormat"/>
     <plugin id="positionHistogram" name="Position Histogram" class="org.geworkbench.components.poshistogram.PositionHistogramAppComponent">
         <gui-area name="VisualArea"/>
     </plugin>
@@ -57,16 +57,16 @@
         <gui-area name="VisualArea"/>
     </plugin>
     <plugin id="log2Normalizer" name="Log2 Tranformation" class="org.geworkbench.components.normalization.LogTransformationNormalizer"/>
-    <plugin id="sequenceFileFilter" name="FASTA Format" class="org.geworkbench.engine.parsers.sequences.SequenceFileFormat"/>
+    <plugin id="sequenceFileFilter" name="FASTA Format" class="org.geworkbench.components.parsers.sequences.SequenceFileFormat"/>
     <plugin id="pathwayPanel" name="caBIO Pathways" class="org.geworkbench.components.annotations.PathwayPanel">
         <gui-area name="VisualArea"/>
     </plugin>
-    <plugin id="expressionFileFilter" name="Exp. Format" class="org.geworkbench.engine.parsers.ExpressionFileFormat"/>
+    <plugin id="expressionFileFilter" name="Exp. Format" class="org.geworkbench.components.parsers.ExpressionFileFormat"/>
     <plugin id="patternDiscoveryAlgorithm" name="Pattern Discovery Algorithm" class="org.geworkbench.components.associationdiscovery.PatternDiscovery"/>
     <plugin id="cytoscapePanel" name="Cytoscape" class="org.geworkbench.components.cytoscape.CytoscapeWidget">
         <gui-area name="VisualArea"/>
     </plugin>
-    <plugin id="patternFilter" name="SPLASH Patterns" class="org.geworkbench.engine.parsers.patterns.PatternFileFormat"/>
+    <plugin id="patternFilter" name="SPLASH Patterns" class="org.geworkbench.components.parsers.patterns.PatternFileFormat"/>
     <plugin id="tTestAnalysis" name="T Test Analysis" class="org.geworkbench.components.analysis.clustering.TtestAnalysis"/>
     <plugin id="syntenyParameters" name="Synteny" class="org.geworkbench.components.alignment.panels.SyntenyAppComponent">
         <gui-area name="SelectionArea"/>
@@ -114,7 +114,7 @@
     <plugin id="microarrayPanel" name="Microarray Panel" class="org.geworkbench.components.microarrays.MicroarrayPanel">
         <gui-area name="VisualArea"/>
     </plugin>
-    <plugin id="genepixFilter" name="Genepix File Format" class="org.geworkbench.engine.parsers.GenePixFileFormat"/>
+    <plugin id="genepixFilter" name="Genepix File Format" class="org.geworkbench.components.parsers.GenePixFileFormat"/>
     <plugin id="promoterPanel" name="Promoter Panel" class="org.geworkbench.components.promoter.PromoterView">
         <gui-area name="VisualArea"/>
     </plugin>

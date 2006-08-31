@@ -64,12 +64,12 @@ import org.geworkbench.engine.management.Publish;
 import org.geworkbench.engine.management.Script;
 import org.geworkbench.engine.management.Subscribe;
 import org.geworkbench.engine.management.TypeMap;
-import org.geworkbench.engine.parsers.CaArrayLoader;
-import org.geworkbench.engine.parsers.FileFormat;
-import org.geworkbench.engine.parsers.InputFileFormatException;
-import org.geworkbench.engine.parsers.MAGELoader;
-import org.geworkbench.engine.parsers.microarray.DataSetFileFormat;
-import org.geworkbench.engine.parsers.patterns.PatternFileFormat;
+import org.geworkbench.components.parsers.CaArrayLoader;
+import org.geworkbench.components.parsers.FileFormat;
+import org.geworkbench.components.parsers.InputFileFormatException;
+import org.geworkbench.components.parsers.MAGELoader;
+import org.geworkbench.components.parsers.microarray.DataSetFileFormat;
+import org.geworkbench.components.parsers.patterns.PatternFileFormat;
 import org.geworkbench.engine.preferences.GlobalPreferences;
 import org.geworkbench.engine.skin.Skin;
 import org.geworkbench.events.CommentsEvent;
@@ -81,21 +81,9 @@ import org.geworkbench.events.SingleValueEditEvent;
 import org.geworkbench.util.PropertiesMonitor;
 import org.geworkbench.util.SaveImage;
 
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.tree.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
 import java.io.*;
-import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Map;
 
-import org.geworkbench.bison.datastructure.biocollections.microarrays.
-        CSMicroarraySet;
 import org.apache.commons.collections15.map.ListOrderedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -1095,13 +1083,12 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
      *
      * @param dataSetFiles The file containing the data to be parsed.
      * @param inputFormat  The format that the file is expected to conform to.
-     * @throws org.geworkbench.engine.parsers.InputFileFormatException
+     * @throws org.geworkbench.components.parsers.InputFileFormatException
      *
      */
     public void fileOpenAction(final File[] dataSetFiles,
-                               final org.geworkbench.engine.parsers.FileFormat
-                               inputFormat, boolean merge) throws org.
-            geworkbench.engine.parsers.InputFileFormatException {
+                               final org.geworkbench.components.parsers.FileFormat
+                               inputFormat, boolean merge) throws org.geworkbench.components.parsers.InputFileFormatException {
 
         final boolean mergeFiles = dataSetFiles.length == 1 ? false : merge;
         if (inputFormat instanceof DataSetFileFormat) {
@@ -1264,7 +1251,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
     }
 
     public void fileOpenAction(File dataSetFile,
-                               org.geworkbench.engine.parsers.FileFormat
+                               org.geworkbench.components.parsers.FileFormat
                                inputFormat) throws InputFileFormatException {
 
         // The call to getMArraySet() may result in an InputFileFormatException

@@ -7,8 +7,8 @@
 	<plugin id="projectWindow" name="Project Panel" class="org.geworkbench.builtin.projects.ProjectPanel">
 		<gui-area name="ProjectArea"/>
 	</plugin>
-	<plugin id="AffyExcelTXTFilter" name="Exp1. Format" class="org.geworkbench.engine.parsers.AffyExcelTXTFileFormat"/>
-	<plugin id="affyFilter" name="Affy File Format" class="org.geworkbench.engine.parsers.AffyFileFormat"/>
+	<plugin id="AffyExcelTXTFilter" name="Exp1. Format" class="org.geworkbench.components.parsers.AffyExcelTXTFileFormat"/>
+	<plugin id="affyFilter" name="Affy File Format" class="org.geworkbench.components.parsers.AffyFileFormat"/>
 	<plugin id="annotationsPanel" name="Marker Annotations" class="org.geworkbench.components.annotations.AnnotationsPanel" source="annotations">
 		<gui-area name="VisualArea"/>
 	</plugin>
@@ -26,12 +26,12 @@
 	</plugin>
 	<plugin id="deviationFilter" name="Deviation Filter" class="org.geworkbench.components.filtering.DeviationBasedFilter" source="filtering"/>
 	<plugin id="detectionCall" name="Affy Detection Call Filter" class="org.geworkbench.components.filtering.AffyDetectionCallFilter" source="filtering"/>
-	<plugin id="expressionFileFilter" name="Exp. Format" class="org.geworkbench.engine.parsers.ExpressionFileFormat"/>
-	<plugin id="rmaExpressFileFilter" name="RMA Express Format" class="org.geworkbench.engine.parsers.RMAExpressFileFormat"/>
-	<plugin id="gcrmaViaRCELLoader" name="GCRMA Via R CEL Loader" class="org.geworkbench.engine.parsers.GCRMAViaRFormat"/>
-	<plugin id="CELLoader" name="CEL File Loader" class="org.geworkbench.engine.parsers.CELFileFormat"/>
-    <plugin id="columnMajorFileFilter" name="Column Major Format" class="org.geworkbench.engine.parsers.ColumnMajorFormat"/>
-    <plugin id="pdbFileFilter" name="PDB Structure Format" class="org.geworkbench.engine.parsers.PDBFileFormat"/>
+	<plugin id="expressionFileFilter" name="Exp. Format" class="org.geworkbench.components.parsers.ExpressionFileFormat"/>
+	<plugin id="rmaExpressFileFilter" name="RMA Express Format" class="org.geworkbench.components.parsers.RMAExpressFileFormat"/>
+	<plugin id="gcrmaViaRCELLoader" name="GCRMA Via R CEL Loader" class="org.geworkbench.components.parsers.GCRMAViaRFormat"/>
+	<plugin id="CELLoader" name="CEL File Loader" class="org.geworkbench.components.parsers.CELFileFormat"/>
+    <plugin id="columnMajorFileFilter" name="Column Major Format" class="org.geworkbench.components.parsers.ColumnMajorFormat"/>
+    <plugin id="pdbFileFilter" name="PDB Structure Format" class="org.geworkbench.components.parsers.PDBFileFormat"/>
     <plugin id="expressionProfilePanel" name="Expression Profiles" class="org.geworkbench.components.microarrays.ExpressionProfilePanel" source="microarrays">
         <gui-area name="VisualArea"/>
 	</plugin>
@@ -39,8 +39,8 @@
 	<plugin id="EVDPanel" name="Expression Value Distribution" class="org.geworkbench.components.microarrays.EVDPanel" source="microarrays">
 		<gui-area name="VisualArea"/>
 	</plugin>
-	<plugin id="genepixFilter" name="Genepix File Format" class="org.geworkbench.engine.parsers.GenePixFileFormat"/>
-	<plugin id="genotypicFilter" name="Genotypic File Format" class="org.geworkbench.engine.parsers.genotype.GenotypicFileFormat"/>
+	<plugin id="genepixFilter" name="Genepix File Format" class="org.geworkbench.components.parsers.GenePixFileFormat"/>
+	<plugin id="genotypicFilter" name="Genotypic File Format" class="org.geworkbench.components.parsers.genotype.GenotypicFileFormat"/>
 	<plugin id="goPanel" name="Gene Ontology" class="org.geworkbench.components.goterms.GOPanel" source="goterms">
 		<gui-area name="VisualArea"/>
 	</plugin>
@@ -74,8 +74,8 @@
 	<plugin id="missingValueNorm" name="Missing Values" class="org.geworkbench.components.normalization.MissingValueNormalizer" source="normalization"/>
 	<plugin id="missingValuesFilter" name="Missing Values Filter" class="org.geworkbench.components.filtering.MissingValuesFilter" source="filtering"/>
 	<plugin id="frequencyThresholdFilter" name="Frequency Threshold Filter" class="org.geworkbench.components.filtering.AllelicFrequencyThresholdFilter" source="filtering"/>
-	<plugin id="sequenceFileFilter" name="FASTA Format" class="org.geworkbench.engine.parsers.sequences.SequenceFileFormat"/>
-	<plugin id="patternFilter" name="SPLASH Patterns" class="org.geworkbench.engine.parsers.patterns.PatternFileFormat"/>
+	<plugin id="sequenceFileFilter" name="FASTA Format" class="org.geworkbench.components.parsers.sequences.SequenceFileFormat"/>
+	<plugin id="patternFilter" name="SPLASH Patterns" class="org.geworkbench.components.parsers.patterns.PatternFileFormat"/>
 	<plugin id="patternDiscoveryAlgorithm" name="Pattern Discovery Algorithm" class="org.geworkbench.components.associationdiscovery.PatternDiscovery" source="associationdiscovery"/>
 	<plugin id="reverseEngineering" name="Reverse Engineering" class="org.geworkbench.components.pathwaydecoder.GeneProfiler" source="pathwaydecoder">
 		<gui-area name="VisualArea"/>
@@ -189,7 +189,7 @@
 	<plugin id="Classifier" name="Classifier" class="org.geworkbench.components.analysis.classification.ClassificationRunnerPlugin" source="analysis">
 		<gui-area name="CommandArea"/>
 	</plugin>
-	<plugin id="SVMNormalizedMatrixFilter" name="SVM Format" class="org.geworkbench.engine.parsers.SVMNormalizedMatrixFileFormat"/>
+	<plugin id="SVMNormalizedMatrixFilter" name="SVM Format" class="org.geworkbench.components.parsers.SVMNormalizedMatrixFileFormat"/>
     <plugin id="tprofilerPanel" name="T-Profiler" class="org.geworkbench.components.tprofiler.TProfiler" source="tprofiler">
         <gui-area name="CommandArea"/>
     </plugin>

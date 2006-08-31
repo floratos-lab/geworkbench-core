@@ -2,25 +2,25 @@
 <geaw-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ConfigurationFile Schema.xsd">
     <!--<gui-window name="Main GUI" class="geaw.GUIApp"/>-->
     <gui-window name="Main GUI" class="org.geworkbench.engine.skin.Workbench"/>
-    <plugin id="expressionFileFilter" name="Exp. Format" class="org.geworkbench.engine.parsers.ExpressionFileFormat">
+    <plugin id="expressionFileFilter" name="Exp. Format" class="org.geworkbench.components.parsers.ExpressionFileFormat">
         <extension-point name="input-format"/>
     </plugin>
-    <plugin id="AffyExcelTXTFilter" name="Exp1. Format" class="org.geworkbench.engine.parsers.AffyExcelTXTFileFormat">
+    <plugin id="AffyExcelTXTFilter" name="Exp1. Format" class="org.geworkbench.components.parsers.AffyExcelTXTFileFormat">
         <extension-point name="input-format"/>
     </plugin>
-    <plugin id="affyFilter" name="Affy File Format" class="org.geworkbench.engine.parsers.AffyFileFormat">
+    <plugin id="affyFilter" name="Affy File Format" class="org.geworkbench.components.parsers.AffyFileFormat">
         <extension-point name="input-format"/>
     </plugin>
-    <plugin id="genepixFilter" name="Genepix File Format" class="org.geworkbench.engine.parsers.GenePixFileFormat">
+    <plugin id="genepixFilter" name="Genepix File Format" class="org.geworkbench.components.parsers.GenePixFileFormat">
         <extension-point name="input-format"/>
     </plugin>
-    <plugin id="sequenceFileFilter" name="FASTA Format" class="org.geworkbench.engine.parsers.sequences.SequenceFileFormat">
+    <plugin id="sequenceFileFilter" name="FASTA Format" class="org.geworkbench.components.parsers.sequences.SequenceFileFormat">
         <extension-point name="input-format"/>
     </plugin>
-    <plugin id="patternFilter" name="SPLASH Patterns" class="org.geworkbench.engine.parsers.patterns.PatternFileFormat">
+    <plugin id="patternFilter" name="SPLASH Patterns" class="org.geworkbench.components.parsers.patterns.PatternFileFormat">
         <extension-point name="input-format"/>
     </plugin>
-    <plugin id="genotypicFilter" name="Genotypic File Format" class="org.geworkbench.engine.parsers.genotype.GenotypicFileFormat">
+    <plugin id="genotypicFilter" name="Genotypic File Format" class="org.geworkbench.components.parsers.genotype.GenotypicFileFormat">
         <extension-point name="input-format"/>
     </plugin>
     <plugin id="projectWindow" name="Project Panel" class="org.geworkbench.builtin.projects.ProjectPanel">

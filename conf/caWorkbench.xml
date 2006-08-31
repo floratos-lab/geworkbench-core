@@ -1,15 +1,15 @@
 <geaw-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ConfigurationFile Schema.xsd">
     <gui-window name="Main GUI" class="org.geworkbench.engine.skin.Skin"/>
-    <plugin id="expressionFileFilter" name="Exp. Format" class="org.geworkbench.engine.parsers.ExpressionFileFormat">
+    <plugin id="expressionFileFilter" name="Exp. Format" class="org.geworkbench.components.parsers.ExpressionFileFormat">
         <extension-point name="input-format"/>
     </plugin>
-    <plugin id="AffyExcelTXTFilter" name="Exp. Format" class="org.geworkbench.engine.parsers.AffyExcelTXTFileFormat">
+    <plugin id="AffyExcelTXTFilter" name="Exp. Format" class="org.geworkbench.components.parsers.AffyExcelTXTFileFormat">
         <extension-point name="input-format"/>
     </plugin>
-    <plugin id="affyFilter" name="Affy File Format" class="org.geworkbench.engine.parsers.AffyFileFormat">
+    <plugin id="affyFilter" name="Affy File Format" class="org.geworkbench.components.parsers.AffyFileFormat">
         <extension-point name="input-format"/>
     </plugin>
-    <plugin id="genepixFilter" name="Genepix File Format" class="org.geworkbench.engine.parsers.GenePixFileFormat">
+    <plugin id="genepixFilter" name="Genepix File Format" class="org.geworkbench.components.parsers.GenePixFileFormat">
         <extension-point name="input-format"/>
     </plugin>
     <plugin id="projectWindow" name="Project Panel" class="org.geworkbench.builtin.projects.ProjectPanel">

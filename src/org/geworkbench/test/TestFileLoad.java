@@ -3,7 +3,7 @@ package org.geworkbench.test;
 import junit.framework.TestCase;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
-import org.geworkbench.engine.parsers.microarray.DataSetFileFormat;
+import org.geworkbench.components.parsers.microarray.DataSetFileFormat;
 
 import java.io.File;
 
@@ -29,7 +29,7 @@ public class TestFileLoad extends TestCase {
 
     public static CSExprMicroarraySet loadDefaultMicroarraySet() throws Exception {
         String fileName = DEFAULT_MICROARRAY_SET;
-        DataSetFileFormat fileFormat = new org.geworkbench.engine.parsers.ExpressionFileFormat();
+        DataSetFileFormat fileFormat = new org.geworkbench.components.parsers.ExpressionFileFormat();
         DSDataSet dataSet = loadDataSet(fileName, fileFormat);
         return (CSExprMicroarraySet) dataSet;
     }
