@@ -256,8 +256,6 @@
         <root url="jar://$PROJECT_DIR$/lib/log4j-1.2.8.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/saaj.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/wsdl4j.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/jcommon-1.0.0-rc1.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/jfreechart-1.0.0-rc1.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/jhall.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/junit.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/polgara.jar!/" />
@@ -313,6 +311,8 @@
         <root url="jar://$PROJECT_DIR$/lib/swing-layout-1.0.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/JRclient-RF503.jar!/" />
         <root url="jar://C:/code/workbook/lib/AffxFusion.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/jfreechart-1.0.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/jcommon-1.0.5.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
