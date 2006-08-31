@@ -233,6 +233,17 @@
         </java>
     </target>
     <!-- ====================================================================== -->
+    <!-- RUN PRODUCTION-->
+    <!-- ====================================================================== -->
+    <target name="run-prod" depends="compile" description="Runs geWorkbench.">
+        <java fork="true" classname="org.geworkbench.engine.config.UILauncher">
+            <jvmarg value="-Xmx512M"/>
+            <jvmarg value="-Djava.library.path=lib"/>
+            <arg value="all_release.xml" />
+            <classpath refid="run.classpath"/>
+        </java>
+    </target>
+    <!-- ====================================================================== -->
     <!-- RUN SILENT -->
     <!-- ====================================================================== -->
     <target name="run-silent" depends="compile" description="Runs geWorkbench.">
