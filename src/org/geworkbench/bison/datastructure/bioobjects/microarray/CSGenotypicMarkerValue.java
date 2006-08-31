@@ -76,6 +76,7 @@ public class CSGenotypicMarkerValue extends CSMarkerValue implements Serializabl
      */
     public void setAllele(int allele) {
         allele0 = (short)allele;
+        value = (short)allele;
         isGT = false;
     }
 
@@ -134,6 +135,8 @@ public class CSGenotypicMarkerValue extends CSMarkerValue implements Serializabl
      */
     public String toString() {
         String string = null;
+        if (!isGT && !isMissing())
+            return new Short(getAllele(0)).toString();
         if (!isMissing()) {
             string = getAllele(0) + "|" + getAllele(1);
             //            string = new String(formatter.format(getValue()) + "\t" +
@@ -273,6 +276,4 @@ public class CSGenotypicMarkerValue extends CSMarkerValue implements Serializabl
     public int compareTo(Object o) {
         return Double.compare(((CSAffyMarkerValue) o).getValue(), getValue());
     }
-
-
 }
