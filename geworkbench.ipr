@@ -313,6 +313,7 @@
         <root url="jar://C:/code/workbook/lib/AffxFusion.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/jfreechart-1.0.2.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/jcommon-1.0.5.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/bnj-kdd.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
