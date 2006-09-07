@@ -65,9 +65,7 @@
 	<classpathentry kind="lib" path="lib/jaxb-rt-1.0-ea.jar"/>
 	<classpathentry kind="lib" path="lib/jaxrpc.jar"/>
 	<classpathentry kind="lib" path="lib/jbcl.jar"/>
-	<classpathentry kind="lib" path="lib/jcommon-1.0.0-rc1.jar"/>
 	<classpathentry kind="lib" path="lib/jdom.jar"/>
-	<classpathentry kind="lib" path="lib/jfreechart-1.0.0-rc1.jar"/>
 	<classpathentry kind="lib" path="lib/jgraph.jar"/>
 	<classpathentry kind="lib" path="lib/jgraphpad.jar"/>
 	<classpathentry kind="lib" path="lib/jhall.jar"/>
@@ -110,7 +108,9 @@
 	<classpathentry kind="lib" path="lib/mageom.jar"/>
 	<classpathentry kind="lib" path="lib/Simulation_libs/jahmm-0.2.6.jar"/>
 	<classpathentry kind="lib" path="lib/Simulation_libs/JClass.jar"/>
+	<classpathentry kind="lib" path="lib/jcommon-1.0.5.jar"/>
 	<classpathentry kind="lib" path="lib/Simulation_libs/jcommon.jar"/>
+	<classpathentry kind="lib" path="lib/jfreechart-1.0.2.jar"/>
 	<classpathentry kind="lib" path="lib/Simulation_libs/jfreechart.jar"/>
 	<classpathentry kind="lib" path="lib/Simulation_libs/mpiJava.jar"/>
 	<classpathentry kind="lib" path="lib/Simulation_libs/netx.jar"/>
@@ -215,5 +215,6 @@
 	<classpathentry kind="lib" path="components/cytoscape/lib/layout.jar"/>
 	<classpathentry kind="lib" path="components/cytoscape/lib/yLayouts.jar"/>
 	<classpathentry kind="lib" path="lib/AffxFusion.jar"/>
+	<classpathentry kind="lib" path="lib/bnj-kdd.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
