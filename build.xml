@@ -349,20 +349,8 @@
             <!--<test name="wb.test.TestAll" todir="${testing}"/>-->
             <batchtest todir="${testing}" unless="testcase">
                 <fileset dir="${src}">
-                    <include name="**/Test*.java"/>
-                </fileset>
-            </batchtest>
-        </junit>
-        <junit fork="yes" dir="${basedir}" failureProperty="test.failed" printsummary="yes">
-            <jvmarg value="-Xmx512M"/>
-            <jvmarg value="-Djava.awt.headless=true"/>
-            <classpath refid="run.classpath"/>
-
-            <formatter type="xml"/>
-            <!--<test name="wb.test.TestAll" todir="${testing}"/>-->
-            <batchtest todir="${testing}" unless="testcase">
-                <fileset dir="${src}">
                     <include name="**/*Test.java"/>
+                    <exclude name="**/BulkTest.java"/>
                 </fileset>
             </batchtest>
         </junit>

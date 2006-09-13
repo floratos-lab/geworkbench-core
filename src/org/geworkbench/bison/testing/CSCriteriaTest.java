@@ -11,7 +11,7 @@ import org.geworkbench.bison.util.CSAnnotValue;
 /**
  * @author John Watkinson
  */
-public class TestCSCriteria extends TestCase {
+public class CSCriteriaTest extends TestCase {
 
     private static class Item implements DSNamed {
 
@@ -30,7 +30,7 @@ public class TestCSCriteria extends TestCase {
         }
     }
 
-    public TestCSCriteria(String s) {
+    public CSCriteriaTest(String s) {
         super(s);
     }
 

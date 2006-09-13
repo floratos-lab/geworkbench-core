@@ -11,12 +11,12 @@ import org.geworkbench.util.function.optimization.fortran.Fmin_methods;
  */
 
 
-public class FminTest extends Object implements Fmin_methods {
+public class TestFmin extends Object implements Fmin_methods {
 
     int id_f_to_min;
     double c, d, e;
 
-    FminTest(int idtemp, double ctemp, double dtemp, double etemp) {
+    TestFmin(int idtemp, double ctemp, double dtemp, double etemp) {
 
         id_f_to_min = idtemp;
         c = ctemp;
@@ -60,7 +60,7 @@ public class FminTest extends Object implements Fmin_methods {
 
             }
 
-            FminTest fmintest = new FminTest(idtemp, ctemp, dtemp, etemp);
+            TestFmin fmintest = new TestFmin(idtemp, ctemp, dtemp, etemp);
 
             a = Console.readDouble("\nWhat is the a value?  ");
             b = Console.readDouble("\nWhat is the b value?  ");

@@ -10,7 +10,7 @@ import java.io.IOException;
  * Date: Oct 10, 2005
  * Time: 3:14:22 PM
  */
-public class TestComponentClassloader extends TestCase {
+public class ComponentClassloaderTest extends TestCase {
 
     public void testComponentResource() throws IOException {
         ComponentResource cr = new ComponentResource("gears", false);

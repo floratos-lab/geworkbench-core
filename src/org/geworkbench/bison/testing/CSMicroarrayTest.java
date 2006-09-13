@@ -8,9 +8,9 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
 /**
  * @author John Watkinson
  */
-public class TestCSMicroarray extends TestCase {
+public class CSMicroarrayTest extends TestCase {
 
-    public TestCSMicroarray(String s) {
+    public CSMicroarrayTest(String s) {
         super(s);
     }
 

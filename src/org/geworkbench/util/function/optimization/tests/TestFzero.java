@@ -11,12 +11,12 @@ import org.geworkbench.util.function.optimization.fortran.Fzero_methods;
  */
 
 
-public class FzeroTest extends Object implements Fzero_methods {
+public class TestFzero extends Object implements Fzero_methods {
 
     int id_f_to_zero;
     double d, e, f;
 
-    FzeroTest(int idtemp, double dtemp, double etemp, double ftemp) {
+    TestFzero(int idtemp, double dtemp, double etemp, double ftemp) {
 
         id_f_to_zero = idtemp;
         d = dtemp;
@@ -65,7 +65,7 @@ public class FzeroTest extends Object implements Fzero_methods {
 
             }
 
-            FzeroTest fzerotest = new FzeroTest(idtemp, dtemp, etemp, ftemp);
+            TestFzero fzerotest = new TestFzero(idtemp, dtemp, etemp, ftemp);
 
             b[1] = Console.readDouble("\nWhat is the b value?  ");
             c[1] = Console.readDouble("\nWhat is the c value?  ");

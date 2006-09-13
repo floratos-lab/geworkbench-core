@@ -96,7 +96,7 @@ public class Fzero extends Object {
      *                  that returns a value that is to be zeroed.
      *                  The class must implement
      *                  the Fzero_methods interface (see the definition
-     *                  in Fzero_methods.java).  See FzeroTest.java
+     *                  in Fzero_methods.java).  See TestFzero.java
      *                  for an example of such a class.
      *                  f_to_zero must have one
      *                  double valued argument.

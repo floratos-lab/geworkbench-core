@@ -90,7 +90,7 @@ public class Fmin extends Object {
      * @param minclass A class that defines a method, f_to_minimize,
      *                 to minimize.  The class must implement
      *                 the Fmin_methods interface (see the definition
-     *                 in Fmin_methods.java).  See FminTest.java
+     *                 in Fmin_methods.java).  See TestFmin.java
      *                 for an example of such a class.
      *                 f_to_minimize must have one
      *                 double valued argument.

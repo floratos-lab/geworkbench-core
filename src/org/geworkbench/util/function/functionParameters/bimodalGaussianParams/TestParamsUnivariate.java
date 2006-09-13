@@ -1,7 +1,7 @@
 package org.geworkbench.util.function.functionParameters.bimodalGaussianParams;
 
-public class ParamsUnivariateTest extends BimodalGaussianParamsBase {
-    public ParamsUnivariateTest() {
+public class TestParamsUnivariate extends BimodalGaussianParamsBase {
+    public TestParamsUnivariate() {
 
     }
 

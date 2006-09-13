@@ -9,6 +9,7 @@
       <sourceFolder url="file://$MODULE_DIR$/fusion" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/smlr" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/devkit" />
       <excludeFolder url="file://$MODULE_DIR$/src/gov" />
       <excludeFolder url="file://$MODULE_DIR$/testing" />

@@ -8,7 +8,7 @@ import org.geworkbench.bison.annotation.DSAnnotationType;
 /**
  * @author John Watkinson
  */
-public class TestCSAnnotationContext extends AbstractTestDSAnnotationContext {
+public class CSAnnotationContextTest extends AbstractTestDSAnnotationContext {
 
     public DSAnnotationContextManager getAnnotationContextManager() {
         return CSAnnotationContextManager.getInstance();

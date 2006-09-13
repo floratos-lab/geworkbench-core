@@ -10,9 +10,9 @@ import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 /**
  * @author John Watkinson
  */
-public class TestCSMicroarraySetView extends TestCase {
+public class CSMicroarraySetViewTest extends TestCase {
 
-    public TestCSMicroarraySetView(String s) {
+    public CSMicroarraySetViewTest(String s) {
         super(s);
     }
 

@@ -12,11 +12,11 @@ import java.io.File;
  *
  * @author John Watkinson
  */
-public class TestFileLoad extends TestCase {
+public class FileLoadTest extends TestCase {
 
     public static final String DEFAULT_MICROARRAY_SET = "data/aTestDataSet.exp";
 
-    public TestFileLoad(String name) {
+    public FileLoadTest(String name) {
         super(name);
     }
 

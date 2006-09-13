@@ -2,10 +2,10 @@ package org.geworkbench.util.sequences;
 
 import junit.framework.TestCase;
 
-public class TestSequenceAligner extends TestCase {
+public class SequenceAlignerTest extends TestCase {
     private SequenceAligner sequenceAligner = null;
 
-    public TestSequenceAligner(String name) {
+    public SequenceAlignerTest(String name) {
         super(name);
     }
 
@@ -14,7 +14,7 @@ public class TestSequenceAligner extends TestCase {
         /**@todo verify the constructors*/
         sequenceAligner = new SequenceAligner(null);
     }
-    
+
     public void testSequenceAligner() {
         // Currently a no-op
     }

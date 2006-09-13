@@ -13,7 +13,7 @@ import java.util.Map;
  * Date: Oct 21, 2005
  * Time: 12:51:46 PM
  */
-public class TestDefaultHierCluster extends TestCase {
+public class DefaultHierClusterTest extends TestCase {
     DefaultHierCluster c1 = new DefaultHierCluster();
     DefaultHierCluster c2 = new DefaultHierCluster();
     DefaultHierCluster c3 = new DefaultHierCluster();

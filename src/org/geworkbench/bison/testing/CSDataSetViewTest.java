@@ -8,9 +8,9 @@ import org.geworkbench.bison.datastructure.complex.panels.CSPanel;
 /**
  * @author John Watkinson
  */
-public class TestCSDataSetView extends TestCase {
+public class CSDataSetViewTest extends TestCase {
 
-    public TestCSDataSetView(String s) {
+    public CSDataSetViewTest(String s) {
         super(s);
     }
 
