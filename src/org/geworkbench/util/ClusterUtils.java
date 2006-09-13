@@ -6,7 +6,7 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.model.clusters.HierCluster;
 import org.geworkbench.bison.model.clusters.MarkerHierCluster;
 import org.geworkbench.bison.model.clusters.MicroarrayHierCluster;
-import org.geworkbench.bison.model.clusters.TestHierCluster;
+import org.geworkbench.bison.model.clusters.SimpleHierCluster;
 
 /**
  * @author John Watkinson
@@ -34,9 +34,9 @@ public class ClusterUtils {
 						+ " ("
 						+ ((MicroarrayHierCluster) h).getMicroarray()
 								.getLabel() + ")");
-			} else if (h instanceof TestHierCluster) {
+			} else if (h instanceof SimpleHierCluster) {
 				System.out.println("" + h.getHeight() + " ("
-						+ ((TestHierCluster) h).getItem() + ")");
+						+ ((SimpleHierCluster) h).getItem() + ")");
 			}
 		} else {
 			printClusterHelper(depth + 1, h.getNode(0));
@@ -82,10 +82,10 @@ public class ClusterUtils {
 							return false;
 						}
 					}
-				} else if ((h1 instanceof TestHierCluster)
-						&& (h2 instanceof TestHierCluster)) {
+				} else if ((h1 instanceof SimpleHierCluster)
+						&& (h2 instanceof SimpleHierCluster)) {
 					if (h1.getHeight() == h2.getHeight()) {
-						if (((TestHierCluster) h1).getItem().equals(((TestHierCluster) h2).getItem())) {
+						if (((SimpleHierCluster) h1).getItem().equals(((SimpleHierCluster) h2).getItem())) {
 							return true;
 						} else {
 							return false;

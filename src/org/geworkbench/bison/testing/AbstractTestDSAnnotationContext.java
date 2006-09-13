@@ -10,7 +10,7 @@ import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 /**
  * @author John Watkinson
  */
-public abstract class TestDSAnnotationContext extends TestCase {
+public abstract class AbstractTestDSAnnotationContext extends TestCase {
 
     //// Provide concrete implementations to this test case by implementing the methods below
 

@@ -1,11 +1,11 @@
 package org.geworkbench.bison.testing;
 
 import junit.framework.Test;
+import junit.framework.TestCase;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
 import org.geworkbench.bison.datastructure.complex.panels.CSPanel;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
-import org.geworkbench.bison.testing.list.AbstractTestList;
 
 import java.util.Collection;
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author John Watkinson
  */
-public class TestCSPanel extends AbstractTestList {
+public class TestCSPanel extends BulkTest {
 
     // These are field variables for now so that some of the basic lists tests can test two collection's elements
     // for equality
@@ -70,7 +70,7 @@ public class TestCSPanel extends AbstractTestList {
         return p1;
     }
 
-    public void xtestCSPanel() {
+    public void testCSPanel() {
         // Create new panels
         CSPanel<CSMicroarray> p1 = new CSPanel<CSMicroarray>("P1", "p1");
         CSPanel<CSMicroarray> p2 = new CSPanel<CSMicroarray>("P2", "p2");

@@ -14,6 +14,10 @@ public class TestSequenceAligner extends TestCase {
         /**@todo verify the constructors*/
         sequenceAligner = new SequenceAligner(null);
     }
+    
+    public void testSequenceAligner() {
+        // Currently a no-op
+    }
 
     protected void tearDown() throws Exception {
         sequenceAligner = null;

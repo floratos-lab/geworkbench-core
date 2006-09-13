@@ -14,8 +14,11 @@
         <property name="classes" value="classes"/>
         <property name="conf" value="conf"/>
         <property name="temp" value="temp"/>
+        <property name="testing" value="testing"/>
+        <property name="test.reports" value="${testing}/junitreport" />
         <!-- Java Source -->
         <property name="src" value="src"/>
+        <property name="test" value="test"/>
         <!-- Directory for releases -->
         <property name="dist" value="dist"/>
         <!-- Directory for developer kit releases -->
@@ -331,4 +334,50 @@
             </manifest>
         </jar>
     </target>
+
+    <!-- JUnit Run and Report -->
+    <target name="junit-run" depends="compile" description="Run JUnit tests and produce success report.">
+        <taskdef name="junit" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask"/>
+        <delete dir="${testing}"/>
+        <mkdir dir="${testing}"/>
+        <junit fork="yes" dir="${basedir}" failureProperty="test.failed" printsummary="yes">
+            <jvmarg value="-Xmx512M"/>
+            <jvmarg value="-Djava.awt.headless=true"/>
+            <classpath refid="run.classpath"/>
+
+            <formatter type="xml"/>
+            <!--<test name="wb.test.TestAll" todir="${testing}"/>-->
+            <batchtest todir="${testing}" unless="testcase">
+                <fileset dir="${src}">
+                    <include name="**/Test*.java"/>
+                </fileset>
+            </batchtest>
+        </junit>
+        <junit fork="yes" dir="${basedir}" failureProperty="test.failed" printsummary="yes">
+            <jvmarg value="-Xmx512M"/>
+            <jvmarg value="-Djava.awt.headless=true"/>
+            <classpath refid="run.classpath"/>
+
+            <formatter type="xml"/>
+            <!--<test name="wb.test.TestAll" todir="${testing}"/>-->
+            <batchtest todir="${testing}" unless="testcase">
+                <fileset dir="${src}">
+                    <include name="**/*Test.java"/>
+                </fileset>
+            </batchtest>
+        </junit>
+        <mkdir dir="${test.reports}"/>
+        <junitreport todir="${test.reports}">
+            <fileset dir="${testing}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report todir="${test.reports}"/>
+        </junitreport>
+        <fail>
+            <condition>
+                <isset property="test.failed"/>
+            </condition>
+        </fail>
+    </target>
+
 </project>

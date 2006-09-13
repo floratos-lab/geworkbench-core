@@ -3,7 +3,7 @@ package org.geworkbench.bison.model.clusters;
 /**
  * @author John Watkinson
  */
-public class TestHierCluster extends DefaultHierCluster {
+public class SimpleHierCluster extends DefaultHierCluster {
 
     private String item;
 
