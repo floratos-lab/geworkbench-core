@@ -24,31 +24,34 @@ public class SequenceMarker extends CSGeneMarker implements Serializable {
                 setDescription("Affy:" + tokens[1]);
                 setLabel(tokens[1]);
             } else {
+                 //Fix bug 650. The label will be two parts. In the format GI|XXXXXXXC
 
                 int last = tokens.length - 1;
-                if (tokens[0].equalsIgnoreCase("pir")) {
-                    setDescription("PIR: " + tokens[last - 1] + tokens[last]);
-                    setLabel(tokens[1]);
-                } else if (tokens[0].equalsIgnoreCase("gp")) {
-                    setDescription("GP: " + tokens[last - 1] + tokens[last]);
-                    setLabel(tokens[1]);
-                } else if (tokens[0].equalsIgnoreCase("sp")) {
-                    setDescription("SP: " + tokens[last - 1] + tokens[last]);
-                    setLabel(tokens[1]);
-                } else if (tokens[0].equalsIgnoreCase("gi")) {
-                    setDescription("GI: " + tokens[last - 1] + tokens[last]);
-                    setLabel(tokens[1]);
-                } else if (tokens[0].equalsIgnoreCase("gb")) {
-                    setDescription("GB: " + tokens[last - 1] + tokens[last]);
-                    setLabel(tokens[1]);
-                } else {
-                    setDescription(s);
-                    setLabel(tokens[0]);
-                }
+                setDescription(tokens[0] + ": " + tokens[last - 1] + tokens[last]);
+                setLabel(tokens[0] + "|" + tokens[1]);
+//                if (tokens[0].equalsIgnoreCase("pir")) {
+//                    setDescription("PIR: " + tokens[last - 1] + tokens[last]);
+//                    setLabel("PIR|"+tokens[1]);
+//                } else if (tokens[0].equalsIgnoreCase("gp")) {
+//                    setDescription("GP: " + tokens[last - 1] + tokens[last]);
+//                    setLabel("GP"+tokens[1]);
+//                } else if (tokens[0].equalsIgnoreCase("sp")) {
+//                    setDescription("SP: " + tokens[last - 1] + tokens[last]);
+//                    setLabel(tokens[1]);
+//                } else if (tokens[0].equalsIgnoreCase("gi")) {
+//                    setDescription("GI: " + tokens[last - 1] + tokens[last]);
+//                    setLabel(tokens[1]);
+//                } else if (tokens[0].equalsIgnoreCase("gb")) {
+//                    setDescription("GB: " + tokens[last - 1] + tokens[last]);
+//                    setLabel(tokens[1]);
+//                } else {
+//                    setDescription(s);
+//                    setLabel(tokens[0]);
+//                }
             }
         } else if (tokens.length == 2) {
-            setDescription(tokens[1]);
-            setLabel(tokens[1]);
+            setDescription(tokens[0] + "|" + tokens[1]);
+            setLabel(tokens[0] + "|" + tokens[1]);
         } else {
             setDescription(s);
             setLabel(s);
