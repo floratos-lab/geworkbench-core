@@ -20,6 +20,7 @@ public class  GeneChromosomeMatcher {
         private String genomeBuildNumber;
         private String name;
 
+
         public GeneChromosomeMatcher(boolean _strand, String _chr, int _startPoint,
                          int _endPoint, String _genomeBuildNumber) {
             positiveStrandDirection = _strand;
