@@ -1236,6 +1236,17 @@ public class CaARRAYPanel extends JPanel implements Observer {
     public void setExperiments(org.geworkbench.builtin.projects.util.
                                CaARRAYPanel.CaArrayExperiment[] experiments) {
         this.experiments = experiments;
+        if(experiments == null){
+            remoteTreeModel.setRoot(null);
+            root = new DefaultMutableTreeNode(
+            "caARRAY experiments");
+            remoteTreeModel = new DefaultTreeModel(root);
+            jScrollPane1.getViewport().removeAll();
+             remoteFileTree = new JTree(remoteTreeModel);
+            jScrollPane1.getViewport().add(remoteFileTree, null);
+            repaint();
+
+    }
     }
 
     public void setParentPanel(LoadData parentPanel) {

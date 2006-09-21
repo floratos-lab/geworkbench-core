@@ -561,6 +561,7 @@ public class LoadData extends JDialog {
             return;
 
         }
+          jPanel8.setExperiments(null);
         if (remoteResourceDialog.isDirty()) {
             jPanel8.setExperimentsLoaded(false);
         }
