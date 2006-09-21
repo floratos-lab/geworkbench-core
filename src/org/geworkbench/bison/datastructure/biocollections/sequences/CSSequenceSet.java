@@ -43,6 +43,10 @@ public class CSSequenceSet<T extends DSSequence> extends CSDataSet<T> implements
         setID(RandomNumberGenerator.getID());
     }
 
+    public void setDNA(boolean DNA) {
+        isDNA = DNA;
+    }
+
     public String getDataSetName() {
         return label;
     }
