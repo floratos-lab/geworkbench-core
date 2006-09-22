@@ -208,9 +208,9 @@
     <plugin id="networkBrowser" name="Network Browser" class="org.geworkbench.components.pathwaydecoder.GeneNetworkPanel" source="pathwaydecoder">
         <gui-area name="VisualArea"/>
     </plugin>
-    <plugin id="interactions" name="Interactions" class="interactions.InteractionsUserInterface" source="interactions">
-        <gui-area name="VisualArea"/>
-    </plugin>
+    <!--<plugin id="interactions" name="Interactions" class="interactions.InteractionsUserInterface" source="interactions">-->
+        <!--<gui-area name="VisualArea"/>-->
+    <!--</plugin>-->
     <plugin id="aracne" name="Aracne" class="org.geworkbench.components.pathwaydecoder.ARACNE" source="pathwaydecoder">
         <gui-area name="VisualArea"/>
     </plugin>

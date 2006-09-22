@@ -3,7 +3,6 @@ package org.geworkbench.components.parsers;
 import org.geworkbench.bison.annotation.CSCriteria;
 import org.geworkbench.bison.annotation.DSCriteria;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.bison.datastructure.biocollections.classification.phenotype.CSClassCriteria;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
@@ -229,23 +228,6 @@ public class StanfordExpressionFormat extends DataSetFileFormat {
                     String maLabel = new String(st[j]);
                     String[] labels = maLabel.split("\\.");
                     mArraySet.get(i).setLabel(maLabel);
-                    if (labels.length > 1) {
-                        String valueLabel = new String(labels[0]);
-                        DSAnnotLabel property = new CSAnnotLabel("Phenotype");
-                        // todo - watkin - if this format is to be used, this needs to be refactored to use CSAnnotationContext
-                        if (CSCriterionManager.getCriteria(mArraySet) == null) {
-                            CSCriterionManager.setCriteria(mArraySet, new CSCriteria());
-                            CSCriterionManager.setClassCriteria(mArraySet, new CSClassCriteria());
-                        }
-                        DSCriteria criteria = CSCriterionManager.getCriteria(mArraySet);
-                        if ((valueLabel != null) && (!valueLabel.equalsIgnoreCase(""))) {
-                            DSAnnotValue value = new CSAnnotValue(valueLabel, valueLabel.hashCode());
-                            if (criteria.get(property) == null)
-                                criteria.put(property, new CSPanel<DSMicroarray>());
-                            criteria.addItem(mArraySet.get(i), property, value);
-                        }
-
-                    }
                     i++;
                 }
             } else if (token.equalsIgnoreCase("EWEIGHT")) {

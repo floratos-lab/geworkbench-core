@@ -3,8 +3,6 @@ package org.geworkbench.util.associationdiscovery.cluster;
 import org.apache.commons.math.MathException;
 import org.apache.commons.math.stat.descriptive.StatisticalSummaryValues;
 import org.apache.commons.math.stat.inference.TTestImpl;
-import org.geworkbench.bison.datastructure.biocollections.classification.phenotype.CSClassCriteria;
-import org.geworkbench.bison.datastructure.biocollections.classification.phenotype.DSClassCriteria;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
@@ -12,7 +10,6 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.complex.pattern.DSPatternMatch;
-import org.geworkbench.bison.util.CSCriterionManager;
 import org.geworkbench.bison.util.DSPValue;
 import org.geworkbench.bison.util.Normal;
 import org.geworkbench.util.associationdiscovery.statistics.ClusterStatistics;
@@ -157,74 +154,4 @@ public class PatternOps {
         }
     }
 
-    /**
-     * refinePattern
-     *
-     * @param mp            CSMatchedMatrixPattern
-     * @param microarraySet DSMicroarraySet
-     *                      This method will extend the set of genes in a matrix pattern to include other genes
-     *                      that have a t-test with low p-value on the same set of microarrays
-     */
-    public static void refinePatternGenes(CSMatchedMatrixPattern mp, DSMicroarraySet<DSMicroarray> microarraySet, double pValue) {
-        // Get the Class manager
-        // todo - watkin - refactor to use CSAnnotationContext
-        DSClassCriteria classCriteria = CSCriterionManager.getClassCriteria(microarraySet);
-        List<DSPatternMatch<DSMicroarray, DSPValue>> matches = mp.matches();
-        DSItemList<? extends DSBioObject> background = null;
-        // Determine if the pattern was obtained by unsupervised analysis
-        if (classCriteria.isUnsupervised()) {
-            background = classCriteria.getTaggedItems(CSClassCriteria.all);
-            if (background.size() == 0) {
-                background = microarraySet;
-            }
-        } else {
-            background = classCriteria.getTaggedItems(CSClassCriteria.controls);
-        }
-        for (DSPatternMatch<DSMicroarray, DSPValue> pm : matches) {
-            background.remove(pm.getObject());
-        }
-        ArrayList<DSGeneMarker> markers = new ArrayList<DSGeneMarker>();
-        for (DSGeneMarker m : microarraySet.getMarkers()) {
-            String name = m.getLabel();
-            if (name.equalsIgnoreCase("32845_at")) {
-                int xxx = 1;
-            }
-            Normal fg = new Normal();
-            Normal bg = new org.geworkbench.bison.util.Normal();
-            for (DSPatternMatch<DSMicroarray, DSPValue> pm : matches) {
-                fg.add(pm.getObject().getMarkerValue(m).getValue());
-            }
-            for (DSBioObject bo : background) {
-                DSMicroarray ma = (DSMicroarray) bo;
-                bg.add(ma.getMarkerValue(m).getValue());
-            }
-            double tTest = Normal.tTest(fg, bg);
-            TTestImpl test = new TTestImpl();
-            StatisticalSummaryValues fgSummary = new StatisticalSummaryValues(fg.getMean(), fg.getVariance(), (int) fg.getN(), 0, 0, 0);
-            StatisticalSummaryValues bgSummary = new StatisticalSummaryValues(bg.getMean(), bg.getVariance(), (int) bg.getN(), 0, 0, 0);
-            try {
-                double t = test.tTest(fgSummary, bgSummary);
-                if (t < pValue) {
-                    markers.add(m);
-                }
-            } catch (MathException ex) {
-            } catch (IllegalArgumentException ex) {
-            }
-        }
-        if (markers.size() > 0) {
-            DSMatrixPattern pattern = mp.getPattern();
-            markers.addAll(Arrays.asList(pattern.markers()));
-            pattern.init(markers.size());
-            DSMicroarray array = mp.getItem(0);
-            int i = 0;
-            for (DSGeneMarker m : markers) {
-                pattern.markers()[i] = m;
-                i++;
-            }
-            for (DSPatternMatch<DSMicroarray, DSPValue> match : mp.matches()) {
-                DSMicroarray mArray = match.getObject();
-                pattern.add(mArray);
-            }
-        }
-    }
 }

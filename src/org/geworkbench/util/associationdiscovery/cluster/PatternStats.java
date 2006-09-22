@@ -1,7 +1,6 @@
 package org.geworkbench.util.associationdiscovery.cluster;
 
 import distributions.ChiSquareDistribution;
-import org.geworkbench.bison.datastructure.biocollections.classification.phenotype.CSClassCriteria;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
@@ -13,6 +12,8 @@ import java.util.*;
 import org.geworkbench.bison.annotation.CSAnnotationContextManager;
 import org.geworkbench.bison.annotation.DSAnnotationContext;
 import org.geworkbench.bison.annotation.DSCriterion;
+import org.geworkbench.bison.util.DSAnnotValue;
+import org.geworkbench.bison.util.CSAnnotValue;
 
 /**
  * <p>Title: Plug And Play</p>
@@ -25,23 +26,27 @@ import org.geworkbench.bison.annotation.DSCriterion;
  */
 
 public class PatternStats extends CSMatchedMatrixPattern {
+
+    public static final DSAnnotValue CASES = new CSAnnotValue("Case", 1);
+    public static final DSAnnotValue CONTROLS = new CSAnnotValue("Control", 0);
+
     //static private JPatternStatistics PS = new JPatternStatistics();
     static private ArrayList frequencies = new ArrayList();
     static private ChiSquareDistribution distribution = new ChiSquareDistribution(1);
     static private int chipNo = 0;
     static private int geneNo = 0;
-    
+
     class JPolyGene {
         int count = 1;
         String label = null;
         double frequency = 0.0;
     }
-    
+
     private HashMap phenotype = new HashMap();
     private HashMap control = new HashMap();
     private double phNo = 0;
     private double bgNo = 0;
-    
+
     public PatternStats(CSMatchedMatrixPattern aPattern) {
         super(aPattern.getPattern());
         matches = aPattern.matches();
@@ -49,7 +54,7 @@ public class PatternStats extends CSMatchedMatrixPattern {
         zScore = aPattern.getPValue();
         bkMatches = aPattern.bkMatches;
     }
-        
+
     public void createContingencyTable(DSMicroarraySet chips) {
         // This routine creates a contingency table for all the
         // different incarnations of a polygenic genotype
@@ -57,12 +62,12 @@ public class PatternStats extends CSMatchedMatrixPattern {
         // todo - watkin - refactor to use CSAnnotationContext
         CSAnnotationContextManager manager = CSAnnotationContextManager.getInstance();
         DSAnnotationContext<DSMicroarray> context = manager.getCurrentContext(chips);
-        
+
         if (!context.isUnsupervised()) {
             // Compute only if phenotype and controls are defined
-            DSItemList<DSMicroarray> cases = context.getItemsWithLabel(CSClassCriteria.cases.toString());
-            for (DSBioObject bioObject : cases) {               
-                if (bioObject instanceof DSMicroarray) {                    
+            DSItemList<DSMicroarray> cases = context.getItemsWithLabel(CASES.toString());
+            for (DSBioObject bioObject : cases) {
+                if (bioObject instanceof DSMicroarray) {
                     DSMicroarray chip = (DSMicroarray) bioObject;
                     if (chip.enabled()) {
                         String polygene = "";
@@ -97,7 +102,7 @@ public class PatternStats extends CSMatchedMatrixPattern {
                 }
             }
             // Repeat same procedure for controls
-            DSItemList<DSMicroarray> controls = context.getItemsWithLabel(CSClassCriteria.controls.toString());
+            DSItemList<DSMicroarray> controls = context.getItemsWithLabel(CONTROLS.toString());
             for (DSBioObject bioObject : controls) {
                 if (bioObject instanceof DSMicroarray) {
                     DSMicroarray chip = (DSMicroarray) bioObject;
@@ -130,7 +135,7 @@ public class PatternStats extends CSMatchedMatrixPattern {
             }
         }
     }
-    
+
     public void printContingencyTable(DSMicroarraySet chips) {
         createContingencyTable(chips);
         Set phKeys = phenotype.keySet();
@@ -155,7 +160,7 @@ public class PatternStats extends CSMatchedMatrixPattern {
             }
         }
     }
-    
+
     public double getPValue(DSMicroarraySet chips, boolean print) {
         createContingencyTable(chips);
         Set phKeys = phenotype.keySet();
@@ -196,7 +201,7 @@ public class PatternStats extends CSMatchedMatrixPattern {
         double pvalue = 1 - distribution.getCDF(chi2);
         return pvalue;
     }
-    
+
     public double getPValue(CSMatchedMatrixPattern pattern, DSMicroarraySet chips, boolean print) {
         createContingencyTable(chips);
         Set phKeys   = phenotype.keySet();
@@ -238,8 +243,8 @@ public class PatternStats extends CSMatchedMatrixPattern {
 //        double pvalue = 1;
         return pvalue;
     }
-    
-    
+
+
     public void print(int i) {
         Set phKeys = phenotype.keySet();
         Set coKeys = phenotype.keySet();

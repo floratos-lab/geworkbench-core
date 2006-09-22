@@ -2,7 +2,6 @@ package org.geworkbench.util.microarrayutils;
 
 import org.geworkbench.bison.annotation.DSCriteria;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.bison.datastructure.biocollections.classification.phenotype.CSClassCriteria;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.views.CSMicroarraySetView;
 import org.geworkbench.bison.datastructure.biocollections.views.DSMicroarraySetView;
@@ -46,7 +45,6 @@ public abstract class MicroarrayVisualizer {
     protected BorderLayout borderLayout = new BorderLayout();
     protected boolean usePanel = false;
     protected DSCriteria<DSBioObject> phCriteria = null;
-    protected CSClassCriteria classCriteria = null;
     protected DSPanel<DSGeneMarker> markerPanel;
     protected DSPanel<DSBioObject> mArrayPanel;
     protected DSItemList<DSGeneMarker> uniqueMarkers = null;
