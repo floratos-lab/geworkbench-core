@@ -37,6 +37,9 @@ public class CaArrayLoader {
             if (ar != null) {
                 maSet.add(arrays++, ar);
             }
+             if(assays.length==1){
+            maSet.setLabel(bap.getIdentifier());
+        }
         }
 
 

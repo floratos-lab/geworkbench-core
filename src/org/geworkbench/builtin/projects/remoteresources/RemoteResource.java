@@ -17,6 +17,7 @@ package org.geworkbench.builtin.projects.remoteresources;
  *A simple wrapper class for resources
  */
 public class RemoteResource {
+    private boolean isDirty = true;
     private String username;
     private String password;
     private String connectProtocol;
@@ -113,6 +114,14 @@ public class RemoteResource {
 
     public void setUri(String uri) {
         this.uri = uri;
+    }
+
+    public boolean isDirty() {
+        return isDirty;
+    }
+
+    public void setDirty(boolean dirty) {
+        isDirty = dirty;
     }
 
     public void setPortnumber(int portnumber) {

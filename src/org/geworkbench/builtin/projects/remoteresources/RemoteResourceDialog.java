@@ -29,6 +29,7 @@ public class RemoteResourceDialog extends JDialog {
     public static final int DELETE = 1;
     public static final int EDIT = 2;
     public static int currentOption = 0;
+    private boolean isSourceDirty = true;
     private static String currentResourceName;
     private String currentURL;
     private String currentUser;
@@ -272,6 +273,7 @@ public class RemoteResourceDialog extends JDialog {
 
     public void setFields(RemoteResource rr) {
         if (rr != null) {
+            isSourceDirty = rr.isDirty();
             jPasswordField1.setText(rr.getPassword());
             jTextField1.setText(rr.getUsername());
             jTextField2.setText(rr.getUri().toString());
@@ -377,6 +379,7 @@ public class RemoteResourceDialog extends JDialog {
             currentURL = "//" + rr.getUri() + ":" + rr.getPortnumber();
             currentUser = rr.getUsername();
             currentPassword = rr.getPassword();
+            isSourceDirty =  rr.isDirty();
 //            System.setProperty("RMIServerURL", url + "/SearchCriteriaHandler");
 //            System.setProperty("SecureSessionManagerURL",
 //                               url + "/SecureSessionManager");
@@ -387,6 +390,18 @@ public class RemoteResourceDialog extends JDialog {
         }
     }
 
+    public boolean isSourceDirty() {
+        return isSourceDirty;
+    }
+
+    public void setSourceDirty(boolean sourceDirty) {
+
+        isSourceDirty = sourceDirty;
+        RemoteResource rr = remoteResourceManager.getSelectedResouceByName(currentResourceName);
+        if (rr != null) {
+            rr.setDirty(sourceDirty);
+        }
+    }
 
     public void jButton6_actionPerformed(ActionEvent e) {
         //dirty = false;

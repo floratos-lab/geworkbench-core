@@ -68,9 +68,10 @@ public class LoadData extends JDialog {
     private JPanel remoteControlPanel;
     private JTabbedPane lowTabPane;
     private JPanel caArrayIndexServicePanel;
-    private String indexURL="";
+    private String indexURL = "";
     private JTextField indexField;
     private JButton updateIndexButton;
+    private String currentRemoteResourceName;
 
 
     /**
@@ -89,7 +90,7 @@ public class LoadData extends JDialog {
     JRadioButton jRadioButton8 = new JRadioButton();
     JPanel jPanel10 = new JPanel();
 
-    String[] DEFAULTRESOUCES = new String[] {"caARRAY", "GEDP"};
+    String[] DEFAULTRESOUCES = new String[]{"caARRAY", "GEDP"};
     DefaultComboBoxModel resourceModel = new DefaultComboBoxModel(
             DEFAULTRESOUCES);
     JComboBox jComboBox1 = new JComboBox(resourceModel);
@@ -99,14 +100,14 @@ public class LoadData extends JDialog {
     JButton deleteButton = new JButton();
     BoxLayout boxLayout21;
     JButton openRemoteResourceButton = new JButton();
+    private boolean isSynchronized = false;
     private boolean merge;
 
     public LoadData(ProjectPanel parent) {
         parentProjectPanel = parent;
         indexURL = System.getProperties().getProperty(
-            "globus.url") + System.getProperties().getProperty(
+                "globus.url") + System.getProperties().getProperty(
                 "caarray.indexservice");
-
 
 
         try {
@@ -139,7 +140,6 @@ public class LoadData extends JDialog {
 
     private void jbInit() throws Exception {
         // format = getLastDataFormat();
-
 
         //change it to false in order to provide a progress bar for loading remote data.
         this.setModal(false);
@@ -202,12 +202,22 @@ public class LoadData extends JDialog {
         editButton.setText("Edit");
         editButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                displayRemoteResourceDialog(jComboBox1.getSelectedItem(),
-                                            RemoteResourceDialog.EDIT);
+                currentRemoteResourceName = jComboBox1.getSelectedItem().toString();
+                displayRemoteResourceDialog(currentRemoteResourceName,
+                        RemoteResourceDialog.EDIT);
 
             }
         });
 
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+
+                                       updateCurrentView();
+
+            }
+
+        });
         deleteButton.setToolTipText("Delete an existed resource");
         deleteButton.setText("Delete");
         deleteButton.addActionListener(new ActionListener() {
@@ -231,9 +241,9 @@ public class LoadData extends JDialog {
         mergePanel.setLayout(new BoxLayout(mergePanel, BoxLayout.X_AXIS));
         mergeCheckBox = new JCheckBox("Merge Files", false);
         mergeCheckBox.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        merge = mergeCheckBox.isSelected();
-                                         }
+            public void actionPerformed(ActionEvent e) {
+                merge = mergeCheckBox.isSelected();
+            }
         });
         //jComboBox1 = new JComboBox(remoteResourceDialog.getResourceNames());
         //jComboBox1 = new JComboBox(new String[]{"TEST"});
@@ -262,13 +272,13 @@ public class LoadData extends JDialog {
             public void actionPerformed(ActionEvent e) {
 
                 String previousIndexURL = indexURL;
-                if(remoteResourceDialog.updateResource(indexField.getText())){
+                if (remoteResourceDialog.updateResource(indexField.getText())) {
                     lowTabPane.setSelectedIndex(0);
-                jRadioButton8.setSelected(true);
+                    jRadioButton8.setSelected(true);
                     updateExistedResourcesGUI();
                     addRemotePanel_actionPerformed(e);
 
-                }else{
+                } else {
                     indexField.setText(previousIndexURL);
                 }
             }
@@ -294,23 +304,23 @@ public class LoadData extends JDialog {
         this.getContentPane().add(jPanel4, BorderLayout.CENTER);
         jPanel4.add(jFileChooser1, BorderLayout.CENTER);
         jPanel5.add(jLabel3,
-                    new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
-                                           GridBagConstraints.WEST,
-                                           GridBagConstraints.NONE,
-                                           new Insets(0, 0, 0, 0), 0, 17));
+                new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+                        GridBagConstraints.WEST,
+                        GridBagConstraints.NONE,
+                        new Insets(0, 0, 0, 0), 0, 17));
         jPanel5.add(jPanel12,
-                    new GridBagConstraints(0, 1, 1, 1, 1.0, 1.0,
-                                           GridBagConstraints.CENTER,
-                                           GridBagConstraints.HORIZONTAL,
-                                           new Insets(0, 0, 23, 0), 27, 30));
+                new GridBagConstraints(0, 1, 1, 1, 1.0, 1.0,
+                        GridBagConstraints.CENTER,
+                        GridBagConstraints.HORIZONTAL,
+                        new Insets(0, 0, 23, 0), 27, 30));
         jPanel12.add(jLabel2, null);
         jPanel12.add(jRadioButton6, null);
         jPanel12.add(jRadioButton5, null);
         jPanel5.add(jPanel11,
-                    new GridBagConstraints(0, 2, 1, 1, 1.0, 1.0,
-                                           GridBagConstraints.CENTER,
-                                           GridBagConstraints.HORIZONTAL,
-                                           new Insets(0, 0, 86, 0), 27, 30));
+                new GridBagConstraints(0, 2, 1, 1, 1.0, 1.0,
+                        GridBagConstraints.CENTER,
+                        GridBagConstraints.HORIZONTAL,
+                        new Insets(0, 0, 86, 0), 27, 30));
         jPanel11.add(jLabel1, null);
         jPanel11.add(jRadioButton4, null);
         jPanel11.add(jRadioButton3, null);
@@ -380,15 +390,15 @@ public class LoadData extends JDialog {
         jFileChooser1.setMultiSelectionEnabled(true);
         for (i = 0; i < supportedInputFormats.length; ++i) {
             jFileChooser1.addChoosableFileFilter(supportedInputFormats[i].
-                                                 getFileFilter());
+                    getFileFilter());
         }
 
         int idx = 0;
         if ((format != null) && (!format.equals("")) &&
-            ((idx = Integer.parseInt(format)) <
-             supportedInputFormats.length)) {
+                ((idx = Integer.parseInt(format)) <
+                        supportedInputFormats.length)) {
             jFileChooser1.setFileFilter(supportedInputFormats[idx].
-                                        getFileFilter());
+                    getFileFilter());
         }
     }
 
@@ -406,12 +416,12 @@ public class LoadData extends JDialog {
      * displayRemoteResourceDiolog for edit/delete an existed resource.
      *
      * @param shortname Object
-     * @param option int
+     * @param option    int
      */
     void displayRemoteResourceDialog(Object shortname, int option) {
         if (shortname != null) {
             RemoteResourceDialog.showDialog(this, null, option,
-                                            shortname.toString());
+                    shortname.toString());
         } else {
             RemoteResourceDialog.showDialog(this, null, option, null);
         }
@@ -432,9 +442,10 @@ public class LoadData extends JDialog {
                 }
             }
             if (remoteResourceDialog.getCurrentResourceName() != null &&
-                !remoteResourceDialog.getCurrentResourceName().equals("")) {
+                    !remoteResourceDialog.getCurrentResourceName().equals("")) {
                 jComboBox1.setSelectedItem(remoteResourceDialog.
-                                           getCurrentResourceName());
+                        getCurrentResourceName());
+                updateCurrentView();
             }
         }
 
@@ -452,7 +463,7 @@ public class LoadData extends JDialog {
         if (deleteResourceStr != null) {
             int choice = JOptionPane.showConfirmDialog(null,
                     "Do you really want to remove the remote source: " +
-                    deleteResourceStr + "?", "Warning",
+                            deleteResourceStr + "?", "Warning",
                     JOptionPane.OK_CANCEL_OPTION);
             if (choice != 2) {
                 resourceModel.removeElement(deleteResourceStr);
@@ -486,7 +497,7 @@ public class LoadData extends JDialog {
                         String format = i + "\n";
                         String filepath = null;
                         filepath = jFileChooser1.getCurrentDirectory().
-                                   getCanonicalPath();
+                                getCanonicalPath();
                         setLastDataInfo(filepath, format);
                         // Delegates the actual file loading to the project panel
                         parentProjectPanel.fileOpenAction(files,
@@ -495,7 +506,7 @@ public class LoadData extends JDialog {
                         dispose();
                         return;
                     } catch (org.geworkbench.components.parsers.
-                             InputFileFormatException iffe) {
+                            InputFileFormatException iffe) {
                         // Let the user know that there was a problem parsing the file.
                         JOptionPane.showMessageDialog(null,
                                 "The input file does not comply with the designated format.",
@@ -512,12 +523,10 @@ public class LoadData extends JDialog {
 
     /**
      * Automatically update the RemoteResources Information from an Index service.
-     *
-     *
      */
     private void autoUpdateIndexService() {
         if (remoteResourceDialog != null &&
-            (remoteResourceDialog.updateResource(indexURL))) {
+                (remoteResourceDialog.updateResource(indexURL))) {
 
             updateExistedResourcesGUI();
         }
@@ -541,9 +550,32 @@ public class LoadData extends JDialog {
         this.repaint();
     }
 
+    private void updateCurrentView() {
+        if (currentRemoteResourceName != null && currentRemoteResourceName != jComboBox1.getSelectedItem().toString()) {
+
+            currentRemoteResourceName = jComboBox1.getSelectedItem().toString();
+
+        } else {
+            if (jComboBox1.getSelectedItem() != null)
+                currentRemoteResourceName = jComboBox1.getSelectedItem().toString();
+        }
+        remoteResourceDialog.setupSystemPropertyForCurrentResource(
+                    currentRemoteResourceName);
+            isSynchronized = !remoteResourceDialog.isSourceDirty();
+            if (!isSynchronized) {
+                openRemoteResourceButton.setBackground(Color.RED);
+                openRemoteResourceButton.setToolTipText("Click to get local data synchronized with Remote source.");
+            } else {
+                openRemoteResourceButton.setBackground(null);
+                openRemoteResourceButton.setToolTipText("");
+            }
+
+    }
+
+
     private void mageButtonSelection_actionPerformed(ActionEvent e) {
         String currentResourceName = resourceModel.getSelectedItem().toString().
-                                     trim();
+                trim();
         remoteResourceDialog.setupSystemPropertyForCurrentResource(
                 currentResourceName);
         jPanel8.setUrl(remoteResourceDialog.getCurrentURL());
@@ -553,19 +585,22 @@ public class LoadData extends JDialog {
         jPanel8.setParentPanel(this);
         jPanel8.setCurrentResourceName(currentResourceName);
         if (remoteResourceDialog.getCurrentUser() == null ||
-            remoteResourceDialog.getCurrentUser().length() == 0) {
+                remoteResourceDialog.getCurrentUser().length() == 0) {
             JOptionPane.showMessageDialog(null,
-                                          "The User name field is empty. Please check again.",
-                                          "RemoteResource Error",
-                                          JOptionPane.ERROR_MESSAGE);
+                    "The User name field is empty. Please check again.",
+                    "RemoteResource Error",
+                    JOptionPane.ERROR_MESSAGE);
             return;
 
         }
-          jPanel8.setExperiments(null);
+        jPanel8.setExperiments(null);
         if (remoteResourceDialog.isDirty()) {
             jPanel8.setExperimentsLoaded(false);
         }
         jPanel8.getExperiments(e);
+        //Reset resource dirty to false after the connection to the server.
+        remoteResourceDialog.setSourceDirty(false);
+        updateCurrentView();
 //       if (jPanel8.isConnectionSuccess()) {
 //            this.getContentPane().remove(jPanel6);
 //            this.getContentPane().remove(jPanel4);
@@ -577,6 +612,7 @@ public class LoadData extends JDialog {
 
     public void addRemotePanel() {
         //  if (jPanel8.isConnectionSuccess()) {
+        updateCurrentView();
         this.getContentPane().remove(jPanel6);
         this.getContentPane().remove(jPanel4);
         this.getContentPane().add(jPanel8, BorderLayout.CENTER);

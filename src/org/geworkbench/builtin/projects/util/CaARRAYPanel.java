@@ -1237,13 +1237,17 @@ public class CaARRAYPanel extends JPanel implements Observer {
                                CaARRAYPanel.CaArrayExperiment[] experiments) {
         this.experiments = experiments;
         if(experiments == null){
-            remoteTreeModel.setRoot(null);
             root = new DefaultMutableTreeNode(
             "caARRAY experiments");
-            remoteTreeModel = new DefaultTreeModel(root);
-            jScrollPane1.getViewport().removeAll();
-             remoteFileTree = new JTree(remoteTreeModel);
-            jScrollPane1.getViewport().add(remoteFileTree, null);
+            remoteTreeModel.setRoot(root);
+
+
+
+
+//            jScrollPane1.getViewport().removeAll();
+//            remoteFileTree.setModel(remoteTreeModel);
+            // remoteFileTree = new JTree(remoteTreeModel);
+           // jScrollPane1.getViewport().add(remoteFileTree, null);
             repaint();
 
     }
