@@ -310,6 +310,9 @@ public class SequenceViewWidgetPanel extends JPanel {
                 double yscale = 1.3 * r2d.getHeight();
                 int width = this.getWidth();
                 int cols = (int) (width / xscale) - 8;
+                 yBasescale = yscale;
+                xBasescale = xscale;
+                xBaseCols = cols;
                 g.setFont(f);
                 JViewport scroller = (JViewport) this.getParent();
                 Rectangle r = scroller.getViewRect();
