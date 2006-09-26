@@ -445,6 +445,12 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
                 newLabels.put(label, iterator.getValue());
             }
             labels = newLabels;
+            // Move classes from old label to the new one
+            String c = getClassForLabel(oldName);
+            if (c != null) {
+                removeClassFromLabel(oldName);
+                assignClassToLabel(newName, c);
+            }
             return true;
         }
     }
