@@ -86,13 +86,13 @@
     <plugin id="phenotypePanel" name="Phenotype Panel" class="org.geworkbench.components.selectors.PropertyTagSelectorPanel">
         <gui-area name="SelectionArea"/>
         <!--<menu-item path="Commands.Panels.New.Phenotype" mode="always" var="Commands.Panels.New.Phenotype"/>-->
-        <menu-item path="Commands.Panels.Delete Panel" mode="onFocus" var="Commands.Panels.Delete"/>
-        <menu-item path="Commands.Panels.Activate Panel" mode="onFocus" var="Commands.Panels.Activate"/>
+        <menu-item path="Commands.Sets.Delete Set" mode="onFocus" var="Commands.Sets.Delete"/>
+        <menu-item path="Commands.Sets.Activate Set" mode="onFocus" var="Commands.Sets.Activate"/>
         <!--<menu-item path="Commands.Panels.Activate All.Phenotypes" mode="always" var="Commands.Panels.Activate All.Phenotype"/>-->
-        <menu-item path="Commands.Panels.Deactivate Panel" mode="onFocus" var="Commands.Panels.Deactivate"/>
+        <menu-item path="Commands.Sets.Deactivate Set" mode="onFocus" var="Commands.Sets.Deactivate"/>
         <!--<menu-item path="Commands.Panels.Deactivate All.Phenotypes" mode="always" var="Commands.Panels.Deactivate All.Phenotype"/>-->
-        <menu-item path="Commands.Panels.Rename Panel" mode="onFocus" var="Commands.Panels.Rename"/>
-        <menu-item path="Commands.Panels.Add to Panel" mode="onFocus" var="Commands.Panels.Add to Panel"/>
+        <menu-item path="Commands.Sets.Rename Set" mode="onFocus" var="Commands.Sets.Rename"/>
+        <menu-item path="Commands.Sets.Add to Set" mode="onFocus" var="Commands.Sets.Add to Set"/>
     </plugin>
     <plugin id="hierarchicalClusteringAnalysis" name="Hierachical Clustering Analysis" class="org.geworkbench.components.clustering.HierClustAnalysis">
         <extension-point name="clustering"/>
