@@ -22,13 +22,19 @@ public class SequenceMarker extends CSGeneMarker implements Serializable {
         if (tokens.length > 2) {
             if (tokens[0].equalsIgnoreCase("Affy")) {
                 setDescription("Affy:" + tokens[1]);
-                setLabel(tokens[1]);
+                setLabel(tokens[0]);
             } else {
-                 //Fix bug 650. The label will be two parts. In the format GI|XXXXXXXC
+                //Fix bug 650. The label will be two parts. In the format GI|XXXXXXXC
 
                 int last = tokens.length - 1;
                 setDescription(tokens[0] + ": " + tokens[last - 1] + tokens[last]);
-                setLabel(tokens[0] + "|" + tokens[1]);
+                if (tokens[0].equalsIgnoreCase("pir") || tokens[0].equalsIgnoreCase("gp") || tokens[0].equalsIgnoreCase("sp") | tokens[0].equalsIgnoreCase("gi") || tokens[0].equalsIgnoreCase("gb"))
+                {
+                    setLabel(tokens[0] + "|" + tokens[1]);
+                }else{
+                    //THis is a temp solution to match the All.NC.-2k+2k.txt file. If the file updated, we can remove this sepcial label.
+                    setLabel(tokens[0]);
+                }
 //                if (tokens[0].equalsIgnoreCase("pir")) {
 //                    setDescription("PIR: " + tokens[last - 1] + tokens[last]);
 //                    setLabel("PIR|"+tokens[1]);
