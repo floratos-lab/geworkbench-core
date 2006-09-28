@@ -84,43 +84,43 @@ import java.io.File;
         });
         commentsPanel.add(jScrollPane1, BorderLayout.CENTER);
         jScrollPane1.getViewport().add(commentsTextArea, null);
-        JButton loadCustomButton = new JButton("Load Custom Data Annotations...");
-        JPanel loadPanel = new JPanel();
-        loadPanel.setLayout(new BoxLayout(loadPanel, BoxLayout.X_AXIS));
-        loadPanel.add(loadCustomButton);
-        commentsPanel.add(loadPanel, BorderLayout.SOUTH);
-        loadCustomButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                loadCustomAnnotations();
-            }
-        });
+//        JButton loadCustomButton = new JButton("Load Custom Data Annotations...");
+//        JPanel loadPanel = new JPanel();
+//        loadPanel.setLayout(new BoxLayout(loadPanel, BoxLayout.X_AXIS));
+//        loadPanel.add(loadCustomButton);
+//        commentsPanel.add(loadPanel, BorderLayout.SOUTH);
+//        loadCustomButton.addActionListener(new ActionListener() {
+//            public void actionPerformed(ActionEvent e) {
+//                loadCustomAnnotations();
+//            }
+//        });
     }
 
-    private void loadCustomAnnotations() {
-        JFileChooser fc = new JFileChooser(".");
-        javax.swing.filechooser.FileFilter filter = new FileFilter() {
-
-            public String getDescription() {
-                return "Comma Separated Values Files";
-            }
-
-            public boolean accept(File f) {
-                boolean returnVal = false;
-                if (f.isDirectory() || f.getName().toLowerCase().endsWith(".csv")) {
-                    return true;
-                }
-                return returnVal;
-            }
-
-        };
-        fc.setFileFilter(filter);
-        fc.setDialogTitle("Open Marker Set");
-        int choice = fc.showOpenDialog(commentsPanel.getParent());
-        if (choice == JFileChooser.APPROVE_OPTION) {
-            // Load custom annotations in annotation parser
-            AnnotationParser.parseCustomAnnotations(fc.getSelectedFile(), dataSet);
-        }
-    }
+//    private void loadCustomAnnotations() {
+//        JFileChooser fc = new JFileChooser(".");
+//        javax.swing.filechooser.FileFilter filter = new FileFilter() {
+//
+//            public String getDescription() {
+//                return "Comma Separated Values Files";
+//            }
+//
+//            public boolean accept(File f) {
+//                boolean returnVal = false;
+//                if (f.isDirectory() || f.getName().toLowerCase().endsWith(".csv")) {
+//                    return true;
+//                }
+//                return returnVal;
+//            }
+//
+//        };
+//        fc.setFileFilter(filter);
+//        fc.setDialogTitle("Open Marker Set");
+//        int choice = fc.showOpenDialog(commentsPanel.getParent());
+//        if (choice == JFileChooser.APPROVE_OPTION) {
+//            // Load custom annotations in annotation parser
+//            AnnotationParser.parseCustomAnnotations(fc.getSelectedFile(), dataSet);
+//        }
+//    }
 
     public Component getComponent() {
         return commentsPanel;
