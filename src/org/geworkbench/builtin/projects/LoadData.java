@@ -209,15 +209,13 @@ public class LoadData extends JDialog {
             }
         });
 
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
-
+         jComboBox1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
-                                       updateCurrentView();
+                updateCurrentView();
 
             }
-
         });
+
         deleteButton.setToolTipText("Delete an existed resource");
         deleteButton.setText("Delete");
         deleteButton.addActionListener(new ActionListener() {
@@ -448,6 +446,7 @@ public class LoadData extends JDialog {
                 updateCurrentView();
             }
         }
+       
 
     }
 
@@ -472,6 +471,7 @@ public class LoadData extends JDialog {
             }
 
         }
+        updateExistedResourcesGUI();
 
     }
 
@@ -551,7 +551,7 @@ public class LoadData extends JDialog {
     }
 
     private void updateCurrentView() {
-        if (currentRemoteResourceName != null && currentRemoteResourceName != jComboBox1.getSelectedItem().toString()) {
+        if (currentRemoteResourceName != null &&jComboBox1.getSelectedItem()!=null &&  currentRemoteResourceName != jComboBox1.getSelectedItem().toString()) {
 
             currentRemoteResourceName = jComboBox1.getSelectedItem().toString();
 
@@ -564,10 +564,10 @@ public class LoadData extends JDialog {
             isSynchronized = !remoteResourceDialog.isSourceDirty();
             if (!isSynchronized) {
                 openRemoteResourceButton.setBackground(Color.RED);
-                openRemoteResourceButton.setToolTipText("Click to get local data synchronized with Remote source.");
+                openRemoteResourceButton.setToolTipText("Click to get the display synchronized with Remote source.");
             } else {
                 openRemoteResourceButton.setBackground(null);
-                openRemoteResourceButton.setToolTipText("");
+                openRemoteResourceButton.setToolTipText("The top display is synchronized with the Remote source.");
             }
 
     }
@@ -578,6 +578,7 @@ public class LoadData extends JDialog {
                 trim();
         remoteResourceDialog.setupSystemPropertyForCurrentResource(
                 currentResourceName);
+        remoteResourceDialog.updateCurrentResourceStatus(currentResourceName, false);
         jPanel8.setUrl(remoteResourceDialog.getCurrentURL());
         jPanel8.setUser(remoteResourceDialog.getCurrentUser());
         jPanel8.setPasswd(remoteResourceDialog.getCurrentPassword());

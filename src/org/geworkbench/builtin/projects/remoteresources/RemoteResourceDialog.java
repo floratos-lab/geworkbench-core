@@ -12,7 +12,7 @@ import javax.swing.border.EtchedBorder;
 /**
  * <p>Title: </p>
  *
- * <p>Description: </p>
+ * <p>The GUI to add/edit a remoteResource. </p>
  *
  * <p>Copyright: Copyright (c) 2005</p>
  *
@@ -258,7 +258,7 @@ public class RemoteResourceDialog extends JDialog {
 
         rr.setShortname(shortname);
         currentResourceName = shortname;
-
+        rr.setDirty(true);
         return rr;
     }
 
@@ -304,6 +304,10 @@ public class RemoteResourceDialog extends JDialog {
         RemoteResource rr = collectResourceInfo();
         if (rr != null) {
             if(previousResourceName != null && previousResourceName.equals(currentResourceName)){
+                RemoteResource previousRR = remoteResourceManager.getSelectedResouceByName(previousResourceName);
+                if(previousRR.equals(rr)){
+                   rr.setDirty(previousRR.isDirty());
+                }
                 remoteResourceManager.deleteRemoteResource(previousResourceName);
             }
             remoteResourceManager.addRemoteResource(rr);
@@ -368,6 +372,17 @@ public class RemoteResourceDialog extends JDialog {
     public boolean isDirty() {
         return dirty;
     }
+
+    public void updateCurrentResourceStatus(String resourceName, boolean status){
+         RemoteResource rr = remoteResourceManager.getSelectedResouceByName(
+                resourceName);
+        if (rr != null) {
+            currentURL = "//" + rr.getUri() + ":" + rr.getPortnumber();
+            currentUser = rr.getUsername();
+            currentPassword = rr.getPassword();
+            isSourceDirty =  status;
+            rr.setDirty(status);
+    } }
 
     /**Set up system.property
      * setupCurrentResource

@@ -1,6 +1,5 @@
 package org.geworkbench.builtin.projects.remoteresources;
 
-
 /**
  * <p>Title: </p>
  *
@@ -13,8 +12,9 @@ package org.geworkbench.builtin.projects.remoteresources;
  * @author not attributable
  * @version 1.0
  */
+
 /**
- *A simple wrapper class for resources
+ * A simple wrapper class for resources
  */
 public class RemoteResource {
     private boolean isDirty = true;
@@ -26,6 +26,7 @@ public class RemoteResource {
     private String uri;
     private int portnumber = 80;
     private boolean editable = true;
+
     public RemoteResource() {
         try {
             jbInit();
@@ -72,13 +73,13 @@ public class RemoteResource {
     public static RemoteResource createNewInstance(String[] columns) {
         if (columns.length == 7) {
             return new RemoteResource(columns[0], columns[1], columns[2],
-                                      columns[3], columns[4], columns[5], columns[6]);
+                    columns[3], columns[4], columns[5], columns[6]);
         } else if (columns.length == 6) {
             return new RemoteResource(columns[0], columns[1], columns[2],
-                                      columns[3], columns[4], columns[5]);
+                    columns[3], columns[4], columns[5]);
         } else if (columns.length == 4) {
-                    return new RemoteResource(columns[0], columns[2], columns[3],
-                                      columns[1], "", "", "false");
+            return new RemoteResource(columns[0], columns[2], columns[3],
+                    columns[1], "", "", "false");
         }
         return null;
 
@@ -90,7 +91,7 @@ public class RemoteResource {
     public RemoteResource(String shortname, String url, String port,
                           String protocal,
                           String user, String passwd, String editableStr
-) {
+    ) {
         this(shortname, url, port, protocal, user, passwd);
 
         this.editable = new Boolean(editableStr.trim()).booleanValue();
@@ -171,17 +172,18 @@ public class RemoteResource {
         username = rResource.username;
         password = rResource.password;
         connectProtocol = rResource.connectProtocol;
-        editable =rResource.editable;
+        editable = rResource.editable;
     }
 
     /**
      * Use shortname as the Key for every object.
+     *
      * @param obj Object
      * @return boolean
      */
     public boolean equals(Object obj) {
         if (obj instanceof RemoteResource) {
-            return shortname.equals(((RemoteResource) obj).shortname);
+            return shortname.equals(((RemoteResource) obj).shortname) && uri.equals(((RemoteResource) obj).uri) && username.equals(((RemoteResource) obj).username) && password.equals(((RemoteResource) obj).password) && connectProtocol.equals(((RemoteResource) obj).connectProtocol);
         } else {
             return false;
         }
