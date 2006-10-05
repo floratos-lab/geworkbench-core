@@ -225,7 +225,7 @@ public class RemoteResourceDialog extends JDialog {
 
         String shortname = shortnameTextField.getText().trim();
         String url = jTextField2.getText().trim();
-
+        String username = jTextField1.getText().trim();
         if (shortname.length() == 0) {
             JOptionPane.showMessageDialog(null, "Shortname can not be empty.",
                                           "Error",
@@ -238,7 +238,12 @@ public class RemoteResourceDialog extends JDialog {
                                           JOptionPane.INFORMATION_MESSAGE);
             return null;
         }
-
+       if (username.length() == 0) {
+            JOptionPane.showMessageDialog(null, "UserName can not be empty.",
+                                          "Error",
+                                          JOptionPane.INFORMATION_MESSAGE);
+            return null;
+        }
         rr.setConnectProtocal(jComboBox1.getSelectedItem().toString().trim());
         rr.setPassword(new String(jPasswordField1.getPassword()).trim());
         rr.setUsername(jTextField1.getText().trim());
