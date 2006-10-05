@@ -406,6 +406,7 @@ public class LoadData extends JDialog {
      * @param option int
      */
     void displayRemoteResourceDialog(int option) {
+        RemoteResourceDialog.setPreviousResourceName((String)jComboBox1.getSelectedItem());
         RemoteResourceDialog.showDialog(this, null, option, null);
         updateExistedResourcesGUI();
     }
@@ -446,7 +447,7 @@ public class LoadData extends JDialog {
                 updateCurrentView();
             }
         }
-       
+
 
     }
 

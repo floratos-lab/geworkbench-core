@@ -340,6 +340,14 @@ public class RemoteResourceDialog extends JDialog {
         return null;
     }
 
+    public static String getPreviousResourceName() {
+        return previousResourceName;
+    }
+
+    public static void setPreviousResourceName(String previousResourceName) {
+        RemoteResourceDialog.previousResourceName = previousResourceName;
+    }
+
     public boolean updateResource(String urlname){
 
         if(remoteResourceManager.init(urlname)){
@@ -420,6 +428,7 @@ public class RemoteResourceDialog extends JDialog {
 
     public void jButton6_actionPerformed(ActionEvent e) {
         //dirty = false;
+        currentResourceName = previousResourceName;
         dispose();
     }
 
