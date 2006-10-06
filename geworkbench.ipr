@@ -327,7 +327,7 @@
     </library>
   </component>
   <component name="uidesigner-configuration">
-    <option name="INSTRUMENT_CLASSES" value="true" />
+    <option name="INSTRUMENT_CLASSES" value="false" />
     <option name="COPY_FORMS_RUNTIME_TO_OUTPUT" value="true" />
   </component>
   <UsedPathMacros />
