@@ -2,6 +2,7 @@ package org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser;
 
 import com.Ostermiller.util.CSVParser;
 import com.Ostermiller.util.LabeledCSVParser;
+import com.jgoodies.forms.builder.ButtonBarBuilder;
 import org.apache.commons.collections15.map.ListOrderedMap;
 import org.apache.commons.collections15.MultiMap;
 import org.apache.commons.collections15.multimap.MultiHashMap;
@@ -9,11 +10,15 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.util.RandomNumberGenerator;
+import org.geworkbench.engine.preferences.*;
 
 import javax.swing.*;
 import java.io.*;
 import java.util.*;
 import java.util.List;
+import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 /**
  * <p>Title: caWorkbench 3.0</p>
@@ -75,43 +80,45 @@ public class AnnotationParser {
                           Vector<String>>>();
     public static final String TRANSCRIPTASSIGN =
                     "Transcript Assignments";
-            static {
-                   if (systempDir == null) {
-                       systempDir = "temp" + File.separator + "GEAW";
-                   }
-                   tmpDir = systempDir + File.separator +
-                           "annotationParser/";
-                   File dir = new File(tmpDir);
-                   if (!dir.exists()) {
-                       dir.mkdir();
-                   }
-                   BufferedReader br = new BufferedReader(new InputStreamReader(
-                           AnnotationParser.class.getResourceAsStream(chiptyemapfilename)));
-                   try {
-                       String str = br.readLine();
-                       while (str != null) {
-                           String[] data = str.split(",");
-                           chiptypeMap.put(data[0].trim(), data[1].trim());
-                           chiptypeMap.put(data[1].trim(), data[0].trim());
-                           chipTypes.add(data[1].trim());
-                           str = br.readLine();
-                       }
-                       br.close();
-                       File temp = new File(tmpDir + chiptyemapfilename);
-                       if (temp.exists()) {
-                           BufferedReader br2 = new BufferedReader(new FileReader(temp));
-                           str = br2.readLine();
-                           while (str != null) {
-                               String[] data = str.split(",");
-                               str = br2.readLine();
-                           }
-                           br2.close();
-                       }
-                   }
-                   catch (Exception e) {
-                       e.printStackTrace();
-                   }
+    public static final String PREF_ANNOTATIONS_MESSAGE = "annotationsMessage";
+
+    static {
+           if (systempDir == null) {
+               systempDir = "temp" + File.separator + "GEAW";
+           }
+           tmpDir = systempDir + File.separator +
+                   "annotationParser/";
+           File dir = new File(tmpDir);
+           if (!dir.exists()) {
+               dir.mkdir();
+           }
+           BufferedReader br = new BufferedReader(new InputStreamReader(
+                   AnnotationParser.class.getResourceAsStream(chiptyemapfilename)));
+           try {
+               String str = br.readLine();
+               while (str != null) {
+                   String[] data = str.split(",");
+                   chiptypeMap.put(data[0].trim(), data[1].trim());
+                   chiptypeMap.put(data[1].trim(), data[0].trim());
+                   chipTypes.add(data[1].trim());
+                   str = br.readLine();
                }
+               br.close();
+               File temp = new File(tmpDir + chiptyemapfilename);
+               if (temp.exists()) {
+                   BufferedReader br2 = new BufferedReader(new FileReader(temp));
+                   str = br2.readLine();
+                   while (str != null) {
+                       String[] data = str.split(",");
+                       str = br2.readLine();
+                   }
+                   br2.close();
+               }
+           }
+           catch (Exception e) {
+               e.printStackTrace();
+           }
+       }
 
 
         public static DSDataSet getCurrentDataSet() {
@@ -384,34 +391,72 @@ public class AnnotationParser {
 
         public static String matchChipType(DSDataSet dataset, String id,
                                            boolean askIfNotFound) {
-            String chip = (String) chiptypeMap.get(id);
-            String defaultChipChoice = chip;
-            if (defaultChipChoice == null) {
-                defaultChipChoice = DEFAULT_CHIPTYPE;
-            }
-            Object[] possibleValues = chipTypes.toArray();
-            Arrays.sort(possibleValues);
-            Object selectedValue = JOptionPane.showInputDialog(null,
-                    "Please confirm your chip type",
-                    "Select Chip Type", JOptionPane.QUESTION_MESSAGE, null,
-                    possibleValues, defaultChipChoice);
-            if (selectedValue != null) {
-                chip = (String) selectedValue;
-                currentDataSet = dataset;
-                if (chip.equals("Other")) {
-                    File userFile = selectUserDefinedAnnotation(dataset);
-                    if (userFile != null) {
-                        chip = userFile.getName();
-                        chipTypes.add(chip);
-                        setChipType(dataset, chip, userFile);
+            PreferencesManager preferencesManager = PreferencesManager.getPreferencesManager();
+            File prefDir = preferencesManager.getPrefDir();
+            File annotFile = new File(prefDir, "annotations.prefs");
+            if (!annotFile.exists()) {
+                boolean dontShowAgain = showAnnotationsMessage();
+                if (dontShowAgain) {
+                    try {
+                        annotFile.createNewFile();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                } else {
-                    setChipType(dataset, chip);
                 }
-                return chip;
             }
-            return "Not Found/Aborted";
+            String chip = "Other";
+            currentDataSet = dataset;
+
+            File userFile = selectUserDefinedAnnotation(dataset);
+            if (userFile != null) {
+                chip = userFile.getName();
+                chipTypes.add(chip);
+                setChipType(dataset, chip, userFile);
+            }
+            return chip;
         }
+
+    public static boolean showAnnotationsMessage() {
+        String message = "To process Affymetrix files many geWorkbench components require information from the associated chip annotation files. Annotation files can be downloaded from the Affymetrix web site, http://www.affymetrix.com/support/technical/byproduct.affx?cat=arrays (due to the Affymetrix license we are precluded from shipping these files with geWorkbench). Place downloaded files to a directory of your choice; when prompted by geWorkbench point to the appropriate annotation file to be associated with the microarray data you are about to load into the application. Your data will load even if you do not associate them with an annotation file; in that case, some geWorkbench components will not be fully functional.\n" +
+                "\n" +
+                "NOTE: Affymetrix requires users to register in order to download annotation files from its web site. Registration is a one time procedure. The credentials (user id and password) acquired via the registration process can then be used in subsequent interactions with the site.\n" +
+                "\n" +
+                "Each chip type in the Affymetrix site can have several associated annotation files (with names like \"...Annotations, BLAST\", \"...Annotations, MAGE-ML XML\", etc). Only annotation files named \"...Annotations, CSV\" need to be downloaded (these are the only files that geWorkbench can process).";
+        final JDialog window = new JDialog((Frame) null, "Annotations Information");
+        Container panel = window.getContentPane();
+        JTextArea textarea = new JTextArea(message);
+        textarea.setEditable(false);
+        textarea.setLineWrap(true);
+        textarea.setWrapStyleWord(true);
+        panel.add(textarea, BorderLayout.CENTER);
+        ButtonBarBuilder builder = ButtonBarBuilder.createLeftToRightBuilder();
+        JCheckBox dontShow = new JCheckBox("Don't show this again");
+        builder.addFixed(dontShow);
+        builder.addGlue();
+        JButton jButton = new JButton("Continue");
+        builder.addFixed(jButton);
+        jButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                window.dispose();
+            }
+        });
+        panel.add(builder.getPanel(), BorderLayout.SOUTH);
+        int width = 450;
+        int height = 400;
+        window.pack();
+        window.setSize(width, height);
+        window.setLocation((Toolkit.getDefaultToolkit().getScreenSize().width - width) / 2, (Toolkit.getDefaultToolkit().getScreenSize().height - height) / 2);
+        window.setModal(true);
+        window.setVisible(true);
+        window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        return dontShow.isSelected();
+    }
+
+    public static void main(String[] args) {
+        boolean b = showAnnotationsMessage();
+        System.out.println(b);
+    }
 
         public static File selectUserDefinedAnnotation(DSDataSet dataset) {
             JFileChooser chooser = new JFileChooser();
@@ -471,7 +516,7 @@ public class AnnotationParser {
          * @return true if sucessfully parsed, false otherwise.
          */
         public static boolean parseCustomAnnotations(File file,
-                DSDataSet dataSet) {
+                                                     DSDataSet dataSet) {
             try {
                 ListOrderedMap<String, Map<String,
                         String>> customAnnots = getCustomAnnots(dataSet);
@@ -517,7 +562,7 @@ public class AnnotationParser {
          * @param dataSet    the data set for which to look up the annotation
          */
         public static String getCustomAnnotationValue(String annotation,
-                String item, DSDataSet dataSet) {
+                                                      String item, DSDataSet dataSet) {
             ListOrderedMap<String, Map<String,
                     String>> customAnnots = getCustomAnnots(dataSet);
             Map<String, String> map = customAnnots.get(annotation);
@@ -538,7 +583,7 @@ public class AnnotationParser {
          */
         public static Map<String,
                 List<String>> getCustomAnnotationGroupings(String annotation,
-                String annotationSeparator, DSDataSet dataSet) {
+                                                           String annotationSeparator, DSDataSet dataSet) {
             ListOrderedMap<String, Map<String,
                     String>> customAnnots = getCustomAnnots(dataSet);
             if (annotationSeparator == null) {

@@ -38,6 +38,10 @@ public class PreferencesManager {
         }
     }
 
+    public File getPrefDir() {
+        return prefDir;
+    }
+
     /**
      * Fills out the preferences (which should contain default values) with saved preferences values,
      * if there are any. Also persists the resulting preferences. Only field included in the passed preferences
