@@ -13,12 +13,15 @@ import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.engine.preferences.*;
 
 import javax.swing.*;
+import javax.swing.event.HyperlinkListener;
+import javax.swing.event.HyperlinkEvent;
 import java.io.*;
 import java.util.*;
 import java.util.List;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.lang.reflect.Method;
 
 /**
  * <p>Title: caWorkbench 3.0</p>
@@ -417,17 +420,24 @@ public class AnnotationParser {
         }
 
     public static boolean showAnnotationsMessage() {
-        String message = "To process Affymetrix files many geWorkbench components require information from the associated chip annotation files. Annotation files can be downloaded from the Affymetrix web site, http://www.affymetrix.com/support/technical/byproduct.affx?cat=arrays (due to the Affymetrix license we are precluded from shipping these files with geWorkbench). Place downloaded files to a directory of your choice; when prompted by geWorkbench point to the appropriate annotation file to be associated with the microarray data you are about to load into the application. Your data will load even if you do not associate them with an annotation file; in that case, some geWorkbench components will not be fully functional.\n" +
-                "\n" +
-                "NOTE: Affymetrix requires users to register in order to download annotation files from its web site. Registration is a one time procedure. The credentials (user id and password) acquired via the registration process can then be used in subsequent interactions with the site.\n" +
-                "\n" +
-                "Each chip type in the Affymetrix site can have several associated annotation files (with names like \"...Annotations, BLAST\", \"...Annotations, MAGE-ML XML\", etc). Only annotation files named \"...Annotations, CSV\" need to be downloaded (these are the only files that geWorkbench can process).";
+        String message = "To process Affymetrix files many geWorkbench components require information from the associated chip annotation files. Annotation files can be downloaded from the Affymetrix web site, <a href='http://www.affymetrix.com/support/technical/byproduct.affx?cat=arrays' target='_blank'>http://www.affymetrix.com/support/technical/byproduct.affx?cat=arrays</a> (due to the Affymetrix license we are precluded from shipping these files with geWorkbench). Place downloaded files to a directory of your choice; when prompted by geWorkbench point to the appropriate annotation file to be associated with the microarray data you are about to load into the application. Your data will load even if you do not associate them with an annotation file; in that case, some geWorkbench components will not be fully functional.<br>\n" +
+                "<br>\n" +
+                "NOTE: Affymetrix requires users to register in order to download annotation files from its web site. Registration is a one time procedure. The credentials (user id and password) acquired via the registration process can then be used in subsequent interactions with the site.<br>\n" +
+                "<br>\n" +
+                "Each chip type in the Affymetrix site can have several associated annotation files (with names like \"...Annotations, BLAST\", \"...Annotations, MAGE-ML XML\", etc). Only annotation files named \"...Annotations, CSV\" need to be downloaded (these are the only files that geWorkbench can process).<br>";
         final JDialog window = new JDialog((Frame) null, "Annotations Information");
         Container panel = window.getContentPane();
-        JTextArea textarea = new JTextArea(message);
+        JEditorPane textarea = new JEditorPane("text/html", message);
         textarea.setEditable(false);
-        textarea.setLineWrap(true);
-        textarea.setWrapStyleWord(true);
+        textarea.addHyperlinkListener(new HyperlinkListener() {
+            public void hyperlinkUpdate(HyperlinkEvent e) {
+                if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                    openURL("http://www.affymetrix.com/support/technical/byproduct.affx?cat=arrays");
+                }
+            }
+        });
+//        textarea.setLineWrap(true);
+//        textarea.setWrapStyleWord(true);
         panel.add(textarea, BorderLayout.CENTER);
         ButtonBarBuilder builder = ButtonBarBuilder.createLeftToRightBuilder();
         JCheckBox dontShow = new JCheckBox("Don't show this again");
@@ -441,8 +451,8 @@ public class AnnotationParser {
             }
         });
         panel.add(builder.getPanel(), BorderLayout.SOUTH);
-        int width = 450;
-        int height = 400;
+        int width = 500;
+        int height = 450;
         window.pack();
         window.setSize(width, height);
         window.setLocation((Toolkit.getDefaultToolkit().getScreenSize().width - width) / 2, (Toolkit.getDefaultToolkit().getScreenSize().height - height) / 2);
@@ -453,13 +463,39 @@ public class AnnotationParser {
         return dontShow.isSelected();
     }
 
+    public static void openURL(String url) {
+        String osName = System.getProperty("os.name");
+        try {
+            if (osName.startsWith("Mac OS")) {
+                Class fileMgr = Class.forName("com.apple.eio.FileManager");
+                Method openURL = fileMgr.getDeclaredMethod("openURL", new Class[]{String.class});
+                openURL.invoke(null, new Object[]{url});
+            } else if (osName.startsWith("Windows")) {
+                Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + url);
+            } else { //assume Unix or Linux
+                String[] browsers = {"firefox", "opera", "konqueror", "epiphany", "mozilla", "netscape"};
+                String browser = null;
+                for (int count = 0; count < browsers.length && browser == null; count++)
+                    if (Runtime.getRuntime().exec(new String[]{"which", browsers[count]}).waitFor() == 0)
+                        browser = browsers[count];
+                if (browser == null) throw new Exception("Could not find web browser");
+                else Runtime.getRuntime().exec(new String[]{browser, url});
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Unable to open browser" + ":\n" + e.getLocalizedMessage());
+        }
+    }
+
+
     public static void main(String[] args) {
         boolean b = showAnnotationsMessage();
         System.out.println(b);
     }
 
         public static File selectUserDefinedAnnotation(DSDataSet dataset) {
-            JFileChooser chooser = new JFileChooser();
+            File f = dataset.getFile();
+
+            JFileChooser chooser = new JFileChooser(f.getParent());
             ExampleFilter filter = new ExampleFilter();
             filter.addExtension("csv");
             filter.setDescription("CSV files");
