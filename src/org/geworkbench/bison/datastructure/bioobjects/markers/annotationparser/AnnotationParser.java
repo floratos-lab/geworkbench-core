@@ -11,6 +11,7 @@ import org.apache.commons.logging.Log;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.engine.preferences.*;
+import org.geworkbench.engine.properties.PropertiesManager;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
@@ -84,6 +85,7 @@ public class AnnotationParser {
     public static final String TRANSCRIPTASSIGN =
                     "Transcript Assignments";
     public static final String PREF_ANNOTATIONS_MESSAGE = "annotationsMessage";
+    public static final String ANNOT_DIR = "annotDir";
 
     static {
            if (systempDir == null) {
@@ -493,9 +495,16 @@ public class AnnotationParser {
     }
 
         public static File selectUserDefinedAnnotation(DSDataSet dataset) {
+            PropertiesManager properties = PropertiesManager.getInstance();
             File f = dataset.getFile();
+            String annotationDir = ".";
+            try {
+                annotationDir = properties.getProperty(AnnotationParser.class, ANNOT_DIR, f.getParent());
+            } catch (IOException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
 
-            JFileChooser chooser = new JFileChooser(f.getParent());
+            JFileChooser chooser = new JFileChooser(annotationDir);
             ExampleFilter filter = new ExampleFilter();
             filter.addExtension("csv");
             filter.setDescription("CSV files");
@@ -504,6 +513,11 @@ public class AnnotationParser {
             int returnVal = chooser.showOpenDialog(null);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File userAnnotations = chooser.getSelectedFile();
+                try {
+                    properties.setProperty(AnnotationParser.class, ANNOT_DIR, userAnnotations.getParent());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 String chipType = "User Defined";
                 return userAnnotations;
             } else {
