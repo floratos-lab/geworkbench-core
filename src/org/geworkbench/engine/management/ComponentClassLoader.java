@@ -13,18 +13,21 @@ import java.io.InputStream;
  */
 public class ComponentClassLoader extends URLClassLoader {
 
-    ClassLoader parent;
+    private ClassLoader parent;
+    private ComponentResource resource;
 
-    public ComponentClassLoader(URL[] urls) {
+    public ComponentClassLoader(URL[] urls, ComponentResource resource) {
         super(urls);
+        this.resource = resource;
         parent = getParent();
         if (parent == null) {
             parent = getSystemClassLoader();
         }
     }
 
-    public ComponentClassLoader(URL[] urls, ClassLoader parent) {
+    public ComponentClassLoader(URL[] urls, ClassLoader parent, ComponentResource resource) {
         super(urls, parent);
+        this.resource = resource;
         this.parent = parent;
         if (parent == null) {
             parent = getSystemClassLoader();
@@ -71,5 +74,7 @@ public class ComponentClassLoader extends URLClassLoader {
         return type;
     }
 
-
+    public ComponentResource getComponentResource() {
+        return resource;
+    }
 }

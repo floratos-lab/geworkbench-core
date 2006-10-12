@@ -52,6 +52,8 @@ public class ComponentResource {
      */
     private boolean isFromGear = false;
 
+    private String name;
+
     /**
      * Creates a new component resource rooted in the given directory.
      *
@@ -59,6 +61,7 @@ public class ComponentResource {
      */
     public ComponentResource(String dir, boolean isFromGear) throws IOException {
         this.dir = dir;
+        name = new File(dir).getName();
         this.isFromGear = isFromGear;
         classLoader = createClassLoader();
     }
@@ -110,7 +113,7 @@ public class ComponentResource {
         for (int i = 0; i < urls.size(); i++) {
             classpath[i] = (URL) urls.get(i);
         }
-        return new ComponentClassLoader(classpath);
+        return new ComponentClassLoader(classpath, this);
     }
 
     public boolean isFromGear() {
@@ -121,8 +124,12 @@ public class ComponentResource {
         return classLoader;
     }
 
-    public String getName() {
+    public String getDir() {
         return dir;
+    }
+
+    public String getName() {
+        return name;
     }
 
     /**

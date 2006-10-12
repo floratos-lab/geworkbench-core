@@ -51,8 +51,8 @@ public class UILauncher implements AnnotationParserListener {
     public static SplashBitmap splash = null;
     public static final String LOOK_AND_FEEL_FLAG = "-lookandfeel";
     public static final String DEVELOPMENT_FLAG = "-dev";
-    private static final String DEFAULT_COMPONENTS_DIR = "components";
-    private static final String COMPONENTS_DIR_PROPERTY = "components.dir";
+    public static final String DEFAULT_COMPONENTS_DIR = "components";
+    public static final String COMPONENTS_DIR_PROPERTY = "components.dir";
     private static final String DEFAULT_GEAR_DIR = DEFAULT_COMPONENTS_DIR;
 
     static {

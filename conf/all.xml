@@ -177,9 +177,9 @@
 		<gui-area name="CommandArea"/>
 	</plugin>
 	<!-- Example Component -->
-	<!--<plugin id="Example" name="Example" class="org.geworkbench.components.example.ExampleComponent" source="example">-->
-	<!--<gui-area name="VisualArea"/>-->
-	<!--</plugin>-->
+	<plugin id="Example" name="Example" class="org.geworkbench.components.example.ExampleComponent" source="example">
+	<gui-area name="VisualArea"/>
+	</plugin>
 	<plugin id="Jmol" name="Jmol" class="org.geworkbench.components.jmol.JmolComponent" source="jmol">
     	<gui-area name="VisualArea"/>
 	</plugin>
