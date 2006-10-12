@@ -496,10 +496,9 @@ public class AnnotationParser {
 
         public static File selectUserDefinedAnnotation(DSDataSet dataset) {
             PropertiesManager properties = PropertiesManager.getInstance();
-            File f = dataset.getFile();
             String annotationDir = ".";
             try {
-                annotationDir = properties.getProperty(AnnotationParser.class, ANNOT_DIR, f.getParent());
+                annotationDir = properties.getProperty(AnnotationParser.class, ANNOT_DIR, annotationDir);
             } catch (IOException e) {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
