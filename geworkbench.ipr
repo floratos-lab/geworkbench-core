@@ -206,6 +206,7 @@
       <module fileurl="file://$PROJECT_DIR$/components/celprocessing/celprocessing.iml" filepath="$PROJECT_DIR$/components/celprocessing/celprocessing.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/clustering/clustering.iml" filepath="$PROJECT_DIR$/components/clustering/clustering.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/colormosaic/colormosaic.iml" filepath="$PROJECT_DIR$/components/colormosaic/colormosaic.iml" />
+      <module fileurl="file://$PROJECT_DIR$/components/cutenet/cutenet.iml" filepath="$PROJECT_DIR$/components/cutenet/cutenet.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/cytoscape/cytoscape.iml" filepath="$PROJECT_DIR$/components/cytoscape/cytoscape.iml" />
       <module fileurl="file://$PROJECT_DIR$/dev/dev.iml" filepath="$PROJECT_DIR$/dev/dev.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/discovery/discovery.iml" filepath="$PROJECT_DIR$/components/discovery/discovery.iml" />
@@ -317,10 +318,13 @@
         <root url="jar://$PROJECT_DIR$/lib/forms-1.0.5.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/swing-layout-1.0.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/JRclient-RF503.jar!/" />
-        <root url="jar://C:/code/workbook/lib/AffxFusion.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/jfreechart-1.0.2.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/jcommon-1.0.5.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/bnj-kdd.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/AffxFusion.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/jdo-1.0.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/kodo-jdo-runtime.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/kodo-jdo.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

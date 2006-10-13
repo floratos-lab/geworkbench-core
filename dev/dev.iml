@@ -39,6 +39,7 @@
     <orderEntry type="module" module-name="simulation" />
     <orderEntry type="module" module-name="matrixreduce" />
     <orderEntry type="module" module-name="celprocessing" />
+    <orderEntry type="module" module-name="cutenet" />
     <orderEntryProperties />
   </component>
 </module>

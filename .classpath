@@ -216,5 +216,32 @@
 	<classpathentry kind="lib" path="components/cytoscape/lib/yLayouts.jar"/>
 	<classpathentry kind="lib" path="lib/AffxFusion.jar"/>
 	<classpathentry kind="lib" path="lib/bnj-kdd.jar"/>
+	<classpathentry kind="lib" path="components/cutenet/lib/cutenet.jar"/>
+	<classpathentry kind="lib" path="components/cutenet/lib/classes12.zip"/>
+	<classpathentry kind="lib" path="components/cutenet/lib/simpledb.jar"/>
+	<classpathentry kind="lib" path="components/cutenet/lib/geneways60test.jar"/>
+	<classpathentry kind="lib" path="components/cutenet/lib/vecmath.jar"/>
+	<classpathentry kind="lib" path="components/cutenet/lib/kodo/kodo-jdo-runtime.jar"/>
+	<classpathentry kind="lib" path="components/cutenet/lib/kodo/kodo-jdo.jar"/>
+	<classpathentry kind="lib" path="components/cutenet/lib/kodo/jakarta-commons-collections-2.1.jar"/>
+	<classpathentry kind="lib" path="components/cutenet/lib/kodo/jakarta-commons-lang-1.0.1.jar"/>
+	<classpathentry kind="lib" path="components/cutenet/lib/kodo/jakarta-commons-pool-1.0.1.jar"/>
+	<classpathentry kind="lib" path="components/cutenet/lib/kodo/jakarta-regexp-1.1.jar"/>
+	<classpathentry kind="lib" path="components/cutenet/lib/kodo/jca1.0.jar"/>
+	<classpathentry kind="lib" path="components/cutenet/lib/kodo/jdbc-hsql-1_7_0.jar"/>
+	<classpathentry kind="lib" path="components/cutenet/lib/kodo/jdbc2_0-stdext.jar"/>
+	<classpathentry kind="lib" path="components/cutenet/lib/kodo/jdo-1.0.1.jar"/>
+	<classpathentry kind="lib" path="components/cutenet/lib/kodo/jndi.jar"/>
+	<classpathentry kind="lib" path="components/cutenet/lib/kodo/jta-spec1_0_1.jar"/>
+	<classpathentry kind="lib" path="components/cutenet/lib/kodo/xalan.jar"/>
+	<classpathentry kind="lib" path="components/cutenet/lib/kodo/xercesImpl.jar"/>
+	<classpathentry kind="lib" path="components/cutenet/lib/kodo/xml-apis.jar"/>
+	<classpathentry kind="lib" path="components/cutenet/lib/kodo/jfreechart-0.9.16.jar"/>
+	<classpathentry kind="lib" path="components/cutenet/lib/kodo/jcommon-0.9.1.jar"/>
+	<classpathentry kind="lib" path="components/cutenet/lib/kodo/mx4j-admb.jar"/>
+	<classpathentry kind="lib" path="components/cutenet/lib/kodo/mx4j-jmx.jar"/>
+	<classpathentry kind="lib" path="components/cutenet/lib/kodo/mx4j-tools.jar"/>
+	<classpathentry kind="lib" path="components/cutenet/lib/kodo/jline.jar"/>
+	<classpathentry kind="lib" path="components/cutenet/lib/kodo/sqlline.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

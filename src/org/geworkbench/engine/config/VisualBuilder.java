@@ -1031,9 +1031,9 @@ public class VisualBuilder extends JFrame {
         FileWriter writer = null;
         try {
             writer = new FileWriter("test.xml");
-            XMLOutputter outputter = new XMLOutputter("  ", true);
-            outputter.output(compsDocument, System.out);
-            outputter.output(compsDocument, writer);
+//            XMLOutputter outputter = new XMLOutputter("  ", true);
+//            outputter.output(compsDocument, System.out);
+//            outputter.output(compsDocument, writer);
             writer.close();
         } catch (IOException ex) {
             ex.printStackTrace();
