@@ -28,6 +28,10 @@ public abstract class GUIFramework extends JFrame {
 
     public static final String PROJECT_AREA = "ProjectArea";
 
+    protected GUIFramework() throws HeadlessException {
+        frame = this;
+    }
+
     /**
      * Adds the <code>visualPlugin</code> to the container identified by the name
      * <code>areaName</code>.
@@ -69,4 +73,11 @@ public abstract class GUIFramework extends JFrame {
      * @param type
      */
     public abstract void setVisualizationType(DSDataSet type);
+
+    private static JFrame frame;
+
+    public static JFrame getFrame() {
+        return frame;
+    }
+
 }
