@@ -3,15 +3,15 @@ package org.geworkbench.engine.config.rules;
 import org.geworkbench.engine.config.GUIFramework;
 import org.geworkbench.util.SplashBitmap;
 
-import javax.help.CSH;
-import javax.help.HelpBroker;
-import javax.help.HelpSet;
+import javax.help.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.net.URL;
+import java.util.*;
+import java.util.Map;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
@@ -58,6 +58,7 @@ public class GeawConfigObject {
      * they are encountered within the configuration file.
      */
     private static HelpSet masterHelp = null;
+    private static TreeMap<String, HelpSet> sortedHelpSets = new TreeMap<String, HelpSet>();
     // ---------------------------------------------------------------------------
     // --------------- Properties
     // ---------------------------------------------------------------------------
@@ -143,30 +144,7 @@ public class GeawConfigObject {
     public static void addHelpSet(HelpSet hs) {
         if (hs == null)
             return;
-        if (masterHelp == null) {
-            // Attempt to open the designated (if any) master help set.
-            String masterHSFileName = System.getProperty(MASTER_HS_PROPERTY_NAME);
-            // If there is no designate master help, just use the argument in the
-            // method call.
-            if (masterHSFileName == null)
-                masterHelp = hs;
-            else
-                try {
-                    ClassLoader cl = GeawConfigObject.class.getClassLoader();
-                    URL url = HelpSet.findHelpSet(cl, masterHSFileName);
-                    masterHelp = new HelpSet(cl, url);
-                    masterHelp.add(hs);
-                }
-
-                        // If the designated master help set cannot be opened use the argument
-                        // of the method call.
-                catch (Exception ee) {
-                    System.err.println("Master Help Set " + masterHSFileName + " not found. Will proceed without it.");
-                    masterHelp = hs;
-                }
-
-        } else
-            masterHelp.add(hs);
+        sortedHelpSets.put(hs.getTitle(), hs);
     }
 
     /**
@@ -188,6 +166,15 @@ public class GeawConfigObject {
      */
     public static void finish() {
         // Enable online help.
+        if (masterHelp == null) {
+            for (Map.Entry<String, HelpSet> entry : sortedHelpSets.entrySet()) {
+                if (masterHelp == null) {
+                    masterHelp = entry.getValue();
+                } else {
+                    masterHelp.add(entry.getValue());
+                }
+            }
+        }
         if (masterHelp != null) {
             JMenuItem menu_help = new JMenuItem("Help Topics");
             HelpBroker masterHelpBroker = masterHelp.createHelpBroker();
