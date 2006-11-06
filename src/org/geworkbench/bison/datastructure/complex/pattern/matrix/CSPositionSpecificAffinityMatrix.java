@@ -13,6 +13,24 @@ public class CSPositionSpecificAffinityMatrix implements DSPositionSpecificAffin
     private String consensusSequence;
     private double pValue;
     private double[][] scores;
+    private long bonferroni;
+    private boolean trailingStrand;
+
+    public boolean isTrailingStrand() {
+        return trailingStrand;
+    }
+
+    public void setTrailingStrand(boolean trailingStrand) {
+        this.trailingStrand = trailingStrand;
+    }
+
+    public long getBonferroni() {
+        return bonferroni;
+    }
+
+    public void setBonferroni(long bonferroni) {
+        this.bonferroni = bonferroni;
+    }
 
     public ImageIcon getPsamImage() {
         return psamImage;

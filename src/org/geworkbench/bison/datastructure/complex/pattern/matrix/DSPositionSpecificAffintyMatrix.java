@@ -20,7 +20,11 @@ public interface DSPositionSpecificAffintyMatrix extends DSBioObject, DSPValued 
 
     String getConsensusSequence();
 
+    long getBonferroni();
+
     double[][] getScores();
+
+    boolean isTrailingStrand();
 
     void setPsamImage(ImageIcon image);
 
@@ -32,4 +36,7 @@ public interface DSPositionSpecificAffintyMatrix extends DSBioObject, DSPValued 
 
     void setScores(double[][] scores);
 
+    void setBonferroni(long bonferonni);
+
+    void setTrailingStrand(boolean trailingStrand);
 }
