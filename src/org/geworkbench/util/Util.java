@@ -214,4 +214,12 @@ public class Util {
         in.close();
         out.close();
     }
+
+    public static boolean isRunningOnAMac() {
+        String osName = System.getProperty("os.name");
+        if (osName.startsWith("Mac OS")) {
+            return true;
+        }
+        return false;
+    }
 }

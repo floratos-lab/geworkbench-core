@@ -80,6 +80,7 @@ import org.geworkbench.events.ProjectEvent;
 import org.geworkbench.events.SingleValueEditEvent;
 import org.geworkbench.util.PropertiesMonitor;
 import org.geworkbench.util.SaveImage;
+import org.geworkbench.util.Util;
 
 import java.io.*;
 import java.util.Map;
@@ -252,6 +253,10 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                                     "Unable to Edit",
                                     JOptionPane.INFORMATION_MESSAGE);
                         } else {
+                            if (Util.isRunningOnAMac()) {
+                                editor = "Open";
+                            }
+
                             String[] args = {editor,
                                             ds.getFile().getAbsolutePath()};
                             try {
@@ -307,8 +312,11 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                     if (editor == null) {
                         System.out.println("No editor configured.");
                     } else {
+                        if (Util.isRunningOnAMac()) {
+                            editor = "Open";
+                        }
                         String[] args = {editor,
-                                        tempAnnot.getAbsolutePath()};
+                                tempAnnot.getAbsolutePath()};
                         try {
                             Runtime.getRuntime().exec(args);
                         } catch (IOException e1) {
