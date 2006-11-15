@@ -181,7 +181,7 @@
 	<!--<gui-area name="VisualArea"/>-->
 	<!--</plugin>-->
     <!-- Example Component -->
-    <plugin id="Cutenet" name="Cutenet" class="org.geworkbench.components.GeCutenetPanel" source="cutenet">
+    <plugin id="Cutenet" name="Cutenet" class="org.geworkbench.components.cutenet.GeCutenetPanel" source="cutenet">
         <gui-area name="VisualArea"/>
     </plugin>
 
