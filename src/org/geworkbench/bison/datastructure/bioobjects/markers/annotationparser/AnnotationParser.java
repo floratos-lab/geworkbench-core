@@ -366,6 +366,19 @@ public class AnnotationParser {
             }
         }
 
+        public static Set<String> getSwissProtIDs(String markerID) {
+            ListOrderedMap<String, Map<String, String>> annots = getAllAnnotationsForDataSet(currentDataSet);
+            String annot = annots.get(markerID).get(SWISSPROT);
+            HashSet<String> set = new HashSet<String>();
+            if ((annot != null) && (annot.trim().length() > 0)) {
+                String[] ids = annot.split("///");
+                for (String s : ids) {
+                    set.add(s.trim());
+                }
+            }
+            return set;
+        }
+
         public static ListOrderedMap<String, Map<String,
                 String>> getAllAnnotationsForDataSet(DSDataSet dataset) {
             String chipType = datasetToChipTypes.get(dataset);
