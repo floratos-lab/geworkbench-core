@@ -380,4 +380,6 @@ public interface DSAnnotationContext<T extends DSNamed> extends DSAnnotationSour
      * @return
      */
     public boolean renameLabel(String oldName, String newName);
+
+    boolean labelExists(String label);
 }

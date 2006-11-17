@@ -395,6 +395,14 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
         return retPanel;
     }
 
+    public boolean labelExists(String label) {
+        if (labels.get(label) != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public boolean hasLabel(T item, String label) {
         Label lab = labels.get(label);
         if (lab != null) {

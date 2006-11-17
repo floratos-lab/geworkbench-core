@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<project name="geWorkBench" default="run">
+	<!-- ===================================================================== -->
+	<!-- INIT  -->
+	<!-- ===================================================================== -->
+	<target name="init" description="Initializes the build environment.">
+		<!-- Project-wide properties -->
+		<!-- App name -->
+		<property name="app" value="geWorkBench1.0.5"/>
+		<!-- Paths -->
+		<property name="classes" value="classes"/>
+		<property name="conf" value="conf"/>
+		<property name="temp" value="temp"/>
+		<!-- Directory for releases -->
+		<property name="cleanFolder" value="../cleanFolder"/>
+		<!-- Directory for developer kit releases -->
+		<!-- The executable libs -->
+		<property name="lib" value="lib"/>
+		<!-- The components directory -->
+		<property name="components" value="components"/>
+		<!-- Release info -->
+		<property name="release.file" value="${dist}/${app}-${version}"/>
+		<!-- Release info -->
+	</target>
+	<!-- ===================================================================== -->
+	<!-- PREPARE  -->
+	<!-- ===================================================================== -->
+	<target name="prepare" depends="init" description="Prepares for compilation.">
+		<mkdir dir="${classes}"/>
+		<path id="classpath">
+			<fileset dir="${lib}">
+				<include name="**/*.jar"/>
+			</fileset>
+		</path>
+		<!-- Classpath for running -->
+		<path id="run.classpath">
+			<pathelement location="${classes}"/>
+			<pathelement location="${conf}"/>
+			<path refid="classpath"/>
+		</path>
+	</target>
+	<!-- ====================================================================== -->
+	<!-- RUN PRODUCTION-->
+	<!-- ====================================================================== -->
+	<target name="run" depends="init" description="Runs geWorkbench.">
+		<java fork="true" classname="org.geworkbench.engine.config.UILauncher">
+			<jvmarg value="-Xmx512M"/>
+			<jvmarg value="-Djava.library.path=lib"/>
+			<arg value="all_release.xml"/>
+			<classpath refid="run.classpath"/>
+		</java>
+	</target>
+</project>

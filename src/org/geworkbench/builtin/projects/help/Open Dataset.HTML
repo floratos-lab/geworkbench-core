@@ -24,26 +24,26 @@
 
 
    <h3>Open a Dataset</h3>
-    <p>This help section describes opening <a href="#_To_Open_a_Local_File:"> local </a>and<a href="#_To_Open_a_File_from_a_Remote_Locati"> remote</a> files. The remote sources and file types you can access are defined in the configuration settings. Supported data formats include:</p>
-    <p><b><i>Microarray </i></b></p>
-    <p>&#12290;Affymetrix MAS5/GCOS Files (.txt) -  File format produced by the Affymetrix data analysis programs.</p>
-    <p>&#12290;Affymetrix File Matrix (.exp) - This is the native file type created by geWorkbench. </p>
-    <p>&#12290;RMA Express File -  File format produced by RMA Express, a sophisticated tool for combining data from multiple Affymetrix chips. </p>
-    <p>&#12290;Affy Excel or txt Data File </p>
-    <p>&#12290;Genepix Files (.gpr) - File format producded by an analysis program for two color arrays.</p>
-	<p><b><i>Other </i></b></p>
-    <p>&#12290;FASTA Files (.fa) - DNA or protein sequence files in FASTA format. </p>
-    <p>&#12290;Pattern Files - Sequence motifs produced using the Pattern Discovery component of geWorkbench.</p>
-    <p>&#12290;Genotypic Data Files - Currently not supported. </p>
-    <p>&#12290;Protein Data Bank (.pdb) - Three-dimensional structures of proteins. </p>
-    <p><a name="_To_Open_a_Local_File:"></a><b>Open a Local File</b></p> 
+    <p>This help section describes opening <a href="#_To_Open_a_Local_File:">local </a>and<a href="#_To_Open_a_File_from_a_Remote_Locati"> remote</a> files. The remote sources and file types you can access are defined in the configuration settings. Supported data formats include:</p> 
+    <p><b><i>Microarray </i></b></p> 
+    <p>&#12290;<a href="#_To_Open_a_Local_File:">Affymetrix MAS5/GCOS Files (.txt)</a> - File format produced by the Affymetrix data analysis programs.</p> 
+    <p>&#12290;<a href="#_Affymetrix_files">Affymetrix File Matrix (.exp)</a> - This is the native file type created by geWorkbench. </p> 
+    <p>&#12290;RMA Express File - File format produced by RMA Express, a sophisticated tool for combining data from multiple Affymetrix chips. </p> 
+    <p>&#12290;Affy Excel or txt Data File </p> 
+    <p>&#12290;Genepix Files (.gpr) - File format produced by an analysis program for two color arrays.</p> 
+    <p><b><i>Other </i></b></p> 
+    <p>&#12290;FASTA Files (.fa) - DNA or protein sequence files in FASTA format. </p> 
+    <p>&#12290;Pattern Files - Sequence motifs produced using the Pattern Discovery component of geWorkbench.</p> 
+    <p>&#12290;Genotypic Data Files - Currently not supported. </p> 
+    <h3>Open a Local File</h3> 
     <p>1. Right-click on the project node where the dataset is to be added.</p> 
     <p>2. Select Open File from the pop-up menu.</p> 
-    <p> Note: From the main menu, you can open a dataset stored on a local or remote location, by selecting File -&gt; Open -&gt; File. </p> 
+    <p>Note: From the main menu, you can open a dataset stored on a local or remote location, by selecting File -&gt; Open -&gt; File. </p> 
     <p>3. Confirm that the Local File radio button at the bottom of the window is selected.</p> 
     <p>4. Choose a file format from the &quot;Files of Type&quot; drop-down and then select the file to load. </p> 
+    <p>Note: If an Affymetrix file is selected, <a href="#_To_Open_a_Local_File:">an annotation file must be loaded.</a> </p> 
     <p><img border="0" width="503" height="421" src="open_dataset_files/image001.jpg"></p> 
-    <p><b><a name="_To_Open_a_File_from_a_Remote_Locati"></a>Open a Remote File </b></p> 
+    <h3><a name="_To_Open_a_File_from_a_Remote_Locati"></a>Open a Remote File </h3> 
     <p>1 Select from the available remote options.</p> 
     <p>2 Click <b>Go</b>. </p> 
     <p>&#12290; If the remote server is online and accessible, the <b>Open File</b> popup window (see below) will be populated with the list of experiments available at that server. </p> 
@@ -52,7 +52,14 @@
     <p>&#12290; The experiment listing is updated to reflect the number of derived assays as child nodes to the experiment selected.</p> 
     <p>5 Click on the assay of interest.</p> 
     <p>6 Click <b>Open</b>.</p> 
-    <p><img border="0" width="498" height="409" src="open_dataset_files/image002.jpg"></p>
+    <p><img border="0" width="498" height="409" src="open_dataset_files/image002.jpg"></p> 
+    <p>&#12290;Protein Data Bank (.pdb) - Three-dimensional structures of proteins. </p> 
+    <h3><a name="_To_Open_a_Local_File:"></a><a name="_Affymetrix_files"></a>Affymetrix files </h3> 
+    <p>&#12290; When an Affymetrix file type is selected, the <a href="#window">Annotation Information pop up</a> window is displayed. To load annotation files from Affymetrix, please refer to the Annotation Information pop up window. </p> 
+    <p>Once you have successfully loaded and stored the annotation files, please take the following steps:</p> 
+    <p>&#12290; In the Annotation Information pop up window, select the checkbox <i>Don&#8217;t show the again </i>and click <b>Continue. </b>The system will display the <i>Select the Location of the Annotation File</i> window.</p> 
+    <p>&#12290; Navigate to the location of the file and select <b>Open.</b></p> 
+    <p><a name="window"><b><img border="0" width="500" height="461" src="open_dataset_files/affy.png"></b></a></p>
 </ul>
 
 
