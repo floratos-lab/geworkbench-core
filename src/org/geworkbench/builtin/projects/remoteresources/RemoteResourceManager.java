@@ -117,25 +117,13 @@ public class RemoteResourceManager {
 
             String cmd = "caARRAY";
             //Object result = call.invoke(new Object[] {cmd});
-//            CaARRAYIndexServiceGridLocator caArrayServiceLocator = new
-//                    CaARRAYIndexServiceGridLocator();
-//
-//            CaARRAYIndexPortType caARRAYPortType = caArrayServiceLocator.
-//                    getCaARRAYIndexPort(GSH); //getsequenceAlignmentPort(GSH);// getSequenceAlignmentPort(GSH);
-//
-//            String test = (String) caARRAYPortType.getServer(cmd);
+            CaARRAYIndexServiceGridLocator caArrayServiceLocator = new
+                    CaARRAYIndexServiceGridLocator();
 
-            //Object result = call.invoke(new Object[] {cmd});
+            CaARRAYIndexPortType caARRAYPortType = caArrayServiceLocator.
+                    getCaARRAYIndexPort(GSH); //getsequenceAlignmentPort(GSH);// getSequenceAlignmentPort(GSH);
 
-            GSH = new java.net.URL("http://156.145.29.52:8080/ogsa/services/edu/columbia/SequenceService");
-//           SequenceServiceGridLocator caArrayServiceLocator = new
-//                   SequenceServiceGridLocator();
-//
-//           SequencePortType caARRAYPortType = caArrayServiceLocator.
-//                   getSequencePort(GSH); //getsequenceAlignmentPort(GSH);// getSequenceAlignmentPort(GSH);
-
-           String test =  "t";//(String) caARRAYPortType.getServer(cmd);
-
+            String test = (String) caARRAYPortType.getServer(cmd);
 
             if (test == null) {
                 return false;
