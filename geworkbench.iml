@@ -12,6 +12,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/components/cutenet/classes" />
+      <excludeFolder url="file://$MODULE_DIR$/data" />
       <excludeFolder url="file://$MODULE_DIR$/devkit" />
       <excludeFolder url="file://$MODULE_DIR$/testing" />
       <excludeFolder url="file://$MODULE_DIR$/web/api" />
