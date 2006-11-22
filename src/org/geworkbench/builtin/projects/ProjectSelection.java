@@ -3,6 +3,7 @@ package org.geworkbench.builtin.projects;
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
+import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.events.ProjectEvent;
 
@@ -121,6 +122,7 @@ public class ProjectSelection {
             boolean subNode = false;
             if (node instanceof DataSetNode) {
                 selectedDataSetNode = (DataSetNode) node;
+                AnnotationParser.setCurrentDataSet(selectedDataSetNode.dataFile);
                 GeawConfigObject.getGuiWindow().setVisualizationType(selectedDataSetNode.dataFile);
             } else if (node instanceof DataSetSubNode) {
                 selectedDataSetSubNode = (DataSetSubNode) node;
