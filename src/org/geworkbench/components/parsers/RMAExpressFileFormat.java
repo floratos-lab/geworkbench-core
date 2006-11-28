@@ -38,7 +38,7 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
     RMAExpressFilter maFilter = null;
 
     public RMAExpressFileFormat() {
-        formatName = "Tab-Delimited Text File";
+        formatName = "RMA Express, Tab-Delimited";
         maFilter = new RMAExpressFilter();
         Arrays.sort(maExtensions);
     }
@@ -211,7 +211,7 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
     class RMAExpressFilter extends FileFilter {
 
         public String getDescription() {
-            return "Tab-Delimited Text (RMA Express)";
+            return getFormatName();
         }
 
         public boolean accept(File f) {
