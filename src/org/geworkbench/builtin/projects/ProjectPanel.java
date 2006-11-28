@@ -72,6 +72,7 @@ import org.geworkbench.components.parsers.microarray.DataSetFileFormat;
 import org.geworkbench.components.parsers.patterns.PatternFileFormat;
 import org.geworkbench.engine.preferences.GlobalPreferences;
 import org.geworkbench.engine.skin.Skin;
+import org.geworkbench.engine.properties.PropertiesManager;
 import org.geworkbench.events.CommentsEvent;
 import org.geworkbench.events.ImageSnapshotEvent;
 import org.geworkbench.events.MicroarrayNameChangeEvent;
@@ -104,25 +105,28 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
     static Log log = LogFactory.getLog(ProjectPanel.class);
 
+    private static final String WORKSPACE_DIR = "workspaceDir";
+
+    /**
+     * Additional Menu related instance variables that do not exist in parent
+     */
+
     private static TypeMap<ImageIcon> iconMap = new TypeMap<ImageIcon>();
 
     static {
         DefaultIconAssignments.initializeDefaultIconAssignments();
     }
 
-    // Initialize default icons
+// Initialize default icons
 
     protected LoadData loadData = new LoadData(this);
 
     private ProjectSelection selection = new ProjectSelection(this);
 
-    // The undo buffer
+// The undo buffer
     ProjectTreeNode undoNode = null;
     ProjectTreeNode undoParent = null;
 
-    /**
-     * Additional Menu related instance variables that do not exist in parent
-     */
     /**
      * XQ uses dataSetMenu to save/modify the new generated/old Fasta file
      * dataSetSubMenu to save sequence alignment result.
@@ -2177,7 +2181,15 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
     }
 
     protected void saveWorkspace_actionPerformed(ActionEvent e) {
-        JFileChooser fc = new JFileChooser(".");
+        PropertiesManager properties = PropertiesManager.getInstance();
+        String workspaceDir = ".";
+        try {
+            workspaceDir = properties.getProperty(ProjectPanel.class, WORKSPACE_DIR, workspaceDir);
+        } catch (IOException exception) {
+            exception.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+        JFileChooser fc = new JFileChooser(workspaceDir);
         String wsFilename = null;
         FileFilter filter = new WorkspaceFileFilter();
         fc.setFileFilter(filter);
@@ -2186,6 +2198,14 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         int choice = fc.showSaveDialog(jProjectPanel);
         if (choice == JFileChooser.APPROVE_OPTION) {
             wsFilename = fc.getSelectedFile().getAbsolutePath();
+
+            // Store directory that we opened this from
+            try {
+                properties.setProperty(ProjectPanel.class, WORKSPACE_DIR, fc.getSelectedFile().getParent());
+            } catch (IOException e1) {
+                e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+
             if (!wsFilename.endsWith(extension)) {
                 wsFilename += extension;
             }
@@ -2196,8 +2216,16 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
     }
 
     protected void openWorkspace_actionPerformed(ActionEvent e) {
+        PropertiesManager properties = PropertiesManager.getInstance();
+        String workspaceDir = ".";
+        try {
+            workspaceDir = properties.getProperty(ProjectPanel.class, WORKSPACE_DIR, workspaceDir);
+        } catch (IOException exception) {
+            exception.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
         // Prompt user for designating the file containing the workspace to be opened.
-        JFileChooser fc = new JFileChooser(".");
+        JFileChooser fc = new JFileChooser(workspaceDir);
         String wsFilename = null;
         FileFilter filter = new WorkspaceFileFilter();
         fc.setFileFilter(filter);
@@ -2211,6 +2239,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
             }
 
             try {
+                // Store directory that we opened this from
+                properties.setProperty(ProjectPanel.class, WORKSPACE_DIR, fc.getSelectedFile().getParent());
+
                 FileInputStream in = new FileInputStream(wsFilename);
                 ObjectInputStream s = new ObjectInputStream(in);
                 SaveTree saveTree = (SaveTree) s.readObject();
