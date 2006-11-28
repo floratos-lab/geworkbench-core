@@ -212,7 +212,7 @@ public class AffyFileFormat extends DataSetFileFormat {
      */
     class AffymetrixFileFilter extends FileFilter {
         public String getDescription() {
-            return "Affymetrix MAS5/GCOS Files";
+            return getFormatName();
         }
 
         public boolean accept(File f) {
