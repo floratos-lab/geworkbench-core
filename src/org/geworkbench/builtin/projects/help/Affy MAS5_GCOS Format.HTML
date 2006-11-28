@@ -1,0 +1,52 @@
+<html>
+
+
+
+<head>
+
+<meta http-equiv="Content-Language" content="en-us">
+
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+
+<meta name="ProgId" content="FrontPage.Editor.Document">
+
+<title>User Comments</title>
+
+<link rel="stylesheet" type="text/css" href="ncicb.css">
+
+</head>
+
+
+
+<body>
+
+
+
+ <h3>Affymetrix MAS5/CCOS Format</h3> 
+    <p>These are text files (specifically, text versions of .CHP files) produced by the MAS software from Affymetrix. The image below provides an example of an input file that the application will accept as a correctly formatted &quot;Affymetrix MAS5/GCOS&quot; file type (only the first 18 lines of the file are shown):</p>
+    <p><img src="open_dataset_files/affyMas5GcosFormat.png" width="832" height="295"></p>
+    <p>Any number of lines can precede the actual array data (in the example above the first 11 lines are non-data lines). All such lines will be ignored when the file is parsed. The beginning of the actual data is marked by a row containing tab-separated column names. Any number of  columns may be present; however, only the following columns will be acted upon (column names must be spelled exactly as listed below and cannot contain tabs):</p>
+    <ul>
+      <li><em>Probe Set Name</em>: This column is mandatory; the file will fail to be parsed unless this column is present. Its contents are strings that provide the marker names associated with a microarray set (AFFX-BioB-5_at, AFFX-MurIL10_at, etc). </li>
+      <li>Log2(ratio): This column is optional. If present, its contents must be real numbers and will be used as the expression measurements for the corresponding markers.</li>
+      <li><em>Signal</em>: Same as column &quot;Log2(ratio)&quot; above. If both columns are present, only &quot;Log2(ratio)&quot; is used (&quot;Signal&quot; will be ignored) </li>
+      <li> <em>Avg Diff</em>: Same as columns &quot;Log2(ratio)&quot; and &quot;Signal&quot;. If either &quot;Log2(ratio)&quot; or &quot;Signal&quot; is present then &quot;Avg Diff&quot; is ignored and the contents of those columns are used instead (with &quot;Log2(ratio)&quot; taking priority over &quot;Signal&quot;). At least one of these 3 columns (&quot;Log2(ratio)&quot;, &quot;Signal&quot;, &quot;Avg Diff&quot;) must be present for the file to parsed in a meaningful way. if this is not the case, the file will still be read in but all markers will be tagged as having missing values.</li>
+      <li><em>Detection</em>: This column is optional. Its value is a single character (P, M, or A) and if present it is used to determine the absolute call for a measurement (A -&gt; absent, M -&gt; marginal, P -&gt; present).</li>
+      <li><em>Abs Call</em>: Exactly the same as column &quot;Detection&quot; (for compatibility with text files produced by older versions of the MAS software).</li>
+      <li><em>Detection p-value</em>: This column is optional. Its values are real numbers between 0 and 1. It provides a measure of confidence in the quality of the measurement reading (the smallest the p-value the higher the confidence). Further, if both &quot;Detection&quot; and &quot;Abs Call&quot; columns are missing, the &quot;Detection p-value&quot; is used as an alternative method to determine the absolute calls for marker measurements:
+        <ul>
+          <li>If p-value &lt; 0.04, then the absolute call is &quot;present&quot;</li>
+          <li>If 0.04 &lt;= p-value &lt; 0.06, then the absolute call is &quot;marginal&quot;.</li>
+          <li>If p-value &gt;= 0.06, then the absolute call is &quot;missing&quot;. </li>
+        </ul>
+      The p-value thresholds used above are chosen to be the same as the default thresholds used for the same purpose by the MAS software (see the manual &quot;GeneChip Expression Analysis: Data Analysis Fundamentals&quot; from Affymetrix, <a href="http://www.affymetrix.com/support/downloads/manuals/data_analysis_fundamentals_manual.pdf" target="_blank">http://www.affymetrix.com/support/downloads/manuals/data_analysis_fundamentals_manual.pdf</a>). </li>
+    </ul>
+    <p>The marker data follow the column names. Each row correspond to one marker. Values within a row are tab-separated.</p>
+</body>
+
+
+
+</html>
+
