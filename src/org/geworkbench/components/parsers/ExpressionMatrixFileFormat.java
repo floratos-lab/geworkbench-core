@@ -31,7 +31,7 @@ public class ExpressionMatrixFileFormat extends DataSetFileFormat {
     AffyFilter maFilter = null;
 
     public ExpressionMatrixFileFormat() {
-        formatName = "Affymetrix File Matrix 1";
+        formatName = "Affymetrix File Matrix";
         maFilter = new AffyFilter();
         Arrays.sort(maExtensions);
     }
@@ -107,7 +107,7 @@ public class ExpressionMatrixFileFormat extends DataSetFileFormat {
     class AffyFilter extends FileFilter {
 
         public String getDescription() {
-            return "Affymetrix File Matrix";
+            return getFormatName();
         }
 
         public boolean accept(File f) {

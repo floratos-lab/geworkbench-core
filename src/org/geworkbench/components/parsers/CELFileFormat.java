@@ -24,7 +24,7 @@ public class CELFileFormat extends DataSetFileFormat {
     CELFileFormat.CELFilter maFilter = null;
 
     public CELFileFormat() {
-        formatName = "CEL File";
+        formatName = "Affy .CEL";
         maFilter = new CELFileFormat.CELFilter();
         Arrays.sort(maExtensions);
     }
@@ -92,7 +92,7 @@ public class CELFileFormat extends DataSetFileFormat {
     class CELFilter extends FileFilter {
 
         public String getDescription() {
-            return "CEL File Format";
+            return getFormatName();
         }
 
         public boolean accept(File f) {
