@@ -9,9 +9,9 @@ import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.datastructure.properties.DSNamed;
 
 import java.awt.*;
+import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.util.*;
-import java.io.Serializable;
 
 /**
  * @author John Watkinson
@@ -19,18 +19,18 @@ import java.io.Serializable;
 public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationContext<T>, Serializable {
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 8064184768541031268L;
+     *
+     */
+    private static final long serialVersionUID = 8064184768541031268L;
 
-	public static final String SELECTION = "Selection";
+    public static final String SELECTION = "Selection";
 
     public static final String CLASS_CASE = "Case";
     public static final String CLASS_CONTROL = "Control";
     public static final String CLASS_TEST = "Test";
     public static final String CLASS_IGNORE = "Ignore";
 
-    private static final HashMap<String,Integer> colorMap = new HashMap<String, Integer>();
+    private static final HashMap<String, Integer> colorMap = new HashMap<String, Integer>();
 
     static {
         colorMap.put(CLASS_CASE, Color.RED.getRGB());
@@ -115,6 +115,7 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
     private String name;
     /**
      * Stored as a weak reference so that this context can be released by the GC when the item list is GCed.
+     *
      * @see CSAnnotationContextManager#contextMap
      */
     private transient WeakReference<DSItemList<T>> itemListReference;
@@ -141,7 +142,7 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
         MapIterator<DSAnnotationType, HashMap<T, ?>> annotationsIterator = annotations.mapIterator();
         while (annotationsIterator.hasNext()) {
             annotationsIterator.next();
-            clone.annotations.put(annotationsIterator.getKey(), (HashMap<T,?>)annotationsIterator.getValue().clone());
+            clone.annotations.put(annotationsIterator.getKey(), (HashMap<T, ?>) annotationsIterator.getValue().clone());
         }
         MapIterator<String, Label> labelIterator = labels.mapIterator();
         while (labelIterator.hasNext()) {
@@ -566,7 +567,7 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
         if (set.isEmpty()) {
             return true;
         } else {
-           return false;
+            return false;
         }
     }
 
@@ -576,7 +577,11 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
 
     public String getDefaultClass() {
         if (defaultClass == null) {
-            return classes.lastKey();
+            if (classes.isEmpty()) {
+                return null;
+            } else {
+                return classes.lastKey();
+            }
         } else {
             return defaultClass;
         }
