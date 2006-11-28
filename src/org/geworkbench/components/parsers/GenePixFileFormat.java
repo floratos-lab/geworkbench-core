@@ -52,7 +52,7 @@ public class GenePixFileFormat extends DataSetFileFormat {
      * application configuration file.
      */
     public GenePixFileFormat() {
-        formatName = "GenePix files";   // Setup the display name for the format.
+        formatName = "GenePix .GPR";   // Setup the display name for the format.
         genepixFileFilter = new GenePixFileFilter();
     }
 
@@ -204,7 +204,7 @@ public class GenePixFileFormat extends DataSetFileFormat {
      */
     class GenePixFileFilter extends FileFilter {
         public String getDescription() {
-            return "Genepix Files";
+            return getFormatName();
         }
 
         public boolean accept(File f) {
