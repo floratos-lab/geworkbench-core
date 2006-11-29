@@ -2,6 +2,8 @@ package org.geworkbench.engine.config.rules;
 
 import org.geworkbench.engine.config.GUIFramework;
 import org.geworkbench.util.SplashBitmap;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.help.*;
 import javax.swing.*;
@@ -26,6 +28,9 @@ import java.util.Map;
  * object creates and maintains the "global" variables of the application.
  */
 public class GeawConfigObject {
+
+    static Log log = LogFactory.getLog(GeawConfigObject.class);
+
     /**
      * The name of the property within <code>applications.properties</code> which
      * contains the location of the master help file.
@@ -168,6 +173,7 @@ public class GeawConfigObject {
         // Enable online help.
         if (masterHelp == null) {
             for (Map.Entry<String, HelpSet> entry : sortedHelpSets.entrySet()) {
+                log.debug("Adding help set: " + entry.getKey() + " | "+entry.getValue().getTitle());
                 if (masterHelp == null) {
                     masterHelp = entry.getValue();
                 } else {
