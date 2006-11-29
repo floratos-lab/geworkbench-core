@@ -72,6 +72,7 @@ public class LoadData extends JDialog {
     private JTextField indexField;
     private JButton updateIndexButton;
     private String currentRemoteResourceName;
+    private String currentDetailedResourceName; //current resurcename which shows detail at the top panel.
 
 
     /**
@@ -562,7 +563,7 @@ public class LoadData extends JDialog {
         }
         remoteResourceDialog.setupSystemPropertyForCurrentResource(
                     currentRemoteResourceName);
-            isSynchronized = !remoteResourceDialog.isSourceDirty();
+            isSynchronized = !remoteResourceDialog.isSourceDirty() && (currentDetailedResourceName.equalsIgnoreCase(currentRemoteResourceName));
             if (!isSynchronized) {
                 openRemoteResourceButton.setBackground(Color.RED);
                 openRemoteResourceButton.setToolTipText("Click to get the display synchronized with Remote source.");
@@ -577,6 +578,7 @@ public class LoadData extends JDialog {
     private void mageButtonSelection_actionPerformed(ActionEvent e) {
         String currentResourceName = resourceModel.getSelectedItem().toString().
                 trim();
+        currentDetailedResourceName = currentResourceName;
         remoteResourceDialog.setupSystemPropertyForCurrentResource(
                 currentResourceName);
         remoteResourceDialog.updateCurrentResourceStatus(currentResourceName, false);
