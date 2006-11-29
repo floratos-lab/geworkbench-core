@@ -2199,6 +2199,13 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         if (choice == JFileChooser.APPROVE_OPTION) {
             wsFilename = fc.getSelectedFile().getAbsolutePath();
 
+            if (fc.getSelectedFile().exists()) {
+                if (JOptionPane.NO_OPTION == JOptionPane.showConfirmDialog(null, "Are you sure you want to overwrite this workspace?", "Overwrite?", JOptionPane.YES_NO_OPTION)) {
+                    JOptionPane.showMessageDialog(null, "Save cancelled.");
+                    return;
+                }
+            }
+
             // Store directory that we opened this from
             try {
                 properties.setProperty(ProjectPanel.class, WORKSPACE_DIR, fc.getSelectedFile().getParent());
@@ -2211,6 +2218,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
             }
 
             serialize(wsFilename);
+            JOptionPane.showMessageDialog(null, "Workspace saved.");
         }
 
     }
