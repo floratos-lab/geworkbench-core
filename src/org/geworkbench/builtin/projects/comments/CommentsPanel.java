@@ -17,6 +17,8 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.ObjectInputStream;
+import java.io.IOException;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
@@ -44,10 +46,9 @@ import java.io.File;
      */
     protected DSDataSet dataSet = null;
     protected ImageIcon image = null;
-    protected String userComments = DEFAULT_MESSAGE;
     private BorderLayout borderLayout1 = new BorderLayout();
     protected JScrollPane jScrollPane1 = new JScrollPane();
-    protected JTextArea commentsTextArea = new JTextArea(userComments);
+    protected JTextArea commentsTextArea = new JTextArea(DEFAULT_MESSAGE);
     protected JPanel commentsPanel = new JPanel();
     private boolean liveMode = true;
 
@@ -66,7 +67,6 @@ import java.io.File;
 
     private void jbInit() throws Exception {
         commentsPanel.setLayout(borderLayout1);
-        commentsTextArea.setText(userComments);
         commentsTextArea.setLineWrap(true);
         commentsTextArea.setWrapStyleWord(true);
         commentsTextArea.getDocument().addDocumentListener(new DocumentListener() {
@@ -79,6 +79,7 @@ import java.io.File;
             }
 
             public void changedUpdate(DocumentEvent e) {
+                commentModified_actionPerformed(e);
             }
 
         });
@@ -130,13 +131,16 @@ import java.io.File;
         if (e == null || e.getDocument() != commentsTextArea.getDocument()) {
             return;
         }
-        // No action required if nothing changed.
-        if (commentsTextArea.getText().trim().equals(userComments.trim())) {
-            return;
-        }
-        userComments = commentsTextArea.getText();
+        String userComments = commentsTextArea.getText().trim();
+//        // No action required if nothing changed.
+//        if (commentsTextArea.getText().trim().equals(userComments.trim())) {
+//            return;
+//        }
         if (liveMode) {
             publishCommentsEvent(new CommentsEvent(userComments));
+        }
+        if (dataSet != null) {
+            dataSet.setExperimentInformation(userComments);
         }
 //        if (dataSet != null) {
 //            dataSet.clearName(COMMENTS_ID_STRING);
@@ -160,6 +164,7 @@ import java.io.File;
 
     @Subscribe public void receive(ProjectEvent event, Object source) {
         dataSet = event.getDataSet();
+        commentsTextArea.setText(dataSet.getExperimentInformation());
     }
 
     /**
