@@ -1,7 +1,8 @@
 package org.geworkbench.builtin.projects.comments;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.engine.config.VisualPlugin;
 import org.geworkbench.engine.management.AcceptTypes;
 import org.geworkbench.engine.management.Publish;
@@ -10,15 +11,9 @@ import org.geworkbench.events.CommentsEvent;
 import org.geworkbench.events.ProjectEvent;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.io.File;
-import java.io.ObjectInputStream;
-import java.io.IOException;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
@@ -28,6 +23,9 @@ import java.io.IOException;
  * @version 1.0
  */
 @AcceptTypes({DSDataSet.class}) public class CommentsPanel implements VisualPlugin {
+
+    static Log log = LogFactory.getLog(CommentsPanel.class);
+
     /**
      * Used as the "name" part in the name-value pair that stores the user
      * comments in a <code>MicroarraySet</code> object X. In particular, if
@@ -164,7 +162,11 @@ import java.io.IOException;
 
     @Subscribe public void receive(ProjectEvent event, Object source) {
         dataSet = event.getDataSet();
-        commentsTextArea.setText(dataSet.getExperimentInformation());
+        try {
+            commentsTextArea.setText(dataSet.getExperimentInformation());
+        } catch (Exception e) {
+            log.warn("Experiment information was null.");
+        }
     }
 
     /**
