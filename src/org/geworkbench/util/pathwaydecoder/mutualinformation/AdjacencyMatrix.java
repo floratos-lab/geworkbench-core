@@ -42,7 +42,7 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.A
 public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMatrix, Serializable {
 
     /**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -4163326138016520666L;
 
@@ -543,7 +543,7 @@ public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMa
             e.printStackTrace();
         }
     }
-    
+
     public void readMappings(File file) {
 
         //File file = new File("u95Mapping.txt");
@@ -831,7 +831,7 @@ public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMa
                 while ((line = br.readLine()) != null) {
                     if (line.length() > 0 && line.charAt(0) != '-' && !line.startsWith(">")) {
                         StringTokenizer tr = new StringTokenizer(line, "\t");
-                        String geneAccess0 = new String(tr.nextToken());    
+                        String geneAccess0 = new String(tr.nextToken());
                         String geneAccess1 = geneAccess0;
                         if (geneNames) {
                             int i = 0;
@@ -879,7 +879,7 @@ public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMa
         }
         resolveGeneCollision(maSet);
     }
-    
+
     public void read(String name, DSMicroarraySet<DSMicroarray> microarraySet, JProgressBar bar) {
         maSet = microarraySet;
         int markerNo = microarraySet.size();
@@ -1568,11 +1568,18 @@ public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMa
         HashSet completed = new HashSet();
         HashSet allGenes = new HashSet();
         int uniId = gm0.getUnigene().getUnigeneId();
+        if (uniId == -1) {
+            uniId = gm0.getSerial();
+        }
         Set rowIds = geneRows.keySet();
         for (Iterator geneA = rowIds.iterator(); geneA.hasNext();) {
             Integer geneAKey = (Integer) geneA.next();
             int geneAId = geneAKey.intValue();
             int uniId1 = maSet.getMarkers().get(geneAId).getUnigene().getUnigeneId();
+            if (uniId1 == -1) {
+                uniId1 = maSet.getMarkers().get(geneAId).getSerial();
+            }
+
             if (uniId1 == uniId) {
                 neighbors.add(new Integer(geneAId));
             }
@@ -1622,7 +1629,11 @@ public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMa
                 if (allGenes.contains(geneAKey)) {
                     int geneAId = geneAKey.intValue();
                     DSGeneMarker gmA = maSet.getMarkers().get(geneAId);
-                    if (!completed.contains(new Integer(gmA.getUnigene().getUnigeneId()))) {
+                    int unigeneId = gmA.getUnigene().getUnigeneId();
+                    if (unigeneId == -1) {
+                        unigeneId = gmA.getSerial();
+                    }
+                    if (!completed.contains(new Integer(unigeneId))) {
                         HashMap geneRow = (HashMap) geneRows.get(geneAKey);
                         float maxMI = 0;
                         int maxId = -1;
@@ -1647,7 +1658,7 @@ public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMa
                             add(geneAId, maxId, maxMI);
                             // GW compatible
                             // subclass -> this.changeInteractionType2Strength(geneAId, maxId, maxMI);
-                            completed.add(new Integer(maSet.getMarkers().get(geneAId).getUnigene().getUnigeneId()));
+                            completed.add(new Integer(unigeneId));
                         }
                     }
                 }
