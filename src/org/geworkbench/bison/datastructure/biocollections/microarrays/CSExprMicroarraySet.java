@@ -110,19 +110,22 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
         }
         String line;
         try {
-            while ((line = rm.reader.readLine()) != null) {
-                parser.parseLine(line, this);
-                if (rm.pm != null) {
-                    if (rm.pm.isCanceled()) {
-                        loadingCancelled = true;
-                        rm.reader.close();
-                        return;
-                    }
-                }
+            while ((line = rm.reader.readLine()) != null){ 
+            	if (!line.trim().equalsIgnoreCase("")) {
+					parser.parseLine(line.trim(), this);
+					if (rm.pm != null) {
+						if (rm.pm.isCanceled()) {
+							loadingCancelled = true;
+							rm.reader.close();
+							return;
+						}
+					}
+				}
             }
             rm.reader.close();
-//            if (this.getCompatibilityLabel() == null) {
-//                JOptionPane.showMessageDialog(null, "Can't recognize the chiptype of the file.");
+// if (this.getCompatibilityLabel() == null) {
+// JOptionPane.showMessageDialog(null, "Can't recognize the chiptype of the
+// file.");
 //                AnnotationParser.callUserDefinedAnnotation(this);
 //            }
         } catch (InterruptedIOException iioe) {
@@ -142,18 +145,16 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
         }
         initialize(parser.microarrayNo, parser.markerNo);
         try {
-            int i = 1;
             while ((line = rm.reader.readLine()) != null) {
-                parser.executeLine(line, this);
-                if (rm.pm.isCanceled()) {
-                    loadingCancelled = true;
-                    rm.reader.close();
-                    return;
-                }
-                if (i % 1000 == 0) {
-                    System.gc();
-                }
-            }
+				if (!line.trim().equalsIgnoreCase("")) {
+					parser.executeLine(line.trim(), this);
+					if (rm.pm.isCanceled()) {
+						loadingCancelled = true;
+						rm.reader.close();
+						return;
+					}
+				}
+			}
         } catch (InterruptedIOException iioe) {
             loadingCancelled = true;
             return;
@@ -315,11 +316,13 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
                             value = st[++j];
                         }
                         String pValue;
-                        if (Boolean.parseBoolean(System.getProperty("expressionMA.usePValue")) || pValueExists) {
+                        // if (Boolean.parseBoolean(System.getProperty("expressionMA.usePValue")) || pValueExists) {
+                        if (pValueExists) {                        	
                             j++;
                             pValue = st[j];
                         } else {
-                            pValue = 1.0 + "";
+//                        	 If no p-value is present, assume that the detection call is "Present"
+                            pValue = 0.000001 + ""; 
                         }
 
                         parse(marker, value, pValue);
@@ -336,6 +339,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
         } //end of executeLine()
 
         void parseLine(String line, DSMicroarraySet mArraySet) {
+        	
             if (line.charAt(0) == '#') {
                 return;
             }
@@ -373,7 +377,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
                     }
                 }
             } //end of parseline()
-        } //end of inner clase parser
+        } //end of inner class parser
     }
 
     public void parse(CSMarkerValue marker, String value, String status) {
