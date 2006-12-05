@@ -1,0 +1,42 @@
+<html>
+
+
+
+<head>
+
+<meta http-equiv="Content-Language" content="en-us">
+
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+
+<meta name="ProgId" content="FrontPage.Editor.Document">
+
+<title>User Comments</title>
+
+<link rel="stylesheet" type="text/css" href="ncicb.css">
+
+</head>
+
+
+
+<body>
+
+
+
+ <h3>Affymetrix File Matrix  Format</h3> 
+    <p>This is  an example of an input file that the application will accept as a correctly formatted &quot;Affymetrix File Matrix &quot; file type (only the first 8 lines of the file are shown):</p>
+    <p><img src="open_dataset_files/AffyFileMatrix.png" width="921" height="147"></p>
+    <p>Files in this format can contain data for more than one microarray (in the example above there are 3 microarrays  named CB26-2, CB511 and CB512). Any number of comment lines, each one starting with a #, can precede the actual array data (however, no empty lines are allowed before, after or between comment lines). All comment lines will be ignored during file parsing. The beginning of the actual data is marked by the first row that does not begin with a # character. This row is expected to have N+2 tab-separated column names. The first column name must read &quot;AffyId&quot;; the second column name must read &quot;Annotation&quot;. The subsequent N entries are assumed to be the labels of the N microarrays whose data are contained in the file. Any string can be used as a microarray label as long as it does not contain tab characters. </p>
+    <p>Then a number of &quot;Description&quot; lines follow (zero or more of them). Description lines can be used to group microarrays into array sets (see online help section on &quot;Markers and Phenotypes&quot; for a description of array sets; or read the online tutorial titled &quot;Data Subsets&quot; in the Tutorials section of the geWorkbench web site, http://www.geworkbench.org). Each line describes one collection of array sets and comprises N+2 tab separated entries. The first entry must be the word &quot;Description&quot;. The second entry is the label that will be used in the application to identify this collection of array sets (users can select which collection to work with from the &quot;Array/Phenotype Sets&quot; drop-down menu within the Arrays/Phenotypes application component). The following N columns  are array set labels that map one-to-one to the N arrays listed in the &quot;AffyID&quot; line; their relative order in the description line determines how the arrays are grouped into sets. E.g., in the example above the first description line defines a collection of 2 array sets: the first set is called &quot;Cord blood&quot; and contains the arrays CB26-2 and CB511. The second set is called &quot;pFL&quot; and contains the array CB512. The collection of these two array sets is itself named and is called &quot;short designation&quot;.</p>
+    <p>The last part of the file contains the actual expression measurements. There is one line per marker on the chip (there are 4 such lines in the example). Each line starts with the name of the marker. The name is followed by a string that provides a human readable annotation of the marker (this entry must contain a non-empty string; if there is no  meaningful annotation to be associated with a marker then the marker name may replicated here or a series of one or more space characters can be used). The measurement values follow the annotation string. This portion of a data line can assume one of two possible forms:</p>
+    <ul>
+      <li>Measurements and p-values: there are 2N tab separated decimal values present (the example above has this form). These values are parsed in consecutive pairs. The i-th pair provides data for the value of the marker on the i-th array and comprises (a) the expression measurement for the marker on the array and (2) a p-value (between 0 and 1) indicating the strength of the call. The p-value is used by the application to infer the detection call for the corresponding measurement. The algorithm used for this purpose is the same as the one used in the <a href="Affy%20MAS5_GCOS%20Format.HTML">Affymetrix MAS5/CCOS Format</a> to infer detection calls from the value of the &quot;Detection p-value&quot; column.</li>
+      <li>Measurements only: there are N tab separated decimal values present. The i-th values provides the expression measurement for the marker at the i-th microarray. All measurements are treated as having a detection call of &quot;Present&quot;.</li>
+    </ul>
+</body>
+
+
+
+</html>
+

@@ -1,0 +1,47 @@
+<html>
+
+
+
+<head>
+
+<meta http-equiv="Content-Language" content="en-us">
+
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+
+<meta name="ProgId" content="FrontPage.Editor.Document">
+
+<title>User Comments</title>
+
+<link rel="stylesheet" type="text/css" href="ncicb.css">
+
+</head>
+
+
+
+<body>
+
+
+
+ <h3>Genepix File Format</h3> 
+    <p>Each GenePix file contains data for a differential expression experiment involving a single microarray. A detailed description of the <a href="http://www.moleculardevices.com/pages/software/gn_genepix_file_formats.html#gpr">GenePix .gpr format</a> can be found at the manufacturer's site.</p>
+    <p>The top portion of the file (the GPR Header) contains information about image acquisition and analysis. This part is ignored during parsing. From the actaul data portion of the file only the following data columkns are parsed: </p>
+    <ul>
+      <li><em>ID</em>: The contents of this column are used as the marker names.</li>
+      <li> <em>F635 Median, F635 Mean, B635 Median, B635 Mean, F532 Median, F532 Mean, B532 Median, B532 Mean</em>: The values of these columns are used for calculating the composite expression measurement for a marker. There are 4 possible options for performing this calculation (the Tools-&gt;Preferences menu can be used to specify which of the 4 to use):
+        <ol>
+          <li> ( <em>F635 Mean</em> - <em>B635 Mean) /  (F532 Mean -  B532 Mean).</em></li>
+          <li> ( <em>F635 Median</em> - <em>B635 Median) / (F532 Median - B532 Median).</em></li>
+          <li>( <em>F532 Mean</em> - <em>B532 Mean) / (F635 Mean - B635 Mean).</em></li>
+          <li> ( <em>F532 Median</em> - <em>B532 Median) / (F635 Median - B635 Median).</em></li>
+        </ol>
+      </li>
+      <li><em>Flags: </em>Parsed as an arbitrary string. The Flags value associated with a marker can be used to filter out the marker when using the &quot;Genepix Flags&quot; filter (for details see the online help section on Filters). </li>
+    </ul>
+</body>
+
+
+
+</html>
+
