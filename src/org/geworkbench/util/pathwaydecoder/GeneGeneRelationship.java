@@ -504,7 +504,7 @@ public class GeneGeneRelationship <T extends DSGeneMarker,Q extends DSMicroarray
         if ((GeneNetworkEdgeImpl.usePValue && (p >= threshold)) || (!GeneNetworkEdgeImpl.usePValue && (mi >= threshold))) {
             rc = new GeneNetworkEdgeImpl();
             rc.setId1(firstGeneId);
-            rc.setMarker2(view.markers().get(secondGeneId)); //visualizer.getmicroarraySet().getGenericMarker(secondGeneId));
+            rc.setMarker2(view.getMicroarraySet().getMarkers().get(secondGeneId)); //visualizer.getmicroarraySet().getGenericMarker(secondGeneId));
             rc.setA(1);
             rc.setMI(mi);
             rc.setPValue(p);
