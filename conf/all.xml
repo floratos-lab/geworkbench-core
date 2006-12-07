@@ -94,7 +94,7 @@
 	 
 	<plugin id="fastHierarchicalClusteringAnalysis" name="Fast Hierachical Clustering Analysis" class="org.geworkbench.components.clustering.FastHierClustAnalysis" source="clustering"/>
 
-     
+
 	<plugin id="somAnalysis" name="SOM Analysis" class="org.geworkbench.components.clustering.SOMAnalysis" source="clustering"/>
 	<plugin id="tTestAnalysis" name="t Test Analysis" class="org.geworkbench.components.analysis.clustering.TtestAnalysis" source="analysis"/>
 	<plugin id="multiTTestAnalysis" name="Multi t Test Analysis" class="org.geworkbench.components.analysis.clustering.MultiTTestAnalysis" source="analysis"/>
@@ -111,7 +111,12 @@
 	<plugin id="sequencePanel" name="Sequence" class="org.geworkbench.components.sequences.SequenceViewAppComponent" source="sequences">
 		<gui-area name="VisualArea"/>
 	</plugin>
-	<plugin id="SequenceRetriever" name="Sequence Retriever" class="org.geworkbench.components.sequenceretriever.SequenceRetriever" source="sequenceretriever">
+
+      <plugin id="Interactions" name="Interaction" class="interactions.InteractionsUserInterface" source="interactions">
+		<gui-area name="VisualArea"/>
+	</plugin>
+      
+    <plugin id="SequenceRetriever" name="Sequence Retriever" class="org.geworkbench.components.sequenceretriever.SequenceRetriever" source="sequenceretriever">
 		<gui-area name="VisualArea"/>
 	</plugin>
 	<plugin id="positionHistogram" name="Position Histogram" class="org.geworkbench.components.poshistogram.PositionHistogramAppComponent" source="poshistogram">
