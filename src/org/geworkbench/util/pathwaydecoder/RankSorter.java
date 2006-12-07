@@ -79,6 +79,11 @@ public class RankSorter {
     public static final Comparator<RankSorter> SORT_Y = new Comparator<RankSorter>() {
 
         public int compare(RankSorter rs1, RankSorter rs2) {
+        	/**
+        	 * TODO
+        	 * if ranks are the same return random result
+        	 * This is needed for ranksorting to introduce some randomness for equal values
+        	 */
             if (rs1.y < rs2.y)
                 return -1;
             if (rs1.y > rs2.y)
