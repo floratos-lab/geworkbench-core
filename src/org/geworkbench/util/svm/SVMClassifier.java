@@ -1,13 +1,11 @@
 package org.geworkbench.util.svm;
 
-import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.bison.algorithm.classification.Classifier;
+import org.geworkbench.bison.algorithm.classification.CSClassifier;
 
 import java.util.List;
-import java.util.ArrayList;
 
-public class SVMClassifier extends Classifier {
+public class SVMClassifier extends CSClassifier {
 
     private float[] alpha;
     private int[] trainingClassifications;
@@ -17,7 +15,7 @@ public class SVMClassifier extends Classifier {
 
     public SVMClassifier(DSDataSet parent, String label, float[] alpha,
                          int[] trainingClassifications, KernelFunction kernel, List<float[]> trainingSet, double b) {
-        super(parent, label, new String[]{"case", "control"});
+        super(parent, label, new String[]{"Positive", "Negative"});
         this.alpha = alpha;
         this.trainingClassifications = trainingClassifications;
         this.kernel = kernel;
@@ -25,14 +23,14 @@ public class SVMClassifier extends Classifier {
         this.b = b;
     }
 
-    public String classify(float[] data) {
+    public int classify(float[] data) {
         double v = discriminant(data);
         // > 0: Case, < 0: Control
         if (v < 0) {
             // Not in case 1
-            return getClassifications()[1];
+            return 1;
         } else {
-            return getClassifications()[0];
+            return 0;
         }
     }
 
