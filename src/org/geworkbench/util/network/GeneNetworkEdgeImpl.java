@@ -36,7 +36,7 @@ public class GeneNetworkEdgeImpl implements GeneNetworkEdge, Serializable, Compa
         if (usePValue) {
             cc = pValueFormatter.format(pValue);
         } else {
-            cc = miFormatter.format(c * 100);
+            cc = miFormatter.format(c);
         }
         String tt = null;
         if (m2 != null) {
