@@ -4,6 +4,8 @@ import org.geworkbench.engine.config.rules.*;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.engine.management.ComponentResource;
 import org.geworkbench.util.Debug;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.logging.Log;
 
 import javax.help.HelpSet;
 import javax.swing.*;
@@ -29,6 +31,9 @@ public class PluginDescriptor extends IdentifiableImpl implements Comparable {
     // ---------------------------------------------------------------------------
     // --------------- Instance and static variables
     // ---------------------------------------------------------------------------
+
+    static Log log = LogFactory.getLog(PluginDescriptor.class);
+
     /**
      * Instance of a plugin component.
      */
@@ -149,8 +154,10 @@ public class PluginDescriptor extends IdentifiableImpl implements Comparable {
         try {
             if (resource != null) {
                 Thread.currentThread().setContextClassLoader(resource.getClassLoader());
+                log.debug("Set context class loader.");
             }
             plugin = componentRegistry.createComponent(pluginClass, this);
+            log.debug("Created component.");
         } catch (Exception e) {
             throw new RuntimeException("Failed to instantiate plugin:" + pluginClass, e);
         } finally {

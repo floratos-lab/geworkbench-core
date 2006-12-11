@@ -29,6 +29,7 @@ public class ComponentResource {
 
     public static final String LIB_DIR = "lib";
     public static final String CLASSES_DIR = "classes";
+    public static final String CONF_DIR = "conf";
 
     /**
      * The directory in which the component resides.
@@ -92,6 +93,14 @@ public class ComponentResource {
             urls.add(baseURL);
         }
 
+        // Add conf dir if it exists
+        File confDir = new File(dir + '/' + CONF_DIR);
+        if (confDir.exists()) {
+            URL confURL = confDir.toURI().toURL();
+            log.debug("Adding " + confURL + " to classpath.");
+            urls.add(confURL);
+        }
+
         // Do libs
         File libdir = new File(dir + '/' + LIB_DIR);
         if (libdir.exists()) {
@@ -100,7 +109,7 @@ public class ComponentResource {
                 File file = libFiles[i];
                 if (!file.isDirectory()) {
                     String name = file.getName().toLowerCase();
-                    if (name.endsWith(".jar") || name.endsWith(".zip")) {
+                    if (name.endsWith(".jar") || name.endsWith(".zip") || name.endsWith(".xsd") || name.endsWith(".xml") || name.endsWith(".dtd") || name.endsWith(".properties")) {
                         log.debug("Adding " + file.toURL() + " to classpath.");
                         urls.add(file.toURL());
                     }

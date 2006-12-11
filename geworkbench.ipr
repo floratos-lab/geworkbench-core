@@ -243,7 +243,6 @@
     <library name="base">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/lib/ArrayExpress.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/caBIO.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/xml-apis.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/jai_core.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/jdom.jar!/" />
@@ -320,6 +319,7 @@
         <root url="jar://$PROJECT_DIR$/lib/jdo-1.0.1.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/kodo-jdo-runtime.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/kodo-jdo.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/caBIO.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

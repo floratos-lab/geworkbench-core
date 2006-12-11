@@ -25,7 +25,7 @@ public interface Pathway {
      *
      * @return Pathway diagram
      */
-    PathwayDiagram getPathwayDiagram();
+    String getPathwayDiagram();
 
     /**
      * Gets the Pathway Identifier of the <code>Pathway</code> instance
