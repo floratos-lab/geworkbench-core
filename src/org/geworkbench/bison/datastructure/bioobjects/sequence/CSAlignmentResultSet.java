@@ -16,9 +16,32 @@ public class CSAlignmentResultSet extends CSAncillaryDataSet implements DSAlignm
 
     }
 
+    /**
+     * @param fileName
+     * @param inputFile
+     * @param dataSet
+     */
+    public CSAlignmentResultSet(String fileName, String inputFile, DSDataSet blastedParentdataSet, DSDataSet parentDataSet) {
+        super(parentDataSet, "BLAST Result");
+        resultFile = new File(fileName);
+        fastaFile = new File(inputFile);
+        blastedParentDataSet = blastedParentdataSet;
+
+    }
+
 
     private File fastaFile = null;
     private File resultFile = null;
+
+    public DSDataSet getBlastedParentDataSet() {
+        return blastedParentDataSet;
+    }
+
+    public void setBlastedParentDataSet(DSDataSet blastedParentDataSet) {
+        this.blastedParentDataSet = blastedParentDataSet;
+    }
+
+    private DSDataSet blastedParentDataSet;
 //    //Just add the new algorithm varible to get the job status show at the project panel.
 //    private BWAbstractAlgorithm algorithm = null;
 //    public BWAbstractAlgorithm getAlgorithm() {
@@ -93,6 +116,7 @@ public class CSAlignmentResultSet extends CSAncillaryDataSet implements DSAlignm
             return false;
         }
     }
+
     ;
 
     /**

@@ -12,9 +12,9 @@ import org.apache.axis.client.Call;
 import org.apache.axis.client.Service;
 import org.apache.axis.encoding.ser.JAFDataHandlerDeserializerFactory;
 import org.apache.axis.encoding.ser.JAFDataHandlerSerializerFactory;
-import org.apache.axis.utils.Options;
 import org.geworkbench.bison.datastructure.biocollections.sequences.
         CSSequenceSet;
+import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import java.io.IOException;
 
@@ -32,6 +32,7 @@ public class SoapClient {
     static final String STRINGURL =
             "http://adparacel.cu-genome.org/axis/servlet/AxisServlet";
     private String url = STRINGURL;
+    private DSSequenceSet parentSequenceDB;
 
 
     private String blastServerInfo;
@@ -79,6 +80,13 @@ public class SoapClient {
 
     }
 
+    public DSSequenceSet getParentSequenceDB() {
+        return parentSequenceDB;
+    }
+
+    public void setParentSequenceDB(DSSequenceSet parentSeqeucneDB) {
+        this.parentSequenceDB = parentSeqeucneDB;
+    }
 
     /**
      * getServerInfo

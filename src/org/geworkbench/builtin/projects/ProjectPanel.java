@@ -540,13 +540,45 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         }
     }
 
+    /**
+     *
+     * @param pnode
+     * @param parentData
+     * @return
+     */
+    public DataSetNode getMatchNode(ProjectTreeNode pnode,
+                                   DSDataSet parentData) {
+
+
+        DSDataSet dNodeFile = null;
+        if(  (pnode instanceof DataSetNode)){
+       dNodeFile  =((DataSetNode) pnode).dataFile;
+
+        }
+        if((dNodeFile!=null &&
+             dNodeFile.hashCode()==
+                    parentData.hashCode()) ) {
+            return (DataSetNode) pnode;
+        }  else if (pnode != null) {
+            Enumeration children = pnode.children();
+            while (children.hasMoreElements()) {
+                Object obj = children.nextElement();
+                if (getMatchNode((ProjectTreeNode) obj, parentData) != null) {
+
+                    return getMatchNode((ProjectTreeNode) obj, parentData);
+                }
+            }
+
+        }
+
+        return null;
+    }
 
     /**
-     * getMatchNode
      *
-     * @param root        ProjectTreeNode
-     * @param _ancDataSet AncillaryDataSet
-     * @return DataSetNode
+     * @param pnode
+     * @param fastaFilename
+     * @return
      */
     public DataSetNode getMatchNode(ProjectTreeNode pnode,
                                     File fastaFilename) {
@@ -582,21 +614,21 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
     private void addDataSetSubNode(DSAncillaryDataSet _ancDataSet) {
         DataSetNode dNode = selection.getSelectedDataSetNode();
         DataSetNode matchedDNode = null;
-        File fastaFile = _ancDataSet.getDataSetFile();
-        if (fastaFile != null) {
+        DSDataSet parentSet = _ancDataSet.getParentDataSet();
+        if (parentSet != null) {
             if (dNode != null) {
 
-                File dNodeFile = dNode.dataFile.getFile();
-
-                if (dNodeFile.equals(fastaFile)) {
+                DSDataSet dNodeFile = dNode.dataFile;
+                if (dNodeFile.hashCode()==parentSet.hashCode()) {
                     _ancDataSet.setDataSetFile(dNode.dataFile.getFile());
+
                 } else {
                     //get the matched node in case the node selected changed.
-                    matchedDNode = getMatchNode(root, fastaFile);
+                    matchedDNode = getMatchNode(root, parentSet);
                 }
 
             } else {
-                matchedDNode = getMatchNode(root, fastaFile);
+                matchedDNode = getMatchNode(root, parentSet);
             }
         }
         if (matchedDNode != null) {
