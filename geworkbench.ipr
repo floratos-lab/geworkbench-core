@@ -216,6 +216,7 @@
       <module fileurl="file://$PROJECT_DIR$/components/jmol/jmol.iml" filepath="$PROJECT_DIR$/components/jmol/jmol.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/matrixreduce/matrixreduce.iml" filepath="$PROJECT_DIR$/components/matrixreduce/matrixreduce.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/microarrays/microarrays.iml" filepath="$PROJECT_DIR$/components/microarrays/microarrays.iml" />
+      <module fileurl="file://$PROJECT_DIR$/components/mindy/mindy.iml" filepath="$PROJECT_DIR$/components/mindy/mindy.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/normalization/normalization.iml" filepath="$PROJECT_DIR$/components/normalization/normalization.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/pathwaydecoder/pathwaydecoder.iml" filepath="$PROJECT_DIR$/components/pathwaydecoder/pathwaydecoder.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/patterns/patterns.iml" filepath="$PROJECT_DIR$/components/patterns/patterns.iml" />
