@@ -48,6 +48,7 @@ public interface DSGeneMarker extends Comparable, DSSequential, Cloneable, Seria
      * @return String
      */
     String getShortName();
+    String getShortName(int maxLength);
 
     boolean isEquivalent(DSGeneMarker mInfo);
 

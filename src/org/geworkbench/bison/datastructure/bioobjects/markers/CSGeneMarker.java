@@ -183,6 +183,14 @@ public class CSGeneMarker implements DSGeneMarker, Serializable {
         return name;
     }
 
+    public String getShortName(int maxLength) {
+        String shortName = getShortName().trim();
+        if (shortName.length() > maxLength) {
+            return shortName.substring(0, maxLength);
+        }
+        return shortName;
+    }
+
     public boolean isEquivalent(DSGeneMarker i) {
         //I think we may want to enforce only comparing genes on the geneId. This is the only thing
         //that guarantees 1-to-1 equivalence -- AM

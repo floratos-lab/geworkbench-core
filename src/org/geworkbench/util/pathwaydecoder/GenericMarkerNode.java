@@ -116,6 +116,14 @@ public class GenericMarkerNode implements DSGeneMarker, Serializable {
         return genericMarker.getShortName();
     }
 
+    public String getShortName(int maxLength) {
+        String shortName = getShortName();
+        if (shortName.length() > maxLength) {
+            return shortName.substring(0, maxLength);
+        }
+        return shortName;
+    }
+
     /**
      * isEquivalent
      *
