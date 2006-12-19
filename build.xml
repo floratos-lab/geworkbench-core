@@ -231,6 +231,19 @@
 			<classpath refid="run.classpath"/>
 		</java>
 	</target>
+	<target name="run-mindy" depends="compile" description="Runs mindy test application.">
+        <path id="mindy.classpath">
+            <pathelement location="components/mindy/${classes}"/>
+            <pathelement location="components/mindy/lib/swingx-2006_10_27.jar"/>
+            <path refid="run.classpath"/>
+        </path>
+
+        <java fork="true" classname="org.geworkbench.components.mindy.test.MindyTest">
+			<jvmarg value="-Xmx512M"/>
+			<jvmarg value="-Djava.library.path=lib"/>
+			<classpath refid="mindy.classpath"/>
+		</java>
+	</target>
 	<!-- ====================================================================== -->
 	<!-- RUN PRODUCTION-->
 	<!-- ====================================================================== -->
