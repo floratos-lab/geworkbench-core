@@ -113,7 +113,7 @@
 		<gui-area name="VisualArea"/>
 	</plugin>
 
-      <plugin id="Interactions" name="Interaction" class="interactions.InteractionsUserInterface" source="interactions">
+    <plugin id="Interactions" name="Interaction" class="interactions.InteractionsUserInterface" source="interactions">
 		<gui-area name="VisualArea"/>
 	</plugin>
 
@@ -139,7 +139,7 @@
 	<plugin id="commentsPanel" name="Dataset Annotation" class="org.geworkbench.builtin.projects.comments.CommentsPanel">
 		<gui-area name="CommandArea"/>
 	</plugin>
-	<plugin id="filteringPanel" name="Filtering" class="org.geworkbench.components.analysis.FilteringPanel" source="analysis">
+	<plugin id="filteringPanel" name="Filtering" class="org.geworkbench.components.filtering.FilteringPanel" source="filtering">
 		<gui-area name="CommandArea"/>
 	</plugin>
 	<plugin id="historyPanel" name="Dataset History" class="org.geworkbench.builtin.projects.history.HistoryPanel">

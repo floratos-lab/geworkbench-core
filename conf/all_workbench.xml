@@ -211,7 +211,7 @@
         <menu-item path="File.Image snapshot" mode="onFocus" var="File.Image snapshot"/>
         <online-help helpSet="geaw/online-help/MicroarrayPanel/microarrayPanelHelpSet.hs"/>
     </plugin>
-    <plugin id="filteringPanel" name="Filtering Panel" class="org.geworkbench.components.analysis.FilteringPanel">
+    <plugin id="filteringPanel" name="Filtering Panel" class="org.geworkbench.components.filtering.FilteringPanel">
         <gui-area name="CommandArea"/>
         <online-help helpSet="geaw/online-help/Filters/filterHelpSet.hs"/>
     </plugin>

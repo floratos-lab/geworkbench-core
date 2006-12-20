@@ -14,7 +14,7 @@
     <plugin id="colorMosaicPanel" name="Color Mosaic" class="org.geworkbench.components.colormosaic.ColorMosaicPanel">
         <gui-area name="VisualArea"/>
     </plugin>
-    <plugin id="filteringPanel" name="Filtering Panel" class="org.geworkbench.components.analysis.FilteringPanel">
+    <plugin id="filteringPanel" name="Filtering Panel" class="org.geworkbench.components.filtering.FilteringPanel">
         <gui-area name="CommandArea"/>
     </plugin>
     <plugin id="genotypicFilter" name="Genotypic File Format" class="org.geworkbench.components.parsers.genotype.GenotypicFileFormat"/>

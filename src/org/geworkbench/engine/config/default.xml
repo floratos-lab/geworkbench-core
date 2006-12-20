@@ -111,7 +111,7 @@
 	<plugin id="commentsPanel" name="Dataset Annotation" class="org.geworkbench.builtin.projects.comments.CommentsPanel">
 		<gui-area name="CommandArea"/>
 	</plugin>
-	<plugin id="filteringPanel" name="Filtering Panel" class="org.geworkbench.components.analysis.FilteringPanel" source="analysis">
+	<plugin id="filteringPanel" name="Filtering Panel" class="org.geworkbench.components.filtering.FilteringPanel" source="analysis">
 		<gui-area name="CommandArea"/>
 	</plugin>
 	<plugin id="historyPanel" name="Dataset History" class="org.geworkbench.builtin.projects.history.HistoryPanel">
