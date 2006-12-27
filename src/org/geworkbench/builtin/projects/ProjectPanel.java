@@ -1145,6 +1145,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                     WAIT_CURSOR));
             Runnable dataLoader = new Runnable() {
                 public void run() {
+                    boolean didMerge = false;
                     int n = dataSetFiles.length;
                     DSDataSet[] dataSets = new DSDataSet[n];
                     DSMicroarraySet mergedSet = null;
@@ -1204,6 +1205,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                                     maSets[i] = (DSMicroarraySet) dataSets[i];
                                 }
                                 doMergeSets(maSets);
+                                didMerge = true;
                             }
                         }
 //                        }
@@ -1212,7 +1214,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                     progressBar.setIndeterminate(false);
                     jDataSetPanel.setCursor(Cursor.getPredefinedCursor(Cursor.
                             DEFAULT_CURSOR));
-                    if (mergeFiles) {
+                    if (didMerge) {
                         // We're done
                         return;
                     }
