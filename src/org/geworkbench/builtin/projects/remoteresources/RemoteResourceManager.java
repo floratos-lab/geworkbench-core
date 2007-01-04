@@ -2,12 +2,10 @@ package org.geworkbench.builtin.projects.remoteresources;
 
 import java.io.*;
 import java.util.ArrayList;
-import org.apache.axis.client.Service;
 import java.net.URL;
-import org.apache.axis.client.Call;
 import javax.xml.namespace.QName;
-import edu.columbia.stubs.CaARRAYIndexService.service.*;
-import edu.columbia.stubs.CaARRAYIndexService.CaARRAYIndexPortType;
+//import edu.columbia.stubs.CaARRAYIndexService.service.*;
+//import edu.columbia.stubs.CaARRAYIndexService.CaARRAYIndexPortType;
 
 /**
  * <p>Title: </p>
@@ -117,13 +115,16 @@ public class RemoteResourceManager {
 
             String cmd = "caARRAY";
             //Object result = call.invoke(new Object[] {cmd});
-            CaARRAYIndexServiceGridLocator caArrayServiceLocator = new
-                    CaARRAYIndexServiceGridLocator();
 
-            CaARRAYIndexPortType caARRAYPortType = caArrayServiceLocator.
-                    getCaARRAYIndexPort(GSH); //getsequenceAlignmentPort(GSH);// getSequenceAlignmentPort(GSH);
-
-            String test = (String) caARRAYPortType.getServer(cmd);
+            // Disabled for caGRID
+//            CaARRAYIndexServiceGridLocator caArrayServiceLocator = new
+//                    CaARRAYIndexServiceGridLocator();
+//
+//            CaARRAYIndexPortType caARRAYPortType = caArrayServiceLocator.
+//                    getCaARRAYIndexPort(GSH); //getsequenceAlignmentPort(GSH);// getSequenceAlignmentPort(GSH);
+//
+//            String test = (String) caARRAYPortType.getServer(cmd);
+            String test = null;
 
             if (test == null) {
                 return false;

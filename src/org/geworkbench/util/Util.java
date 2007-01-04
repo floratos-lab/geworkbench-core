@@ -6,8 +6,10 @@ import org.apache.commons.logging.LogFactory;
 import javax.swing.*;
 import java.io.*;
 import java.util.*;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.awt.*;
 
 public class Util {
     static Log log = LogFactory.getLog(Util.class);
@@ -200,11 +202,11 @@ public class Util {
         }
         return name;
     }
-    
+
     public static void copyFile(InputStream in, File dst) throws IOException {
         //InputStream in = new FileInputStream(src);
         OutputStream out = new FileOutputStream(dst);
-    
+
         // Transfer bytes from in to out
         byte[] buf = new byte[1024];
         int len;
@@ -222,4 +224,14 @@ public class Util {
         }
         return false;
     }
+
+    public static void centerWindow(Window window) {
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        Dimension screenSize = toolkit.getScreenSize();
+        Dimension winSize = window.getSize();
+        int x = (screenSize.width - winSize.width) / 2;
+        int y = (screenSize.height - winSize.height) / 2;
+        window.setLocation(x, y);
+    }
+
 }
