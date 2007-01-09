@@ -50,6 +50,7 @@ import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarr
 import org.geworkbench.bison.datastructure.biocollections.views.CSMicroarraySetView;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
+import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.APSerializable;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
@@ -707,6 +708,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
             ObjectInputStream s = new ObjectInputStream(in);
             SaveTree saveTree = (SaveTree) s.readObject();
             populateFromSaveTree(saveTree);
+            APSerializable aps = (APSerializable) s.readObject();
+            AnnotationParser.setFromSerializable(aps);
 //            root = (ProjectTreeNode) s.readObject();
 //            selection.clearNodeSelections();
 //            projectTreeModel = new DefaultTreeModel(root);
@@ -1876,6 +1879,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
             ObjectOutput s = new ObjectOutputStream(f);
             SaveTree saveTree = new SaveTree(this, getDataSet());
             s.writeObject(saveTree);
+            APSerializable aps = AnnotationParser.getSerializable();
+            s.writeObject(aps);
             s.flush();
         } catch (IOException ex) {
             System.err.println("Error: " + ex);
@@ -2289,6 +2294,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                 SaveTree saveTree = (SaveTree) s.readObject();
                 clear();
                 populateFromSaveTree(saveTree);
+                APSerializable aps = (APSerializable) s.readObject();
+                AnnotationParser.setFromSerializable(aps);
 //                ProjectTreeNode tempNode = (ProjectTreeNode) s.readObject();
 //                // Clean up local structures and notify interested components to clean
 //                // themselves up.

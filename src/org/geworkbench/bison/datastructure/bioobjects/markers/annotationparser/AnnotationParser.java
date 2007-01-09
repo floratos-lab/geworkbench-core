@@ -32,7 +32,7 @@ import java.lang.reflect.Method;
  * @version 1.5
  */
 
-public class AnnotationParser {
+public class AnnotationParser implements Serializable {
 
     static Log log = LogFactory.getLog(AnnotationParser.class);
 
@@ -62,21 +62,46 @@ public class AnnotationParser {
     public static final String REFSEQ = "RefSeq Transcript ID"; // RefSeq
     public static final String TRANSCRIPT = "Transcript Assignments";
 
+    //// FIELDS
     private static DSDataSet currentDataSet = null;
     private static Map<DSDataSet, String> datasetToChipTypes = new HashMap<DSDataSet, String>();
     private static Map<String, ListOrderedMap<String, Map<String, String>>> chipTypeToAnnotations
             = new HashMap<String, ListOrderedMap<String, Map<String, String>>>();
 
-    final static String chiptyemapfilename = "chiptypeMap.txt";
-    private static String systempDir = System.getProperty(
-            "temporary.files.directory");
-    public final static String tmpDir;
+    private static HashMap<DSDataSet,
+            CustomAnnotations> customAnnotations = new HashMap<DSDataSet,
+            CustomAnnotations>();
 
     public static HashMap chiptypeMap = new HashMap();
-    private static ArrayList<String> chipTypes = new ArrayList<String>();
-    public static final String DEFAULT_CHIPTYPE = "HG_U95Av2";
+
     public static Map<String, ListOrderedMap<String, Vector<String>>> geneNameMap
             = new HashMap<String, ListOrderedMap<String, Vector<String>>>();
+    private static ArrayList<String> chipTypes = new ArrayList<String>();
+    static MultiMap<String, String> GOIDToAffy = null;
+    static MultiMap<String, String> affyToGOID = null;
+    //// END FIELDS
+
+    public static APSerializable getSerializable() {
+        return new APSerializable(currentDataSet, datasetToChipTypes, chipTypeToAnnotations, customAnnotations, chiptypeMap, geneNameMap, chipTypes, GOIDToAffy, affyToGOID);
+    }
+
+    public static void setFromSerializable(APSerializable aps) {
+        currentDataSet = aps.currentDataSet;
+        datasetToChipTypes = aps.datasetToChipTypes;
+        chipTypeToAnnotations = aps.chipTypeToAnnotations;
+        customAnnotations = aps.customAnnotations;
+        chiptypeMap = aps.chiptypeMap;
+        geneNameMap = aps.geneNameMap;
+        chipTypes = aps.chipTypes;
+        GOIDToAffy = aps.GOIDToAffy;
+        affyToGOID = aps.affyToGOID;
+    }
+
+    final static String chiptyemapfilename = "chiptypeMap.txt";
+    private static String systempDir = System.getProperty("temporary.files.directory");
+    public final static String tmpDir;
+
+    public static final String DEFAULT_CHIPTYPE = "HG_U95Av2";
     public static final String TRANSCRIPTASSIGN =
             "Transcript Assignments";
     public static final String PREF_ANNOTATIONS_MESSAGE = "annotationsMessage";
@@ -310,9 +335,6 @@ public class AnnotationParser {
         return result;
     }
 
-    static MultiMap<String, String> GOIDToAffy = null;
-    static MultiMap<String, String> affyToGOID = null;
-
     public static MultiMap<String, String> getGotable() {
         if (GOIDToAffy != null) {
             return GOIDToAffy;
@@ -531,7 +553,7 @@ public class AnnotationParser {
     }
 
     // Custom annotations loaded by the user (not necessarily Affy)
-    private static class CustomAnnotations {
+    static class CustomAnnotations {
 
         public CustomAnnotations() {
             annotations = new ListOrderedMap<String, Map<String, String>>();
@@ -540,10 +562,6 @@ public class AnnotationParser {
         private ListOrderedMap<String, Map<String, String>> annotations;
     }
 
-
-    private static HashMap<DSDataSet,
-            CustomAnnotations> customAnnotations = new HashMap<DSDataSet,
-            CustomAnnotations>();
 
     private static ListOrderedMap<String, Map<String,
             String>> getCustomAnnots(DSDataSet dataSet) {
