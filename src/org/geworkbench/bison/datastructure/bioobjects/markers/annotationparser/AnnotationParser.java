@@ -283,18 +283,15 @@ public class AnnotationParser implements Serializable {
      * @version 1.0
      */
     static public String[] getInfo(String affyID, String fieldID) {
-        try {
-            Map<String,
-                    String>
-                    annots = getAllAnnotationsForDataSet(currentDataSet).
-                    get(affyID);
+        Map<String, String> annots = getAllAnnotationsForDataSet(currentDataSet).get(affyID);
+        if (annots != null) {
             String field = annots.get(fieldID);
-            return field.split(MAIN_DELIMITER);
-        } catch (Exception e) {
-            if (affyID != null) {
-                log.debug("Error getting info for affyId (" + affyID + "):" +
-                        e);
+            if (field != null) {
+                return field.split(MAIN_DELIMITER);
+            } else {
+                return null;
             }
+        } else {
             return null;
         }
     }
@@ -394,8 +391,7 @@ public class AnnotationParser implements Serializable {
         return set;
     }
 
-    public static ListOrderedMap<String, Map<String,
-            String>> getAllAnnotationsForDataSet(DSDataSet dataset) {
+    public static ListOrderedMap<String, Map<String, String>> getAllAnnotationsForDataSet(DSDataSet dataset) {
         String chipType = datasetToChipTypes.get(dataset);
         ListOrderedMap<String, Map<String,
                 String>> annots = chipTypeToAnnotations.get(chipType);
