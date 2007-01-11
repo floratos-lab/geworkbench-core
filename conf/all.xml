@@ -105,8 +105,7 @@
 	<plugin id="preferences" name="preferences" class="org.geworkbench.engine.config.PreferencesMenu"/>
 
 	<plugin id="versioninfo" name="Version Infomation" class="org.geworkbench.components.versioninfo.VersionInfoComponent" source="versioninfo"/>
-    <plugin id="Cutenet" name="Cutenet" class="org.geworkbench.components.cutenet.CutenetAnalysis" source="cutenet"/>
-	<plugin id="promoterPanel" name="Promoter" class="org.geworkbench.components.promoter.PromoterView" source="promoter">
+    	<plugin id="promoterPanel" name="Promoter" class="org.geworkbench.components.promoter.PromoterView" source="promoter">
 		<gui-area name="VisualArea"/>
 	</plugin>
 	<plugin id="sequencePanel" name="Sequence" class="org.geworkbench.components.sequences.SequenceViewAppComponent" source="sequences">
@@ -114,6 +113,11 @@
 	</plugin>
 
     <plugin id="Interactions" name="Interaction" class="interactions.InteractionsUserInterface" source="interactions">
+		<gui-area name="VisualArea"/>
+	</plugin>
+
+
+     <plugin id="CellularNetWork" name="Cellular NetWork" class="interactions.CellularNetworkKnowledgeWidget" source="interactions">
 		<gui-area name="VisualArea"/>
 	</plugin>
 
