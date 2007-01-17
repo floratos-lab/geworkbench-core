@@ -59,8 +59,9 @@
 	<plugin id="imageViewer" name="Image Viewer" class="org.geworkbench.components.viewers.ImageViewer" source="viewers">
 		<gui-area name="VisualArea"/>
 	</plugin>
-	<plugin id="log2Normalizer" name="Log2 Tranformation" class="org.geworkbench.components.normalization.LogTransformationNormalizer" source="normalization"/>
-	<plugin id="MarkerCenteringNormalizer" name="Marker Centering Normalizer" class="org.geworkbench.components.normalization.MarkerCenteringNormalizer" source="normalization"/>
+
+    <plugin id="log2Normalizer" name="Log2 Tranformation" class="org.geworkbench.components.normalization.LogTransformationNormalizer" source="normalization"/>
+    <plugin id="MarkerCenteringNormalizer" name="Marker Centering Normalizer" class="org.geworkbench.components.normalization.MarkerCenteringNormalizer" source="normalization"/>
 	<plugin id="MeanVarianceNormalizer" name="Mean Variance Normalizer" class="org.geworkbench.components.normalization.MarkerMeanVarianceNormalizer" source="normalization"/>
 	<plugin id="MicroarrayCenteringNormalizer" name="Microarray Centering Normalizer" class="org.geworkbench.components.normalization.MicroarrayCenteringNormalizer" source="normalization"/>
 	<plugin id="missingValueNorm" name="Missing Values" class="org.geworkbench.components.normalization.MissingValueNormalizer" source="normalization"/>
@@ -95,7 +96,8 @@
 	<plugin id="fastHierarchicalClusteringAnalysis" name="Fast Hierachical Clustering Analysis" class="org.geworkbench.components.clustering.FastHierClustAnalysis" source="clustering"/>
 
 
-	<plugin id="somAnalysis" name="SOM Analysis" class="org.geworkbench.components.clustering.SOMAnalysis" source="clustering"/>
+    <plugin id="mindy" name="MINDY Analysis" class="org.geworkbench.components.mindy.MindyAnalysis" source="mindy"/>
+    <plugin id="somAnalysis" name="SOM Analysis" class="org.geworkbench.components.clustering.SOMAnalysis" source="clustering"/>
 	<plugin id="tTestAnalysis" name="t Test Analysis" class="org.geworkbench.components.analysis.clustering.TtestAnalysis" source="analysis"/>
 	<plugin id="multiTTestAnalysis" name="Multi t Test Analysis" class="org.geworkbench.components.analysis.clustering.MultiTTestAnalysis" source="analysis"/>
 	<plugin id="thresholdNormalizer" name="Threshold Normalizer" class="org.geworkbench.components.normalization.ThresholdNormalizer" source="normalization"/>
@@ -170,7 +172,12 @@
         <!--<gui-area name="CommandArea"/>-->
     <!--</plugin>-->
 
-	<plugin id="Jmol" name="Jmol" class="org.geworkbench.components.jmol.JmolComponent" source="jmol">
+    <!-- MINDY -->
+    <plugin id="mindyViewer" name="MINDY Viewer" class="org.geworkbench.components.mindy.MindyVisualComponent" source="mindy">
+        <gui-area name="VisualArea"/>
+    </plugin>
+
+    <plugin id="Jmol" name="Jmol" class="org.geworkbench.components.jmol.JmolComponent" source="jmol">
     	<gui-area name="VisualArea"/>
 	</plugin>
 	<plugin id="CELImageViewer" name="CELImageViewer" class="org.geworkbench.components.celprocessing.CELImageViewerComponent" source="celprocessing">
@@ -188,5 +195,7 @@
     <plugin id="cagrid" name="caGrid" class="org.geworkbench.components.cagrid.CaGridPanel" source="cagrid">
         <gui-area name="CommandArea"/>
     </plugin>
+
+
 
 </geaw-config>

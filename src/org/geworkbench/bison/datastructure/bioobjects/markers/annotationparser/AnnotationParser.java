@@ -283,15 +283,14 @@ public class AnnotationParser implements Serializable {
      * @version 1.0
      */
     static public String[] getInfo(String affyID, String fieldID) {
-        Map<String, String> annots = getAllAnnotationsForDataSet(currentDataSet).get(affyID);
-        if (annots != null) {
+        try {
+            Map<String, String> annots = getAllAnnotationsForDataSet(currentDataSet). get(affyID);
             String field = annots.get(fieldID);
-            if (field != null) {
-                return field.split(MAIN_DELIMITER);
-            } else {
-                return null;
+            return field.split(MAIN_DELIMITER);
+        } catch (Exception e) {
+            if (affyID != null) {
+                log.debug("Error getting info for affyId (" + affyID + "):" + e);
             }
-        } else {
             return null;
         }
     }

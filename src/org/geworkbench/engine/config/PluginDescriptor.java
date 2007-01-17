@@ -157,7 +157,7 @@ public class PluginDescriptor extends IdentifiableImpl implements Comparable {
                 log.debug("Set context class loader.");
             }
             plugin = componentRegistry.createComponent(pluginClass, this);
-            log.debug("Created component.");
+            log.debug("Created component: " + getLabel() + ", " + pluginClass);
         } catch (Exception e) {
             throw new RuntimeException("Failed to instantiate plugin:" + pluginClass, e);
         } finally {
