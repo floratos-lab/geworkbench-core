@@ -119,7 +119,7 @@
 	</plugin>
 
 
-     <plugin id="CellularNetWork" name="Cellular NetWork" class="interactions.CellularNetworkKnowledgeWidget" source="interactions">
+     <plugin id="CellularNetWork" name="Cellular NetWork" class="org.geworkbench.components.interactions.cellularnetwork.CellularNetworkKnowledgeWidget" source="interactions">
 		<gui-area name="VisualArea"/>
 	</plugin>
 
