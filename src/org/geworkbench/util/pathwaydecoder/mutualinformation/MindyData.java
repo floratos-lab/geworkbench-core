@@ -101,6 +101,19 @@ public class MindyData {
         return results;
     }
 
+    public List<MindyResultRow> getRows(DSGeneMarker modulator, DSGeneMarker transFactor, List<DSGeneMarker> limitTargets) {
+        List<MindyResultRow> results = new ArrayList<MindyResultRow>();
+        for (MindyResultRow mindyResultRow : data) {
+            if (mindyResultRow.getModulator().equals(modulator) && mindyResultRow.getTranscriptionFactor().equals(transFactor))
+            {
+                if (limitTargets != null && limitTargets.contains(mindyResultRow.getTarget())) {
+                    results.add(mindyResultRow);
+                }
+            }
+        }
+        return results;
+    }
+
     private void calculateModulatorStatistics() {
         log.debug("Calculating modulator stats...");
         for (MindyResultRow row : data) {

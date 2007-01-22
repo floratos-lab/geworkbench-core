@@ -200,6 +200,7 @@
       <module fileurl="file://$PROJECT_DIR$/components/cagrid/cagrid.iml" filepath="$PROJECT_DIR$/components/cagrid/cagrid.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/cascript/cascript.iml" filepath="$PROJECT_DIR$/components/cascript/cascript.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/celprocessing/celprocessing.iml" filepath="$PROJECT_DIR$/components/celprocessing/celprocessing.iml" />
+      <module fileurl="file://$PROJECT_DIR$/components/cgems/cgems.iml" filepath="$PROJECT_DIR$/components/cgems/cgems.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/clustering/clustering.iml" filepath="$PROJECT_DIR$/components/clustering/clustering.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/colormosaic/colormosaic.iml" filepath="$PROJECT_DIR$/components/colormosaic/colormosaic.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/cutenet/cutenet.iml" filepath="$PROJECT_DIR$/components/cutenet/cutenet.iml" />
@@ -333,6 +334,7 @@
         <root url="jar://$PROJECT_DIR$/lib/annotations/dom4j-1.4.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/annotations/openide-util.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/annotations/hibernate3.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/cgems/cgom-cgems-client.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
