@@ -12,6 +12,9 @@
 	<plugin id="annotationsPanel" name="Marker Annotations" class="org.geworkbench.components.annotations.AnnotationsPanel" source="annotations">
 		<gui-area name="VisualArea"/>
 	</plugin>
+	<plugin id="cgemsPanel" name="Cancer GEMS" class="org.geworkbench.components.cgems.CGemsPanel" source="cgems">
+		<gui-area name="VisualArea"/>
+	</plugin>
 	<plugin id="blastResults" name="Alignment Results" class="org.geworkbench.components.alignment.panels.BlastViewComponent" source="alignment">
 		<gui-area name="VisualArea"/>
 	</plugin>
