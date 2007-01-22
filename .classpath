@@ -101,17 +101,5 @@
 	<classpathentry exported="true" kind="lib" path="plugins/SigAttributes.jar"/>
 	<classpathentry exported="true" kind="lib" path="plugins/yeast-context.jar"/>
 	<classpathentry exported="true" kind="lib" path="plugins/yLayouts.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/annotations/spring.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/annotations/spring-richclient.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/annotations/client.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/annotations/hibernate3.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/annotations/aspectjrt.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/annotations/jmiutils.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/annotations/mail.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/annotations/openide-util.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/annotations/dom4j-1.4.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/annotations/wsdl4j.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/annotations/wsdl4j-1.5.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/cgems/cgom-cgems-client.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
