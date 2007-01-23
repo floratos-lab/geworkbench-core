@@ -98,7 +98,8 @@
 
 	<plugin id="fastHierarchicalClusteringAnalysis" name="Fast Hierachical Clustering Analysis" class="org.geworkbench.components.clustering.FastHierClustAnalysis" source="clustering"/>
 
-
+    <plugin id="matrixReduce" name="Matrix Reduce" class="org.geworkbench.components.matrixreduce.MatrixReduceAnalysis" source="matrixreduce"/>
+    
     <plugin id="mindy" name="MINDY Analysis" class="org.geworkbench.components.mindy.MindyAnalysis" source="mindy"/>
     <plugin id="somAnalysis" name="SOM Analysis" class="org.geworkbench.components.clustering.SOMAnalysis" source="clustering"/>
 	<plugin id="tTestAnalysis" name="t Test Analysis" class="org.geworkbench.components.analysis.clustering.TtestAnalysis" source="analysis"/>
