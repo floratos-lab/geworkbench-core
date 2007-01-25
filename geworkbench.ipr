@@ -249,7 +249,6 @@
         <root url="jar://$PROJECT_DIR$/lib/xml-apis.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/jai_core.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/jdom.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/axis.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/activation.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/mail.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/commons-beanutils.jar!/" />
@@ -270,7 +269,6 @@
         <root url="jar://$PROJECT_DIR$/lib/jbcl.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/docking.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/poi-2.5.1-final-20040804.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/ogsa.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/cog-jglobus.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/cog-axis.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/ostermillerutils_1_04_03_for_kaffe.jar!/" />
@@ -323,18 +321,6 @@
         <root url="jar://$PROJECT_DIR$/lib/kodo-jdo-runtime.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/kodo-jdo.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/caBIO.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/annotations/client.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/annotations/aspectjrt.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/annotations/spring-richclient.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/annotations/wsdl4j.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/annotations/spring.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/annotations/jmiutils.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/annotations/wsdl4j-1.5.1.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/annotations/mail.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/annotations/dom4j-1.4.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/annotations/openide-util.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/annotations/hibernate3.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/cgems/cgom-cgems-client.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

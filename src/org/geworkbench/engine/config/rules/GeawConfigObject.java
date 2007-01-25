@@ -149,7 +149,7 @@ public class GeawConfigObject {
     public static void addHelpSet(HelpSet hs) {
         if (hs == null)
             return;
-        sortedHelpSets.put(hs.getTitle(), hs);
+        sortedHelpSets.put(hs.getTitle().toLowerCase(), hs);
     }
 
     /**
