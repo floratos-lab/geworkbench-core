@@ -28,7 +28,7 @@ import java.util.StringTokenizer;
  * <p>Company: </p>
  *
  * @version 1.0
- * @xuegong wang
+ * @author xuegong wang
  */
 
 public class RMAExpressFileFormat extends DataSetFileFormat {
@@ -104,7 +104,7 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
                     if (length != (n + 1)) {
                         System.out.println("Warning: Could not parse line #" + (m + 1) + ". Line should have " + (n+1) + " lines, has " + length + ".");
                     }
-                    String markerName = tokens[0];
+                    String markerName = new String(tokens[0].trim());
                     CSExpressionMarker marker = new CSExpressionMarker(m);
                     marker.setLabel(markerName);
                     maSet.getMarkerVector().add(m, marker);
@@ -184,7 +184,7 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
     }
 
     public List getOptions() {
-        /**@todo Implement this org.geworkbench.components.parsers.FileFormat abstract method*/
+        // todo Implement this org.geworkbench.components.parsers.FileFormat abstract method
         throw new UnsupportedOperationException("Method getOptions() not yet implemented.");
     }
 
