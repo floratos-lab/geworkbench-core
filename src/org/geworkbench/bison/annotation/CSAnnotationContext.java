@@ -715,8 +715,8 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
         for (Iterator<T> iterator = items.iterator(); iterator.hasNext();) {
             panel.add(iterator.next());
         }
-        // If this is the default class, then also include unlabeled items
-        if (clazz.equals(defaultClass)) {
+        // If this is the default class, then also include unlabeled items, but only if no activated labels of this type
+        if (clazz.equals(defaultClass) && panel.size() == 0) {
             DSItemList<T> allItems = itemListReference.get();
             for (int i = 0; i < allItems.size(); i++) {
                 T item = allItems.get(i);
