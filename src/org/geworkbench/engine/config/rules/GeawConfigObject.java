@@ -172,9 +172,26 @@ public class GeawConfigObject {
     public static void finish() {
         // Enable online help.
         if (masterHelp == null) {
+            String masterHSFileName = System.getProperty(MASTER_HS_PROPERTY_NAME);
+            // If there is no designate master help, just use the argument in the
+            // method call.
+            if (masterHSFileName != null) {
+                try {
+                    ClassLoader cl = GeawConfigObject.class.getClassLoader();
+                    URL url = HelpSet.findHelpSet(cl, masterHSFileName);
+                    masterHelp = new HelpSet(cl, url);
+                } catch (Exception ee) {
+                    log.error("Master Help Set " + masterHSFileName + " not found. Will proceed without it.");
+                }
+            } else {
+                log.error("Master Help Set property not found.");
+            }
+
+
             for (Map.Entry<String, HelpSet> entry : sortedHelpSets.entrySet()) {
                 log.debug("Adding help set: " + entry.getKey() + " | "+entry.getValue().getTitle());
                 if (masterHelp == null) {
+                    log.warn("Using first help set in map as master.");
                     masterHelp = entry.getValue();
                 } else {
                     masterHelp.add(entry.getValue());
