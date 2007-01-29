@@ -103,6 +103,13 @@ public abstract class AbstractTraining extends AbstractAnalysis implements Clust
         }
     }
 
+    @Subscribe public void receive(org.geworkbench.events.GeneSelectorEvent e, Object source) {
+        if (panel.getMaSet() != null) {
+            DSPanel<DSGeneMarker> selectionPanel = e.getPanel();
+            panel.setMarkerPanel(selectionPanel);
+        }
+    }
+
     @Subscribe public void receive(PhenotypeSelectorEvent event, Object source) {
         panel.rebuildForm();
     }

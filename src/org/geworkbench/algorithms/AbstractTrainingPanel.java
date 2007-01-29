@@ -7,9 +7,12 @@ import org.geworkbench.util.ProgressGraph;
 import org.geworkbench.util.TrainingTask;
 import org.geworkbench.util.threading.SwingWorker;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
+import org.geworkbench.bison.datastructure.biocollections.views.DSMicroarraySetView;
+import org.geworkbench.bison.datastructure.biocollections.views.CSMicroarraySetView;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
+import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.annotation.DSAnnotationContext;
 import org.geworkbench.bison.annotation.CSAnnotationContextManager;
 import org.geworkbench.bison.annotation.CSAnnotationContext;
@@ -45,6 +48,7 @@ public abstract class AbstractTrainingPanel extends AbstractSaveableParameterPan
     protected JLabel truePositives = new JLabel();
     protected JLabel trueNegatives = new JLabel();
     protected DSMicroarraySet maSet = null;
+    private DSPanel<DSGeneMarker> selectionPanel;
     protected JButton crossTest = new JButton("Test via Cross Validation");
     protected JButton cancelTest = new JButton("Cancel Test");
     private SwingWorker worker;
@@ -68,6 +72,24 @@ public abstract class AbstractTrainingPanel extends AbstractSaveableParameterPan
 
     public void setMaSet(DSMicroarraySet maSet) {
         this.maSet = maSet;
+    }
+
+    public DSMicroarraySet getMaSet() {
+        return maSet;
+    }
+
+    public void setMarkerPanel(DSPanel<DSGeneMarker> selectionPanel) {
+        this.selectionPanel = selectionPanel;
+    }
+
+    public DSItemList<DSGeneMarker> getActiveMarkers() {
+        if (selectionPanel != null) {
+            DSMicroarraySetView<DSGeneMarker, DSMicroarray> maView = new CSMicroarraySetView<DSGeneMarker, DSMicroarray>(maSet);
+            maView.setMarkerPanel(selectionPanel);
+            return maView.getMarkerPanel().activeSubset();
+        } else {
+            return maSet.getMarkers();
+        }
     }
 
     public void stepUpdate(float value) {
@@ -136,8 +158,7 @@ public abstract class AbstractTrainingPanel extends AbstractSaveableParameterPan
 
                         DSAnnotationContext<DSMicroarray> context = CSAnnotationContextManager.getInstance().getCurrentContext(maSet);
 
-                        // todo - Use microarray set view for marker lists
-                        DSItemList<DSGeneMarker> markers = maSet.getMarkers();
+                        DSItemList<DSGeneMarker> markers = getActiveMarkers();
 
                         java.util.List<float[]> caseData = new ArrayList<float[]>();
                         AbstractTraining.addMicroarrayData(context.getActivatedItemsForClass(CSAnnotationContext.CLASS_CASE), caseData, markers);
@@ -262,4 +283,5 @@ public abstract class AbstractTrainingPanel extends AbstractSaveableParameterPan
         this.trainingTask = trainingTask;
         trainingTask.setTrainingProgressListener(AbstractTrainingPanel.this);
     }
+
 }
