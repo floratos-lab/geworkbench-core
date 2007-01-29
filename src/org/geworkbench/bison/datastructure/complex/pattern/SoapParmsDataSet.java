@@ -3,7 +3,7 @@ package org.geworkbench.bison.datastructure.complex.pattern;
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.util.RandomNumberGenerator;
-import polgara.soapPD_wsdl.Parameters;
+//import polgara.soapPD_wsdl.Parameters;
 
 import java.io.File;
 
@@ -17,14 +17,14 @@ import java.io.File;
  * @version 1.0
  */
 
-public class ParmsDataSet extends CSAncillaryDataSet {
+public class SoapParmsDataSet extends CSAncillaryDataSet {
     private Parameters parms = null;
     boolean dirty = true;
     File dataSetFile = null;
     String label = "Undefined";
 
 
-    public ParmsDataSet(Parameters p, String name, DSDataSet parent) {
+    public SoapParmsDataSet(Parameters p, String name, DSDataSet parent) {
         super(parent, name);        
         parms = p;
         setID(RandomNumberGenerator.getID());
@@ -52,8 +52,8 @@ public class ParmsDataSet extends CSAncillaryDataSet {
     }
 
     public boolean equals(Object ads) {
-        if (ads instanceof ParmsDataSet) {
-            ParmsDataSet pds = (ParmsDataSet) ads;
+        if (ads instanceof SoapParmsDataSet) {
+            SoapParmsDataSet pds = (SoapParmsDataSet) ads;
             if (parms.getComputePValue() != pds.parms.getComputePValue()) return false;
             if (parms.getCountSeq() != pds.parms.getCountSeq()) return false;
             if (parms.getExact() != pds.parms.getExact()) return false;

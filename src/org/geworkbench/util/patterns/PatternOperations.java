@@ -4,7 +4,7 @@ import org.geworkbench.bison.datastructure.biocollections.sequences.
         DSSequenceSet;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.
         DSMatchedSeqPattern;
-import polgara.soapPD_wsdl.SOAPOffset;
+//import polgara.soapPD_wsdl.SOAPOffset;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -87,23 +87,27 @@ public class PatternOperations {
     static public void fill(DSMatchedSeqPattern pattern, DSSequenceSet sDB) {
         if (pattern.getClass().isAssignableFrom(org.geworkbench.util.patterns.
                                                 CSMatchedSeqPattern.class)) {
+            //What is the purpose here? reset the ascii value?
+            //Xiaoqing changes it on 1/25/2007
+
             CSMatchedSeqPattern p = (CSMatchedSeqPattern) pattern;
+            p.updateASCII();
             String ascii = new String();
-            SOAPOffset[] offsets = p.offset.value;
-            int j = offsets[0].getDx();
-            for (int i = 0; i < offsets.length; i++, j++) {
-                int dx = offsets[i].getDx();
-                for (; j < dx; j++) {
-                    ascii += '.';
-                }
-                String tokString = offsets[i].getToken();
-                if (tokString.length() > 1) {
-                    ascii += '[' + tokString + ']';
-                } else {
-                    ascii += tokString;
-                }
-            }
-            p.ascii = ascii;
+//            SOAPOffset[] offsets = p.offset.value;
+//            int j = offsets[0].getDx();
+//            for (int i = 0; i < offsets.length; i++, j++) {
+//                int dx = offsets[i].getDx();
+//                for (; j < dx; j++) {
+//                    ascii += '.';
+//                }
+//                String tokString = offsets[i].getToken();
+//                if (tokString.length() > 1) {
+//                    ascii += '[' + tokString + ']';
+//                } else {
+//                    ascii += tokString;
+//                }
+//            }
+//            p.ascii = ascii;
         }
     }
 

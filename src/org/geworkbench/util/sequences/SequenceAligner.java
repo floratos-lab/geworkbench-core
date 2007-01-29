@@ -3,7 +3,7 @@ package org.geworkbench.util.sequences;
 import Jama.Matrix;
 import org.geworkbench.bison.datastructure.biocollections.sequences.CSSequenceSet;
 import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
-import polgara.soapPD_wsdl.SoapPDPortType;
+
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 
 public class SequenceAligner { //rename to entropy calculator?
     private DSSequenceSet sequenceDB = null;
-    private SoapPDPortType port = null;
+
     private int handle = -1;
     private int index = -1;
     private int patLength = -1;

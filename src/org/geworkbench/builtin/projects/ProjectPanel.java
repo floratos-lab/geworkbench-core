@@ -70,7 +70,7 @@ import org.geworkbench.components.parsers.FileFormat;
 import org.geworkbench.components.parsers.InputFileFormatException;
 import org.geworkbench.components.parsers.MAGELoader;
 import org.geworkbench.components.parsers.microarray.DataSetFileFormat;
-import org.geworkbench.components.parsers.patterns.PatternFileFormat;
+
 import org.geworkbench.engine.preferences.GlobalPreferences;
 import org.geworkbench.engine.skin.Skin;
 import org.geworkbench.engine.properties.PropertiesManager;
@@ -197,7 +197,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         jMenuItem1.setText("Load Patterns");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                jMenuItem1_actionPerformed(e);
+                //jMenuItem1_actionPerformed(e);
             }
         });
         jMArrayMenu.add(jMenuItem1);
@@ -393,10 +393,12 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
             }
         }
         // Set final selection
+        if(selectedNode!=null){
         projectTree.scrollPathToVisible(new TreePath(selectedNode));
         //serialize("default.ws");
         projectTree.setSelectionPath(new TreePath(selectedNode.getPath()));
         selection.setNodeSelection(selectedNode);
+        }
     }
 
     private void setComponents(DataSetSaveNode saveNode) {
@@ -800,25 +802,29 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         }
     }
 
-    void jMenuItem1_actionPerformed(ActionEvent e) {
-        JFileChooser chooser = new JFileChooser(PropertiesMonitor.
-                                                getPropertiesMonitor().
-                                                getDefPath());
-        PatternFileFormat format = new PatternFileFormat();
-        FileFilter filter = format.getFileFilter();
-        chooser.setFileFilter(filter);
-        int returnVal = chooser.showOpenDialog(null);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            DSDataSet ds = selection.getDataSet();
-            if (ds != null) {
-                org.geworkbench.util.patterns.PatternDB patternDB = new org.
-                        geworkbench.util.patterns.PatternDB(ds.getFile(), null);
-                if (patternDB.read(chooser.getSelectedFile())) {
-                    addDataSetSubNode(patternDB);
-                }
-            }
-        }
-    }
+    /**
+     * Temp removed for axis fix.
+     * @param e
+     */
+//    void jMenuItem1_actionPerformed(ActionEvent e) {
+//        JFileChooser chooser = new JFileChooser(PropertiesMonitor.
+//                                                getPropertiesMonitor().
+//                                                getDefPath());
+//        PatternFileFormat format = new PatternFileFormat();
+//        FileFilter filter = format.getFileFilter();
+//        chooser.setFileFilter(filter);
+//        int returnVal = chooser.showOpenDialog(null);
+//        if (returnVal == JFileChooser.APPROVE_OPTION) {
+//            DSDataSet ds = selection.getDataSet();
+//            if (ds != null) {
+//                org.geworkbench.util.patterns.PatternDB patternDB = new org.
+//                        geworkbench.util.patterns.PatternDB(ds.getFile(), null);
+//                if (patternDB.read(chooser.getSelectedFile())) {
+//                    addDataSetSubNode(patternDB);
+//                }
+//            }
+//        }
+//    }
 
     @Subscribe
             public void receive(org.geworkbench.events.ProjectNodeAddedEvent

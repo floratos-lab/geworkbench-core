@@ -1,27 +1,25 @@
 package org.geworkbench.util.patterns;
 
-import org.geworkbench.bison.datastructure.biocollections.sequences.
-        DSSequenceSet;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
+import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSSeqRegistration;
+import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeqPattern;
+import org.geworkbench.bison.datastructure.complex.pattern.sequence.CSSeqPatternMatch;
 import org.geworkbench.bison.datastructure.complex.pattern.CSMatchedPattern;
-import org.geworkbench.bison.datastructure.complex.pattern.DSMatchedPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.DSPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.DSPatternMatch;
-import org.geworkbench.bison.datastructure.complex.pattern.sequence.
-        CSSeqPatternMatch;
-import org.geworkbench.bison.datastructure.complex.pattern.sequence.
-        DSMatchedSeqPattern;
-import org.geworkbench.bison.datastructure.complex.pattern.sequence.
-        DSSeqRegistration;
-import polgara.soapPD_wsdl.SOAPOffset;
-import polgara.soapPD_wsdl.holders.ArrayOfSOAPOffsetHolder;
+import org.geworkbench.bison.datastructure.complex.pattern.DSMatchedPattern;
+import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 
 import javax.xml.rpc.holders.IntHolder;
-import java.io.BufferedWriter;
-import java.io.IOException;
+
+
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
+import java.io.BufferedWriter;
+import java.io.IOException;
 
 /**
  * <p>Title: </p>
@@ -57,7 +55,7 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence,
     // dramatically speed up the transfer of patterns over a SOAP
     // connection.
     public byte[] locus = null;
-    public ArrayOfSOAPOffsetHolder offset = new ArrayOfSOAPOffsetHolder();
+    public ArrayList<PatternOfflet> offset = new ArrayList<PatternOfflet>();
     public String ascii = null;
     public int maxLen = 0;
     protected int rand_hash;
@@ -65,6 +63,70 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence,
     protected CSMatchedSeqPattern() {
         pattern = this;
         rand_hash = new java.util.Random().nextInt();
+    }
+
+    public static Pattern getHeaderPattern() {
+        return headerPattern;
+    }
+
+    public static void setHeaderPattern(Pattern headerPattern) {
+        CSMatchedSeqPattern.headerPattern = headerPattern;
+    }
+
+    public static Pattern getLocusPattern() {
+        return locusPattern;
+    }
+
+    public static void setLocusPattern(Pattern locusPattern) {
+        CSMatchedSeqPattern.locusPattern = locusPattern;
+    }
+
+    public static Pattern getOffsetPattern() {
+        return offsetPattern;
+    }
+
+    public static void setOffsetPattern(Pattern offsetPattern) {
+        CSMatchedSeqPattern.offsetPattern = offsetPattern;
+    }
+
+    public IntHolder getIdNo() {
+        return idNo;
+    }
+
+    public void setIdNo(IntHolder idNo) {
+        this.idNo = idNo;
+    }
+
+    public byte[] getLocus() {
+        return locus;
+    }
+
+    public void setLocus(byte[] locus) {
+        this.locus = locus;
+    }
+
+    public ArrayList<PatternOfflet> getOffset() {
+        return offset;
+    }
+
+    public void setOffset(ArrayList<PatternOfflet> offset) {
+        this.offset = offset;
+    }
+
+    public String getAscii() {
+        return ascii;
+    }
+
+    public void setAscii(String ascii) {
+        this.ascii = ascii;
+    }
+
+    public int getMaxLen() {
+        return maxLen;
+    }
+
+    public void setMaxLen(int maxLen) {
+        this.maxLen = maxLen;
     }
 
     public CSMatchedSeqPattern(DSSequenceSet _seqDB) {
@@ -78,16 +140,39 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence,
         if (ascii != null) {
             s += ascii + "    ";
         }
-        s += "(" + idNo.value + "," + offset.value.length + ")";
+        s += "(" + idNo.value + "," + offset.size() + ")";
         return s;
+    }
+
+    /**  update the ascii representation.
+     * Method to replace PatternOperations.fill method.
+     */
+    public void updateASCII(){
+        String s = new String();
+
+            int j = offset.get(0).getPosition();
+            for (int i = 0; i < offset.size(); i++, j++) {
+                int dx = offset.get(i).getPosition();
+                for (; j < dx; j++) {
+                    s += '.';
+                }
+                String tokString = offset.get(i).getToken();
+                if (tokString.length() > 1) {
+                   s += '[' + tokString + ']';
+                } else {
+                    s += tokString;
+                }
+            }
+            ascii = s;
+
     }
 
     public CSMatchedSeqPattern(String s) {
         pattern = this;
-        Matcher m0 = headerPattern.matcher(s);
+        Matcher m0 = CSMatchedSeqPattern.headerPattern.matcher(s);
         rand_hash = new java.util.Random().nextInt();
         if (m0.find()) {
-            Matcher m1 = locusPattern.matcher(s);
+            Matcher m1 = CSMatchedSeqPattern.locusPattern.matcher(s);
             String pat = m0.group(1);
             int seqNo = Integer.parseInt(m0.group(2));
             int idNo = Integer.parseInt(m0.group(3));
@@ -96,16 +181,16 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence,
             this.zScore = pVal;
             this.seqNo.value = seqNo;
             this.idNo.value = idNo;
-            this.offset.value = new SOAPOffset[tokNo];
+            this.offset = new ArrayList<PatternOfflet>();
             int offDx = 0;
             int j = 0;
-            Matcher m2 = offsetPattern.matcher(pat);
+            Matcher m2 = CSMatchedSeqPattern.offsetPattern.matcher(pat);
             while (m2.find()) {
                 String token = m2.group(1);
                 if (!token.equalsIgnoreCase(".")) {
-                    this.offset.value[j] = new SOAPOffset();
-                    this.offset.value[j].setDx(offDx);
-                    this.offset.value[j].setToken(token);
+
+                    PatternOfflet patternOfflet = new PatternOfflet(offDx, token);
+                    this.offset.set(j, patternOfflet);
                     j++;
                 }
                 offDx++;
@@ -201,7 +286,7 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence,
     }
 
     public int getLength() {
-        return offset.value.length;
+        return offset.size();
     }
 
     public int getSupport() {
@@ -248,12 +333,12 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence,
     }
 
     public int getExtent() {
-        int baseOffset = this.offset.value[0].getDx();
-        return offset.value[getLength() - 1].getDx() + 1 - baseOffset;
+        int baseOffset = this.offset.get(0).getPosition();
+        return offset.get(getLength() - 1).getPosition() + 1 - baseOffset;
     }
 
     public int getOffset(int j) {
-        int baseOffset = this.offset.value[0].getDx();
+        int baseOffset =  this.offset.get(0).getPosition();
         int dx = getAbsoluteOffset(j) + baseOffset;
         return dx;
     }
@@ -264,7 +349,7 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence,
     }
 
     ArrayList<DSPatternMatch<DSSequence,
-            DSSeqRegistration>> matches = new ArrayList<DSPatternMatch<
+                    DSSeqRegistration>> matches = new ArrayList<DSPatternMatch<
                                           DSSequence, DSSeqRegistration>>();
 
     public DSPatternMatch<DSSequence, DSSeqRegistration> get(int i) {
@@ -311,7 +396,7 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence,
     public DSSeqRegistration match(DSSequence object) {
         DSSeqRegistration result = new DSSeqRegistration();
         DSMatchedPattern<DSSequence,
-                DSSeqRegistration>
+                        DSSeqRegistration>
                 matchResults = new CSMatchedPattern<DSSequence,
                                DSSeqRegistration>(this);
         for (DSPatternMatch<DSSequence,
