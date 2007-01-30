@@ -22,6 +22,8 @@ import org.geworkbench.events.PhenotypeSelectorEvent;
 import org.geworkbench.engine.management.Publish;
 import org.geworkbench.engine.management.Subscribe;
 import org.geworkbench.algorithms.AbstractTrainingPanel;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -32,6 +34,9 @@ import java.util.ArrayList;
  * @author John Watkinson
  */
 public abstract class AbstractTraining extends AbstractAnalysis implements ClusteringAnalysis {
+
+    static Log log = LogFactory.getLog(AbstractTraining.class);
+
     protected AbstractTrainingPanel panel;
 
     public AlgorithmExecutionResults execute(Object input) {
@@ -104,8 +109,10 @@ public abstract class AbstractTraining extends AbstractAnalysis implements Clust
     }
 
     @Subscribe public void receive(org.geworkbench.events.GeneSelectorEvent e, Object source) {
+        log.debug("Received gene selection event.");
         if (panel.getMaSet() != null) {
             DSPanel<DSGeneMarker> selectionPanel = e.getPanel();
+            log.debug("Setting selection in parent panel.");
             panel.setMarkerPanel(selectionPanel);
         }
     }

@@ -86,7 +86,12 @@ public abstract class AbstractTrainingPanel extends AbstractSaveableParameterPan
         if (selectionPanel != null) {
             DSMicroarraySetView<DSGeneMarker, DSMicroarray> maView = new CSMicroarraySetView<DSGeneMarker, DSMicroarray>(maSet);
             maView.setMarkerPanel(selectionPanel);
-            return maView.getMarkerPanel().activeSubset();
+            DSPanel<DSGeneMarker> activeMarkers = maView.getMarkerPanel().activeSubset();
+            if (activeMarkers.size() > 0) {
+                return activeMarkers;
+            } else {
+                return maSet.getMarkers();
+            }
         } else {
             return maSet.getMarkers();
         }
