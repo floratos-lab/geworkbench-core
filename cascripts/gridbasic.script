@@ -1,0 +1,17 @@
+void main() {
+   // Instantiate project panel and cagrid panel
+   module projectWindow projectPanel;
+   module expressionFileFilter expFileFormat;
+   module cagrid cagrid;
+
+   // Load a microarray set
+   projectPanel.loadDataSet("data/web100.exp", expFileFormat);
+   datatype DSMicroarraySet mset = projectPanel.getDataSet();
+
+   // Do clustering
+   datatype DSHierClusterDataSet cluster = cagrid.doClustering(mset, "Average", "Both", "Euclidean", "http://cagridnode.c2b2.columbia.edu:8080/wsrf/services/cagrid/HierarchicalClustering");
+   print cluster.getLabel();
+
+   // Add cluster to project panel
+   projectPanel.addDataSetNode(cluster);
+}

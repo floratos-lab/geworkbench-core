@@ -9,7 +9,7 @@ import java.util.Vector;
  * Interpreter routines that is called directly from the tree walker.
  *
  * @author Behrooz Badii - badiib@gmail.com
- * @version $Id: CasInterpreter.java,v 1.22 2005-12-07 15:47:09 manju Exp $
+ * @version $Id: CasInterpreter.java,v 1.23 2007-01-30 21:52:58 mhall Exp $
  */
 class CasInterpreter {
     CasSymbolTable symt;
@@ -280,7 +280,10 @@ class CasInterpreter {
                 else if (b instanceof CasCallReturn) {
                     Object data = ((CasCallReturn) b).getRetValue();
                     try {
-                        if (((CasDataPlug) a).getVar().getClass().isAssignableFrom(data.getClass())) {
+                        String aType = (String) CDTI.get(((CasDataPlug) a).getType());
+                        Class aClass = Class.forName(aType);
+                        if (aClass.isAssignableFrom(data.getClass())) {
+                        // if (((CasDataPlug) a).getVar().getClass().isAssignableFrom(data.getClass())) {
                             CasDataType x = ((CasDataPlug) a).copy();
                             ((CasDataPlug) x).setVar(data);
                             symt.setVar(x.name, (CasDataPlug) x);

@@ -2388,9 +2388,16 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         }
     }
 
-    @Script
-            public DSDataSet getDataSet() {
+    @Script public DSDataSet getDataSet() {
         return selection.getDataSet();
+    }
+
+    @Script public void addDataSetNode(DSDataSet dataSet) {
+        if (dataSet instanceof DSAncillaryDataSet) {
+            addDataSetSubNode((DSAncillaryDataSet) dataSet);
+        } else {
+            addDataSetNode(dataSet);
+        }
     }
 
 }

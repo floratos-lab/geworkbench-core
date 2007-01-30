@@ -73,11 +73,8 @@ public class CasDataPlug extends CasDataType {
     }
 
     public void setVar(Object a) {
-        try {
-            var = var.getClass().cast(a);
+            var = a;
         }
-        catch (ClassCastException cce){}
-    }
     public CasDataType copy() {
         return new CasDataPlug(name, type, var);
     }
