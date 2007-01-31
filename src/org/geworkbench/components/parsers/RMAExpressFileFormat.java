@@ -10,6 +10,8 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.CSExpressionMar
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
 import org.geworkbench.bison.parsers.resources.Resource;
 import org.geworkbench.components.parsers.microarray.DataSetFileFormat;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.logging.Log;
 
 import javax.swing.filechooser.FileFilter;
 import java.io.BufferedReader;
@@ -32,6 +34,8 @@ import java.util.StringTokenizer;
  */
 
 public class RMAExpressFileFormat extends DataSetFileFormat {
+
+    static Log log = LogFactory.getLog(RMAExpressFileFormat.class);
 
     String[] maExtensions = {"txt"};
     ExpressionResource resource = new ExpressionResource();
@@ -161,12 +165,16 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
                 for (DSGeneMarker marker : maSet.getMarkerVector()) {
                     String token = marker.getLabel();
                     String[] locusResult = AnnotationParser.getInfo(token, AnnotationParser.LOCUSLINK);
-                    String locus = " ";
-                    if ((locusResult != null) && (!locusResult[0].equals(""))) {
-                        locus = locusResult[0];
+                    String locus = "";
+                    if ((locusResult != null) && (!locusResult[0].trim().equals(""))) {
+                        locus = locusResult[0].trim();
                     }
-                    if (locus.compareTo(" ") != 0) {
-                        marker.setGeneId(Integer.parseInt(locus));
+                    if (locus.compareTo("") != 0) {
+                        try {
+                            marker.setGeneId(Integer.parseInt(locus));
+                        } catch (NumberFormatException e) {
+                            log.info("Couldn't parse locus id: "+locus);
+                        }
                     }
                     String[] geneNames = AnnotationParser.getInfo(token, AnnotationParser.ABREV);
                     if (geneNames != null) {
