@@ -10,11 +10,11 @@ void main() {
   datatype DSMicroarraySet mset = projectPanel.getDataSet();
 
   // Get serivces
-  string url = cagrid.getServiceUrl("cagridnode.c2b2.columbia.edu", 8080, "Hier");
+  string url = cagrid.getServiceUrl("cagridnode.c2b2.columbia.edu", 8080, "HierarchicalClustering");
   print url;
 
   // Do clustering
-  datatype DSHierClusterDataSet cluster = cagrid.doClustering(mset, "Average", "Both", "Euclidean", "http://cagridnode.c2b2.columbia.edu:8080/wsrf/services/cagrid/HierarchicalClustering");
+  datatype DSHierClusterDataSet cluster = cagrid.doClustering(mset, "Average", "Both", "Euclidean", url);
   print cluster.getLabel();
 
   // Add cluster to project panel
