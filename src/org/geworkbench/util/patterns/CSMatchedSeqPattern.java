@@ -190,7 +190,11 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence,
                 if (!token.equalsIgnoreCase(".")) {
 
                     PatternOfflet patternOfflet = new PatternOfflet(offDx, token);
+                    if(this.offset.size()<=j){
+                    this.offset.add(j, patternOfflet);
+                    }else{
                     this.offset.set(j, patternOfflet);
+                    }
                     j++;
                 }
                 offDx++;
@@ -290,7 +294,7 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence,
     }
 
     public int getSupport() {
-        return idNo.value;
+        return idNo!=null?idNo.value:0;
     }
 
     public int getUniqueSupport() {
@@ -356,13 +360,16 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence,
         if (matches.size() > i) {
             return matches.get(i);
         } else {
+            if(getObject(i)!=null){
             CSSeqPatternMatch match = new CSSeqPatternMatch(getObject(i));
             DSSeqRegistration reg = match.getRegistration();
             reg.x1 = getOffset(i);
             reg.x2 = reg.x1 + getLength();
             //  System.out.println(match.getObject().getSequence());
             return match;
+            }
         }
+        return null;
     }
 
     public List<DSPatternMatch<DSSequence, DSSeqRegistration>> matches() {
@@ -417,12 +424,15 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence,
         }
     }
 
-    public DSSequence getObject(int i) throws IndexOutOfBoundsException {
+    public DSSequence getObject(int i)  {
+
         if ((seqDB != null) && (i < getSupport())) {
-//            System.out.println("IN CSMATHCEDSP" + i + " " + getId(i) + getSupport());
-            return seqDB.getSequence(this.getId(i));
+                   return seqDB.getSequence(this.getId(i));
+        } else{
+            //System.out.println("IN CSMATHCEDSP" + i + " "   + getSupport() + seqDB.size());
+             return null;
         }
-        throw new IndexOutOfBoundsException();
+
     }
 
     public DSSeqRegistration getRegistration(int i) throws

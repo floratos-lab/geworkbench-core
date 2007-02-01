@@ -3,9 +3,11 @@ package org.geworkbench.bison.datastructure.complex.pattern;
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.util.RandomNumberGenerator;
+import org.geworkbench.util.patterns.PatternDB;
 //import polgara.soapPD_wsdl.Parameters;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * <p>Title: Sequence and Pattern Plugin</p>
@@ -18,17 +20,58 @@ import java.io.File;
  */
 
 public class SoapParmsDataSet extends CSAncillaryDataSet {
+
+    private PatternDB patternDB;
     private Parameters parms = null;
     boolean dirty = true;
     File dataSetFile = null;
     String label = "Undefined";
+    File resultFile;
+    /**
+     * Link Parameters to real result.
+     * @return
+     */
+    public PatternDB getPatternDB() {
+        return patternDB;
+    }
 
+    public void setPatternDB(PatternDB patternDB) {
+        this.patternDB = patternDB;
+    }
 
+    /**
+     * Initate the dataset and assign a result file for that dataset.
+     * @param p
+     * @param name
+     * @param parent
+     */
     public SoapParmsDataSet(Parameters p, String name, DSDataSet parent) {
-        super(parent, name);        
+        super(parent, name);
         parms = p;
-        setID(RandomNumberGenerator.getID());
+        String idString =  RandomNumberGenerator.getID();
+        setID(idString);
         setLabel(name);
+         try {
+                    String tempFolder = System.getProperties().getProperty(
+                            "temporary.files.directory");
+                    if (tempFolder == null) {
+                        tempFolder = ".";
+
+                    }
+                     String outputFile = tempFolder    +
+                                        "/";
+                     if(parent.getFile().exists()){
+                        outputFile+= parent.getFile().getName() + idString +  ".pat";
+                     }
+             if(!new File(outputFile).exists()){
+                 new File(outputFile).createNewFile();
+             }
+               resultFile = new File(outputFile);
+
+        }catch (IOException ie){
+               System.out.print("Cannot create the new fil: " + ie.getMessage());
+         }
+
     }
 
     public File getDataSetFile() {
@@ -81,5 +124,13 @@ public class SoapParmsDataSet extends CSAncillaryDataSet {
      * @param fileName String
      */
     public void writeToFile(String fileName) {
+    }
+
+    public File getResultFile() {
+        return resultFile;
+    }
+
+    public void setResultFile(File resultFile) {
+        this.resultFile = resultFile;
     }
 }

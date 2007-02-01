@@ -9,8 +9,11 @@ import org.geworkbench.bison.datastructure.complex.pattern.sequence.
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import org.geworkbench.bison.datastructure.bioobjects.sequence.CSSequence;
+
 import java.util.TreeSet;
+
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.
         DSSeqRegistration;
 import org.geworkbench.bison.datastructure.biocollections.sequences.
@@ -19,8 +22,11 @@ import org.geworkbench.bison.datastructure.complex.pattern.DSPatternMatch;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import org.geworkbench.bison.datastructure.biocollections.DSCollection;
 import org.geworkbench.bison.datastructure.complex.pattern.DSMatchedPattern;
+
 import java.util.List;
+
 import org.geworkbench.bison.datastructure.complex.pattern.DSPattern;
+
 import java.util.Set;
 
 /**
@@ -43,18 +49,18 @@ public class PatternOperations {
 
     static ArrayList<Color> makeColors() {
         Color[] c = {new Color(0, 0, 255), new Color(138, 43, 226),
-                    new Color(165, 42, 42), new Color(222, 184, 135),
-                    new Color(95, 158, 160), new Color(127, 255, 0),
-                    new Color(210, 105, 30), new Color(255, 127, 80),
-                    new Color(100, 149, 237), new Color(220, 20, 60),
-                    new Color(0, 255, 255), new Color(0, 0, 139),
-                    new Color(184, 134, 11), new Color(238, 130, 238),
-                    new Color(0, 100, 0), new Color(189, 183, 107),
-                    new Color(139, 0, 139), new Color(85, 107, 47),
-                    new Color(255, 140, 0), new Color(153, 50, 204),
-                    new Color(139, 0, 0), new Color(233, 150, 122),
-                    new Color(255, 255, 0), new Color(255, 0, 0),
-                    new Color(0, 0, 0), new Color(128, 0, 128)};
+                new Color(165, 42, 42), new Color(222, 184, 135),
+                new Color(95, 158, 160), new Color(127, 255, 0),
+                new Color(210, 105, 30), new Color(255, 127, 80),
+                new Color(100, 149, 237), new Color(220, 20, 60),
+                new Color(0, 255, 255), new Color(0, 0, 139),
+                new Color(184, 134, 11), new Color(238, 130, 238),
+                new Color(0, 100, 0), new Color(189, 183, 107),
+                new Color(139, 0, 139), new Color(85, 107, 47),
+                new Color(255, 140, 0), new Color(153, 50, 204),
+                new Color(139, 0, 0), new Color(233, 150, 122),
+                new Color(255, 255, 0), new Color(255, 0, 0),
+                new Color(0, 0, 0), new Color(128, 0, 128)};
         ArrayList<Color> list = new ArrayList<Color>();
         for (int i = 0; i < c.length; i++) {
             list.add(c[i]);
@@ -86,7 +92,7 @@ public class PatternOperations {
 
     static public void fill(DSMatchedSeqPattern pattern, DSSequenceSet sDB) {
         if (pattern.getClass().isAssignableFrom(org.geworkbench.util.patterns.
-                                                CSMatchedSeqPattern.class)) {
+                CSMatchedSeqPattern.class)) {
             //What is the purpose here? reset the ascii value?
             //Xiaoqing changes it on 1/25/2007
 
@@ -114,30 +120,30 @@ public class PatternOperations {
     /**
      * A utility to create a match between a sequence with all available patterns within the sequence.
      *
-     * @param patterns DSCollection
+     * @param patterns   DSCollection
      * @param sequenceDB DSSequenceSet
      * @return HashMap
      */
     public static HashMap<CSSequence,
             PatternSequenceDisplayUtil> processPatterns(DSCollection<
             DSMatchedPattern<DSSequence,
-            DSSeqRegistration>> patterns, DSSequenceSet sequenceDB) {
+                    DSSeqRegistration>> patterns, DSSequenceSet sequenceDB) {
         return processPatterns(patterns, sequenceDB,
-                               PatternLocations.DEFAULTTYPE);
+                PatternLocations.DEFAULTTYPE);
 
     }
 
     public static void addTFMatches(HashMap<CSSequence,
-                                    PatternSequenceDisplayUtil> existedPatterns,
+            PatternSequenceDisplayUtil> existedPatterns,
                                     List<DSPatternMatch<DSSequence,
-                                    DSSeqRegistration>>
-                                    matches, DSPattern tf) {
+                                            DSSeqRegistration>>
+                                            matches, DSPattern tf) {
         if (matches == null) {
             return;
         }
         if (existedPatterns == null) {
             existedPatterns = new HashMap<CSSequence,
-                              PatternSequenceDisplayUtil>();
+                    PatternSequenceDisplayUtil>();
 
         }
 
@@ -147,7 +153,7 @@ public class PatternOperations {
             if (existedPatterns.containsKey(hitSeq)) {
                 PatternSequenceDisplayUtil pu = (
                         PatternSequenceDisplayUtil)
-                                                existedPatterns.get(hitSeq);
+                        existedPatterns.get(hitSeq);
                 PatternLocations pl = new PatternLocations(
                         tf, reg);
                 pl.setPatternType(PatternLocations.TFTYPE);
@@ -171,22 +177,23 @@ public class PatternOperations {
 
     /**
      * A utility to create a match between a sequence with all available patterns within the sequence.
-     * @param patterns DSCollection
-     * @param sequenceDB DSSequenceSet
+     *
+     * @param patterns    DSCollection
+     * @param sequenceDB  DSSequenceSet
      * @param patternType String
      * @return HashMap
      */
     public static HashMap<CSSequence,
             PatternSequenceDisplayUtil> processPatterns(DSCollection<
             DSMatchedPattern<DSSequence,
-            DSSeqRegistration>> patterns, DSSequenceSet sequenceDB,
-            String patternType) {
+                    DSSeqRegistration>> patterns, DSSequenceSet sequenceDB,
+                                                  String patternType) {
         if (patterns != null && sequenceDB != null) {
-            try{
+            try {
                 HashMap<CSSequence,
                         PatternSequenceDisplayUtil>
                         sequencePatternMatches = new HashMap<CSSequence,
-                                                 PatternSequenceDisplayUtil>();
+                        PatternSequenceDisplayUtil>();
 
                 PatternSequenceDisplayUtil[] patternsSequenceList = new
                         PatternSequenceDisplayUtil[sequenceDB.size()];
@@ -194,7 +201,7 @@ public class PatternOperations {
                     patternsSequenceList[i] = new PatternSequenceDisplayUtil((
                             CSSequence) sequenceDB.get(i));
                     sequencePatternMatches.put((CSSequence) sequenceDB.get(i),
-                                               patternsSequenceList[i]);
+                            patternsSequenceList[i]);
                 }
 
                 if (patterns != null) {
@@ -205,34 +212,34 @@ public class PatternOperations {
                         if (pattern != null) {
                             PatternOperations.setPatternColor(new Integer(
                                     pattern.
-                                    hashCode()),
+                                            hashCode()),
                                     PatternOperations.
-                                    getPatternColor(row));
+                                            getPatternColor(row));
                             for (int locusId = 0;
-                                               locusId < pattern.getSupport();
-                                               locusId++) {
+                                 locusId < pattern.getSupport();
+                                 locusId++) {
                                 int seqId = ((CSMatchedSeqPattern) pattern).
-                                            getId(
-                                        locusId);
+                                        getId(
+                                                locusId);
                                 DSPatternMatch<DSSequence,
                                         DSSeqRegistration>
                                         sp = pattern.get(locusId);
+                                if (sp != null) {
+                                    DSSequence hitSeq = sp.getObject();
+                                    DSSeqRegistration reg = sp.getRegistration();
+                                    if (sequencePatternMatches.containsKey(hitSeq)) {
+                                        PatternSequenceDisplayUtil pu = (
+                                                PatternSequenceDisplayUtil)
+                                                sequencePatternMatches.get(hitSeq);
+                                        PatternLocations pl = new PatternLocations(
+                                                pattern.
+                                                        getASCII(), reg);
+                                        pl.setPatternType(patternType);
+                                        pl.setIDForDisplay(pattern.hashCode());
+                                        pu.addPattern(pl);
 
-                                DSSequence hitSeq = sp.getObject();
-                                DSSeqRegistration reg = sp.getRegistration();
-                                if (sequencePatternMatches.containsKey(hitSeq)) {
-                                    PatternSequenceDisplayUtil pu = (
-                                            PatternSequenceDisplayUtil)
-                                            sequencePatternMatches.get(hitSeq);
-                                    PatternLocations pl = new PatternLocations(
-                                            pattern.
-                                            getASCII(), reg);
-                                    pl.setPatternType(patternType);
-                                    pl.setIDForDisplay(pattern.hashCode());
-                                    pu.addPattern(pl);
-
+                                    }
                                 }
-
                             }
 
                         }
@@ -240,7 +247,9 @@ public class PatternOperations {
                 }
 
                 return sequencePatternMatches;
-            }catch (Exception e){e.printStackTrace();}
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return null;
     }
@@ -248,10 +257,10 @@ public class PatternOperations {
 
     public static HashMap<CSSequence,
             PatternSequenceDisplayUtil> merge(HashMap<CSSequence,
-                                              PatternSequenceDisplayUtil>
-                                              seqPatterns, HashMap<CSSequence,
-                                              PatternSequenceDisplayUtil>
-                                              tfPatterns) {
+            PatternSequenceDisplayUtil>
+            seqPatterns, HashMap<CSSequence,
+            PatternSequenceDisplayUtil>
+            tfPatterns) {
         if (seqPatterns == null) {
             return tfPatterns;
         }
@@ -261,7 +270,7 @@ public class PatternOperations {
         HashMap<CSSequence,
                 PatternSequenceDisplayUtil>
                 allPatterns = new HashMap<CSSequence,
-                              PatternSequenceDisplayUtil>(seqPatterns);
+                PatternSequenceDisplayUtil>(seqPatterns);
 
         Set<CSSequence> keySet = tfPatterns.keySet();
         for (CSSequence keySeq : keySet) {

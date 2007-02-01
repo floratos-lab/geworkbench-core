@@ -9,6 +9,7 @@ package org.geworkbench.bison.datastructure.complex.pattern;
  */
 
 import java.io.Serializable;
+import java.io.File;
 
 // Referenced classes of package polgara.soapPD_wsdl:
 //            Exhaustive, Hierarchical, ProfileHMM
@@ -289,6 +290,8 @@ public class Parameters
         }
     }
 
+
+
     public synchronized int hashCode()
     {
         if(__hashCodeCalc)
@@ -357,6 +360,7 @@ public class Parameters
 
     private Object __equalsCalc;
     private boolean __hashCodeCalc;
+ 
 
 
 }
