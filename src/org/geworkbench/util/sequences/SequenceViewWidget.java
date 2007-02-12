@@ -513,6 +513,7 @@ public class SequenceViewWidget extends JPanel {
 
         //if (patternLocationsMatches != null && sequenceDB != null) {
         if (patternLocationsMatches != null && sequenceDB != null) {
+                       seqViewWPanel.setMaxSeqLen(sequenceDB.getMaxLength());
             for (int i = 0; i < sequenceDB.size(); i++) {
                 DSSequence sequence = sequenceDB.getSequence(i);
                 PatternSequenceDisplayUtil pdu = patternLocationsMatches.get(

@@ -603,7 +603,7 @@ public class SequenceViewWidgetPanel extends JPanel {
             scale = Math.min(5.0,
                     (double) (this.getWidth() - 20 - xOff) /
                             (double) maxSeqLen);
-            // System.out.println("IN SVWPanel: " + scale + maxSeqLen);
+
             g.clearRect(0, 0, getWidth(), getHeight());
             // draw the patterns
             g.setFont(f);
@@ -875,6 +875,7 @@ public class SequenceViewWidgetPanel extends JPanel {
             g.drawString(lab, 4, y + 3);
         }
         g.drawLine(xOff, y, x, y);
+
     }
 
 //    boolean drawPattern(Graphics g, int rowId, int locusId,
@@ -1269,7 +1270,6 @@ public class SequenceViewWidgetPanel extends JPanel {
     }
 
     private int getSeqDx(int x) {
-
         int seqDx = (int) ((double) (x - xOff) / scale);
         return seqDx;
     }
@@ -1514,8 +1514,9 @@ public class SequenceViewWidgetPanel extends JPanel {
             DSSequence sequence = sequenceDB.getSequence(seqid);
             if (sequence != null) {
                 if ((off <= sequenceDB.getSequence(seqid).length()) && (off > 0)) {
+
                     String texttip = getTipInfo(sequence, off);
-                    this.setToolTipText(texttip);
+                          this.setToolTipText(texttip);
                 }
             }
         } else {
