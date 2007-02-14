@@ -3,6 +3,7 @@ package org.geworkbench.engine.preferences;
 import org.geworkbench.bison.util.colorcontext.ColorContext;
 import org.geworkbench.bison.util.colorcontext.DefaultColorContext;
 import org.geworkbench.bison.util.colorcontext.ExpressionPValueColorContext;
+import org.geworkbench.util.Util;
 
 import java.io.File;
 
@@ -26,6 +27,7 @@ public class GlobalPreferences {
                     "Option 4: (Median F532 - Median B532) / (Median F635 - Median B635)"
             };
     public static final String DEFAULT_TEXT_EDITOR = "c:/windows/system32/notepad.exe";
+    public static final String DEFAULT_TEXT_EDITOR_MAC = "Open";
 
     private static GlobalPreferences instance;
 
@@ -44,7 +46,11 @@ public class GlobalPreferences {
         // TEXT EDITOR
         FileField field1 = new FileField(GlobalPreferences.PREF_TEXT_EDITOR);
         // Default value
-        field1.setValue(new File(GlobalPreferences.DEFAULT_TEXT_EDITOR));
+        if (!Util.isRunningOnAMac()) {
+            field1.setValue(new File(GlobalPreferences.DEFAULT_TEXT_EDITOR));
+        } else {
+            field1.setValue(new File(DEFAULT_TEXT_EDITOR_MAC));
+        }
 
         // Visualization
         ChoiceField field2 = new ChoiceField(GlobalPreferences.PREF_VISUALIZATION, GlobalPreferences.VISUALIZATION_VALUES);
