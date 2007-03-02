@@ -22,11 +22,14 @@ import org.geworkbench.events.PhenotypeSelectorEvent;
 import org.geworkbench.engine.management.Publish;
 import org.geworkbench.engine.management.Subscribe;
 import org.geworkbench.algorithms.AbstractTrainingPanel;
+import org.geworkbench.util.ProgressBar;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import javax.swing.*;
 import java.util.List;
 import java.util.ArrayList;
+import java.awt.*;
 
 /**
  * An abstract trainer for a machine learning algorithm.
@@ -60,9 +63,11 @@ public abstract class AbstractTraining extends AbstractAnalysis implements Clust
         if (classifier != null) {
             publishProjectNodeAddedEvent(new ProjectNodeAddedEvent(classifier.getLabel(), null, classifier));
             if (testData.size() > 0) {
-                DSPanel<DSMicroarray> newPanel = new CSPanel<DSMicroarray>("Classification Results");
-                classifyData(testPanel, classifier, newPanel);
-                publishSubpanelChangedEvent(new SubpanelChangedEvent<DSMicroarray>(DSMicroarray.class, newPanel, SubpanelChangedEvent.NEW));
+                DSPanel<DSMicroarray> predictedCasePanel = new CSPanel<DSMicroarray>("Predicted Cases");
+                DSPanel<DSMicroarray> predictedControlPanel = new CSPanel<DSMicroarray>("Predicted Controls");
+                classifyData(testPanel, classifier, predictedCasePanel, predictedControlPanel);
+                publishSubpanelChangedEvent(new SubpanelChangedEvent<DSMicroarray>(DSMicroarray.class, predictedCasePanel, SubpanelChangedEvent.NEW));
+                publishSubpanelChangedEvent(new SubpanelChangedEvent<DSMicroarray>(DSMicroarray.class, predictedControlPanel, SubpanelChangedEvent.NEW));
             }
         }
         return null;
@@ -79,12 +84,34 @@ public abstract class AbstractTraining extends AbstractAnalysis implements Clust
         }
     }
 
-    public static void classifyData(DSPanel<DSMicroarray> panel, CSClassifier classifier, DSPanel<DSMicroarray> newGroupPanel) {
+    public static void classifyData(DSPanel<DSMicroarray> panel, CSClassifier classifier, DSPanel<DSMicroarray> predictedCasesPanel, DSPanel<DSMicroarray> predictedControlsPanel)
+    {
+        int size = panel.size();
+        ProgressBar progressBar = ProgressBar.create(ProgressBar.BOUNDED_TYPE);
+        progressBar.setTitle("Classification Progress");
+        progressBar.setBounds(new org.geworkbench.util.ProgressBar.IncrementModel(0, size, 0, size, 1));
+        progressBar.setAlwaysOnTop(true);
+        progressBar.showValues(false);
+        
+        progressBar.start();
+
+        int count = 0;
         for (DSMicroarray microarray : panel) {
-            if (classifier.classify(microarray.getRawMarkerData()) == 0) {
-                newGroupPanel.add(microarray);
+            if (classifier.classify(microarray.getRawMarkerData()) == 0)
+            {
+                predictedCasesPanel.add(microarray);
             }
+            else
+            {
+                predictedControlsPanel.add(microarray);
+            }
+
+            count++;
+            progressBar.update();
+            progressBar.setMessage("Classified " + count + " out of " + size);
         }
+
+        progressBar.stop();
     }
 
     /**
