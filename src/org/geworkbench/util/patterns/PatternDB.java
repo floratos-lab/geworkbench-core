@@ -162,6 +162,12 @@ public class PatternDB extends CSAncillaryDataSet implements Serializable {
         in.defaultReadObject();
     }
 
+    public int size(){
+        if(patterns!=null){
+            return patterns.size();
+        }
+        return 0;
+    }
     /**
      * TODO - unused
      * writeToFile
