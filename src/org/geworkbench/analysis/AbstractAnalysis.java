@@ -65,6 +65,8 @@ public abstract class AbstractAnalysis implements Analysis, Serializable, java.u
     public static final int QUANTILE_NORMALIZER_TYPE = 23;
     public static final int ALLELIC_FREQUENCY_TYPE = 24;
     
+    protected boolean gridEnabled = false;
+    
     /**
      * The parameters panel to be use from within the AnalysisPane in order
      * to collect the analysis parameters from the user.
@@ -367,6 +369,15 @@ public abstract class AbstractAnalysis implements Analysis, Serializable, java.u
         }
 
     }
+    
+    /**
+     * Determines if a grid component is available.
+     * 
+     * @return
+     */
+    public boolean isGridEnabled() {
+		return gridEnabled;
+	}
 
 }
 
