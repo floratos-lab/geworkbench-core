@@ -623,15 +623,6 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/saaj.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" exported="">
-      <library>
-        <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/poi-2.5.1-final-20040804.jar!/" />
         </CLASSES>
         <JAVADOC />
@@ -813,6 +804,15 @@
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/ginkgo.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/saaj.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
