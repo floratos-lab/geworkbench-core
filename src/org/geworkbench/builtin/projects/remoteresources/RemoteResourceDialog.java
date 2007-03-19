@@ -74,6 +74,14 @@ public class RemoteResourceDialog extends JDialog {
 
     }
 
+    public static RemoteResourceManager getRemoteResourceManager() {
+        return remoteResourceManager;
+    }
+
+    public static void setRemoteResourceManager(RemoteResourceManager remoteResourceManager) {
+        RemoteResourceDialog.remoteResourceManager = remoteResourceManager;
+    }
+
     private void jbInit() throws Exception {
         jLabel1.setText("Details:");
         jLabel2.setText("Port:");
@@ -444,7 +452,7 @@ public class RemoteResourceDialog extends JDialog {
      */
     public void removeResourceByName(String deleteResourceStr) {
         remoteResourceManager.deleteRemoteResource(deleteResourceStr);
-        remoteResourceManager.getFristItemName();
+        remoteResourceManager.getFirstItemName();
 
     }
 

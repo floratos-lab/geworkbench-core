@@ -9,6 +9,8 @@ import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 
 import org.geworkbench.builtin.projects.remoteresources.RemoteResourceDialog;
+import org.geworkbench.builtin.projects.remoteresources.RemoteResource;
+import org.geworkbench.builtin.projects.remoteresources.query.CaARRAYQueryPanel;
 import org.geworkbench.builtin.projects.util.CaARRAYPanel;
 import org.geworkbench.builtin.projects.util.NCIPanel;
 import org.geworkbench.engine.management.ComponentRegistry;
@@ -97,6 +99,7 @@ public class LoadData extends JDialog {
     JComboBox jComboBox1 = new JComboBox(resourceModel);
 
     JButton addButton = new JButton();
+    JButton queryButton = new JButton();
     JButton editButton = new JButton();
     JButton deleteButton = new JButton();
     BoxLayout boxLayout21;
@@ -199,6 +202,17 @@ public class LoadData extends JDialog {
             }
 
         });
+
+        queryButton.setToolTipText("Filtering the selections.");
+        queryButton.setText("Query");
+        queryButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                displayQueryDialog(RemoteResourceDialog.ADD);
+
+            }
+
+        });
+
         editButton.setToolTipText("Edit an existed source");
         editButton.setText("Edit");
         editButton.addActionListener(new ActionListener() {
@@ -248,6 +262,7 @@ public class LoadData extends JDialog {
         //jComboBox1 = new JComboBox(new String[]{"TEST"});
         jPanel10.add(jComboBox1);
         jPanel10.add(openRemoteResourceButton);
+        jPanel10.add(queryButton);
         jPanel10.add(addButton);
         jPanel10.add(editButton);
         jPanel10.add(deleteButton);
@@ -411,6 +426,19 @@ public class LoadData extends JDialog {
         RemoteResourceDialog.showDialog(this, null, option, null);
         updateExistedResourcesGUI();
     }
+
+    /**
+        * Show filtering options.
+        *
+        * @param option int
+        */
+       void displayQueryDialog(int option) {
+
+        String remoteSourceName = (String)jComboBox1.getSelectedItem();
+           RemoteResourceDialog.setPreviousResourceName(remoteSourceName);
+           CaARRAYQueryPanel.display(remoteSourceName);
+       }
+
 
     /**
      * displayRemoteResourceDiolog for edit/delete an existed resource.

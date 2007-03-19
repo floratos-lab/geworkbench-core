@@ -17,7 +17,6 @@ import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import org.geworkbench.bison.datastructure.complex.pattern.DSMatchedPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.
         DSSeqRegistration;
-import org.geworkbench.events.ImageSnapshotEvent;
 import org.geworkbench.util.patterns.*;
 import org.geworkbench.util.promoter.pattern.Display;
 
@@ -769,7 +768,7 @@ public class SequenceViewWidgetPanel extends JPanel {
 //                            if (pattern.getClass().isAssignableFrom(
 //                                    CSMatchedSeqPattern.class) ||
 //                                pattern.getClass().isAssignableFrom(
-//                                        CSMatchedHMMSeqPattern.class)) {
+//                                        CSMatchedHMMOriginSeqPattern.class)) {
 //                                CSMatchedSeqPattern pat = (CSMatchedSeqPattern)
 //                                        pattern;
 //                                if (pattern != null) {
@@ -886,11 +885,11 @@ public class SequenceViewWidgetPanel extends JPanel {
 //            if (y > r.y + r.height) {
 //                return true;
 //            }
-//            double x0 = pat instanceof CSMatchedHMMSeqPattern ?
-//                        ((CSMatchedHMMSeqPattern) pat).getStart(locusId) :
+//            double x0 = pat instanceof CSMatchedHMMOriginSeqPattern ?
+//                        ((CSMatchedHMMOriginSeqPattern) pat).getStart(locusId) :
 //                        (double) pat.getOffset(locusId);
-//            double dx = pat instanceof CSMatchedHMMSeqPattern ?
-//                        (((CSMatchedHMMSeqPattern) pat).getEnd(locusId) - x0) :
+//            double dx = pat instanceof CSMatchedHMMOriginSeqPattern ?
+//                        (((CSMatchedHMMOriginSeqPattern) pat).getEnd(locusId) - x0) :
 //                        pat.getASCII().length();
 //            int xa = xOff + (int) (x0 * scale) + 1;
 //            int xb = xa + (int) (dx * scale) - 1;

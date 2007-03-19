@@ -176,7 +176,7 @@ public class RemoteResourceManager {
     /**
      * getFristItem
      */
-    public String getFristItemName() {
+    public String getFirstItemName() {
         if (existedResources != null && existedResources.size() > 0) {
             return existedResources.get(0).getShortname();
         }
