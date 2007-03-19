@@ -49,11 +49,14 @@ public class RemoteResourceManager {
      * init
      */
     protected void init() {
-        RemoteResource rr = new RemoteResource("caARRAY",
-                                               "caarray-mageom-server.nci.nih.gov",
+//        RemoteResource rr = new RemoteResource("caARRAY",
+//                                               "caarray-mageom-server.nci.nih.gov",
+//                                               "8080", "http:",
+//                                               "PUBLIC", "");
+       RemoteResource rr = new RemoteResource("caARRAYStage",
+                                               "caarray-mageom-server-stage.nci.nih.gov",
                                                "8080", "http:",
                                                "PUBLIC", "");
-
 //        # caARRAY username/password
 //caarray.mage.user=KustagiM
 //caarray.mage.password=Tbf38!a
