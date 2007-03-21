@@ -31,12 +31,13 @@ import org.geworkbench.util.promoter.pattern.Display;
  */
 public class SequenceViewWidgetPanel extends JPanel {
 
-    final int xOff = 60;
+    //final int xOff = 60;
+    final int xOff = 80;
     final int yOff = 20;
     final int xStep = 5;
     final int yStep = 14;
     double scale = 1.0;
-
+    final static int maxDisplayChars = 12;
     int selected = 0;
     int maxSeqLen = 1;
     private String displayInfo = "";
@@ -318,15 +319,15 @@ public class SequenceViewWidgetPanel extends JPanel {
                 String lab = theone.getLabel();
                 y += (int) (rowId * yscale);
                 g.setColor(SEQUENCEBACKGROUDCOLOR);
-                if (lab.length() > 10) {
-                    g.drawString(lab.substring(0, 10), 2, y + 3);
+                if (lab.length() > maxDisplayChars) {
+                    g.drawString(lab.substring(0, maxDisplayChars), 2, y + 3);
                 } else {
                     g.drawString(lab, 2, y + 3);
                 }
                 int x0 = (int) (10 * xscale);
                 int x = x0 + (int) (theone.length() * scale);
 
-                g.drawLine(x0, y, x, y);
+                g.drawLine(xOff, y, x, y);
 
                 int begin = 0 - cols;
                 int end = 0;
@@ -868,8 +869,9 @@ public class SequenceViewWidgetPanel extends JPanel {
         int y = yOff + rowId * yStep;
         int x = xOff + (int) (len * scale);
         g.setColor(SEQUENCEBACKGROUDCOLOR);
-        if (lab.length() > 9) {
-            g.drawString(lab.substring(0, 9), 4, y + 3);
+        //Why 9 chars? It should be at least
+        if (lab.length() > maxDisplayChars) {
+            g.drawString(lab.substring(0, maxDisplayChars), 4, y + 3);
         } else {
             g.drawString(lab, 4, y + 3);
         }
