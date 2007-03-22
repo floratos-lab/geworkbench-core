@@ -245,7 +245,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
                         } while (stillWaitForConnecting);
 
                     }
-                 } catch (Exception e) {
+                } catch (Exception e) {
                 }
             }
         };
@@ -1282,6 +1282,47 @@ public class CaARRAYPanel extends JPanel implements Observer {
             // jScrollPane1.getViewport().add(remoteFileTree, null);
             repaint();
 
+        }
+    }
+
+
+    public void setCaExperiments(Experiment[] experiment) {
+        if (experiment == null || experiment.length == 0) {
+            JOptionPane.showMessageDialog(null, "0 result retrieved.", "0 experiment", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        CaArrayExperiment[] newExperiments = new CaArrayExperiment[experiment.length];
+        for (int x = 0; x < experiment.length; x++) {
+            if (experiment[x] instanceof ExperimentImpl) {
+                CaArrayExperiment exp = new CaArrayExperiment((
+                        ExperimentImpl) experiment[x]);
+                //  pb.updateTo(x / totalexpNum * model.getMaximum());
+
+                newExperiments[x] = exp;
+
+            }
+            experiments = newExperiments;
+            jScrollPane1.getViewport().removeAll();
+            DefaultMutableTreeNode queryResultRoot = new DefaultMutableTreeNode(
+                    "selected caARRAY experiments");
+            for (int i = 0; i < experiments.length; ++i) {
+                DefaultMutableTreeNode node = new DefaultMutableTreeNode(
+                        experiments[i]);
+                remoteTreeModel.insertNodeInto(node, queryResultRoot,
+                        queryResultRoot.getChildCount());
+            }
+            remoteFileTree.expandRow(0);
+            experimentsLoaded = true;
+            previousResourceName = currentResourceName;
+            connectionSuccess = true;
+            //done = true;
+
+            remoteTreeModel = new DefaultTreeModel(queryResultRoot);
+            remoteFileTree.setModel(remoteTreeModel);
+            remoteFileTree = new JTree(remoteTreeModel);
+            jScrollPane1.getViewport().add(remoteFileTree, null);
+            revalidate();
+            repaint();
         }
     }
 

@@ -9,7 +9,6 @@ import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 
 import org.geworkbench.builtin.projects.remoteresources.RemoteResourceDialog;
-import org.geworkbench.builtin.projects.remoteresources.RemoteResource;
 import org.geworkbench.builtin.projects.remoteresources.query.CaARRAYQueryPanel;
 import org.geworkbench.builtin.projects.util.CaARRAYPanel;
 import org.geworkbench.builtin.projects.util.NCIPanel;
@@ -62,7 +61,7 @@ public class LoadData extends JDialog {
     private GridLayout grid4 = new GridLayout();
     private String format = null;
     private NCIPanel jPanel6 = new NCIPanel(this);
-    private CaARRAYPanel jPanel8 = new CaARRAYPanel(this);
+    private CaARRAYPanel caArrayDisplayPanel = new CaARRAYPanel(this);
     private JCheckBox mergeCheckBox;
     private JPanel lowerPanel;
     private JPanel mergePanel;
@@ -75,7 +74,7 @@ public class LoadData extends JDialog {
     private JButton updateIndexButton;
     private String currentRemoteResourceName;
     private String currentDetailedResourceName; //current resurcename which shows detail at the top panel.
-
+    private CaARRAYQueryPanel caARRAYQueryPanel;
 
     /**
      * The project panel that manages the dialog box.
@@ -106,6 +105,7 @@ public class LoadData extends JDialog {
     JButton openRemoteResourceButton = new JButton();
     private boolean isSynchronized = false;
     private boolean merge;
+    private static final String QUERYTITLE = "Query the caARRAY Server.";
 
     public LoadData(ProjectPanel parent) {
         parentProjectPanel = parent;
@@ -140,6 +140,10 @@ public class LoadData extends JDialog {
 
     public void setMerge(boolean merge) {
         this.merge = merge;
+    }
+
+    public CaARRAYPanel getCaArrayDisplayPanel() {
+        return caArrayDisplayPanel;
     }
 
     private void jbInit() throws Exception {
@@ -203,6 +207,7 @@ public class LoadData extends JDialog {
 
         });
 
+        caARRAYQueryPanel = new CaARRAYQueryPanel(JOptionPane.getFrameForComponent(this), QUERYTITLE);
         queryButton.setToolTipText("Filtering the selections.");
         queryButton.setText("Query");
         queryButton.addActionListener(new ActionListener() {
@@ -224,7 +229,7 @@ public class LoadData extends JDialog {
             }
         });
 
-         jComboBox1.addActionListener(new ActionListener() {
+        jComboBox1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 updateCurrentView();
 
@@ -422,22 +427,25 @@ public class LoadData extends JDialog {
      * @param option int
      */
     void displayRemoteResourceDialog(int option) {
-        RemoteResourceDialog.setPreviousResourceName((String)jComboBox1.getSelectedItem());
+        RemoteResourceDialog.setPreviousResourceName((String) jComboBox1.getSelectedItem());
         RemoteResourceDialog.showDialog(this, null, option, null);
         updateExistedResourcesGUI();
     }
 
     /**
-        * Show filtering options.
-        *
-        * @param option int
-        */
-       void displayQueryDialog(int option) {
+     * Show filtering options.
+     *
+     * @param option int
+     */
+    void displayQueryDialog(int option) {
 
-        String remoteSourceName = (String)jComboBox1.getSelectedItem();
-           RemoteResourceDialog.setPreviousResourceName(remoteSourceName);
-           CaARRAYQueryPanel.display(remoteSourceName);
-       }
+        String remoteSourceName = (String) jComboBox1.getSelectedItem();
+        RemoteResourceDialog.setPreviousResourceName(remoteSourceName);
+        if (caARRAYQueryPanel == null) {
+            caARRAYQueryPanel = new CaARRAYQueryPanel(JOptionPane.getFrameForComponent(this), QUERYTITLE);
+        }
+        caARRAYQueryPanel.display(this, remoteSourceName);
+    }
 
 
     /**
@@ -573,7 +581,7 @@ public class LoadData extends JDialog {
      */
     private void remoteButtonSelection_actionPerformed(ActionEvent e) {
         jPanel6.getExperiments(e);
-        this.getContentPane().remove(jPanel8);
+        this.getContentPane().remove(caArrayDisplayPanel);
         this.getContentPane().remove(jPanel4);
         this.getContentPane().add(jPanel6, BorderLayout.CENTER);
         this.validate();
@@ -581,7 +589,8 @@ public class LoadData extends JDialog {
     }
 
     private void updateCurrentView() {
-        if (currentRemoteResourceName != null &&jComboBox1.getSelectedItem()!=null &&  currentRemoteResourceName != jComboBox1.getSelectedItem().toString()) {
+        if (currentRemoteResourceName != null && jComboBox1.getSelectedItem() != null && currentRemoteResourceName != jComboBox1.getSelectedItem().toString())
+        {
 
             currentRemoteResourceName = jComboBox1.getSelectedItem().toString();
 
@@ -590,15 +599,15 @@ public class LoadData extends JDialog {
                 currentRemoteResourceName = jComboBox1.getSelectedItem().toString();
         }
         remoteResourceDialog.setupSystemPropertyForCurrentResource(
-                    currentRemoteResourceName);
-            isSynchronized = !remoteResourceDialog.isSourceDirty() && (currentDetailedResourceName.equalsIgnoreCase(currentRemoteResourceName));
-            if (!isSynchronized) {
-                openRemoteResourceButton.setBackground(Color.RED);
-                openRemoteResourceButton.setToolTipText("Click to get the display synchronized with Remote source.");
-            } else {
-                openRemoteResourceButton.setBackground(null);
-                openRemoteResourceButton.setToolTipText("The top display is synchronized with the Remote source.");
-            }
+                currentRemoteResourceName);
+        isSynchronized = !remoteResourceDialog.isSourceDirty() && (currentDetailedResourceName.equalsIgnoreCase(currentRemoteResourceName));
+        if (!isSynchronized) {
+            openRemoteResourceButton.setBackground(Color.RED);
+            openRemoteResourceButton.setToolTipText("Click to get the display synchronized with Remote source.");
+        } else {
+            openRemoteResourceButton.setBackground(null);
+            openRemoteResourceButton.setToolTipText("The top display is synchronized with the Remote source.");
+        }
 
     }
 
@@ -610,12 +619,12 @@ public class LoadData extends JDialog {
         remoteResourceDialog.setupSystemPropertyForCurrentResource(
                 currentResourceName);
         remoteResourceDialog.updateCurrentResourceStatus(currentResourceName, false);
-        jPanel8.setUrl(remoteResourceDialog.getCurrentURL());
-        jPanel8.setUser(remoteResourceDialog.getCurrentUser());
-        jPanel8.setPasswd(remoteResourceDialog.getCurrentPassword());
+        caArrayDisplayPanel.setUrl(remoteResourceDialog.getCurrentURL());
+        caArrayDisplayPanel.setUser(remoteResourceDialog.getCurrentUser());
+        caArrayDisplayPanel.setPasswd(remoteResourceDialog.getCurrentPassword());
 
-        jPanel8.setParentPanel(this);
-        jPanel8.setCurrentResourceName(currentResourceName);
+        caArrayDisplayPanel.setParentPanel(this);
+        caArrayDisplayPanel.setCurrentResourceName(currentResourceName);
         if (remoteResourceDialog.getCurrentUser() == null ||
                 remoteResourceDialog.getCurrentUser().length() == 0) {
             JOptionPane.showMessageDialog(null,
@@ -625,29 +634,29 @@ public class LoadData extends JDialog {
             return;
 
         }
-        jPanel8.setExperiments(null);
+        caArrayDisplayPanel.setExperiments(null);
         if (remoteResourceDialog.isDirty()) {
-            jPanel8.setExperimentsLoaded(false);
+            caArrayDisplayPanel.setExperimentsLoaded(false);
         }
-        jPanel8.getExperiments(e);
+        caArrayDisplayPanel.getExperiments(e);
         //Reset resource dirty to false after the connection to the server.
         remoteResourceDialog.setSourceDirty(false);
         updateCurrentView();
-//       if (jPanel8.isConnectionSuccess()) {
+//       if (caArrayDisplayPanel.isConnectionSuccess()) {
 //            this.getContentPane().remove(jPanel6);
 //            this.getContentPane().remove(jPanel4);
-//            this.getContentPane().add(jPanel8, BorderLayout.CENTER);
+//            this.getContentPane().add(caArrayDisplayPanel, BorderLayout.CENTER);
 //            this.validate();
 //            this.repaint();
 //        }
     }
 
     public void addRemotePanel() {
-        //  if (jPanel8.isConnectionSuccess()) {
+        //  if (caArrayDisplayPanel.isConnectionSuccess()) {
         updateCurrentView();
         this.getContentPane().remove(jPanel6);
         this.getContentPane().remove(jPanel4);
-        this.getContentPane().add(jPanel8, BorderLayout.CENTER);
+        this.getContentPane().add(caArrayDisplayPanel, BorderLayout.CENTER);
         this.validate();
         this.repaint();
         //      }
@@ -663,7 +672,7 @@ public class LoadData extends JDialog {
 
 
     private void jRadioButton2_actionPerformed(ActionEvent e) {
-        this.getContentPane().remove(jPanel8);
+        this.getContentPane().remove(caArrayDisplayPanel);
         this.getContentPane().remove(jPanel6);
         this.getContentPane().add(jPanel4, BorderLayout.CENTER);
         lowerPanel.remove(jPanel10);

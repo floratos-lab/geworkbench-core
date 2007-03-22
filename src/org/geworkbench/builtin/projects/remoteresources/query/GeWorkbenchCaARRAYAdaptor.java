@@ -55,9 +55,15 @@ public class GeWorkbenchCaARRAYAdaptor {
     public GeWorkbenchCaARRAYAdaptor() throws IOException {
         try {
             username = PropertiesManager.getInstance().getProperty(getClass(), CAARRAY_USERNAME, "Default Value");
+            //SHould we add the // somewhere in advance?
             _serverLocation = PropertiesManager.getInstance().getProperty(getClass(), SERVERLOCATION, "Default Value");
-            password = PropertiesManager.getInstance().getProperty(getClass(), PASSWORD, "Default Value");
-        } catch (IOException e) {
+            String newPassword = PropertiesManager.getInstance().getProperty(getClass(), PASSWORD, "Default Value");
+            if(newPassword==null){
+                password = "";
+            }else{
+               password = newPassword; 
+            }
+              } catch (IOException e) {
             throw e;
         }
     }
@@ -78,7 +84,6 @@ public class GeWorkbenchCaARRAYAdaptor {
      */
     public Set testGetOntologyEntriesByCategory(String catagory) throws SearchException {
         SecureSession sess = null;
-        String _serverLocation = "";
         try {
             sess = SecureSessionFactory.defaultSecureSession();
             ((Directable) sess).direct(_serverLocation + "SecureSessionManager");
@@ -175,7 +180,7 @@ public class GeWorkbenchCaARRAYAdaptor {
 
     }
 
-    public Experiment[]  testFiltering(boolean useFilteringParameters) throws Exception {
+    public Experiment[]  getExperiments(boolean useFilteringParameters) throws Exception {
         SecureSession sess = SecureSessionFactory.defaultSecureSession();
         ((Directable) sess).direct(_serverLocation + "SecureSessionManager");
         sess.start(username, password);

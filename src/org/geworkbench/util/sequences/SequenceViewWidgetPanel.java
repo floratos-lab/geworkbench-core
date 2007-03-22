@@ -320,14 +320,14 @@ public class SequenceViewWidgetPanel extends JPanel {
                 y += (int) (rowId * yscale);
                 g.setColor(SEQUENCEBACKGROUDCOLOR);
                 if (lab.length() > maxDisplayChars) {
-                    g.drawString(lab.substring(0, maxDisplayChars), 2, y + 3);
+                    g.drawString(lab, 2, y + 3);
                 } else {
                     g.drawString(lab, 2, y + 3);
                 }
-                int x0 = (int) (10 * xscale);
+                int x0 = (int) (lab.length() * xscale);
                 int x = x0 + (int) (theone.length() * scale);
 
-                g.drawLine(xOff, y, x, y);
+                g.drawLine(x0, y, x, y);
 
                 int begin = 0 - cols;
                 int end = 0;

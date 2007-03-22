@@ -2,6 +2,7 @@ package org.geworkbench.builtin.projects.remoteresources.query;
 
 import org.geworkbench.builtin.projects.remoteresources.RemoteResource;
 import org.geworkbench.builtin.projects.remoteresources.RemoteResourceDialog;
+import org.geworkbench.builtin.projects.LoadData;
 import org.geworkbench.engine.properties.PropertiesManager;
 
 import javax.swing.*;
@@ -14,17 +15,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.util.Vector;
-import javax.swing.*;
 import java.awt.BorderLayout;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseAdapter;
-import javax.swing.border.TitledBorder;
-import javax.swing.border.Border;
-import javax.swing.table.AbstractTableModel;
-import java.util.Vector;
 import java.io.IOException;
 
 /**
@@ -35,8 +26,12 @@ import java.io.IOException;
  * To change this template use File | Settings | File Templates.
  */
 
-public class CaARRAYQueryPanel extends JPanel {
-    public CaARRAYQueryPanel() {
+public class CaARRAYQueryPanel extends JDialog {
+
+
+    public CaARRAYQueryPanel(Frame frame,
+                             String title) {
+        super(frame, title, false);
         try {
             jbInit();
         } catch (Exception ex) {
@@ -44,44 +39,23 @@ public class CaARRAYQueryPanel extends JPanel {
         }
     }
 
-    /**
-     * main
-     *
-     * @param anObject String[]
-     */
-    public static void main(String[] anObject) {
-        CaARRAYQueryPanel ca = new CaARRAYQueryPanel();
-        JFrame frame = new JFrame("Query CaARRAY");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-
-        frame.setContentPane(ca);
-
-        //Display the window.
-        frame.pack();
-        frame.setVisible(true);
-
-    }
-
-
-    public static void display(String remoteSourceName) {
+    public void display(LoadData frameComp, String remoteSourceName) {
         RemoteResource resourceDialog = RemoteResourceDialog.getRemoteResourceManager().getSelectedResouceByName(
                 remoteSourceName.trim());
+
         try {
+            loadData = frameComp;
             if (resourceDialog != null) {
                 PropertiesManager properties = PropertiesManager.getInstance();
                 properties.setProperty(GeWorkbenchCaARRAYAdaptor.class, GeWorkbenchCaARRAYAdaptor.CAARRAY_USERNAME, resourceDialog.getUsername());
                 properties.setProperty(GeWorkbenchCaARRAYAdaptor.class, GeWorkbenchCaARRAYAdaptor.PASSWORD, resourceDialog.getPassword());
-                properties.setProperty(GeWorkbenchCaARRAYAdaptor.class, GeWorkbenchCaARRAYAdaptor.SERVERLOCATION, resourceDialog.getUri());
+                properties.setProperty(GeWorkbenchCaARRAYAdaptor.class, GeWorkbenchCaARRAYAdaptor.SERVERLOCATION, "//" + resourceDialog.getUri()+ ":" + resourceDialog.getPortnumber() + "/");
 
             }
-            CaARRAYQueryPanel ca = new CaARRAYQueryPanel();
-
-            JFrame frame = new JFrame("Query CaARRAY");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setContentPane(ca);
-            frame.pack();
-            frame.setVisible(true);
+           // CaARRAYQueryPanel caARRAYQueryPanel = new CaARRAYQueryPanel(frame, "Query the CaARRAY Server.");
+            this.repaint();
+            this.setVisible(true);
         } catch (IOException e) {
 
         }
@@ -146,7 +120,8 @@ public class CaARRAYQueryPanel extends JPanel {
         JPanel allCheckBoxPanel = new JPanel();
         allCheckBoxPanel.add(allButton, BorderLayout.CENTER);
         jPanel1.add(allCheckBoxPanel);
-        this.add(jSplitPane1, java.awt.BorderLayout.CENTER);
+        this.getContentPane().add(jSplitPane1, java.awt.BorderLayout.CENTER);
+        pack();
     }
 
     public static final String PINAME = "Principal Investigator";
@@ -164,6 +139,7 @@ public class CaARRAYQueryPanel extends JPanel {
     JPanel jPanel1 = new JPanel();
     JSplitPane jSplitPane2 = new JSplitPane();
     JScrollPane jScrollPane1 = new JScrollPane();
+    JScrollPane jScrollPane2 = new JScrollPane();
     JPanel jPanel2 = new JPanel();
     JComboBox jComboBox1 = new JComboBox();
     JToolBar jToolBar1 = new JToolBar();
@@ -190,6 +166,7 @@ public class CaARRAYQueryPanel extends JPanel {
             new Color(165, 163, 151));
     Border border6 = new TitledBorder(border5, "Value");
     valueTableModel tableModel = new valueTableModel();
+    LoadData loadData;
     boolean loaded = false; //To present whether the values are retrieved already.
 
     //SelectedValue is a util class for values.
@@ -362,36 +339,33 @@ public class CaARRAYQueryPanel extends JPanel {
         jPanel2.removeAll();
         if (selectedCritiria.equalsIgnoreCase(CHIPPLATFORM)) {
             jPanel2.add(chipPlatformNameField);
-            revalidate();
+             jPanel2.revalidate();
             repaint();
             return;
         }
         if (selectedCritiria.equalsIgnoreCase(PINAME)) {
             jPanel2.add(piTextField);
-            revalidate();
+            jPanel2.revalidate();
             repaint();
             return;
         }
         JTable jTable = new JTable();
+        jScrollPane2 = new JScrollPane();
         // jTable.setPreferredScrollableViewportSize(new Dimension(100, 100));
         if (selectedCritiria.equalsIgnoreCase(ORGANISM)) {
             tableModel.setHits(valueHits);
-            jTable.setModel(tableModel);
-            jPanel2.setLayout(new BorderLayout());
-            jPanel2.add(jTable, BorderLayout.CENTER);
-            revalidate();
-            repaint();
-            return;
-        }
-        if (selectedCritiria.equalsIgnoreCase(TISSUETYPE)) {
+
+        } else if (selectedCritiria.equalsIgnoreCase(TISSUETYPE)) {
             tableModel.setHits(tissueHits);
-            jTable.setModel(tableModel);
-            jPanel2.setLayout(new BorderLayout());
-            jPanel2.add(jTable, BorderLayout.CENTER);
-            revalidate();
-            repaint();
         }
 
+        jTable.setModel(tableModel);
+        jPanel2.setLayout(new BorderLayout());
+        jScrollPane2.getViewport().add(jTable);
+        jPanel2.add(jScrollPane2, BorderLayout.CENTER);
+       jPanel2.revalidate();
+        repaint();
+        return;
     }
 
     /**
@@ -406,7 +380,7 @@ public class CaARRAYQueryPanel extends JPanel {
         tissueHits = new Vector<SelectedValue>();
         loaded = false;
         jPanel2.removeAll();
-        revalidate();
+        jPanel2.revalidate();
         repaint();
     }
 
@@ -437,6 +411,7 @@ public class CaARRAYQueryPanel extends JPanel {
                 tissueType += selectedValue.value;
             }
         }
+        this.setVisible(false);
         try {
             GeWorkbenchCaARRAYAdaptor geWorkbenchCaARRAYAdaptor = new GeWorkbenchCaARRAYAdaptor();
             boolean conbineSearchCritiria = allButton.isSelected();
@@ -464,7 +439,7 @@ public class CaARRAYQueryPanel extends JPanel {
                 }
             }
 
-            geWorkbenchCaARRAYAdaptor.testFiltering(true);
+            loadData.getCaArrayDisplayPanel().setCaExperiments(geWorkbenchCaARRAYAdaptor.getExperiments(true));
 
         } catch (Exception er) {
             GeWorkbenchCaARRAYAdaptor.fail("Cannot process the query.");
@@ -473,7 +448,7 @@ public class CaARRAYQueryPanel extends JPanel {
     }
 
     public void cancelButton_actionPerformed(ActionEvent e) {
-
+            dispose();
     }
 }
 
