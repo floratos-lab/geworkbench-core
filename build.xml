@@ -226,7 +226,7 @@
 	<!-- ====================================================================== -->
 	<target name="run" depends="compile" description="Runs geWorkbench.">
 		<java fork="true" classname="org.geworkbench.engine.config.UILauncher">
-			<jvmarg value="-Xmx512M"/>
+			<jvmarg value="-Xmx640M"/>
 			<jvmarg value="-Djava.library.path=lib"/>
 			<classpath refid="run.classpath"/>
 		</java>
@@ -250,7 +250,7 @@
 	
 	<target name="run-eclipse-config" depends="eclipse-cond-if,eclipse-cond-else,compile" >
 		<java fork="true" classname="org.geworkbench.engine.config.UILauncher">
-			<jvmarg value="-Xmx512M"/>
+			<jvmarg value="-Xmx640M"/>
 			<jvmarg value="-Dcomponents.dir=${env.ECLIPSE_HOME}"/>
 			<jvmarg value="-Djava.library.path=lib"/>
 			<classpath refid="run.classpath"/>
@@ -266,7 +266,7 @@
         </path>
 
         <java fork="true" classname="org.geworkbench.components.mindy.test.MindyTest">
-			<jvmarg value="-Xmx512M"/>
+			<jvmarg value="-Xmx640M"/>
 			<jvmarg value="-Djava.library.path=lib"/>
 			<classpath refid="mindy.classpath"/>
 		</java>
@@ -276,7 +276,7 @@
 	<!-- ====================================================================== -->
 	<target name="run-prod" depends="compile" description="Runs geWorkbench.">
 		<java fork="true" classname="org.geworkbench.engine.config.UILauncher">
-			<jvmarg value="-Xmx512M"/>
+			<jvmarg value="-Xmx640M"/>
 			<jvmarg value="-Djava.library.path=lib"/>
 			<arg value="all_release.xml"/>
 			<classpath refid="run.classpath"/>
@@ -287,7 +287,7 @@
 	<!-- ====================================================================== -->
 	<target name="run-silent" depends="compile" description="Runs geWorkbench.">
 		<java fork="true" classname="org.geworkbench.engine.config.UILauncher">
-			<jvmarg value="-Xmx512M"/>
+			<jvmarg value="-Xmx640M"/>
 			<jvmarg value="-Djava.library.path=lib"/>
 			<redirector output="NUL"/>
 			<classpath refid="run.classpath"/>
@@ -298,7 +298,7 @@
 	<!-- ====================================================================== -->
 	<target name="runNewFlavor" depends="compile" description="Runs geWorkbench.">
 		<java fork="true" classname="org.geworkbench.engine.config.UILauncher">
-			<jvmarg value="-Xmx512M"/>
+			<jvmarg value="-Xmx640M"/>
 			<jvmarg value="-Djava.library.path=lib"/>
 			<arg value="all_combobox.xml"/>
 			<classpath refid="run.classpath"/>
@@ -369,7 +369,7 @@
 		<delete dir="${testing}"/>
 		<mkdir dir="${testing}"/>
 		<junit fork="yes" dir="${basedir}" failureProperty="test.failed" printsummary="yes">
-			<jvmarg value="-Xmx512M"/>
+			<jvmarg value="-Xmx640M"/>
 			<jvmarg value="-Djava.awt.headless=true"/>
 			<classpath refid="run.classpath"/>
 			<formatter type="xml"/>
@@ -438,20 +438,26 @@
 				<exclude name="${components}/matrixreduce/**/*"/>
 				<exclude name="${components}/simulation/**/*"/>
 				<exclude name="${components}/tprofiler/**/*"/>
+				<exclude name="${components}/cytoscape/**/*"/>
+				<exclude name="${components}/mindy/**/*"/>
+				<exclude name="${components}/am/**/*"/>
+				<exclude name="${components}/cagrid/**/*"/>
+				<exclude name="${components}/cgems/**/*"/>
+				<exclude name="plugins/**/*"/>
+				
 				<exclude name="**/synteny/*"/>
 				<exclude name="**/src/**"/>
 				<exclude name="**/test/**"/>
 				<include name="annotation/**/*"/>
 				<include name="${lib}/**/*"/>
-				<include name="plugins/**/*"/>
-				<include name="caWorkbenchLicense.txt"/>
+				
+				<include name="geWorkbenchLicense.txt"/>
+	<include name="ReleaseNotes1.0.5.txt"/>
 				<include name="java.policy"/>
-				<include name="aracne*"/>
-				<include name="blat*"/>
+ 
 				 
 				<include name="build-component.xml"/>
-				<include name="config_kernel.txt"/>
-				<include name="config_thrshold.txt"/>
+				 
 				<exclude name="**/*.cvsignore"/>
 				<exclude name="data"/>
 				<exclude name="nbproject"/>
