@@ -1,12 +1,5 @@
 package org.geworkbench.builtin.projects.remoteresources.query;
 
-/**
- * Created by IntelliJ IDEA.
- * User: xiaoqing
- * Date: Mar 19, 2007
- * Time: 2:52:05 PM
- * To change this template use File | Settings | File Templates.
- */
 
 import gov.nih.nci.common.search.SearchException;
 import gov.nih.nci.common.search.Directable;
@@ -28,6 +21,7 @@ import java.io.IOException;
 import org.geworkbench.engine.properties.PropertiesManager;
 
 /**
+ * Util class for connect with caArray RMI sever.
  * Created by IntelliJ IDEA.
  * User: xiaoqing
  * Date: Mar 1, 2007
@@ -36,10 +30,6 @@ import org.geworkbench.engine.properties.PropertiesManager;
  */
 public class GeWorkbenchCaARRAYAdaptor {
 
-//    private final static String CAARRAY_USER = "PUBLIC";
-//    private final static String CAARRAY_USER_PWD = "";
-//    static String _serverLocation = "//caarray-mageom-server.nci.nih.gov:8080/";
-//    private final static String _serverLocation = "//caarray-mageom-server-stage.nci.nih.gov:8080/";
     public final static String CAARRAY_USERNAME = "username";
     public final static String PASSWORD = "password";
     public final static String SERVERLOCATION = "serverlocation";
@@ -55,28 +45,31 @@ public class GeWorkbenchCaARRAYAdaptor {
     public GeWorkbenchCaARRAYAdaptor() throws IOException {
         try {
             username = PropertiesManager.getInstance().getProperty(getClass(), CAARRAY_USERNAME, "Default Value");
-            //SHould we add the // somewhere in advance?
             _serverLocation = PropertiesManager.getInstance().getProperty(getClass(), SERVERLOCATION, "Default Value");
             String newPassword = PropertiesManager.getInstance().getProperty(getClass(), PASSWORD, "Default Value");
-            if(newPassword==null){
+            if (newPassword == null) {
                 password = "";
-            }else{
-               password = newPassword; 
+            } else {
+                password = newPassword;
             }
-              } catch (IOException e) {
+        } catch (IOException e) {
             throw e;
         }
     }
 
-
+    /**
+     * Report Error.
+     *
+     * @param message
+     * @return
+     */
     public static boolean fail(String message) {
         JOptionPane.showMessageDialog(null, message);
-
         return false;
     }
 
     /**
-     * Get the predefined values for some catagories. The values will be used to create a table.
+     * Get the predefined values for some catagories. The values will be used for the content table.
      *
      * @param catagory
      * @return
@@ -109,16 +102,14 @@ public class GeWorkbenchCaARRAYAdaptor {
         Set distinctCategory = new TreeSet();
         for (int i = 0; i < oeResults.length; i++) {
             OntologyEntry entry = oeResults[i];
-            System.out.println("entry=" + entry.getValue());
-            distinctCategory.add(entry.getValue().toLowerCase());
-            System.out.println("entry.getCategory= " + entry.getCategory());
+            distinctCategory.add(entry.getValue().toLowerCase().trim());
         }
         return distinctCategory;
 
     }
 
     /**
-     * Now only support two match types for pull down menu. ChipType will be added later.
+     * Now caArray only supports two match types for pull down menu. ChipType will be added later.
      *
      * @param key
      * @return
@@ -146,7 +137,6 @@ public class GeWorkbenchCaARRAYAdaptor {
             ex.printStackTrace();
             fail("Error getting experiment SC." + "Got " + ex.getClass().getName() + ": " + ex.getMessage());
         }
-
         SearchResult result = oesc.search();
         OntologyEntry[] oeResults = (OntologyEntry[]) result.getResultSet();
         Set distinctCategory = new HashSet();
@@ -173,7 +163,6 @@ public class GeWorkbenchCaARRAYAdaptor {
         SearchResult results = esc.search();
         /*return all, no filtering*/
         Experiment[] allResults = (Experiment[]) results.getResultSet();
-
         esc.setTissueType("prostate and ovary");
         results = esc.search();
         Experiment[] result = (Experiment[]) results.getResultSet();
@@ -203,14 +192,13 @@ public class GeWorkbenchCaARRAYAdaptor {
             }
             SearchResult results = esc.search();
             Experiment[] result = (Experiment[]) results.getResultSet();
-            System.out.println(result.length + " experiments exist with  filtering. ");
             return result;
 
         } else {
             SearchResult results = esc.search();
             /*return all, no filtering*/
             Experiment[] allResults = (Experiment[]) results.getResultSet();
-            System.out.println(allResults.length + " experiments exist without filtering. ");
+            //  System.out.println(allResults.length + " experiments exist without filtering. ");
             return allResults;
         }
 

@@ -262,141 +262,17 @@ public class CaARRAYPanel extends JPanel implements Observer {
      * @param e
      */
     private void openRemoteFile_action(ActionEvent e) {
-        merge = parent.isMerge();
-        TreePath[] paths = remoteFileTree.getSelectionPaths();
-        ExperimentImpl exp = null;
-        int arrayNumber = paths.length;
-        CaArrayResource[] caArrayResources = new CaArrayResource[arrayNumber];
 
-//        if (merge) {
-//            if (paths.length > 0) {
-//                exp = ((CaArrayExperiment) ((DefaultMutableTreeNode) paths[0].
-//                                            getPath()[1]).getUserObject()).
-//                      getExperiment();
-//            }
-//            Vector tempAssays = new Vector();
-//            boolean multipleAssays = false;
-//
-//            for (int i = 0; i < paths.length; i++) {
-//                DefaultMutableTreeNode node = (DefaultMutableTreeNode) paths[i].
-//                                              getLastPathComponent();
-//                if (node != null &&
-//                    (node.getUserObject() instanceof CaArrayBioassay)) {
-//                    if (exp ==
-//                        ((CaArrayExperiment) ((DefaultMutableTreeNode) node.
-//                                              getPath()[
-//                                              1]).getUserObject()).
-//                        getExperiment()) {
-//                        CaArrayBioassay ba = (CaArrayBioassay) node.
-//                                             getUserObject();
-//                        if (ba != null) {
-//
-//                            tempAssays.add(ba.getBioAssayImpl());
-////                        } else {
-////                            BioAssay[] singleAssay = new BioAssayImpl[1];
-////                            singleAssay[0] = ba.getBioAssayImpl();
-////                            parent.parentProjectPanel.remoteFileOpenAction(new
-////                                    CaArrayResource(
-////                                            singleAssay, exp));
-////
-////                        }
-//                        } else {
-//                            JOptionPane.showMessageDialog(null,
-//                                    "No data in selected experiment " +
-//                                    ba.getBioAssayImpl().getName(),
-//                                    "Remote Open File Error",
-//                                    JOptionPane.ERROR_MESSAGE);
-//                            return;
-//                        }
-//                    } else {
-//                        multipleAssays = true;
-//                    }
-//                }
-//            }
-//            if (multipleAssays) {
-//                JOptionPane.showMessageDialog(null,
-//                                              "BioAssay selections only from " +
-//                                              exp.getName() + " will be used",
-//                                              "Multiple Experiment Selections",
-//                                              JOptionPane.WARNING_MESSAGE);
-//            }
-//
-//            BioAssayImpl[] assays = new BioAssayImpl[tempAssays.size()];
-//            assays = (BioAssayImpl[]) tempAssays.toArray(assays);
-//            if (exp != null && assays.length > 0) {
-//
-//                parent.parentProjectPanel.remoteFileOpenAction(new
-//                        CaArrayResource(
-//                                assays, exp));
-//
-//            }
-//
-//            dispose();
-//            return;
-//
-//        } else {
-        if (paths.length > 0) {
-            exp = ((CaArrayExperiment) ((DefaultMutableTreeNode) paths[0].
-                    getPath()[1]).getUserObject()).
-                    getExperiment();
-        }
-        Vector tempAssays = new Vector();
-        boolean multipleAssays = false;
-
-        for (int i = 0; i < paths.length; i++) {
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode) paths[i].
-                    getLastPathComponent();
-            if (node != null &&
-                    (node.getUserObject() instanceof CaArrayBioassay)) {
-                if (exp ==
-                        ((CaArrayExperiment) ((DefaultMutableTreeNode) node.
-                                getPath()[
-                                1]).getUserObject()).
-                                getExperiment()) {
-                    CaArrayBioassay ba = (CaArrayBioassay) node.
-                            getUserObject();
-                    if (ba != null) {
-
-                        BioAssay[] singleAssay = new BioAssayImpl[1];
-                        singleAssay[0] = ba.getBioAssayImpl();
-                        if (!merge || arrayNumber == 1) {
-                            parent.parentProjectPanel.remoteFileOpenAction(new
-                                    CaArrayResource(
-                                    singleAssay, exp));
-                        } else {
-                            caArrayResources[i] = new
-                                    CaArrayResource(singleAssay,
-                                    exp);
-
-                        }
-
-                    } else {
-                        JOptionPane.showMessageDialog(null,
-                                "No data in selected experiment " +
-                                        ba.getBioAssayImpl().getName(),
-                                "Remote Open File Error",
-                                JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                } else {
-                    multipleAssays = true;
-                }
-            }
-        }
-        if (multipleAssays) {
-            JOptionPane.showMessageDialog(null,
-                    "BioAssay selections only from " +
-                            exp.getName() + " will be used",
-                    "Multiple Experiment Selections",
-                    JOptionPane.WARNING_MESSAGE);
-        }
-
-        if (merge && arrayNumber > 1 && caArrayResources != null) {
-            parent.parentProjectPanel.remoteFileOpenAction(caArrayResources);
-        }
-
-        dispose();
-        return;
+        progressMonitor = new ProgressMonitor(this,
+                "Connecting..",
+                "", 0, 1000000);
+        stillWaitForConnecting = true;
+        progressBar.setMessage("Try to load to the selected bioassays...");
+        updateProgressBar("Try to load to the selected bioassays for ");
+        //progressBar.addObserver(this);
+        progressBar.start();
+        task = new ConnectionTask();
+        task.getBioAssayThread();
 
     }
 
@@ -613,6 +489,94 @@ public class CaARRAYPanel extends JPanel implements Observer {
             t.setPriority(Thread.MAX_PRIORITY);
             t.start();
 
+        }
+
+        public void getBioAssayThread() {
+            Runnable dataLoader = new Runnable() {
+                public void run() {
+                    getBioAssay();
+                }
+            };
+            Thread t = new Thread(dataLoader);
+            t.setPriority(Thread.MAX_PRIORITY);
+            t.start();
+
+        }
+
+
+        public void getBioAssay() {
+            merge = parent.isMerge();
+            TreePath[] paths = remoteFileTree.getSelectionPaths();
+            ExperimentImpl exp = null;
+            int arrayNumber = paths.length;
+
+
+            CaArrayResource[] caArrayResources = new CaArrayResource[arrayNumber];
+
+            if (paths.length > 0) {
+                exp = ((CaArrayExperiment) ((DefaultMutableTreeNode) paths[0].
+                        getPath()[1]).getUserObject()).
+                        getExperiment();
+            }
+            Vector tempAssays = new Vector();
+            boolean multipleAssays = false;
+
+            for (int i = 0; i < paths.length; i++) {
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode) paths[i].
+                        getLastPathComponent();
+                if (node != null &&
+                        (node.getUserObject() instanceof CaArrayBioassay)) {
+                    if (exp ==
+                            ((CaArrayExperiment) ((DefaultMutableTreeNode) node.
+                                    getPath()[
+                                    1]).getUserObject()).
+                                    getExperiment()) {
+                        CaArrayBioassay ba = (CaArrayBioassay) node.
+                                getUserObject();
+
+                        if (ba != null) {
+
+                            BioAssay[] singleAssay = new BioAssayImpl[1];
+                            singleAssay[0] = ba.getBioAssayImpl();
+                            if (!merge || arrayNumber == 1) {
+                                parent.parentProjectPanel.remoteFileOpenAction(new
+                                        CaArrayResource(
+                                        singleAssay, exp));
+                            } else {
+                                caArrayResources[i] = new
+                                        CaArrayResource(singleAssay,
+                                        exp);
+
+                            }
+
+                        } else {
+                            JOptionPane.showMessageDialog(null,
+                                    "No data in selected experiment " +
+                                            ba.getBioAssayImpl().getName(),
+                                    "Remote Open File Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+                    } else {
+                        multipleAssays = true;
+                    }
+                }
+            }
+
+            if (multipleAssays) {
+                JOptionPane.showMessageDialog(null,
+                        "BioAssay selections only from " +
+                                exp.getName() + " will be used",
+                        "Multiple Experiment Selections",
+                        JOptionPane.WARNING_MESSAGE);
+            }
+
+            if (merge && arrayNumber > 1 && caArrayResources != null) {
+                parent.parentProjectPanel.remoteFileOpenAction(caArrayResources);
+            }
+            progressBar.dispose();
+            dispose();
+            return;
         }
 
         public void connect() {
@@ -1275,13 +1239,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
             root = new DefaultMutableTreeNode(
                     "caARRAY experiments");
             remoteTreeModel.setRoot(root);
-
-//            jScrollPane1.getViewport().removeAll();
-//            remoteFileTree.setModel(remoteTreeModel);
-            // remoteFileTree = new JTree(remoteTreeModel);
-            // jScrollPane1.getViewport().add(remoteFileTree, null);
             repaint();
-
         }
     }
 
@@ -1319,7 +1277,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
 
             remoteTreeModel = new DefaultTreeModel(queryResultRoot);
             remoteFileTree.setModel(remoteTreeModel);
-            remoteFileTree = new JTree(remoteTreeModel);
+            //remoteFileTree = new JTree(remoteTreeModel);
             jScrollPane1.getViewport().add(remoteFileTree, null);
             revalidate();
             repaint();

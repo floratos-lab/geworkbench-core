@@ -50,10 +50,10 @@ public class CaARRAYQueryPanel extends JDialog {
                 PropertiesManager properties = PropertiesManager.getInstance();
                 properties.setProperty(GeWorkbenchCaARRAYAdaptor.class, GeWorkbenchCaARRAYAdaptor.CAARRAY_USERNAME, resourceDialog.getUsername());
                 properties.setProperty(GeWorkbenchCaARRAYAdaptor.class, GeWorkbenchCaARRAYAdaptor.PASSWORD, resourceDialog.getPassword());
-                properties.setProperty(GeWorkbenchCaARRAYAdaptor.class, GeWorkbenchCaARRAYAdaptor.SERVERLOCATION, "//" + resourceDialog.getUri()+ ":" + resourceDialog.getPortnumber() + "/");
+                properties.setProperty(GeWorkbenchCaARRAYAdaptor.class, GeWorkbenchCaARRAYAdaptor.SERVERLOCATION, "//" + resourceDialog.getUri() + ":" + resourceDialog.getPortnumber() + "/");
 
             }
-           // CaARRAYQueryPanel caARRAYQueryPanel = new CaARRAYQueryPanel(frame, "Query the CaARRAY Server.");
+            // CaARRAYQueryPanel caARRAYQueryPanel = new CaARRAYQueryPanel(frame, "Query the CaARRAY Server.");
             this.repaint();
             this.setVisible(true);
         } catch (IOException e) {
@@ -98,8 +98,8 @@ public class CaARRAYQueryPanel extends JDialog {
                 CaARRAYQueryPanel_jcatagoryComboBox_actionAdapter(this));
         jPanel1.setBorder(border2);
         jPanel1.setLayout(new BorderLayout());
-        chipPlatformNameField.setText("Please enter text here.");
-        piTextField.setText("Please enter PI information here.");
+        chipPlatformNameField.setText(ChipFieldDefaultMessage);
+        piTextField.setText(PIFieldDefaultMessage);
         jSplitPane2.add(jScrollPane1, JSplitPane.LEFT);
         jSplitPane2.add(jPanel2, JSplitPane.RIGHT);
         jScrollPane1.add(jList);
@@ -129,6 +129,8 @@ public class CaARRAYQueryPanel extends JDialog {
     public static final String TISSUETYPE = "Tissue Type";
     public static final String CHIPPLATFORM = "Chip Platform";
     public static final boolean INISTATE = false; //The initial state for a value.
+    public static final String ChipFieldDefaultMessage = "Please enter chip type information here.";
+    public static final String PIFieldDefaultMessage = "Please enter PI information here.";
 
     String[] listContent = new String[]{TISSUETYPE, CHIPPLATFORM,
             ORGANISM, PINAME};  //The content of search criteria.
@@ -339,7 +341,7 @@ public class CaARRAYQueryPanel extends JDialog {
         jPanel2.removeAll();
         if (selectedCritiria.equalsIgnoreCase(CHIPPLATFORM)) {
             jPanel2.add(chipPlatformNameField);
-             jPanel2.revalidate();
+            jPanel2.revalidate();
             repaint();
             return;
         }
@@ -351,7 +353,6 @@ public class CaARRAYQueryPanel extends JDialog {
         }
         JTable jTable = new JTable();
         jScrollPane2 = new JScrollPane();
-        // jTable.setPreferredScrollableViewportSize(new Dimension(100, 100));
         if (selectedCritiria.equalsIgnoreCase(ORGANISM)) {
             tableModel.setHits(valueHits);
 
@@ -363,7 +364,7 @@ public class CaARRAYQueryPanel extends JDialog {
         jPanel2.setLayout(new BorderLayout());
         jScrollPane2.getViewport().add(jTable);
         jPanel2.add(jScrollPane2, BorderLayout.CENTER);
-       jPanel2.revalidate();
+        jPanel2.revalidate();
         repaint();
         return;
     }
@@ -387,7 +388,33 @@ public class CaARRAYQueryPanel extends JDialog {
     //What for?
 
     public void deleteButton_actionPerformed(ActionEvent e) {
+        switch (currentSelectedContentIndex) {
+            case 0:
+                if (tissueHits != null) {
+                    for (SelectedValue selectedValue : tissueHits) {
+                        selectedValue.setSelected(false);
+                    }
+                    tableModel.fireTableDataChanged();
+                }
+                break;
+            case 1:
+                chipPlatformNameField.setText(ChipFieldDefaultMessage);
+                break;
+            case 2:
+                if (valueHits != null) {
+                    for (SelectedValue selectedValue : valueHits) {
+                        selectedValue.setSelected(false);
+                    }
+                    tableModel.fireTableDataChanged();
+                }
+                break;
 
+            case 3:
+                piTextField.setText(PIFieldDefaultMessage);
+                break;
+        }
+        jPanel2.revalidate();
+        jPanel2.repaint();
     }
 
     /**
@@ -448,7 +475,7 @@ public class CaARRAYQueryPanel extends JDialog {
     }
 
     public void cancelButton_actionPerformed(ActionEvent e) {
-            dispose();
+        dispose();
     }
 }
 
