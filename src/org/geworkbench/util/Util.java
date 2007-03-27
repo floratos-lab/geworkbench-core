@@ -1,5 +1,6 @@
 package org.geworkbench.util;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -233,5 +234,34 @@ public class Util {
         int y = (screenSize.height - winSize.height) / 2;
         window.setLocation(x, y);
     }
+    
+    /**
+	 * 
+	 * @param title
+	 * @param message
+	 * @return ProgressBar
+	 */
+	public static ProgressBar createProgressBar(String title, String message) {
 
+		ProgressBar pBar = createProgressBar(title);
+		pBar.setMessage(message);
+
+		return pBar;
+	}
+
+	/**
+	 * 
+	 * @param title
+	 * @return ProgressBar
+	 */
+	public static ProgressBar createProgressBar(String title) {
+		final ProgressBar pBar = ProgressBar
+				.create(ProgressBar.INDETERMINATE_TYPE);
+
+		pBar.setTitle(title);
+
+		centerWindow(pBar);
+
+		return pBar;
+	}
 }
