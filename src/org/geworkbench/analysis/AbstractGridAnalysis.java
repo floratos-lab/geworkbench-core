@@ -7,16 +7,14 @@ import java.util.Map;
  * abstract class to have the grid analyses exposed.
  * 
  * @author keshav
- * @version $Id: AbstractGridAnalysis.java,v 1.2 2007-03-19 18:13:37 keshav Exp $
+ * @version $Id: AbstractGridAnalysis.java,v 1.3 2007-03-27 19:32:37 keshav Exp $
  */
 public abstract class AbstractGridAnalysis extends AbstractAnalysis {
 
 	/**
-	 * Returns the bison parameters, to be used for conversion in to cagrid
-	 * parameter types.
 	 * 
-	 * @return Map<String, String>
+	 * @return Map<String, Object>
 	 */
-	public abstract Map<String, String> getBisonParameters();
+	public abstract Map<String, Object> getBisonParameters();
 
 }
