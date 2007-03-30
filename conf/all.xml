@@ -129,6 +129,11 @@
 		<gui-area name="VisualArea"/>
 	</plugin>
 
+    <!-- geneways plugin -->
+    <plugin id="Geneways" name="Geneways" class="org.geworkbench.components.cutenet.GenewaysWidget" source="cutenet">
+       <gui-area name="VisualArea"/>
+   </plugin>
+
     <plugin id="SequenceRetriever" name="Sequence Retriever" class="org.geworkbench.components.sequenceretriever.SequenceRetriever" source="sequenceretriever">
 		<gui-area name="VisualArea"/>
 	</plugin>
