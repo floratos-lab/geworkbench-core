@@ -261,7 +261,7 @@ public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMa
 
     }
 
-    public HashMap getGeneRows() {
+    public HashMap<Integer, HashMap<Integer, Float>> getGeneRows() {
         return this.geneRows;
     }
 
