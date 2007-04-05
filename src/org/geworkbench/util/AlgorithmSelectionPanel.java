@@ -62,7 +62,7 @@ public class AlgorithmSelectionPanel extends JPanel {
         algorithmGroup.add(exhaustive);
         algorithmGroup.add(hierarc);
         //@todo disable the button for geworkbench-v_1_0_5
-        hierarc.setEnabled(false);
+        //hierarc.setEnabled(false);
         add(discovery);
         add(hierarc);
         add(exhaustive);
