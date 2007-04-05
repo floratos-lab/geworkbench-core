@@ -55,6 +55,7 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.datastructure.properties.DSNamed;
+import org.geworkbench.bison.datastructure.properties.DSExtendable;
 import org.geworkbench.bison.parsers.resources.MAGEResource2;
 import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.bison.util.colorcontext.ColorContext;
@@ -455,6 +456,30 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                 // this.repaint();
                 return false;
             }
+        } else if (mSetSelected != null && mSetSelected instanceof DataSetSubNode) {
+            DSDataSet ds = ((DataSetSubNode) mSetSelected)._aDataSet;
+            File f = ds.getFile();
+            jFileChooser1 = new JFileChooser(f);
+            jFileChooser1.setSelectedFile(f);
+
+            // Use the SAVE version of the dialog, test return for Approve/Cancel
+            if (JFileChooser.APPROVE_OPTION ==
+                jFileChooser1.showSaveDialog(jSaveMenuItem)) {
+                // Set the current file name to the user's selection,
+                // then do a regular saveFile
+                String newFileName = jFileChooser1.getSelectedFile().getPath();
+                //repaints menu after item is selected
+                System.out.println(newFileName);
+                //        if(f != null) {
+                //          return saveFile(f, newFileName);
+                //        } else {
+                ds.writeToFile(newFileName);
+                //        }
+            } else {
+                // this.repaint();
+                return false;
+            }
+
         } else {
             JOptionPane.showMessageDialog(null,
                                           "This node contains no Dataset.",
@@ -796,7 +821,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                 } else if (mNode instanceof DataSetNode) {
                     dataSetMenu.show(projectTree, e.getX(), e.getY());
                 } else if (mNode instanceof DataSetSubNode) {
-                    dataSetSubMenu.show(projectTree, e.getX(), e.getY());
+                    dataSetMenu.show(projectTree, e.getX(), e.getY());
                 }
             }
         }
@@ -1800,6 +1825,14 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
             publishProjectEvent(new ProjectEvent(ProjectEvent.SELECTED,
                                                  sourceMA, selectedNode));
         }
+    }
+
+    public static void addToHistory(DSExtendable objectWithHistory, String newHistory) {
+        Object[] prevHistory = objectWithHistory.getValuesForName(HISTORY);
+        if (prevHistory != null) {
+            objectWithHistory.clearName(HISTORY);
+        }
+        objectWithHistory.addNameValuePair(HISTORY, (prevHistory == null ? "" : (String) prevHistory[0]) + newHistory + "\n");
     }
 
     /**

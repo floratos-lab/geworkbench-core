@@ -2,6 +2,7 @@ package org.geworkbench.builtin.projects.history;
 
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
+import org.geworkbench.bison.datastructure.properties.DSExtendable;
 import org.geworkbench.builtin.projects.ProjectPanel;
 import org.geworkbench.engine.config.VisualPlugin;
 import org.geworkbench.engine.management.AcceptTypes;
@@ -30,7 +31,7 @@ import java.awt.*;
     /**
      * The currently selected microarray set.
      */
-    protected DSMicroarraySet maSet = null;
+    protected DSDataSet maSet = null;
     protected String datasetHistory = DEFAULT_MESSAGE;
     private BorderLayout borderLayout1 = new BorderLayout();
     protected JScrollPane jScrollPane1 = new JScrollPane();
@@ -71,13 +72,12 @@ import java.awt.*;
      * @param e
      */
     @Subscribe public void receive(org.geworkbench.events.ProjectEvent e, Object source) {
-        DSDataSet dataSet = e.getDataSet();
-        if (e != null && dataSet instanceof DSMicroarraySet) {
+        maSet = e.getDataSet();
+        if (maSet != null) {
             datasetHistory = DEFAULT_MESSAGE;
             if (e.getMessage().equals(org.geworkbench.events.ProjectEvent.CLEARED))
                 maSet = null;
-            else if (dataSet != null) {
-                maSet = (DSMicroarraySet) dataSet;
+            else if (maSet != null) {
                 Object[] values = maSet.getValuesForName(ProjectPanel.HISTORY);
                 if (values != null && values.length > 0) {
                     datasetHistory = (String) values[0];
