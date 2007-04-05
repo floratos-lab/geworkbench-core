@@ -352,7 +352,7 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence,
                 bytes, offset);
     }
 
-    ArrayList<DSPatternMatch<DSSequence,
+ public   ArrayList<DSPatternMatch<DSSequence,
                     DSSeqRegistration>> matches = new ArrayList<DSPatternMatch<
                                           DSSequence, DSSeqRegistration>>();
 
