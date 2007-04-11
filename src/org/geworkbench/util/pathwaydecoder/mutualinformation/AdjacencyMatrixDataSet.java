@@ -59,11 +59,13 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet implements DSAnci
             HashMap<Integer, HashMap<Integer, Float>> geneRows = matrix.getGeneRows();
             for (Map.Entry<Integer, HashMap<Integer, Float>> entry : geneRows.entrySet()) {
                 String geneName = markers.get(entry.getKey()).getLabel();
+                writer.write(geneName + "\t");
                 HashMap<Integer, Float> destRows = entry.getValue();
                 for (Map.Entry<Integer, Float> entry2 : destRows.entrySet()) {
                     String geneName2 = markers.get(entry2.getKey()).getLabel();
-                    writer.write(geneName + ", " + entry2.getValue() + ", " + geneName2 + "\n");
+                    writer.write(geneName2 + "\t" + entry2.getValue() + "\t");
                 }
+                writer.write("\n");
             }
             writer.close();
         } catch (IOException e) {
