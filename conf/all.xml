@@ -101,6 +101,7 @@
     <plugin id="matrixReduce" name="Matrix Reduce" class="org.geworkbench.components.matrixreduce.MatrixReduceAnalysis" source="matrixreduce"/>
     
     <plugin id="mindy" name="MINDY Analysis" class="org.geworkbench.components.mindy.MindyAnalysis" source="mindy"/>
+    <plugin id="aracne" name="ARACNE Analysis" class="org.geworkbench.components.aracne.AracneAnalysis" source="aracne-java"/>
     <plugin id="somAnalysis" name="SOM Analysis" class="org.geworkbench.components.clustering.SOMAnalysis" source="clustering"/>
 	<plugin id="wvAnalysis" name="WV Analysis" class="org.geworkbench.components.analysis.classification.wv.WVTraining" source="analysis"/>
     <plugin id="knnAnalysis" name="KNN Analysis" class="org.geworkbench.components.analysis.classification.knn.KNNTraining" source="analysis"/>
@@ -133,7 +134,7 @@
     <plugin id="Geneways" name="Geneways" class="org.geworkbench.components.cutenet.GenewaysWidget" source="cutenet">
        <gui-area name="VisualArea"/>
    </plugin>
-
+	 
     <plugin id="SequenceRetriever" name="Sequence Retriever" class="org.geworkbench.components.sequenceretriever.SequenceRetriever" source="sequenceretriever">
 		<gui-area name="VisualArea"/>
 	</plugin>
@@ -198,15 +199,18 @@
     <plugin id="networkBrowser" name="Network Browser" class="org.geworkbench.components.pathwaydecoder.GeneNetworkPanel" source="pathwaydecoder">
         <gui-area name="VisualArea"/>
     </plugin>
-
+	
+	<!-- 
     <plugin id="aracne" name="Aracne" class="org.geworkbench.components.pathwaydecoder.ARACNE" source="pathwaydecoder">
         <gui-area name="VisualArea"/>
     </plugin>
-
+     -->
+	
+	<!-- TODO - Remove this component, but move caScript stuff first.
     <plugin id="cagrid" name="caGrid" class="org.geworkbench.components.cagrid.CaGridPanel" source="cagrid">
         <gui-area name="CommandArea"/>
     </plugin>
-
+ 	-->
 
 
 </geaw-config>
