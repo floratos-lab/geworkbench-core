@@ -118,7 +118,7 @@ public class CaARRAYQueryPanel extends JDialog {
         jSplitPane1.add(jPanel1, JSplitPane.LEFT);
         jPanel1.add(jcatagoryComboBox, BorderLayout.NORTH);
         JPanel allCheckBoxPanel = new JPanel();
-        allCheckBoxPanel.add(allButton, BorderLayout.CENTER);
+        // allCheckBoxPanel.add(allButton, BorderLayout.CENTER);
         jPanel1.add(allCheckBoxPanel);
         this.getContentPane().add(jSplitPane1, java.awt.BorderLayout.CENTER);
         pack();
@@ -258,6 +258,18 @@ public class CaARRAYQueryPanel extends JDialog {
 
         /*detect change in cell at (row, col); set cell to value; update the table */
         public void setValueAt(Object value, int row, int col) {
+            //Set the selection to single selection as requested by Aris. 04/19/2007
+
+            if (hits != null) {
+                for (int i = 0; i < hits.size(); i++) {
+                    SelectedValue hit = hits.get(i);
+                    if (hit.getSelected()) {
+                        hit.setSelected(false);
+                        fireTableCellUpdated(i, col);
+                    }
+                }
+            }
+
             SelectedValue hit = hits.get(row);
             hit.setSelected((Boolean) value);
             fireTableCellUpdated(row, col);
@@ -340,12 +352,17 @@ public class CaARRAYQueryPanel extends JDialog {
     public void updateSelectionValues(String selectedCritiria) {
         jPanel2.removeAll();
         if (selectedCritiria.equalsIgnoreCase(CHIPPLATFORM)) {
+            //jPanel2.setLayout(new FlowLayout());
+            jPanel2.setLayout(new GridLayout(6, 1));
+            chipPlatformNameField.setMinimumSize(new Dimension(200, 50));
             jPanel2.add(chipPlatformNameField);
             jPanel2.revalidate();
             repaint();
             return;
         }
         if (selectedCritiria.equalsIgnoreCase(PINAME)) {
+            jPanel2.setLayout(new GridLayout(6, 1));
+            piTextField.setMinimumSize(new Dimension(200, 50));
             jPanel2.add(piTextField);
             jPanel2.revalidate();
             repaint();
@@ -425,9 +442,16 @@ public class CaARRAYQueryPanel extends JDialog {
     public void searchButton_actionPerformed(ActionEvent e) {
         //get parameters.
         String piName = piTextField.getText().trim();
+        if (piName != null && piName.startsWith(PIFieldDefaultMessage)) {
+            piName = "";
+        }
         String chipPlatformName = chipPlatformNameField.getText().trim();
+        if (chipPlatformName != null && chipPlatformName.startsWith(ChipFieldDefaultMessage)) {
+            chipPlatformName = "";
+        }
         String speciesValue = "";
         String tissueType = "";
+
         for (SelectedValue selectedValue : valueHits) {
             if (selectedValue.getSelected()) {
                 speciesValue += selectedValue.value;
@@ -441,13 +465,17 @@ public class CaARRAYQueryPanel extends JDialog {
         this.setVisible(false);
         try {
             GeWorkbenchCaARRAYAdaptor geWorkbenchCaARRAYAdaptor = new GeWorkbenchCaARRAYAdaptor();
-            boolean conbineSearchCritiria = allButton.isSelected();
+            // boolean conbineSearchCritiria = allButton.isSelected();
+            boolean conbineSearchCritiria = true;
             if (conbineSearchCritiria) {
-
-                geWorkbenchCaARRAYAdaptor.setChipTypeName(chipPlatformName);
-                geWorkbenchCaARRAYAdaptor.setOrganName(speciesValue);
-                geWorkbenchCaARRAYAdaptor.setTissueTypeName(tissueType);
-                geWorkbenchCaARRAYAdaptor.setPiName(piName);
+                if (chipPlatformName.length() > 0)
+                    geWorkbenchCaARRAYAdaptor.setChipTypeName(chipPlatformName);
+                if (speciesValue.length() > 0)
+                    geWorkbenchCaARRAYAdaptor.setOrganName(speciesValue);
+                if (tissueType.length() > 0)
+                    geWorkbenchCaARRAYAdaptor.setTissueTypeName(tissueType);
+                if (piName.length() > 0)
+                    geWorkbenchCaARRAYAdaptor.setPiName(piName);
             } else {
                 switch (currentSelectedContentIndex) {
                     case 0:

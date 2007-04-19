@@ -251,6 +251,9 @@ public DSSequenceSet getActiveSequenceSet(DSPanel<? extends DSGeneMarker> marker
         return file.getAbsolutePath();
     }
 
+     public String getFASTAFileRelativePath() throws IOException {
+        return file.getCanonicalPath();
+    }
     public void setFASTAFile(File f) {
         file = f;
 
