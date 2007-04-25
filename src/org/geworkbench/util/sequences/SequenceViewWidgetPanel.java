@@ -833,7 +833,7 @@ public class SequenceViewWidgetPanel extends JPanel {
 //        }
 //    }
 
-    void setShowAll(boolean all) {
+   public void setShowAll(boolean all) {
         showAll = all;
     }
 
