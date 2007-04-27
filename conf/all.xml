@@ -98,9 +98,14 @@
     
     <plugin id="mindy" name="MINDY Analysis" class="org.geworkbench.components.mindy.MindyAnalysis" source="mindy"/>
     <plugin id="aracne" name="ARACNE Analysis" class="org.geworkbench.components.aracne.AracneAnalysis" source="aracne-java"/>
+    <!-- <plugin id="medusa" name="MEDUSA Analysis" class="org.geworkbench.components.medusa.MedusaAnalysis" source="medusa"/> -->
     <plugin id="somAnalysis" name="SOM Analysis" class="org.geworkbench.components.clustering.SOMAnalysis" source="clustering"/>
 	<plugin id="wvAnalysis" name="WV Analysis" class="org.geworkbench.components.gpmodule.classification.wv.WVTraining" source="gpmodule"/>
     <plugin id="knnAnalysis" name="KNN Analysis" class="org.geworkbench.components.gpmodule.classification.knn.KNNTraining" source="gpmodule"/>
+ 	<!-- 
+    <plugin id="smlrAnalysis" name="SMLR Analysis" class="org.geworkbench.components.classification.smlr.SMLRTraining" source="classification"/>
+    <plugin id="svmAnalysis" name="SVM Analysis" class="org.geworkbench.components.classification.svm.SVMTraining" source="classification"/>
+     -->
     <plugin id="tTestAnalysis" name="t Test Analysis" class="org.geworkbench.components.analysis.clustering.TtestAnalysis" source="analysis"/>
 	<plugin id="multiTTestAnalysis" name="Multi t Test Analysis" class="org.geworkbench.components.analysis.clustering.MultiTTestAnalysis" source="analysis"/>
 	<plugin id="thresholdNormalizer" name="Threshold Normalizer" class="org.geworkbench.components.normalization.ThresholdNormalizer" source="normalization"/>
@@ -122,8 +127,6 @@
     <plugin id="Interactions" name="Interaction" class="interactions.InteractionsUserInterface" source="interactions">
 		<gui-area name="VisualArea"/>
 	</plugin>
-
-
      <plugin id="CellularNetWork" name="Cellular NetWork" class="org.geworkbench.components.interactions.cellularnetwork.CellularNetworkKnowledgeWidget" source="interactions">
 		<gui-area name="VisualArea"/>
 	</plugin>
