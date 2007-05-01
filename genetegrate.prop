@@ -1,0 +1,115 @@
+## Properties for Genetegrate  
+## Property names should be unique and are case sensative 
+## Values are available through GenetegrateProperties which extends java.util.Properties 
+## Multiple values can be seperated and retrieved with getMultipleProperties (or java.util.StringTokenizer) 
+## To use, initialize with the location of this file.  ########################################################################## 
+## LOCAL VALUES & REPOSITORY PARAMETERS 
+## Change these values to match your setup, including file locations and 
+## the type of repository and tooks being used.  
+DATA-DIRECTORY = 
+########################################################################## 
+## REPOSITORY FILE TYPES   
+FILETYPES = FASTA, PDB, DSSP, PROF, CLUSTAL, MSF, BLAST, HSSP, SIF, EXCELNETWORK, LOCTREE, ISIS, AGAPE, PROFCON, PROFTMB, CHOP, ESYPRED, SWISSMODEL, JPRED, PSIPRED, SABLE1, SABLE2, SAMT99, YASPIN, PORTER, FUGUE
+FASTA-ADAPTER = genetegrate.adapters.FastaAdapter 
+PDB-ADAPTER = genetegrate.adapters.PDBAdapter 
+DSSP-ADAPTER = genetegrate.adapters.DSSPAdapter 
+PROF-ADAPTER = genetegrate.adapters.ProfAdapter 
+CLUSTAL-ADAPTER = genetegrate.adapters.ClustalAdapter 
+MSF-ADAPTER = genetegrate.adapters.MSFAdapter 
+BLAST-ADAPTER = genetegrate.adapters.BlastAdapter 
+HSSP-ADAPTER = genetegrate.adapters.HSSPAdapter 
+GENEPIX-ADAPTER = genetegrate.adapters.GenepixAdapter 
+STANFORD-ADAPTER = genetegrate.adapters.StanfordAdapter 
+EXCELNETWORK-ADAPTER = genetegrate.adapters.ExcelNetworkAdapter 
+SIF-ADAPTER = genetegrate.adapters.SIFAdapter 
+LOCTREE-ADAPTER = genetegrate.adapters.LociAdapter 
+ISIS-ADAPTER = genetegrate.adapters.IsisAdapter  
+AGAPE-ADAPTER = genetegrate.adapters.AgapeAdapter
+PROFCON-ADAPTER = genetegrate.adapters.ProfConAdapter
+PROFTMB-ADAPTER = genetegrate.adapters.ProfTmbAdapter
+CHOP-ADAPTER = genetegrate.adapters.ChopAdapter
+JPRED-ADAPTER = genetegrate.adapters.JpredAdapter  
+PSIPRED-ADAPTER = genetegrate.adapters.PsipredAdapter
+SABLE1-ADAPTER = genetegrate.adapters.SableAdapter
+SABLE2-ADAPTER = genetegrate.adapters.SableAdapter
+SAMT99-ADAPTER = genetegrate.adapters.Samt99Adapter
+YASPIN-ADAPTER = genetegrate.adapters.YaspinAdapter
+PORTER-ADAPTER = genetegrate.adapters.SsproAdapter
+ESYPRED-ADAPTER = genetegrate.adapters.ESyPredAdapter 
+JIGSAW3D-ADAPTER = genetegrate.adapters.Jigsaw3dAdapter 
+FUGUE-ADAPTER = genetegrate.adapters.FugueAdapter 
+SWISSMODEL-ADAPTER = genetegrate.adapters.SwissmodelAdapter 
+
+FASTA-CLASSES = genetegrate.model.protein.Protein
+PDB-CLASSES = genetegrate.model.protein.Protein 
+DSSP-CLASSES = genetegrate.model.protein.Protein 
+PROF-CLASSES = genetegrate.model.protein.Protein 
+MSF-CLASSES = genetegrate.model.alignment.MultipleAlignment 
+BLAST-CLASSES = genetegrate.model.alignment.PairwiseAlignmentSet 
+CLUSTAL-CLASSES = genetegrate.model.alignment.MultipleAlignment 
+HSSP-CLASSES = genetegrate.model.alignment.MultipleAlignment 
+GENEPIX-CLASSES = genetegrate.model.microarray.MicroArray, genetegrate.model.microarray.MicroArrayDesign 
+STANFORD-CLASSES = genetegrate.model.microarray.MicroArraySet, genetegrate.model.microarray.MicroArrayDesign 
+EXCELNETWORK-CLASSES = genetegrate.model.network.Network 
+SIF-CLASSES = genetegrate.model.network.Network 
+LOCTREE-CLASSES = genetegrate.model.protein.Protein 
+ISIS-CLASSES = genetegrate.model.protein.Protein  
+PROFCON-CLASSES = genetegrate.model.protein.Protein  
+PROFTMB-CLASSES = genetegrate.model.protein.Protein  
+CHOP-CLASSES = genetegrate.model.protein.Protein  
+JPRED-CLASSES = genetegrate.model.protein.Protein 
+PSIPRED-CLASSES = genetegrate.model.protein.Protein  
+SABLE1-CLASSES = genetegrate.model.protein.Protein  
+SABLE2-CLASSES = genetegrate.model.protein.Protein  
+SAMT99-CLASSES = genetegrate.model.protein.Protein  
+YASPIN-CLASSES = genetegrate.model.protein.Protein  
+PORTER-CLASSES = genetegrate.model.protein.Protein  
+AGAPE-CLASSES = genetegrate.model.alignment.PairwiseAlignmentSet
+ESYPRED-CLASSES = genetegrate.model.alignment.PairwiseAlignmentSet 
+FUGUE-CLASSES = genetegrate.model.alignment.PairwiseAlignmentSet 
+JIGSAW3D-CLASSES = genetegrate.model.alignment.PairwiseAlignment 
+SWISSMODEL-CLASSES = genetegrate.model.alignment.MultipleAlignment 
+
+TOOLTYPES = DSSP, PROF, PDB, FASTA, AGAPE, ISIS, ESYPRED, SWISSMODEL, JPRED, SABLE1, SABLE2, YASPIN, PORTER
+
+DSSP-INPUT = NONE
+PDB-INPUT = NONE
+FASTA-INPUT = NONE
+HSSP-INPUT = NONE
+
+CLUSTAL-IDSUFFIX = align
+HSSP-IDSUFFIX = hssp
+AGAPE-IDSUFFIX = agape
+FUGUE-IDSUFFIX = fugue
+ESYPRED-IDSUFFIX = esypred
+SWISSMODEL-IDSUFFIX = swissmodel
+
+PROF-LIMIT = yes
+PROFCON-LIMIT = yes
+CHOP-LIMIT = yes
+PROFTMB-LIMIT = yes
+AGAPE-LIMIT = yes
+ISIS-LIMIT = yes
+LOCTREE-LIMIT = yes
+
+DSSP-REMOVECHAIN = YES
+PDB-REMOVECHAIN = YES
+HSSP-REMOVECHAIN = YES
+
+LOCTREE-NETWORKINPUT = YES
+
+COMPUTED-ATTRIBUTES = Degree, COUNT, PERCENTAGE, DATASOURCES 
+Degree-CLASS = genetegrate.model.network.NodeDegree 
+COUNT-CLASS = genetegrate.model.Count 
+PERCENTAGE-CLASS = genetegrate.model.Percentage 
+DATASOURCES-CLASS = genetegrate.model.DataSources  
+
+FASTA-SUFFIX = f
+
+MONITOR-WAIT = 1
+
+DAEMONADDRESS = http://www.predictprotein.org/oldwebsite/genetegrate/interface.php?class=genetegrate.callDaemon
+  
+
+# PROF-TYPES = Protein Sequence, Protein Alignment 
+# DSSP-TYPES = Protein Tertiary Structure   ########################################################################## ## TEST SECTION  ## To see these tests in action run GenetegrateProperties  TEST1=HELLO TEST2 = WORLD TEST3 = Value1, Value2 TEST5 = Value1 TEST5 = Value2 TEST 6 = SPACED! TEST-6 = DASHED! 
