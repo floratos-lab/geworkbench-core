@@ -202,10 +202,12 @@
       <module fileurl="file://$PROJECT_DIR$/components/cascript/cascript.iml" filepath="$PROJECT_DIR$/components/cascript/cascript.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/celprocessing/celprocessing.iml" filepath="$PROJECT_DIR$/components/celprocessing/celprocessing.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/cgems/cgems.iml" filepath="$PROJECT_DIR$/components/cgems/cgems.iml" />
+      <module fileurl="file://$PROJECT_DIR$/components/classification/classification.iml" filepath="$PROJECT_DIR$/components/classification/classification.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/clustering/clustering.iml" filepath="$PROJECT_DIR$/components/clustering/clustering.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/colormosaic/colormosaic.iml" filepath="$PROJECT_DIR$/components/colormosaic/colormosaic.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/cutenet/cutenet.iml" filepath="$PROJECT_DIR$/components/cutenet/cutenet.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/cytoscape/cytoscape.iml" filepath="$PROJECT_DIR$/components/cytoscape/cytoscape.iml" />
+      <module fileurl="file://$PROJECT_DIR$/components/cytoscape_v2_4/cytoscape24.iml" filepath="$PROJECT_DIR$/components/cytoscape_v2_4/cytoscape24.iml" />
       <module fileurl="file://$PROJECT_DIR$/dev/dev.iml" filepath="$PROJECT_DIR$/dev/dev.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/discovery/discovery.iml" filepath="$PROJECT_DIR$/components/discovery/discovery.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/example/example.iml" filepath="$PROJECT_DIR$/components/example/example.iml" />
@@ -213,6 +215,7 @@
       <module fileurl="file://$PROJECT_DIR$/geworkbench.iml" filepath="$PROJECT_DIR$/geworkbench.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/gominer/gominer.iml" filepath="$PROJECT_DIR$/components/gominer/gominer.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/goterms/goterms.iml" filepath="$PROJECT_DIR$/components/goterms/goterms.iml" />
+      <module fileurl="file://$PROJECT_DIR$/components/gpmodule/gpmodule.iml" filepath="$PROJECT_DIR$/components/gpmodule/gpmodule.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/gsea/gsea.iml" filepath="$PROJECT_DIR$/components/gsea/gsea.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/hierarchicalclustering/hierarchicalclustering.iml" filepath="$PROJECT_DIR$/components/hierarchicalclustering/hierarchicalclustering.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/interactions/interactions.iml" filepath="$PROJECT_DIR$/components/interactions/interactions.iml" />
