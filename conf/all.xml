@@ -22,6 +22,9 @@
         <gui-area name="VisualArea"/>
     </plugin>
 
+    <plugin id="cytoscapePanel_V2_4" name="Cytoscape_V2_4" class="org.geworkbench.components.cytoscape_v2_4.CytoscapeWidget" source="cytoscape_v2_4">
+        <gui-area name="VisualArea"/>
+    </plugin>
 	<plugin id="cytoscapePanel" name="Cytoscape" class="org.geworkbench.components.cytoscape.CytoscapeWidget" source="cytoscape">
 		<gui-area name="VisualArea"/>
 	</plugin>
