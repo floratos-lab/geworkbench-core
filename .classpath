@@ -102,6 +102,7 @@
 	<classpathentry exported="true" kind="lib" path="plugins/yeast-context.jar"/>
 	<classpathentry exported="true" kind="lib" path="plugins/yLayouts.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ginkgo.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/medusa/saxpath-1.0-FCS.jar"/>
 	<classpathentry kind="lib" path="lib/mageom-client.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
