@@ -1,0 +1,46 @@
+<medusa
+    verbose="true"
+    file_state="">
+    <input
+        file_labels="data/medusa/dataset/small_yeast/yeast_test.labels">
+        <fasta_files>
+            <file
+                file_fasta="data/medusa/dataset/small_yeast/yeast_test.fasta"
+                motif_type="iterative"
+                lbound="0"
+                ubound="0"
+                nchoose="0"
+                kmers_smallest="3"
+                kmers_largest="5"
+                dimers_allowed="true"
+                dimers_maximum_gap="3"
+                dimers_smallest="3"
+                dimers_largest="5"
+                window_size="0"
+                min_motif_count_per_window="0"
+            />
+        </fasta_files>
+    </input>
+    <parameters
+            stumps_only="false"
+            iterations="10"
+            is_corrected="false"
+            holdout_type="experiments"
+            holdout_experiments="1, 15, 19, 23, 27, 28, 30, 33, 44, 47, 51, 55, 57, 63, 76, 77, 80, 81, 91, 100, 102, 107, 111, 115, 119, 124, 127, 134, 164, 165"
+            holdout_genes=""
+            holdout_matrix=""
+            pssms="true"
+            pssms_maximum_length="18"
+            pssms_number_to_agglomerate="5"
+            reverse_complement_matches_complement="true"
+            fewest_trim="0"
+            most_trim="0"
+            report_agglomeration="false"
+	/>
+    <output
+            continuous_write="true"
+            dir_experiment="temp/medusa/dataset/output"
+            run_name="run1"
+            file_rules="rules.xml"
+	/>
+</medusa>
