@@ -5,7 +5,7 @@
         file_labels="data/medusa/dataset/test.labels">
         <fasta_files>
             <file
-                file_fasta="data/medusa/dataset/small_yeast/test.fasta"
+                file_fasta="data/medusa/dataset/test.fasta"
                 motif_type="iterative"
                 lbound="0"
                 ubound="0"
@@ -25,10 +25,8 @@
             stumps_only="false"
             iterations="10"
             is_corrected="false"
-            holdout_type="experiments"
-            holdout_experiments="1, 15, 19, 23, 27, 28, 30, 33, 44, 47, 51, 55, 57, 63, 76, 77, 80, 81, 91, 100, 102, 107, 111, 115, 119, 124, 127, 134, 164, 165"
-            holdout_genes=""
-            holdout_matrix=""
+            holdout_type="random"
+            holdout_percent="10"
             pssms="true"
             pssms_maximum_length="18"
             pssms_number_to_agglomerate="5"
