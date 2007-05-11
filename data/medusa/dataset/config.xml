@@ -2,10 +2,10 @@
     verbose="true"
     file_state="">
     <input
-        file_labels="data/medusa/dataset/small_yeast/yeast_test.labels">
+        file_labels="data/medusa/dataset/test.labels">
         <fasta_files>
             <file
-                file_fasta="data/medusa/dataset/small_yeast/yeast_test.fasta"
+                file_fasta="data/medusa/dataset/small_yeast/test.fasta"
                 motif_type="iterative"
                 lbound="0"
                 ubound="0"
