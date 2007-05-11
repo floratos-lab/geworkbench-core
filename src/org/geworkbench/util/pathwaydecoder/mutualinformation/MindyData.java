@@ -7,12 +7,13 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.commons.collections15.map.MultiKeyMap;
 
 import java.util.*;
+import java.io.Serializable;
 
 /**
  * Class containing MINDY run results.
  * @author mhall
  */
-public class MindyData {
+public class MindyData implements Serializable {
 
     static Log log = LogFactory.getLog(MindyData.class);
 
@@ -167,7 +168,7 @@ public class MindyData {
         return dataMap.get(modulator, transcriptionFactor, target);
     }
 
-    public static class MindyResultRow {
+    public static class MindyResultRow implements Serializable{
         private DSGeneMarker modulator;
         private DSGeneMarker transcriptionFactor;
         private DSGeneMarker target;
@@ -225,7 +226,7 @@ public class MindyData {
 
     }
 
-    public static class ModulatorStatistics {
+    public static class ModulatorStatistics implements Serializable {
         protected int count;
         protected int mover;
         protected int munder;
