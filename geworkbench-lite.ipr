@@ -202,6 +202,7 @@
       <module fileurl="file://$PROJECT_DIR$/components/clustering/clustering.iml" filepath="$PROJECT_DIR$/components/clustering/clustering.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/colormosaic/colormosaic.iml" filepath="$PROJECT_DIR$/components/colormosaic/colormosaic.iml" />
       <module fileurl="file://$PROJECT_DIR$/dev/dev.iml" filepath="$PROJECT_DIR$/dev/dev.iml" />
+      <module fileurl="file:///Users/mhall/code/evidenceintegration/ei-calculations.iml" filepath="/Users/mhall/code/evidenceintegration/ei-calculations.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/evidenceintegration/evidence-integration.iml" filepath="$PROJECT_DIR$/components/evidenceintegration/evidence-integration.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/example/example.iml" filepath="$PROJECT_DIR$/components/example/example.iml" />
       <module fileurl="file://$PROJECT_DIR$/components/filtering/filtering.iml" filepath="$PROJECT_DIR$/components/filtering/filtering.iml" />
