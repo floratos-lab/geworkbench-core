@@ -109,6 +109,9 @@
 	<plugin id="fastHierarchicalClusteringAnalysis" name="Fast Hierachical Clustering Analysis" class="org.geworkbench.components.clustering.FastHierClustAnalysis" source="clustering"/>
 
     <plugin id="matrixReduce" name="Matrix Reduce" class="org.geworkbench.components.matrixreduce.MatrixReduceAnalysis" source="matrixreduce"/>
+    <plugin id="matrixReduceViewer" name="MatrixREDUCE" class="org.geworkbench.components.matrixreduce.MatrixReduceViewer" source="matrixreduce">
+    	<gui-area name="VisualArea" />
+    </plugin>
     
     <plugin id="mindy" name="MINDY Analysis" class="org.geworkbench.components.mindy.MindyAnalysis" source="mindy"/>
     <plugin id="aracne" name="ARACNE Analysis" class="org.geworkbench.components.aracne.AracneAnalysis" source="aracne-java"/>
