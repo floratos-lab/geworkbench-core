@@ -60,7 +60,8 @@ public class PreferencesManager {
         File prefFile = new File(prefDir, fileName);
         if (prefFile.exists()) {
             Preferences oldPreferences = readPreferences(prefFile);
-            updatePreferences(preferences, oldPreferences);
+            if (oldPreferences != null)
+            	updatePreferences(preferences, oldPreferences);
         } else {
             // No -op
         }
