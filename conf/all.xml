@@ -224,11 +224,15 @@
     </plugin>
      -->
 
-	<!-- TODO - Remove this component, but move caScript stuff first.
     <plugin id="cagrid" name="caGrid" class="org.geworkbench.components.cagrid.CaGridPanel" source="cagrid">
         <gui-area name="CommandArea"/>
     </plugin>
- 	-->
+
+    <plugin id="cascriptPanel" name="caSCRIPT" class="org.geworkbench.components.cascript.CaSCRIPTEditor" source="cagrid">
+        <gui-area name="CommandArea"/>
+    </plugin>
+
+ 
 
 
 </geaw-config>
