@@ -1,0 +1,36 @@
+<geaw-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ConfigurationFile Schema.xsd">
+
+	<description>
+        This is useful when writing new components as it speeds up the starting time of geworkbench.  To use, rename as all.xml.
+    </description>
+
+	<gui-window name="Main GUI" class="org.geworkbench.engine.skin.Skin"/>
+
+	<plugin id="projectWindow" name="Project Panel" class="org.geworkbench.builtin.projects.ProjectPanel">
+		<gui-area name="ProjectArea"/>
+	</plugin>
+	
+	<plugin id="expressionFileFilter" name="Exp. Format" class="org.geworkbench.components.parsers.ExpressionFileFormat"/>
+	 
+	<!-- New Gene Panel implementation -->
+	<plugin id="genePanel" name="Markers" class="org.geworkbench.components.selectors.GenePanel" source="selectors">
+		<gui-area name="SelectionArea"/>
+	</plugin>
+
+	<plugin id="phenotypePanel2" name="Arrays/Phenotypes" class="org.geworkbench.components.selectors.PhenotypePanel" source="selectors">
+		<gui-area name="SelectionArea"/>
+	</plugin>
+	
+	<!-- 
+	<plugin id="microarrayPanel" name="Microarray Viewer" class="org.geworkbench.components.microarrays.MicroarrayPanel" source="microarrays">
+		<gui-area name="VisualArea"/>
+		<subscription type="org.geworkbench.events.ProjectEvent" enabled="Yes"/>
+	</plugin>
+	 -->  
+	
+	<!-- Analyses must go here, before the analysis panel -->	
+	<plugin id="analysisPanel" name="Analysis" class="org.geworkbench.components.analysis.AnalysisPanel" source="analysis">
+		<gui-area name="CommandArea"/>
+	</plugin>
+  
+</geaw-config>
