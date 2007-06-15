@@ -1,2 +1,3 @@
 *.fasta.clean*
 *.labels
+config_hacked.xml
