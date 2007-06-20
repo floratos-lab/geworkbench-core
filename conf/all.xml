@@ -15,7 +15,7 @@
 	<plugin id="cgemsPanel" name="Cancer GEMS" class="org.geworkbench.components.cgems.CGemsPanel" source="cgems">
 		<gui-area name="VisualArea"/>
 	</plugin>
-	 
+
 	<plugin id="colorMosaicPanel" name="Color Mosaic" class="org.geworkbench.components.colormosaic.ColorMosaicPanel" source="colormosaic">
 		<gui-area name="VisualArea"/>
 	</plugin>
@@ -29,7 +29,7 @@
         <gui-area name="VisualArea"/>
     </plugin>
 
-    <plugin id="cytoscapePanel_V2_4" name="Cytoscape_V2_4" class="org.geworkbench.components.cytoscape_v2_4.CytoscapeWidget" source="cytoscape_v2_4">
+    <plugin id="cytoscapePanel_V2_4" name="Cytoscape_V2_4" class="org.geworkbench.components.cytoscape_v2_4.CytoscapeWidget" source="cutenet">
         <gui-area name="VisualArea"/>
     </plugin>
 	<plugin id="cytoscapePanel" name="Cytoscape" class="org.geworkbench.components.cytoscape.CytoscapeWidget" source="cytoscape">
@@ -81,7 +81,7 @@
 	<plugin id="missingValuesFilter" name="Missing Values Filter" class="org.geworkbench.components.filtering.MissingValuesFilter" source="filtering"/>
 
 	<plugin id="sequenceFileFilter" name="FASTA Format" class="org.geworkbench.components.parsers.sequences.SequenceFileFormat"/>
-	 
+
 	<plugin id="patternDiscoveryAlgorithm" name="Pattern Discovery Algorithm" class="org.geworkbench.components.associationdiscovery.PatternDiscovery" source="associationdiscovery"/>
 	<plugin id="reverseEngineering" name="Reverse Engineering" class="org.geworkbench.components.pathwaydecoder.GeneProfiler" source="pathwaydecoder">
 		<gui-area name="VisualArea"/>
@@ -232,7 +232,7 @@
         <gui-area name="CommandArea"/>
     </plugin>
 
- 
+
 
 
 </geaw-config>
