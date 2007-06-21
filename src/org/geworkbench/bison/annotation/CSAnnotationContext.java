@@ -278,7 +278,10 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
     }
 
     public String getLabel(int index) {
+        if(index<labels.size()){
         return labels.get(index);
+        }
+        return "";
     }
 
     public void setLabelActive(String label, boolean active) {
