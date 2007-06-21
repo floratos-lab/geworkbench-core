@@ -847,30 +847,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         }
     }
 
-    /**
-     * Temp removed for axis fix.
-     *
-     * @param e
-     */
-//    void jMenuItem1_actionPerformed(ActionEvent e) {
-//        JFileChooser chooser = new JFileChooser(PropertiesMonitor.
-//                                                getPropertiesMonitor().
-//                                                getDefPath());
-//        PatternFileFormat format = new PatternFileFormat();
-//        FileFilter filter = format.getFileFilter();
-//        chooser.setFileFilter(filter);
-//        int returnVal = chooser.showOpenDialog(null);
-//        if (returnVal == JFileChooser.APPROVE_OPTION) {
-//            DSDataSet ds = selection.getDataSet();
-//            if (ds != null) {
-//                org.geworkbench.util.patterns.PatternDB patternDB = new org.
-//                        geworkbench.util.patterns.PatternDB(ds.getFile(), null);
-//                if (patternDB.read(chooser.getSelectedFile())) {
-//                    addDataSetSubNode(patternDB);
-//                }
-//            }
-//        }
-//    }
+  
     @Subscribe
     public void receive(org.geworkbench.events.ProjectNodeAddedEvent
             pnae, Object source) {
@@ -2432,7 +2409,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
             // If everything went OK, register the newly created microarray set.
             if (dataSet != null) {
                 //String directory = dataSetFile.getPath();
-                System.out.println("data set parsed");
+                //System.out.println("data set parsed");
                 jNewProjectItem_actionPerformed(null);
                 addDataSetNode(dataSet, true);
             } else {
@@ -2457,20 +2434,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         }
     }
 
-    @Script
-    public void addDataSetNodeToProject(DSSequenceSet dataSet) {
-        if (dataSet instanceof DSAncillaryDataSet) {
-            addDataSetSubNode((DSAncillaryDataSet) dataSet);
-        } else {
-            addDataSetNode(dataSet, true);
-        }
-    }
-
-
-     @Script
-    public void addDataSetNodeTest(String[] dataSet) {
-         
-    }
     @Script
     public void setcaArrayServer(String url, int portnumber) {
         loadData.setCaARRAYServer(url, portnumber);
