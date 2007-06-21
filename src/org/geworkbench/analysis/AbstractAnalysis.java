@@ -19,6 +19,7 @@ import org.geworkbench.bison.model.analysis.ParamValidationResults;
 import org.geworkbench.bison.model.analysis.ParameterPanel;
 import org.geworkbench.bison.util.DefaultIdentifiable;
 import org.geworkbench.engine.management.ComponentObjectInputStream;
+import org.geworkbench.engine.management.Script;
 
 /**
  * <p>
@@ -369,7 +370,12 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	 */
 	public abstract int getAnalysisType();
 
-	/**
+
+    @Script
+    public  void setParameter(String key, String value){
+        
+    };
+    /**
 	 * Convenience class modeling the 'key' part of the (key, value) pairs
 	 * stored in the variable <code>indices</code>.
 	 */

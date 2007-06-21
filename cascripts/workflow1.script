@@ -51,7 +51,7 @@ void main() {
 
      	 //run T-test
 	module tTestAnalysis tTest;
-      	 datatype  DSSignificanceResultSet significanceResultSet  = tTest.runTtest(mset);
+      	 datatype  DSSignificanceResultSet significanceResultSet  = tTest.runTtest(mset, 0.05, "Welch approximation", "t-distribution", "adjustedBonferroni");
 
      	 //Sort the markers by significance. 
      	// significanceResultSet.sortMarkersBySignificance();
