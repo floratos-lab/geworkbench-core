@@ -10,33 +10,27 @@ void main() {
   	module expressionFileFilter expFileFormat;
 
  	 // Load a microarray set
-	 
- 	projectPanel.loadDataSet("data/web100.exp", expFileFormat); 
+	projectPanel.loadDataSet("data/web100.exp", expFileFormat); 
   	datatype DSMicroarraySet mset = projectPanel.getDataSet();
 
   	// Create a list of interested markers
   	module   genePanel genePanel;
   	genePanel.setDataSet(mset);
-datatype DSPanel interestedMarkersPanel = genePanel.createPanel("interested", 100);
-print "get interestedMarkersPanel";
-
+	datatype DSPanel interestedMarkersPanel = genePanel.createPanel("interested", 100);
+	 
  	 //Activate the panel
 	 interestedMarkersPanel.setActive(true);
  
- 	 //Get the sequences for these interested markers.
- module  SequenceRetriever sequenceRetriever;
+ 	 //retrieve the sequences for these interested markers.
+ 	module  SequenceRetriever sequenceRetriever;
  
-datatype DSSequenceSet sequences =  sequenceRetriever.getSequences( interestedMarkersPanel, "DNA", "UCSC");
- 	 projectPanel.addDataSetNode(sequences);
+	datatype DSSequenceSet sequences =  sequenceRetriever.getSequences( interestedMarkersPanel, "DNA", "UCSC");
+ 	projectPanel.addDataSetNode(sequences);
 
   	//Set up BLAST parameters
   	module sequenceAlignment alignment;
   	alignment.setSequences(sequences);
- alignment.setParameters("ncbi/nt", "blastn"  );
- 
- 	alignment.runBlast();
-
-	 
-
+ 	alignment.setParameters("ncbi/nt", "blastn"  );
+  	alignment.runBlast();
 }
  
