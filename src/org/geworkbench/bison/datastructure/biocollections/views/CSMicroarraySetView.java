@@ -9,6 +9,7 @@ import org.geworkbench.bison.datastructure.complex.panels.CSPanel;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.datastructure.complex.panels.CSItemList;
+import org.geworkbench.engine.management.Script;
 
 import java.io.Serializable;
 
@@ -157,6 +158,7 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
      *
      * @param ma The new reference microarray set.
      */
+    @Script
     public void setMicroarraySet(DSMicroarraySet<Q> ma) {
         if (ma != null) {
             dataSet = ma;

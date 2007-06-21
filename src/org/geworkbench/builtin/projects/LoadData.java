@@ -130,6 +130,10 @@ public class LoadData extends JDialog {
         }
     }
 
+    public void setCaARRAYServer(String url, int portnumber){
+        caArrayDisplayPanel.setUrl(url + ":" + portnumber);
+    }
+
     public void setDirectory(String directory) {
         jFileChooser1.setCurrentDirectory(new File(directory));
     }

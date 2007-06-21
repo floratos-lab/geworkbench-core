@@ -3,10 +3,14 @@ package org.geworkbench.bison.datastructure.bioobjects.microarray;
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
+import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
 import org.geworkbench.bison.datastructure.complex.panels.CSPanel;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
+import org.geworkbench.engine.management.Script;
 
 import java.io.File;
+import java.io.PrintWriter;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -71,6 +75,22 @@ public class CSSignificanceResultSet <T extends DSGeneMarker> extends CSAncillar
             panel.add(marker);
         }
     }
+     @Script
+     public void saveToFile(String filename){
+        try{
+            File resultFile = new File(filename);
+            PrintWriter out = new PrintWriter(new FileOutputStream(filename));
+            int i =0;
+            for(T o: panel){
+                  out.println(new StringBuilder().append(((CSExpressionMarker)o).getLabel() + "\t").append(significance.get(o)).toString());
+                i++;
+            }
+            out.flush();
+            out.close();
+        }catch(Exception e){
+
+        }
+     };
 
     public DSPanel<T> getSignificantMarkers() {
         return panel;

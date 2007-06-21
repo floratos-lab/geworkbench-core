@@ -1,0 +1,42 @@
+void main() {
+ 
+//1.	Load microarray set file from disc.
+//2.	Select a group of probes/markers.
+//3.	Retrieve from UCSC the gene sequences corresponding to these markers.
+//4.	Run BLAST on all these sequences.
+//5.	Write in a file the BLAST alignment results.
+
+  	module projectWindow projectPanel;
+  	module expressionFileFilter expFileFormat;
+
+ 	 // Load a microarray set
+	 
+ 	projectPanel.loadDataSet("data/web100.exp", expFileFormat); 
+  	datatype DSMicroarraySet mset = projectPanel.getDataSet();
+
+  	// Create a list of interested markers
+  	module   genePanel genePanel;
+  	genePanel.setDataSet(mset);
+datatype DSPanel interestedMarkersPanel = genePanel.createPanel("interested", 100);
+print "get interestedMarkersPanel";
+
+ 	 //Activate the panel
+	 interestedMarkersPanel.setActive(true);
+ 
+ 	 //Get the sequences for these interested markers.
+ module  SequenceRetriever sequenceRetriever;
+ 
+datatype DSSequenceSet sequences =  sequenceRetriever.getSequences( interestedMarkersPanel, "DNA", "UCSC");
+ 	 projectPanel.addDataSetNode(sequences);
+
+  	//Set up BLAST parameters
+  	module sequenceAlignment alignment;
+  	alignment.setSequences(sequences);
+ alignment.setParameters("ncbi/nt", "blastn"  );
+ 
+ 	alignment.runBlast();
+
+	 
+
+}
+ 

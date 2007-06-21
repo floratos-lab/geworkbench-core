@@ -4,6 +4,7 @@ import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
+import org.geworkbench.engine.management.Script;
 
 /**
  * @author John Watkinson
@@ -30,4 +31,6 @@ public interface DSSignificanceResultSet <T extends DSGeneMarker> extends DSAnci
 
     public void sortMarkersBySignificance();
 
+    @Script
+    public void saveToFile(String filename);
 }

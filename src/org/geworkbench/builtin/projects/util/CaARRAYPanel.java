@@ -353,7 +353,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
      * Action listener invoked when a remote file is selected in the remote file
      * tree. Updates the experiment information text area.
      *
-     * @param lse
+     * @param
      */
     private void remoteFileSelection_action(TreeSelectionEvent tse) {
         if (tse == null) {

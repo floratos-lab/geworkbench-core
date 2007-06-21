@@ -1,0 +1,65 @@
+void main() {
+ 	
+	module projectWindow pp;
+                     module expressionFileFilter expFileFormat;
+	pp.setcaArrayServer("caarray-mageom-server-stage.nci.nih.gov", 8080);
+	pp.loadDataSet("data/web100.exp", expFileFormat); 
+  	datatype DSMicroarraySet mset = pp.getDataSet();
+
+
+                      // Logon to the designated caArray server.	      
+ 
+
+	// Get ready to filter the dataset we just retrieved from caArray
+	module expressionThreshold expThres;
+	expThres.filter(mset, 10, 100, "Inside range");
+
+                    // Physically remove the markers that were marked "filtered".
+                   module missingValuesFilter mvFilter;
+                   mvFilter.filter(mset, 0);
+
+      	//Quantile and Log2 normalizers
+      	module QuantileNormalizer quantileNormalizer;
+      	quantileNormalizer.normalize(mset, "Mean Profile Marker");
+     
+	module log2Normalizer log2Normalizer;
+
+       	log2Normalizer.normalize(mset);
+
+
+      	// Create two groups (panels)
+      	module phenotypePanel2 phenoPanel;
+      	//phenoPanel.setDataSet(mset);
+     	 datatype DSPanel casesPanel = phenoPanel.createPanel("Cases", 1);
+      	datatype DSPanel controlPanel = phenoPanel.createPanel("Controls", 5);
+      	phenoPanel.addToPanel(casesPanel, 3);
+      	phenoPanel.addToPanel(casesPanel, 2);
+      	phenoPanel.addToPanel(casesPanel, 4);
+      	phenoPanel.addToPanel(controlPanel, 6);
+      	phenoPanel.addToPanel(controlPanel, 7);
+      	phenoPanel.addToPanel(controlPanel, 8);
+
+    	 // assign classes to the newly created panels
+    	 // delegate this task to the Phenotype panel
+      	phenoPanel.assignClassToLabel("Cases", "Case");
+      	phenoPanel.assignClassToLabel("Controls", "Control");
+   
+
+     	 //activate panels
+     	 casesPanel.setActive(true);
+     	 controlPanel.setActive(true);
+
+     	 //run T-test
+	module tTestAnalysis tTest;
+      	 datatype  DSSignificanceResultSet significanceResultSet  = tTest.runTtest(mset);
+
+     	 //Sort the markers by significance. 
+     	// significanceResultSet.sortMarkersBySignificance();
+ 
+      	// add the result node in the project panel
+     	 pp.addDataSetNode( significanceResultSet);
+	
+	//save the result to a file
+ 	significanceResultSet.saveToFile("significantMarkersList.txt");
+      }
+ 
