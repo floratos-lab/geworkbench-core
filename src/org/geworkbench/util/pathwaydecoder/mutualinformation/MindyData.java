@@ -24,10 +24,20 @@ public class MindyData implements Serializable {
     private MultiKeyMap<DSGeneMarker, MindyResultRow> dataMap = new MultiKeyMap<DSGeneMarker, MindyResultRow>();
 
     private HashMap<DSGeneMarker, ModulatorStatistics> modulatorStatistics = new HashMap<DSGeneMarker, ModulatorStatistics>();
+    
+    private float setFraction;
 
-    public MindyData(CSMicroarraySet arraySet, List<MindyResultRow> data) {
+    /**
+     * Constructor.
+     * 
+     * @param arraySet - microarray set
+     * @param data - list of MINDY result rows
+     * @param setFraction - Sample per Condition in fraction
+     */
+    public MindyData(CSMicroarraySet arraySet, List<MindyResultRow> data, float setFraction) {
         this.arraySet = arraySet;
         this.data = data;
+        this.setFraction = setFraction;
         if (data.size() > 0) {
             this.transcriptionFactor = data.get(0).getTranscriptionFactor();
         } else {
@@ -36,35 +46,85 @@ public class MindyData implements Serializable {
         calculateModulatorStatistics();
     }
 
+    /**
+     * Get the microarray set.
+     * 
+     * @return microarray set
+     */
     public CSMicroarraySet getArraySet() {
         return arraySet;
     }
 
+    /**
+     * Set the specified microarray set to MINDY data.
+     * 
+     * @param arraySet - the microarray set to associate with MINDY data
+     */
     public void setArraySet(CSMicroarraySet arraySet) {
         this.arraySet = arraySet;
     }
 
+    /**
+     * Get the MINDY result rows.
+     * 
+     * @return MINDY result rows
+     */
     public List<MindyResultRow> getData() {
         return data;
     }
 
+    /**
+     * Set the MINDY result rows associated with MINDY data.
+     * 
+     * @param data - the list of MINDY result rows to associate with MINDY data.
+     */
     public void setData(List<MindyResultRow> data) {
         this.data = data;
         calculateModulatorStatistics();
     }
 
+    /**
+     * Get the statics for the specified modulator.
+     * 
+     * @param modulator - modulator for which to get the statistics
+     * @return - ModulatorStatistics object
+     */
     public ModulatorStatistics getStatistics(DSGeneMarker modulator) {
         return modulatorStatistics.get(modulator);
     }
 
+    /**
+     * Get the transcription factor specified for MINDY data.
+     * 
+     * @return the transcription factor gene marker
+     */
     public DSGeneMarker getTranscriptionFactor() {
         return transcriptionFactor;
     }
+    
+    /**
+     * Get the fraction of the sample to display on the heat map.
+     * 
+     * @return fraction of the sample to display
+     */
+    public float getSetFraction(){
+    	return this.setFraction;
+    }
 
+    /**
+     * Set the transcription factor for the MINDY data.
+     * 
+     * @param transcriptionFactor
+     */
     public void setTranscriptionFactor(DSGeneMarker transcriptionFactor) {
         this.transcriptionFactor = transcriptionFactor;
     }
 
+    /**
+     * Get the list of mondulators.
+     * 
+     * @return list of modulators
+     */
     public List<DSGeneMarker> getModulators() {
         ArrayList<DSGeneMarker> modulators = new ArrayList<DSGeneMarker>();
         for (Map.Entry<DSGeneMarker, ModulatorStatistics> entry : modulatorStatistics.entrySet()) {
@@ -73,6 +133,11 @@ public class MindyData implements Serializable {
         return modulators;
     }
 
+    /**
+     * Get a list of all the transcription factors.
+     * 
+     * @return list of all the transcription factors
+     */
     public List<DSGeneMarker> getAllTranscriptionFactors() {
         ArrayList<DSGeneMarker> transFacs = new ArrayList<DSGeneMarker>();
         for (MindyResultRow mindyResultRow : data) {
@@ -81,6 +146,12 @@ public class MindyData implements Serializable {
         return transFacs;
     }
 
+    /**
+     * Get a list of transcription factors based on a specified modulator.
+     * 
+     * @param modulator
+     * @return list of transcription factors
+     */
     public List<DSGeneMarker> getTranscriptionFactors(DSGeneMarker modulator) {
         HashSet<DSGeneMarker> transFacs = new HashSet<DSGeneMarker>();
         for (MindyResultRow mindyResultRow : data) {
@@ -91,6 +162,13 @@ public class MindyData implements Serializable {
         return new ArrayList<DSGeneMarker>(transFacs);
     }
 
+    /**
+     * Get the list of MINDY result rows based on specified modulator and transcription factor.
+     * 
+     * @param modulator
+     * @param transFactor - transcription factor
+     * @return list of MINDY result rows
+     */
     public List<MindyResultRow> getRows(DSGeneMarker modulator, DSGeneMarker transFactor) {
         List<MindyResultRow> results = new ArrayList<MindyResultRow>();
         for (MindyResultRow mindyResultRow : data) {
@@ -102,6 +180,14 @@ public class MindyData implements Serializable {
         return results;
     }
 
+    /**
+     * Get the list of MINDY result rows based on specified modulator, transcription factor, and target marker set.
+     * 
+     * @param modulator
+     * @param transFactor - transcription factor
+     * @param limitTargets - target marker set being displayed
+     * @return list of MINDY result rows
+     */
     public List<MindyResultRow> getRows(DSGeneMarker modulator, DSGeneMarker transFactor, List<DSGeneMarker> limitTargets) {
         List<MindyResultRow> results = new ArrayList<MindyResultRow>();
         for (MindyResultRow mindyResultRow : data) {
@@ -134,10 +220,22 @@ public class MindyData implements Serializable {
         log.debug("Done calculating modulator stats...");
     }
 
+    /**
+     * Get a hash map storing modulators and their statistics.
+     * 
+     * @return the hash map
+     */
     public HashMap<DSGeneMarker, ModulatorStatistics> getAllModulatorStatistics() {
         return modulatorStatistics;
     }
 
+    /**
+     * Get a list of targets based on specified modulator and transcription factor.
+     * 
+     * @param modulator
+     * @param transcriptionFactor
+     * @return list of targets
+     */
     public List<DSGeneMarker> getTargets(DSGeneMarker modulator, DSGeneMarker transcriptionFactor) {
         List<DSGeneMarker> targets = new ArrayList<DSGeneMarker>();
         List<MindyResultRow> rows = getRows(modulator, transcriptionFactor);
@@ -147,6 +245,11 @@ public class MindyData implements Serializable {
         return targets;
     }
 
+    /**
+     * Get the list of all targets.
+     * 
+     * @return list of all targets
+     */
     public List<DSGeneMarker> getAllTargets() {
         List<DSGeneMarker> targets = new ArrayList<DSGeneMarker>();
         for (MindyResultRow mindyResultRow : data) {
@@ -155,6 +258,14 @@ public class MindyData implements Serializable {
         return targets;
     }
 
+    /**
+     * Get the score of the specified modulator, transcription factor and target.
+     * 
+     * @param modulator
+     * @param transcriptionFactor
+     * @param target
+     * @return the score used in MINDY data
+     */
     public float getScore(DSGeneMarker modulator, DSGeneMarker transcriptionFactor, DSGeneMarker target) {
         MindyResultRow row = dataMap.get(modulator, transcriptionFactor, target);
         if (row == null) {
@@ -164,10 +275,24 @@ public class MindyData implements Serializable {
         }
     }
 
+    /**
+     * Get the MINDY result row that has the specified modulator, transcription factor, and target.
+     * 
+     * @param modulator
+     * @param transcriptionFactor
+     * @param target
+     * @return MINDY result row
+     */
     public MindyResultRow getRow(DSGeneMarker modulator, DSGeneMarker transcriptionFactor, DSGeneMarker target) {
         return dataMap.get(modulator, transcriptionFactor, target);
     }
 
+    /**
+     * Represents a row in the MINDY result data.
+     * 
+     * @author mhall
+     * @version $Id: MindyData.java,v 1.4 2007-07-13 19:12:21 hungc Exp $
+     */
     public static class MindyResultRow implements Serializable{
         private DSGeneMarker modulator;
         private DSGeneMarker transcriptionFactor;
@@ -176,6 +301,15 @@ public class MindyData implements Serializable {
         private float score;
         private float pvalue;
 
+        /**
+         * Constructor.
+         * 
+         * @param modulator
+         * @param transcriptionFactor
+         * @param target
+         * @param score
+         * @param pvalue
+         */
         public MindyResultRow(DSGeneMarker modulator, DSGeneMarker transcriptionFactor, DSGeneMarker target, float score, float pvalue) {
             this.modulator = modulator;
             this.transcriptionFactor = transcriptionFactor;
@@ -184,67 +318,148 @@ public class MindyData implements Serializable {
             this.pvalue = pvalue;
         }
 
+        /**
+         * Get the modulator in this MINDY result row.
+         * 
+         * @return a modulator gene marker
+         */
         public DSGeneMarker getModulator() {
             return modulator;
         }
 
+        /**
+         * Set the modulator in this MINDY result row.
+         * 
+         * @param modulator
+         */
         public void setModulator(DSGeneMarker modulator) {
             this.modulator = modulator;
         }
 
+        /**
+         * Get the transcription factor in this MINDY result row.
+         * 
+         * @return a transcription factor gene marker
+         */
         public DSGeneMarker getTranscriptionFactor() {
             return transcriptionFactor;
         }
 
+        /**
+         * Set the transcription factor of this MINDY result row.
+         * 
+         * @param transcriptionFactor
+         */
         public void setTranscriptionFactor(DSGeneMarker transcriptionFactor) {
             this.transcriptionFactor = transcriptionFactor;
         }
 
+        /**
+         * Get the target in this MINDY result row.
+         * 
+         * @return a target gene marker
+         */
         public DSGeneMarker getTarget() {
             return target;
         }
 
+        /**
+         * Set the target for this MINDY result row.
+         * 
+         * @param target
+         */
         public void setTarget(DSGeneMarker target) {
             this.target = target;
         }
 
+        /**
+         * Get the score in this MINDY result row.
+         * 
+         * @return the score 
+         */
         public float getScore() {
             return score;
         }
 
+        /**
+         * Set the score for this MINDY result row.
+         * 
+         * @param score
+         */
         public void setScore(float score) {
             this.score = score;
         }
 
+        /**
+         * Get the P-value in this MINDY result row.
+         * 
+         * @return the P-value
+         */
         public float getPvalue() {
             return pvalue;
         }
 
+        /**
+         * Set the P-value for this MINDY result row.
+         * 
+         * @param pvalue
+         */
         public void setPvalue(float pvalue) {
             this.pvalue = pvalue;
         }
 
     }
 
+    /**
+     * Represents the statistics of a modulator. The statistics consist of:
+     * Count (M#)
+     * Mover (M+)
+     * Munder(M-)
+     * 
+     * @author mhall
+     * @version $Id: MindyData.java,v 1.4 2007-07-13 19:12:21 hungc Exp $
+     */
     public static class ModulatorStatistics implements Serializable {
         protected int count;
         protected int mover;
         protected int munder;
 
+        /**
+         * Constructor.  Sets all three stats -- count (M#), mover(M+), and munder (M-)
+         * 
+         * @param count
+         * @param mover
+         * @param munder
+         */
         public ModulatorStatistics(int count, int mover, int munder) {
             this.count = count;
             this.mover = mover;
             this.munder = munder;
         }
 
+        /**
+         * Get the count (M#).
+         * 
+         * @return the count
+         */
         public int getCount() {
             return count;
         }
 
+        /**
+         * Get the mover (M+)
+         * 
+         * @return the mover
+         */
         public int getMover() {
             return mover;
         }
 
+        /**
+         * Get the munder (M-)
+         * 
+         * @return the munder
+         */
         public int getMunder() {
             return munder;
         }
