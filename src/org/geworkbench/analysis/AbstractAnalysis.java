@@ -166,6 +166,8 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 				oos = new ObjectOutputStream(fos);
 				oos.writeInt(0); // Initialize an empty database
 				oos.flush();
+				oos.close();
+				fos.close();
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
 			}
@@ -194,6 +196,8 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 				String paramFileName = (String) ois.readObject();
 				indices.put(key, paramFileName);
 			}
+			ois.close();
+			fis.close();
 		} catch (Exception exc) {
 			System.err
 					.println("\n\nThe format of the parameters file \""
@@ -249,10 +253,53 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 			oos = new ObjectOutputStream(fos);
 			oos.writeObject(aspp);
 			oos.flush();
+			oos.close();
+			fos.close();
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
 
+	}
+	
+	/**
+	 * Deletes a saved setting based on the saved parameter name.
+	 * 
+	 * @param name - name of the saved parameter
+	 */
+	public void removeNamedParameter(String name){
+		Tuple key = new Tuple(getIndex(), name);
+		if(indices.containsKey(key)){
+			String fileName = (String) indices.get(key);
+			indices.remove(key);
+			
+			FileOutputStream fos = null;
+			ObjectOutputStream oos = null;
+			File f = null;
+			try {
+				fos = new FileOutputStream(dbFile);
+				oos = new ObjectOutputStream(fos);
+				int indexCount = indices.size();
+				oos.writeInt(indexCount);
+				for (Enumeration e = indices.keys(); e.hasMoreElements();) {
+					Tuple t = (Tuple) e.nextElement();
+					String paramFileName = (String) indices.get(t);
+					oos.writeObject(t);
+					oos.writeObject(paramFileName);
+				}
+				oos.flush();
+				oos.close();
+				fos.close();
+				log.info("Modified saved parameter db file [" + dbFile + "]");
+				
+				f = new File(fileName);
+				log.info("Removing file [" + f.getCanonicalPath() + "]:file exists? " + f.exists());
+				f.delete();
+				log.debug("\tFile deleted.  File still exists? " + f.exists());
+				
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+			}	
+		}		
 	}
 
 	/**
