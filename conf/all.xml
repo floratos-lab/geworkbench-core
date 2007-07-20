@@ -212,7 +212,13 @@
     <plugin id="mindyViewer" name="MINDY Viewer" class="org.geworkbench.components.mindy.MindyVisualComponent" source="mindy">
         <gui-area name="VisualArea"/>
     </plugin>
-
+    
+    <!-- 
+     <plugin id="medusaViewer" name="MEDUSA Viewer" class="org.geworkbench.components.medusa.gui.MedusaVisualComponent" source="medusa">
+        <gui-area name="VisualArea"/>
+    </plugin>	
+	 -->
+	 
     <plugin id="Jmol" name="Jmol" class="org.geworkbench.components.jmol.JmolComponent" source="jmol">
     	<gui-area name="VisualArea"/>
 	</plugin>
