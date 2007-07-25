@@ -213,7 +213,7 @@ public class MindyData implements Serializable {
             modStats.count++;
             if (row.getScore() < 0) {
                 modStats.munder++;
-            } else {
+            } else if(row.getScore() > 0){
                 modStats.mover++;
             }
         }
@@ -291,7 +291,7 @@ public class MindyData implements Serializable {
      * Represents a row in the MINDY result data.
      * 
      * @author mhall
-     * @version $Id: MindyData.java,v 1.4 2007-07-13 19:12:21 hungc Exp $
+     * @version $Id: MindyData.java,v 1.5 2007-07-25 21:11:12 hungc Exp $
      */
     public static class MindyResultRow implements Serializable{
         private DSGeneMarker modulator;
@@ -417,7 +417,7 @@ public class MindyData implements Serializable {
      * Munder(M-)
      * 
      * @author mhall
-     * @version $Id: MindyData.java,v 1.4 2007-07-13 19:12:21 hungc Exp $
+     * @version $Id: MindyData.java,v 1.5 2007-07-25 21:11:12 hungc Exp $
      */
     public static class ModulatorStatistics implements Serializable {
         protected int count;
