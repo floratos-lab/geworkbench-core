@@ -293,7 +293,7 @@ public class MindyData implements Serializable {
      * Represents a row in the MINDY result data.
      * 
      * @author mhall
-     * @version $Id: MindyData.java,v 1.6 2007-07-26 19:03:18 hungc Exp $
+     * @version $Id: MindyData.java,v 1.7 2007-08-14 19:48:47 hungc Exp $
      */
     public static class MindyResultRow implements Serializable{
         private DSGeneMarker modulator;
@@ -302,6 +302,7 @@ public class MindyData implements Serializable {
 
         private float score;
         private float pvalue;
+        private double correlation;  // pearson correlation (TF, target) result
 
         /**
          * Constructor.
@@ -409,6 +410,25 @@ public class MindyData implements Serializable {
         public void setPvalue(float pvalue) {
             this.pvalue = pvalue;
         }
+        
+        /**
+         * Pearson correlation between the transcription factor and the target gene.
+         * Used primarily for the heat map.
+         * @return result of Pearson correlation
+         */
+        public double getCorrelation(){
+        	return this.correlation;
+        }
+        
+        /**
+         * Pearson correlation between the transcription factor and the target gene.
+         * Used primarily for the heat map.
+         * 
+         * @param Pearson correlation
+         */
+        public void setCorrelation(double correlation){
+        	this.correlation = correlation;
+        }
 
     }
 
@@ -419,7 +439,7 @@ public class MindyData implements Serializable {
      * Munder(M-)
      * 
      * @author mhall
-     * @version $Id: MindyData.java,v 1.6 2007-07-26 19:03:18 hungc Exp $
+     * @version $Id: MindyData.java,v 1.7 2007-08-14 19:48:47 hungc Exp $
      */
     public static class ModulatorStatistics implements Serializable {
         protected int count;
