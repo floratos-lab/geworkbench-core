@@ -71,18 +71,22 @@ public class NetBoostData implements Serializable {
 }
 
 class DataFromMatLab {
+	static Log log = LogFactory.getLog(DataFromMatLab.class);
+	
 	static final String DIR_PATH = "../netboost/test/";
 	static final String CHART_DATA = "netboost_traintestloss.txt";
 	static final String SCORES_DATA = "classscores_target.txt";
 	static final String CONFUSED_DATA = "confusion.txt";
 	static final String[] MODELS = {"DMC","DMR","LPA","RDG","AGV","SMW","RDS"};
 	
+	static String fp = "";
+	
 	static ArrayList<String[]> scores = new ArrayList<String[]>();
 	
 	static{
 		try{
-			//File f = new File(".");
-			//System.out.println("\t\tf=" + f.getCanonicalPath());
+			File f = new File(".");
+			fp = f.getCanonicalPath();
 			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(DIR_PATH + SCORES_DATA)));
 			String line = null;
 			while((line = br.readLine()) != null){
@@ -104,7 +108,7 @@ class DataFromMatLab {
 			}
 			br.close();
 		} catch (Exception e){
-			e.printStackTrace();
+			log.warn("Cannot find file [" + SCORES_DATA + "] under path: " + fp);	
 		}
 	}
 	
@@ -160,7 +164,7 @@ class DataFromMatLab {
 			br.close();
 			success = true;
 		} catch (Exception e){
-			e.printStackTrace();
+			log.warn("Cannot find file [" + CHART_DATA + "] under path: " + fp);
 		} 
 		return success;
 	}
@@ -295,7 +299,7 @@ class DataFromMatLab {
 			}			
 			br.close();
 		} catch (Exception e){
-			e.printStackTrace();
+			log.warn("Cannot find file [" + CONFUSED_DATA + "] under path: " + fp);
 		}
 		return result;
 	}
