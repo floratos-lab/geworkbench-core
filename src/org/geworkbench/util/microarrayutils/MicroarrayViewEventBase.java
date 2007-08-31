@@ -49,6 +49,7 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 	 */
 	protected DSMicroarraySet<DSMicroarray> refMASet = null;
 	protected DSMicroarraySetView<DSGeneMarker, DSMicroarray> maSetView = null;
+	protected DSDataSet refOtherSet = null;
 	protected boolean onlyActivatedMarkers = true;
 	protected boolean onlyActivatedArrays = true;
 	protected JCheckBox chkAllMarkers = new JCheckBox("All Markers", false);
@@ -122,6 +123,9 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 					activatedMarkers = null;
 					uniqueMarkers = null;
 				}
+			} else {
+				// no microarray data set
+				this.refOtherSet = dataSet;
 			}
 			refreshMaSetView();
 		}
