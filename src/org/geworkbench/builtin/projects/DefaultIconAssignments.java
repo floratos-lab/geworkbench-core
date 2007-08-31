@@ -12,6 +12,7 @@ import org.geworkbench.bison.model.clusters.DSHierClusterDataSet;
 import org.geworkbench.bison.model.clusters.DSSOMClusterDataSet;
 import org.geworkbench.bison.algorithm.classification.CSClassifier;
 import org.geworkbench.util.pathwaydecoder.mutualinformation.AdjacencyMatrixDataSet;
+import org.geworkbench.util.pathwaydecoder.mutualinformation.EdgeListDataSet;
 
 /**
  * @author John Watkinson
@@ -32,5 +33,6 @@ public class DefaultIconAssignments {
         ProjectPanel.setIconForType(DSProteinStructure.class, Icons.STRUCTURE_ICON);
         ProjectPanel.setIconForType(DSMatrixReduceSet.class, Icons.PSAM_ICON);
         ProjectPanel.setIconForType(DSProbeIntensityArray.class, Icons.CEL_ICON);
+        ProjectPanel.setIconForType(EdgeListDataSet.class, Icons.EDGELIST_ICON);
     }
 }
