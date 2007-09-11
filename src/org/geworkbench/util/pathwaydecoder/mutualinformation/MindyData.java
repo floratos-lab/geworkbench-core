@@ -7,6 +7,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.commons.collections15.map.MultiKeyMap;
 
 import java.util.*;
+import java.text.CollationKey;
 import java.io.Serializable;
 
 /**
@@ -304,7 +305,7 @@ public class MindyData implements Serializable {
      * Represents a row in the MINDY result data.
      * 
      * @author mhall
-     * @version $Id: MindyData.java,v 1.8 2007-09-11 16:21:45 hungc Exp $
+     * @version $Id: MindyData.java,v 1.9 2007-09-11 21:02:18 hungc Exp $
      */
     public static class MindyResultRow implements Serializable{
         private DSGeneMarker modulator;
@@ -314,6 +315,8 @@ public class MindyData implements Serializable {
         private float score;
         private float pvalue;
         private double correlation;  // pearson correlation (TF, target) result
+        private CollationKey modKey;	// for sorting
+        private CollationKey targetKey;	// for sorting
 
         /**
          * Constructor.
@@ -330,6 +333,12 @@ public class MindyData implements Serializable {
             this.target = target;
             this.score = score;
             this.pvalue = pvalue;
+        }
+        
+        public MindyResultRow(DSGeneMarker modulator, DSGeneMarker transcriptionFactor, DSGeneMarker target, float score, float pvalue, CollationKey mkey, CollationKey tkey) {
+        	this(modulator, transcriptionFactor, target, score, pvalue);
+        	this.modKey = mkey;
+            this.targetKey = tkey;
         }
 
         /**
@@ -440,6 +449,14 @@ public class MindyData implements Serializable {
         public void setCorrelation(double correlation){
         	this.correlation = correlation;
         }
+        
+        public CollationKey getModulatorKey(){
+        	return this.modKey;
+        }
+        
+        public CollationKey getTargetKey(){
+        	return this.targetKey;
+        }
 
     }
 
@@ -450,7 +467,7 @@ public class MindyData implements Serializable {
      * Munder(M-)
      * 
      * @author mhall
-     * @version $Id: MindyData.java,v 1.8 2007-09-11 16:21:45 hungc Exp $
+     * @version $Id: MindyData.java,v 1.9 2007-09-11 21:02:18 hungc Exp $
      */
     public static class ModulatorStatistics implements Serializable {
         protected int count;
