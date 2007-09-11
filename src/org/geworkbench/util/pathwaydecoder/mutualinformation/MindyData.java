@@ -45,6 +45,17 @@ public class MindyData implements Serializable {
         }
         calculateModulatorStatistics();
     }
+    
+    public MindyData(CSMicroarraySet arraySet, List<MindyResultRow> data) {
+        this.arraySet = arraySet;
+        this.data = data;
+        if (data.size() > 0) {
+            this.transcriptionFactor = data.get(0).getTranscriptionFactor();
+        } else {
+            log.warn("Data passed in had 0 records, unable to determine transcription factor under consideration.");
+        }
+        calculateModulatorStatistics();
+    }
 
     /**
      * Get the microarray set.
@@ -293,7 +304,7 @@ public class MindyData implements Serializable {
      * Represents a row in the MINDY result data.
      * 
      * @author mhall
-     * @version $Id: MindyData.java,v 1.7 2007-08-14 19:48:47 hungc Exp $
+     * @version $Id: MindyData.java,v 1.8 2007-09-11 16:21:45 hungc Exp $
      */
     public static class MindyResultRow implements Serializable{
         private DSGeneMarker modulator;
@@ -439,7 +450,7 @@ public class MindyData implements Serializable {
      * Munder(M-)
      * 
      * @author mhall
-     * @version $Id: MindyData.java,v 1.7 2007-08-14 19:48:47 hungc Exp $
+     * @version $Id: MindyData.java,v 1.8 2007-09-11 16:21:45 hungc Exp $
      */
     public static class ModulatorStatistics implements Serializable {
         protected int count;
