@@ -2,6 +2,7 @@ package org.geworkbench.util.pathwaydecoder.mutualinformation;
 
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.collections15.map.MultiKeyMap;
@@ -19,6 +20,7 @@ public class MindyData implements Serializable {
     static Log log = LogFactory.getLog(MindyData.class);
 
     private CSMicroarraySet arraySet;
+    private ArrayList<DSMicroarray> arrayList;
     private DSGeneMarker transcriptionFactor;
     private List<MindyResultRow> data;
 
@@ -44,7 +46,15 @@ public class MindyData implements Serializable {
         } else {
             log.warn("Data passed in had 0 records, unable to determine transcription factor under consideration.");
         }
-        calculateModulatorStatistics();
+        calculateModulatorStatistics();     
+        
+            
+        // for convenience....
+        int size = this.arraySet.size();    
+        arrayList = new ArrayList<DSMicroarray>(size);
+        for(int i = 0; i < size; i++){
+        	arrayList.add((DSMicroarray) this.arraySet.get(i)); 
+        }
     }
     
     public MindyData(CSMicroarraySet arraySet, List<MindyResultRow> data) {
@@ -73,7 +83,16 @@ public class MindyData implements Serializable {
      * @param arraySet - the microarray set to associate with MINDY data
      */
     public void setArraySet(CSMicroarraySet arraySet) {
+    	int size = this.arraySet.size();
         this.arraySet = arraySet;
+        arrayList = new ArrayList<DSMicroarray>(size);
+        for(int i = 0; i < size; i++){
+        	arrayList.add((DSMicroarray) this.arraySet.get(i)); 
+        }
+    }
+    
+    public ArrayList<DSMicroarray> getArraySetAsList(){
+    	return this.arrayList;
     }
 
     /**
@@ -305,7 +324,7 @@ public class MindyData implements Serializable {
      * Represents a row in the MINDY result data.
      * 
      * @author mhall
-     * @version $Id: MindyData.java,v 1.9 2007-09-11 21:02:18 hungc Exp $
+     * @version $Id: MindyData.java,v 1.10 2007-09-13 20:17:32 hungc Exp $
      */
     public static class MindyResultRow implements Serializable{
         private DSGeneMarker modulator;
@@ -467,7 +486,7 @@ public class MindyData implements Serializable {
      * Munder(M-)
      * 
      * @author mhall
-     * @version $Id: MindyData.java,v 1.9 2007-09-11 21:02:18 hungc Exp $
+     * @version $Id: MindyData.java,v 1.10 2007-09-13 20:17:32 hungc Exp $
      */
     public static class ModulatorStatistics implements Serializable {
         protected int count;
