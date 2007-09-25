@@ -21,18 +21,23 @@ public class JAutoList extends JPanel {
     private JTextField searchField;
     private ListModel model;
     private JScrollPane scrollPane;
+    JPanel topPanel;
 
     private boolean lastSearchFailed = false;
     private boolean lastSearchWasAscending = true;
 
     private boolean prefixMode = false;
 
+    public void removeSearchBar(){
+        this.remove(topPanel);
+        this.revalidate();
+    }
     public JAutoList(ListModel model) {
         super();
         this.model = model;
         // Create and lay out components
         setLayout(new BorderLayout());
-        JPanel topPanel = new JPanel();
+        topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
         JLabel searchLabel = new JLabel(SEARCH_LABEL_TEXT);
         nextButton = new JButton(NEXT_BUTTON_TEXT);
@@ -283,7 +288,9 @@ public class JAutoList extends JPanel {
     public int getHighlightedIndex() {
         return list.getSelectedIndex();
     }
-
+     public int[] getSelectedIndices() {
+         return list.getSelectedIndices();
+     }
     /**
      * Set the highlightedIndex automatically.
      * @param theIndex int
