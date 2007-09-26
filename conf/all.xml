@@ -252,11 +252,11 @@
     </plugin>
 
     
-    <!-- Uncomment this to enable the visualizer for the Evidence Integration results
-    <plugin id="EvidenceIntegrationViewer" name="Evidence Integration Viewer" class="org.geworkbench.components.ei.EvidenceIntegrationVisualization" source="evidenceintegration">
-         <gui-area name="VisualArea"/>
-    </plugin>
-    -->
+ <plugin id="EvidenceIntegrationViewer" name="Evidence Integration Viewer" class="org.geworkbench.components.ei.EvidenceIntegrationVisualization" source="evidenceintegration">
+               <gui-area name="VisualArea"/>
+          </plugin>
+    
+    <plugin id="evidenceintegration" name="Evidence Integration Analysis" class="org.geworkbench.components.ei.EvidenceIntegrationAnalysis" source="evidenceintegration"/>
 
 
 </geaw-config>
