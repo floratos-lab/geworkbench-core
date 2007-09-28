@@ -6,7 +6,13 @@
 	<gui-window name="Main GUI" class="org.geworkbench.engine.skin.Skin"/>
 	<plugin id="projectWindow" name="Project Panel" class="org.geworkbench.builtin.projects.ProjectPanel">
 		<gui-area name="ProjectArea"/>
-	</plugin>
+	</plugin> 
+
+ <plugin id="EvidenceIntegrationViewer" name="Evidence Integration Viewer" class="org.geworkbench.components.ei.EvidenceIntegrationVisualization" source="evidenceintegration">
+               <gui-area name="VisualArea"/>
+          </plugin>
+    
+    <plugin id="evidenceintegration" name="Evidence Integration Analysis" class="org.geworkbench.components.ei.EvidenceIntegrationAnalysis" source="evidenceintegration"/>
 
 	<plugin id="edgeListFilter" name="Affy File Format" class="org.geworkbench.components.parsers.EdgeListFileFormat"/>
 	<plugin id="affyFilter" name="Affy File Format" class="org.geworkbench.components.parsers.AffyFileFormat"/>
@@ -146,7 +152,12 @@
 	<plugin id="sequencePanel" name="Sequence" class="org.geworkbench.components.sequences.SequenceViewAppComponent" source="sequences">
 		<gui-area name="VisualArea"/>
 	</plugin>
+<!--
     <plugin id="genetegratePanel" name="Genetegrate" class="org.geworkbench.components.pudge.GenetegrateViewAppComponent" source="sequences">
+		<gui-area name="VisualArea"/>
+	</plugin>
+-->
+<plugin id="pudgePanel" name="Pudge" class="org.geworkbench.components.cagrid.GenetegrateViewAppComponent" source="cagrid">
 		<gui-area name="VisualArea"/>
 	</plugin>
     <plugin id="Interactions" name="Interaction" class="interactions.InteractionsUserInterface" source="interactions">
@@ -251,12 +262,6 @@
         <gui-area name="CommandArea"/>
     </plugin>
 
-    
- <plugin id="EvidenceIntegrationViewer" name="Evidence Integration Viewer" class="org.geworkbench.components.ei.EvidenceIntegrationVisualization" source="evidenceintegration">
-               <gui-area name="VisualArea"/>
-          </plugin>
-    
-    <plugin id="evidenceintegration" name="Evidence Integration Analysis" class="org.geworkbench.components.ei.EvidenceIntegrationAnalysis" source="evidenceintegration"/>
-
+ 
 
 </geaw-config>
