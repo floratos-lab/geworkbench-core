@@ -51,7 +51,7 @@ public abstract class MatrixModel {
 
     }
 
-    public static class Gene extends MatrixModel {
+    public class Gene extends MatrixModel {
         public Gene(DSMicroarraySetView data) {
             super(data);
         }
@@ -66,7 +66,7 @@ public abstract class MatrixModel {
 
     }
 
-    public static class Microarray extends MatrixModel {
+    public class Microarray extends MatrixModel {
         public Microarray(DSMicroarraySetView data) {
             super(data);
         }
