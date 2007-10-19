@@ -91,6 +91,8 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	public static final int QUANTILE_NORMALIZER_TYPE = 23;
 
 	public static final int ALLELIC_FREQUENCY_TYPE = 24;
+	
+	public static final int NETBOOST_TYPE = 25;
 
 	/**
 	 * The parameters panel to be use from within the AnalysisPane in order to
