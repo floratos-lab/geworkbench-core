@@ -26,11 +26,22 @@
 		<gui-area name="VisualArea"/>
 		<subscription type="org.geworkbench.events.ProjectEvent" enabled="Yes"/>
 	</plugin>
-	 -->  
+	 --> 
+	 <plugin id="hierarchicalClusteringPanel" name="Dendrogram" class="org.geworkbench.components.hierarchicalclustering.HierClusterViewAppComponent" source="hierarchicalclustering">
+		<gui-area name="VisualArea"/>
+	</plugin> 
 	
-	<!-- Analyses must go here, before the analysis panel -->	
+	<!-- Analyses must go here, before the analysis panel -->
+	<plugin id="fastHierarchicalClusteringAnalysis" name="Fast Hierachical Clustering Analysis" class="org.geworkbench.components.clustering.FastHierClustAnalysis" source="clustering"/>
+	<plugin id="medusa" name="MEDUSA Analysis" class="org.geworkbench.components.medusa.MedusaAnalysis" source="medusa"/>
+	
 	<plugin id="analysisPanel" name="Analysis" class="org.geworkbench.components.analysis.AnalysisPanel" source="analysis">
 		<gui-area name="CommandArea"/>
 	</plugin>
+	
+	<!-- Views of corresponding analyses go here -->
+	<plugin id="medusaViewer" name="MEDUSA Viewer" class="org.geworkbench.components.medusa.gui.MedusaVisualComponent" source="medusa">
+        <gui-area name="VisualArea"/>
+    </plugin>	
   
 </geaw-config>
