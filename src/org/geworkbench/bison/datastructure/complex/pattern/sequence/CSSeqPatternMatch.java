@@ -3,7 +3,7 @@ package org.geworkbench.bison.datastructure.complex.pattern.sequence;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import org.geworkbench.bison.datastructure.complex.pattern.CSPatternMatch;
 
-public class CSSeqPatternMatch extends CSPatternMatch<DSSequence, DSSeqRegistration> implements DSSeqPatternMatch {
+public class CSSeqPatternMatch extends CSPatternMatch<DSSequence, CSSeqRegistration> implements DSSeqPatternMatch {
 
     public CSSeqPatternMatch(DSSequence seq) {
         super(seq);
@@ -12,9 +12,9 @@ public class CSSeqPatternMatch extends CSPatternMatch<DSSequence, DSSeqRegistrat
     //public void setPattern(IGetPattern pattern){
     //  this.pattern=pattern;
     //}
-    public DSSeqRegistration getRegistration() throws IndexOutOfBoundsException {
+    public CSSeqRegistration getRegistration() throws IndexOutOfBoundsException {
         if (registration == null) {
-            registration = new DSSeqRegistration();
+            registration = new CSSeqRegistration();
             return registration;
         }
         return registration;
@@ -23,7 +23,7 @@ public class CSSeqPatternMatch extends CSPatternMatch<DSSequence, DSSeqRegistrat
       public void setAlignment(DSSequence _seq, int off, int length){
          object          = _seq;
          if(registration == null) {
-           registration = new DSSeqRegistration();
+           registration = new CSSeqRegistration();
          }
          registration.x1 = off;
          registration.x2 = off + length;

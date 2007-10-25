@@ -1,6 +1,6 @@
 package org.geworkbench.util.patterns;
 
-import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSSeqRegistration;
+import org.geworkbench.bison.datastructure.complex.pattern.sequence.CSSeqRegistration;
 import org.geworkbench.bison.datastructure.complex.pattern.DSPattern;
 
 /**
@@ -27,14 +27,14 @@ public class PatternLocations implements Comparable{
     }
 
     private String displayName;
-        private  DSSeqRegistration registration;
+        private  CSSeqRegistration registration;
         private int idForDisplay;
         private String patternType;
        // private  DSPattern pattern;
         public static final String DEFAULTTYPE = "splash";
         public static final String TFTYPE = "TFBS";
 
-        public PatternLocations(DSPattern tf, DSSeqRegistration _registration){
+        public PatternLocations(DSPattern tf, CSSeqRegistration _registration){
 
             //this.pattern = tf;
             registration = _registration;
@@ -49,7 +49,7 @@ public class PatternLocations implements Comparable{
             patternType = DEFAULTTYPE;
 
         }
-        public  PatternLocations(String _ascii, DSSeqRegistration _registration){
+        public  PatternLocations(String _ascii, CSSeqRegistration _registration){
             ascii = _ascii;
             registration = _registration;
             patternType = DEFAULTTYPE;
@@ -67,7 +67,7 @@ public class PatternLocations implements Comparable{
         return patternType;
     }
 
-    public DSSeqRegistration getRegistration() {
+    public CSSeqRegistration getRegistration() {
         return registration;
     }
 
@@ -83,7 +83,7 @@ public class PatternLocations implements Comparable{
         this.patternType = patternType;
     }
 
-    public void setRegistration(DSSeqRegistration registration) {
+    public void setRegistration(CSSeqRegistration registration) {
         this.registration = registration;
     }
     public int compareTo(Object o){

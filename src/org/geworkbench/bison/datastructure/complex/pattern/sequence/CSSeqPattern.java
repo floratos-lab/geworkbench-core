@@ -21,18 +21,18 @@ import java.util.List;
  * @version 1.0
  */
 
-public class CSSeqPattern implements DSPattern<DSSequence, DSSeqRegistration> {
+public class CSSeqPattern implements DSPattern<DSSequence, CSSeqRegistration> {
 
     ArrayList<Integer> locus = new ArrayList<Integer>();
     ArrayList<String> value = new ArrayList<String>();
 
-    public DSSeqRegistration match(DSSequence object) {
+    public CSSeqRegistration match(DSSequence object) {
         return null;
     }
 
-    public List<DSPatternMatch<DSSequence, DSSeqRegistration>> match(DSSequence sequence, double p) {
+    public List<DSPatternMatch<DSSequence, CSSeqRegistration>> match(DSSequence sequence, double p) {
         // last offset
-        ArrayList<DSPatternMatch<DSSequence, DSSeqRegistration>> matches = new ArrayList<DSPatternMatch<DSSequence, DSSeqRegistration>>();
+        ArrayList<DSPatternMatch<DSSequence, CSSeqRegistration>> matches = new ArrayList<DSPatternMatch<DSSequence, CSSeqRegistration>>();
         int lastOffset = locus.get(locus.size() - 1);
         for (int i = 0; i < sequence.length(); i++) {
             boolean matched = true;
@@ -43,7 +43,7 @@ public class CSSeqPattern implements DSPattern<DSSequence, DSSeqRegistration> {
                 }
             }
             if (matched) {
-                DSPatternMatch<DSSequence, DSSeqRegistration> match = new CSPatternMatch<DSSequence, DSSeqRegistration>(sequence);
+                DSPatternMatch<DSSequence, CSSeqRegistration> match = new CSPatternMatch<DSSequence, CSSeqRegistration>(sequence);
                 match.getRegistration().x1 = i;
                 match.getRegistration().x2 = i + lastOffset;
                 matches.add(match);
@@ -52,7 +52,7 @@ public class CSSeqPattern implements DSPattern<DSSequence, DSSeqRegistration> {
         return matches;
     }
 
-    public String toString(DSSequence object, DSSeqRegistration registration) {
+    public String toString(DSSequence object, CSSeqRegistration registration) {
         return "";
     }
 }

@@ -6,7 +6,7 @@ import org.geworkbench.bison.datastructure.complex.pattern.DSMatchedPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.DSPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.DSPatternMatch;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeqPattern;
-import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSSeqRegistration;
+import org.geworkbench.bison.datastructure.complex.pattern.sequence.CSSeqRegistration;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -24,7 +24,7 @@ import java.util.List;
  * @version 1.0
  */
 
-public class FlexiblePattern extends ArrayList<DSPatternMatch<DSSequence, DSSeqRegistration>> implements DSMatchedSeqPattern {
+public class FlexiblePattern extends ArrayList<DSPatternMatch<DSSequence, CSSeqRegistration>> implements DSMatchedSeqPattern {
     /**
      * This class implements flexible patterns having more than one
      * set of offsets. This is implemented by having an array of N offsets
@@ -177,9 +177,9 @@ public class FlexiblePattern extends ArrayList<DSPatternMatch<DSSequence, DSSeqR
         return getASCII();
     }
 
-    public DSSeqRegistration getRegistration(int i) throws IndexOutOfBoundsException {
+    public CSSeqRegistration getRegistration(int i) throws IndexOutOfBoundsException {
         if (i < getSupport()) {
-            DSSeqRegistration seqReg = new DSSeqRegistration();
+            CSSeqRegistration seqReg = new CSSeqRegistration();
             patterns.get(0);
             seqReg.x1 = ((TwoLocus) mLocus.get(i)).dx0;
             seqReg.x2 = ((TwoLocus) mLocus.get(i)).dx1 + ((DSMatchedSeqPattern) patterns.get(1)).getLength();
@@ -197,7 +197,7 @@ public class FlexiblePattern extends ArrayList<DSPatternMatch<DSSequence, DSSeqR
         throw new IndexOutOfBoundsException();
     }
 
-    public DSPattern<DSSequence, DSSeqRegistration> getPattern() {
+    public DSPattern<DSSequence, CSSeqRegistration> getPattern() {
         /** @todo Fix Patterns */
         return null;
     }
@@ -210,13 +210,13 @@ public class FlexiblePattern extends ArrayList<DSPatternMatch<DSSequence, DSSeqR
         }
     }
 
-    public void addAll(DSMatchedPattern<DSSequence, DSSeqRegistration> matches) {
+    public void addAll(DSMatchedPattern<DSSequence, CSSeqRegistration> matches) {
 
     }
 
-    //  public void add(DSPatternMatch<DSSequence, DSSeqRegistration> match) {
+    //  public void add(DSPatternMatch<DSSequence, CSSeqRegistration> match) {
     //  }
-    public List<DSPatternMatch<DSSequence, DSSeqRegistration>> matches() {
+    public List<DSPatternMatch<DSSequence, CSSeqRegistration>> matches() {
         return this;
     }
 

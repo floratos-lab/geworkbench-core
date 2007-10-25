@@ -16,7 +16,7 @@ import java.io.IOException;
  * @version 1.0
  */
 
-public interface DSMatchedSeqPattern extends DSMatchedPattern<DSSequence, DSSeqRegistration> {
+public interface DSMatchedSeqPattern extends DSMatchedPattern<DSSequence, CSSeqRegistration> {
     int getLength();
 
     int getMaxLength();

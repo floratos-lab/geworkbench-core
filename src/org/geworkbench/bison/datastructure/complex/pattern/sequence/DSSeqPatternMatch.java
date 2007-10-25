@@ -16,5 +16,5 @@ import org.geworkbench.bison.datastructure.complex.pattern.DSPatternMatch;
  * @author not attributable
  * @version 1.0
  */
-public interface DSSeqPatternMatch extends DSPatternMatch<DSSequence, DSSeqRegistration> {
+public interface DSSeqPatternMatch extends DSPatternMatch<DSSequence, CSSeqRegistration> {
 }

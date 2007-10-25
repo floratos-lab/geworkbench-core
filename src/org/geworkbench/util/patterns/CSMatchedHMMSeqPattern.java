@@ -6,7 +6,7 @@ import org.geworkbench.bison.datastructure.complex.pattern.CSMatchedPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.DSMatchedPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.DSPatternMatch;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.CSSeqPatternMatch;
-import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSSeqRegistration;
+import org.geworkbench.bison.datastructure.complex.pattern.sequence.CSSeqRegistration;
 
 
 import javax.xml.rpc.holders.IntHolder;
@@ -62,7 +62,7 @@ public class CSMatchedHMMSeqPattern extends org.geworkbench.util.patterns.CSMatc
 //            if (seq != null) {
 //                String str = seq.getSequence().substring(loci[i].getStart(),
 //                                                         loci[i].getEnd());
-//                DSSeqRegistration regis = new DSSeqRegistration();
+//                CSSeqRegistration regis = new CSSeqRegistration();
 //                regis.x1 = loci[i].getStart();
 //                regis.x2 = loci[i].getEnd();
 //                CSSeqPatternMatch pmatch = new CSSeqPatternMatch(seq);
@@ -128,13 +128,13 @@ public class CSMatchedHMMSeqPattern extends org.geworkbench.util.patterns.CSMatc
 //        return lociList.get(i).getEnd();
 //    }
 //
-//    public DSPatternMatch<DSSequence, DSSeqRegistration> get(int i) {
+//    public DSPatternMatch<DSSequence, CSSeqRegistration> get(int i) {
 //        return matches.get(i);
 //    }
 //
-//    public List<DSPatternMatch<DSSequence, DSSeqRegistration>> match(DSSequence object, double p) {
-//        List<DSPatternMatch<DSSequence, DSSeqRegistration>> matchResults = new ArrayList<DSPatternMatch<DSSequence, DSSeqRegistration>>();
-//        for (DSPatternMatch<DSSequence, DSSeqRegistration> match : matches) {
+//    public List<DSPatternMatch<DSSequence, CSSeqRegistration>> match(DSSequence object, double p) {
+//        List<DSPatternMatch<DSSequence, CSSeqRegistration>> matchResults = new ArrayList<DSPatternMatch<DSSequence, CSSeqRegistration>>();
+//        for (DSPatternMatch<DSSequence, CSSeqRegistration> match : matches) {
 //            if (match.getObject().equals(object) && match.getRegistration().getPValue() > p) {
 //                matchResults.add(match);
 //            }
@@ -142,10 +142,10 @@ public class CSMatchedHMMSeqPattern extends org.geworkbench.util.patterns.CSMatc
 //        return matchResults;
 //    }
 //
-//    public DSSeqRegistration match(DSSequence object) {
-//        DSSeqRegistration result = new DSSeqRegistration();
-//        DSMatchedPattern<DSSequence, DSSeqRegistration> matchResults = new CSMatchedPattern<DSSequence, DSSeqRegistration>(this);
-//        for (DSPatternMatch<DSSequence, ? extends DSSeqRegistration> match : matches) {
+//    public CSSeqRegistration match(DSSequence object) {
+//        CSSeqRegistration result = new CSSeqRegistration();
+//        DSMatchedPattern<DSSequence, CSSeqRegistration> matchResults = new CSMatchedPattern<DSSequence, CSSeqRegistration>(this);
+//        for (DSPatternMatch<DSSequence, ? extends CSSeqRegistration> match : matches) {
 //            if (match.getObject().equals(object)) {
 //                match.getRegistration().setPValue(0.0);
 //                return match.getRegistration();

@@ -15,7 +15,7 @@ import java.util.ArrayList;
  * @author not attributable
  * @version 1.0
  */
-public class CSSeqCmplxRegistration extends DSSeqRegistration {
+public class CSSeqCmplxRegistration extends CSSeqRegistration {
     public ArrayList<Integer> offsets = new ArrayList<Integer>();
 
     public CSSeqCmplxRegistration() {

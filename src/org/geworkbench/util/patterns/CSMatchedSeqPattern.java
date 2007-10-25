@@ -1,7 +1,7 @@
 package org.geworkbench.util.patterns;
 
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
-import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSSeqRegistration;
+import org.geworkbench.bison.datastructure.complex.pattern.sequence.CSSeqRegistration;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeqPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.CSSeqPatternMatch;
 import org.geworkbench.bison.datastructure.complex.pattern.CSMatchedPattern;
@@ -32,9 +32,8 @@ import java.io.IOException;
  */
 
 
-public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence,
-        DSSeqRegistration> implements DSMatchedSeqPattern, DSPattern<DSSequence,
-        DSSeqRegistration> {
+public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence, CSSeqRegistration> implements DSMatchedSeqPattern, DSPattern<DSSequence,
+        CSSeqRegistration> {
 
     static java.util.regex.Pattern headerPattern = java.util.regex.Pattern.
             compile("\\[\\d+\\]\\s+(\\S+)\\s+\\[(\\d+)\\D*(\\d+)\\D*(\\d+)\\D*(\\d+\\.?\\d*E?\\d*)\\]");
@@ -352,17 +351,16 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence,
                 bytes, offset);
     }
 
- public   ArrayList<DSPatternMatch<DSSequence,
-                    DSSeqRegistration>> matches = new ArrayList<DSPatternMatch<
-                                          DSSequence, DSSeqRegistration>>();
+ public   ArrayList<DSPatternMatch<DSSequence, CSSeqRegistration>> matches = new ArrayList<DSPatternMatch<
+                                          DSSequence, CSSeqRegistration>>();
 
-    public DSPatternMatch<DSSequence, DSSeqRegistration> get(int i) {
+    public DSPatternMatch<DSSequence, CSSeqRegistration> get(int i) {
         if (matches.size() > i) {
             return matches.get(i);
         } else {
             if(getObject(i)!=null){
             CSSeqPatternMatch match = new CSSeqPatternMatch(getObject(i));
-            DSSeqRegistration reg = match.getRegistration();
+            CSSeqRegistration reg = match.getRegistration();
             reg.x1 = getOffset(i);
             reg.x2 = reg.x1 + getLength();
             //  System.out.println(match.getObject().getSequence());
@@ -372,7 +370,7 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence,
         return null;
     }
 
-    public List<DSPatternMatch<DSSequence, DSSeqRegistration>> matches() {
+    public List<DSPatternMatch<DSSequence, CSSeqRegistration>> matches() {
         if (matches.size() < 1) {
             for (int i = 0; i < this.getSupport(); i++) {
                 matches.add(i, get(i));
@@ -385,13 +383,12 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence,
         return rand_hash;
     }
 
-    public List<DSPatternMatch<DSSequence,
-            DSSeqRegistration>> match(DSSequence object, double p) {
+    public List<DSPatternMatch<DSSequence, CSSeqRegistration>> match(DSSequence object, double p) {
         List<DSPatternMatch<DSSequence,
-                DSSeqRegistration>>
+                CSSeqRegistration>>
                 matchResults = new ArrayList<DSPatternMatch<DSSequence,
-                               DSSeqRegistration>>();
-        for (DSPatternMatch<DSSequence, DSSeqRegistration> match : matches) {
+                               CSSeqRegistration>>();
+        for (DSPatternMatch<DSSequence, CSSeqRegistration> match : matches) {
             if (match.getObject().equals(object) &&
                 match.getRegistration().getPValue() > p) {
                 matchResults.add(match);
@@ -400,14 +397,14 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence,
         return matchResults;
     }
 
-    public DSSeqRegistration match(DSSequence object) {
-        DSSeqRegistration result = new DSSeqRegistration();
+    public CSSeqRegistration match(DSSequence object) {
+        CSSeqRegistration result = new CSSeqRegistration();
         DSMatchedPattern<DSSequence,
-                        DSSeqRegistration>
+                        CSSeqRegistration>
                 matchResults = new CSMatchedPattern<DSSequence,
-                               DSSeqRegistration>(this);
+                               CSSeqRegistration>(this);
         for (DSPatternMatch<DSSequence,
-             ? extends DSSeqRegistration> match : matches) {
+             ? extends CSSeqRegistration> match : matches) {
             if (match.getObject().equals(object)) {
                 match.getRegistration().setPValue(0.0);
                 return match.getRegistration();
@@ -416,7 +413,7 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence,
         return null;
     }
 
-    public String toString(DSSequence object, DSSeqRegistration registration) {
+    public String toString(DSSequence object, CSSeqRegistration registration) {
         if (ascii != null) {
             return ascii;
         } else {
@@ -435,10 +432,10 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence,
 
     }
 
-    public DSSeqRegistration getRegistration(int i) throws
+    public CSSeqRegistration getRegistration(int i) throws
             IndexOutOfBoundsException {
         if (i < getSupport()) {
-            DSSeqRegistration seqReg = new DSSeqRegistration();
+            CSSeqRegistration seqReg = new CSSeqRegistration();
             seqReg.x1 = getOffset(i);
             seqReg.x2 = seqReg.x1 + this.getExtent();
             return seqReg;

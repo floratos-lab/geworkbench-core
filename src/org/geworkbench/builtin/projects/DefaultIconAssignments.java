@@ -11,6 +11,7 @@ import org.geworkbench.bison.datastructure.complex.pattern.matrix.DSMatrixReduce
 import org.geworkbench.bison.model.clusters.DSHierClusterDataSet;
 import org.geworkbench.bison.model.clusters.DSSOMClusterDataSet;
 import org.geworkbench.bison.algorithm.classification.CSClassifier;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.CSChipchipSet;
 import org.geworkbench.util.pathwaydecoder.mutualinformation.AdjacencyMatrixDataSet;
 import org.geworkbench.util.pathwaydecoder.mutualinformation.EdgeListDataSet;
 
@@ -34,5 +35,6 @@ public class DefaultIconAssignments {
         ProjectPanel.setIconForType(DSMatrixReduceSet.class, Icons.PSAM_ICON);
         ProjectPanel.setIconForType(DSProbeIntensityArray.class, Icons.CEL_ICON);
         ProjectPanel.setIconForType(EdgeListDataSet.class, Icons.EDGELIST_ICON);
+        ProjectPanel.setIconForType(CSChipchipSet.class, Icons.CHIPCHIP_ICON);
     }
 }

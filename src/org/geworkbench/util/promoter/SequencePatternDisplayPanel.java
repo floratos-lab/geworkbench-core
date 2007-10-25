@@ -17,7 +17,7 @@ import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import org.geworkbench.bison.datastructure.complex.pattern.DSPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.DSPatternMatch;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.
-        DSSeqRegistration;
+        CSSeqRegistration;
 import org.geworkbench.util.patterns.PatternOperations;
 import org.geworkbench.util.patterns.PatternSequenceDisplayUtil;
 import org.geworkbench.util.promoter.pattern.Display;
@@ -53,12 +53,10 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget {
     private boolean displaySeqPattern = true;
     DSSequenceSet sequenceDB = null;
     HashMap patternDisplay = new HashMap();
-    Hashtable<DSPattern<DSSequence, DSSeqRegistration>,
-            List<DSPatternMatch<DSSequence,
-            DSSeqRegistration>>> patternMatches = new Hashtable<DSPattern<
-                                                  DSSequence, DSSeqRegistration>,
+    Hashtable<DSPattern<DSSequence, CSSeqRegistration>, List<DSPatternMatch<DSSequence, CSSeqRegistration>>> patternMatches = new Hashtable<DSPattern<
+                                                  DSSequence, CSSeqRegistration>,
                                                   List<DSPatternMatch<
-                                                  DSSequence, DSSeqRegistration>>>();
+                                                  DSSequence, CSSeqRegistration>>>();
     public HashMap<CSSequence,
             PatternSequenceDisplayUtil> patternTFMatches = new HashMap<
             CSSequence,
@@ -227,7 +225,7 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget {
 
             for (DSPattern pattern : patternMatches.keySet()) {
                 List<DSPatternMatch<DSSequence,
-                        DSSeqRegistration>>
+                        CSSeqRegistration>>
                         matches = patternMatches.get(pattern);
                 if ((matches != null) && (matches.size() > 0)) {
                     drawPattern(g, matches, r,
@@ -297,12 +295,12 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget {
                 }
                 for (DSPattern pattern : patternMatches.keySet()) {
                     List<DSPatternMatch<DSSequence,
-                            DSSeqRegistration>>
+                            CSSeqRegistration>>
                             matches = patternMatches.get(pattern);
                     if (matches != null) {
                         for (int i = 0; i < matches.size(); i++) {
                             DSPatternMatch<DSSequence,
-                                    DSSeqRegistration> match = matches.get(i);
+                                    CSSeqRegistration> match = matches.get(i);
                             DSSequence sequence = match.getObject();
                             if (sequence.getSerial() == selected) {
                                 drawPattern(g, match, r, xscale, yscale, cols,
@@ -332,8 +330,7 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget {
      * @param cols    int
      * @param display Display
      */
-    private void drawPattern(Graphics g, DSPatternMatch<DSSequence,
-                             DSSeqRegistration> sp, Rectangle r, double xscale,
+    private void drawPattern(Graphics g, DSPatternMatch<DSSequence, CSSeqRegistration> sp, Rectangle r, double xscale,
                              double yscale, int cols, Display dp) {
         int length = sp.getRegistration().length();
         int offset = sp.getRegistration().x1;
@@ -605,14 +602,14 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget {
 //        String display = "";
 //        for (DSPattern pattern : patternMatches.keySet()) {
 //            List<DSPatternMatch<DSSequence,
-//                    DSSeqRegistration>> matches = patternMatches.get(pattern);
+//                    CSSeqRegistration>> matches = patternMatches.get(pattern);
 //            if ((matches != null) && (matches.size() > 0)) {
 //                for (int i = 0; i < matches.size(); i++) {
 //                    DSPatternMatch<DSSequence,
-//                            DSSeqRegistration> match = matches.get(i);
+//                            CSSeqRegistration> match = matches.get(i);
 //                    DSSequence sequence = match.getObject();
 //                    if (selected == sequence.getSerial()) {
-//                        DSSeqRegistration reg = match.getRegistration();
+//                        CSSeqRegistration reg = match.getRegistration();
 //                        if (dis >= reg.x1 && dis <= reg.x2) {
 //                            display = "Pattern:" + pattern;
 //                            displayInfo(display);
@@ -640,14 +637,14 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget {
 //
 //        for (DSPattern pattern : patternMatches.keySet()) {
 //            List<DSPatternMatch<DSSequence,
-//                    DSSeqRegistration>> matches = patternMatches.get(pattern);
+//                    CSSeqRegistration>> matches = patternMatches.get(pattern);
 //            if (matches != null) {
 //                for (int i = 0; i < matches.size(); i++) {
 //                    DSPatternMatch<DSSequence,
-//                            DSSeqRegistration> match = matches.get(i);
+//                            CSSeqRegistration> match = matches.get(i);
 //                    DSSequence sequence = match.getObject();
 //                    if (sequence.getSerial() == seqid) {
-//                        DSSeqRegistration reg = match.getRegistration();
+//                        CSSeqRegistration reg = match.getRegistration();
 //                        if ((off > reg.x1 - 5) && (off < reg.x2 + 4)) {
 //                            /**
 //                             * todo need to make it more generalize
@@ -681,9 +678,8 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget {
 //        }
     }
 
-    public void addAPattern(DSPattern<DSSequence, DSSeqRegistration> pt,
-                            Display dis, List<DSPatternMatch<DSSequence,
-                            DSSeqRegistration>> matches) {
+    public void addAPattern(DSPattern<DSSequence, CSSeqRegistration> pt,
+                            Display dis, List<DSPatternMatch<DSSequence, CSSeqRegistration>> matches) {
 //        if (pt != null && dis != null && matches != null) {
 //            patternDisplay.put(pt, dis);
 //            patternMatches.put(pt, matches);
@@ -700,9 +696,9 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget {
 
     }
 
-//    public void addAPattern(DSPattern<DSSequence, DSSeqRegistration> pt,
+//    public void addAPattern(DSPattern<DSSequence, CSSeqRegistration> pt,
 //                            Display dis, List<DSPatternMatch<DSSequence,
-//                            DSSeqRegistration>> matches) {
+//                            CSSeqRegistration>> matches) {
 //        if (pt != null && dis != null && matches != null) {
 //            patternDisplay.put(pt, dis);
 //            patternMatches.put(pt, matches);
@@ -710,16 +706,14 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget {
 //        }
 //    }
 
-    public void removePattern(DSPattern<DSSequence, DSSeqRegistration> pt) {
+    public void removePattern(DSPattern<DSSequence, CSSeqRegistration> pt) {
         patternMatches.remove(pt);
         patternDisplay.remove(pt);
         repaint();
 
     }
 
-    public Hashtable<DSPattern<DSSequence, DSSeqRegistration>,
-            List<DSPatternMatch<DSSequence,
-            DSSeqRegistration>>> getPatternMatches() {
+    public Hashtable<DSPattern<DSSequence, CSSeqRegistration>, List<DSPatternMatch<DSSequence, CSSeqRegistration>>> getPatternMatches() {
         return patternMatches;
     }
 
@@ -747,15 +741,14 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget {
      * @param matches IGetPatternMatchCollection
      * @param r       Rectangle
      */
-    private boolean drawPattern(Graphics g, List<DSPatternMatch<DSSequence,
-                                DSSeqRegistration>> matches, Rectangle r,
+    private boolean drawPattern(Graphics g, List<DSPatternMatch<DSSequence, CSSeqRegistration>> matches, Rectangle r,
                                 Display dp) {
         if (matches != null) {
             for (int i = 0; i < matches.size(); i++) {
                 DSPatternMatch<DSSequence,
-                        DSSeqRegistration> match = matches.get(i);
+                        CSSeqRegistration> match = matches.get(i);
                 DSSequence sequence = match.getObject();
-                DSSeqRegistration reg = match.getRegistration();
+                CSSeqRegistration reg = match.getRegistration();
                 int y = yOff + sequence.getSerial() * yStep;
                 if (y > r.y) {
                     if (y > r.y + r.height) {

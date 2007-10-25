@@ -15,7 +15,7 @@ import org.geworkbench.bison.datastructure.bioobjects.sequence.CSSequence;
 import java.util.TreeSet;
 
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.
-        DSSeqRegistration;
+        CSSeqRegistration;
 import org.geworkbench.bison.datastructure.biocollections.sequences.
         CSSequenceSet;
 import org.geworkbench.bison.datastructure.complex.pattern.DSPatternMatch;
@@ -125,9 +125,7 @@ public class PatternOperations {
      * @return HashMap
      */
     public static HashMap<CSSequence,
-            PatternSequenceDisplayUtil> processPatterns(DSCollection<
-            DSMatchedPattern<DSSequence,
-                    DSSeqRegistration>> patterns, DSSequenceSet sequenceDB) {
+            PatternSequenceDisplayUtil> processPatterns(DSCollection<DSMatchedPattern<DSSequence, CSSeqRegistration>> patterns, DSSequenceSet sequenceDB) {
         return processPatterns(patterns, sequenceDB,
                 PatternLocations.DEFAULTTYPE);
 
@@ -135,8 +133,7 @@ public class PatternOperations {
 
     public static void addTFMatches(HashMap<CSSequence,
             PatternSequenceDisplayUtil> existedPatterns,
-                                    List<DSPatternMatch<DSSequence,
-                                            DSSeqRegistration>>
+                                    List<DSPatternMatch<DSSequence, CSSeqRegistration>>
                                             matches, DSPattern tf) {
         if (matches == null) {
             return;
@@ -147,9 +144,9 @@ public class PatternOperations {
 
         }
 
-        for (DSPatternMatch<DSSequence, DSSeqRegistration> sp : matches) {
+        for (DSPatternMatch<DSSequence, CSSeqRegistration> sp : matches) {
             DSSequence hitSeq = sp.getObject();
-            DSSeqRegistration reg = sp.getRegistration();
+            CSSeqRegistration reg = sp.getRegistration();
             if (existedPatterns.containsKey(hitSeq)) {
                 PatternSequenceDisplayUtil pu = (
                         PatternSequenceDisplayUtil)
@@ -184,9 +181,7 @@ public class PatternOperations {
      * @return HashMap
      */
     public static HashMap<CSSequence,
-            PatternSequenceDisplayUtil> processPatterns(DSCollection<
-            DSMatchedPattern<DSSequence,
-                    DSSeqRegistration>> patterns, DSSequenceSet sequenceDB,
+            PatternSequenceDisplayUtil> processPatterns(DSCollection<DSMatchedPattern<DSSequence, CSSeqRegistration>> patterns, DSSequenceSet sequenceDB,
                                                   String patternType) {
         if (patterns != null && sequenceDB != null) {
             try {
@@ -222,11 +217,11 @@ public class PatternOperations {
                                         getId(
                                                 locusId);
                                 DSPatternMatch<DSSequence,
-                                        DSSeqRegistration>
+                                        CSSeqRegistration>
                                         sp = pattern.get(locusId);
                                 if (sp != null) {
                                     DSSequence hitSeq = sp.getObject();
-                                    DSSeqRegistration reg = sp.getRegistration();
+                                    CSSeqRegistration reg = sp.getRegistration();
                                     if (sequencePatternMatches.containsKey(hitSeq)) {
                                         PatternSequenceDisplayUtil pu = (
                                                 PatternSequenceDisplayUtil)

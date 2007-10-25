@@ -16,7 +16,7 @@ import org.geworkbench.bison.datastructure.bioobjects.sequence.CSSequence;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import org.geworkbench.bison.datastructure.complex.pattern.DSMatchedPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.
-        DSSeqRegistration;
+        CSSeqRegistration;
 import org.geworkbench.util.patterns.*;
 import org.geworkbench.util.promoter.pattern.Display;
 
@@ -42,8 +42,7 @@ public class SequenceViewWidgetPanel extends JPanel {
     int maxSeqLen = 1;
     private String displayInfo = "";
     //ArrayList  selectedPatterns   = null;
-    DSCollection<DSMatchedPattern<DSSequence,
-            DSSeqRegistration>> selectedPatterns = null;
+    DSCollection<DSMatchedPattern<DSSequence, CSSeqRegistration>> selectedPatterns = null;
     DSSequenceSet sequenceDB = null;
     HashMap<CSSequence,
             PatternSequenceDisplayUtil> sequencePatternmatches;
@@ -125,7 +124,7 @@ public class SequenceViewWidgetPanel extends JPanel {
 
     //public void initialize(ArrayList patterns, CSSequenceSet seqDB) {
 //    public void initialize(DSCollection<DSMatchedPattern<DSSequence,
-//                           DSSeqRegistration>> matches, DSSequenceSet seqDB) {
+//                           CSSeqRegistration>> matches, DSSequenceSet seqDB) {
 //
 //        initialize(matches, seqDB, true);
 //    }
@@ -138,7 +137,7 @@ public class SequenceViewWidgetPanel extends JPanel {
      * @param isLineView boolean
      */
 //    public void initialize(DSCollection<DSMatchedPattern<DSSequence,
-//                           DSSeqRegistration>> matches, DSSequenceSet seqDB,
+//                           CSSeqRegistration>> matches, DSSequenceSet seqDB,
 //                           boolean isLineView) {
 //        selectedPatterns = matches;
 //        sequenceDB = seqDB;
@@ -243,7 +242,7 @@ public class SequenceViewWidgetPanel extends JPanel {
                             if (patternsPerSequence != null &&
                                     patternsPerSequence.size() > 0) {
                                 for (PatternLocations pl : patternsPerSequence) {
-                                    DSSeqRegistration reg = pl.getRegistration();
+                                    CSSeqRegistration reg = pl.getRegistration();
                                     if (reg != null) {
 
                                         if (pl.getPatternType().equals(
@@ -356,7 +355,7 @@ public class SequenceViewWidgetPanel extends JPanel {
                         if (patternsPerSequence != null &&
                                 patternsPerSequence.size() > 0) {
                             for (PatternLocations pl : patternsPerSequence) {
-                                DSSeqRegistration reg = pl.getRegistration();
+                                CSSeqRegistration reg = pl.getRegistration();
                                 if (reg != null) {
 
                                     if (pl.getPatternType().equals(
@@ -465,7 +464,7 @@ public class SequenceViewWidgetPanel extends JPanel {
 //                                seqId = ((CSMatchedSeqPattern) pattern).getId(
 //                                        locusId);
 //                                DSPatternMatch<DSSequence,
-//                                        DSSeqRegistration>
+//                                        CSSeqRegistration>
 //                                        sp = pattern.get(locusId);
 //
 //                                if (showAll) {
@@ -556,7 +555,7 @@ public class SequenceViewWidgetPanel extends JPanel {
 //            }
 //
 //            //  for (DSPattern pattern : patternMatches.keySet()) {
-//            // List<DSPatternMatch<DSSequence, DSSeqRegistration>> matches = selectedPatterns;
+//            // List<DSPatternMatch<DSSequence, CSSeqRegistration>> matches = selectedPatterns;
 //
 //            if ((selectedPatterns != null) && (selectedPatterns.size() > 0)) {
 //                for (Object pattern : selectedPatterns) {
@@ -624,7 +623,7 @@ public class SequenceViewWidgetPanel extends JPanel {
                         if (patternsPerSequence != null &&
                                 patternsPerSequence.size() > 0) {
                             for (PatternLocations pl : patternsPerSequence) {
-                                DSSeqRegistration reg = pl.getRegistration();
+                                CSSeqRegistration reg = pl.getRegistration();
                                 if (reg != null) {
                                     if (pl.getPatternType().equals(
                                             PatternLocations.DEFAULTTYPE)) {
@@ -922,7 +921,7 @@ public class SequenceViewWidgetPanel extends JPanel {
     }
 
 //    private void drawPattern(Graphics g, DSPatternMatch<DSSequence,
-//                             DSSeqRegistration> sp, double xscale,
+//                             CSSeqRegistration> sp, double xscale,
 //                             double yscale, int yBase, int cols, Color color,
 //                             String highlight) {
 //
@@ -1577,7 +1576,7 @@ public class SequenceViewWidgetPanel extends JPanel {
                 if (patternsPerSequence != null &&
                         patternsPerSequence.size() > 0) {
                     for (PatternLocations pl : patternsPerSequence) {
-                        DSSeqRegistration reg = pl.getRegistration();
+                        CSSeqRegistration reg = pl.getRegistration();
                         if (reg != null && reg.x1 <= off && reg.x2 >= off) {
                             int x1 = reg.x1 + 1;
                             int x2 = reg.x2 + 1;
