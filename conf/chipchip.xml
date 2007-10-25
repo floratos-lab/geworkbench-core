@@ -1,0 +1,18 @@
+<geaw-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ConfigurationFile Schema.xsd">
+	<!--<gui-window name="Main GUI" class="geaw.GUIApp"/>-->
+	<description>
+        Enables all available plug-ins.
+    </description>
+	<gui-window name="Main GUI" class="org.geworkbench.engine.skin.Skin"/>
+	<plugin id="projectWindow" name="Project Panel" class="org.geworkbench.builtin.projects.ProjectPanel">
+		<gui-area name="ProjectArea"/>
+	</plugin>
+	<plugin id="chipchipFileFilter" name="ChIP-chip Format" class="org.geworkbench.components.parsers.ChipChipFileFormat"/>
+	<!-- New Gene Panel implementation -->
+	<plugin id="genePanel" name="Markers" class="org.geworkbench.components.selectors.GenePanel" source="selectors">
+		<gui-area name="SelectionArea"/>
+	</plugin>
+	<plugin id="genomeBrowser" name="Genome Browser" class="org.geworkbench.components.genomebrowser.GenomeBrowser" source="genomebrowser">
+		<gui-area name="VisualArea"/>
+	</plugin>
+</geaw-config>
