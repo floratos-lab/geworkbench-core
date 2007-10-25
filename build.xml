@@ -231,24 +231,20 @@
 			<classpath refid="run.classpath"/>
 		</java>
 	</target>
-	
 	<!-- ECLIPSE: USE THIS RUN CONFIGURATION IF YOU HAVE AN ECLIPSE CONFIG ON YOUR FILESYSTEM -->
 	<target name="check-eclipse-env-cond">
-	  <property environment="env"/>
-	  <condition property="eclipse.env.set">
-	  	<available file="${env.ECLIPSE_HOME}"/>    
-	  </condition>
+		<property environment="env"/>
+		<condition property="eclipse.env.set">
+			<available file="${env.ECLIPSE_HOME}"/>
+		</condition>
 	</target>
-
 	<target name="eclipse-cond-if" depends="check-eclipse-env-cond" if="eclipse.env.set">
 		<echo message="ECLIPSE_HOME successfully set to ${env.ECLIPSE_HOME}.  Executing target."/>
 	</target>
-
 	<target name="eclipse-cond-else" depends="check-eclipse-env-cond" unless="eclipse.env.set">
-	  <echo message="ECLIPSE_HOME not set.  Cannot execute target."/>
+		<echo message="ECLIPSE_HOME not set.  Cannot execute target."/>
 	</target>
-	
-	<target name="run-eclipse-config" depends="eclipse-cond-if,eclipse-cond-else,compile" >
+	<target name="run-eclipse-config" depends="eclipse-cond-if,eclipse-cond-else,compile">
 		<java fork="true" classname="org.geworkbench.engine.config.UILauncher">
 			<jvmarg value="-Xmx640M"/>
 			<jvmarg value="-Dcomponents.dir=${env.ECLIPSE_HOME}"/>
@@ -257,15 +253,13 @@
 		</java>
 	</target>
 	<!-- END ECLIPSE -->
-	
 	<target name="run-mindy" depends="compile" description="Runs mindy test application.">
-        <path id="mindy.classpath">
-            <pathelement location="components/mindy/${classes}"/>
-            <pathelement location="components/mindy/lib/swingx-2006_10_27.jar"/>
-            <path refid="run.classpath"/>
-        </path>
-
-        <java fork="true" classname="org.geworkbench.components.mindy.test.MindyTest">
+		<path id="mindy.classpath">
+			<pathelement location="components/mindy/${classes}"/>
+			<pathelement location="components/mindy/lib/swingx-2006_10_27.jar"/>
+			<path refid="run.classpath"/>
+		</path>
+		<java fork="true" classname="org.geworkbench.components.mindy.test.MindyTest">
 			<jvmarg value="-Xmx640M"/>
 			<jvmarg value="-Djava.library.path=lib"/>
 			<classpath refid="mindy.classpath"/>
@@ -394,26 +388,22 @@
 			</condition>
 		</fail>
 	</target>
-	
 	<!-- ====================================================================== -->
 	<!-- CLEAR   DISTRIBUTION-->
 	<!-- ====================================================================== -->
 	<target name="cleanDist" depends="init" description="Clean the folder for depositing...">
 		<delete dir="${cleanFolder}"/>
-			</target>
-	
-<!-- ====================================================================== -->
+	</target>
+	<!-- ====================================================================== -->
 	<!-- CREATE CLEAN DISTRIBUTION-->
 	<!-- ====================================================================== -->
 	<target name="createCleanDist" depends="cleanDist, createDist" description="Creating a new folder for depositing...">
 		 
 </target>
-
-<!-- ====================================================================== -->
+	<!-- ====================================================================== -->
 	<!-- CREATE   DISTRIBUTION-->
 	<!-- ====================================================================== -->
 	<target name="createDist" depends="compile" description="Creating a new folder for depositing...">
-	 
 		<mkdir dir="${cleanFolder}"/>
 		<echo>Begin to create a new source, which is located at ${cleanFolder}, please wait...</echo>
 		<copy todir="${cleanFolder}" includeEmptyDirs="NO">
@@ -444,27 +434,21 @@
 				<exclude name="${components}/cagrid/**/*"/>
 				<exclude name="${components}/cgems/**/*"/>
 				<exclude name="plugins/**/*"/>
-				
 				<exclude name="**/synteny/*"/>
 				<exclude name="**/src/**"/>
 				<exclude name="**/test/**"/>
 				<include name="annotation/**/*"/>
 				<include name="${lib}/**/*"/>
-				
 				<include name="geWorkbenchLicense.txt"/>
-	<include name="ReleaseNotes1.0.5.txt"/>
+				<include name="ReleaseNotes1.0.5.txt"/>
 				<include name="java.policy"/>
- 
-				 
 				<include name="build-component.xml"/>
-				 
 				<exclude name="**/*.cvsignore"/>
 				<exclude name="data"/>
 				<exclude name="nbproject"/>
 				<include name="data/public_data/**"/>
 			</fileset>
 		</copy>
-
 		<copy todir="${cleanFolder}/conf" includeEmptyDirs="NO">
 			<fileset dir="./conf">
 				<include name="application.properties"/>

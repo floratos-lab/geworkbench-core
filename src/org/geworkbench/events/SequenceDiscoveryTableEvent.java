@@ -3,7 +3,7 @@ package org.geworkbench.events;
 import org.geworkbench.bison.datastructure.biocollections.DSCollection;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import org.geworkbench.bison.datastructure.complex.pattern.DSMatchedPattern;
-import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSSeqRegistration;
+import org.geworkbench.bison.datastructure.complex.pattern.sequence.CSSeqRegistration;
 import org.geworkbench.engine.config.events.Event;
 
 /**
@@ -14,19 +14,19 @@ import org.geworkbench.engine.config.events.Event;
  * <p>Company: Columbia Genomics Center</p>
  *
  * @author Saroja Hanasoge
- * @version $Id: SequenceDiscoveryTableEvent.java,v 1.2 2005-12-22 18:44:02 watkin Exp $
+ * @version $Id: SequenceDiscoveryTableEvent.java,v 1.3 2007-10-25 19:43:21 mkustagi Exp $
  */
 
 public class SequenceDiscoveryTableEvent extends Event {
 
-    public SequenceDiscoveryTableEvent(DSCollection<DSMatchedPattern<DSSequence, DSSeqRegistration>> patternMatches) {
+    public SequenceDiscoveryTableEvent(DSCollection<DSMatchedPattern<DSSequence, CSSeqRegistration>> patternMatches) {
         super(null);
         this.patternMatches = patternMatches;
     }
 
-    private DSCollection<DSMatchedPattern<DSSequence, DSSeqRegistration>> patternMatches = null;
+    private DSCollection<DSMatchedPattern<DSSequence, CSSeqRegistration>> patternMatches = null;
 
-    public DSCollection<DSMatchedPattern<DSSequence, DSSeqRegistration>> getPatternMatchCollection() {
+    public DSCollection<DSMatchedPattern<DSSequence, CSSeqRegistration>> getPatternMatchCollection() {
         return patternMatches;
     }
 
