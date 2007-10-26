@@ -25,6 +25,7 @@ public class MindyData implements Serializable {
     private List<MindyResultRow> data;
 
     private MultiKeyMap<DSGeneMarker, MindyResultRow> dataMap = new MultiKeyMap<DSGeneMarker, MindyResultRow>();
+    private HashMap<DSGeneMarker, MindyGeneMarker> mindyMap = new HashMap();
 
     private HashMap<DSGeneMarker, ModulatorStatistics> modulatorStatistics = new HashMap<DSGeneMarker, ModulatorStatistics>();
     
@@ -93,6 +94,30 @@ public class MindyData implements Serializable {
     
     public ArrayList<DSMicroarray> getArraySetAsList(){
     	return this.arrayList;
+    }
+    
+    public HashMap<DSGeneMarker, MindyGeneMarker> getMindyMap(){
+    	return this.mindyMap;
+    }
+    
+    public void setMindyMap(HashMap<DSGeneMarker, MindyGeneMarker> map){
+    	this.mindyMap = map;
+    }
+    
+    public ArrayList<MindyGeneMarker> convertToMindyGeneMarker(List<DSGeneMarker> list){
+    	ArrayList<MindyGeneMarker> result = new ArrayList<MindyGeneMarker>(list.size());
+    	for(DSGeneMarker m: list){
+    		result.add(this.mindyMap.get(m));
+    	}
+    	return result;
+    }
+    
+    public ArrayList<DSGeneMarker> convertToDSGeneMarker(List<MindyGeneMarker> list){
+    	ArrayList<DSGeneMarker> result = new ArrayList<DSGeneMarker>(list.size());
+    	for(MindyGeneMarker m: list){
+    		result.add(m.getGeneMarker());
+    	}
+    	return result;
     }
 
     /**
@@ -324,12 +349,13 @@ public class MindyData implements Serializable {
      * Represents a row in the MINDY result data.
      * 
      * @author mhall
-     * @version $Id: MindyData.java,v 1.10 2007-09-13 20:17:32 hungc Exp $
+     * @version $Id: MindyData.java,v 1.11 2007-10-26 16:59:00 hungc Exp $
      */
     public static class MindyResultRow implements Serializable{
         private DSGeneMarker modulator;
         private DSGeneMarker transcriptionFactor;
         private DSGeneMarker target;
+        private MindyGeneMarker mindyMarker;
 
         private float score;
         private float pvalue;
@@ -486,7 +512,7 @@ public class MindyData implements Serializable {
      * Munder(M-)
      * 
      * @author mhall
-     * @version $Id: MindyData.java,v 1.10 2007-09-13 20:17:32 hungc Exp $
+     * @version $Id: MindyData.java,v 1.11 2007-10-26 16:59:00 hungc Exp $
      */
     public static class ModulatorStatistics implements Serializable {
         protected int count;

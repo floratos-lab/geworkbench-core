@@ -47,5 +47,4 @@ public class MindyDataSet extends CSAncillaryDataSet implements DSAncillaryDataS
     public void setFilename(String filename) {
         this.filename = filename;
     }
-
 }
