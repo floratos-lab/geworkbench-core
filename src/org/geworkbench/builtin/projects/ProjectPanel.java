@@ -2166,7 +2166,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         };
         listeners.put("File.New.Project", listener);
         jNewProjectItem.addActionListener(listener);
-        jNewProjectItem.setAccelerator(KeyStroke.getKeyStroke(new Character('P'), InputEvent.META_MASK));
         jLoadMArrayItem.setText("Open File(s)");
         listener = new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -2176,7 +2175,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         };
         listeners.put("File.Open.File", listener);
         jLoadMArrayItem.addActionListener(listener);
-        jLoadMArrayItem.setAccelerator(KeyStroke.getKeyStroke(new Character('O'), InputEvent.META_MASK));        
         jMergeDatasets.setText("Merge Files");
         listener = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
