@@ -577,6 +577,27 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         }
     }
     
+    /**
+     * Inserts a new pending node a new node in the project tree.
+     * The node is a child of the curently selected project
+     *
+     * @param _dataSet
+     */
+    public void addPendingNode() {
+        // Retrieve the project node for this node
+        ProjectNode pNode = selection.getSelectedProjectNode();
+        if (pNode == null) {
+        }
+        if (pNode != null) {
+            // Inserts the new node and sets the menuNode and other variables to point to it
+            ProjectTreeNode node = new ProjectTreeNode();
+            node.setDescription("Pending Node");
+            projectTreeModel.insertNodeInto(node, pNode, pNode.getChildCount());
+        }
+    }
+    
+
+    
     @Script
 //    public void addDataSetNode(DSDataSet _dataSet) {
 //            // Retrieve the project node for this node
@@ -865,6 +886,13 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         } else if (ancillaryDataSet != null) {
             addDataSetSubNode(ancillaryDataSet);
         }
+    }
+    
+
+    @Subscribe
+    public void receive(org.geworkbench.events.ProjectNodePendingEvent
+            ppne) {
+    	addPendingNode();
     }
     
     /**
