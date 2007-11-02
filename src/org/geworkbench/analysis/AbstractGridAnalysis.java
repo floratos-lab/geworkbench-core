@@ -7,7 +7,7 @@ import java.util.Map;
  * abstract class to have the grid analyses exposed.
  * 
  * @author keshav
- * @version $Id: AbstractGridAnalysis.java,v 1.5 2007-06-13 16:13:36 keshav Exp $
+ * @version $Id: AbstractGridAnalysis.java,v 1.6 2007-11-02 17:19:31 keshav Exp $
  */
 public abstract class AbstractGridAnalysis extends AbstractAnalysis {
 
@@ -28,5 +28,7 @@ public abstract class AbstractGridAnalysis extends AbstractAnalysis {
 	 * @return String
 	 */
 	public abstract String getAnalysisName();
+
+	public abstract Class getBisonReturnType();
 
 }
