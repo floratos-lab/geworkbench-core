@@ -139,7 +139,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	private ProjectSelection selection = new ProjectSelection(this);
 
-	private HashMap<String, ProjectTreeNode> eprPendingNodeMap = new HashMap<String, ProjectTreeNode>();
+	private HashMap<GridEndpointReferenceType, ProjectTreeNode> eprPendingNodeMap = new HashMap<GridEndpointReferenceType, ProjectTreeNode>();
 
 	// The undo buffer
 	ProjectTreeNode undoNode = null;
@@ -624,21 +624,21 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			node = new ProjectTreeNode();
 			node.setDescription("Pending Node");
 			projectTreeModel.insertNodeInto(node, pNode, pNode.getChildCount());
-			eprPendingNodeMap.put(gridEpr.getTaskId(), node);
+			eprPendingNodeMap.put(gridEpr, node);
 		}
 		return node;
 	}
 
 	public void addCompletedNode(GridEndpointReferenceType gridEpr,
 			DSDataSet dataSet) {
-		ProjectTreeNode node = eprPendingNodeMap.get(gridEpr.getTaskId());
+		ProjectTreeNode node = eprPendingNodeMap.get(gridEpr);
 		if (node != null) {
 			ProjectTreeNode parent = (ProjectTreeNode) node.getParent();
 			int index = parent.getIndex(node);
 			projectTreeModel.removeNodeFromParent(node);
 			DataSetNode newNode = new DataSetNode(dataSet);
 			projectTreeModel.insertNodeInto(newNode, parent, index);
-			eprPendingNodeMap.remove(gridEpr.getTaskId());
+			eprPendingNodeMap.remove(gridEpr);
 		}
 	}
 
