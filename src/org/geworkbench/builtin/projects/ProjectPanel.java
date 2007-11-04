@@ -612,6 +612,11 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 	}
 
+	public void addCompletedNode() {
+		// TODO Auto-generated method stub
+
+	}
+
 	@Script
 	// public void addDataSetNode(DSDataSet _dataSet) {
 	// // Retrieve the project node for this node
@@ -896,6 +901,14 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		// FIXME why would we pass the source. Nothing is done with it! See
 		// method above
 		addPendingNode();
+	}
+
+	@Subscribe
+	public void receive(org.geworkbench.events.ProjectNodeCompletedEvent ppne,
+			Object source) {
+		// FIXME why would we pass the source. Nothing is done with it! See
+		// method above
+		addCompletedNode();
 	}
 
 	/**
