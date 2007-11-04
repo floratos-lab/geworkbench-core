@@ -87,6 +87,7 @@ import org.geworkbench.events.ProjectEvent;
 import org.geworkbench.events.SingleValueEditEvent;
 import org.geworkbench.util.SaveImage;
 import org.geworkbench.util.Util;
+import org.ginkgo.labs.ws.GridEndpointReferenceType;
 
 import com.Ostermiller.util.CSVPrinter;
 
@@ -138,8 +139,11 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	private ProjectSelection selection = new ProjectSelection(this);
 
+	private HashMap<String, ProjectTreeNode> eprPendingNodeMap = new HashMap<String, ProjectTreeNode>();
+
 	// The undo buffer
 	ProjectTreeNode undoNode = null;
+
 	ProjectTreeNode undoParent = null;
 
 	/**
@@ -147,6 +151,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * dataSetSubMenu to save sequence alignment result.
 	 */
 	private JPopupMenu dataSetMenu = new JPopupMenu();
+
 	private JPopupMenu dataSetSubMenu = new JPopupMenu();
 
 	/**
@@ -154,19 +159,28 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 */
 
 	private JProgressBar progressBar = new JProgressBar();
+
 	private JMenuItem jMenuItem1 = new JMenuItem();
+
 	private JMenuItem jRemoveProjectItem = new JMenuItem();
+
 	private JMenuItem jRemoveDatasetItem = new JMenuItem();
+
 	private JMenuItem jRemoveSubItem = new JMenuItem();
+
 	private JMenuItem jRenameSubItem = new JMenuItem();
+
 	private JMenuItem jEditItem = new JMenuItem();
+
 	private JMenuItem jViewAnnotations = new JMenuItem();
 
 	/**
 	 * added by XQ 4/7/04
 	 */
 	private JMenuItem jSaveMenuItem = new JMenuItem();
+
 	private JMenuItem jRenameMenuItem = new JMenuItem();
+
 	private JFileChooser jFileChooser1;
 
 	/**
@@ -598,23 +612,34 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * 
 	 * @param _dataSet
 	 */
-	public void addPendingNode() {
+	public ProjectTreeNode addPendingNode(GridEndpointReferenceType gridEpr) {
 		// Retrieve the project node for this node
 		ProjectNode pNode = selection.getSelectedProjectNode();
+		ProjectTreeNode node = null;
 		if (pNode == null) {
 		}
 		if (pNode != null) {
 			// Inserts the new node and sets the menuNode and other variables to
 			// point to it
-			ProjectTreeNode node = new ProjectTreeNode();
+			node = new ProjectTreeNode();
 			node.setDescription("Pending Node");
 			projectTreeModel.insertNodeInto(node, pNode, pNode.getChildCount());
+			eprPendingNodeMap.put(gridEpr.getTaskId(), node);
 		}
+		return node;
 	}
 
-	public void addCompletedNode() {
-		// TODO Auto-generated method stub
-
+	public void addCompletedNode(GridEndpointReferenceType gridEpr,
+			DSDataSet dataSet) {
+		ProjectTreeNode node = eprPendingNodeMap.get(gridEpr.getTaskId());
+		if (node != null) {
+			ProjectTreeNode parent = (ProjectTreeNode) node.getParent();
+			int index = parent.getIndex(node);
+			projectTreeModel.removeNodeFromParent(node);
+			DataSetNode newNode = new DataSetNode(dataSet);
+			projectTreeModel.insertNodeInto(newNode, parent, index);
+			eprPendingNodeMap.remove(gridEpr.getTaskId());
+		}
 	}
 
 	@Script
@@ -900,15 +925,15 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			Object source) {
 		// FIXME why would we pass the source. Nothing is done with it! See
 		// method above
-		addPendingNode();
+		addPendingNode(ppne.getGridEndpointReferenceType());
 	}
 
 	@Subscribe
-	public void receive(org.geworkbench.events.ProjectNodeCompletedEvent ppne,
+	public void receive(org.geworkbench.events.ProjectNodeCompletedEvent pnce,
 			Object source) {
 		// FIXME why would we pass the source. Nothing is done with it! See
 		// method above
-		addCompletedNode();
+		addCompletedNode(pnce.getGridEndpointReferenceType(), pnce.getDataSet());
 	}
 
 	/**
@@ -1669,6 +1694,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	// ----------------------------------------------------------------------
 
 	protected ProjectTreeNode selectedNode = null;
+
 	protected MicroarraySetNode previousMANode = null;
 
 	@Publish
@@ -2171,29 +2197,53 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * <code>ProjectPanel</code>
 	 */
 	protected JPanel jProjectPanel = new JPanel();
+
 	protected JPanel jDataSetPanel = new JPanel();
+
 	protected BorderLayout borderLayout2 = new BorderLayout();
+
 	protected BorderLayout borderLayout4 = new BorderLayout();
+
 	protected GridBagLayout gridBagLayout3 = new GridBagLayout();
+
 	protected JPanel jDataPane = new JPanel();
+
 	protected JLabel jDataSetLabel = new JLabel();
+
 	protected JScrollPane jDataSetScrollPane = new JScrollPane();
+
 	protected BorderLayout borderLayout1 = new BorderLayout();
+
 	protected ProjectTreeNode root = new ProjectTreeNode("Workspace");
+
 	protected DefaultTreeModel projectTreeModel = new DefaultTreeModel(root);
+
 	protected JTree projectTree = new JTree(projectTreeModel);
+
 	protected TreeNodeRenderer projectRenderer = new TreeNodeRenderer(selection);
+
 	protected JPopupMenu jRootMenu = new JPopupMenu();
+
 	protected JPopupMenu jProjectMenu = new JPopupMenu();
+
 	protected JPopupMenu jMArrayMenu = new JPopupMenu();
+
 	protected JMenuItem jLoadProjectItem = new JMenuItem();
+
 	protected JMenuItem jNewProjectItem = new JMenuItem();
+
 	protected JMenuItem jLoadMArrayItem = new JMenuItem();
+
 	protected JMenuItem jLoadRemoteMArrayItem = new JMenuItem();
+
 	protected JMenuItem jMergeDatasets = new JMenuItem();
+
 	protected JMenuItem jRenameProjectItem = new JMenuItem();
+
 	protected JMenuItem jRemoveDataSetItem = new JMenuItem();
+
 	protected JMenuItem jRenameDataset = new JMenuItem();
+
 	/**
 	 * PlaceHolder for <code>JComponent</code> listeners to be added to the
 	 * application's <code>JMenuBar</code> through the application
