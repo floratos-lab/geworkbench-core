@@ -139,7 +139,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	private ProjectSelection selection = new ProjectSelection(this);
 
-	private HashMap<GridEndpointReferenceType, ProjectTreeNode> eprPendingNodeMap = new HashMap<GridEndpointReferenceType, ProjectTreeNode>();
+	private HashMap<GridEndpointReferenceType, PendingTreeNode> eprPendingNodeMap = new HashMap<GridEndpointReferenceType, PendingTreeNode>();
 
 	// The undo buffer
 	ProjectTreeNode undoNode = null;
@@ -612,16 +612,16 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * 
 	 * @param _dataSet
 	 */
-	public ProjectTreeNode addPendingNode(GridEndpointReferenceType gridEpr) {
+	public PendingTreeNode addPendingNode(GridEndpointReferenceType gridEpr) {
 		// Retrieve the project node for this node
 		ProjectNode pNode = selection.getSelectedProjectNode();
-		ProjectTreeNode node = null;
+		PendingTreeNode node = null;
 		if (pNode == null) {
 		}
 		if (pNode != null) {
 			// Inserts the new node and sets the menuNode and other variables to
 			// point to it
-			node = new ProjectTreeNode();
+			node = new PendingTreeNode("Pending Node");
 			node.setDescription("Pending Node");
 			projectTreeModel.insertNodeInto(node, pNode, pNode.getChildCount());
 			eprPendingNodeMap.put(gridEpr, node);
@@ -631,7 +631,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	public void addCompletedNode(GridEndpointReferenceType gridEpr,
 			DSDataSet dataSet) {
-		ProjectTreeNode node = eprPendingNodeMap.get(gridEpr);
+		PendingTreeNode node = eprPendingNodeMap.get(gridEpr);
 		if (node != null) {
 			ProjectTreeNode parent = (ProjectTreeNode) node.getParent();
 			int index = parent.getIndex(node);

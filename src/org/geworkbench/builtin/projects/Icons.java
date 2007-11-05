@@ -23,7 +23,8 @@ public class Icons {
     public static ImageIcon CLASSIFIER_ICON = new ImageIcon(Icons.class.getResource("classifier16x16.gif"));
     public static ImageIcon STRUCTURE_ICON = new ImageIcon(Icons.class.getResource("structure16x16.gif"));
     public static ImageIcon PSAM_ICON = new ImageIcon(Icons.class.getResource("psam16x16.gif"));
-    public static ImageIcon BUSY_ICON = new ImageIcon(Icons.class.getResource("busy.gif"));
+    public static ImageIcon BUSY_ICON = new ImageIcon(Icons.class.getResource("workspace16x16.gif"));
+    public static ImageIcon BUSY_STATIC_ICON = new ImageIcon(Icons.class.getResource("busy_static.gif"));
     public static ImageIcon CEL_ICON = new ImageIcon(Icons.class.getResource("cel16x16.gif"));
     public static ImageIcon EDGELIST_ICON = new ImageIcon(Icons.class.getResource("edgelist.gif"));
     public static ImageIcon CHIPCHIP_ICON = new ImageIcon(Icons.class.getResource("chipchip16x16.gif"));
