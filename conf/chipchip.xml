@@ -9,7 +9,7 @@
 	</plugin>
 	<plugin id="chipchipFileFilter" name="ChIP-chip Format" class="org.geworkbench.components.parsers.ChipChipFileFormat"/>
 	<!-- New Gene Panel implementation -->
-	<plugin id="genePanel" name="Markers" class="org.geworkbench.components.selectors.GenePanel" source="selectors">
+	<plugin id="genePanel" name="Markers" class="org.geworkbench.components.selectors.ProbePanel" source="selectors">
 		<gui-area name="SelectionArea"/>
 	</plugin>
 	<plugin id="genomeBrowser" name="Genome Browser" class="org.geworkbench.components.genomebrowser.GenomeBrowser" source="genomebrowser">
