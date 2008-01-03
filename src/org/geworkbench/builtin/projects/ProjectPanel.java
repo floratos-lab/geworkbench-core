@@ -19,8 +19,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
@@ -83,6 +85,7 @@ import org.geworkbench.events.CommentsEvent;
 import org.geworkbench.events.ImageSnapshotEvent;
 import org.geworkbench.events.MicroarrayNameChangeEvent;
 import org.geworkbench.events.NormalizationEvent;
+import org.geworkbench.events.PendingNodeLoadedFromWorkspaceEvent;
 import org.geworkbench.events.ProjectEvent;
 import org.geworkbench.events.SingleValueEditEvent;
 import org.geworkbench.util.SaveImage;
@@ -392,20 +395,37 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	public void populateFromSaveTree(SaveTree saveTree) {
 		java.util.List<DataSetSaveNode> projects = saveTree.getNodes();
 		ProjectTreeNode selectedNode = null;
+		Collection<GridEndpointReferenceType> pendingGridEprs = new HashSet<GridEndpointReferenceType>();
 		for (DataSetSaveNode project : projects) {
 			ProjectNode projectNode = new ProjectNode(project.getName());
 			addToProject(projectNode, true);
 			selection.setNodeSelection(projectNode);
-			// Add data sets next
+			/* add data sets next */
 			java.util.List<DataSetSaveNode> dataSets = project.getChildren();
 			for (DataSetSaveNode dataNode : dataSets) {
 				setComponents(dataNode);
 				DSDataSet dataSet = dataNode.getDataSet();
-				addDataSetNode(dataSet, true);
+				/* pending node */
+				if (dataSet.getLabel() != null
+						&& dataSet.getLabel().equals(
+								PendingTreeNode.class.getName())) {
+					// FIXME These are stored by class name in SaveTree. Not
+					// sure I like this.
+					GridEndpointReferenceType pendingGridEpr = (GridEndpointReferenceType) dataSet
+							.getObject(GridEndpointReferenceType.class
+									.getName());
+					addPendingNode(pendingGridEpr, (String) dataSet
+							.getObject(String.class.getName()), true);
+					pendingGridEprs.add(pendingGridEpr);
+				}
+				/* real node */
+				else {
+					addDataSetNode(dataSet, true);
+				}
 				if (dataSet == saveTree.getSelected()) {
 					selectedNode = selection.getSelectedNode();
 				}
-				// Add ancillary data sets
+				/* add ancillary data sets */
 				java.util.List<DataSetSaveNode> ancSets = dataNode
 						.getChildren();
 				for (DataSetSaveNode ancNode : ancSets) {
@@ -428,6 +448,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				selection.setNodeSelection((ProjectTreeNode) selection
 						.getSelectedDataSetNode().getParent());
 			}
+			publishPendingNodeLoadedFromWorkspaceEvent(new PendingNodeLoadedFromWorkspaceEvent(
+					pendingGridEprs, null));
 		}
 		// Set final selection
 		if (selectedNode != null) {
@@ -612,17 +634,19 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * 
 	 * @param _dataSet
 	 */
-	public PendingTreeNode addPendingNode(GridEndpointReferenceType gridEpr) {
+	public PendingTreeNode addPendingNode(GridEndpointReferenceType gridEpr,
+			String description, boolean startNewThread) {
 		// Retrieve the project node for this node
 		ProjectNode pNode = selection.getSelectedProjectNode();
 		PendingTreeNode node = null;
 		if (pNode == null) {
 		}
 		if (pNode != null) {
-			// Inserts the new node and sets the menuNode and other variables to
-			// point to it
-			node = new PendingTreeNode("Pending Node");
-			node.setDescription("Pending Node");
+			/*
+			 * Inserts the new node and sets the menuNode and other variables to
+			 * point to it.
+			 */
+			node = new PendingTreeNode(description, description, gridEpr);
 			projectTreeModel.insertNodeInto(node, pNode, pNode.getChildCount());
 			eprPendingNodeMap.put(gridEpr, node);
 		}
@@ -633,12 +657,20 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			DSDataSet dataSet) {
 		PendingTreeNode node = eprPendingNodeMap.get(gridEpr);
 		if (node != null) {
-			ProjectTreeNode parent = (ProjectTreeNode) node.getParent();
-			int index = parent.getIndex(node);
-			projectTreeModel.removeNodeFromParent(node);
-			DataSetNode newNode = new DataSetNode(dataSet);
-			projectTreeModel.insertNodeInto(newNode, parent, index);
-			eprPendingNodeMap.remove(gridEpr);
+			if (dataSet != null) {
+				ProjectTreeNode parent = (ProjectTreeNode) node.getParent();
+				int index = parent.getIndex(node);
+				projectTreeModel.removeNodeFromParent(node);
+				DataSetNode newNode = new DataSetNode(dataSet);
+				projectTreeModel.insertNodeInto(newNode, parent, index);
+				eprPendingNodeMap.remove(gridEpr);
+			} else {
+				JOptionPane
+						.showMessageDialog(
+								null,
+								"The service didn't return any results. Please check your input parameters and try again");
+				node.setUserObject("No Results");
+			}
 		}
 	}
 
@@ -925,7 +957,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			Object source) {
 		// FIXME why would we pass the source. Nothing is done with it! See
 		// method above
-		addPendingNode(ppne.getGridEndpointReferenceType());
+		addPendingNode(ppne.getGridEndpointReferenceType(), ppne
+				.getDescription(), false);
 	}
 
 	@Subscribe
@@ -2507,6 +2540,17 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 		}
 
+	}
+
+	/**
+	 * 
+	 * @param pendingEvent
+	 * @return
+	 */
+	@Publish
+	public PendingNodeLoadedFromWorkspaceEvent publishPendingNodeLoadedFromWorkspaceEvent(
+			PendingNodeLoadedFromWorkspaceEvent event) {
+		return event;
 	}
 
 	protected void newWorkspace_actionPerformed(ActionEvent e) {

@@ -3,14 +3,13 @@ package org.geworkbench.events;
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.engine.config.events.Event;
-import org.geworkbench.engine.config.events.EventSource;
 import org.ginkgo.labs.ws.GridEndpointReferenceType;
 
 /**
  * 
  * @author keshav
  * @author kk2457
- * @version $Id: ProjectNodeCompletedEvent.java,v 1.2 2007-11-04 19:13:17 kk2457 Exp $
+ * @version $Id: ProjectNodeCompletedEvent.java,v 1.3 2008-01-03 19:26:21 keshav Exp $
  */
 public class ProjectNodeCompletedEvent extends Event {
 
@@ -44,11 +43,6 @@ public class ProjectNodeCompletedEvent extends Event {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public ProjectNodeCompletedEvent(EventSource s) {
-		super(s);
-		// TODO Auto-generated constructor stub
 	}
 
 	public DSAncillaryDataSet getAncillaryDataSet() {

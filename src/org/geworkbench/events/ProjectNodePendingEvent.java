@@ -7,11 +7,13 @@ import org.ginkgo.labs.ws.GridEndpointReferenceType;
  * A project node pending event to be used to trigger "events in progress".
  * 
  * @author keshav
- * @version $Id: ProjectNodePendingEvent.java,v 1.2 2007-11-04 19:13:18 kk2457 Exp $
+ * @version $Id: ProjectNodePendingEvent.java,v 1.3 2008-01-03 19:26:21 keshav Exp $
  */
 public class ProjectNodePendingEvent extends Event {
 
 	private String name = null;
+	
+	private String description = null;
 
 	private GridEndpointReferenceType gridEndpointReferenceType = null;
 
@@ -39,6 +41,14 @@ public class ProjectNodePendingEvent extends Event {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 }

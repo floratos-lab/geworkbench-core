@@ -147,8 +147,6 @@ public class TreeNodeRenderer extends DefaultTreeCellRenderer {
                 }
             } else if (value.getClass() == ImageNode.class) {
                 setIcon(Icons.IMAGE_ICON);
-            }else if(value.getClass() == PendingTreeNode.class){
-            	setIcon(Icons.BUSY_STATIC_ICON);
             }
         }
         // watkin - Using a light gray is confusing and hard to read, using black for all nodes.

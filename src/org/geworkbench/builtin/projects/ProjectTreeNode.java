@@ -1,47 +1,54 @@
 package org.geworkbench.builtin.projects;
 
-import javax.swing.tree.DefaultMutableTreeNode;
 import java.io.Serializable;
 
+import javax.swing.tree.DefaultMutableTreeNode;
+
 /**
- * <p>Copyright: Copyright (c) 2003</p>
- * <p>Company: First Genetic Trust Inc.</p>
- * <p/>
- * <code>ProjectTree</code> node which represents a generic node in the Project
- * panel component
- *
+ * <p>
+ * Copyright: Copyright (c) 2003
+ * </p>
+ * <p>
+ * Company: First Genetic Trust Inc.
+ * </p>
+ * <p/> <code>ProjectTree</code> node which represents a generic node in the
+ * Project panel component
+ * 
  * @author First Genetic Trust
  * @version 1.0
  */
-public class ProjectTreeNode extends DefaultMutableTreeNode implements Serializable {
+public class ProjectTreeNode extends DefaultMutableTreeNode implements
+		Serializable {
 
-    /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 6368086703128743579L;
-	private String description = "";
 
-    /**
-     * Default Constructor
-     */
-    public ProjectTreeNode() {
-    }
+	protected String description = "";
 
-    /**
-     * Constructor
-     *
-     * @param nodeName <code>Object</code> to be set as User Object
-     */
-    public ProjectTreeNode(Object nodeName) {
-        setUserObject(nodeName);
-    }
+	/**
+	 * Default Constructor
+	 */
+	public ProjectTreeNode() {
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	/**
+	 * Constructor
+	 * 
+	 * @param nodeName
+	 *            <code>Object</code> to be set as User Object
+	 */
+	public ProjectTreeNode(Object nodeName) {
+		setUserObject(nodeName);
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
 }

@@ -1,5 +1,6 @@
 package org.geworkbench.analysis;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -7,18 +8,10 @@ import java.util.Map;
  * abstract class to have the grid analyses exposed.
  * 
  * @author keshav
- * @version $Id: AbstractGridAnalysis.java,v 1.6 2007-11-02 17:19:31 keshav Exp $
+ * @version $Id: AbstractGridAnalysis.java,v 1.6.2.1 2007/11/05 21:08:42 keshav
+ *          Exp $
  */
 public abstract class AbstractGridAnalysis extends AbstractAnalysis {
-
-	/**
-	 * This method should be implmented to obtain the user input (which is
-	 * stored as BISON parameters), convert it to caGrid parameters, and return
-	 * a map with caGrid parameter values keyed by parameter names.
-	 * 
-	 * @return Map<String, Object>
-	 */
-	public abstract Map<String, Object> getBisonParameters();
 
 	/**
 	 * Analyses extending this class will implement this method, setting the
@@ -30,5 +23,14 @@ public abstract class AbstractGridAnalysis extends AbstractAnalysis {
 	public abstract String getAnalysisName();
 
 	public abstract Class getBisonReturnType();
+
+	/**
+	 * This method should be implmented to obtain the user input (which is
+	 * stored as BISON parameters), convert it to caGrid parameters, and return
+	 * a map with caGrid parameter values keyed by parameter names.
+	 * 
+	 * @return
+	 */
+	public abstract Map<Serializable, Serializable> getBisonParameters();
 
 }
