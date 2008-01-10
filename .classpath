@@ -104,6 +104,9 @@
 	<classpathentry exported="true" kind="lib" path="lib/medusa/saxpath-1.0-FCS.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-codec-1.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ginkgo-0.1-SNAPSHOT.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/cryptix.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/cryptix32.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/cryptix-asn1.jar"/>
 	<classpathentry kind="lib" path="lib/mageom-client.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
