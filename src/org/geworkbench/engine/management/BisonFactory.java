@@ -12,12 +12,22 @@ public class BisonFactory {
 
     public static <T> T createInstance(Class<T> klass){
         T instance = null;
+
         try {
             Class<T> implType = ReferenceImplMap.getDefaultImplementationMap().
                                getDefaultImplementation(klass);
+System.out.println(implType + " ? " + klass);
+
+
+	if(implType!=null){
+
             instance = implType.newInstance();
-        } catch (InstantiationException ie) {
-        } catch (IllegalAccessException iae) {}
+}else{
+	System.out.println(implType + " is null " + klass);
+}
+        } catch (InstantiationException ie) {ie.printStackTrace();
+        } catch (Exception iae) {iae.printStackTrace();
+}
 
         return instance;
     }
@@ -28,10 +38,17 @@ public class BisonFactory {
             Class clazz = Class.forName(klass);
             Class implType = ReferenceImplMap.getDefaultImplementationMap().
                                getDefaultImplementation(clazz);
+        
+
+	if(implType!=null){
+
             instance = implType.newInstance();
-        } catch (ClassNotFoundException cnfe){
-        } catch (InstantiationException ie){
-        } catch (IllegalAccessException iae){}
+}else{
+	 
+}
+        } catch (InstantiationException ie) {ie.printStackTrace();
+        } catch (Exception iae) {iae.printStackTrace();
+}
 
         return instance;
     }
