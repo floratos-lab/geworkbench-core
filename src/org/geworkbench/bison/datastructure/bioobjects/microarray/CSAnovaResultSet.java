@@ -19,10 +19,11 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.complex.panels.CSPanel;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.engine.management.Script;
-
+import java.util.Map;
+import java.util.HashMap;
 /**
  * @author yc2480
- * @version $Id: CSAnovaResultSet.java,v 1.1 2008-01-14 20:49:54 chiangy Exp $
+ * @version $Id: CSAnovaResultSet.java,v 1.2 2008-01-16 16:25:21 chiangy Exp $
  *
  */
 public class CSAnovaResultSet <T extends DSGeneMarker> extends CSSignificanceResultSet implements DSAnovaResultSet<T>{
@@ -33,6 +34,9 @@ public class CSAnovaResultSet <T extends DSGeneMarker> extends CSSignificanceRes
     private String[] groupNames;
     private String[] significantMarkerNames;
     private DSPanel<T> panel;
+    
+//	private ArrayList<String> list = new ArrayList<String>(); //store significantMarkerNames in ArrayList for searching.
+	private Map<String, Integer> map = new HashMap<String, Integer>();
 	
 	//constructor for local
 	public CSAnovaResultSet(DSMicroarraySetView microarraySetView, String label, String[] groupNames, String[] significantMarkerNames, double[][] result2DArray) {
@@ -42,7 +46,11 @@ public class CSAnovaResultSet <T extends DSGeneMarker> extends CSSignificanceRes
         this.groupNames=groupNames;
         this.significantMarkerNames=significantMarkerNames;
         panel = new CSPanel<T>(label);
-    }
+//    	list.addAll(Arrays.asList(significantMarkerNames));
+    	for (int cx=0; cx<significantMarkerNames.length;cx++){
+    		map.put(significantMarkerNames[cx], new Integer(cx));
+    	}
+	}
 
 	//constructor for grid
     public CSAnovaResultSet(
@@ -64,10 +72,28 @@ public class CSAnovaResultSet <T extends DSGeneMarker> extends CSSignificanceRes
         // no-op
     }
 
+    //TODO: color mosaic use these one a lot, make it faster
     public Double getSignificance(DSGeneMarker marker) {
+//    	System.out.println("getSignificance");
+/*    	
     	int index=microarraySetView.getMicroarraySet().getMarkers().indexOf(marker);
+    	ArrayList<String> list = new ArrayList<String>();
+		list.addAll(Arrays.asList(significantMarkerNames));
+		int index=list.indexOf(marker.getShortName());
+    		
+		if (index<0){
+			//System.out.println("error get sig:"+marker.getShortName());
+			return null;
+		}else 
     	//TODO: error check
     	return result2DArray[0][index];
+*/		
+    	Integer I= map.get(marker.getShortName());
+    	if (I==null){
+    		return null;
+    	}else{
+        	return result2DArray[0][I.intValue()];
+    	}
 /*    	
     	Double v=(double)anovaResult.getPVals(microarraySetView.getMicroarraySet().getMarkers().indexOf(marker));
     	
@@ -81,7 +107,11 @@ public class CSAnovaResultSet <T extends DSGeneMarker> extends CSSignificanceRes
     }
 
     public void setSignificance(DSGeneMarker marker, double value) {
-    	result2DArray[0][microarraySetView.getMicroarraySet().getMarkers().indexOf(marker)]=value;
+    	ArrayList<String> list = new ArrayList<String>();
+		list.addAll(Arrays.asList(significantMarkerNames));
+		int index=list.indexOf(marker.getShortName());
+		result2DArray[0][index]=value;
+//    	result2DArray[0][microarraySetView.getMicroarraySet().getMarkers().indexOf(marker)]=value;
 //        significance.put(marker, value);
         if (value < alpha) {
             panel.add((T)marker);
@@ -121,16 +151,28 @@ public class CSAnovaResultSet <T extends DSGeneMarker> extends CSSignificanceRes
 
     public void sortMarkersBySignificance() {
         int n = panel.size();
+        double[][] newResult2DArray=new double[result2DArray.length][result2DArray[0].length];
+        String[] newSignificantMarkerNames=new String[significantMarkerNames.length];
+        Map<String, Integer> newMap = new HashMap<String, Integer>();
         ArrayList<Integer> indices = new ArrayList<Integer>(n);
         for (int i = 0; i < n; i++) {
             indices.add(i);
         }
         Collections.sort(indices, new SignificanceComparator());
         CSPanel<T> newPanel = new CSPanel<T>();
+        ArrayList<String> newList = new ArrayList<String>();
         for (int i = 0; i < n; i++) {
             newPanel.add(panel.get(indices.get(i)));
+            newSignificantMarkerNames[i]=significantMarkerNames[indices.get(i)];
+            newMap.put(newSignificantMarkerNames[i],i);
+            for (int cx=0;cx<result2DArray.length;cx++){
+            	newResult2DArray[cx][i]=result2DArray[cx][indices.get(i)];
+            }
         }
         panel = newPanel;
+        map = newMap;
+        result2DArray=newResult2DArray;
+        significantMarkerNames=newSignificantMarkerNames;
     }
     public DSMicroarraySet getParentDataSet() {
         return (DSMicroarraySet) super.getParentDataSet();
@@ -158,17 +200,26 @@ public class CSAnovaResultSet <T extends DSGeneMarker> extends CSSignificanceRes
     	return result2DArray;
     }
 	public double getPValue (T marker){
-    	int index=microarraySetView.getMicroarraySet().getMarkers().indexOf(marker);
+//    	int index=microarraySetView.getMicroarraySet().getMarkers().indexOf(marker);
+		ArrayList<String> list = new ArrayList<String>();
+		list.addAll(Arrays.asList(significantMarkerNames));
+		int index=list.indexOf(marker.getShortName());
     	//TODO: error check
     	return result2DArray[0][index];
 	};
 	public double getAdjPValue (T marker){
-    	int index=microarraySetView.getMicroarraySet().getMarkers().indexOf(marker);
+//    	int index=microarraySetView.getMicroarraySet().getMarkers().indexOf(marker);
+		ArrayList<String> list = new ArrayList<String>();
+		list.addAll(Arrays.asList(significantMarkerNames));
+		int index=list.indexOf(marker.getShortName());
     	//TODO: error check
     	return result2DArray[1][index];
 	};
 	public double getFStatistic (T marker){
-    	int index=microarraySetView.getMicroarraySet().getMarkers().indexOf(marker);
+//    	int index=microarraySetView.getMicroarraySet().getMarkers().indexOf(marker);
+		ArrayList<String> list = new ArrayList<String>();
+		list.addAll(Arrays.asList(significantMarkerNames));
+		int index=list.indexOf(marker.getShortName());
     	//TODO: error check
     	return result2DArray[2][index];
 	};
@@ -177,7 +228,11 @@ public class CSAnovaResultSet <T extends DSGeneMarker> extends CSSignificanceRes
 		ArrayList<String> list = new ArrayList<String>();
 		list.addAll(Arrays.asList(groupNames));
 		int groupIndex=list.indexOf(label);
-		int markerIndex=microarraySetView.getMicroarraySet().getMarkers().indexOf(marker);
+//		int markerIndex=microarraySetView.getMicroarraySet().getMarkers().indexOf(marker);
+		ArrayList<String> mlist = new ArrayList<String>();
+		mlist.addAll(Arrays.asList(significantMarkerNames));
+		int markerIndex=mlist.indexOf(marker.getShortName());
+
 		return result2DArray[3+groupIndex*2][markerIndex];
 	};
 	public double getDeviation(T marker, String label){
@@ -185,7 +240,11 @@ public class CSAnovaResultSet <T extends DSGeneMarker> extends CSSignificanceRes
 		ArrayList<String> list = new ArrayList<String>();
 		list.addAll(Arrays.asList(groupNames));
 		int groupIndex=list.indexOf(label);
-		int markerIndex=microarraySetView.getMicroarraySet().getMarkers().indexOf(marker);
+//		int markerIndex=microarraySetView.getMicroarraySet().getMarkers().indexOf(marker);
+		ArrayList<String> mlist = new ArrayList<String>();
+		mlist.addAll(Arrays.asList(significantMarkerNames));
+		int markerIndex=mlist.indexOf(marker.getShortName());
+
 		return result2DArray[3+groupIndex*2+1][markerIndex];
 	};
 }
