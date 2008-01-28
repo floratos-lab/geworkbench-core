@@ -15,7 +15,7 @@
 		<property name="conf" value="conf"/>
 		<property name="temp" value="temp"/>
 		<property name="testing" value="testing"/>
-		<property name="test.reports" value="${testing}/junitreport"/>
+		<property name="test.reports" value="${testing}/junitreport"/>		
 		<!-- Java Source -->
 		<property name="src" value="src"/>
 		<property name="test" value="test"/>
@@ -32,6 +32,7 @@
 		<property name="docs" value="web/api"/>
 		<!-- The executable libs -->
 		<property name="lib" value="lib"/>
+		<property name="cabio40_lib" value="components/annotations/lib/cabio40_java_client"/>
 		<!-- The components directory -->
 		<property name="components" value="components"/>
 		<!-- Release info -->
@@ -49,7 +50,10 @@
 		<path id="classpath">
 			<fileset dir="${lib}">
 				<include name="**/*.jar"/>
-			</fileset>
+			</fileset>		
+			<fileset dir="${cabio40_lib}">
+							<include name="**/*.jar"/>
+			</fileset>		
 		</path>
 		<!-- Classpath for running -->
 		<path id="run.classpath">

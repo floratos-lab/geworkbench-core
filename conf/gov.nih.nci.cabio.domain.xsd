@@ -1,0 +1,1518 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" xmlns:gov.nih.nci.common.domain="gme://caCORE.caBIO/4.0/gov.nih.nci.common.domain" xmlns:gov.nih.nci.common.provenance.domain="gme://caCORE.caBIO/4.0/gov.nih.nci.common.provenance.domain" targetNamespace="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" elementFormDefault="qualified">
+  <xs:import namespace="gme://caCORE.caBIO/4.0/gov.nih.nci.common.domain" schemaLocation="gov.nih.nci.common.domain.xsd" />
+  <xs:import namespace="gme://caCORE.caBIO/4.0/gov.nih.nci.common.provenance.domain" schemaLocation="gov.nih.nci.common.provenance.domain.xsd" />
+  <xs:element name="PhysicalLocation" type="PhysicalLocation" />
+  <xs:complexType name="PhysicalLocation">
+    <xs:complexContent>
+      <xs:extension base="Location">
+        <xs:sequence>
+          <xs:element name="transcript" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="Transcript" minOccurs="0" maxOccurs="1" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="exonArrayReporter" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="ExonArrayReporter" minOccurs="0" maxOccurs="1" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="cytoband" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="Cytoband" minOccurs="0" maxOccurs="1" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="chromosomalEndPosition" type="xs:long" />
+        <xs:attribute name="chromosomalStartPosition" type="xs:long" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="TranscriptArrayReporter" type="TranscriptArrayReporter" />
+  <xs:complexType name="TranscriptArrayReporter">
+    <xs:complexContent>
+      <xs:extension base="ArrayReporter">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="DiseaseOntology" type="DiseaseOntology" />
+  <xs:complexType name="DiseaseOntology">
+    <xs:sequence>
+      <xs:element name="childDiseaseOntologyRelationshipCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="DiseaseOntologyRelationship" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="histopathologyCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Histopathology" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="clinicalTrialProtocolCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="ClinicalTrialProtocol" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="parentDiseaseOntologyRelationshipCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="DiseaseOntologyRelationship" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="name" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="GeneRelativeLocation" type="GeneRelativeLocation" />
+  <xs:complexType name="GeneRelativeLocation">
+    <xs:complexContent>
+      <xs:extension base="RelativeLocation">
+        <xs:sequence>
+          <xs:element name="gene" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="Gene" minOccurs="0" maxOccurs="1" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="PopulationFrequency" type="PopulationFrequency" />
+  <xs:complexType name="PopulationFrequency">
+    <xs:sequence>
+      <xs:element name="SNP" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="SNP" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="ethnicity" type="xs:string" />
+    <xs:attribute name="heterozygousFrequency" type="xs:double" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="majorAllele" type="xs:string" />
+    <xs:attribute name="majorFrequency" type="xs:double" />
+    <xs:attribute name="minorAllele" type="xs:string" />
+    <xs:attribute name="minorFrequency" type="xs:double" />
+    <xs:attribute name="type" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="Microarray" type="Microarray" />
+  <xs:complexType name="Microarray">
+    <xs:sequence>
+      <xs:element name="arrayReporterCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="ArrayReporter" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="annotationDate" type="xs:dateTime" />
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="dbSNPVersion" type="xs:string" />
+    <xs:attribute name="genomeVersion" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="manufacturer" type="xs:string" />
+    <xs:attribute name="name" type="xs:string" />
+    <xs:attribute name="type" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="SNPArrayReporter" type="SNPArrayReporter" />
+  <xs:complexType name="SNPArrayReporter">
+    <xs:complexContent>
+      <xs:extension base="ArrayReporter">
+        <xs:sequence>
+          <xs:element name="SNP" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="SNP" minOccurs="0" maxOccurs="1" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="phastConservation" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="HomologousAssociation" type="HomologousAssociation" />
+  <xs:complexType name="HomologousAssociation">
+    <xs:sequence>
+      <xs:element name="homologousGene" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Gene" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="homologousId" type="xs:long" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="similarityPercentage" type="xs:float" />
+  </xs:complexType>
+  <xs:element name="Location" type="Location" />
+  <xs:complexType name="Location">
+    <xs:sequence>
+      <xs:element name="chromosome" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Chromosome" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="gene" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Gene" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="nucleicAcidSequence" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="NucleicAcidSequence" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SNP" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="SNP" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:long" />
+  </xs:complexType>
+  <xs:element name="Cytoband" type="Cytoband" />
+  <xs:complexType name="Cytoband">
+    <xs:sequence>
+      <xs:element name="physicalLocationCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="PhysicalLocation" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="name" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="GeneOntology" type="GeneOntology" />
+  <xs:complexType name="GeneOntology">
+    <xs:sequence>
+      <xs:element name="parentGeneOntologyRelationshipCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="GeneOntologyRelationship" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="childGeneOntologyRelationshipCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="GeneOntologyRelationship" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="geneCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Gene" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="name" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="Histopathology" type="Histopathology" />
+  <xs:complexType name="Histopathology">
+    <xs:sequence>
+      <xs:element name="geneCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Gene" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="anomalyCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Anomaly" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="metastasisCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Histopathology" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="diseaseOntology" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="DiseaseOntology" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="clinicalTrialProtocolCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="ClinicalTrialProtocol" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="organOntology" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="OrganOntology" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="libraryCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Library" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="ageOfOnset" type="xs:string" />
+    <xs:attribute name="comments" type="xs:string" />
+    <xs:attribute name="grossDescription" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="microscopicDescription" type="xs:string" />
+    <xs:attribute name="relationalOperation" type="xs:string" />
+    <xs:attribute name="survivalInfo" type="xs:string" />
+    <xs:attribute name="tumorIncidenceRate" type="xs:float" />
+  </xs:complexType>
+  <xs:element name="ExonArrayReporter" type="ExonArrayReporter" />
+  <xs:complexType name="ExonArrayReporter">
+    <xs:complexContent>
+      <xs:extension base="TranscriptArrayReporter">
+        <xs:sequence>
+          <xs:element name="transcript" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="Transcript" minOccurs="0" maxOccurs="1" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="exon" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="Exon" minOccurs="0" maxOccurs="1" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="physicalLocationCollection" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="PhysicalLocation" minOccurs="0" maxOccurs="unbounded" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="geneCollection" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="Gene" minOccurs="0" maxOccurs="unbounded" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="probeCount" type="xs:long" />
+        <xs:attribute name="probeSelectionRegionId" type="xs:long" />
+        <xs:attribute name="strand" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="NucleicAcidSequence" type="NucleicAcidSequence" />
+  <xs:complexType name="NucleicAcidSequence">
+    <xs:sequence>
+      <xs:element name="cloneRelativeLocation" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="CloneRelativeLocation" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="expressionArrayReporterCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="ExpressionArrayReporter" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="geneCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Gene" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="locationCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Location" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="databaseCrossReferenceCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="gov.nih.nci.common.domain:DatabaseCrossReference" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="accessionNumber" type="xs:string" />
+    <xs:attribute name="accessionNumberVersion" type="xs:string" />
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="description" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="length" type="xs:long" />
+    <xs:attribute name="type" type="xs:string" />
+    <xs:attribute name="value" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="Protein" type="Protein" />
+  <xs:complexType name="Protein">
+    <xs:sequence>
+      <xs:element name="keywords" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="string" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="secondaryAccession" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="string" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="taxonCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Taxon" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="proteinSequence" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="ProteinSequence" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="geneCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Gene" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="proteinAliasCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="ProteinAlias" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="copyrightStatement" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="name" type="xs:string" />
+    <xs:attribute name="primaryAccession" type="xs:string" />
+    <xs:attribute name="uniProtCode" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="ProteinAlias" type="ProteinAlias" />
+  <xs:complexType name="ProteinAlias">
+    <xs:sequence>
+      <xs:element name="proteinCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Protein" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="name" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="Target" type="Target" />
+  <xs:complexType name="Target">
+    <xs:sequence>
+      <xs:element name="geneCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Gene" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="agentCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Agent" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="anomalyCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Anomaly" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="name" type="xs:string" />
+    <xs:attribute name="type" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="GeneAlias" type="GeneAlias" />
+  <xs:complexType name="GeneAlias">
+    <xs:sequence>
+      <xs:element name="geneCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Gene" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="name" type="xs:string" />
+    <xs:attribute name="type" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="GenericArray" type="GenericArray" />
+  <xs:complexType name="GenericArray">
+    <xs:sequence>
+      <xs:element name="genericReporterCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="GenericReporter" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="arrayName" type="xs:string" />
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="platform" type="xs:string" />
+    <xs:attribute name="type" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="Vocabulary" type="Vocabulary" />
+  <xs:complexType name="Vocabulary">
+    <xs:sequence>
+      <xs:element name="anomalyCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Anomaly" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="coreTerm" type="xs:string" />
+    <xs:attribute name="generalTerm" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+  </xs:complexType>
+  <xs:element name="ExpressionArrayReporter" type="ExpressionArrayReporter" />
+  <xs:complexType name="ExpressionArrayReporter">
+    <xs:complexContent>
+      <xs:extension base="TranscriptArrayReporter">
+        <xs:sequence>
+          <xs:element name="nucleicAcidSequence" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="NucleicAcidSequence" minOccurs="0" maxOccurs="1" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="gene" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="Gene" minOccurs="0" maxOccurs="1" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="proteinDomainCollection" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="ProteinDomain" minOccurs="0" maxOccurs="unbounded" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="sequenceSource" type="xs:string" />
+        <xs:attribute name="sequenceType" type="xs:string" />
+        <xs:attribute name="targetDescription" type="xs:string" />
+        <xs:attribute name="targetId" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="OrganOntologyRelationship" type="OrganOntologyRelationship" />
+  <xs:complexType name="OrganOntologyRelationship">
+    <xs:sequence>
+      <xs:element name="parentOrganOntology" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="OrganOntology" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="childOrganOntology" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="OrganOntology" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="type" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="OrganOntology" type="OrganOntology" />
+  <xs:complexType name="OrganOntology">
+    <xs:sequence>
+      <xs:element name="childOrganOntologyRelationshipCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="OrganOntologyRelationship" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="anomalyCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Anomaly" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="parentOrganOntologyRelationshipCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="OrganOntologyRelationship" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="geneCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Gene" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="histopathologyCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Histopathology" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="name" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="Protocol" type="Protocol" />
+  <xs:complexType name="Protocol">
+    <xs:sequence>
+      <xs:element name="tissueCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Tissue" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="libraryCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Library" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="description" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="name" type="xs:string" />
+    <xs:attribute name="type" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="Anomaly" type="Anomaly" />
+  <xs:complexType name="Anomaly">
+    <xs:sequence>
+      <xs:element name="vocabularyCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Vocabulary" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="organOntologyCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="OrganOntology" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="histopathology" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Histopathology" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="description" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+  </xs:complexType>
+  <xs:element name="Agent" type="Agent" />
+  <xs:complexType name="Agent">
+    <xs:sequence>
+      <xs:element name="clinicalTrialProtocolCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="ClinicalTrialProtocol" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="targetCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Target" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="comment" type="xs:string" />
+    <xs:attribute name="EVSId" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="isCMAPAgent" type="xs:boolean" />
+    <xs:attribute name="name" type="xs:string" />
+    <xs:attribute name="NSCNumber" type="xs:long" />
+    <xs:attribute name="source" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="Exon" type="Exon" />
+  <xs:complexType name="Exon">
+    <xs:sequence>
+      <xs:element name="exonArrayReporterCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="ExonArrayReporter" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="transcript" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Transcript" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="source" type="xs:string" />
+    <xs:attribute name="sourceId" type="xs:long" />
+  </xs:complexType>
+  <xs:element name="RelativeLocation" type="RelativeLocation" />
+  <xs:complexType name="RelativeLocation">
+    <xs:sequence>
+      <xs:element name="SNP" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="SNP" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="distance" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="orientation" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="Library" type="Library" />
+  <xs:complexType name="Library">
+    <xs:sequence>
+      <xs:element name="geneCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Gene" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="tissue" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Tissue" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="cloneCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Clone" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="protocol" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Protocol" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="histopathologyCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Histopathology" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="cloneProducer" type="xs:string" />
+    <xs:attribute name="clonesToDate" type="xs:long" />
+    <xs:attribute name="cloneVector" type="xs:string" />
+    <xs:attribute name="cloneVectorType" type="xs:string" />
+    <xs:attribute name="creationDate" type="xs:dateTime" />
+    <xs:attribute name="description" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="keyword" type="xs:string" />
+    <xs:attribute name="labHost" type="xs:string" />
+    <xs:attribute name="name" type="xs:string" />
+    <xs:attribute name="rsite1" type="xs:string" />
+    <xs:attribute name="rsite2" type="xs:string" />
+    <xs:attribute name="sequencesToDate" type="xs:long" />
+    <xs:attribute name="type" type="xs:string" />
+    <xs:attribute name="uniGeneId" type="xs:long" />
+  </xs:complexType>
+  <xs:element name="MarkerRelativeLocation" type="MarkerRelativeLocation" />
+  <xs:complexType name="MarkerRelativeLocation">
+    <xs:complexContent>
+      <xs:extension base="RelativeLocation">
+        <xs:sequence>
+          <xs:element name="markerCollection" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="Marker" minOccurs="0" maxOccurs="unbounded" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="type" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Marker" type="Marker" />
+  <xs:complexType name="Marker">
+    <xs:sequence>
+      <xs:element name="markerRelativeLocationCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="MarkerRelativeLocation" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="aliases" type="xs:string" />
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="geneticMarkerId" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="type" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="Clone" type="Clone" />
+  <xs:complexType name="Clone">
+    <xs:sequence>
+      <xs:element name="taxonCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Taxon" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="library" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Library" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="nucleicAcidSequenceCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="NucleicAcidSequence" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="cloneRelativeLocationCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="CloneRelativeLocation" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="insertSize" type="xs:long" />
+    <xs:attribute name="name" type="xs:string" />
+    <xs:attribute name="type" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="ProteinDomain" type="ProteinDomain" />
+  <xs:complexType name="ProteinDomain">
+    <xs:sequence>
+      <xs:element name="expressionArrayReporterCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="ExpressionArrayReporter" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="accessionNumber" type="xs:string" />
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="description" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="source" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="Chromosome" type="Chromosome" />
+  <xs:complexType name="Chromosome">
+    <xs:sequence>
+      <xs:element name="taxon" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Taxon" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="locationCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Location" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="geneCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Gene" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="number" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="ProtocolAssociation" type="ProtocolAssociation" />
+  <xs:complexType name="ProtocolAssociation">
+    <xs:sequence>
+      <xs:element name="clinicalTrialProtocol" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="ClinicalTrialProtocol" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="CTEPNAME" type="xs:string" />
+    <xs:attribute name="diseaseCategory" type="xs:string" />
+    <xs:attribute name="diseaseSubCategory" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="IMTCODE" type="xs:long" />
+  </xs:complexType>
+  <xs:element name="Gene" type="Gene" />
+  <xs:complexType name="Gene">
+    <xs:sequence>
+      <xs:element name="targetCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Target" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="taxon" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Taxon" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="histopathologyCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Histopathology" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="transcriptCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Transcript" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="geneOntologyCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="GeneOntology" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="locationCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Location" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="genericReporterCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="GenericReporter" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="exonArrayReporterCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="ExonArrayReporter" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="databaseCrossReferenceCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="gov.nih.nci.common.domain:DatabaseCrossReference" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="geneRelativeLocationCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="GeneRelativeLocation" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="homologousAssociationCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="HomologousAssociation" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="pathwayCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Pathway" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="libraryCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Library" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="geneAliasCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="GeneAlias" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="expressionArrayReporterCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="ExpressionArrayReporter" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="nucleicAcidSequenceCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="NucleicAcidSequence" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="organOntologyCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="OrganOntology" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="chromosome" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Chromosome" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="proteinCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Protein" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="clusterId" type="xs:long" />
+    <xs:attribute name="fullName" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="symbol" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="Tissue" type="Tissue" />
+  <xs:complexType name="Tissue">
+    <xs:sequence>
+      <xs:element name="taxon" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Taxon" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="protocol" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Protocol" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="libraryCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Library" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="cellLine" type="xs:string" />
+    <xs:attribute name="cellType" type="xs:string" />
+    <xs:attribute name="description" type="xs:string" />
+    <xs:attribute name="developmentalStage" type="xs:string" />
+    <xs:attribute name="histology" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="name" type="xs:string" />
+    <xs:attribute name="organ" type="xs:string" />
+    <xs:attribute name="sex" type="xs:string" />
+    <xs:attribute name="supplier" type="xs:string" />
+    <xs:attribute name="type" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="GeneOntologyRelationship" type="GeneOntologyRelationship" />
+  <xs:complexType name="GeneOntologyRelationship">
+    <xs:sequence>
+      <xs:element name="childGeneOntology" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="GeneOntology" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="parentGeneOntology" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="GeneOntology" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="relationshipType" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="Transcript" type="Transcript" />
+  <xs:complexType name="Transcript">
+    <xs:sequence>
+      <xs:element name="exonArrayReporterCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="ExonArrayReporter" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="physicalLocationCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="PhysicalLocation" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="geneCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Gene" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="exonCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Exon" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="source" type="xs:string" />
+    <xs:attribute name="sourceId" type="xs:string" />
+    <xs:attribute name="strand" type="xs:string" />
+    <xs:attribute name="totalProbeCount" type="xs:long" />
+  </xs:complexType>
+  <xs:element name="GenericReporter" type="GenericReporter" />
+  <xs:complexType name="GenericReporter">
+    <xs:sequence>
+      <xs:element name="gene" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Gene" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="genericArrayCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="GenericArray" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="name" type="xs:string" />
+    <xs:attribute name="type" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="Pathway" type="Pathway" />
+  <xs:complexType name="Pathway">
+    <xs:sequence>
+      <xs:element name="geneCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Gene" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="taxon" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Taxon" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="histopathologyCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Histopathology" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="description" type="xs:string" />
+    <xs:attribute name="diagram" type="xs:string" />
+    <xs:attribute name="displayValue" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="name" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="ProteinSequence" type="ProteinSequence" />
+  <xs:complexType name="ProteinSequence">
+    <xs:sequence>
+      <xs:element name="protein" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Protein" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="checkSum" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="length" type="xs:long" />
+    <xs:attribute name="molecularWeightInDaltons" type="xs:double" />
+    <xs:attribute name="value" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="CloneRelativeLocation" type="CloneRelativeLocation" />
+  <xs:complexType name="CloneRelativeLocation">
+    <xs:sequence>
+      <xs:element name="nucleicAcidSequence" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="NucleicAcidSequence" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="clone" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Clone" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="type" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="ClinicalTrialProtocol" type="ClinicalTrialProtocol" />
+  <xs:complexType name="ClinicalTrialProtocol">
+    <xs:sequence>
+      <xs:element name="protocolAssociationCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="ProtocolAssociation" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="agentCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Agent" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="diseaseOntologyCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="DiseaseOntology" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="histopathologyCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Histopathology" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="currentStatus" type="xs:string" />
+    <xs:attribute name="currentStatusDate" type="xs:dateTime" />
+    <xs:attribute name="documentNumber" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="leadOrganizationId" type="xs:string" />
+    <xs:attribute name="leadOrganizationName" type="xs:string" />
+    <xs:attribute name="NIHAdminCode" type="xs:string" />
+    <xs:attribute name="participationType" type="xs:string" />
+    <xs:attribute name="PDQIdentifier" type="xs:string" />
+    <xs:attribute name="phase" type="xs:string" />
+    <xs:attribute name="PIName" type="xs:string" />
+    <xs:attribute name="title" type="xs:string" />
+    <xs:attribute name="treatmentFlag" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="DiseaseOntologyRelationship" type="DiseaseOntologyRelationship" />
+  <xs:complexType name="DiseaseOntologyRelationship">
+    <xs:sequence>
+      <xs:element name="parentDiseaseOntology" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="DiseaseOntology" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="childDiseaseOntology" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="DiseaseOntology" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="type" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="ArrayReporter" type="ArrayReporter" />
+  <xs:complexType name="ArrayReporter">
+    <xs:sequence>
+      <xs:element name="microarray" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Microarray" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="name" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="SNP" type="SNP" />
+  <xs:complexType name="SNP">
+    <xs:sequence>
+      <xs:element name="databaseCrossReferenceCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="gov.nih.nci.common.domain:DatabaseCrossReference" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="relativeLocationCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="RelativeLocation" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="snpArrayReporterCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="SNPArrayReporter" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="cytogeneticLocationCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="CytogeneticLocation" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="populationFrequencyCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="PopulationFrequency" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="physicalLocationCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="PhysicalLocation" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="locationCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Location" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="alleleA" type="xs:string" />
+    <xs:attribute name="alleleB" type="xs:string" />
+    <xs:attribute name="aminoAcidChange" type="xs:string" />
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="chrXPseudoAutosomalRegion" type="xs:string" />
+    <xs:attribute name="codingStatus" type="xs:string" />
+    <xs:attribute name="DBSNPID" type="xs:string" />
+    <xs:attribute name="flank" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="validationStatus" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="CytogeneticLocation" type="CytogeneticLocation" />
+  <xs:complexType name="CytogeneticLocation">
+    <xs:complexContent>
+      <xs:extension base="Location">
+        <xs:sequence>
+          <xs:element name="endCytoband" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="Cytoband" minOccurs="0" maxOccurs="1" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="startCytoband" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="Cytoband" minOccurs="0" maxOccurs="1" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="bigid" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Taxon" type="Taxon" />
+  <xs:complexType name="Taxon">
+    <xs:sequence>
+      <xs:element name="tissueCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Tissue" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="pathwayCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Pathway" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="chromosomeCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Chromosome" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="cloneCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Clone" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="geneCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Gene" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="proteinCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Protein" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="abbreviation" type="xs:string" />
+    <xs:attribute name="bigid" type="xs:string" />
+    <xs:attribute name="commonName" type="xs:string" />
+    <xs:attribute name="ethnicityStrain" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="scientificName" type="xs:string" />
+  </xs:complexType>
+</xs:schema>
+

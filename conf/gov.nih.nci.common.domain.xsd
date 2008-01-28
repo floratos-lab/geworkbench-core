@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="gme://caCORE.caBIO/4.0/gov.nih.nci.common.domain" xmlns:gov.nih.nci.cabio.domain="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" xmlns:gov.nih.nci.common.provenance.domain="gme://caCORE.caBIO/4.0/gov.nih.nci.common.provenance.domain" targetNamespace="gme://caCORE.caBIO/4.0/gov.nih.nci.common.domain" elementFormDefault="qualified">
+  <xs:import namespace="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" schemaLocation="gov.nih.nci.cabio.domain.xsd" />
+  <xs:import namespace="gme://caCORE.caBIO/4.0/gov.nih.nci.common.provenance.domain" schemaLocation="gov.nih.nci.common.provenance.domain.xsd" />
+  <xs:element name="DatabaseCrossReference" type="DatabaseCrossReference" />
+  <xs:complexType name="DatabaseCrossReference">
+    <xs:sequence>
+      <xs:element name="SNP" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="gov.nih.nci.cabio.domain:SNP" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="nucleicAcidSequence" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="gov.nih.nci.cabio.domain:NucleicAcidSequence" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="gene" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="gov.nih.nci.cabio.domain:Gene" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="crossReferenceId" type="xs:string" />
+    <xs:attribute name="dataSourceName" type="xs:string" />
+    <xs:attribute name="id" type="xs:long" />
+    <xs:attribute name="sourceType" type="xs:string" />
+    <xs:attribute name="summary" type="xs:string" />
+    <xs:attribute name="type" type="xs:string" />
+  </xs:complexType>
+</xs:schema>
+

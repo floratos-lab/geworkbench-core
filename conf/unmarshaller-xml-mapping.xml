@@ -1,0 +1,1431 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapping PUBLIC "-//EXOLAB/Castor Object Mapping DTD Version 1.0//EN" "http://www.castor.org/mapping.dtd">
+
+<mapping>
+  <class name="gov.nih.nci.cabio.domain.Histopathology" identity="id">
+    <map-to xml="Histopathology" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="ageOfOnset" type="string">
+      <bind-xml name="ageOfOnset" node="attribute" />
+    </field>
+    <field name="comments" type="string">
+      <bind-xml name="comments" node="attribute" />
+    </field>
+    <field name="grossDescription" type="string">
+      <bind-xml name="grossDescription" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="microscopicDescription" type="string">
+      <bind-xml name="microscopicDescription" node="attribute" />
+    </field>
+    <field name="relationalOperation" type="string">
+      <bind-xml name="relationalOperation" node="attribute" />
+    </field>
+    <field name="survivalInfo" type="string">
+      <bind-xml name="survivalInfo" node="attribute" />
+    </field>
+    <field name="tumorIncidenceRate" type="float">
+      <bind-xml name="tumorIncidenceRate" node="attribute" />
+    </field>
+    <field name="geneCollection" type="gov.nih.nci.cabio.domain.Gene" collection="collection">
+      <bind-xml name="Gene" type="gov.nih.nci.cabio.domain.Gene" location="geneCollection" node="element" />
+    </field>
+    <field name="anomalyCollection" type="gov.nih.nci.cabio.domain.Anomaly" collection="collection">
+      <bind-xml name="Anomaly" type="gov.nih.nci.cabio.domain.Anomaly" location="anomalyCollection" node="element" />
+    </field>
+    <field name="metastasisCollection" type="gov.nih.nci.cabio.domain.Histopathology" collection="collection">
+      <bind-xml name="Histopathology" type="gov.nih.nci.cabio.domain.Histopathology" location="metastasisCollection" node="element" />
+    </field>
+    <field name="diseaseOntology" type="gov.nih.nci.cabio.domain.DiseaseOntology">
+      <bind-xml name="DiseaseOntology" type="gov.nih.nci.cabio.domain.DiseaseOntology" location="diseaseOntology" node="element" />
+    </field>
+    <field name="clinicalTrialProtocolCollection" type="gov.nih.nci.cabio.domain.ClinicalTrialProtocol" collection="collection">
+      <bind-xml name="ClinicalTrialProtocol" type="gov.nih.nci.cabio.domain.ClinicalTrialProtocol" location="clinicalTrialProtocolCollection" node="element" />
+    </field>
+    <field name="organOntology" type="gov.nih.nci.cabio.domain.OrganOntology">
+      <bind-xml name="OrganOntology" type="gov.nih.nci.cabio.domain.OrganOntology" location="organOntology" node="element" />
+    </field>
+    <field name="libraryCollection" type="gov.nih.nci.cabio.domain.Library" collection="collection">
+      <bind-xml name="Library" type="gov.nih.nci.cabio.domain.Library" location="libraryCollection" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.Marker" identity="id">
+    <map-to xml="Marker" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="aliases" type="string">
+      <bind-xml name="aliases" node="attribute" />
+    </field>
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="geneticMarkerId" type="string">
+      <bind-xml name="geneticMarkerId" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="type" type="string">
+      <bind-xml name="type" node="attribute" />
+    </field>
+    <field name="markerRelativeLocationCollection" type="gov.nih.nci.cabio.domain.MarkerRelativeLocation" collection="collection">
+      <bind-xml name="MarkerRelativeLocation" type="gov.nih.nci.cabio.domain.MarkerRelativeLocation" location="markerRelativeLocationCollection" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.Agent" identity="id">
+    <map-to xml="Agent" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="comment" type="string">
+      <bind-xml name="comment" node="attribute" />
+    </field>
+    <field name="EVSId" type="string">
+      <bind-xml name="EVSId" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="isCMAPAgent" type="boolean">
+      <bind-xml name="isCMAPAgent" node="attribute" />
+    </field>
+    <field name="name" type="string">
+      <bind-xml name="name" node="attribute" />
+    </field>
+    <field name="NSCNumber" type="long">
+      <bind-xml name="NSCNumber" node="attribute" />
+    </field>
+    <field name="source" type="string">
+      <bind-xml name="source" node="attribute" />
+    </field>
+    <field name="clinicalTrialProtocolCollection" type="gov.nih.nci.cabio.domain.ClinicalTrialProtocol" collection="collection">
+      <bind-xml name="ClinicalTrialProtocol" type="gov.nih.nci.cabio.domain.ClinicalTrialProtocol" location="clinicalTrialProtocolCollection" node="element" />
+    </field>
+    <field name="targetCollection" type="gov.nih.nci.cabio.domain.Target" collection="collection">
+      <bind-xml name="Target" type="gov.nih.nci.cabio.domain.Target" location="targetCollection" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.Pathway" identity="id">
+    <map-to xml="Pathway" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="description" type="string">
+      <bind-xml name="description" node="attribute" />
+    </field>
+    <field name="diagram" type="string">
+      <bind-xml name="diagram" node="attribute" />
+    </field>
+    <field name="displayValue" type="string">
+      <bind-xml name="displayValue" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="name" type="string">
+      <bind-xml name="name" node="attribute" />
+    </field>
+    <field name="geneCollection" type="gov.nih.nci.cabio.domain.Gene" collection="collection">
+      <bind-xml name="Gene" type="gov.nih.nci.cabio.domain.Gene" location="geneCollection" node="element" />
+    </field>
+    <field name="taxon" type="gov.nih.nci.cabio.domain.Taxon">
+      <bind-xml name="Taxon" type="gov.nih.nci.cabio.domain.Taxon" location="taxon" node="element" />
+    </field>
+    <field name="histopathologyCollection" type="gov.nih.nci.cabio.domain.Histopathology" collection="collection">
+      <bind-xml name="Histopathology" type="gov.nih.nci.cabio.domain.Histopathology" location="histopathologyCollection" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.Location" identity="id">
+    <map-to xml="Location" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="chromosome" type="gov.nih.nci.cabio.domain.Chromosome">
+      <bind-xml name="Chromosome" type="gov.nih.nci.cabio.domain.Chromosome" location="chromosome" node="element" />
+    </field>
+    <field name="gene" type="gov.nih.nci.cabio.domain.Gene">
+      <bind-xml name="Gene" type="gov.nih.nci.cabio.domain.Gene" location="gene" node="element" />
+    </field>
+    <field name="nucleicAcidSequence" type="gov.nih.nci.cabio.domain.NucleicAcidSequence">
+      <bind-xml name="NucleicAcidSequence" type="gov.nih.nci.cabio.domain.NucleicAcidSequence" location="nucleicAcidSequence" node="element" />
+    </field>
+    <field name="SNP" type="gov.nih.nci.cabio.domain.SNP">
+      <bind-xml name="SNP" type="gov.nih.nci.cabio.domain.SNP" location="snp" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.Tissue" identity="id">
+    <map-to xml="Tissue" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="cellLine" type="string">
+      <bind-xml name="cellLine" node="attribute" />
+    </field>
+    <field name="cellType" type="string">
+      <bind-xml name="cellType" node="attribute" />
+    </field>
+    <field name="description" type="string">
+      <bind-xml name="description" node="attribute" />
+    </field>
+    <field name="developmentalStage" type="string">
+      <bind-xml name="developmentalStage" node="attribute" />
+    </field>
+    <field name="histology" type="string">
+      <bind-xml name="histology" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="name" type="string">
+      <bind-xml name="name" node="attribute" />
+    </field>
+    <field name="organ" type="string">
+      <bind-xml name="organ" node="attribute" />
+    </field>
+    <field name="sex" type="string">
+      <bind-xml name="sex" node="attribute" />
+    </field>
+    <field name="supplier" type="string">
+      <bind-xml name="supplier" node="attribute" />
+    </field>
+    <field name="type" type="string">
+      <bind-xml name="type" node="attribute" />
+    </field>
+    <field name="taxon" type="gov.nih.nci.cabio.domain.Taxon">
+      <bind-xml name="Taxon" type="gov.nih.nci.cabio.domain.Taxon" location="taxon" node="element" />
+    </field>
+    <field name="protocol" type="gov.nih.nci.cabio.domain.Protocol">
+      <bind-xml name="Protocol" type="gov.nih.nci.cabio.domain.Protocol" location="protocol" node="element" />
+    </field>
+    <field name="libraryCollection" type="gov.nih.nci.cabio.domain.Library" collection="collection">
+      <bind-xml name="Library" type="gov.nih.nci.cabio.domain.Library" location="libraryCollection" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.ClinicalTrialProtocol" identity="id">
+    <map-to xml="ClinicalTrialProtocol" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="currentStatus" type="string">
+      <bind-xml name="currentStatus" node="attribute" />
+    </field>
+    <field name="currentStatusDate" type="java.util.Date">
+      <bind-xml name="currentStatusDate" node="attribute" />
+    </field>
+    <field name="documentNumber" type="string">
+      <bind-xml name="documentNumber" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="leadOrganizationId" type="string">
+      <bind-xml name="leadOrganizationId" node="attribute" />
+    </field>
+    <field name="leadOrganizationName" type="string">
+      <bind-xml name="leadOrganizationName" node="attribute" />
+    </field>
+    <field name="NIHAdminCode" type="string">
+      <bind-xml name="NIHAdminCode" node="attribute" />
+    </field>
+    <field name="participationType" type="string">
+      <bind-xml name="participationType" node="attribute" />
+    </field>
+    <field name="PDQIdentifier" type="string">
+      <bind-xml name="PDQIdentifier" node="attribute" />
+    </field>
+    <field name="phase" type="string">
+      <bind-xml name="phase" node="attribute" />
+    </field>
+    <field name="PIName" type="string">
+      <bind-xml name="PIName" node="attribute" />
+    </field>
+    <field name="title" type="string">
+      <bind-xml name="title" node="attribute" />
+    </field>
+    <field name="treatmentFlag" type="string">
+      <bind-xml name="treatmentFlag" node="attribute" />
+    </field>
+    <field name="protocolAssociationCollection" type="gov.nih.nci.cabio.domain.ProtocolAssociation" collection="collection">
+      <bind-xml name="ProtocolAssociation" type="gov.nih.nci.cabio.domain.ProtocolAssociation" location="protocolAssociationCollection" node="element" />
+    </field>
+    <field name="agentCollection" type="gov.nih.nci.cabio.domain.Agent" collection="collection">
+      <bind-xml name="Agent" type="gov.nih.nci.cabio.domain.Agent" location="agentCollection" node="element" />
+    </field>
+    <field name="diseaseOntologyCollection" type="gov.nih.nci.cabio.domain.DiseaseOntology" collection="collection">
+      <bind-xml name="DiseaseOntology" type="gov.nih.nci.cabio.domain.DiseaseOntology" location="diseaseOntologyCollection" node="element" />
+    </field>
+    <field name="histopathologyCollection" type="gov.nih.nci.cabio.domain.Histopathology" collection="collection">
+      <bind-xml name="Histopathology" type="gov.nih.nci.cabio.domain.Histopathology" location="histopathologyCollection" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.GenericReporter" identity="id">
+    <map-to xml="GenericReporter" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="name" type="string">
+      <bind-xml name="name" node="attribute" />
+    </field>
+    <field name="type" type="string">
+      <bind-xml name="type" node="attribute" />
+    </field>
+    <field name="gene" type="gov.nih.nci.cabio.domain.Gene">
+      <bind-xml name="Gene" type="gov.nih.nci.cabio.domain.Gene" location="gene" node="element" />
+    </field>
+    <field name="genericArrayCollection" type="gov.nih.nci.cabio.domain.GenericArray" collection="collection">
+      <bind-xml name="GenericArray" type="gov.nih.nci.cabio.domain.GenericArray" location="genericArrayCollection" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.common.provenance.domain.SourceReference" identity="id">
+    <map-to xml="SourceReference" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.common.provenance.domain" />
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="reference" type="string">
+      <bind-xml name="reference" node="attribute" />
+    </field>
+    <field name="sourceReferenceType" type="string">
+      <bind-xml name="sourceReferenceType" node="attribute" />
+    </field>
+    <field name="provenanceCollection" type="gov.nih.nci.common.provenance.domain.Provenance" collection="collection">
+      <bind-xml name="Provenance" type="gov.nih.nci.common.provenance.domain.Provenance" location="provenanceCollection" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.OrganOntologyRelationship" identity="id">
+    <map-to xml="OrganOntologyRelationship" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="type" type="string">
+      <bind-xml name="type" node="attribute" />
+    </field>
+    <field name="parentOrganOntology" type="gov.nih.nci.cabio.domain.OrganOntology">
+      <bind-xml name="OrganOntology" type="gov.nih.nci.cabio.domain.OrganOntology" location="parentOrganOntology" node="element" />
+    </field>
+    <field name="childOrganOntology" type="gov.nih.nci.cabio.domain.OrganOntology">
+      <bind-xml name="OrganOntology" type="gov.nih.nci.cabio.domain.OrganOntology" location="childOrganOntology" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.common.provenance.domain.Source" identity="id">
+    <map-to xml="Source" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.common.provenance.domain" />
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="name" type="string">
+      <bind-xml name="name" node="attribute" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.SNP" identity="id">
+    <map-to xml="SNP" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="alleleA" type="string">
+      <bind-xml name="alleleA" node="attribute" />
+    </field>
+    <field name="alleleB" type="string">
+      <bind-xml name="alleleB" node="attribute" />
+    </field>
+    <field name="aminoAcidChange" type="string">
+      <bind-xml name="aminoAcidChange" node="attribute" />
+    </field>
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="chrXPseudoAutosomalRegion" type="string">
+      <bind-xml name="chrXPseudoAutosomalRegion" node="attribute" />
+    </field>
+    <field name="codingStatus" type="string">
+      <bind-xml name="codingStatus" node="attribute" />
+    </field>
+    <field name="DBSNPID" type="string">
+      <bind-xml name="DBSNPID" node="attribute" />
+    </field>
+    <field name="flank" type="string">
+      <bind-xml name="flank" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="validationStatus" type="string">
+      <bind-xml name="validationStatus" node="attribute" />
+    </field>
+    <field name="databaseCrossReferenceCollection" type="gov.nih.nci.common.domain.DatabaseCrossReference" collection="collection">
+      <bind-xml name="DatabaseCrossReference" type="gov.nih.nci.common.domain.DatabaseCrossReference" location="databaseCrossReferenceCollection" node="element" />
+    </field>
+    <field name="relativeLocationCollection" type="gov.nih.nci.cabio.domain.RelativeLocation" collection="collection">
+      <bind-xml name="RelativeLocation" type="gov.nih.nci.cabio.domain.RelativeLocation" location="relativeLocationCollection" node="element" />
+    </field>
+    <field name="snpArrayReporterCollection" type="gov.nih.nci.cabio.domain.SNPArrayReporter" collection="collection">
+      <bind-xml name="SNPArrayReporter" type="gov.nih.nci.cabio.domain.SNPArrayReporter" location="snpArrayReporterCollection" node="element" />
+    </field>
+    <field name="cytogeneticLocationCollection" type="gov.nih.nci.cabio.domain.CytogeneticLocation" collection="collection">
+      <bind-xml name="CytogeneticLocation" type="gov.nih.nci.cabio.domain.CytogeneticLocation" location="cytogeneticLocationCollection" node="element" />
+    </field>
+    <field name="populationFrequencyCollection" type="gov.nih.nci.cabio.domain.PopulationFrequency" collection="collection">
+      <bind-xml name="PopulationFrequency" type="gov.nih.nci.cabio.domain.PopulationFrequency" location="populationFrequencyCollection" node="element" />
+    </field>
+    <field name="physicalLocationCollection" type="gov.nih.nci.cabio.domain.PhysicalLocation" collection="collection">
+      <bind-xml name="PhysicalLocation" type="gov.nih.nci.cabio.domain.PhysicalLocation" location="physicalLocationCollection" node="element" />
+    </field>
+    <field name="locationCollection" type="gov.nih.nci.cabio.domain.Location" collection="collection">
+      <bind-xml name="Location" type="gov.nih.nci.cabio.domain.Location" location="locationCollection" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.GenericArray" identity="id">
+    <map-to xml="GenericArray" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="arrayName" type="string">
+      <bind-xml name="arrayName" node="attribute" />
+    </field>
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="platform" type="string">
+      <bind-xml name="platform" node="attribute" />
+    </field>
+    <field name="type" type="string">
+      <bind-xml name="type" node="attribute" />
+    </field>
+    <field name="genericReporterCollection" type="gov.nih.nci.cabio.domain.GenericReporter" collection="collection">
+      <bind-xml name="GenericReporter" type="gov.nih.nci.cabio.domain.GenericReporter" location="genericReporterCollection" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.Gene" identity="id">
+    <map-to xml="Gene" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="clusterId" type="long">
+      <bind-xml name="clusterId" node="attribute" />
+    </field>
+    <field name="fullName" type="string">
+      <bind-xml name="fullName" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="symbol" type="string">
+      <bind-xml name="symbol" node="attribute" />
+    </field>
+    <field name="targetCollection" type="gov.nih.nci.cabio.domain.Target" collection="collection">
+      <bind-xml name="Target" type="gov.nih.nci.cabio.domain.Target" location="targetCollection" node="element" />
+    </field>
+    <field name="taxon" type="gov.nih.nci.cabio.domain.Taxon">
+      <bind-xml name="Taxon" type="gov.nih.nci.cabio.domain.Taxon" location="taxon" node="element" />
+    </field>
+    <field name="histopathologyCollection" type="gov.nih.nci.cabio.domain.Histopathology" collection="collection">
+      <bind-xml name="Histopathology" type="gov.nih.nci.cabio.domain.Histopathology" location="histopathologyCollection" node="element" />
+    </field>
+    <field name="transcriptCollection" type="gov.nih.nci.cabio.domain.Transcript" collection="collection">
+      <bind-xml name="Transcript" type="gov.nih.nci.cabio.domain.Transcript" location="transcriptCollection" node="element" />
+    </field>
+    <field name="geneOntologyCollection" type="gov.nih.nci.cabio.domain.GeneOntology" collection="collection">
+      <bind-xml name="GeneOntology" type="gov.nih.nci.cabio.domain.GeneOntology" location="geneOntologyCollection" node="element" />
+    </field>
+    <field name="locationCollection" type="gov.nih.nci.cabio.domain.Location" collection="collection">
+      <bind-xml name="Location" type="gov.nih.nci.cabio.domain.Location" location="locationCollection" node="element" />
+    </field>
+    <field name="genericReporterCollection" type="gov.nih.nci.cabio.domain.GenericReporter" collection="collection">
+      <bind-xml name="GenericReporter" type="gov.nih.nci.cabio.domain.GenericReporter" location="genericReporterCollection" node="element" />
+    </field>
+    <field name="exonArrayReporterCollection" type="gov.nih.nci.cabio.domain.ExonArrayReporter" collection="collection">
+      <bind-xml name="ExonArrayReporter" type="gov.nih.nci.cabio.domain.ExonArrayReporter" location="exonArrayReporterCollection" node="element" />
+    </field>
+    <field name="databaseCrossReferenceCollection" type="gov.nih.nci.common.domain.DatabaseCrossReference" collection="collection">
+      <bind-xml name="DatabaseCrossReference" type="gov.nih.nci.common.domain.DatabaseCrossReference" location="databaseCrossReferenceCollection" node="element" />
+    </field>
+    <field name="geneRelativeLocationCollection" type="gov.nih.nci.cabio.domain.GeneRelativeLocation" collection="collection">
+      <bind-xml name="GeneRelativeLocation" type="gov.nih.nci.cabio.domain.GeneRelativeLocation" location="geneRelativeLocationCollection" node="element" />
+    </field>
+    <field name="homologousAssociationCollection" type="gov.nih.nci.cabio.domain.HomologousAssociation" collection="collection">
+      <bind-xml name="HomologousAssociation" type="gov.nih.nci.cabio.domain.HomologousAssociation" location="homologousAssociationCollection" node="element" />
+    </field>
+    <field name="pathwayCollection" type="gov.nih.nci.cabio.domain.Pathway" collection="collection">
+      <bind-xml name="Pathway" type="gov.nih.nci.cabio.domain.Pathway" location="pathwayCollection" node="element" />
+    </field>
+    <field name="libraryCollection" type="gov.nih.nci.cabio.domain.Library" collection="collection">
+      <bind-xml name="Library" type="gov.nih.nci.cabio.domain.Library" location="libraryCollection" node="element" />
+    </field>
+    <field name="geneAliasCollection" type="gov.nih.nci.cabio.domain.GeneAlias" collection="collection">
+      <bind-xml name="GeneAlias" type="gov.nih.nci.cabio.domain.GeneAlias" location="geneAliasCollection" node="element" />
+    </field>
+    <field name="expressionArrayReporterCollection" type="gov.nih.nci.cabio.domain.ExpressionArrayReporter" collection="collection">
+      <bind-xml name="ExpressionArrayReporter" type="gov.nih.nci.cabio.domain.ExpressionArrayReporter" location="expressionArrayReporterCollection" node="element" />
+    </field>
+    <field name="nucleicAcidSequenceCollection" type="gov.nih.nci.cabio.domain.NucleicAcidSequence" collection="collection">
+      <bind-xml name="NucleicAcidSequence" type="gov.nih.nci.cabio.domain.NucleicAcidSequence" location="nucleicAcidSequenceCollection" node="element" />
+    </field>
+    <field name="organOntologyCollection" type="gov.nih.nci.cabio.domain.OrganOntology" collection="collection">
+      <bind-xml name="OrganOntology" type="gov.nih.nci.cabio.domain.OrganOntology" location="organOntologyCollection" node="element" />
+    </field>
+    <field name="chromosome" type="gov.nih.nci.cabio.domain.Chromosome">
+      <bind-xml name="Chromosome" type="gov.nih.nci.cabio.domain.Chromosome" location="chromosome" node="element" />
+    </field>
+    <field name="proteinCollection" type="gov.nih.nci.cabio.domain.Protein" collection="collection">
+      <bind-xml name="Protein" type="gov.nih.nci.cabio.domain.Protein" location="proteinCollection" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.common.domain.DatabaseCrossReference" identity="id">
+    <map-to xml="DatabaseCrossReference" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.common.domain" />
+    <field name="crossReferenceId" type="string">
+      <bind-xml name="crossReferenceId" node="attribute" />
+    </field>
+    <field name="dataSourceName" type="string">
+      <bind-xml name="dataSourceName" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="sourceType" type="string">
+      <bind-xml name="sourceType" node="attribute" />
+    </field>
+    <field name="summary" type="string">
+      <bind-xml name="summary" node="attribute" />
+    </field>
+    <field name="type" type="string">
+      <bind-xml name="type" node="attribute" />
+    </field>
+    <field name="SNP" type="gov.nih.nci.cabio.domain.SNP">
+      <bind-xml name="SNP" type="gov.nih.nci.cabio.domain.SNP" location="snp" node="element" />
+    </field>
+    <field name="nucleicAcidSequence" type="gov.nih.nci.cabio.domain.NucleicAcidSequence">
+      <bind-xml name="NucleicAcidSequence" type="gov.nih.nci.cabio.domain.NucleicAcidSequence" location="nucleicAcidSequence" node="element" />
+    </field>
+    <field name="gene" type="gov.nih.nci.cabio.domain.Gene">
+      <bind-xml name="Gene" type="gov.nih.nci.cabio.domain.Gene" location="gene" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.Chromosome" identity="id">
+    <map-to xml="Chromosome" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="number" type="string">
+      <bind-xml name="number" node="attribute" />
+    </field>
+    <field name="taxon" type="gov.nih.nci.cabio.domain.Taxon">
+      <bind-xml name="Taxon" type="gov.nih.nci.cabio.domain.Taxon" location="taxon" node="element" />
+    </field>
+    <field name="locationCollection" type="gov.nih.nci.cabio.domain.Location" collection="collection">
+      <bind-xml name="Location" type="gov.nih.nci.cabio.domain.Location" location="locationCollection" node="element" />
+    </field>
+    <field name="geneCollection" type="gov.nih.nci.cabio.domain.Gene" collection="collection">
+      <bind-xml name="Gene" type="gov.nih.nci.cabio.domain.Gene" location="geneCollection" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.Taxon" identity="id">
+    <map-to xml="Taxon" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="abbreviation" type="string">
+      <bind-xml name="abbreviation" node="attribute" />
+    </field>
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="commonName" type="string">
+      <bind-xml name="commonName" node="attribute" />
+    </field>
+    <field name="ethnicityStrain" type="string">
+      <bind-xml name="ethnicityStrain" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="scientificName" type="string">
+      <bind-xml name="scientificName" node="attribute" />
+    </field>
+    <field name="tissueCollection" type="gov.nih.nci.cabio.domain.Tissue" collection="collection">
+      <bind-xml name="Tissue" type="gov.nih.nci.cabio.domain.Tissue" location="tissueCollection" node="element" />
+    </field>
+    <field name="pathwayCollection" type="gov.nih.nci.cabio.domain.Pathway" collection="collection">
+      <bind-xml name="Pathway" type="gov.nih.nci.cabio.domain.Pathway" location="pathwayCollection" node="element" />
+    </field>
+    <field name="chromosomeCollection" type="gov.nih.nci.cabio.domain.Chromosome" collection="collection">
+      <bind-xml name="Chromosome" type="gov.nih.nci.cabio.domain.Chromosome" location="chromosomeCollection" node="element" />
+    </field>
+    <field name="cloneCollection" type="gov.nih.nci.cabio.domain.Clone" collection="collection">
+      <bind-xml name="Clone" type="gov.nih.nci.cabio.domain.Clone" location="cloneCollection" node="element" />
+    </field>
+    <field name="geneCollection" type="gov.nih.nci.cabio.domain.Gene" collection="collection">
+      <bind-xml name="Gene" type="gov.nih.nci.cabio.domain.Gene" location="geneCollection" node="element" />
+    </field>
+    <field name="proteinCollection" type="gov.nih.nci.cabio.domain.Protein" collection="collection">
+      <bind-xml name="Protein" type="gov.nih.nci.cabio.domain.Protein" location="proteinCollection" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.NucleicAcidSequence" identity="id">
+    <map-to xml="NucleicAcidSequence" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="accessionNumber" type="string">
+      <bind-xml name="accessionNumber" node="attribute" />
+    </field>
+    <field name="accessionNumberVersion" type="string">
+      <bind-xml name="accessionNumberVersion" node="attribute" />
+    </field>
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="description" type="string">
+      <bind-xml name="description" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="length" type="long">
+      <bind-xml name="length" node="attribute" />
+    </field>
+    <field name="type" type="string">
+      <bind-xml name="type" node="attribute" />
+    </field>
+    <field name="value" type="string">
+      <bind-xml name="value" node="attribute" />
+    </field>
+    <field name="cloneRelativeLocation" type="gov.nih.nci.cabio.domain.CloneRelativeLocation">
+      <bind-xml name="CloneRelativeLocation" type="gov.nih.nci.cabio.domain.CloneRelativeLocation" location="cloneRelativeLocation" node="element" />
+    </field>
+    <field name="expressionArrayReporterCollection" type="gov.nih.nci.cabio.domain.ExpressionArrayReporter" collection="collection">
+      <bind-xml name="ExpressionArrayReporter" type="gov.nih.nci.cabio.domain.ExpressionArrayReporter" location="expressionArrayReporterCollection" node="element" />
+    </field>
+    <field name="geneCollection" type="gov.nih.nci.cabio.domain.Gene" collection="collection">
+      <bind-xml name="Gene" type="gov.nih.nci.cabio.domain.Gene" location="geneCollection" node="element" />
+    </field>
+    <field name="locationCollection" type="gov.nih.nci.cabio.domain.Location" collection="collection">
+      <bind-xml name="Location" type="gov.nih.nci.cabio.domain.Location" location="locationCollection" node="element" />
+    </field>
+    <field name="databaseCrossReferenceCollection" type="gov.nih.nci.common.domain.DatabaseCrossReference" collection="collection">
+      <bind-xml name="DatabaseCrossReference" type="gov.nih.nci.common.domain.DatabaseCrossReference" location="databaseCrossReferenceCollection" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.Clone" identity="id">
+    <map-to xml="Clone" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="insertSize" type="long">
+      <bind-xml name="insertSize" node="attribute" />
+    </field>
+    <field name="name" type="string">
+      <bind-xml name="name" node="attribute" />
+    </field>
+    <field name="type" type="string">
+      <bind-xml name="type" node="attribute" />
+    </field>
+    <field name="taxonCollection" type="gov.nih.nci.cabio.domain.Taxon" collection="collection">
+      <bind-xml name="Taxon" type="gov.nih.nci.cabio.domain.Taxon" location="taxonCollection" node="element" />
+    </field>
+    <field name="library" type="gov.nih.nci.cabio.domain.Library">
+      <bind-xml name="Library" type="gov.nih.nci.cabio.domain.Library" location="library" node="element" />
+    </field>
+    <field name="nucleicAcidSequenceCollection" type="gov.nih.nci.cabio.domain.NucleicAcidSequence" collection="collection">
+      <bind-xml name="NucleicAcidSequence" type="gov.nih.nci.cabio.domain.NucleicAcidSequence" location="nucleicAcidSequenceCollection" node="element" />
+    </field>
+    <field name="cloneRelativeLocationCollection" type="gov.nih.nci.cabio.domain.CloneRelativeLocation" collection="collection">
+      <bind-xml name="CloneRelativeLocation" type="gov.nih.nci.cabio.domain.CloneRelativeLocation" location="cloneRelativeLocationCollection" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.Target" identity="id">
+    <map-to xml="Target" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="name" type="string">
+      <bind-xml name="name" node="attribute" />
+    </field>
+    <field name="type" type="string">
+      <bind-xml name="type" node="attribute" />
+    </field>
+    <field name="geneCollection" type="gov.nih.nci.cabio.domain.Gene" collection="collection">
+      <bind-xml name="Gene" type="gov.nih.nci.cabio.domain.Gene" location="geneCollection" node="element" />
+    </field>
+    <field name="agentCollection" type="gov.nih.nci.cabio.domain.Agent" collection="collection">
+      <bind-xml name="Agent" type="gov.nih.nci.cabio.domain.Agent" location="agentCollection" node="element" />
+    </field>
+    <field name="anomalyCollection" type="gov.nih.nci.cabio.domain.Anomaly" collection="collection">
+      <bind-xml name="Anomaly" type="gov.nih.nci.cabio.domain.Anomaly" location="anomalyCollection" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.CloneRelativeLocation" identity="id">
+    <map-to xml="CloneRelativeLocation" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="type" type="string">
+      <bind-xml name="type" node="attribute" />
+    </field>
+    <field name="nucleicAcidSequence" type="gov.nih.nci.cabio.domain.NucleicAcidSequence">
+      <bind-xml name="NucleicAcidSequence" type="gov.nih.nci.cabio.domain.NucleicAcidSequence" location="nucleicAcidSequence" node="element" />
+    </field>
+    <field name="clone" type="gov.nih.nci.cabio.domain.Clone">
+      <bind-xml name="Clone" type="gov.nih.nci.cabio.domain.Clone" location="clone" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.DiseaseOntologyRelationship" identity="id">
+    <map-to xml="DiseaseOntologyRelationship" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="type" type="string">
+      <bind-xml name="type" node="attribute" />
+    </field>
+    <field name="parentDiseaseOntology" type="gov.nih.nci.cabio.domain.DiseaseOntology">
+      <bind-xml name="DiseaseOntology" type="gov.nih.nci.cabio.domain.DiseaseOntology" location="parentDiseaseOntology" node="element" />
+    </field>
+    <field name="childDiseaseOntology" type="gov.nih.nci.cabio.domain.DiseaseOntology">
+      <bind-xml name="DiseaseOntology" type="gov.nih.nci.cabio.domain.DiseaseOntology" location="childDiseaseOntology" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.Library" identity="id">
+    <map-to xml="Library" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="cloneProducer" type="string">
+      <bind-xml name="cloneProducer" node="attribute" />
+    </field>
+    <field name="clonesToDate" type="long">
+      <bind-xml name="clonesToDate" node="attribute" />
+    </field>
+    <field name="cloneVector" type="string">
+      <bind-xml name="cloneVector" node="attribute" />
+    </field>
+    <field name="cloneVectorType" type="string">
+      <bind-xml name="cloneVectorType" node="attribute" />
+    </field>
+    <field name="creationDate" type="java.util.Date">
+      <bind-xml name="creationDate" node="attribute" />
+    </field>
+    <field name="description" type="string">
+      <bind-xml name="description" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="keyword" type="string">
+      <bind-xml name="keyword" node="attribute" />
+    </field>
+    <field name="labHost" type="string">
+      <bind-xml name="labHost" node="attribute" />
+    </field>
+    <field name="name" type="string">
+      <bind-xml name="name" node="attribute" />
+    </field>
+    <field name="rsite1" type="string">
+      <bind-xml name="rsite1" node="attribute" />
+    </field>
+    <field name="rsite2" type="string">
+      <bind-xml name="rsite2" node="attribute" />
+    </field>
+    <field name="sequencesToDate" type="long">
+      <bind-xml name="sequencesToDate" node="attribute" />
+    </field>
+    <field name="type" type="string">
+      <bind-xml name="type" node="attribute" />
+    </field>
+    <field name="uniGeneId" type="long">
+      <bind-xml name="uniGeneId" node="attribute" />
+    </field>
+    <field name="geneCollection" type="gov.nih.nci.cabio.domain.Gene" collection="collection">
+      <bind-xml name="Gene" type="gov.nih.nci.cabio.domain.Gene" location="geneCollection" node="element" />
+    </field>
+    <field name="tissue" type="gov.nih.nci.cabio.domain.Tissue">
+      <bind-xml name="Tissue" type="gov.nih.nci.cabio.domain.Tissue" location="tissue" node="element" />
+    </field>
+    <field name="cloneCollection" type="gov.nih.nci.cabio.domain.Clone" collection="collection">
+      <bind-xml name="Clone" type="gov.nih.nci.cabio.domain.Clone" location="cloneCollection" node="element" />
+    </field>
+    <field name="protocol" type="gov.nih.nci.cabio.domain.Protocol">
+      <bind-xml name="Protocol" type="gov.nih.nci.cabio.domain.Protocol" location="protocol" node="element" />
+    </field>
+    <field name="histopathologyCollection" type="gov.nih.nci.cabio.domain.Histopathology" collection="collection">
+      <bind-xml name="Histopathology" type="gov.nih.nci.cabio.domain.Histopathology" location="histopathologyCollection" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.DiseaseOntology" identity="id">
+    <map-to xml="DiseaseOntology" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="name" type="string">
+      <bind-xml name="name" node="attribute" />
+    </field>
+    <field name="childDiseaseOntologyRelationshipCollection" type="gov.nih.nci.cabio.domain.DiseaseOntologyRelationship" collection="collection">
+      <bind-xml name="DiseaseOntologyRelationship" type="gov.nih.nci.cabio.domain.DiseaseOntologyRelationship" location="childDiseaseOntologyRelationshipCollection" node="element" />
+    </field>
+    <field name="histopathologyCollection" type="gov.nih.nci.cabio.domain.Histopathology" collection="collection">
+      <bind-xml name="Histopathology" type="gov.nih.nci.cabio.domain.Histopathology" location="histopathologyCollection" node="element" />
+    </field>
+    <field name="clinicalTrialProtocolCollection" type="gov.nih.nci.cabio.domain.ClinicalTrialProtocol" collection="collection">
+      <bind-xml name="ClinicalTrialProtocol" type="gov.nih.nci.cabio.domain.ClinicalTrialProtocol" location="clinicalTrialProtocolCollection" node="element" />
+    </field>
+    <field name="parentDiseaseOntologyRelationshipCollection" type="gov.nih.nci.cabio.domain.DiseaseOntologyRelationship" collection="collection">
+      <bind-xml name="DiseaseOntologyRelationship" type="gov.nih.nci.cabio.domain.DiseaseOntologyRelationship" location="parentDiseaseOntologyRelationshipCollection" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.HomologousAssociation" identity="id">
+    <map-to xml="HomologousAssociation" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="homologousId" type="long">
+      <bind-xml name="homologousId" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="similarityPercentage" type="float">
+      <bind-xml name="similarityPercentage" node="attribute" />
+    </field>
+    <field name="homologousGene" type="gov.nih.nci.cabio.domain.Gene">
+      <bind-xml name="Gene" type="gov.nih.nci.cabio.domain.Gene" location="homologousGene" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.PopulationFrequency" identity="id">
+    <map-to xml="PopulationFrequency" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="ethnicity" type="string">
+      <bind-xml name="ethnicity" node="attribute" />
+    </field>
+    <field name="heterozygousFrequency" type="double">
+      <bind-xml name="heterozygousFrequency" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="majorAllele" type="string">
+      <bind-xml name="majorAllele" node="attribute" />
+    </field>
+    <field name="majorFrequency" type="double">
+      <bind-xml name="majorFrequency" node="attribute" />
+    </field>
+    <field name="minorAllele" type="string">
+      <bind-xml name="minorAllele" node="attribute" />
+    </field>
+    <field name="minorFrequency" type="double">
+      <bind-xml name="minorFrequency" node="attribute" />
+    </field>
+    <field name="type" type="string">
+      <bind-xml name="type" node="attribute" />
+    </field>
+    <field name="SNP" type="gov.nih.nci.cabio.domain.SNP">
+      <bind-xml name="SNP" type="gov.nih.nci.cabio.domain.SNP" location="snp" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.Protein" identity="id">
+    <map-to xml="Protein" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="copyrightStatement" type="string">
+      <bind-xml name="copyrightStatement" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="name" type="string">
+      <bind-xml name="name" node="attribute" />
+    </field>
+    <field name="primaryAccession" type="string">
+      <bind-xml name="primaryAccession" node="attribute" />
+    </field>
+    <field name="uniProtCode" type="string">
+      <bind-xml name="uniProtCode" node="attribute" />
+    </field>
+    <field name="keywords" type="string" collection="collection">
+      <bind-xml name="string" type="string" location="keywords" node="element" />
+    </field>
+    <field name="secondaryAccession" type="string" collection="collection">
+      <bind-xml name="string" type="string" location="secondaryAccession" node="element" />
+    </field>
+    <field name="taxonCollection" type="gov.nih.nci.cabio.domain.Taxon" collection="collection">
+      <bind-xml name="Taxon" type="gov.nih.nci.cabio.domain.Taxon" location="taxonCollection" node="element" />
+    </field>
+    <field name="proteinSequence" type="gov.nih.nci.cabio.domain.ProteinSequence" collection="collection">
+      <bind-xml name="ProteinSequence" type="gov.nih.nci.cabio.domain.ProteinSequence" location="proteinSequence" node="element" />
+    </field>
+    <field name="geneCollection" type="gov.nih.nci.cabio.domain.Gene" collection="collection">
+      <bind-xml name="Gene" type="gov.nih.nci.cabio.domain.Gene" location="geneCollection" node="element" />
+    </field>
+    <field name="proteinAliasCollection" type="gov.nih.nci.cabio.domain.ProteinAlias" collection="collection">
+      <bind-xml name="ProteinAlias" type="gov.nih.nci.cabio.domain.ProteinAlias" location="proteinAliasCollection" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.Cytoband" identity="id">
+    <map-to xml="Cytoband" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="name" type="string">
+      <bind-xml name="name" node="attribute" />
+    </field>
+    <field name="physicalLocationCollection" type="gov.nih.nci.cabio.domain.PhysicalLocation" collection="collection">
+      <bind-xml name="PhysicalLocation" type="gov.nih.nci.cabio.domain.PhysicalLocation" location="physicalLocationCollection" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.Transcript" identity="id">
+    <map-to xml="Transcript" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="source" type="string">
+      <bind-xml name="source" node="attribute" />
+    </field>
+    <field name="sourceId" type="string">
+      <bind-xml name="sourceId" node="attribute" />
+    </field>
+    <field name="strand" type="string">
+      <bind-xml name="strand" node="attribute" />
+    </field>
+    <field name="totalProbeCount" type="long">
+      <bind-xml name="totalProbeCount" node="attribute" />
+    </field>
+    <field name="exonArrayReporterCollection" type="gov.nih.nci.cabio.domain.ExonArrayReporter" collection="collection">
+      <bind-xml name="ExonArrayReporter" type="gov.nih.nci.cabio.domain.ExonArrayReporter" location="exonArrayReporterCollection" node="element" />
+    </field>
+    <field name="physicalLocationCollection" type="gov.nih.nci.cabio.domain.PhysicalLocation" collection="collection">
+      <bind-xml name="PhysicalLocation" type="gov.nih.nci.cabio.domain.PhysicalLocation" location="physicalLocationCollection" node="element" />
+    </field>
+    <field name="geneCollection" type="gov.nih.nci.cabio.domain.Gene" collection="collection">
+      <bind-xml name="Gene" type="gov.nih.nci.cabio.domain.Gene" location="geneCollection" node="element" />
+    </field>
+    <field name="exonCollection" type="gov.nih.nci.cabio.domain.Exon" collection="collection">
+      <bind-xml name="Exon" type="gov.nih.nci.cabio.domain.Exon" location="exonCollection" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.Exon" identity="id">
+    <map-to xml="Exon" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="source" type="string">
+      <bind-xml name="source" node="attribute" />
+    </field>
+    <field name="sourceId" type="long">
+      <bind-xml name="sourceId" node="attribute" />
+    </field>
+    <field name="exonArrayReporterCollection" type="gov.nih.nci.cabio.domain.ExonArrayReporter" collection="collection">
+      <bind-xml name="ExonArrayReporter" type="gov.nih.nci.cabio.domain.ExonArrayReporter" location="exonArrayReporterCollection" node="element" />
+    </field>
+    <field name="transcript" type="gov.nih.nci.cabio.domain.Transcript">
+      <bind-xml name="Transcript" type="gov.nih.nci.cabio.domain.Transcript" location="transcript" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.Vocabulary" identity="id">
+    <map-to xml="Vocabulary" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="coreTerm" type="string">
+      <bind-xml name="coreTerm" node="attribute" />
+    </field>
+    <field name="generalTerm" type="string">
+      <bind-xml name="generalTerm" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="anomalyCollection" type="gov.nih.nci.cabio.domain.Anomaly" collection="collection">
+      <bind-xml name="Anomaly" type="gov.nih.nci.cabio.domain.Anomaly" location="anomalyCollection" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.ProteinDomain" identity="id">
+    <map-to xml="ProteinDomain" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="accessionNumber" type="string">
+      <bind-xml name="accessionNumber" node="attribute" />
+    </field>
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="description" type="string">
+      <bind-xml name="description" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="source" type="string">
+      <bind-xml name="source" node="attribute" />
+    </field>
+    <field name="expressionArrayReporterCollection" type="gov.nih.nci.cabio.domain.ExpressionArrayReporter" collection="collection">
+      <bind-xml name="ExpressionArrayReporter" type="gov.nih.nci.cabio.domain.ExpressionArrayReporter" location="expressionArrayReporterCollection" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.ArrayReporter" identity="id">
+    <map-to xml="ArrayReporter" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="name" type="string">
+      <bind-xml name="name" node="attribute" />
+    </field>
+    <field name="microarray" type="gov.nih.nci.cabio.domain.Microarray">
+      <bind-xml name="Microarray" type="gov.nih.nci.cabio.domain.Microarray" location="microarray" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.GeneOntology" identity="id">
+    <map-to xml="GeneOntology" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="name" type="string">
+      <bind-xml name="name" node="attribute" />
+    </field>
+    <field name="parentGeneOntologyRelationshipCollection" type="gov.nih.nci.cabio.domain.GeneOntologyRelationship" collection="collection">
+      <bind-xml name="GeneOntologyRelationship" type="gov.nih.nci.cabio.domain.GeneOntologyRelationship" location="parentGeneOntologyRelationshipCollection" node="element" />
+    </field>
+    <field name="childGeneOntologyRelationshipCollection" type="gov.nih.nci.cabio.domain.GeneOntologyRelationship" collection="collection">
+      <bind-xml name="GeneOntologyRelationship" type="gov.nih.nci.cabio.domain.GeneOntologyRelationship" location="childGeneOntologyRelationshipCollection" node="element" />
+    </field>
+    <field name="geneCollection" type="gov.nih.nci.cabio.domain.Gene" collection="collection">
+      <bind-xml name="Gene" type="gov.nih.nci.cabio.domain.Gene" location="geneCollection" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.ProtocolAssociation" identity="id">
+    <map-to xml="ProtocolAssociation" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="CTEPNAME" type="string">
+      <bind-xml name="CTEPNAME" node="attribute" />
+    </field>
+    <field name="diseaseCategory" type="string">
+      <bind-xml name="diseaseCategory" node="attribute" />
+    </field>
+    <field name="diseaseSubCategory" type="string">
+      <bind-xml name="diseaseSubCategory" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="IMTCODE" type="long">
+      <bind-xml name="IMTCODE" node="attribute" />
+    </field>
+    <field name="clinicalTrialProtocol" type="gov.nih.nci.cabio.domain.ClinicalTrialProtocol">
+      <bind-xml name="ClinicalTrialProtocol" type="gov.nih.nci.cabio.domain.ClinicalTrialProtocol" location="clinicalTrialProtocol" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.GeneAlias" identity="id">
+    <map-to xml="GeneAlias" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="name" type="string">
+      <bind-xml name="name" node="attribute" />
+    </field>
+    <field name="type" type="string">
+      <bind-xml name="type" node="attribute" />
+    </field>
+    <field name="geneCollection" type="gov.nih.nci.cabio.domain.Gene" collection="collection">
+      <bind-xml name="Gene" type="gov.nih.nci.cabio.domain.Gene" location="geneCollection" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.Microarray" identity="id">
+    <map-to xml="Microarray" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="annotationDate" type="java.util.Date">
+      <bind-xml name="annotationDate" node="attribute" />
+    </field>
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="dbSNPVersion" type="string">
+      <bind-xml name="dbSNPVersion" node="attribute" />
+    </field>
+    <field name="genomeVersion" type="string">
+      <bind-xml name="genomeVersion" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="manufacturer" type="string">
+      <bind-xml name="manufacturer" node="attribute" />
+    </field>
+    <field name="name" type="string">
+      <bind-xml name="name" node="attribute" />
+    </field>
+    <field name="type" type="string">
+      <bind-xml name="type" node="attribute" />
+    </field>
+    <field name="arrayReporterCollection" type="gov.nih.nci.cabio.domain.ArrayReporter" collection="collection">
+      <bind-xml name="ArrayReporter" type="gov.nih.nci.cabio.domain.ArrayReporter" location="arrayReporterCollection" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.GeneOntologyRelationship" identity="id">
+    <map-to xml="GeneOntologyRelationship" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="relationshipType" type="string">
+      <bind-xml name="relationshipType" node="attribute" />
+    </field>
+    <field name="childGeneOntology" type="gov.nih.nci.cabio.domain.GeneOntology">
+      <bind-xml name="GeneOntology" type="gov.nih.nci.cabio.domain.GeneOntology" location="childGeneOntology" node="element" />
+    </field>
+    <field name="parentGeneOntology" type="gov.nih.nci.cabio.domain.GeneOntology">
+      <bind-xml name="GeneOntology" type="gov.nih.nci.cabio.domain.GeneOntology" location="parentGeneOntology" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.common.provenance.domain.Provenance" identity="id">
+    <map-to xml="Provenance" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.common.provenance.domain" />
+    <field name="evidenceCode" type="string">
+      <bind-xml name="evidenceCode" node="attribute" />
+    </field>
+    <field name="fullyQualifiedClassName" type="string">
+      <bind-xml name="fullyQualifiedClassName" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="objectIdentifier" type="string">
+      <bind-xml name="objectIdentifier" node="attribute" />
+    </field>
+    <field name="transformation" type="string">
+      <bind-xml name="transformation" node="attribute" />
+    </field>
+    <field name="sourceReference" type="gov.nih.nci.common.provenance.domain.SourceReference">
+      <bind-xml name="SourceReference" type="gov.nih.nci.common.provenance.domain.SourceReference" location="sourceReference" node="element" />
+    </field>
+    <field name="supplyingSource" type="gov.nih.nci.common.provenance.domain.Source">
+      <bind-xml name="Source" type="gov.nih.nci.common.provenance.domain.Source" location="supplyingSource" node="element" />
+    </field>
+    <field name="immediateSource" type="gov.nih.nci.common.provenance.domain.Source">
+      <bind-xml name="Source" type="gov.nih.nci.common.provenance.domain.Source" location="immediateSource" node="element" />
+    </field>
+    <field name="originalSource" type="gov.nih.nci.common.provenance.domain.Source">
+      <bind-xml name="Source" type="gov.nih.nci.common.provenance.domain.Source" location="originalSource" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.ProteinAlias" identity="id">
+    <map-to xml="ProteinAlias" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="name" type="string">
+      <bind-xml name="name" node="attribute" />
+    </field>
+    <field name="proteinCollection" type="gov.nih.nci.cabio.domain.Protein" collection="collection">
+      <bind-xml name="Protein" type="gov.nih.nci.cabio.domain.Protein" location="proteinCollection" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.ProteinSequence" identity="id">
+    <map-to xml="ProteinSequence" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="checkSum" type="string">
+      <bind-xml name="checkSum" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="length" type="long">
+      <bind-xml name="length" node="attribute" />
+    </field>
+    <field name="molecularWeightInDaltons" type="double">
+      <bind-xml name="molecularWeightInDaltons" node="attribute" />
+    </field>
+    <field name="value" type="string">
+      <bind-xml name="value" node="attribute" />
+    </field>
+    <field name="protein" type="gov.nih.nci.cabio.domain.Protein">
+      <bind-xml name="Protein" type="gov.nih.nci.cabio.domain.Protein" location="protein" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.OrganOntology" identity="id">
+    <map-to xml="OrganOntology" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="name" type="string">
+      <bind-xml name="name" node="attribute" />
+    </field>
+    <field name="childOrganOntologyRelationshipCollection" type="gov.nih.nci.cabio.domain.OrganOntologyRelationship" collection="collection">
+      <bind-xml name="OrganOntologyRelationship" type="gov.nih.nci.cabio.domain.OrganOntologyRelationship" location="childOrganOntologyRelationshipCollection" node="element" />
+    </field>
+    <field name="anomalyCollection" type="gov.nih.nci.cabio.domain.Anomaly" collection="collection">
+      <bind-xml name="Anomaly" type="gov.nih.nci.cabio.domain.Anomaly" location="anomalyCollection" node="element" />
+    </field>
+    <field name="parentOrganOntologyRelationshipCollection" type="gov.nih.nci.cabio.domain.OrganOntologyRelationship" collection="collection">
+      <bind-xml name="OrganOntologyRelationship" type="gov.nih.nci.cabio.domain.OrganOntologyRelationship" location="parentOrganOntologyRelationshipCollection" node="element" />
+    </field>
+    <field name="geneCollection" type="gov.nih.nci.cabio.domain.Gene" collection="collection">
+      <bind-xml name="Gene" type="gov.nih.nci.cabio.domain.Gene" location="geneCollection" node="element" />
+    </field>
+    <field name="histopathologyCollection" type="gov.nih.nci.cabio.domain.Histopathology" collection="collection">
+      <bind-xml name="Histopathology" type="gov.nih.nci.cabio.domain.Histopathology" location="histopathologyCollection" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.Anomaly" identity="id">
+    <map-to xml="Anomaly" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="description" type="string">
+      <bind-xml name="description" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="vocabularyCollection" type="gov.nih.nci.cabio.domain.Vocabulary" collection="collection">
+      <bind-xml name="Vocabulary" type="gov.nih.nci.cabio.domain.Vocabulary" location="vocabularyCollection" node="element" />
+    </field>
+    <field name="organOntologyCollection" type="gov.nih.nci.cabio.domain.OrganOntology" collection="collection">
+      <bind-xml name="OrganOntology" type="gov.nih.nci.cabio.domain.OrganOntology" location="organOntologyCollection" node="element" />
+    </field>
+    <field name="histopathology" type="gov.nih.nci.cabio.domain.Histopathology">
+      <bind-xml name="Histopathology" type="gov.nih.nci.cabio.domain.Histopathology" location="histopathology" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.Protocol" identity="id">
+    <map-to xml="Protocol" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="description" type="string">
+      <bind-xml name="description" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="name" type="string">
+      <bind-xml name="name" node="attribute" />
+    </field>
+    <field name="type" type="string">
+      <bind-xml name="type" node="attribute" />
+    </field>
+    <field name="tissueCollection" type="gov.nih.nci.cabio.domain.Tissue" collection="collection">
+      <bind-xml name="Tissue" type="gov.nih.nci.cabio.domain.Tissue" location="tissueCollection" node="element" />
+    </field>
+    <field name="libraryCollection" type="gov.nih.nci.cabio.domain.Library" collection="collection">
+      <bind-xml name="Library" type="gov.nih.nci.cabio.domain.Library" location="libraryCollection" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.RelativeLocation" identity="id">
+    <map-to xml="RelativeLocation" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="distance" type="string">
+      <bind-xml name="distance" node="attribute" />
+    </field>
+    <field name="id" type="long">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="orientation" type="string">
+      <bind-xml name="orientation" node="attribute" />
+    </field>
+    <field name="SNP" type="gov.nih.nci.cabio.domain.SNP">
+      <bind-xml name="SNP" type="gov.nih.nci.cabio.domain.SNP" location="snp" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.GeneRelativeLocation" identity="id" extends="gov.nih.nci.cabio.domain.RelativeLocation">
+    <map-to xml="GeneRelativeLocation" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="gene" type="gov.nih.nci.cabio.domain.Gene">
+      <bind-xml name="Gene" type="gov.nih.nci.cabio.domain.Gene" location="gene" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.common.provenance.domain.InternetSource" identity="id" extends="gov.nih.nci.common.provenance.domain.Source">
+    <map-to xml="InternetSource" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.common.provenance.domain" />
+    <field name="ownerInstitution" type="string">
+      <bind-xml name="ownerInstitution" node="attribute" />
+    </field>
+    <field name="ownerPersons" type="string">
+      <bind-xml name="ownerPersons" node="attribute" />
+    </field>
+    <field name="sourceURI" type="string">
+      <bind-xml name="sourceURI" node="attribute" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.common.provenance.domain.WebServicesSourceReference" identity="id" extends="gov.nih.nci.common.provenance.domain.SourceReference">
+    <map-to xml="WebServicesSourceReference" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.common.provenance.domain" />
+    <field name="request" type="string">
+      <bind-xml name="request" node="attribute" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.SNPArrayReporter" identity="id" extends="gov.nih.nci.cabio.domain.ArrayReporter">
+    <map-to xml="SNPArrayReporter" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="phastConservation" type="string">
+      <bind-xml name="phastConservation" node="attribute" />
+    </field>
+    <field name="SNP" type="gov.nih.nci.cabio.domain.SNP">
+      <bind-xml name="SNP" type="gov.nih.nci.cabio.domain.SNP" location="snp" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.TranscriptArrayReporter" identity="id" extends="gov.nih.nci.cabio.domain.ArrayReporter">
+    <map-to xml="TranscriptArrayReporter" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+  </class>
+  <class name="gov.nih.nci.cabio.domain.MarkerRelativeLocation" identity="id" extends="gov.nih.nci.cabio.domain.RelativeLocation">
+    <map-to xml="MarkerRelativeLocation" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="type" type="string">
+      <bind-xml name="type" node="attribute" />
+    </field>
+    <field name="markerCollection" type="gov.nih.nci.cabio.domain.Marker" collection="collection">
+      <bind-xml name="Marker" type="gov.nih.nci.cabio.domain.Marker" location="markerCollection" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.CytogeneticLocation" identity="id" extends="gov.nih.nci.cabio.domain.Location">
+    <map-to xml="CytogeneticLocation" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="bigid" type="string">
+      <bind-xml name="bigid" node="attribute" />
+    </field>
+    <field name="endCytoband" type="gov.nih.nci.cabio.domain.Cytoband">
+      <bind-xml name="Cytoband" type="gov.nih.nci.cabio.domain.Cytoband" location="endCytoband" node="element" />
+    </field>
+    <field name="startCytoband" type="gov.nih.nci.cabio.domain.Cytoband">
+      <bind-xml name="Cytoband" type="gov.nih.nci.cabio.domain.Cytoband" location="startCytoband" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.common.provenance.domain.PublicationSource" identity="id" extends="gov.nih.nci.common.provenance.domain.Source">
+    <map-to xml="PublicationSource" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.common.provenance.domain" />
+    <field name="authors" type="string">
+      <bind-xml name="authors" node="attribute" />
+    </field>
+    <field name="endPage" type="integer">
+      <bind-xml name="endPage" node="attribute" />
+    </field>
+    <field name="startPage" type="integer">
+      <bind-xml name="startPage" node="attribute" />
+    </field>
+    <field name="title" type="string">
+      <bind-xml name="title" node="attribute" />
+    </field>
+    <field name="volume" type="integer">
+      <bind-xml name="volume" node="attribute" />
+    </field>
+    <field name="year" type="integer">
+      <bind-xml name="year" node="attribute" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.common.provenance.domain.ResearchInstitutionSource" identity="id" extends="gov.nih.nci.common.provenance.domain.Source">
+    <map-to xml="ResearchInstitutionSource" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.common.provenance.domain" />
+    <field name="institutionAddress" type="string">
+      <bind-xml name="institutionAddress" node="attribute" />
+    </field>
+    <field name="institutionDepartment" type="string">
+      <bind-xml name="institutionDepartment" node="attribute" />
+    </field>
+    <field name="institutionName" type="string">
+      <bind-xml name="institutionName" node="attribute" />
+    </field>
+    <field name="institutionPersons" type="string">
+      <bind-xml name="institutionPersons" node="attribute" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.common.provenance.domain.URLSourceReference" identity="id" extends="gov.nih.nci.common.provenance.domain.SourceReference">
+    <map-to xml="URLSourceReference" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.common.provenance.domain" />
+    <field name="sourceURL" type="string">
+      <bind-xml name="sourceURL" node="attribute" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.PhysicalLocation" identity="id" extends="gov.nih.nci.cabio.domain.Location">
+    <map-to xml="PhysicalLocation" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="chromosomalEndPosition" type="long">
+      <bind-xml name="chromosomalEndPosition" node="attribute" />
+    </field>
+    <field name="chromosomalStartPosition" type="long">
+      <bind-xml name="chromosomalStartPosition" node="attribute" />
+    </field>
+    <field name="transcript" type="gov.nih.nci.cabio.domain.Transcript">
+      <bind-xml name="Transcript" type="gov.nih.nci.cabio.domain.Transcript" location="transcript" node="element" />
+    </field>
+    <field name="exonArrayReporter" type="gov.nih.nci.cabio.domain.ExonArrayReporter">
+      <bind-xml name="ExonArrayReporter" type="gov.nih.nci.cabio.domain.ExonArrayReporter" location="exonArrayReporter" node="element" />
+    </field>
+    <field name="cytoband" type="gov.nih.nci.cabio.domain.Cytoband">
+      <bind-xml name="Cytoband" type="gov.nih.nci.cabio.domain.Cytoband" location="cytoband" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.ExpressionArrayReporter" identity="id" extends="gov.nih.nci.cabio.domain.TranscriptArrayReporter">
+    <map-to xml="ExpressionArrayReporter" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="sequenceSource" type="string">
+      <bind-xml name="sequenceSource" node="attribute" />
+    </field>
+    <field name="sequenceType" type="string">
+      <bind-xml name="sequenceType" node="attribute" />
+    </field>
+    <field name="targetDescription" type="string">
+      <bind-xml name="targetDescription" node="attribute" />
+    </field>
+    <field name="targetId" type="string">
+      <bind-xml name="targetId" node="attribute" />
+    </field>
+    <field name="nucleicAcidSequence" type="gov.nih.nci.cabio.domain.NucleicAcidSequence">
+      <bind-xml name="NucleicAcidSequence" type="gov.nih.nci.cabio.domain.NucleicAcidSequence" location="nucleicAcidSequence" node="element" />
+    </field>
+    <field name="gene" type="gov.nih.nci.cabio.domain.Gene">
+      <bind-xml name="Gene" type="gov.nih.nci.cabio.domain.Gene" location="gene" node="element" />
+    </field>
+    <field name="proteinDomainCollection" type="gov.nih.nci.cabio.domain.ProteinDomain" collection="collection">
+      <bind-xml name="ProteinDomain" type="gov.nih.nci.cabio.domain.ProteinDomain" location="proteinDomainCollection" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.cabio.domain.ExonArrayReporter" identity="id" extends="gov.nih.nci.cabio.domain.TranscriptArrayReporter">
+    <map-to xml="ExonArrayReporter" ns-uri="gme://caCORE.caBIO/4.0/gov.nih.nci.cabio.domain" />
+    <field name="probeCount" type="long">
+      <bind-xml name="probeCount" node="attribute" />
+    </field>
+    <field name="probeSelectionRegionId" type="long">
+      <bind-xml name="probeSelectionRegionId" node="attribute" />
+    </field>
+    <field name="strand" type="string">
+      <bind-xml name="strand" node="attribute" />
+    </field>
+    <field name="transcript" type="gov.nih.nci.cabio.domain.Transcript">
+      <bind-xml name="Transcript" type="gov.nih.nci.cabio.domain.Transcript" location="transcript" node="element" />
+    </field>
+    <field name="exon" type="gov.nih.nci.cabio.domain.Exon">
+      <bind-xml name="Exon" type="gov.nih.nci.cabio.domain.Exon" location="exon" node="element" />
+    </field>
+    <field name="physicalLocationCollection" type="gov.nih.nci.cabio.domain.PhysicalLocation" collection="collection">
+      <bind-xml name="PhysicalLocation" type="gov.nih.nci.cabio.domain.PhysicalLocation" location="physicalLocationCollection" node="element" />
+    </field>
+    <field name="geneCollection" type="gov.nih.nci.cabio.domain.Gene" collection="collection">
+      <bind-xml name="Gene" type="gov.nih.nci.cabio.domain.Gene" location="geneCollection" node="element" />
+    </field>
+  </class>
+</mapping>
+
