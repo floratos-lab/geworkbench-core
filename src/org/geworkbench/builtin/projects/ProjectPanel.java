@@ -637,7 +637,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	public PendingTreeNode addPendingNode(GridEndpointReferenceType gridEpr,
 			String description, boolean startNewThread) {
 		// Retrieve the project node for this node
-		ProjectNode pNode = selection.getSelectedProjectNode();
+		ProjectTreeNode pNode = selection.getSelectedNode();
 		PendingTreeNode node = null;
 		if (pNode == null) {
 		}
@@ -662,6 +662,26 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				int index = parent.getIndex(node);
 				projectTreeModel.removeNodeFromParent(node);
 				DataSetNode newNode = new DataSetNode(dataSet);
+				projectTreeModel.insertNodeInto(newNode, parent, index);
+				eprPendingNodeMap.remove(gridEpr);
+			} else {
+				JOptionPane
+						.showMessageDialog(
+								null,
+								"The service didn't return any results. Please check your input parameters and try again");
+				node.setUserObject("No Results");
+			}
+		}
+	}
+	public void addCompletedNode(GridEndpointReferenceType gridEpr,
+			DSAncillaryDataSet ancillaryDataSet) {
+		PendingTreeNode node = eprPendingNodeMap.get(gridEpr);
+		if (node != null) {
+			if (ancillaryDataSet != null) {
+				ProjectTreeNode parent = (ProjectTreeNode) node.getParent();
+				int index = parent.getIndex(node);
+				projectTreeModel.removeNodeFromParent(node);
+				DataSetSubNode newNode = new DataSetSubNode(ancillaryDataSet);
 				projectTreeModel.insertNodeInto(newNode, parent, index);
 				eprPendingNodeMap.remove(gridEpr);
 			} else {
@@ -966,7 +986,13 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			Object source) {
 		// FIXME why would we pass the source. Nothing is done with it! See
 		// method above
-		addCompletedNode(pnce.getGridEndpointReferenceType(), pnce.getDataSet());
+		DSDataSet dataSet = pnce.getDataSet();
+		DSAncillaryDataSet ancillaryDataSet = pnce.getAncillaryDataSet();
+		if (dataSet != null) {
+			addCompletedNode(pnce.getGridEndpointReferenceType(), dataSet);
+		} else if (ancillaryDataSet != null) {
+			addCompletedNode(pnce.getGridEndpointReferenceType(), ancillaryDataSet);
+		}
 	}
 
 	/**
