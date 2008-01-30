@@ -98,6 +98,9 @@
 	<plugin id="tabularMicroarrayPanel" name="Tabular Microarray Viewer" class="org.geworkbench.components.microarrays.TabularMicroarrayPanel" source="microarrays">
 		<gui-area name="VisualArea"/>
 	</plugin>
+    <plugin id="tabularDataViewer" name="Tabular Viewer" class="org.geworkbench.components.anova.gui.TabularDataViewer" source="anova">
+        <gui-area name="VisualArea"/>
+    </plugin>		
 	<plugin id="phenotypePanel2" name="Arrays/Phenotypes" class="org.geworkbench.components.selectors.PhenotypePanel" source="selectors">
 		<gui-area name="SelectionArea"/>
 	</plugin>
@@ -127,6 +130,7 @@
 	<plugin id="svmAnalysis" name="SVM Analysis" class="org.geworkbench.components.classification.svm.SVMTraining" source="classification"/>
 	<plugin id="tTestAnalysis" name="t Test Analysis" class="org.geworkbench.components.analysis.clustering.TtestAnalysis" source="analysis"/>
 	<plugin id="multiTTestAnalysis" name="Multi t Test Analysis" class="org.geworkbench.components.analysis.clustering.MultiTTestAnalysis" source="analysis"/>
+	<plugin id="anova" name="Anova Analysis" class="org.geworkbench.components.anova.AnovaAnalysis" source="anova"/>
 	<plugin id="thresholdNormalizer" name="Threshold Normalizer" class="org.geworkbench.components.normalization.ThresholdNormalizer" source="normalization"/>
 	<plugin id="QuantileNormalizer" name="Quantile Normalizer" class="org.geworkbench.components.normalization.QuantileNormalizer" source="normalization"/>
 	<plugin id="TwoChannelFilter" name="Genepix Filter" class="org.geworkbench.components.filtering.GenepixExpressionThresholdFilter" source="filtering"/>
