@@ -31,4 +31,10 @@ public interface DSAncillaryDataSet<T extends DSBioObject> extends DSDataSet<T> 
      * @return
      */
     public DSDataSet<T> getParentDataSet();
+
+    /**
+     * This function is designed for injection, used on grid service, when ResultSet doesn't have parent information, ex:microarray data, panels data, etc. we need to assign a parent, then when we want to get it's parent's data, we can. 
+     * @param parent
+     */
+    public void parentSetter(DSDataSet<T> parent);
 }

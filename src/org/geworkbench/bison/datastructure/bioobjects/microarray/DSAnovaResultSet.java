@@ -4,6 +4,7 @@
 package org.geworkbench.bison.datastructure.bioobjects.microarray;
 
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
+import org.geworkbench.bison.datastructure.biocollections.views.DSMicroarraySetView;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.engine.management.Script;
@@ -39,5 +40,7 @@ public interface DSAnovaResultSet<T extends DSGeneMarker> extends
 	
 	@Script
 	public void saveToFile(String filename);
-
+	
+	public void microarraySetViewSetter(DSMicroarraySetView view); //for microarraysetview injection
+	public String[] significantMarkerNamesGetter(); //for panel injection
 }

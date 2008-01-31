@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.HashMap;
 /**
  * @author yc2480
- * @version $Id: CSAnovaResultSet.java,v 1.2 2008-01-16 16:25:21 chiangy Exp $
+ * @version $Id: CSAnovaResultSet.java,v 1.3 2008-01-31 18:16:16 chiangy Exp $
  *
  */
 public class CSAnovaResultSet <T extends DSGeneMarker> extends CSSignificanceResultSet implements DSAnovaResultSet<T>{
@@ -73,43 +73,29 @@ public class CSAnovaResultSet <T extends DSGeneMarker> extends CSSignificanceRes
     }
 
     //TODO: color mosaic use these one a lot, make it faster
+    //TODO: we can use a HashMap to increase speed as in CSSignificanceResultSet
     public Double getSignificance(DSGeneMarker marker) {
 //    	System.out.println("getSignificance");
-/*    	
-    	int index=microarraySetView.getMicroarraySet().getMarkers().indexOf(marker);
-    	ArrayList<String> list = new ArrayList<String>();
-		list.addAll(Arrays.asList(significantMarkerNames));
-		int index=list.indexOf(marker.getShortName());
-    		
-		if (index<0){
-			//System.out.println("error get sig:"+marker.getShortName());
-			return null;
-		}else 
-    	//TODO: error check
-    	return result2DArray[0][index];
-*/		
-    	Integer I= map.get(marker.getShortName());
+    	Integer I= map.get(marker.getLabel());
     	if (I==null){
     		return null;
     	}else{
         	return result2DArray[0][I.intValue()];
     	}
-/*    	
-    	Double v=(double)anovaResult.getPVals(microarraySetView.getMicroarraySet().getMarkers().indexOf(marker));
-    	
-        //Double v = significance.get(marker);
-        if (v == null) {
-            return 1d;
-        } else {
-            return v;
-        }
-*/        
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.geworkbench.bison.datastructure.bioobjects.microarray.CSSignificanceResultSet#setSignificance(org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker, double)
+     * 
+     * This function override it's parent's so it can also set result2DArray array.
+     */
+    @Override
     public void setSignificance(DSGeneMarker marker, double value) {
+    	super.setSignificance(marker, value);
     	ArrayList<String> list = new ArrayList<String>();
 		list.addAll(Arrays.asList(significantMarkerNames));
-		int index=list.indexOf(marker.getShortName());
+		int index=list.indexOf(marker.getLabel());
 		result2DArray[0][index]=value;
 //    	result2DArray[0][microarraySetView.getMicroarraySet().getMarkers().indexOf(marker)]=value;
 //        significance.put(marker, value);
@@ -136,6 +122,11 @@ public class CSAnovaResultSet <T extends DSGeneMarker> extends CSSignificanceRes
         }
      };
 
+    /*
+     * (non-Javadoc)
+     * @see org.geworkbench.bison.datastructure.bioobjects.microarray.CSSignificanceResultSet#getSignificantMarkers()
+     */
+     @Override
     public DSPanel<T> getSignificantMarkers() {
         return panel;
     }
@@ -247,4 +238,10 @@ public class CSAnovaResultSet <T extends DSGeneMarker> extends CSSignificanceRes
 
 		return result2DArray[3+groupIndex*2+1][markerIndex];
 	};
+	public void microarraySetViewSetter(DSMicroarraySetView view){ //for injection used in grid service
+		microarraySetView=view;
+	}
+	public String[] significantMarkerNamesGetter(){
+		return significantMarkerNames;
+	}
 }
