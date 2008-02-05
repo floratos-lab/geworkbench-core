@@ -22,7 +22,7 @@ public abstract class CSAncillaryDataSet<T extends DSBioObject> extends CSDataSe
      * This function is designed for injection, used on grid service, when ResultSet doesn't have parent information, ex:microarray data, panels data, etc. we need to assign a parent, then when we want to get it's parent's data, we can.
      * @param parent
      */
-    public void parentSetter(DSDataSet<T> parent){ 
+    public void setParent(DSDataSet<T> parent){ 
     	this.parent=parent;
     }
 }

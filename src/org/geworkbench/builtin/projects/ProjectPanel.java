@@ -51,6 +51,7 @@ import org.apache.commons.collections15.map.ListOrderedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
+import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
@@ -681,6 +682,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				ProjectTreeNode parent = (ProjectTreeNode) node.getParent();
 				int index = parent.getIndex(node);
 				projectTreeModel.removeNodeFromParent(node);
+				//FIXME: we should check if parent is a DataSetNode or not, before casting. If not we should find a way to deal with it.
+				((CSAncillaryDataSet)ancillaryDataSet).setParent(((DataSetNode)parent).dataFile);
 				DataSetSubNode newNode = new DataSetSubNode(ancillaryDataSet);
 				projectTreeModel.insertNodeInto(newNode, parent, index);
 				eprPendingNodeMap.remove(gridEpr);
