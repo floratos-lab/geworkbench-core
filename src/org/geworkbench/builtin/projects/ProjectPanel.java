@@ -649,6 +649,11 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			 */
 			node = new PendingTreeNode(description, description, gridEpr);
 			projectTreeModel.insertNodeInto(node, pNode, pNode.getChildCount());
+			// Make sure the user can see the lovely new node.
+			projectTree.scrollPathToVisible(new TreePath(node));
+			projectTree.setSelectionPath(new TreePath(node.getPath()));
+			selection.setNodeSelection(node);
+			
 			eprPendingNodeMap.put(gridEpr, node);
 		}
 		return node;
@@ -687,6 +692,11 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				DataSetSubNode newNode = new DataSetSubNode(ancillaryDataSet);
 				projectTreeModel.insertNodeInto(newNode, parent, index);
 				eprPendingNodeMap.remove(gridEpr);
+
+				// Make sure the user can see the lovely new node.
+				projectTree.scrollPathToVisible(new TreePath(newNode));
+				projectTree.setSelectionPath(new TreePath(newNode.getPath()));
+				selection.setNodeSelection(newNode);
 			} else {
 				JOptionPane
 						.showMessageDialog(
