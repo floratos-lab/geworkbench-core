@@ -18,6 +18,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.Vector;
 
 /**
@@ -73,12 +74,67 @@ public class AffyFileFormat extends DataSetFileFormat {
         return affyExtensions;
     }
 
-    // Fixme.
-    // In here we should check (among other things) that:
-    // * There are no duplicate markers (ie., no 2 markers have the same name).
+    /**
+     * In this method, we check that:
+     * There is a header line exist (keyword "Probe Set Name" exist)
+     * number of columns in header line is same as number of columns in data.
+     * There are no duplicate markers (ie., no 2 markers have the same name).
+     */
+    // FIXME
+    // In here we should also check (among other things) that:
     // * The values of the data points respect their expected type.
     public boolean checkFormat(File f) {
-        return true;
+        boolean headerExist = false;
+        boolean columnsMatch = true;
+        boolean noDuplicateMarkers = true;
+        boolean valuesAreExpectedType = true;
+    	try{
+	        FileInputStream fileIn = new FileInputStream(f);
+	        ProgressMonitorInputStream progressIn = new ProgressMonitorInputStream(null, "Checking File Format", fileIn);
+	        BufferedReader reader = new BufferedReader(new InputStreamReader(progressIn));
+	
+	        String line = null;
+	        int totalColumns = 0;
+	        List<String> markers = new ArrayList<String>();
+	        while ((line = reader.readLine()) != null) { //for each line
+	        	if (line.indexOf("Probe Set Name") == 0) {
+	                headerExist = true;
+	            }
+	        	if (headerExist){//we'll skip anything before header
+		            String token=null;
+			        int columnIndex = 0;
+			        int accessionIndex= 0;
+		            StringTokenizer st = new StringTokenizer(line, "\t\n");	            
+		            while (st.hasMoreTokens()) {	//for each column
+		                token = st.nextToken().trim();
+		                if (token.equals("Probe Set Name")) {
+		                    accessionIndex = columnIndex;
+		                }else if (headerExist && (columnIndex==0)){ // if this line is after header, then first column should be our marker name
+		                	if (markers.contains(token)){//duplicate markers
+		                		noDuplicateMarkers=false;
+		                	}else{
+		                		markers.add(token);
+		                	}
+		                }
+		                columnIndex++;
+		            }
+		            //check if column match or not
+		            if (headerExist){ //if this line is real data, we assume lines after header are real data. (we might have bug here)
+		            	if (totalColumns==0)//not been set yet
+		            		totalColumns=columnIndex-accessionIndex;
+		            	else if (columnIndex!=totalColumns)//if not equal 
+		            		columnsMatch=false;
+		            }
+	        	}
+	        }
+	        fileIn.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    if (headerExist && columnsMatch && noDuplicateMarkers)
+	    	return true;
+	    else
+	    	return false;
     }
 
     /**
@@ -169,13 +225,9 @@ public class AffyFileFormat extends DataSetFileFormat {
      * @param file File
      * @return DataSet
      */
-    public DSDataSet getDataFile(File file) {
+    public DSDataSet getDataFile(File file) throws InputFileFormatException{
         DSDataSet ds = null;
-        try {
-            ds = (DSDataSet) getMArraySet(file);
-        } catch (InputFileFormatException ife) {
-            ife.printStackTrace();
-        }
+        ds = (DSDataSet) getMArraySet(file);
         return ds;
     }
 
