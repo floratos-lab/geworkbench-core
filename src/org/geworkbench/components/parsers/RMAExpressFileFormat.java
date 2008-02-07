@@ -133,6 +133,7 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
     }
 
     public DSMicroarraySet getMArraySet(File file) throws InputFileFormatException {
+
 //        if (!checkFormat(file))
 //            throw new InputFileFormatException("AffyFileFormat::getMArraySet - " + "Attempting to open a file that does not comply with the " + "Affy format.");
     	
