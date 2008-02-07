@@ -1355,7 +1355,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 							JOptionPane
 									.showMessageDialog(
 											null,
-											"The input file does not comply with the designated format.",
+											iffe.getMessage(),
 											"Parsing Error",
 											JOptionPane.ERROR_MESSAGE);
 						}
