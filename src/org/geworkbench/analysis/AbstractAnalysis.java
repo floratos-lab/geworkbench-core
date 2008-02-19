@@ -94,6 +94,8 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	
 	public static final int NETBOOST_TYPE = 25;
 
+	public static final int SKYLINE_TYPE = 26;
+
 	/**
 	 * The parameters panel to be use from within the AnalysisPane in order to
 	 * collect the analysis parameters from the user.
