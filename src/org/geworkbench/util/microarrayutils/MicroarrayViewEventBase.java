@@ -126,7 +126,6 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 				}
 			} else {
 				// no microarray data set
-				this.refMASet = null;
 				this.refOtherSet = dataSet;
 			}
 			refreshMaSetView();
