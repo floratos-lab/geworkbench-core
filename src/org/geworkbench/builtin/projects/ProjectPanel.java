@@ -1207,8 +1207,10 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		// merged
 		// microarray set node.
 		for (i = 0; i < count; i++) {
+			
 			node = (MutableTreeNode) selections[i].getLastPathComponent();
 			if (node instanceof DataSetNode) {
+				try{//Provide fix for bug 666, only merge Microarraydatasets.
 				sets[i] = (DSMicroarraySet) ((DataSetNode) node).dataFile;
 				if (sibling == null
 						|| sibling.getPathCount() > selections[i]
@@ -1221,6 +1223,13 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 					JOptionPane.showMessageDialog(null,
 							"Select nodes from 1 project only.", "Merge Error",
 							JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				}catch (ClassCastException ex){
+					JOptionPane.showMessageDialog(null,
+							"Only microarray sets of the same"
+									+ " underlying platform can be merged.",
+							"Merge Error", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 			} else {
