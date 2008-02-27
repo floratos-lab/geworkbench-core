@@ -360,6 +360,21 @@ public class Parameters
 
     private Object __equalsCalc;
     private boolean __hashCodeCalc;
+   // private polgara.soapPD_wsdl.ProfileHMM profile;
+    private String minSupportType;
+	/**
+	 * @return the minSupportType
+	 */
+	public String getMinSupportType() {
+		return minSupportType;
+	}
+
+	/**
+	 * @param minSupportType the minSupportType to set
+	 */
+	public void setMinSupportType(String minSupportType) {
+		this.minSupportType = minSupportType;
+	}
  
 
 
