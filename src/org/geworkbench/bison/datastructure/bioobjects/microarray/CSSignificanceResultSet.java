@@ -21,7 +21,12 @@ import java.util.HashMap;
  */
 public class CSSignificanceResultSet <T extends DSGeneMarker> extends CSAncillaryDataSet implements DSSignificanceResultSet<T> {
 
-    private class SignificanceComparator implements Comparator<Integer> {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private class SignificanceComparator implements Comparator<Integer> {
 
         public int compare(Integer x, Integer y) {
             double sigX = significance.get(panel.get(x));
