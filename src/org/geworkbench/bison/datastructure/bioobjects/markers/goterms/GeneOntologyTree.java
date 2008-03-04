@@ -13,15 +13,15 @@ import java.util.*;
  * @author John Watkinson, Xiaoqing Zhang
  */
 public class GeneOntologyTree {
-	
-	  private static GeneOntologyTree instance;
 
-	    public static GeneOntologyTree getInstance() {
-	        if (instance == null) {
-	            instance = new GeneOntologyTree();
-	        }
-	        return instance;
-	    }
+	private static GeneOntologyTree instance;
+
+	public static GeneOntologyTree getInstance() {
+		if (instance == null) {
+			instance = new GeneOntologyTree();
+		}
+		return instance;
+	}
 
 	// Interim object for building up goterm data
 	private static class Term {
@@ -318,10 +318,14 @@ public class GeneOntologyTree {
 	}
 
 	private void getAncestorsHelper(GOTerm term, Set<GOTerm> set) {
-		set.add(term);
-		GOTerm[] parents = term.getParents();
-		for (GOTerm parent : parents) {
-			getAncestorsHelper(parent, set);
+		if (term != null) {
+			set.add(term);
+			GOTerm[] parents = term.getParents();
+			for (GOTerm parent : parents) {
+				getAncestorsHelper(parent, set);
+			}
+		}else{
+			System.out.println("EMPTY GOTERM ID:" + term);
 		}
 	}
 
@@ -375,4 +379,4 @@ public class GeneOntologyTree {
 		System.out.println("Depth of 6928: " + tree.getDepth(6928));
 		System.out.println("Depth of 9987: " + tree.getDepth(9987));
 	}
- }
+}
