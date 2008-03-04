@@ -253,6 +253,8 @@
 	<plugin id="cascriptPanel" name="caSCRIPT" class="org.geworkbench.components.cascript.CaSCRIPTEditor" source="cagrid">
 		<gui-area name="CommandArea"/>
 	</plugin>
+	 <plugin id="goTree" name="Gene Ontology Tree" class="org.geworkbench.components.goterms.tree.GeneOntologyTreePopulateComponent" source="goterms">
+</plugin>
 	<!--<plugin id="genomeBrowser" name="Genome Browser" class="org.geworkbench.components.genomebrowser.GenomeBrowser" source="genomebrowser">
 		<gui-area name="VisualArea"/>
 	</plugin>-->
