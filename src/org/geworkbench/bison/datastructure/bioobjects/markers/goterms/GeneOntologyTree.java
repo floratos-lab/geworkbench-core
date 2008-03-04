@@ -325,7 +325,7 @@ public class GeneOntologyTree {
 				getAncestorsHelper(parent, set);
 			}
 		}else{
-			System.out.println("EMPTY GOTERM ID:" + term);
+			//System.out.println("EMPTY GOTERM ID:" + term);
 		}
 	}
 
