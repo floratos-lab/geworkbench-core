@@ -1,6 +1,7 @@
 package org.geworkbench.bison.datastructure.bioobjects.markers.goterms;
 
 import org.apache.commons.collections15.map.ListOrderedMap;
+import org.geworkbench.bison.annotation.CSAnnotationContextManager;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -9,9 +10,18 @@ import java.util.*;
 /**
  * Represents the Gene Ontology Tree and provides methods to access it.
  * 
- * @author John Watkinson
+ * @author John Watkinson, Xiaoqing Zhang
  */
 public class GeneOntologyTree {
+	
+	  private static GeneOntologyTree instance;
+
+	    public static GeneOntologyTree getInstance() {
+	        if (instance == null) {
+	            instance = new GeneOntologyTree();
+	        }
+	        return instance;
+	    }
 
 	// Interim object for building up goterm data
 	private static class Term {
@@ -365,4 +375,4 @@ public class GeneOntologyTree {
 		System.out.println("Depth of 6928: " + tree.getDepth(6928));
 		System.out.println("Depth of 9987: " + tree.getDepth(9987));
 	}
-}
+ }
