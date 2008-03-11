@@ -285,7 +285,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 					GlobalPreferences prefs = GlobalPreferences.getInstance();
 					String editor = prefs.getTextEditor();
 					if (editor == null) {
-						System.out.println("No editor configured.");
+						log.info("No editor configured.");
 					} else {
 						if (ds.getFile() == null) {
 							JOptionPane
@@ -304,7 +304,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 							try {
 								Runtime.getRuntime().exec(args);
 							} catch (IOException e1) {
-								System.out.println("Error opening editor:");
+								log.info("Error opening editor:");
 								e1.printStackTrace();
 							}
 						}
@@ -358,7 +358,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 					GlobalPreferences prefs = GlobalPreferences.getInstance();
 					String editor = prefs.getTextEditor();
 					if (editor == null) {
-						System.out.println("No editor configured.");
+						log.info("No editor configured.");
 					} else {
 						if (Util.isRunningOnAMac()) {
 							editor = "Open";
@@ -367,7 +367,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 						try {
 							Runtime.getRuntime().exec(args);
 						} catch (IOException e1) {
-							System.out.println("Error opening editor:");
+							log.info("Error opening editor:");
 							e1.printStackTrace();
 						}
 					}
@@ -512,7 +512,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				// then do a regular saveFile
 				String newFileName = jFileChooser1.getSelectedFile().getPath();
 				// repaints menu after item is selected
-				System.out.println(newFileName);
+				log.info(newFileName);
 				// if(f != null) {
 				// return saveFile(f, newFileName);
 				// } else {
@@ -537,7 +537,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				// then do a regular saveFile
 				String newFileName = jFileChooser1.getSelectedFile().getPath();
 				// repaints menu after item is selected
-				System.out.println(newFileName);
+				log.info(newFileName);
 				// if(f != null) {
 				// return saveFile(f, newFileName);
 				// } else {
@@ -818,7 +818,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			dNode = matchedDNode;
 		}
 		if (dNode == null) {
-			System.out.println("There is no node at project panel!");
+			log.info("There is no node at project panel!");
 			return;
 		}
 
@@ -867,7 +867,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 *            FileOutputStream f = new FileOutputStream(filename);
 	 *            ObjectOutput s = new ObjectOutputStream(f);
 	 *            s.writeObject(root); s.flush(); } catch (IOException ex) {
-	 *            System.err.println("Error: " + ex); } }
+	 *            log.error("Error: " + ex); } }
 	 */
 
 	/**
@@ -888,9 +888,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			// projectTreeModel = new DefaultTreeModel(root);
 			// projectTree.setModel(projectTreeModel);
 		} catch (ClassNotFoundException ex) {
-			System.err.println("Error: " + ex);
+			log.error("Error: " + ex);
 		} catch (IOException ex) {
-			System.err.println("Error: " + ex);
+			log.error("Error: " + ex);
 		}
 	}
 
@@ -1472,7 +1472,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 								addDataSetNode(set, false);
 							}
 						} else {
-							System.out.println("Datafile not loaded");
+							log.info("Datafile not loaded");
 						}
 					}
 
@@ -1540,7 +1540,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				// System.setProperty("data.files.dir", directory);
 				addDataSetNode(dataSet, true);
 			} else {
-				System.out.println("Could not load file: " + dataSetFile);
+				log.info("Could not load file: " + dataSetFile);
 			}
 		} else {
 		}
@@ -1709,7 +1709,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 							selectedFilter = (ImageFileFilter) fc
 									.getFileFilter();
 							ext = selectedFilter.getExtension();
-							System.out.println("File extension: " + ext);
+							log.info("File extension: " + ext);
 						}
 					}
 				}
@@ -2171,7 +2171,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			s.writeObject(aps);
 			s.flush();
 		} catch (IOException ex) {
-			System.err.println("Error: " + ex);
+			log.error("Error: " + ex);
 		}
 
 	}
@@ -2701,11 +2701,11 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			// If everything went OK, register the newly created microarray set.
 			if (dataSet != null) {
 				// String directory = dataSetFile.getPath();
-				// System.out.println("data set parsed");
+				// log.info("data set parsed");
 				jNewProjectItem_actionPerformed(null);
 				addDataSetNode(dataSet, true);
 			} else {
-				System.out.println("Could not load file: " + dataSetFiles);
+				log.info("Could not load file: " + dataSetFiles);
 			}
 		} else {
 			// super.fileOpenAction(dataSetFiles, inputFormat);
