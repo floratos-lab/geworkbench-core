@@ -11,26 +11,29 @@
  */
 package org.geworkbench.bison.datastructure.biocollections.pca;
 
-import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
-import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
-import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.HashMap;
+
+import javax.swing.JOptionPane;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import javax.swing.*;
-import java.io.*;
-import java.util.HashMap;
+import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
+import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 
 /**
  * @author: Marc-Danie Nazaire
+ * @version $Id: CSPCADataSet.java,v 1.1 2008-03-14 20:06:21 keshav Exp $
  */
 @SuppressWarnings("unchecked")
-public class PCADataSet extends CSAncillaryDataSet implements
-		DSAncillaryDataSet {
+public class CSPCADataSet extends CSAncillaryDataSet implements DSPCADataSet {
 
 	private static final long serialVersionUID = 1L;
-	
-	static Log log = LogFactory.getLog(PCADataSet.class);
+
+	static Log log = LogFactory.getLog(CSPCADataSet.class);
 	private float[][] u_Matrix;
 	private int numPCs;
 	private HashMap eigenValues;
@@ -38,7 +41,7 @@ public class PCADataSet extends CSAncillaryDataSet implements
 	private HashMap eigenVectors;
 	private String variables;
 
-	public PCADataSet(DSDataSet parent, String label, String variables,
+	public CSPCADataSet(DSDataSet parent, String label, String variables,
 			int numPCs, float[][] u_Matrix, HashMap eigenValues,
 			HashMap eigenVectors, HashMap percentVariations) {
 		super(parent, label);
@@ -51,39 +54,94 @@ public class PCADataSet extends CSAncillaryDataSet implements
 		this.percentVariations = percentVariations;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet#getDataSetFile()
+	 */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.geworkbench.bison.datastructure.biocollections.pca.DSPCADataSet#getDataSetFile()
+	 */
 	public File getDataSetFile() {
 		// no-op
 		return null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet#setDataSetFile(java.io.File)
+	 */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.geworkbench.bison.datastructure.biocollections.pca.DSPCADataSet#setDataSetFile(java.io.File)
+	 */
 	public void setDataSetFile(File file) {
 		// no-op
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.geworkbench.bison.datastructure.biocollections.pca.DSPCADataSet#getNumPCs()
+	 */
 	public int getNumPCs() {
 		return numPCs;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.geworkbench.bison.datastructure.biocollections.pca.DSPCADataSet#getEigenValues()
+	 */
 	public HashMap getEigenValues() {
 		return eigenValues;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.geworkbench.bison.datastructure.biocollections.pca.DSPCADataSet#getPercentVars()
+	 */
 	public HashMap getPercentVars() {
 		return percentVariations;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.geworkbench.bison.datastructure.biocollections.pca.DSPCADataSet#getEigenVectors()
+	 */
 	public HashMap getEigenVectors() {
 		return eigenVectors;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.geworkbench.bison.datastructure.biocollections.pca.DSPCADataSet#getUMatrix()
+	 */
 	public float[][] getUMatrix() {
 		return u_Matrix;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.geworkbench.bison.datastructure.biocollections.pca.DSPCADataSet#getVariables()
+	 */
 	public String getVariables() {
 		return variables;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.geworkbench.bison.datastructure.biocollections.pca.DSPCADataSet#writeToFile(java.lang.String)
+	 */
 	public void writeToFile(String fileName) {
 		File file = new File(fileName);
 
