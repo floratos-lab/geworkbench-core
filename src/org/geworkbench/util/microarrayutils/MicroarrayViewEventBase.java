@@ -165,7 +165,7 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 			markers = activatedMarkers;
 
 			numMarkersSelectedLabel.setText(markerLabelPrefix
-					+ activatedMarkers.size());
+					+ activatedMarkers.size() + "  ");
 
 		}
 
