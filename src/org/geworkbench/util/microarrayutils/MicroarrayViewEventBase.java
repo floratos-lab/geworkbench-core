@@ -39,6 +39,7 @@ import org.geworkbench.events.SubpanelChangedEvent;
 /**
  * @author unattributable
  * @see VisualPlugin
+ * @version $Id: MicroarrayViewEventBase.java,v 1.21 2008-03-20 17:01:57 my2248 Exp $
  */
 public abstract class MicroarrayViewEventBase implements VisualPlugin {
 
