@@ -18,6 +18,7 @@ import java.util.HashMap;
 
 /**
  * @author John Watkinson
+ * @version $Id: CSSignificanceResultSet.java,v 1.10 2008-03-31 15:36:01 my2248 Exp $
  */
 public class CSSignificanceResultSet <T extends DSGeneMarker> extends CSAncillaryDataSet implements DSSignificanceResultSet<T> {
 
@@ -39,7 +40,7 @@ public class CSSignificanceResultSet <T extends DSGeneMarker> extends CSAncillar
                 return 0;
             }
         }
-
+  
     }
 
     private HashMap<T, Double> significance;
@@ -80,6 +81,16 @@ public class CSSignificanceResultSet <T extends DSGeneMarker> extends CSAncillar
             panel.add(marker);
         }
     }
+    
+    public void setMarker(T marker, double value) {
+        significance.put(marker, value);        
+    }
+    
+    public void addSigGenToPanel(T marker) {
+    	panel.add(marker);
+    }
+    
+    
      @Script
      public void saveToFile(String filename){
         try{
@@ -121,6 +132,7 @@ public class CSSignificanceResultSet <T extends DSGeneMarker> extends CSAncillar
             newPanel.add(panel.get(indices.get(i)));
         }
         panel = newPanel;
+        
     }
 
     public DSMicroarraySet getParentDataSet() {
