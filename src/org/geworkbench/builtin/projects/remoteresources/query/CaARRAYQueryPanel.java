@@ -493,8 +493,8 @@ public class CaARRAYQueryPanel extends JDialog {
                         break;
                 }
             }
-
-            loadData.getCaArrayDisplayPanel().setCaExperiments(geWorkbenchCaARRAYAdaptor.getExperiments(true));
+//@xz disabled
+          //  loadData.getCaArrayDisplayPanel().setCaExperiments(geWorkbenchCaARRAYAdaptor.getExperiments(true));
 
         } catch (Exception er) {
             GeWorkbenchCaARRAYAdaptor.fail("Cannot process the query.");

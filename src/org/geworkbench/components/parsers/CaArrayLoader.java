@@ -16,7 +16,7 @@ public class CaArrayLoader {
     public static CSExprMicroarraySet loadCaArrayData(CaArrayResource resource) {
         CSExprMicroarraySet maSet = new CSExprMicroarraySet();
         maSet.addDescription(resource.getExperiment().toString());
-        maSet.setLabel(resource.getExperiment().getIdentifier());
+        //maSet.setLabel(resource.getExperiment().getIdentifier());//xq diaabled.
         List ctu = new ArrayList();
         ctu.add("Avg Diff");
         ctu.add("Signal");
@@ -32,13 +32,13 @@ public class CaArrayLoader {
             DSMicroarray ar = null;
             if (bap != null) {
 
-                ar = parser.getMicroarray(arrays, bap, maSet);
+                ar = null;//parser.getMicroarray(arrays, bap, maSet);
             }
             if (ar != null) {
                 maSet.add(arrays++, ar);
             }
              if(assays.length==1){
-            maSet.setLabel(bap.getIdentifier());
+           // maSet.setLabel(bap.getIdentifier());//xq disabled
         }
         }
 

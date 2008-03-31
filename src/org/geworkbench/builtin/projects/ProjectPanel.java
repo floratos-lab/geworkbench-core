@@ -84,6 +84,8 @@ import org.geworkbench.engine.management.TypeMap;
 import org.geworkbench.engine.preferences.GlobalPreferences;
 import org.geworkbench.engine.properties.PropertiesManager;
 import org.geworkbench.engine.skin.Skin;
+import org.geworkbench.events.CaArrayEvent;
+import org.geworkbench.events.CaArrayRequestEvent;
 import org.geworkbench.events.CommentsEvent;
 import org.geworkbench.events.ImageSnapshotEvent;
 import org.geworkbench.events.MicroarrayNameChangeEvent;
@@ -1104,9 +1106,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			return false;
 		}
 
-		DSMicroarraySet maSet = MAGELoader.loadMAGEDataSet(mRes);
-		addColorContext(maSet);
-		addDataSetNode((DSDataSet) maSet, true);
+		//DSMicroarraySet maSet = MAGELoader.loadMAGEDataSet(mRes); /xz
+//		addColorContext(maSet);
+//		addDataSetNode((DSDataSet) maSet, true);
 		return true;
 
 		// We need to know the type of the remote array set in order to call
@@ -1148,9 +1150,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 		// to do
 
-		DSMicroarraySet maSet = MAGELoader.loadMAGEDataSet(mRes);
-		addColorContext(maSet);
-		addDataSetNode((DSDataSet) maSet, true);
+		//DSMicroarraySet maSet = MAGELoader.loadMAGEDataSet(mRes); //xz
+//		addColorContext(maSet);
+//		addDataSetNode((DSDataSet) maSet, true);
 		return true;
 	}
 
@@ -1785,6 +1787,12 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	public ProjectEvent publishProjectEvent(ProjectEvent event) {
 		return event;
 	}
+	
+	@Publish
+	public CaArrayRequestEvent publishCaArrayRequestEvent(CaArrayRequestEvent event) {
+		System.out.println("Publish...");
+    	 		return event;
+	}
 
 	@Publish
 	public CommentsEvent publishCommentsEvent(CommentsEvent event) {
@@ -1998,7 +2006,18 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 
 	}
-
+/**
+ * get the caArray Result back from caArray server.
+ * @param ce
+ * @param source
+ */
+	
+	
+	@Subscribe
+	public void receive(CaArrayEvent ce, Object source) {
+		System.out.println("Get CaArrayEvent at ProjectPanel.");
+		loadData.receive(ce);
+	}
 	/**
 	 * For receiving the results of applying a normalizer to a microarray set.
 	 * 

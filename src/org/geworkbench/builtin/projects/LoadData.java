@@ -13,6 +13,8 @@ import org.geworkbench.builtin.projects.remoteresources.query.CaARRAYQueryPanel;
 import org.geworkbench.builtin.projects.util.CaARRAYPanel;
 import org.geworkbench.builtin.projects.util.NCIPanel;
 import org.geworkbench.engine.management.ComponentRegistry;
+import org.geworkbench.events.CaArrayEvent;
+import org.geworkbench.events.CaArrayRequestEvent;
 import org.geworkbench.components.parsers.FileFormat;
 
 /**
@@ -60,7 +62,7 @@ public class LoadData extends JDialog {
     private GridLayout gridLayout2 = new GridLayout();
     private GridLayout grid4 = new GridLayout();
     private String format = null;
-    private NCIPanel jPanel6 = new NCIPanel(this);
+    //private NCIPanel jPanel6 = new NCIPanel(this);
     private CaARRAYPanel caArrayDisplayPanel = new CaARRAYPanel(this);
     private JCheckBox mergeCheckBox;
     private JPanel lowerPanel;
@@ -88,8 +90,10 @@ public class LoadData extends JDialog {
     private FileFormat[] supportedInputFormats = null;
     BorderLayout borderLayout7 = new BorderLayout();
     JPanel jPanel7 = new JPanel();
+    JPanel gridButtonPanel = new JPanel();
     JRadioButton jRadioButton7 = new JRadioButton();
     JRadioButton jRadioButton8 = new JRadioButton();
+     JRadioButton gridButton = new JRadioButton();
     JPanel jPanel10 = new JPanel();
 
     String[] DEFAULTRESOUCES = new String[]{"caARRAY", "GEDP"};
@@ -129,6 +133,10 @@ public class LoadData extends JDialog {
             e.printStackTrace();
         }
     }
+    public void receive(CaArrayEvent ce) {
+		System.out.println("Get CaArrayEvent at lD.");
+	    caArrayDisplayPanel.receive(ce);
+	}
 
     public void setCaARRAYServer(String url, int portnumber){
         caArrayDisplayPanel.setUrl(url + ":" + portnumber);
@@ -320,8 +328,11 @@ public class LoadData extends JDialog {
 //        jPanel3.add(jRadioButton2, null);
         //deletion ends here.
         jPanel1.add(jPanel7, null);
+        jPanel1.add(gridButtonPanel, null);
         jRadioButton8.setText("Remote");
+      gridButton.setText("Grid");
         jPanel7.add(jRadioButton8, null);
+        gridButtonPanel.add(gridButton);
 
         //XQ modification ends here.
         this.getContentPane().add(jPanel4, BorderLayout.CENTER);
@@ -351,6 +362,7 @@ public class LoadData extends JDialog {
         buttonGroup1.add(jRadioButton2);
         buttonGroup1.add(jRadioButton7);
         buttonGroup1.add(jRadioButton8);
+        buttonGroup1.add(gridButton);
         buttonGroup2.add(jRadioButton5);
         buttonGroup2.add(jRadioButton6);
         buttonGroup3.add(jRadioButton3);
@@ -377,7 +389,11 @@ public class LoadData extends JDialog {
                 addRemotePanel_actionPerformed(e);
             }
         });
-
+         gridButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                addGridPanel_actionPerformed(e);
+            }
+        });
         jFileChooser1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 jFileChooser1_actionPerformed(e);
@@ -492,6 +508,9 @@ public class LoadData extends JDialog {
 
     }
 
+    public void publishCaArrayEvent(CaArrayRequestEvent event) {
+    	parentProjectPanel.publishCaArrayRequestEvent(event);
+	}
 
     /**
      * deleteButton_actionPerformed, remove the selected resource after
@@ -584,10 +603,10 @@ public class LoadData extends JDialog {
      * @param e
      */
     private void remoteButtonSelection_actionPerformed(ActionEvent e) {
-        jPanel6.getExperiments(e);
+        //jPanel6.getExperiments(e);
         this.getContentPane().remove(caArrayDisplayPanel);
         this.getContentPane().remove(jPanel4);
-        this.getContentPane().add(jPanel6, BorderLayout.CENTER);
+        //this.getContentPane().add(jPanel6, BorderLayout.CENTER);
         this.validate();
         this.repaint();
     }
@@ -658,7 +677,7 @@ public class LoadData extends JDialog {
     public void addRemotePanel() {
         //  if (caArrayDisplayPanel.isConnectionSuccess()) {
         updateCurrentView();
-        this.getContentPane().remove(jPanel6);
+        //this.getContentPane().remove(jPanel6);
         this.getContentPane().remove(jPanel4);
         this.getContentPane().add(caArrayDisplayPanel, BorderLayout.CENTER);
         this.validate();
@@ -674,10 +693,17 @@ public class LoadData extends JDialog {
         this.repaint();
     }
 
+    private void addGridPanel_actionPerformed(ActionEvent e) {
+          addRemotePanel();
+          lowerPanel.add(jPanel10);
+          this.validate();
+          this.repaint();
+      }
+
 
     private void jRadioButton2_actionPerformed(ActionEvent e) {
         this.getContentPane().remove(caArrayDisplayPanel);
-        this.getContentPane().remove(jPanel6);
+        //this.getContentPane().remove(jPanel6);
         this.getContentPane().add(jPanel4, BorderLayout.CENTER);
         lowerPanel.remove(jPanel10);
         this.validate();

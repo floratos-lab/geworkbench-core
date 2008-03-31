@@ -76,34 +76,34 @@ public class GeWorkbenchCaARRAYAdaptor {
      * @throws SearchException
      */
     public Set testGetOntologyEntriesByCategory(String catagory) throws SearchException {
-        SecureSession sess = null;
-        try {
-            sess = SecureSessionFactory.defaultSecureSession();
-            ((Directable) sess).direct(_serverLocation + "SecureSessionManager");
-            sess.start(username, password);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            fail("Error starting session." + "Got " + ex.getClass().getName() + ": " + ex.getMessage());
-        }
-
-        OntologyEntrySearchCriteria oesc = null;
-        try {
-            String className = OntologyEntrySearchCriteria.class.getName();
-            oesc = (OntologyEntrySearchCriteria) SearchCriteriaFactory.new_DESCRIPTION_ONTOLOGYENTRY_SC();
-            ((Directable) oesc).direct(_serverLocation + "SearchCriteriaHandler");
-            oesc.setSessionId(sess.getSessionId());
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            fail("Error getting experiment SC." + "Got " + ex.getClass().getName() + ": " + ex.getMessage());
-        }
-        oesc.setCategory(catagory);
-        SearchResult result = oesc.search();
-        OntologyEntry[] oeResults = (OntologyEntry[]) result.getResultSet();
+//        SecureSession sess = null;
+//        try {
+//            sess = SecureSessionFactory.defaultSecureSession();
+//            ((Directable) sess).direct(_serverLocation + "SecureSessionManager");
+//            sess.start(username, password);
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//            fail("Error starting session." + "Got " + ex.getClass().getName() + ": " + ex.getMessage());
+//        }
+//
+//        OntologyEntrySearchCriteria oesc = null;
+//        try {
+//            String className = OntologyEntrySearchCriteria.class.getName();
+//            oesc = (OntologyEntrySearchCriteria) SearchCriteriaFactory.new_DESCRIPTION_ONTOLOGYENTRY_SC();
+//            ((Directable) oesc).direct(_serverLocation + "SearchCriteriaHandler");
+//            oesc.setSessionId(sess.getSessionId());
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//            fail("Error getting experiment SC." + "Got " + ex.getClass().getName() + ": " + ex.getMessage());
+//        }
+//        oesc.setCategory(catagory);
+//        SearchResult result = oesc.search();
+//        OntologyEntry[] oeResults = (OntologyEntry[]) result.getResultSet();
         Set distinctCategory = new TreeSet();
-        for (int i = 0; i < oeResults.length; i++) {
-            OntologyEntry entry = oeResults[i];
-            distinctCategory.add(entry.getValue().toLowerCase().trim());
-        }
+//        for (int i = 0; i < oeResults.length; i++) {
+//            OntologyEntry entry = oeResults[i];
+//            distinctCategory.add(entry.getValue().toLowerCase().trim());
+//        }
         return distinctCategory;
 
     }
@@ -123,86 +123,86 @@ public class GeWorkbenchCaARRAYAdaptor {
     }
 
     public void testFindDistinctCategoryFromOntologyEntry() throws SearchException {
-        SecureSession sess = null;
-
-        sess = SecureSessionFactory.defaultSecureSession();
-        ((Directable) sess).direct(_serverLocation + "SecureSessionManager");
-        sess.start(username, password);
-        OntologyEntrySearchCriteria oesc = null;
-        try {
-            oesc = (OntologyEntrySearchCriteria) SearchCriteriaFactory.new_DESCRIPTION_ONTOLOGYENTRY_SC();
-            ((Directable) oesc).direct(_serverLocation + "SearchCriteriaHandler");
-            oesc.setSessionId(sess.getSessionId());
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            fail("Error getting experiment SC." + "Got " + ex.getClass().getName() + ": " + ex.getMessage());
-        }
-        SearchResult result = oesc.search();
-        OntologyEntry[] oeResults = (OntologyEntry[]) result.getResultSet();
-        Set distinctCategory = new HashSet();
-        for (int i = 0; i < oeResults.length; i++) {
-            OntologyEntry entry = oeResults[i];
-            distinctCategory.add(entry.getCategory());
-            System.out.println(entry.toString() + " " + entry.getCategory().toString());
-        }
-        Vector array = new Vector(distinctCategory);
-        Collections.sort(array);
-
-    }
-
-
-    public void testFiltering() throws Exception {
-        SecureSession sess = SecureSessionFactory.defaultSecureSession();
-
-        ((Directable) sess).direct(_serverLocation + "SecureSessionManager");
-        sess.start(username, password);
-        String sessID = sess.getSessionId();
-        ExperimentSearchCriteria esc =
-                EnhancedSearchCriteriaFactory.new_EXPERIMENT_SC();
-        esc.setSessionId(sessID);
-        SearchResult results = esc.search();
-        /*return all, no filtering*/
-        Experiment[] allResults = (Experiment[]) results.getResultSet();
-        esc.setTissueType("prostate and ovary");
-        results = esc.search();
-        Experiment[] result = (Experiment[]) results.getResultSet();
+//        SecureSession sess = null;
+//
+//        sess = SecureSessionFactory.defaultSecureSession();
+//        ((Directable) sess).direct(_serverLocation + "SecureSessionManager");
+//        sess.start(username, password);
+//        OntologyEntrySearchCriteria oesc = null;
+//        try {
+//            oesc = (OntologyEntrySearchCriteria) SearchCriteriaFactory.new_DESCRIPTION_ONTOLOGYENTRY_SC();
+//            ((Directable) oesc).direct(_serverLocation + "SearchCriteriaHandler");
+//            oesc.setSessionId(sess.getSessionId());
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//            fail("Error getting experiment SC." + "Got " + ex.getClass().getName() + ": " + ex.getMessage());
+//        }
+//        SearchResult result = oesc.search();
+//        OntologyEntry[] oeResults = (OntologyEntry[]) result.getResultSet();
+//        Set distinctCategory = new HashSet();
+//        for (int i = 0; i < oeResults.length; i++) {
+//            OntologyEntry entry = oeResults[i];
+//            distinctCategory.add(entry.getCategory());
+//            System.out.println(entry.toString() + " " + entry.getCategory().toString());
+//        }
+//        Vector array = new Vector(distinctCategory);
+//        Collections.sort(array);
 
     }
 
-    public Experiment[]  getExperiments(boolean useFilteringParameters) throws Exception {
-        SecureSession sess = SecureSessionFactory.defaultSecureSession();
-        ((Directable) sess).direct(_serverLocation + "SecureSessionManager");
-        sess.start(username, password);
-        String sessID = sess.getSessionId();
-        ExperimentSearchCriteria esc =
-                EnhancedSearchCriteriaFactory.new_EXPERIMENT_SC();
-        esc.setSessionId(sessID);
 
-        if (useFilteringParameters) {
+//    public void testFiltering() throws Exception {
+//        SecureSession sess = SecureSessionFactory.defaultSecureSession();
+//
+//        ((Directable) sess).direct(_serverLocation + "SecureSessionManager");
+//        sess.start(username, password);
+//        String sessID = sess.getSessionId();
+//        ExperimentSearchCriteria esc =
+//                EnhancedSearchCriteriaFactory.new_EXPERIMENT_SC();
+//        esc.setSessionId(sessID);
+//        SearchResult results = esc.search();
+//        /*return all, no filtering*/
+//        Experiment[] allResults = (Experiment[]) results.getResultSet();
+//        esc.setTissueType("prostate and ovary");
+//        results = esc.search();
+//        Experiment[] result = (Experiment[]) results.getResultSet();
 
-            if (tissueTypeName != null && tissueTypeName.length() > 0)
-                esc.setTissueType(tissueTypeName);
-            if (chipTypeName != null && chipTypeName.length() > 0)
-                esc.setChipPlatformType(chipTypeName);
-            if (piName != null && piName.length() > 0) {
-                esc.setInvestigatorName(new NameCriterion(piName, piName));
-            }
-            if (organName != null && organName.length() > 0) {
-                esc.setOrganism(organName);
-            }
-            SearchResult results = esc.search();
-            Experiment[] result = (Experiment[]) results.getResultSet();
-            return result;
+ //   }
 
-        } else {
-            SearchResult results = esc.search();
-            /*return all, no filtering*/
-            Experiment[] allResults = (Experiment[]) results.getResultSet();
-            //  System.out.println(allResults.length + " experiments exist without filtering. ");
-            return allResults;
-        }
-
-    }
+//    public Experiment[]  getExperiments(boolean useFilteringParameters) throws Exception {
+//        SecureSession sess = SecureSessionFactory.defaultSecureSession();
+//        ((Directable) sess).direct(_serverLocation + "SecureSessionManager");
+//        sess.start(username, password);
+//        String sessID = sess.getSessionId();
+//        ExperimentSearchCriteria esc =
+//                EnhancedSearchCriteriaFactory.new_EXPERIMENT_SC();
+//        esc.setSessionId(sessID);
+//
+//        if (useFilteringParameters) {
+//
+//            if (tissueTypeName != null && tissueTypeName.length() > 0)
+//                esc.setTissueType(tissueTypeName);
+//            if (chipTypeName != null && chipTypeName.length() > 0)
+//                esc.setChipPlatformType(chipTypeName);
+//            if (piName != null && piName.length() > 0) {
+//                esc.setInvestigatorName(new NameCriterion(piName, piName));
+//            }
+//            if (organName != null && organName.length() > 0) {
+//                esc.setOrganism(organName);
+//            }
+//            SearchResult results = esc.search();
+//            Experiment[] result = (Experiment[]) results.getResultSet();
+//            return result;
+//
+//        } else {
+//            SearchResult results = esc.search();
+//            /*return all, no filtering*/
+//            Experiment[] allResults = (Experiment[]) results.getResultSet();
+//            //  System.out.println(allResults.length + " experiments exist without filtering. ");
+//            return allResults;
+//        }
+//
+//    }
 
     public String getPiName() {
         return piName;
