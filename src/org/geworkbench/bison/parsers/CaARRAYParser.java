@@ -91,111 +91,111 @@ public class CaARRAYParser {
      * @return
      */
     public DSMicroarray getMicroarray(int ser, BioAssay bioAssayImpl, CSExprMicroarraySet maSet) {
-          microarray = null;
-        CaARRAYParseContext context = new CaARRAYParseContext(columnsToUse);
-        HashMap contextData = context.getColumnsToUse();
-        try {//System.out.println("In caARRAYPASSER " +  bioAssayImpl.getIdentifier());
-            if (bioAssayImpl instanceof DerivedBioAssayImpl) {
-                DerivedBioAssayData[] dbd = ((DerivedBioAssayImpl) bioAssayImpl).getDerivedBioAssayData();
-                DesignElementDimension ded = null;
-                DesignElement[] de = null;
-                QuantitationType[] qTypes = null;
-                BioDataValues bdv = null;
-                for (int m = 0; m < dbd.length; m++) {
-                    ded = dbd[m].getDesignElementDimension();
-                    qTypes = dbd[m].getQuantitationTypeDimension().getQuantitationTypes();
-                    bdv = dbd[m].getBioDataValues();
-                    if (ded instanceof ReporterDimension) {
-                        ReporterDimension rd = (ReporterDimension) ded;
-                        de = rd.getReporters();
-                        markerNo = de.length;
-                        break;
-                    } else if (ded instanceof FeatureDimension) {
-                        FeatureDimensionImpl fd = (FeatureDimensionImpl) ded;
-                        de = fd.getContainedFeatures();
-                        markerNo = de.length;
-                        break;
-                    } else if (ded instanceof CompositeSequenceDimensionImpl) {
-                        de = ((CompositeSequenceDimensionImpl) ded).getCompositeSequences();
-                        markerNo = de.length;
-                    }
-                }
-                if (!maSet.initialized) {
-                    maSet.initialize(0, markerNo);
-                    maSet.setCompatibilityLabel(bioAssayImpl.getIdentifier());
-                    for (int z = 0; z < markerNo; z++) {
-                        maSet.getMarkers().get(z).setGeneName(de[z].getName());
-                        maSet.getMarkers().get(z).setDisPlayType(DSGeneMarker.AFFY_TYPE);
-                        maSet.getMarkers().get(z).setLabel(de[z].getName());
-                        maSet.getMarkers().get(z).setDescription(de[z].getIdentifier());
-                    }
-
-                }
-                microarray = new CSMicroarray(ser, markerNo, bioAssayImpl.getName(), null, null, true, DSMicroarraySet.geneExpType);
-                    microarray.setLabel("Derived:" + bioAssayImpl.getIdentifier());
-                for (int i = 0; i < markerNo; i++) {
-                    if (bdv instanceof BioDataCubeImpl) {
-                        Object[][][] cube = ((BioDataCubeImpl) bdv).getCube();
-
-                        for (int j = 0; j < qTypes.length; j++) {
-                            //Object val = getCubeValue(cube, ser, i, j, ((BioDataCubeImpl) bdv).getOrder());//
-                            Object val = getCubeValue(cube, 0, i, j, ((BioDataCubeImpl) bdv).getOrder());
-                            if (qTypes[j].getIdentifier().equalsIgnoreCase("Affymetrix:QuantitationType:CHPSignal") && (val instanceof Double)) {
-                                ((DSMutableMarkerValue) microarray.getMarkerValue(i)).setValue(((Double) val).doubleValue());
-                                break;
-                            }
-                        }
-                    }
-                }
-            } else if (bioAssayImpl instanceof MeasuredBioAssayImpl) {
-                MeasuredBioAssayData[] mbd = ((MeasuredBioAssayImpl) bioAssayImpl).getMeasuredBioAssayData();
-                DesignElementDimension ded = null;
-                DesignElement[] de = null;
-                QuantitationType[] qTypes = null;
-                BioDataValues bdv = null;
-                for (int m = 0; m < mbd.length; m++) {
-                    ded = mbd[m].getDesignElementDimension();
-                    qTypes = mbd[m].getQuantitationTypeDimension().getQuantitationTypes();
-                    bdv = mbd[m].getBioDataValues();
-                    if (ded instanceof ReporterDimension) {
-                        ReporterDimension rd = (ReporterDimension) ded;
-                        de = rd.getReporters();
-                        markerNo = de.length;
-                        break;
-                    } else if (ded instanceof FeatureDimension) {
-                        FeatureDimensionImpl fd = (FeatureDimensionImpl) ded;
-                        de = fd.getContainedFeatures();
-                        markerNo = fd.getContainedFeaturesCount();
-                        break;
-                    }
-                }
-                if (!maSet.initialized) {
-                    maSet.initialize(0, markerNo);
-                    for (int z = 0; z < markerNo; z++) {
-                        maSet.getMarkers().get(z).setGeneName(de[z].getIdentifier());
-                        maSet.getMarkers().get(z).setDisPlayType(DSGeneMarker.AFFY_TYPE);
-                        maSet.getMarkers().get(z).setDescription(de[z].toString());
-                    }
-                    microarray = new CSMicroarray(ser, markerNo, bioAssayImpl.getName(), null, null, true, DSMicroarraySet.geneExpType);
-                    microarray.setLabel("Measured:" + bioAssayImpl.getName());
-                     }
-                Object[][][] cube = ((BioDataCubeImpl) bdv).getCube();
-                for (int i = 0; i < markerNo; i++) {
-                    if (bdv instanceof BioDataCubeImpl) {
-                        for (int j = 0; j < qTypes.length; j++) {
-                            Object val = getCubeValue(cube, ser, i, j, ((BioDataCubeImpl) bdv).getOrder());
-                            if (qTypes[j].getIdentifier().equalsIgnoreCase("Affymetrix:QuantitationType:CELIntensity") && (val instanceof Double)) {
-                                ((DSMutableMarkerValue) microarray.getMarkerValue(i)).setValue(((Double) val).doubleValue());
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            System.out.println("Error getting reporter data for bioassay: " + e.getMessage());
-            e.printStackTrace();
-        }
+           microarray = null;
+//        CaARRAYParseContext context = new CaARRAYParseContext(columnsToUse);
+//        HashMap contextData = context.getColumnsToUse();
+//        try {//System.out.println("In caARRAYPASSER " +  bioAssayImpl.getIdentifier());
+//            if (bioAssayImpl instanceof DerivedBioAssayImpl) {
+//                DerivedBioAssayData[] dbd = ((DerivedBioAssayImpl) bioAssayImpl).getDerivedBioAssayData();
+//                DesignElementDimension ded = null;
+//                DesignElement[] de = null;
+//                QuantitationType[] qTypes = null;
+//                BioDataValues bdv = null;
+//                for (int m = 0; m < dbd.length; m++) {
+//                    ded = dbd[m].getDesignElementDimension();
+//                    qTypes = dbd[m].getQuantitationTypeDimension().getQuantitationTypes();
+//                    bdv = dbd[m].getBioDataValues();
+//                    if (ded instanceof ReporterDimension) {
+//                        ReporterDimension rd = (ReporterDimension) ded;
+//                        de = rd.getReporters();
+//                        markerNo = de.length;
+//                        break;
+//                    } else if (ded instanceof FeatureDimension) {
+//                        FeatureDimensionImpl fd = (FeatureDimensionImpl) ded;
+//                        de = fd.getContainedFeatures();
+//                        markerNo = de.length;
+//                        break;
+//                    } else if (ded instanceof CompositeSequenceDimensionImpl) {
+//                        de = ((CompositeSequenceDimensionImpl) ded).getCompositeSequences();
+//                        markerNo = de.length;
+//                    }
+//                }
+//                if (!maSet.initialized) {
+//                    maSet.initialize(0, markerNo);
+//                    maSet.setCompatibilityLabel(bioAssayImpl.getIdentifier());
+//                    for (int z = 0; z < markerNo; z++) {
+//                        maSet.getMarkers().get(z).setGeneName(de[z].getName());
+//                        maSet.getMarkers().get(z).setDisPlayType(DSGeneMarker.AFFY_TYPE);
+//                        maSet.getMarkers().get(z).setLabel(de[z].getName());
+//                        maSet.getMarkers().get(z).setDescription(de[z].getIdentifier());
+//                    }
+//
+//                }
+//                microarray = new CSMicroarray(ser, markerNo, bioAssayImpl.getName(), null, null, true, DSMicroarraySet.geneExpType);
+//                    microarray.setLabel("Derived:" + bioAssayImpl.getIdentifier());
+//                for (int i = 0; i < markerNo; i++) {
+//                    if (bdv instanceof BioDataCubeImpl) {
+//                        Object[][][] cube = ((BioDataCubeImpl) bdv).getCube();
+//
+//                        for (int j = 0; j < qTypes.length; j++) {
+//                            //Object val = getCubeValue(cube, ser, i, j, ((BioDataCubeImpl) bdv).getOrder());//
+//                            Object val = getCubeValue(cube, 0, i, j, ((BioDataCubeImpl) bdv).getOrder());
+//                            if (qTypes[j].getIdentifier().equalsIgnoreCase("Affymetrix:QuantitationType:CHPSignal") && (val instanceof Double)) {
+//                                ((DSMutableMarkerValue) microarray.getMarkerValue(i)).setValue(((Double) val).doubleValue());
+//                                break;
+//                            }
+//                        }
+//                    }
+//                }
+//            } else if (bioAssayImpl instanceof MeasuredBioAssayImpl) {
+//                MeasuredBioAssayData[] mbd = ((MeasuredBioAssayImpl) bioAssayImpl).getMeasuredBioAssayData();
+//                DesignElementDimension ded = null;
+//                DesignElement[] de = null;
+//                QuantitationType[] qTypes = null;
+//                BioDataValues bdv = null;
+//                for (int m = 0; m < mbd.length; m++) {
+//                    ded = mbd[m].getDesignElementDimension();
+//                    qTypes = mbd[m].getQuantitationTypeDimension().getQuantitationTypes();
+//                    bdv = mbd[m].getBioDataValues();
+//                    if (ded instanceof ReporterDimension) {
+//                        ReporterDimension rd = (ReporterDimension) ded;
+//                        de = rd.getReporters();
+//                        markerNo = de.length;
+//                        break;
+//                    } else if (ded instanceof FeatureDimension) {
+//                        FeatureDimensionImpl fd = (FeatureDimensionImpl) ded;
+//                        de = fd.getContainedFeatures();
+//                        markerNo = fd.getContainedFeaturesCount();
+//                        break;
+//                    }
+//                }
+//                if (!maSet.initialized) {
+//                    maSet.initialize(0, markerNo);
+//                    for (int z = 0; z < markerNo; z++) {
+//                        maSet.getMarkers().get(z).setGeneName(de[z].getIdentifier());
+//                        maSet.getMarkers().get(z).setDisPlayType(DSGeneMarker.AFFY_TYPE);
+//                        maSet.getMarkers().get(z).setDescription(de[z].toString());
+//                    }
+//                    microarray = new CSMicroarray(ser, markerNo, bioAssayImpl.getName(), null, null, true, DSMicroarraySet.geneExpType);
+//                    microarray.setLabel("Measured:" + bioAssayImpl.getName());
+//                     }
+//                Object[][][] cube = ((BioDataCubeImpl) bdv).getCube();
+//                for (int i = 0; i < markerNo; i++) {
+//                    if (bdv instanceof BioDataCubeImpl) {
+//                        for (int j = 0; j < qTypes.length; j++) {
+//                            Object val = getCubeValue(cube, ser, i, j, ((BioDataCubeImpl) bdv).getOrder());
+//                            if (qTypes[j].getIdentifier().equalsIgnoreCase("Affymetrix:QuantitationType:CELIntensity") && (val instanceof Double)) {
+//                                ((DSMutableMarkerValue) microarray.getMarkerValue(i)).setValue(((Double) val).doubleValue());
+//                                break;
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        } catch (Exception e) {
+//            System.out.println("Error getting reporter data for bioassay: " + e.getMessage());
+//            e.printStackTrace();
+//        }
 
         return microarray;
     }
