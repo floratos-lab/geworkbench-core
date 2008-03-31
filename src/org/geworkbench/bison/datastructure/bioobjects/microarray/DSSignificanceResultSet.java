@@ -8,6 +8,7 @@ import org.geworkbench.engine.management.Script;
 
 /**
  * @author John Watkinson
+ * @version $Id: DSSignificanceResultSet.java,v 1.8 2008-03-31 15:57:32 my2248 Exp $
  */
 public interface DSSignificanceResultSet <T extends DSGeneMarker> extends DSAncillaryDataSet {
 
@@ -30,7 +31,12 @@ public interface DSSignificanceResultSet <T extends DSGeneMarker> extends DSAnci
     public DSMicroarraySet getParentDataSet();
 
     public void sortMarkersBySignificance();
-
+  
+    public void setMarker(T marker, double signficance);
+    
+    public void addSigGenToPanel(T marker);
+    
+    
     @Script
     public void saveToFile(String filename);
 }
