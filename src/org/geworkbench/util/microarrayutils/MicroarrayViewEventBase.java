@@ -39,7 +39,7 @@ import org.geworkbench.events.SubpanelChangedEvent;
 /**
  * @author unattributable
  * @see VisualPlugin
- * @version $Id: MicroarrayViewEventBase.java,v 1.21 2008-03-20 17:01:57 my2248 Exp $
+ * @version $Id: MicroarrayViewEventBase.java,v 1.22 2008-04-04 14:52:48 chiangy Exp $
  */
 public abstract class MicroarrayViewEventBase implements VisualPlugin {
 
@@ -119,12 +119,12 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 			if (dataSet instanceof DSMicroarraySet) {
 				if (refMASet != dataSet) {
 					this.refMASet = (DSMicroarraySet) dataSet;
-					this.refOtherSet = null;
 					// panels are now invalid
 					activatedArrays = null;
 					activatedMarkers = null;
 					uniqueMarkers = null;
 				}
+				this.refOtherSet = null;
 			} else {
 				// no microarray data set
 				this.refOtherSet = dataSet;
