@@ -14,6 +14,8 @@ import org.geworkbench.builtin.projects.util.CaARRAYPanel;
 import org.geworkbench.builtin.projects.util.NCIPanel;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.events.CaArrayEvent;
+import org.geworkbench.events.CaArrayQueryEvent;
+import org.geworkbench.events.CaArrayQueryResultEvent;
 import org.geworkbench.events.CaArrayRequestEvent;
 import org.geworkbench.components.parsers.FileFormat;
 
@@ -134,8 +136,11 @@ public class LoadData extends JDialog {
         }
     }
     public void receive(CaArrayEvent ce) {
-		System.out.println("Get CaArrayEvent at lD.");
-	    caArrayDisplayPanel.receive(ce);
+ 	    caArrayDisplayPanel.receive(ce);
+	}
+    
+    public void receive(CaArrayQueryResultEvent ce) {
+ 	    caARRAYQueryPanel.receiveCaAraryQueryResultEvent(ce);
 	}
 
     public void setCaARRAYServer(String url, int portnumber){
@@ -289,15 +294,15 @@ public class LoadData extends JDialog {
         mergePanel.add(Box.createGlue());
         lowerPanel.add(jPanel1);
         //lowerPanel.add(jPanel10);
-        lowTabPane = new JTabbedPane();
-        lowTabPane.add(lowerPanel, "Main");
-        caArrayIndexServicePanel = new JPanel();
-        lowTabPane.add(caArrayIndexServicePanel, "caARRAY Index Service");
-        lowTabPane.setSelectedIndex(0);
+//        lowTabPane = new JTabbedPane();
+//        lowTabPane.add(lowerPanel, "Main");
+//        caArrayIndexServicePanel = new JPanel();
+//        lowTabPane.add(caArrayIndexServicePanel, "caARRAY Index Service");
+//        lowTabPane.setSelectedIndex(0);
         indexField = new JTextField(indexURL);
         updateIndexButton = new JButton("Update");
-        caArrayIndexServicePanel.add(indexField);
-        caArrayIndexServicePanel.add(updateIndexButton);
+//        caArrayIndexServicePanel.add(indexField);
+//        caArrayIndexServicePanel.add(updateIndexButton);
 
         updateIndexButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -315,8 +320,8 @@ public class LoadData extends JDialog {
             }
         });
 
-        // this.getContentPane().add(lowerPanel, BorderLayout.SOUTH);
-        this.getContentPane().add(lowTabPane, BorderLayout.SOUTH);
+         this.getContentPane().add(lowerPanel, BorderLayout.SOUTH);
+        //this.getContentPane().add(lowTabPane, BorderLayout.SOUTH);
         //Merge Merge panel and Jpanel 1 in 1 line.
         jPanel1.add(mergePanel);
         jPanel1.add(jPanel2, null);
@@ -504,12 +509,18 @@ public class LoadData extends JDialog {
                 updateCurrentView();
             }
         }
-
-
+ 
     }
 
-    public void publishCaArrayEvent(CaArrayRequestEvent event) {
+    
+    public void publishProjectNodeAddedEvent(org.geworkbench.events.ProjectNodeAddedEvent event) {
+    	parentProjectPanel.publishProjectNodeAddedEvent(event);
+	}
+    public void publishCaArrayRequestEvent(CaArrayRequestEvent event) {
     	parentProjectPanel.publishCaArrayRequestEvent(event);
+	}
+    public void publishCaArrayQueryEvent(CaArrayQueryEvent event) {
+    	parentProjectPanel.publishCaArrayQueryEvent(event);
 	}
 
     /**
@@ -645,18 +656,19 @@ public class LoadData extends JDialog {
         caArrayDisplayPanel.setUrl(remoteResourceDialog.getCurrentURL());
         caArrayDisplayPanel.setUser(remoteResourceDialog.getCurrentUser());
         caArrayDisplayPanel.setPasswd(remoteResourceDialog.getCurrentPassword());
-
+        caArrayDisplayPanel.setPortnumber(remoteResourceDialog.getCurrentPortnumber());
         caArrayDisplayPanel.setParentPanel(this);
         caArrayDisplayPanel.setCurrentResourceName(currentResourceName);
-        if (remoteResourceDialog.getCurrentUser() == null ||
-                remoteResourceDialog.getCurrentUser().length() == 0) {
-            JOptionPane.showMessageDialog(null,
-                    "The User name field is empty. Please check again.",
-                    "RemoteResource Error",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-
-        }
+        //XZ, 4/4. The user name/password can be null now for caArray2.0.1.
+//        if (remoteResourceDialog.getCurrentUser() == null ||
+//                remoteResourceDialog.getCurrentUser().length() == 0) {
+//            JOptionPane.showMessageDialog(null,
+//                    "The User name field is empty. Please check again.",
+//                    "RemoteResource Error",
+//                    JOptionPane.ERROR_MESSAGE);
+//            return;
+//
+//        }
         caArrayDisplayPanel.setExperiments(null);
         if (remoteResourceDialog.isDirty()) {
             caArrayDisplayPanel.setExperimentsLoaded(false);

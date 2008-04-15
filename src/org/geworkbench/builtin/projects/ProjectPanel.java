@@ -85,6 +85,8 @@ import org.geworkbench.engine.preferences.GlobalPreferences;
 import org.geworkbench.engine.properties.PropertiesManager;
 import org.geworkbench.engine.skin.Skin;
 import org.geworkbench.events.CaArrayEvent;
+import org.geworkbench.events.CaArrayQueryEvent;
+import org.geworkbench.events.CaArrayQueryResultEvent;
 import org.geworkbench.events.CaArrayRequestEvent;
 import org.geworkbench.events.CommentsEvent;
 import org.geworkbench.events.ImageSnapshotEvent;
@@ -92,6 +94,7 @@ import org.geworkbench.events.MicroarrayNameChangeEvent;
 import org.geworkbench.events.NormalizationEvent;
 import org.geworkbench.events.PendingNodeLoadedFromWorkspaceEvent;
 import org.geworkbench.events.ProjectEvent;
+import org.geworkbench.events.ProjectNodeAddedEvent;
 import org.geworkbench.events.SingleValueEditEvent;
 import org.geworkbench.events.StructureAnalysisEvent;
 import org.geworkbench.util.SaveImage;
@@ -1790,9 +1793,18 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	
 	@Publish
 	public CaArrayRequestEvent publishCaArrayRequestEvent(CaArrayRequestEvent event) {
-		System.out.println("Publish...");
+		 
     	 		return event;
 	}
+	
+	@Publish
+	public CaArrayQueryEvent publishCaArrayQueryEvent(CaArrayQueryEvent event) {
+	 	 		return event;
+	}
+	@Publish
+	 public ProjectNodeAddedEvent publishProjectNodeAddedEvent(ProjectNodeAddedEvent event) {
+	    	return event;
+		}
 
 	@Publish
 	public CommentsEvent publishCommentsEvent(CommentsEvent event) {
@@ -2015,7 +2027,13 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	
 	@Subscribe
 	public void receive(CaArrayEvent ce, Object source) {
-		System.out.println("Get CaArrayEvent at ProjectPanel.");
+  
+		loadData.receive(ce);
+	}
+	
+	@Subscribe
+	public void receive(CaArrayQueryResultEvent ce, Object source) {
+  
 		loadData.receive(ce);
 	}
 	/**
