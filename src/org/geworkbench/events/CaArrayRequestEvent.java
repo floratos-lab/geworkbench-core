@@ -17,6 +17,11 @@ public class CaArrayRequestEvent extends Event {
 	private int port;
 	private String requestItem;
 	private String qType;
+	private boolean queryExperiment = false;
+	private boolean useFilterCrit;
+	private boolean merge;
+	private String username;
+	private String password;
 	
 	
 	public CaArrayRequestEvent(String _url, int _port){
@@ -35,7 +40,6 @@ public class CaArrayRequestEvent extends Event {
 		filterCrit = filters;
 	}
 
-	
 	public String getQType() {
 		return qType;
 	}
@@ -62,6 +66,12 @@ public class CaArrayRequestEvent extends Event {
 		return populated;
 	}
 
+	public boolean isQueryExperiment() {
+		return queryExperiment;
+	}
+	public void setQueryExperiment(boolean queryExperiment) {
+		this.queryExperiment = queryExperiment;
+	}
 	public void setPopulated(boolean populated) {
 		this.populated = populated;
 	}
@@ -70,6 +80,12 @@ public class CaArrayRequestEvent extends Event {
 		return succeed;
 	}
 
+	public boolean isMerge() {
+		return merge;
+	}
+	public void setMerge(boolean merge) {
+		this.merge = merge;
+	}
 	public String getUrl() {
 		return url;
 	}
@@ -92,6 +108,24 @@ public class CaArrayRequestEvent extends Event {
 
 	public void setDataSet(DSDataSet dataSet) {
 		this.dataSet = dataSet;
+	}
+	public boolean isUseFilterCrit() {
+		return useFilterCrit;
+	}
+	public void setUseFilterCrit(boolean useFilterCrit) {
+		this.useFilterCrit = useFilterCrit;
+	}
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
 	}
 	
 	

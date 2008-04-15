@@ -32,6 +32,7 @@ public class RemoteResourceDialog extends JDialog {
     private boolean isSourceDirty = true;
     private static String currentResourceName;
     private String currentURL;
+    private int currentPortnumber;
     private String currentUser;
     private String currentPassword;
     private static String previousResourceName;
@@ -219,7 +220,15 @@ public class RemoteResourceDialog extends JDialog {
         this.currentUser = user;
     }
 
-    public void jComboBox1_actionPerformed(ActionEvent e) {
+    public int getCurrentPortnumber() {
+		return currentPortnumber;
+	}
+
+	public void setCurrentPortnumber(int currentPortnumber) {
+		this.currentPortnumber = currentPortnumber;
+	}
+
+	public void jComboBox1_actionPerformed(ActionEvent e) {
 
     }
 
@@ -247,11 +256,12 @@ public class RemoteResourceDialog extends JDialog {
             return null;
         }
        if (username.length() == 0) {
-            JOptionPane.showMessageDialog(null, "UserName can not be empty.",
-                                          "Error",
-                                          JOptionPane.INFORMATION_MESSAGE);
-            return null;
+//            JOptionPane.showMessageDialog(null, "UserName can not be empty.",
+//                                          "Error",
+//                                          JOptionPane.INFORMATION_MESSAGE);
+//            return null;
         }
+       
         rr.setConnectProtocal(jComboBox1.getSelectedItem().toString().trim());
         rr.setPassword(new String(jPasswordField1.getPassword()).trim());
         rr.setUsername(jTextField1.getText().trim());
@@ -398,7 +408,8 @@ public class RemoteResourceDialog extends JDialog {
          RemoteResource rr = remoteResourceManager.getSelectedResouceByName(
                 resourceName);
         if (rr != null) {
-            currentURL = "//" + rr.getUri() + ":" + rr.getPortnumber();
+        	currentURL =  rr.getUri(); 
+            currentPortnumber = rr.getPortnumber();
             currentUser = rr.getUsername();
             currentPassword = rr.getPassword();
             isSourceDirty =  status;
@@ -412,7 +423,8 @@ public class RemoteResourceDialog extends JDialog {
         RemoteResource rr = remoteResourceManager.getSelectedResouceByName(
                 resourceName);
         if (rr != null) {
-            currentURL = "//" + rr.getUri() + ":" + rr.getPortnumber();
+            currentURL =  rr.getUri(); 
+            currentPortnumber = rr.getPortnumber();
             currentUser = rr.getUsername();
             currentPassword = rr.getPassword();
             isSourceDirty =  rr.isDirty();

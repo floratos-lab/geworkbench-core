@@ -32,7 +32,8 @@ public class GeWorkbenchCaARRAYAdaptor {
 
     public final static String CAARRAY_USERNAME = "username";
     public final static String PASSWORD = "password";
-    public final static String SERVERLOCATION = "serverlocation";
+    public final static String SERVERURL = "serverlocation";
+    public final static String SERVERPORT = "serverport";
 
     private String piName;
     private String chipTypeName;
@@ -40,13 +41,17 @@ public class GeWorkbenchCaARRAYAdaptor {
     private String organName;
     private String username;
     String password;
-    private String _serverLocation;
+    private String serverURL;
+    private int portNumber;
 
     public GeWorkbenchCaARRAYAdaptor() throws IOException {
         try {
             username = PropertiesManager.getInstance().getProperty(getClass(), CAARRAY_USERNAME, "Default Value");
-            _serverLocation = PropertiesManager.getInstance().getProperty(getClass(), SERVERLOCATION, "Default Value");
+            serverURL = PropertiesManager.getInstance().getProperty(getClass(), SERVERURL, "Default Value");
             String newPassword = PropertiesManager.getInstance().getProperty(getClass(), PASSWORD, "Default Value");
+ //portNumber =  PropertiesManager.getInstance().getProperty(getClass(), SERVERPORT, "Default Value");
+            
+            
             if (newPassword == null) {
                 password = "";
             } else {
