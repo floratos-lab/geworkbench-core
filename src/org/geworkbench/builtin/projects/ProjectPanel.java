@@ -714,6 +714,14 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			}
 		}
 	}
+	public void removeCanceledNode(GridEndpointReferenceType gridEpr) {
+		PendingTreeNode node = eprPendingNodeMap.get(gridEpr);
+		if (node != null) {
+				ProjectTreeNode parent = (ProjectTreeNode) node.getParent();
+				projectTreeModel.removeNodeFromParent(node);
+				//node.setUserObject("No Results");
+		}
+	}
 
 	@Script
 	// public void addDataSetNode(DSDataSet _dataSet) {
@@ -1013,6 +1021,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			addCompletedNode(pnce.getGridEndpointReferenceType(), dataSet);
 		} else if (ancillaryDataSet != null) {
 			addCompletedNode(pnce.getGridEndpointReferenceType(), ancillaryDataSet);
+		} else { //no result from grid server? let's delete this node!
+			removeCanceledNode(pnce.getGridEndpointReferenceType());
 		}
 	}
 
