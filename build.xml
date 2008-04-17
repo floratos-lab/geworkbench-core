@@ -82,15 +82,6 @@
 			<dirset dir="components" includes="*"/>
 		</subant>
 	</target>
-	<!-- ===============================================================
-	Generate Bison Snapshot automatically===includes bison, util, algorithms packages
-	==================================================================== -->
-	<target name="bison-jar" depends="compile">
-		<jar destfile="lib/bison-0.1-SNAPSHOT.jar" basedir="classes" includes="org/geworkbench/bison/**,org/geworkbench/util/**,org/geworkbench/algorithms/**"/>
-	<!-- if we need to copy this bison jar to some lib/ under some components  directory, we can have some lines like following:
-	<copy file="lib/bison-0.1-SNAPSHOT.jar" tofile="lib/bison-0.2-SNAPSHOT.jar"/>
-	-->
-	</target>
 	<!-- ===================================================================== -->
 	<!-- DIST  -->
 	<!-- ===================================================================== -->
