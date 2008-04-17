@@ -993,6 +993,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	public void receive(org.geworkbench.events.ProjectNodeAddedEvent pnae,
 			Object source) {
 		DSDataSet dataSet = pnae.getDataSet();
+		if(dataSet instanceof DSMicroarraySet){
+			addColorContext((DSMicroarraySet)dataSet);
+		}
 		DSAncillaryDataSet ancillaryDataSet = pnae.getAncillaryDataSet();
 		if (dataSet != null) {
 			addDataSetNode(dataSet, true);
