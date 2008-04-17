@@ -4,7 +4,11 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="annotation"/>
 	<classpathentry kind="src" path="test"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="geworkbench-core/lib"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="lib/BNJ_libs/jxl.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/caArrayMageom/aspectjrt.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/Simulation_libs/colt.jar"/>
@@ -107,6 +111,9 @@
 	<classpathentry exported="true" kind="lib" path="lib/cryptix.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/cryptix32.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/cryptix-asn1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/j3dcore.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/j3dutils.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/vecmath.jar"/>
 	<classpathentry kind="lib" path="lib/mageom-client.jar"/>
 	<classpathentry kind="lib" path="components/annotations/lib/cabio40_java_client/acegi-security-1.0.4.jar"/>
 	<classpathentry kind="lib" path="components/annotations/lib/cabio40_java_client/antlr-2.7.6.jar"/>
