@@ -757,7 +757,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
 	 
 			// update the progress message.
 			stillWaitForConnecting = false;
-			progressBar.setMessage("Connecting with the server... The initial step may take few minutes.");
+			progressBar.setMessage("Connecting with the server... The initial step may take a few minutes.");
 //			CaArrayRequestEvent event = new CaArrayRequestEvent(
 //					"array-stage.nci.nih.gov", 8080);
  			CaArrayRequestEvent event = new CaArrayRequestEvent(
