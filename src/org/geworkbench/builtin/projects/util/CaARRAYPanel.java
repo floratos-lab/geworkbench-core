@@ -135,9 +135,12 @@ public class CaARRAYPanel extends JPanel implements Observer {
 			progressBar.dispose();
 			currentLoadedExps = ce.getExperiments();
 			treeMap = new TreeMap<String, CaArray2Experiment>();
+			root = new DefaultMutableTreeNode("caARRAY experiments");
+			remoteTreeModel.setRoot(root);
 			if(currentLoadedExps==null){
 				return;
 			}
+			 
 			for (int i = 0; i < currentLoadedExps.length; ++i) {
 				DefaultMutableTreeNode node = new DefaultMutableTreeNode(
 						currentLoadedExps[i].getName());
