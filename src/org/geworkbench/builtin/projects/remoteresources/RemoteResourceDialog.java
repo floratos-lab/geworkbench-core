@@ -56,9 +56,9 @@ public class RemoteResourceDialog extends JDialog {
         super(frame, title, true);
         currentOption = option;
         currentResourceName = initialName;
-        if (option == ADD) {
-            clearFields();
-        }
+//        if (option == ADD) {
+//            clearFields();
+//        }
         try {
             jbInit();
         } catch (Exception ex) {

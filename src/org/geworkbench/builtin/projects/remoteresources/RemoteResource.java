@@ -183,7 +183,8 @@ public class RemoteResource {
      */
     public boolean equals(Object obj) {
         if (obj instanceof RemoteResource) {
-            return shortname.equals(((RemoteResource) obj).shortname) && uri.equals(((RemoteResource) obj).uri) && username.equals(((RemoteResource) obj).username) && password.equals(((RemoteResource) obj).password) && connectProtocol.equals(((RemoteResource) obj).connectProtocol);
+            return shortname.equals(((RemoteResource) obj).shortname)&& portnumber==(((RemoteResource) obj).portnumber)
+					&& uri.equals(((RemoteResource) obj).uri) && username.equals(((RemoteResource) obj).username) && password.equals(((RemoteResource) obj).password) && connectProtocol.equals(((RemoteResource) obj).connectProtocol);
         } else {
             return false;
         }

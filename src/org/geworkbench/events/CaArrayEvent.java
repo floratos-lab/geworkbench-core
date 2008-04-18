@@ -19,6 +19,7 @@ public class CaArrayEvent extends Event {
 	private int port;
 	private String username;
 	private String password;
+	private String errorMessage;
 	
 	// private TreeMap<String, String[]> treeMap;
 	// private TreeMap<String, String> experimentDesciptions;
@@ -134,6 +135,14 @@ public class CaArrayEvent extends Event {
 
 	public void setExperiments(CaArray2Experiment[] experiments) {
 		this.experiments = experiments;
+	}
+
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
 	}
 
 }
