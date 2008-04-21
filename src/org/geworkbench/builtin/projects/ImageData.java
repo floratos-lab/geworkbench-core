@@ -1,12 +1,18 @@
 package org.geworkbench.builtin.projects;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.util.RandomNumberGenerator;
 
 import javax.swing.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.Vector;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 
 /**
  * <p>Title: Bioworks</p>
@@ -24,7 +30,9 @@ public class ImageData extends CSAncillaryDataSet {
 	 *
 	 */
 	private static final long serialVersionUID = 3899156889448935110L;
-
+	
+	static Log log = LogFactory.getLog(ImageData.class);
+	
 	private File imageFile = null;
     private ImageIcon image = null;
     private Vector descriptions = new Vector();
@@ -75,7 +83,51 @@ public class ImageData extends CSAncillaryDataSet {
 
     public void writeToFile(String fileName) {
         /**@todo Implement this org.geworkbench.builtin.projects.DataSet method*/
-        throw new java.lang.UnsupportedOperationException("Method writeToFile() not yet implemented.");
+        //throw new java.lang.UnsupportedOperationException("Method writeToFile() not yet implemented.");
+    	
+    	boolean isfound = false;
+    	try{
+    		
+    	    String formatStr = "png";  //default format
+    		String writerNames[] = ImageIO.getWriterFormatNames();    		 
+    		for (int i=0; i<writerNames.length; i++)
+    		{
+    			if (writerNames[i].equalsIgnoreCase("png"))
+    			{	isfound = true;
+    			    break;
+    			}
+    		}
+    		if ( isfound == false && writerNames.length > 0)
+    			formatStr = writerNames[0];
+    		    	 
+    		isfound = false;
+    		
+    		for (int i=0; i<writerNames.length; i++)
+    		{
+    			if ( fileName.trim().endsWith("."+ writerNames[i]) )
+    			{
+    				formatStr = writerNames[i];
+    			    isfound = true;
+    				break;
+    			}
+    			
+    		}
+    		if ( isfound == true )
+    			imageFile = new File(fileName); 
+    		else    			 
+    		    imageFile = new File(fileName + "." + formatStr);    		 
+    		 
+    		ImageIO.write((BufferedImage)image.getImage(), formatStr, imageFile);
+    		 
+         } catch (IOException e)
+    		 
+         {	    
+        	  log.error("writeToFile():" +  e.getMessage());
+    	 }
+    		 
+    	
+    	 
+    
     }
 
     public void setDirty(boolean dirty) {
