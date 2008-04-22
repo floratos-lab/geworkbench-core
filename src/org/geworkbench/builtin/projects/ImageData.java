@@ -8,8 +8,7 @@ import org.geworkbench.bison.util.RandomNumberGenerator;
 
 import javax.swing.*;
 import java.io.File;
-import java.io.IOException;
-import java.util.Vector;
+import java.io.IOException; 
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -34,9 +33,7 @@ public class ImageData extends CSAncillaryDataSet {
 	static Log log = LogFactory.getLog(ImageData.class);
 	
 	private File imageFile = null;
-    private ImageIcon image = null;
-    private Vector descriptions = new Vector();
-    private String name = null;
+    private ImageIcon image = null;     
     private String id = null;
     private boolean isDirty = false;
 
