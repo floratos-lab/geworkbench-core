@@ -63,9 +63,11 @@ public class CaARRAYQueryPanel extends JDialog {
 			if (searchItem.equalsIgnoreCase(ORGANISM)) {
 				orginsmBox = new JComboBox(values);
 			} else if (searchItem.equals(CHIPPROVIDER)) {
-				chipPlatformNameField = new JComboBox(values);
+				chipPlatformBox = new JComboBox(values);
 			} else if (searchItem.equals(PINAME)) {
-				piTextField = new JComboBox(values);
+				piComboxBox = new JComboBox(values);
+			} else if (searchItem.equals(TISSUETYPE)) {
+				tissueTypeBox = new JComboBox(values);
 			}
 		}
 		updateSelectionValues(currentSelectedContent);
@@ -192,7 +194,7 @@ public class CaARRAYQueryPanel extends JDialog {
 	private int portnumber;
 	private String url;
 
-	String[] listContent = new String[] { CHIPPROVIDER, ORGANISM, PINAME,
+	public static String[] listContent = new String[] { CHIPPROVIDER, ORGANISM, PINAME,
 			TISSUETYPE }; // The
 	// content
 	// of
@@ -266,9 +268,10 @@ public class CaARRAYQueryPanel extends JDialog {
 
 	Vector<SelectedValue> valueHits = new Vector<SelectedValue>();
 	Vector<SelectedValue> tissueHits = new Vector<SelectedValue>();
-	JComboBox chipPlatformNameField = new JComboBox();
-	JComboBox piTextField = new JComboBox();
+	JComboBox chipPlatformBox = new JComboBox();
+	JComboBox piComboxBox = new JComboBox();
 	JComboBox orginsmBox = new JComboBox();
+	JComboBox tissueTypeBox = new JComboBox();
 
 	private class valueTableModel extends AbstractTableModel {
 		/* array of the column names in order from left to right */
@@ -375,11 +378,12 @@ public class CaARRAYQueryPanel extends JDialog {
 	 */
 	public void populateHits() {
 		if (!loaded) {
-			
+
 			Runnable thread = new Runnable() {
 				public void run() {
-					CaArrayQueryEvent event = new CaArrayQueryEvent(url, portnumber,
-							username, password, CaArrayQueryEvent.GOTVALIDVALUES);
+					CaArrayQueryEvent event = new CaArrayQueryEvent(url,
+							portnumber, username, password,
+							CaArrayQueryEvent.GOTVALIDVALUES);
 					event.setQueries(listContent);
 					publishCaArrayQueryEvent(event);
 
@@ -389,12 +393,10 @@ public class CaARRAYQueryPanel extends JDialog {
 			Thread t = new Thread(thread);
 			t.setPriority(Thread.MAX_PRIORITY);
 			t.start();
-			
-			
+
 			searchButton.setEnabled(false);
 			progressBar.setIndeterminate(true);
-			progressBar
-					.setString("Waiting for the response from serve...");
+			progressBar.setString("Waiting for the response from serve...");
 			repaint();
 		}
 	}
@@ -424,16 +426,16 @@ public class CaARRAYQueryPanel extends JDialog {
 		if (selectedCritiria.equalsIgnoreCase(CHIPPROVIDER)) {
 			// jPanel2.setLayout(new FlowLayout());
 			jPanel2.setLayout(new GridLayout(6, 1));
-			chipPlatformNameField.setMinimumSize(new Dimension(200, 50));
-			jPanel2.add(chipPlatformNameField);
+			chipPlatformBox.setMinimumSize(new Dimension(200, 50));
+			jPanel2.add(chipPlatformBox);
 			jPanel2.revalidate();
 			repaint();
 			return;
 		}
 		if (selectedCritiria.equalsIgnoreCase(PINAME)) {
 			jPanel2.setLayout(new GridLayout(6, 1));
-			piTextField.setMinimumSize(new Dimension(200, 50));
-			jPanel2.add(piTextField);
+			piComboxBox.setMinimumSize(new Dimension(200, 50));
+			jPanel2.add(piComboxBox);
 			jPanel2.revalidate();
 			repaint();
 			return;
@@ -442,6 +444,14 @@ public class CaARRAYQueryPanel extends JDialog {
 			jPanel2.setLayout(new GridLayout(6, 1));
 			orginsmBox.setMinimumSize(new Dimension(200, 50));
 			jPanel2.add(orginsmBox);
+			jPanel2.revalidate();
+			repaint();
+			return;
+		}
+		if (selectedCritiria.equalsIgnoreCase(TISSUETYPE)) {
+			jPanel2.setLayout(new GridLayout(6, 1));
+			tissueTypeBox.setMinimumSize(new Dimension(200, 50));
+			jPanel2.add(tissueTypeBox);
 			jPanel2.revalidate();
 			repaint();
 			return;
@@ -522,12 +532,12 @@ public class CaARRAYQueryPanel extends JDialog {
 	public void searchButton_actionPerformed(ActionEvent e) {
 		// get parameters.
 		HashMap<String, String[]> filterCrit = new HashMap<String, String[]>();
-		String piName = ((String) piTextField.getSelectedItem()).trim();
+		String piName = ((String) piComboxBox.getSelectedItem()).trim();
 		if (piName != null && piName.startsWith(PIFieldDefaultMessage)) {
 			piName = "";
 		}
-		String chipPlatformName = ((String) (chipPlatformNameField
-				.getSelectedItem())).trim();
+		String chipPlatformName = ((String) (chipPlatformBox.getSelectedItem()))
+				.trim();
 		if (chipPlatformName != null
 				&& chipPlatformName.startsWith(ChipFieldDefaultMessage)) {
 			chipPlatformName = "";
@@ -538,8 +548,9 @@ public class CaARRAYQueryPanel extends JDialog {
 				&& chipPlatformName.startsWith(ChipFieldDefaultMessage)) {
 			organismName = "";
 		}
-		String speciesValue = "";
-		String tissueType = "";
+		String tissueTypeName = ((String) (tissueTypeBox.getSelectedItem()))
+				.trim();
+
 		//
 		// for (SelectedValue selectedValue : valueHits) {
 		// if (selectedValue.getSelected()) {
@@ -554,46 +565,33 @@ public class CaARRAYQueryPanel extends JDialog {
 		this.setVisible(false);
 
 		try {
-			GeWorkbenchCaARRAYAdaptor geWorkbenchCaARRAYAdaptor = new GeWorkbenchCaARRAYAdaptor();
-			// boolean conbineSearchCritiria = allButton.isSelected();
-			boolean conbineSearchCritiria = false; // diabled by xz.
-			if (conbineSearchCritiria) {
-				if (chipPlatformName.length() > 0)
-					geWorkbenchCaARRAYAdaptor.setChipTypeName(chipPlatformName);
-				if (speciesValue.length() > 0)
-					geWorkbenchCaARRAYAdaptor.setOrganName(speciesValue);
-				if (tissueType.length() > 0)
-					geWorkbenchCaARRAYAdaptor.setTissueTypeName(tissueType);
-				if (piName.length() > 0)
-					geWorkbenchCaARRAYAdaptor.setPiName(piName);
-			} else {
-				switch (currentSelectedContentIndex) {
-				case 0:
-					filterCrit.put(listContent[0],
-							new String[] { chipPlatformName });
+			switch (currentSelectedContentIndex) {
+			case 0:
+				filterCrit.put(listContent[0],
+						new String[] { chipPlatformName });
 
-					break;
-				case 1:
-					filterCrit.put(listContent[1],
-							new String[] { organismName });
+				break;
+			case 1:
+				filterCrit.put(listContent[1], new String[] { organismName });
 
-					break;
-				case 2:
-					filterCrit.put(listContent[2], new String[] { piName });
-					break;
+				break;
+			case 2:
+				filterCrit.put(listContent[2], new String[] { piName });
+				break;
 
-				case 3:
-					geWorkbenchCaARRAYAdaptor.setPiName(piName);
-					break;
-				}
+			case 3:
+				filterCrit.put(listContent[3], new String[] { tissueTypeName });
+				break;
 			}
-			final CaArrayRequestEvent event = new CaArrayRequestEvent(url, portnumber);
+
+			final CaArrayRequestEvent event = new CaArrayRequestEvent(url,
+					portnumber);
 			event.setQueryExperiment(true);
 			event.setRequestItem(CaArrayRequestEvent.EXPERIMENT);
 			event.setFilterCrit(filterCrit);
 			event.setUseFilterCrit(true);
 			loadData.getCaArrayDisplayPanel().startProgressBar();
-			
+
 			Runnable thread = new Runnable() {
 				public void run() {
 					loadData.publishCaArrayRequestEvent(event);
@@ -602,11 +600,7 @@ public class CaARRAYQueryPanel extends JDialog {
 			Thread t = new Thread(thread);
 			t.setPriority(Thread.MAX_PRIORITY);
 			t.start();
-			
-			// @xz disabled
-			// loadData.getCaArrayDisplayPanel().setCaExperiments(geWorkbenchCaARRAYAdaptor.getExperiments(true));
-
-		} catch (Exception er) {
+ 		} catch (Exception er) {
 			er.printStackTrace();
 			GeWorkbenchCaARRAYAdaptor.fail("Cannot process the query.");
 		}

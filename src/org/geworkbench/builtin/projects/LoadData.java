@@ -697,6 +697,14 @@ public class LoadData extends JDialog {
 		} else {
 			JOptionPane.showMessageDialog(null,
 					"The data already have been retrieved.");
+			int choice = JOptionPane.showConfirmDialog(null, "You just connected to the server. Connect again?");
+			if(JOptionPane.YES_OPTION==choice){
+				caArrayDisplayPanel.setExperiments(null);
+				caArrayDisplayPanel.setExperimentsLoaded(false);
+				caArrayDisplayPanel.getExperiments(e);	
+			}else{
+				
+			}
 		}
 
 		// Reset resource dirty to false after the connection to the server.

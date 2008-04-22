@@ -130,17 +130,40 @@ public class CaARRAYPanel extends JPanel implements Observer {
 	}
 
 	public void receive(CaArrayEvent ce) {
+		
 		stillWaitForConnecting = false;
+		progressBar.stop();
+		
+		if (!ce.isPopulated()) {
+			if (!ce.isSucceed()) {
+				String errorMessage = ce.getErrorMessage();
+				if(errorMessage==null){
+				 errorMessage = "Cannot connect with the server.";	
+				}
+				JOptionPane.showMessageDialog(null, "The error: " + errorMessage);
+					//	+ ce.getErrorMessage()==null? "Cannot connect with the server.":ce.getErrorMessage());
+			} else {
+				JOptionPane.showMessageDialog(null,
+						"No data can be retrieved from the server.");
+			}
+
+			try {
+				Thread.sleep(500);
+				dispose();
+			} catch (Exception e) {
+
+			}
+		}
+
 		if (ce.getInfoType().equalsIgnoreCase(CaArrayEvent.EXPERIMENT)) {
-			progressBar.dispose();
 			currentLoadedExps = ce.getExperiments();
 			treeMap = new TreeMap<String, CaArray2Experiment>();
 			root = new DefaultMutableTreeNode("caARRAY experiments");
 			remoteTreeModel.setRoot(root);
-			if(currentLoadedExps==null){
+			if (currentLoadedExps == null) {
 				return;
 			}
-			 
+
 			for (int i = 0; i < currentLoadedExps.length; ++i) {
 				DefaultMutableTreeNode node = new DefaultMutableTreeNode(
 						currentLoadedExps[i].getName());
@@ -159,19 +182,6 @@ public class CaARRAYPanel extends JPanel implements Observer {
 				caArrayTreePanel.add(displayLabel, BorderLayout.SOUTH);
 			}
 			revalidate();
-		} else {
-			
-			progressBar.stop();
-			if (!ce.isPopulated()) {
-				JOptionPane.showMessageDialog(null,
-						"No data can be retrieved from the server.");
-			}
-			try {
-				Thread.sleep(500);
-				dispose();
-			} catch (Exception e) {
-
-			}
 		}
 	}
 
@@ -738,10 +748,9 @@ public class CaARRAYPanel extends JPanel implements Observer {
 		public void getBioAssay() {
 			// CaArrayRequestEvent event = new CaArrayRequestEvent(
 			// "array-stage.nci.nih.gov", 8080);
-			CaArrayRequestEvent event = new CaArrayRequestEvent(
-					url, portnumber);
- 			event.setUsername(user);
- 			event.setPassword(passwd);
+			CaArrayRequestEvent event = new CaArrayRequestEvent(url, portnumber);
+			event.setUsername(user);
+			event.setPassword(passwd);
 			event.setRequestItem(CaArrayRequestEvent.BIOASSAY);
 			event.setMerge(merge);
 			HashMap<String, String[]> filterCrit = new HashMap<String, String[]>();
@@ -757,16 +766,15 @@ public class CaARRAYPanel extends JPanel implements Observer {
 
 		public void connect() {
 
-	 
 			// update the progress message.
 			stillWaitForConnecting = false;
-			progressBar.setMessage("Connecting with the server... The initial step may take a few minutes.");
-//			CaArrayRequestEvent event = new CaArrayRequestEvent(
-//					"array-stage.nci.nih.gov", 8080);
- 			CaArrayRequestEvent event = new CaArrayRequestEvent(
-					url, portnumber);
- 			event.setUsername(user);
- 			event.setPassword(passwd);
+			progressBar
+					.setMessage("Connecting with the server... The initial step may take a few minutes.");
+			// CaArrayRequestEvent event = new CaArrayRequestEvent(
+			// "array-stage.nci.nih.gov", 8080);
+			CaArrayRequestEvent event = new CaArrayRequestEvent(url, portnumber);
+			event.setUsername(user);
+			event.setPassword(passwd);
 
 			event.setRequestItem(CaArrayRequestEvent.EXPERIMENT);
 			publishCaArrayEvent(event);
@@ -808,13 +816,14 @@ public class CaARRAYPanel extends JPanel implements Observer {
 				url = System.getProperty("SecureSessionManagerURL");
 			}
 
-			//System.setProperty("RMIServerURL", url + "/SearchCriteriaHandler");
+			// System.setProperty("RMIServerURL", url +
+			// "/SearchCriteriaHandler");
 			System.setProperty("SecureSessionManagerURL", url);
 			task = new ConnectionTask();
 			timer = new Timer(2500, new TimerListener());
 			timer.start();
 			task.go();
- 			if (stopConnection) {
+			if (stopConnection) {
 				return;
 			}
 
