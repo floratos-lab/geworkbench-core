@@ -146,13 +146,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
 				JOptionPane.showMessageDialog(null,
 						"No data can be retrieved from the server.");
 			}
-
-			try {
-				Thread.sleep(500);
-				dispose();
-			} catch (Exception e) {
-
-			}
+  
 		}
 
 		if (ce.getInfoType().equalsIgnoreCase(CaArrayEvent.EXPERIMENT)) {
@@ -182,6 +176,8 @@ public class CaARRAYPanel extends JPanel implements Observer {
 				caArrayTreePanel.add(displayLabel, BorderLayout.SOUTH);
 			}
 			revalidate();
+		}else{
+			dispose();//make itself disappear.
 		}
 	}
 

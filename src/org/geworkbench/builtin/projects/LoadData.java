@@ -680,43 +680,24 @@ public class LoadData extends JDialog {
 		caArrayDisplayPanel.setParentPanel(this);
 		caArrayDisplayPanel.setCurrentResourceName(currentResourceName);
 		// XZ, 4/4. The user name/password can be null now for caArray2.0.1.
-		// if (remoteResourceDialog.getCurrentUser() == null ||
-		// remoteResourceDialog.getCurrentUser().length() == 0) {
-		// JOptionPane.showMessageDialog(null,
-		// "The User name field is empty. Please check again.",
-		// "RemoteResource Error",
-		// JOptionPane.ERROR_MESSAGE);
-		// return;
-		//
-		// }
 
 		if (!isSynchronized) {
 			caArrayDisplayPanel.setExperiments(null);
 			caArrayDisplayPanel.setExperimentsLoaded(false);
 			caArrayDisplayPanel.getExperiments(e);
 		} else {
-			JOptionPane.showMessageDialog(null,
-					"The data already have been retrieved.");
+			 
 			int choice = JOptionPane.showConfirmDialog(null, "You just connected to the server. Connect again?");
 			if(JOptionPane.YES_OPTION==choice){
 				caArrayDisplayPanel.setExperiments(null);
 				caArrayDisplayPanel.setExperimentsLoaded(false);
 				caArrayDisplayPanel.getExperiments(e);	
-			}else{
-				
-			}
+			} 
 		}
-
 		// Reset resource dirty to false after the connection to the server.
 		remoteResourceDialog.setSourceDirty(false);
 		updateCurrentView();
-		// if (caArrayDisplayPanel.isConnectionSuccess()) {
-		// this.getContentPane().remove(jPanel6);
-		// this.getContentPane().remove(jPanel4);
-		// this.getContentPane().add(caArrayDisplayPanel, BorderLayout.CENTER);
-		// this.validate();
-		// this.repaint();
-		// }
+	
 	}
 
 	public void addRemotePanel() {

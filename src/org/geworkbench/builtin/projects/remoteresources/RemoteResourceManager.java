@@ -39,9 +39,9 @@ public class RemoteResourceManager {
 //            deleteRemoteResource("caARRAY");
 //            init();
               RemoteResource rr = new RemoteResource("caARRAYStage",
-                                               "caarray-mageom-server-stage.nci.nih.gov",
+                                               "array-stage.nci.nih.gov",
                                                "8080", "http:",
-                                               "PUBLIC", "");
+                                               "", "");
          existedResources.add(rr);
         } else {
             init();
