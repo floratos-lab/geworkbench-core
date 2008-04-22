@@ -61,7 +61,6 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.A
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.structure.DSProteinStructure;
-import org.geworkbench.bison.datastructure.bioobjects.structure.CSProteinStructure;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.datastructure.properties.DSExtendable;
@@ -72,7 +71,6 @@ import org.geworkbench.bison.util.colorcontext.ColorContext;
 import org.geworkbench.components.parsers.CaArrayLoader;
 import org.geworkbench.components.parsers.FileFormat;
 import org.geworkbench.components.parsers.InputFileFormatException;
-import org.geworkbench.components.parsers.MAGELoader;
 import org.geworkbench.components.parsers.microarray.DataSetFileFormat;
 import org.geworkbench.engine.config.MenuListener;
 import org.geworkbench.engine.config.VisualPlugin;
@@ -483,7 +481,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * jSaveMenuItem_actionPerformed
 	 */
 	public void jSaveMenuItem_actionPerformed(ActionEvent e) {
-		saveAsFile();
+		saveImageAsFile();
 	}
 
 	public static ImageIcon getIconForType(Class<? extends DSNamed> type) {
@@ -498,6 +496,51 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	public static void setIconForType(Class<? extends DSNamed> type,
 			ImageIcon icon) {
 		iconMap.put(type, icon);
+	}
+	
+	void saveImageAsFile()
+	{
+		ProjectTreeNode ds = selection.getSelectedNode();
+		if (ds != null) {
+			if (ds instanceof ImageNode) {
+				Image currentImage = ((ImageNode) ds).image.getImage();
+				SaveImage si = new SaveImage(currentImage);
+				JFileChooser fc = new JFileChooser(".");
+				String imageFilename = null;
+				String filename = null, ext = null;
+				FileFilter bitmapFilter = new BitmapFileFilter();
+				FileFilter jpegFilter = new JPEGFileFilter();
+				FileFilter pngFilter = new PNGFileFilter();
+				FileFilter tiffFilter = new TIFFFileFilter();
+				fc.setFileFilter(tiffFilter);
+				fc.setFileFilter(pngFilter);
+				fc.setFileFilter(jpegFilter);
+				fc.setFileFilter(bitmapFilter);
+				int choice = fc.showSaveDialog(jProjectPanel);
+				if (choice == JFileChooser.APPROVE_OPTION) {
+					imageFilename = fc.getSelectedFile().getAbsolutePath();
+					filename = fc.getSelectedFile().getName();
+					int i = filename.lastIndexOf('.');
+					if (i > 0 && i < filename.length() - 1) {
+						ext = filename.substring(i + 1).toLowerCase();
+					} else {
+						ImageFileFilter selectedFilter = null;
+						FileFilter filter = fc.getFileFilter();
+						if (filter instanceof ImageFileFilter) {
+							selectedFilter = (ImageFileFilter) fc
+									.getFileFilter();
+							ext = selectedFilter.getExtension();
+							log.info("File extension: " + ext);
+						}
+					}
+				}
+				if (imageFilename != null) {
+					si.save(imageFilename, ext);
+				}
+			}
+		}
+		
+		
 	}
 
 	boolean saveAsFile() {
@@ -1697,45 +1740,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	protected void export_actionPerformed(ActionEvent e) {
 		// Save an image
-		ProjectTreeNode ds = selection.getSelectedNode();
-		if (ds != null) {
-			if (ds instanceof ImageNode) {
-				Image currentImage = ((ImageNode) ds).image.getImage();
-				SaveImage si = new SaveImage(currentImage);
-				JFileChooser fc = new JFileChooser(".");
-				String imageFilename = null;
-				String filename = null, ext = null;
-				FileFilter bitmapFilter = new BitmapFileFilter();
-				FileFilter jpegFilter = new JPEGFileFilter();
-				FileFilter pngFilter = new PNGFileFilter();
-				FileFilter tiffFilter = new TIFFFileFilter();
-				fc.setFileFilter(tiffFilter);
-				fc.setFileFilter(pngFilter);
-				fc.setFileFilter(jpegFilter);
-				fc.setFileFilter(bitmapFilter);
-				int choice = fc.showSaveDialog(jProjectPanel);
-				if (choice == JFileChooser.APPROVE_OPTION) {
-					imageFilename = fc.getSelectedFile().getAbsolutePath();
-					filename = fc.getSelectedFile().getName();
-					int i = filename.lastIndexOf('.');
-					if (i > 0 && i < filename.length() - 1) {
-						ext = filename.substring(i + 1).toLowerCase();
-					} else {
-						ImageFileFilter selectedFilter = null;
-						FileFilter filter = fc.getFileFilter();
-						if (filter instanceof ImageFileFilter) {
-							selectedFilter = (ImageFileFilter) fc
-									.getFileFilter();
-							ext = selectedFilter.getExtension();
-							log.info("File extension: " + ext);
-						}
-					}
-				}
-				if (imageFilename != null) {
-					si.save(imageFilename, ext);
-				}
-			}
-		}
+		saveImageAsFile();
 	}
 
 	/**
