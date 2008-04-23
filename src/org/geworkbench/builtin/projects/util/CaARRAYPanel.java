@@ -135,16 +135,17 @@ public class CaARRAYPanel extends JPanel implements Observer {
 		progressBar.stop();
 		
 		if (!ce.isPopulated()) {
+			String errorMessage = ce.getErrorMessage();
+			if(errorMessage==null){
+			 errorMessage = "Cannot connect with the server.";	
+			}
 			if (!ce.isSucceed()) {
-				String errorMessage = ce.getErrorMessage();
-				if(errorMessage==null){
-				 errorMessage = "Cannot connect with the server.";	
-				}
+				
 				JOptionPane.showMessageDialog(null, "The error: " + errorMessage);
 					//	+ ce.getErrorMessage()==null? "Cannot connect with the server.":ce.getErrorMessage());
 			} else {
 				JOptionPane.showMessageDialog(null,
-						"No data can be retrieved from the server.");
+						errorMessage);
 			}
   
 		}

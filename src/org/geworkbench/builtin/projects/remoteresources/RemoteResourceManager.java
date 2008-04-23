@@ -36,7 +36,7 @@ public class RemoteResourceManager {
             init(new File(filename));
 
             //changed for bug 395
-//            deleteRemoteResource("caARRAY");
+            deleteRemoteResource("caARRAYStage");
 //            init();
               RemoteResource rr = new RemoteResource("caARRAYStage",
                                                "array-stage.nci.nih.gov",

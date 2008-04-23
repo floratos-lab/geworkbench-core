@@ -45,13 +45,22 @@ public class CaARRAYQueryPanel extends JDialog {
 	}
 
 	public void receiveCaAraryQueryResultEvent(CaArrayQueryResultEvent event) {
-		TreeMap<String, Set<String>> treeMap = event.getQueryPairs();
+		
 		progressBar.setIndeterminate(false);
+		
+		if (!event.isSucceed()) {
+			JOptionPane.showMessageDialog(this,
+					event.getErrorMessage());
+			return;
+		}
+		
+		TreeMap<String, Set<String>> treeMap = event.getQueryPairs();
 		if (treeMap == null) {
 			JOptionPane.showMessageDialog(this,
 					"No data can be retrieved from the caArray Server!");
 			return;
 		}
+		
 		for (String searchItem : listContent) {
 			Set<String> set = treeMap.get(searchItem);
 			String[] values = null;
