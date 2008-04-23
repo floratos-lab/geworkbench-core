@@ -617,6 +617,7 @@ public class CaARRAYQueryPanel extends JDialog {
 	}
 
 	public void cancelButton_actionPerformed(ActionEvent e) {
+		progressBar.setIndeterminate(false);
 		dispose();
 	}
 }
