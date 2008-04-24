@@ -763,6 +763,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				ProjectTreeNode parent = (ProjectTreeNode) node.getParent();
 				projectTreeModel.removeNodeFromParent(node);
 				//node.setUserObject("No Results");
+				//now nothing is selected, which is annoying, let's select it's parent
+				projectTree.setSelectionPath(new TreePath(parent.getPath()));
+				selection.setNodeSelection(parent);
 		}
 	}
 
