@@ -27,5 +27,10 @@ public class SearchCriteria {
 	public SearchCriteria() {
 		 searchType = EXPERIMENT;
 	}
+	public SearchCriteria(String searchType, String value) {
+		super();
+		this.searchType = searchType;
+		this.value = value;
+	}
 
 }
