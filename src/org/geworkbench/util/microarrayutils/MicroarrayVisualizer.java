@@ -85,7 +85,8 @@ public abstract class MicroarrayVisualizer {
     public final void changeMicroArraySet(DSMicroarraySet<DSMicroarray> maSet) {
         dataSetView.setMicroarraySet(maSet);
         reset();
-        setMicroarraySet(maSet);
+
+
     }
 
     /**
@@ -143,7 +144,7 @@ public abstract class MicroarrayVisualizer {
     }
 
     @Subscribe public void receive(org.geworkbench.events.ProjectEvent projectEvent, Object source) {
-        // System.out.println("receiveProjectSelection() in microarrayvisualizer");
+      // System.out.println("receiveProjectSelection() in microarrayvisualizer");
         if (projectEvent.getMessage().equals(ProjectEvent.CLEARED)) {
             changeMicroArraySet(null);
             repaint();
