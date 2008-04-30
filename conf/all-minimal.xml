@@ -2,10 +2,12 @@
 A bare-bones all.xml file that is useful when creating a new component.
 
 author: keshav 
-version: $Id: all-minimal.xml,v 1.3 2008-01-04 15:45:17 keshav Exp $
+version: $Id: all-minimal.xml,v 1.4 2008-04-30 19:11:30 xiaoqing Exp $
 -->
 
 <geaw-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ConfigurationFile Schema.xsd">
+
+
 
 	<description>
         This is useful when writing new components as it speeds up the starting time of geworkbench.  To use, rename as all.xml.
@@ -24,7 +26,8 @@ version: $Id: all-minimal.xml,v 1.3 2008-01-04 15:45:17 keshav Exp $
 		<gui-area name="SelectionArea"/>
 	</plugin>
 
-	<plugin id="phenotypePanel2" name="Arrays/Phenotypes" class="org.geworkbench.components.selectors.PhenotypePanel" source="selectors">
+	<plugin id="phenotypePanel2" name="Arrays/Phenotypes" class="org.geworkbench.components.selectors.PhenotypePanel"  source="selectors">
+	
 		<gui-area name="SelectionArea"/>
 	</plugin>
 	
