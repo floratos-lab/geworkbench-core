@@ -1,6 +1,6 @@
 package org.geworkbench.builtin.projects.remoteresources.carraydata;
 
-public class CaArray2Experiment {
+public class CaArray2Experiment  implements Comparable{
  private String name;
  private String[] hybridizations;
  private String description;
@@ -79,6 +79,15 @@ public String getPassword() {
 public void setPassword(String password) {
 	this.password = password;
 }
+
+	public int compareTo(Object o) throws ClassCastException {
+		if (o instanceof CaArray2Experiment) {
+			return name.compareTo(((CaArray2Experiment) o).getName());
+		} else {
+			throw new ClassCastException("Expect a CaArray2Experiment Object.");
+		}
+
+	}
  
  
 }
