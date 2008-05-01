@@ -40,7 +40,7 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 
     static Log log = LogFactory.getLog(RMAExpressFileFormat.class);
 
-    String[] maExtensions = {"txt"};
+    String[] maExtensions = {"txt", "tsv", "TSV"};
     ExpressionResource resource = new ExpressionResource();
     RMAExpressFilter maFilter = null;
 
