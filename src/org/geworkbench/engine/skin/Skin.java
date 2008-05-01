@@ -133,6 +133,8 @@ public class Skin extends GUIFramework {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     private void jbInit() throws Exception {
@@ -382,13 +384,6 @@ public class Skin extends GUIFramework {
             }
         }
         visualRegistry.remove(visualPlugin);
-    }
-
-    protected void processWindowEvent(WindowEvent e) {
-        super.processWindowEvent(e);
-        if (e.getID() == WindowEvent.WINDOW_CLOSING) {
-            System.exit(0);
-        }
     }
 
     public String getVisualArea(Component visualPlugin) {
