@@ -7,9 +7,11 @@ import org.apache.commons.logging.LogFactory;
 
 import javax.help.*;
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.net.URL;
 import java.util.*;
@@ -215,6 +217,17 @@ public class GeawConfigObject {
             });
             helpMenu.add(about);
         }
+        
+        // ZJ 2008-05-01
+        // exit menu is added here (instead of through configuration) so to be the last item regardless of individual components' menu items
+        JMenuItem exitMenu = new JMenuItem("Exit");
+        exitMenu.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		// emulate a window-closing event to let ProjectPanel do its job
+				guiWindow.dispatchEvent(new WindowEvent(guiWindow, WindowEvent.WINDOW_CLOSING));
+            }
+        });
+        guiWindow.getJMenuBar().getMenu(0).add(exitMenu);
 
         // Display the main application window.
         if (startupWindow != null)
