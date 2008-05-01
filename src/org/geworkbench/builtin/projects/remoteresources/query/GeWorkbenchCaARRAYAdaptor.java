@@ -2,15 +2,7 @@ package org.geworkbench.builtin.projects.remoteresources.query;
 
 
 import gov.nih.nci.common.search.SearchException;
-import gov.nih.nci.common.search.Directable;
-import gov.nih.nci.common.search.SearchResult;
-import gov.nih.nci.common.search.session.SecureSession;
-import gov.nih.nci.common.search.session.SecureSessionFactory;
-import gov.nih.nci.mageom.search.Description.OntologyEntrySearchCriteria;
-import gov.nih.nci.mageom.search.SearchCriteriaFactory;
-import gov.nih.nci.mageom.search.EnhancedSearchCriteriaFactory;
-import gov.nih.nci.mageom.search.Experiment.enhanced.ExperimentSearchCriteria;
-import gov.nih.nci.mageom.search.Experiment.enhanced.NameCriterion;
+ 
 import gov.nih.nci.mageom.domain.Description.OntologyEntry;
 import gov.nih.nci.mageom.domain.Experiment.Experiment;
 
