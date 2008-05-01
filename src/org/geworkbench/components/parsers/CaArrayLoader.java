@@ -24,7 +24,7 @@ public class CaArrayLoader {
         ctu.add("Detection");
         ctu.add("Detection p-value");
         ctu.add("Abs Call");
-        CaARRAYParser parser = new CaARRAYParser(ctu);
+        CaARRAYParser parser = null;
         gov.nih.nci.mageom.domain.BioAssay.BioAssay[] assays = resource.getBioAssays();
         int arrays = 0;
         for (int i = 0; i < assays.length; i++) {
