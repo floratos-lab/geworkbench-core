@@ -85,8 +85,7 @@ public abstract class MicroarrayVisualizer {
     public final void changeMicroArraySet(DSMicroarraySet<DSMicroarray> maSet) {
         dataSetView.setMicroarraySet(maSet);
         reset();
-
-
+        setMicroarraySet(maSet);
     }
 
     /**
