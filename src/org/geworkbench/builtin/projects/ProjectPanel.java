@@ -11,6 +11,8 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -2526,7 +2528,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		// and popup selections.
 		listener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				saveWorkspace_actionPerformed(e);
+				// ZJ 2008-05-01
+				// parameter ActionEvent e is not used in saveWorkspace_actionPerformed and should not be passed in
+				saveWorkspace_actionPerformed();
 			}
 
 		};
@@ -2584,9 +2588,23 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 		}
 
+		// Let the main frame listen to window-closing event ZJ 2008-05-01
+		GeawConfigObject.getGuiWindow().addWindowListener( new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+				if (JOptionPane.NO_OPTION == JOptionPane.showConfirmDialog(
+						null,
+						"You're closing geWorkbench. \nDo you want to save the current workspace?",
+						"Save or not?", JOptionPane.YES_NO_OPTION)) {
+					// do nothing here; unrelated actions for window-closing happend as they should
+				} else {
+					saveWorkspace_actionPerformed();
+				}
+            }
+        });
+		
 	}
 
-	protected void saveWorkspace_actionPerformed(ActionEvent e) {
+	protected void saveWorkspace_actionPerformed() {
 		PropertiesManager properties = PropertiesManager.getInstance();
 		String workspaceDir = ".";
 		try {
