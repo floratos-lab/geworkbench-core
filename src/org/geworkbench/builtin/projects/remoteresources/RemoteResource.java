@@ -1,5 +1,7 @@
 package org.geworkbench.builtin.projects.remoteresources;
 
+import org.geworkbench.builtin.projects.remoteresources.carraydata.CaArray2Experiment;
+
 /**
  * <p>Title: </p>
  *
@@ -190,6 +192,14 @@ public class RemoteResource {
         }
     }
 
+    public int compareTo(Object o) throws ClassCastException {
+    	 if(o instanceof RemoteResource){
+    		 return shortname.compareTo(((RemoteResource)o).getShortname());
+    	 }else{
+    		throw new ClassCastException("Expect a RemoteResource Object.");  
+    	 }
+    	 
+    }
     private void jbInit() throws Exception {
     }
 }
