@@ -1425,6 +1425,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 						try {
 							dataSets[0] = ((DataSetFileFormat) inputFormat)
 									.getDataFile(dataSetFiles[0]);
+							dataSets[0].setAbsPath(dataSetFiles[0].getAbsolutePath());
 						} catch (InputFileFormatException iffe) {
 							// Let the user know that there was a problem
 							// parsing the file.
@@ -1474,6 +1475,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 												.getDataFile(dataSetFile);
 									}
 								}
+								dataSets[i].setAbsPath(dataSetFiles[i].getAbsolutePath());
 							} catch (InputFileFormatException iffe) {
 								// Let the user know that there was a problem
 								// parsing the file.
