@@ -440,19 +440,35 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				for (DataSetSaveNode ancNode : ancSets) {
 					setComponents(ancNode);
 
-					DSAncillaryDataSet ancSet = null;
-					if (ancNode.getDataSet() instanceof ImageData) {
-						ancSet = (ImageData) ancNode.getDataSet();
-					} else {
-						ancSet = (DSAncillaryDataSet) ancNode.getDataSet();
+					/* pending node */
+					
+					if (ancNode.getDataSet().getDataSetName() != null
+							&& ancNode.getDataSet().getDataSetName().equals(
+									PendingTreeNode.class.getName())) {
+						// FIXME These are stored by class name in SaveTree. Not
+						// sure I like this.
+						GridEndpointReferenceType pendingGridEpr = (GridEndpointReferenceType) ancNode.getDataSet()
+								.getObject(GridEndpointReferenceType.class
+										.getName());
+						addPendingNode(pendingGridEpr, (String) ancNode.getDataSet()
+								.getObject(String.class.getName()), true);
+						pendingGridEprs.add(pendingGridEpr);
+					}else{
+						DSAncillaryDataSet ancSet = null;
+						
+						if (ancNode.getDataSet() instanceof ImageData) {
+							ancSet = (ImageData) ancNode.getDataSet();
+						} else {
+							ancSet = (DSAncillaryDataSet) ancNode.getDataSet();
+						}
+	
+						addDataSetSubNode(ancSet);
+						if (ancSet == saveTree.getSelected()) {
+							selectedNode = selection.getSelectedNode();
+						}
+						selection.setNodeSelection((ProjectTreeNode) selection
+								.getSelectedDataSetSubNode().getParent());
 					}
-
-					addDataSetSubNode(ancSet);
-					if (ancSet == saveTree.getSelected()) {
-						selectedNode = selection.getSelectedNode();
-					}
-					selection.setNodeSelection((ProjectTreeNode) selection
-							.getSelectedDataSetSubNode().getParent());
 				}
 				selection.setNodeSelection((ProjectTreeNode) selection
 						.getSelectedDataSetNode().getParent());
