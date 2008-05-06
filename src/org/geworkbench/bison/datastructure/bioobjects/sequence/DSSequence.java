@@ -29,13 +29,6 @@ public interface DSSequence extends DSBioObject {
     public int length();
 
     /**
-     * Gets the composition of the sequence.
-     *
-     * @return <code>true</code> if it is a DNA sequence, <code>false</code> if it is a protein sequence.
-     */
-    public boolean isDNA();
-
-    /**
      * Randomize the order of the characters in the sequence
      */
     public void shuffle();

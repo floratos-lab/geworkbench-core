@@ -3,7 +3,6 @@ package org.geworkbench.bison.datastructure.bioobjects.sequence;
 import org.geworkbench.bison.datastructure.properties.CSDescribable;
 import org.geworkbench.bison.datastructure.properties.CSExtendable;
 
-import java.io.ObjectStreamField;
 import java.io.Serializable;
 import java.util.regex.Matcher;
 
@@ -20,36 +19,25 @@ import java.util.regex.Matcher;
 public class CSSequence implements DSSequence, Serializable {
 
     /**
+	 * 
+	 */
+	// This class is changed so a new ID is given.
+	private static final long serialVersionUID = 7157849532235539033L;
+	/**
      *
      */
-    private static final long serialVersionUID = -8710506841571301285L;
-
-    private final static ObjectStreamField[] serialPersistentFields = {
-            new ObjectStreamField("isDNA", boolean.class),
-            new ObjectStreamField("label", String.class),
-            new ObjectStreamField("sequence", String.class),
-            new ObjectStreamField("descriptions", CSDescribable.class),
-            new ObjectStreamField("extend", CSExtendable.class),
-            new ObjectStreamField("id", String.class),
-            new ObjectStreamField("serial", int.class),
-            new ObjectStreamField("isEnabled", boolean.class)
-    };
+    //private static final long serialVersionUID = -8710506841571301285L;
 
     static final String[] repeats = {"(at){5,}", "a{7,}", "c{7,}", "g{7,}",
                                     "t{7,}"};
     static final java.util.regex.Pattern[] repeatPattern = new java.util.regex.
             Pattern[repeats.length];
 
-   // add 'E' in the list because the promoter panel local cache has lots of E for exon sequences.
-    static java.util.regex.Pattern dnaPattern = java.util.regex.Pattern.compile(
-            "[^#acgtnxACGTNXE]");
-
     private String id = "";
     private int serial = -1;
     private boolean isEnabled = true;
     private String sequence = new String();
     private String label = new String();
-    private boolean isDNA = true;
     /**
      * Used in the implementation of the <code>Extendable</code> interface.
      */
@@ -89,10 +77,6 @@ public class CSSequence implements DSSequence, Serializable {
 
     public void setSequence(String s) {
         sequence = s;
-        Matcher m = dnaPattern.matcher(sequence);
-        if (m.find()) {
-            isDNA = false;
-        }
     }
 
     public String toString() {
@@ -101,10 +85,6 @@ public class CSSequence implements DSSequence, Serializable {
 
     public int length() {
         return sequence.length();
-    }
-
-    public boolean isDNA() {
-        return isDNA;
     }
 
     public void maskRepeats() {
