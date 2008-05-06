@@ -9,6 +9,7 @@ import org.geworkbench.bison.datastructure.complex.panels.CSSequentialItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.util.RandomNumberGenerator;
+import org.geworkbench.bison.util.SequenceUtils;
 
 import java.io.*;
 import java.util.HashMap;
@@ -52,7 +53,7 @@ public class CSSequenceSet<T extends DSSequence> extends CSDataSet<T> implements
     }
 
     public void addASequence(T sequence) {
-        if (!sequence.isDNA()) {
+        if (!SequenceUtils.isValidDNASeqForBLAST(sequence)) {
             isDNA = false;
         }
         this.add(sequence);
