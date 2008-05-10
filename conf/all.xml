@@ -91,10 +91,7 @@
 	</plugin>
 	<plugin id="SOMClusteringPanel" name="SOM Clusters" class="org.geworkbench.components.plots.SOMDisplay" source="plots">
 		<gui-area name="VisualArea"/>
-	</plugin>
-	<plugin id="pathwayPanel" name="caBIO Pathways" class="org.geworkbench.components.annotations.PathwayPanel" source="annotations">
-		<gui-area name="VisualArea"/>
-	</plugin>
+	</plugin>	 
 	<plugin id="tabularMicroarrayPanel" name="Tabular Microarray Viewer" class="org.geworkbench.components.microarrays.TabularMicroarrayPanel" source="microarrays">
 		<gui-area name="VisualArea"/>
 	</plugin>
