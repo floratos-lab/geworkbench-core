@@ -13,6 +13,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -1052,6 +1054,61 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			}
 		}
 	}
+	
+	
+	/**
+	 * key release event.  
+	 * 
+	 * @param e
+	 */
+	protected void jProjectTree_keyReleased(KeyEvent e) {
+		TreePath path = projectTree.getSelectionPath();
+		if ( (e.getKeyCode() == e.VK_DOWN || e.getKeyCode() == e.VK_UP) &&path != null ) {
+			ProjectTreeNode mNode = (ProjectTreeNode) path
+					.getLastPathComponent();
+			selection.setMenuNode(mNode);		 
+			 
+			jProjectTree_keyReleased();		 
+			 
+			 
+		}
+	}
+	
+	
+	/**
+	 * Key listener responding to the selection of a project tree node.
+	 * 
+	 * @param e
+	 */
+	protected void jProjectTree_keyReleased() {
+
+		TreePath path = projectTree.getSelectionPath();
+		if (path != null) {
+			path.getLastPathComponent();
+			selectedNode = selection.getSelectedNode();
+			ProjectTreeNode clickedNode = (ProjectTreeNode) path
+					.getLastPathComponent();
+			// Take action only if a new node is selected.
+			if (path != null && selectedNode != clickedNode) {
+				setNodeSelection(clickedNode);
+			}
+			 
+			if ((clickedNode != null) && clickedNode instanceof ImageNode) {
+				 
+					publishImageSnapshot(new ImageSnapshotEvent(
+							"Image Node Selected",
+							((ImageNode) clickedNode).image,
+							ImageSnapshotEvent.Action.SHOW));
+					sendCommentsEvent(clickedNode);
+				 
+			}
+			sendCommentsEvent(clickedNode);
+		}
+	}
+	 
+
+	
+
 
 	@Subscribe
 	public void receive(org.geworkbench.events.ProjectNodeAddedEvent pnae,
@@ -2540,6 +2597,23 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			}
 
 		});
+		
+		projectTree.addKeyListener(new KeyListener() {
+			public void keyTyped(KeyEvent e) {
+				//do nothing;
+			}
+
+			public void keyPressed(KeyEvent e) {
+				//do nothing;
+			}
+			
+			public void keyReleased(KeyEvent e) {
+				jProjectTree_keyReleased(e);
+			}
+		 
+		});
+
+		
 		// Add the action listeners that respond to the various menu selections
 		// and popup selections.
 		listener = new ActionListener() {
