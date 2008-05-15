@@ -39,7 +39,7 @@ import org.geworkbench.events.SubpanelChangedEvent;
 /**
  * @author unattributable
  * @see VisualPlugin
- * @version $Id: MicroarrayViewEventBase.java,v 1.22 2008-04-04 14:52:48 chiangy Exp $
+ * @version $Id: MicroarrayViewEventBase.java,v 1.23 2008-05-15 16:40:43 hungc Exp $
  */
 public abstract class MicroarrayViewEventBase implements VisualPlugin {
 
@@ -64,7 +64,6 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 	protected DSPanel<DSGeneMarker> activatedMarkers = null;
 	protected DSItemList<? extends DSGeneMarker> uniqueMarkers = null;
 	protected DSPanel activatedArrays = null;
-	private DefaultListModel ls2 = new DefaultListModel();
 	private boolean isPlotRefresh = false;
 
 	/**
@@ -147,20 +146,14 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 
 		markers = e.getPanel();
 		activatedMarkers = new CSPanel();
-		if (markers != null && markers.size() > 0) {
-
-            ls2.clear();
+		if (markers != null && markers.size() > 0) {            
 			for (int j = 0; j < markers.panels().size(); j++) {
 				DSPanel<DSGeneMarker> mrk = markers.panels().get(j);
 				if (mrk.isActive()) {
-					for (int i = 0; i < mrk.size(); i++) {
-						if (!ls2.contains(mrk.get(i))) {
-							ls2.addElement(mrk.get(i));
-						}
+					for (int i = 0; i < mrk.size(); i++) {						
 						activatedMarkers.add(mrk.get(i));
 
 					}
-
 				}
 			}
 			markers = activatedMarkers;

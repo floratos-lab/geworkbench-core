@@ -1,17 +1,18 @@
 package org.geworkbench.bison.datastructure.biocollections.views;
 
+import java.io.Serializable;
+
+import org.apache.commons.collections15.set.ListOrderedSet;
 import org.geworkbench.bison.annotation.CSAnnotationContextManager;
 import org.geworkbench.bison.annotation.DSAnnotationContext;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
+import org.geworkbench.bison.datastructure.complex.panels.CSItemList;
 import org.geworkbench.bison.datastructure.complex.panels.CSPanel;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
-import org.geworkbench.bison.datastructure.complex.panels.CSItemList;
 import org.geworkbench.engine.management.Script;
-
-import java.io.Serializable;
 
 
 /**
@@ -67,24 +68,30 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
         }
     }
 
-    public DSItemList<T> getUniqueMarkers() {
-        if (useMarkerPanel && markerPanel.size() > 0) {
-            CSItemList<T> itemList = new CSItemList<T>();
-            for (int i = 0; i < markerPanel.size(); i++) {
-                T t = markerPanel.get(i);
-                if (!itemList.contains(t)) {
-                    itemList.add(t);
-                }
-            }
-            return itemList;
-        } else {
-            if (dataSet == null) {
-                return null;
-            } else {
-                return (DSItemList) ((DSMicroarraySet) dataSet).getMarkers();
-            }
-        }
-    }
+    @SuppressWarnings("unchecked")
+	public DSItemList<T> getUniqueMarkers() {
+		if (useMarkerPanel && markerPanel.size() > 0) {
+			ListOrderedSet<T> orderedSet = new ListOrderedSet<T>();
+			for (int i = 0; i < markerPanel.size(); i++) {
+				T t = markerPanel.get(i);
+				orderedSet.add(t);
+			}
+
+			CSItemList<T> itemList = new CSItemList<T>();
+			for (T item : orderedSet) {
+				itemList.add(item);
+			}
+
+			return itemList;
+		} else {
+			if (dataSet == null) {
+				return null;
+			} else {
+				return (DSItemList) ((DSMicroarraySet) dataSet).getMarkers();
+			}
+		}
+	}
+
 
     /**
      * Set/resets marker subselection based on activated panels.

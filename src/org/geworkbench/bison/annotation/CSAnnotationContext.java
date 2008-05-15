@@ -1,5 +1,15 @@
 package org.geworkbench.bison.annotation;
 
+import java.awt.Color;
+import java.io.Serializable;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.commons.collections15.MapIterator;
 import org.apache.commons.collections15.map.ListOrderedMap;
 import org.apache.commons.collections15.set.ListOrderedSet;
@@ -7,11 +17,6 @@ import org.geworkbench.bison.datastructure.complex.panels.CSPanel;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.datastructure.properties.DSNamed;
-
-import java.awt.*;
-import java.io.Serializable;
-import java.lang.ref.WeakReference;
-import java.util.*;
 
 /**
  * @author John Watkinson
@@ -323,6 +328,56 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
             lab.panel.add(item);
             return true;
         }
+    }
+    
+    public boolean labelItems(List<T> items, String label) {
+        Label lab = labels.get(label);
+        if (lab == null) {
+            addLabel(label);
+            lab = labels.get(label);
+        }
+        if (lab.isCriterion()) {
+            throw new IllegalArgumentException("Cannot explicitly label a criterion label.");
+        }
+        if((lab.panel != null) && (lab.panel.size() == 0)){
+        	for(T item: items){
+        		lab.panel.add(item);
+        	}
+        	return true;
+        }
+    	for(T item: items){
+	        if (lab.panel.contains(item)) {
+	            continue;
+	        } else {        	
+	            lab.panel.add(item);
+	        }
+        }
+        return true;
+    }
+    
+    public boolean labelItems(T[] items, String label) {
+        Label lab = labels.get(label);
+        if (lab == null) {
+            addLabel(label);
+            lab = labels.get(label);
+        }
+        if (lab.isCriterion()) {
+            throw new IllegalArgumentException("Cannot explicitly label a criterion label.");
+        }
+        if((lab.panel != null) && (lab.panel.size() == 0)){
+        	for(T item: items){
+        		lab.panel.add(item);
+        	}
+        	return true;
+        }
+    	for(T item: items){
+	        if (lab.panel.contains(item)) {
+	            continue;
+	        } else {        	
+	            lab.panel.add(item);
+	        }
+        }
+        return true;
     }
 
     public DSPanel<T> getActiveItems() {

@@ -1,5 +1,7 @@
 package org.geworkbench.bison.annotation;
 
+import java.util.List;
+
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.datastructure.properties.DSNamed;
@@ -186,6 +188,24 @@ public interface DSAnnotationContext<T extends DSNamed> extends DSAnnotationSour
      * @return <tt>true</tt> if the item did not already hold the label, <tt>false</tt> otherwise.
      */
     public boolean labelItem(T item, String label);
+    
+    /**
+     * Applies a label to a list of items.
+     * @param list of items to label.
+     * @param label the label to apply. If the label does exist in this context, it will be implicitly added by this
+     * method.
+     * @return <tt>true</tt> if the items did not already hold the label, <tt>false</tt> otherwise.
+     */
+    public boolean labelItems(List<T> items, String label);    
+    
+    /**
+     * Applies a label to a array of items.
+     * @param array of items to label.
+     * @param label the label to apply. If the label does exist in this context, it will be implicitly added by this
+     * method.
+     * @return <tt>true</tt> if the items did not already hold the label, <tt>false</tt> otherwise.
+     */
+    public boolean labelItems(T[] items, String label);
 
     /**
      * Retrieves all items that are associated with at least one active label.
