@@ -11,7 +11,7 @@
 		<gui-area name="VisualArea"/>
 	</plugin>
 	<plugin id="evidenceintegration" name="Evidence Integration Analysis" class="org.geworkbench.components.ei.EvidenceIntegrationAnalysis" source="evidenceintegration"/>
-	<plugin id="edgeListFilter" name="Affy File Format" class="org.geworkbench.components.parsers.EdgeListFileFormat"/>
+	<plugin id="edgeListFilter" name="Edge List File Format" class="org.geworkbench.components.parsers.EdgeListFileFormat"/>
 	<plugin id="affyFilter" name="Affy File Format" class="org.geworkbench.components.parsers.AffyFileFormat"/>
 	<plugin id="annotationsPanel" name="Marker Annotations" class="org.geworkbench.components.annotations.AnnotationsPanel" source="annotations">
 		<gui-area name="VisualArea"/>
