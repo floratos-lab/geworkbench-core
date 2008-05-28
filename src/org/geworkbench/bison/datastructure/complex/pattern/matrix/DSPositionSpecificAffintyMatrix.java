@@ -15,12 +15,18 @@ public interface DSPositionSpecificAffintyMatrix extends DSBioObject, DSPValued 
     ImageIcon getPsamImage();
 
     String getExperiment();
+    
+    String getExperimentID();
 
     String getSeedSequence();
 
     String getConsensusSequence();
 
     long getBonferroni();
+    
+    double getTValue();
+    
+    double getCoeff();
 
     double[][] getScores();
 
@@ -29,6 +35,8 @@ public interface DSPositionSpecificAffintyMatrix extends DSBioObject, DSPValued 
     void setPsamImage(ImageIcon image);
 
     void setExperiment(String experiment);
+    
+    void setExperimentID(String id);
 
     void setSeedSequence(String seedSequence);
 
@@ -37,6 +45,10 @@ public interface DSPositionSpecificAffintyMatrix extends DSBioObject, DSPValued 
     void setScores(double[][] scores);
 
     void setBonferroni(long bonferonni);
+    
+    void setTValue(double t);
+    
+    void setCoeff(double F);
 
     void setTrailingStrand(boolean trailingStrand);
 }

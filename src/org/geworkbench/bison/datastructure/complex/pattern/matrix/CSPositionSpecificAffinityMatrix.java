@@ -8,12 +8,15 @@ import javax.swing.*;
 public class CSPositionSpecificAffinityMatrix implements DSPositionSpecificAffintyMatrix {
 
     private ImageIcon psamImage;
-    private String experiment;
+    private String psamId;
+    private String experimentName;
+    private String experimentId;
     private String seedSequence;
     private String consensusSequence;
     private double pValue;
+    private double tValue;
+    private double coeff;
     private double[][] scores;
-    private long bonferroni;
     private boolean trailingStrand;
 
     public boolean isTrailingStrand() {
@@ -25,11 +28,26 @@ public class CSPositionSpecificAffinityMatrix implements DSPositionSpecificAffin
     }
 
     public long getBonferroni() {
-        return bonferroni;
+        return 0;
     }
 
     public void setBonferroni(long bonferroni) {
-        this.bonferroni = bonferroni;
+    }
+    
+    public double getTValue(){
+    	return this.tValue;
+    }
+    
+    public void setTValue(double t){
+    	this.tValue = t;
+    }
+    
+    public double getCoeff(){
+    	return this.coeff;
+    }
+    
+    public void setCoeff(double F){
+    	this.coeff = F;
     }
 
     public ImageIcon getPsamImage() {
@@ -37,7 +55,11 @@ public class CSPositionSpecificAffinityMatrix implements DSPositionSpecificAffin
     }
 
     public String getExperiment() {
-        return experiment;
+        return experimentName;
+    }
+    
+    public String getExperimentID(){
+    	return this.experimentId;
     }
 
     public String getSeedSequence() {
@@ -53,7 +75,11 @@ public class CSPositionSpecificAffinityMatrix implements DSPositionSpecificAffin
     }
 
     public void setExperiment(String experiment) {
-        this.experiment = experiment;
+        this.experimentName = experiment;
+    }
+    
+    public void setExperimentID(String id){
+    	this.experimentId = id;
     }
 
     public void setSeedSequence(String seedSequence) {
@@ -103,10 +129,11 @@ public class CSPositionSpecificAffinityMatrix implements DSPositionSpecificAffin
     }
 
     public String getID() {
-        return null;
+        return psamId;
     }
 
     public void setID(String id) {
+    	psamId = id;
     }
 
     public int getSerial() {
