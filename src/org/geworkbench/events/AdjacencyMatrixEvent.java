@@ -24,6 +24,8 @@ public class AdjacencyMatrixEvent extends Event {
         DRAW_NETWORK,
         DRAW_NETWORK_AND_INTERACTION,
         FINISH,
+        DRAW_NETWORK_ON_MICROARRAY,
+        DRAW_GENEWAYS_NETWORK,
         DRAW_GENEWAYS_COMPLETE_NETWORK
     };
 
