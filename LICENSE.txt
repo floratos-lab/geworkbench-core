@@ -41,6 +41,7 @@
 - Contains Batik by the Apache Foundation. (Apache)
 * Contains JClass by Quest Software. (Non-Free: http://www.quest.com/jclass/)
 - Contains GSEA by Broad Institute, MIT. (MIT License: http://www.broad.mit.edu/gsea/)
+- Contains MatrixREDUCE by Harmen Bussemaker Laboratory, Columbia University. (http://bussemaker.bio.columbia.edu/software/MatrixREDUCE/)
 
 (mpiJava - GPL - but unknown attribution)
 (polgara.jar - source unknown)
