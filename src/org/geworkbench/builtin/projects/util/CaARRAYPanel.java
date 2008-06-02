@@ -86,7 +86,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
 	private JScrollPane jScrollPane2 = new JScrollPane();
 	private JPanel jPanel14 = new JPanel();
 	private JPanel jPanel16 = new JPanel();
-	private JLabel derivedLabel = new JLabel("Number of Derived Assays");
+	private JLabel derivedLabel = new JLabel("Number of Assays");
 	private JTextField measuredField = new JTextField();
 	private JTextField derivedField = new JTextField();
 	private JTextArea experimentInfoArea = new JTextArea();
@@ -123,6 +123,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
 	public CaARRAYPanel(LoadData p) {
 		parent = p;
 		try {
+			 
 			jbInit();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -364,8 +365,8 @@ public class CaARRAYPanel extends JPanel implements Observer {
 
 		if (qType != null) {
 			stillWaitForConnecting = true;
-			progressBar.setMessage("Try to load to the selected bioassays...");
-			updateProgressBar("Try to load to the selected bioassays for ");
+			progressBar.setMessage("Try to load the selected bioassays...");
+			updateProgressBar("Try to load the selected bioassays for ");
 			progressBar.addObserver(this);
 			progressBar.start();
 			task = new ConnectionTask();
@@ -375,8 +376,8 @@ public class CaARRAYPanel extends JPanel implements Observer {
 	}
 
 	public void startProgressBar() {
-
-		updateProgressBar("Try to load to the selected bioassays for ");
+		stillWaitForConnecting = true;
+		updateProgressBar("Try to load the filtered expriments for ");
 		progressBar.start();
 
 	}
