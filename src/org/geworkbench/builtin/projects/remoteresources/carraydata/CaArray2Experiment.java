@@ -1,4 +1,5 @@
 package org.geworkbench.builtin.projects.remoteresources.carraydata;
+import java.io.Serializable;
 
 public class CaArray2Experiment  implements Comparable, Serializable{
  private String name;
