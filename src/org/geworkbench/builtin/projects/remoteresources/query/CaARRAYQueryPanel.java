@@ -2,6 +2,7 @@ package org.geworkbench.builtin.projects.remoteresources.query;
 
 import org.geworkbench.builtin.projects.remoteresources.RemoteResource;
 import org.geworkbench.builtin.projects.remoteresources.RemoteResourceDialog;
+import org.geworkbench.builtin.projects.util.CaARRAYPanel;
 import org.geworkbench.builtin.projects.LoadData;
 import org.geworkbench.engine.properties.PropertiesManager;
 import org.geworkbench.events.CaArrayQueryEvent;
@@ -45,22 +46,21 @@ public class CaARRAYQueryPanel extends JDialog {
 	}
 
 	public void receiveCaAraryQueryResultEvent(CaArrayQueryResultEvent event) {
-		
+
 		progressBar.setIndeterminate(false);
-		
+
 		if (!event.isSucceed()) {
-			JOptionPane.showMessageDialog(this,
-					event.getErrorMessage());
+			JOptionPane.showMessageDialog(this, event.getErrorMessage());
 			return;
 		}
-		
+
 		TreeMap<String, Set<String>> treeMap = event.getQueryPairs();
 		if (treeMap == null) {
 			JOptionPane.showMessageDialog(this,
 					"No data can be retrieved from the caArray Server!");
 			return;
 		}
-		
+
 		for (String searchItem : listContent) {
 			Set<String> set = treeMap.get(searchItem);
 			String[] values = null;
@@ -203,8 +203,8 @@ public class CaARRAYQueryPanel extends JDialog {
 	private int portnumber;
 	private String url;
 
-	public static String[] listContent = new String[] { CHIPPROVIDER, ORGANISM, PINAME};
-	//,TISSUETYPE }; // The
+	public static String[] listContent = new String[] { CHIPPROVIDER, ORGANISM,
+			PINAME};//, TISSUETYPE};// Remove TissueType because it takes too long to get any result back., TISSUETYPE }; // The
 	// content
 	// of
 	// search
@@ -557,8 +557,10 @@ public class CaARRAYQueryPanel extends JDialog {
 				&& chipPlatformName.startsWith(ChipFieldDefaultMessage)) {
 			organismName = "";
 		}
-		String tissueTypeName = ((String) (tissueTypeBox.getSelectedItem()))
-				.trim();
+		String tissueTypeName = null;
+		if(tissueTypeBox!=null){
+		 tissueTypeName = ((String) (tissueTypeBox.getSelectedItem()));
+		}
 
 		//
 		// for (SelectedValue selectedValue : valueHits) {
@@ -599,8 +601,17 @@ public class CaARRAYQueryPanel extends JDialog {
 			event.setRequestItem(CaArrayRequestEvent.EXPERIMENT);
 			event.setFilterCrit(filterCrit);
 			event.setUseFilterCrit(true);
-			loadData.getCaArrayDisplayPanel().startProgressBar();
-
+			if (username != null) {
+				event.setUsername(username);
+				event.setPassword(password);
+			}
+			CaARRAYPanel caArrayPanel = loadData.getCaArrayDisplayPanel();
+			caArrayPanel.setUser(username);
+			caArrayPanel.setUrl(url);
+			caArrayPanel.setPortnumber(portnumber);
+			caArrayPanel.setPasswd(password);
+			caArrayPanel.startProgressBar();
+	
 			Runnable thread = new Runnable() {
 				public void run() {
 					loadData.publishCaArrayRequestEvent(event);
@@ -609,7 +620,7 @@ public class CaARRAYQueryPanel extends JDialog {
 			Thread t = new Thread(thread);
 			t.setPriority(Thread.MAX_PRIORITY);
 			t.start();
- 		} catch (Exception er) {
+		} catch (Exception er) {
 			er.printStackTrace();
 			GeWorkbenchCaARRAYAdaptor.fail("Cannot process the query.");
 		}
