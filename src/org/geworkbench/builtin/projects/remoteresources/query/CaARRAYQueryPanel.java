@@ -203,8 +203,8 @@ public class CaARRAYQueryPanel extends JDialog {
 	private int portnumber;
 	private String url;
 
-	public static String[] listContent = new String[] { CHIPPROVIDER, ORGANISM, PINAME,
-			TISSUETYPE }; // The
+	public static String[] listContent = new String[] { CHIPPROVIDER, ORGANISM, PINAME};
+	//,TISSUETYPE }; // The
 	// content
 	// of
 	// search
