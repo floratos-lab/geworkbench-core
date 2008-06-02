@@ -1,6 +1,6 @@
 package org.geworkbench.builtin.projects.remoteresources.carraydata;
 
-public class CaArray2Experiment  implements , Serializable{
+public class CaArray2Experiment  implements Comparable, Serializable{
  private String name;
  private String[] hybridizations;
  private String description;
