@@ -463,4 +463,13 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 		}
 
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String createHistory(){
+		return aspp.toString();
+	}
+	
 }

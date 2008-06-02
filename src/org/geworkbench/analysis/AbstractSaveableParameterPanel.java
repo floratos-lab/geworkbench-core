@@ -65,5 +65,8 @@ public class AbstractSaveableParameterPanel extends ParameterPanel {
         name = (String) in.readObject();
     }
 
+    public String toString(){ //override this method to generate dataset history automatically from parameter panel
+    	return null;
+    }
 }
 

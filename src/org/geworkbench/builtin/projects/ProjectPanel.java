@@ -97,6 +97,7 @@ import org.geworkbench.events.NormalizationEvent;
 import org.geworkbench.events.PendingNodeLoadedFromWorkspaceEvent;
 import org.geworkbench.events.ProjectEvent;
 import org.geworkbench.events.ProjectNodeAddedEvent;
+import org.geworkbench.events.ProjectNodePostCompletedEvent;
 import org.geworkbench.events.SingleValueEditEvent;
 import org.geworkbench.events.StructureAnalysisEvent;
 import org.geworkbench.util.SaveImage;
@@ -426,7 +427,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 							.getObject(GridEndpointReferenceType.class
 									.getName());
 					addPendingNode(pendingGridEpr, (String) dataSet
-							.getObject(String.class.getName()), true);
+							.getObject(String.class.getName()), dataSet.getDescriptions()[0], true);
 					pendingGridEprs.add(pendingGridEpr);
 				}
 				/* real node */
@@ -452,8 +453,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 						GridEndpointReferenceType pendingGridEpr = (GridEndpointReferenceType) ancNode.getDataSet()
 								.getObject(GridEndpointReferenceType.class
 										.getName());
+						String history = (String)ancNode.getDataSet().getObject(String.class.getName());
 						addPendingNode(pendingGridEpr, (String) ancNode.getDataSet()
-								.getObject(String.class.getName()), true);
+								.getObject(String.class.getName()), history, true);
 						pendingGridEprs.add(pendingGridEpr);
 					}else{
 						DSAncillaryDataSet ancSet = null;
@@ -707,7 +709,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * @param _dataSet
 	 */
 	public PendingTreeNode addPendingNode(GridEndpointReferenceType gridEpr,
-			String description, boolean startNewThread) {
+			String description, String history, boolean startNewThread) {
 		// Retrieve the project node for this node
 		ProjectTreeNode pNode = selection.getSelectedNode();
 		PendingTreeNode node = null;
@@ -718,13 +720,12 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			 * Inserts the new node and sets the menuNode and other variables to
 			 * point to it.
 			 */
-			node = new PendingTreeNode(description, description, gridEpr);
+			node = new PendingTreeNode(description, history, gridEpr);
 			projectTreeModel.insertNodeInto(node, pNode, pNode.getChildCount());
 			// Make sure the user can see the lovely new node.
 			projectTree.scrollPathToVisible(new TreePath(node));
 			projectTree.setSelectionPath(new TreePath(node.getPath()));
 			selection.setNodeSelection(node);
-			
 			eprPendingNodeMap.put(gridEpr, node);
 		}
 		return node;
@@ -753,6 +754,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	public void addCompletedNode(GridEndpointReferenceType gridEpr,
 			DSAncillaryDataSet ancillaryDataSet) {
 		PendingTreeNode node = eprPendingNodeMap.get(gridEpr);
+		String history = node.getDescription();
 		if (node != null) {
 			if (ancillaryDataSet != null) {
 				ProjectTreeNode parent = (ProjectTreeNode) node.getParent();
@@ -763,11 +765,20 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				DataSetSubNode newNode = new DataSetSubNode(ancillaryDataSet);
 				projectTreeModel.insertNodeInto(newNode, parent, index);
 				eprPendingNodeMap.remove(gridEpr);
-
+//TODO: now we need to put history on new node
+				this.addToHistory(ancillaryDataSet, history);
+//TODO: Aris don't like this expend effect, remove it.
 				// Make sure the user can see the lovely new node.
+/*				
 				projectTree.scrollPathToVisible(new TreePath(newNode));
 				projectTree.setSelectionPath(new TreePath(newNode.getPath()));
 				selection.setNodeSelection(newNode);
+*/
+				// PS: this post processing event has to follow the node selection. otherwise it might affect wrong node.
+				// ex: significance result set will add a significant markers in the panel for wrong node.
+				publishPostProcessingEvent(new ProjectNodePostCompletedEvent(ancillaryDataSet.getDataSetName(),
+						gridEpr, ancillaryDataSet, parent));
+
 			} else {
 				JOptionPane
 						.showMessageDialog(
@@ -1131,7 +1142,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		// FIXME why would we pass the source. Nothing is done with it! See
 		// method above
 		addPendingNode(ppne.getGridEndpointReferenceType(), ppne
-				.getDescription(), false);
+				.getDescription(), ppne.getHistory(), false);
 	}
 
 	@Subscribe
@@ -2904,5 +2915,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		// loadData.setCaARRAYServer(url, portnumber);
 		return false;
 	}
-
+	
+	@Publish
+	public ProjectNodePostCompletedEvent publishPostProcessingEvent(ProjectNodePostCompletedEvent event){
+		return event;
+	}
 }
