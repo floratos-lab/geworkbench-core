@@ -601,9 +601,11 @@ public class CaARRAYQueryPanel extends JDialog {
 			event.setRequestItem(CaArrayRequestEvent.EXPERIMENT);
 			event.setFilterCrit(filterCrit);
 			event.setUseFilterCrit(true);
-			if (username != null) {
+			if (username != null && username.trim().length()>0) {
 				event.setUsername(username);
 				event.setPassword(password);
+			}else{
+				event.setUsername(null);
 			}
 			CaARRAYPanel caArrayPanel = loadData.getCaArrayDisplayPanel();
 			caArrayPanel.setUser(username);

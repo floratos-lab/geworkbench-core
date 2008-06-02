@@ -123,7 +123,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
 	public CaARRAYPanel(LoadData p) {
 		parent = p;
 		try {
-			 
+
 			jbInit();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -131,24 +131,25 @@ public class CaARRAYPanel extends JPanel implements Observer {
 	}
 
 	public void receive(CaArrayEvent ce) {
-		
+
 		stillWaitForConnecting = false;
 		progressBar.stop();
-		
+
 		if (!ce.isPopulated()) {
 			String errorMessage = ce.getErrorMessage();
-			if(errorMessage==null){
-			 errorMessage = "Cannot connect with the server.";	
+			if (errorMessage == null) {
+				errorMessage = "Cannot connect with the server.";
 			}
 			if (!ce.isSucceed()) {
-				
-				JOptionPane.showMessageDialog(null, "The error: " + errorMessage);
-					//	+ ce.getErrorMessage()==null? "Cannot connect with the server.":ce.getErrorMessage());
+
+				JOptionPane.showMessageDialog(null, "The error: "
+						+ errorMessage);
+				// + ce.getErrorMessage()==null? "Cannot connect with the
+				// server.":ce.getErrorMessage());
 			} else {
-				JOptionPane.showMessageDialog(null,
-						errorMessage);
+				JOptionPane.showMessageDialog(null, errorMessage);
 			}
-  
+
 		}
 
 		if (ce.getInfoType().equalsIgnoreCase(CaArrayEvent.EXPERIMENT)) {
@@ -178,8 +179,8 @@ public class CaARRAYPanel extends JPanel implements Observer {
 				caArrayTreePanel.add(displayLabel, BorderLayout.SOUTH);
 			}
 			revalidate();
-		}else{
-			dispose();//make itself disappear.
+		} else {
+			dispose();// make itself disappear.
 		}
 	}
 
@@ -224,7 +225,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
 		measuredField.setEditable(false);
 
 		extendButton.setPreferredSize(new Dimension(100, 25));
-		extendButton.setText("Show Detail");
+		extendButton.setText("Show arrays");
 		extendButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				extendBioassays_action(e);
@@ -333,7 +334,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
 		Runnable r = new Runnable() {
 			public void run() {
 				try {
-					if (text.startsWith("Try")) {
+					if (text.startsWith("Loading")) {
 						int i = 0;
 						do {
 							Thread.sleep(250);
@@ -365,8 +366,9 @@ public class CaARRAYPanel extends JPanel implements Observer {
 
 		if (qType != null) {
 			stillWaitForConnecting = true;
-			progressBar.setMessage("Try to load the selected bioassays...");
-			updateProgressBar("Try to load the selected bioassays for ");
+			progressBar
+					.setMessage("Loading selected bioassays - elapsed time: ");
+			updateProgressBar("Loading selected bioassays - elapsed time: ");
 			progressBar.addObserver(this);
 			progressBar.start();
 			task = new ConnectionTask();
@@ -377,7 +379,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
 
 	public void startProgressBar() {
 		stillWaitForConnecting = true;
-		updateProgressBar("Try to load the filtered expriments for ");
+		updateProgressBar("Loading the filtered expriments - elapsed time: ");
 		progressBar.start();
 
 	}
@@ -747,8 +749,12 @@ public class CaARRAYPanel extends JPanel implements Observer {
 			// CaArrayRequestEvent event = new CaArrayRequestEvent(
 			// "array-stage.nci.nih.gov", 8080);
 			CaArrayRequestEvent event = new CaArrayRequestEvent(url, portnumber);
-			event.setUsername(user);
-			event.setPassword(passwd);
+			if (user == null || user.trim().length() == 0) {
+				event.setUsername(null);
+			} else {
+				event.setUsername(user);
+				event.setPassword(passwd);
+			}
 			event.setRequestItem(CaArrayRequestEvent.BIOASSAY);
 			event.setMerge(merge);
 			HashMap<String, String[]> filterCrit = new HashMap<String, String[]>();
@@ -771,9 +777,13 @@ public class CaARRAYPanel extends JPanel implements Observer {
 			// CaArrayRequestEvent event = new CaArrayRequestEvent(
 			// "array-stage.nci.nih.gov", 8080);
 			CaArrayRequestEvent event = new CaArrayRequestEvent(url, portnumber);
-			event.setUsername(user);
-			event.setPassword(passwd);
+			if (user == null || user.trim().length() == 0) {
+				event.setUsername(null);
+			} else {
+				event.setUsername(user);
+				event.setPassword(passwd);
 
+			}
 			event.setRequestItem(CaArrayRequestEvent.EXPERIMENT);
 			publishCaArrayEvent(event);
 			stillConnecting = false;
@@ -801,8 +811,9 @@ public class CaARRAYPanel extends JPanel implements Observer {
 	public void getExperiments() {
 
 		stillWaitForConnecting = true;
-		progressBar.setMessage("Try to connect to the remote resource...");
-		updateProgressBar("Try to connect to the remote resource for ");
+		progressBar
+				.setMessage("Loading selected experiments from the remote resource...");
+		updateProgressBar("Loading selected experiments from the remote resource for ");
 		progressBar.addObserver(this);
 		progressBar.start();
 
