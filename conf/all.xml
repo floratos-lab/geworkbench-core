@@ -252,6 +252,8 @@
 	</plugin>
 	 <plugin id="goTree" name="Gene Ontology Tree" class="org.geworkbench.components.goterms.tree.GeneOntologyTreePopulateComponent" source="goterms">
 </plugin>
+  <plugin id="caArray2Panel" name="CaArray2" class="org.geworkbench.components.caarray.arraydata.CaArray2Component" source="caarray">
+            </plugin>
 	<!--<plugin id="genomeBrowser" name="Genome Browser" class="org.geworkbench.components.genomebrowser.GenomeBrowser" source="genomebrowser">
 		<gui-area name="VisualArea"/>
 	</plugin>-->
