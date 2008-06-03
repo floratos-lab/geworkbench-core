@@ -130,8 +130,18 @@ public class CaARRAYPanel extends JPanel implements Observer {
 		}
 	}
 
-	public void receive(CaArrayEvent ce) {
+	public boolean isStillWaitForConnecting() {
+		return stillWaitForConnecting;
+	}
 
+	public void setStillWaitForConnecting(boolean stillWaitForConnecting) {
+		this.stillWaitForConnecting = stillWaitForConnecting;
+	}
+
+	public void receive(CaArrayEvent ce) {
+		if(!stillWaitForConnecting){
+			return;
+		}
 		stillWaitForConnecting = false;
 		progressBar.stop();
 
@@ -379,7 +389,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
 
 	public void startProgressBar() {
 		stillWaitForConnecting = true;
-		updateProgressBar("Loading the filtered expriments - elapsed time: ");
+		updateProgressBar("Loading the filtered experiments - elapsed time: ");
 		progressBar.start();
 
 	}
@@ -771,11 +781,12 @@ public class CaARRAYPanel extends JPanel implements Observer {
 		public void connect() {
 
 			// update the progress message.
-			stillWaitForConnecting = false;
+			 
+			//stillWaitForConnecting = false;
+			 stillWaitForConnecting = true;
 			progressBar
 					.setMessage("Connecting with the server... The initial step may take a few minutes.");
 			// CaArrayRequestEvent event = new CaArrayRequestEvent(
-			// "array-stage.nci.nih.gov", 8080);
 			CaArrayRequestEvent event = new CaArrayRequestEvent(url, portnumber);
 			if (user == null || user.trim().length() == 0) {
 				event.setUsername(null);
@@ -866,7 +877,19 @@ public class CaARRAYPanel extends JPanel implements Observer {
 		if (task != null) {
 			task.stop();
 		}
+		log.error("Get Canceled");
+		 
 		progressBar.dispose();
+		CaArrayRequestEvent event = new CaArrayRequestEvent(url, portnumber);
+		if (user == null || user.trim().length() == 0) {
+			event.setUsername(null);
+		} else {
+			event.setUsername(user);
+			event.setPassword(passwd);
+
+		}
+		event.setRequestItem(CaArrayRequestEvent.CANCEL);
+		publishCaArrayEvent(event);
 
 	}
 
