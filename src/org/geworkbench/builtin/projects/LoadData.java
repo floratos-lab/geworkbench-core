@@ -229,7 +229,7 @@ public class LoadData extends JDialog {
 		caARRAYQueryPanel = new CaARRAYQueryPanel(JOptionPane
 				.getFrameForComponent(this), QUERYTITLE);
 		queryButton.setToolTipText("Filtering the selections.");
-		queryButton.setText("Query");
+		queryButton.setText("Filtering");
 		queryButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				displayQueryDialog(RemoteResourceDialog.ADD);
@@ -655,6 +655,9 @@ public class LoadData extends JDialog {
 			openRemoteResourceButton.setBackground(Color.RED);
 			openRemoteResourceButton
 					.setToolTipText("Click to get the display synchronized with Remote source.");
+			//Added by XQ to fix bug 1288
+			caArrayDisplayPanel.setExperiments(null);
+			caArrayDisplayPanel.setExperimentsLoaded(false);
 		} else {
 			openRemoteResourceButton.setBackground(null);
 			openRemoteResourceButton
