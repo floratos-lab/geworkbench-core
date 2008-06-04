@@ -4,6 +4,7 @@ import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.engine.config.events.Event;
 import java.util.*;
 public class CaArrayRequestEvent extends Event {
+	public static final String CANCEL = "CANCEL";
 	public static final String EXPERIMENT = "EXP";
 	public static final String BIOASSAY = "BIOASSAY";
 	public static String searchcritia = "selection";
