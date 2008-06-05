@@ -765,15 +765,15 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				DataSetSubNode newNode = new DataSetSubNode(ancillaryDataSet);
 				projectTreeModel.insertNodeInto(newNode, parent, index);
 				eprPendingNodeMap.remove(gridEpr);
-//TODO: now we need to put history on new node
+				//TODO: now we need to put history on new node
 				this.addToHistory(ancillaryDataSet, history);
-//TODO: Aris don't like this expend effect, remove it.
-				// Make sure the user can see the lovely new node.
-/*				
+				
+				// Make sure the user can see the lovely new node. (But don't visually set the focus to the new node)
+				TreePath pathNow = projectTree.getSelectionPath();
 				projectTree.scrollPathToVisible(new TreePath(newNode));
 				projectTree.setSelectionPath(new TreePath(newNode.getPath()));
-				selection.setNodeSelection(newNode);
-*/
+				projectTree.setSelectionPath(pathNow);
+
 				// PS: this post processing event has to follow the node selection. otherwise it might affect wrong node.
 				// ex: significance result set will add a significant markers in the panel for wrong node.
 				publishPostProcessingEvent(new ProjectNodePostCompletedEvent(ancillaryDataSet.getDataSetName(),
