@@ -47,7 +47,7 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
     RMAExpressFilter maFilter = null;
 
     public RMAExpressFileFormat() {
-        formatName = "Tab-Delimited(RMAExpress, GEO series matrix etc)";
+        formatName = "Tab-Delimited (RMAExpress, GEO series matrix etc)";
         maFilter = new RMAExpressFilter();
         Arrays.sort(maExtensions);
     }
