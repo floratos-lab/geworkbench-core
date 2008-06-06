@@ -1,20 +1,5 @@
 package org.geworkbench.components.parsers;
 
-import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
-import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
-import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
-import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
-import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
-import org.geworkbench.bison.datastructure.bioobjects.microarray.CSExpressionMarkerValue;
-import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
-import org.geworkbench.bison.parsers.resources.Resource;
-import org.geworkbench.components.parsers.microarray.DataSetFileFormat;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.logging.Log;
-
-import javax.swing.ProgressMonitorInputStream;
-import javax.swing.filechooser.FileFilter;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,6 +10,23 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
+
+import javax.swing.ProgressMonitorInputStream;
+import javax.swing.filechooser.FileFilter;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
+import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
+import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
+import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.CSExpressionMarkerValue;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
+import org.geworkbench.bison.parsers.resources.Resource;
+import org.geworkbench.components.parsers.microarray.DataSetFileFormat;
 
 /**
  * <p>Title: Sequence and Pattern Plugin</p>
@@ -151,12 +153,17 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
                 if (header == null) {
                     throw new InputFileFormatException("File is empty.");
                 }
-                while (header != null && header.startsWith("#")) {
-                    header = in.readLine();
+                while (header != null &&                 		
+                		(header.startsWith("#")
+                		|| header.startsWith("!"))		// for mantis issue: 1349
+                		|| StringUtils.isEmpty(header) 	// for mantis issue: 1349
+                		) {
+                    header = in.readLine();                    
                 }
                 if (header == null) {
                     throw new InputFileFormatException("File is empty or consists of only comments.\n"+"RMAExpressFileFormat expected");
                 }
+                header = StringUtils.replace(header, "\"", ""); // for mantis issue:1349
                 StringTokenizer headerTokenizer = new StringTokenizer(header, "\t", false);
                 int n = headerTokenizer.countTokens();
                 if (n <= 1) {
@@ -168,8 +175,13 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
                     values[i] = new ArrayList<Float>();
                 }
                 String line = in.readLine();
+                line = StringUtils.replace(line, "\"", "");
                 int m = 0;
-                while (line != null) {
+                //while (line != null) {		// original code
+                while((line != null) 			// modified for mantis issue: 1349
+                		&& (!StringUtils.isEmpty(line))
+                		&& (!line.trim().startsWith("!"))
+                		){	
                     String[] tokens = line.split("\t");
                     int length = tokens.length;
                     if (length != (n + 1)) {
@@ -202,6 +214,7 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
                     }
                     m++;
                     line = in.readLine();
+                    line = StringUtils.replace(line, "\"", "");
                 }
                 // Skip first token
                 headerTokenizer.nextToken();
