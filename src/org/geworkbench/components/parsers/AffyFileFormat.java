@@ -1,5 +1,22 @@
 package org.geworkbench.components.parsers;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.StringTokenizer;
+import java.util.Vector;
+
+import javax.swing.ProgressMonitorInputStream;
+import javax.swing.filechooser.FileFilter;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.CSMarkerVector;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
@@ -11,15 +28,6 @@ import org.geworkbench.bison.parsers.AffymetrixParser;
 import org.geworkbench.bison.parsers.resources.AffyResource;
 import org.geworkbench.bison.parsers.resources.Resource;
 import org.geworkbench.components.parsers.microarray.DataSetFileFormat;
-
-import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
-import java.io.*;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.StringTokenizer;
-import java.util.Vector;
 
 /**
  * <p>Title: Bioworks</p>
@@ -38,8 +46,9 @@ import java.util.Vector;
 public class AffyFileFormat extends DataSetFileFormat {
     /**
      * The file extensions expected for Affy files.
-     */
+     */	
     String[] affyExtensions = {"affy", "txt", "TXT"};
+    private Log log = LogFactory.getLog(this.getClass());
     AffyResource resource = new AffyResource();
     DSMicroarraySet microarraySet = null;
     /**
@@ -100,6 +109,7 @@ public class AffyFileFormat extends DataSetFileFormat {
 	        int totalColumns = 0;
 	        int accessionIndex= -1;
 	        List<String> markers = new ArrayList<String>();
+	        int lineIndex = 0;
 	        while ((line = reader.readLine()) != null) { //for each line
 	        	if (line.indexOf("Probe Set Name") > 0) {
 	                headerExist = true;
@@ -115,7 +125,7 @@ public class AffyFileFormat extends DataSetFileFormat {
 		                }else if (headerExist && (columnIndex==accessionIndex)){ // if this line is after header, then first column should be our marker name
 		                	if (markers.contains(token)){//duplicate markers
 		                		noDuplicateMarkers=false;
-		                		System.out.println("duplicate markers: "+token);
+		                		log.info("duplicate markers: "+token);
 		                	}else{
 		                		markers.add(token);
 		                	}
@@ -125,11 +135,14 @@ public class AffyFileFormat extends DataSetFileFormat {
 		            //check if column match or not
 		            if (headerExist){ //if this line is real data, we assume lines after header are real data. (we might have bug here)
 		            	if (totalColumns==0)//not been set yet
-		            		totalColumns=columnIndex-accessionIndex;
-		            	else if (columnIndex!=totalColumns)//if not equal 
+		            		totalColumns=columnIndex;
+		            	else if (columnIndex!=totalColumns){//if not equal 
 		            		columnsMatch=false;
+		            		log.info("In the file"+f.getName()+", header contains "+totalColumns+" columns, but line "+lineIndex+" only contains "+columnIndex+" columns.");
+		            	}
 		            }
 	        	}
+	        	lineIndex++;
 	        }
 	        fileIn.close();
 	    } catch (Exception e) {
