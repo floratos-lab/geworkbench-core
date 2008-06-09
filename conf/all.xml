@@ -28,7 +28,7 @@
 	<plugin id="tprofilerView" name="T-Profiler Results" class="org.geworkbench.components.tprofiler.TProfilerVisualComponent" source="tprofiler">
 		<gui-area name="VisualArea"/>
 	</plugin>
-	<plugin id="tprofiler" name="T-Profiler" class="org.geworkbench.components.tprofiler.TProfiler" source="tprofiler">
+    <plugin id="tprofiler" name="T-Profiler" class="org.geworkbench.components.tprofiler.TProfiler" source="tprofiler">
 		<gui-area name="VisualArea"/>
 	</plugin>
 	<plugin id="cytoscapePanel_V2_4" name="Cytoscape_V2_4" class="org.geworkbench.components.cytoscape_v2_4.CytoscapeWidget" source="cutenet">
@@ -257,4 +257,9 @@
 	<!--<plugin id="genomeBrowser" name="Genome Browser" class="org.geworkbench.components.genomebrowser.GenomeBrowser" source="genomebrowser">
 		<gui-area name="VisualArea"/>
 	</plugin>-->
+	<!-- plugin id="GenSpaceLogPreferences" name="genSpace" 
+ 	        class="org.geworkbench.components.genspace.GenSpaceLogPreferences" 
+ 	        source="genspace">
+ 	    <gui-area name="VisualArea"/>
+	</plugin> -->
 </geaw-config>
