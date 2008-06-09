@@ -85,8 +85,8 @@ public class AffyFileFormat extends DataSetFileFormat {
     // * The values of the data points respect their expected type.
     public boolean checkFormat(File f) {
     	
-    	return true;
-/*    	
+//    	return true;
+
         boolean headerExist = false;
         boolean columnsMatch = true;
         boolean noDuplicateMarkers = true;
@@ -98,6 +98,7 @@ public class AffyFileFormat extends DataSetFileFormat {
 	
 	        String line = null;
 	        int totalColumns = 0;
+	        int accessionIndex= -1;
 	        List<String> markers = new ArrayList<String>();
 	        while ((line = reader.readLine()) != null) { //for each line
 	        	if (line.indexOf("Probe Set Name") > 0) {
@@ -106,15 +107,15 @@ public class AffyFileFormat extends DataSetFileFormat {
 	        	if (headerExist){//we'll skip anything before header
 		            String token=null;
 			        int columnIndex = 0;
-			        int accessionIndex= 0;
 		            StringTokenizer st = new StringTokenizer(line, "\t\n");	            
 		            while (st.hasMoreTokens()) {	//for each column
 		                token = st.nextToken().trim();
 		                if (token.equals("Probe Set Name")) {
 		                    accessionIndex = columnIndex;
-		                }else if (headerExist && (columnIndex==0)){ // if this line is after header, then first column should be our marker name
+		                }else if (headerExist && (columnIndex==accessionIndex)){ // if this line is after header, then first column should be our marker name
 		                	if (markers.contains(token)){//duplicate markers
 		                		noDuplicateMarkers=false;
+		                		System.out.println("duplicate markers: "+token);
 		                	}else{
 		                		markers.add(token);
 		                	}
@@ -134,11 +135,13 @@ public class AffyFileFormat extends DataSetFileFormat {
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
-	    if (headerExist && columnsMatch && noDuplicateMarkers)
+	  //if (headerExist && columnsMatch && noDuplicateMarkers)
+	    if (headerExist && noDuplicateMarkers)
+		    
 	    	return true;
 	    else
 	    	return false;
-*/	    	
+
     }
 
     /**
