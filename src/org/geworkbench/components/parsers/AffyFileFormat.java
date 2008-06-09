@@ -84,6 +84,9 @@ public class AffyFileFormat extends DataSetFileFormat {
     // In here we should also check (among other things) that:
     // * The values of the data points respect their expected type.
     public boolean checkFormat(File f) {
+    	
+    	return true;
+/*    	
         boolean headerExist = false;
         boolean columnsMatch = true;
         boolean noDuplicateMarkers = true;
@@ -97,7 +100,7 @@ public class AffyFileFormat extends DataSetFileFormat {
 	        int totalColumns = 0;
 	        List<String> markers = new ArrayList<String>();
 	        while ((line = reader.readLine()) != null) { //for each line
-	        	if (line.indexOf("Probe Set Name") == 0) {
+	        	if (line.indexOf("Probe Set Name") > 0) {
 	                headerExist = true;
 	            }
 	        	if (headerExist){//we'll skip anything before header
@@ -135,6 +138,7 @@ public class AffyFileFormat extends DataSetFileFormat {
 	    	return true;
 	    else
 	    	return false;
+*/	    	
     }
 
     /**
