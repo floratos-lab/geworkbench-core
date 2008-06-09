@@ -38,31 +38,15 @@ public class ProgressBar
     /**
      * Visual widget
      */
-    private GridBagLayout gridbagLayout = new GridBagLayout();
-    /**
-     * Visual widget
-     */
     private JProgressBar jProgressBar = new JProgressBar();
     /**
      * Visual widget
      */
-    private JPanel contentPane = new JPanel();
+    private JButton cancelButton = new JButton("Cancel");
     /**
      * Visual widget
      */
     private JPanel jPanel1 = new JPanel();
-    /**
-     * Visual widget
-     */
-    private JPanel jPanel2 = new JPanel();
-    /**
-     * Visual widget
-     */
-    private JPanel jPanel3 = new JPanel();
-    /**
-     * Visual widget
-     */
-    private JPanel jPanel4 = new JPanel();
     /**
      * Singleton representing a <code>ProgressBar</code> with a specified range
      * This needs to set before using the instance
@@ -83,9 +67,17 @@ public class ProgressBar
     private BarObservable winDisposed = null;
 
     private class BarWindowAdapter
-        extends java.awt.event.WindowAdapter {
+        extends java.awt.event.WindowAdapter implements java.awt.event.ActionListener {
         public void windowClosing(java.awt.event.WindowEvent e) {
-            winDisposed.setChanged();
+            doAction();
+        }
+        
+        public void actionPerformed(java.awt.event.ActionEvent e){
+        	doAction();
+        }
+        
+        public void doAction(){
+        	winDisposed.setChanged();
             winDisposed.notifyObservers();
         }
 
@@ -98,7 +90,7 @@ public class ProgressBar
     private static ProgressBar indeterminateProgressBar =
         new ProgressBar(INDETERMINATE_TYPE);
     JLabel jLabel1 = new JLabel();
-    GridLayout gridLayout1 = new GridLayout();
+    GridLayout gridLayout1 = new GridLayout(3, 1);
     /**
      * Factory method to create one of the two above defined ProgressBar types
      * @param type type of the <code>ProgressBar</code>
@@ -146,15 +138,11 @@ public class ProgressBar
             if (nv <= jProgressBar.getMaximum()) {
                 jProgressBar.setValue(value + inc);
                 jProgressBar.setString(Integer.toString(value + inc));
-//                ((JPanel)this.getContentPane())
-//                        .paintImmediately(((JPanel)this
-//                                           .getContentPane()).getVisibleRect());
+
                 return true;
             }
         }
-//        ((JPanel)this.getContentPane())
-//                .paintImmediately(((JPanel)this
-//                                   .getContentPane()).getVisibleRect());
+
         return false;
     }
 
@@ -169,15 +157,9 @@ public class ProgressBar
             if ((int) value <= jProgressBar.getMaximum()) {
                 jProgressBar.setValue((int) value);
                 jProgressBar.setString(Integer.toString((int) value));
-//                ((JPanel)this.getContentPane())
-//                        .paintImmediately(((JPanel)this
-//                                           .getContentPane()).getVisibleRect());
                 return true;
             }
         }
-//        ((JPanel)this.getContentPane())
-//                .paintImmediately(((JPanel)this
-//                                   .getContentPane()).getVisibleRect());
         return false;
     }
 
@@ -287,39 +269,51 @@ public class ProgressBar
      */
     private void jbInit() throws Exception {
         this.getContentPane().setLayout(borderLayout1);
-        contentPane.setLayout(gridbagLayout);
         jProgressBar.setBorder(BorderFactory.createLoweredBevelBorder());
         jProgressBar.setMinimumSize(new Dimension(300, 22));
         jProgressBar.setPreferredSize(new Dimension(300, 22));
         jProgressBar.setRequestFocusEnabled(true);
         jProgressBar.setBorderPainted(true);
-        jPanel4.setMinimumSize(new Dimension(10, 5));
-        jPanel4.setPreferredSize(new Dimension(320, 5));
-        jPanel1.setMinimumSize(new Dimension(10, 5));
-        jPanel1.setPreferredSize(new Dimension(320, 25));
+        cancelButton.setMinimumSize(new Dimension(30, 22));
+        cancelButton.setPreferredSize(new Dimension(30, 22));
+        cancelButton.setRequestFocusEnabled(true);
+        jPanel1.setPreferredSize(new Dimension(320,50));
         jPanel1.setLayout(gridLayout1);
-        jPanel2.setMinimumSize(new Dimension(10, 10));
-        jPanel2.setPreferredSize(new Dimension(10, 110));
-        jPanel3.setMinimumSize(new Dimension(10, 10));
-        jPanel3.setPreferredSize(new Dimension(10, 110));
         jLabel1.setToolTipText("");
         jLabel1.setHorizontalAlignment(SwingConstants.CENTER);
         jLabel1.setText("Message");
         jLabel1.setVerticalTextPosition(SwingConstants.CENTER);
-        gridLayout1.setColumns(3);
-        contentPane.add(jProgressBar);
-        this.getContentPane().add(jPanel1, BorderLayout.SOUTH);
-        jPanel1.add(jLabel1, null);
-        this.getContentPane().add(jPanel2, BorderLayout.WEST);
-        this.getContentPane().add(jPanel3, BorderLayout.EAST);
-        this.getContentPane().add(jPanel4, BorderLayout.NORTH);
-        contentPane.setSize(300, 100);
-        this.getContentPane().add(contentPane, BorderLayout.CENTER);
-        this.setSize(new Dimension(350, 100));
+        jPanel1.add(jProgressBar);
+        jPanel1.add(jLabel1);
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 3));
+        buttonPanel.add(new JLabel(""));
+        buttonPanel.add(cancelButton);
+        buttonPanel.add(new JLabel(""));
+        jPanel1.add(buttonPanel);
+        JPanel spaceNorthPane = new JPanel();
+        spaceNorthPane.setMinimumSize(new Dimension(300, 5));
+        spaceNorthPane.setPreferredSize(new Dimension(300, 5));
+        JPanel spaceSouthPane = new JPanel();
+        spaceSouthPane.setMinimumSize(new Dimension(300, 5));
+        spaceSouthPane.setPreferredSize(new Dimension(300, 5));
+        JPanel spaceEastPane = new JPanel();
+        spaceEastPane.setMinimumSize(new Dimension(10, 100));
+        spaceEastPane.setPreferredSize(new Dimension(10, 100));
+        JPanel spaceWestPane = new JPanel();
+        spaceWestPane.setMinimumSize(new Dimension(10, 100));
+        spaceWestPane.setPreferredSize(new Dimension(10, 100));
+        this.getContentPane().add(jPanel1, BorderLayout.CENTER);
+        this.getContentPane().add(spaceNorthPane, BorderLayout.NORTH);
+        this.getContentPane().add(spaceSouthPane, BorderLayout.SOUTH);
+        this.getContentPane().add(spaceEastPane, BorderLayout.EAST);
+        this.getContentPane().add(spaceWestPane, BorderLayout.WEST);
+        this.setSize(new Dimension(320, 110));
         this.setTitle("Progress Bar");
         winDisposed = new BarObservable();
 
-        this.addWindowListener(new BarWindowAdapter());
+        BarWindowAdapter bwa = new BarWindowAdapter();
+        this.addWindowListener(bwa);
+        cancelButton.addActionListener(bwa);
     }
 
     public boolean hasChanged() {
