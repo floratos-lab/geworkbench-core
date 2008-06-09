@@ -10,11 +10,11 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -54,8 +54,8 @@ import javax.swing.tree.TreeSelectionModel;
 import org.apache.commons.collections15.map.ListOrderedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
+import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
@@ -755,8 +755,15 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			DSAncillaryDataSet ancillaryDataSet) {
 		PendingTreeNode node = eprPendingNodeMap.get(gridEpr);
 		String history = node.getDescription();
+		boolean pendingNodeFocused=false;
 		if (node != null) {
 			if (ancillaryDataSet != null) {
+				TreePath pathNow = projectTree.getSelectionPath();
+				Object lastSelected = projectTree.getLastSelectedPathComponent();
+				if (lastSelected.getClass().getName()==PendingTreeNode.class.getName()){
+					if (((PendingTreeNode)lastSelected).getGridEpr()==gridEpr)
+						pendingNodeFocused=true;
+				}
 				ProjectTreeNode parent = (ProjectTreeNode) node.getParent();
 				int index = parent.getIndex(node);
 				projectTreeModel.removeNodeFromParent(node);
@@ -768,12 +775,18 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				//TODO: now we need to put history on new node
 				this.addToHistory(ancillaryDataSet, history);
 				
-				// Make sure the user can see the lovely new node. (But don't visually set the focus to the new node)
-				TreePath pathNow = projectTree.getSelectionPath();
+				// Make sure the user can see the lovely new node. 
 				projectTree.scrollPathToVisible(new TreePath(newNode));
 				projectTree.setSelectionPath(new TreePath(newNode.getPath()));
 				projectTree.setSelectionPath(pathNow);
-
+				// If the pending node is focused, 
+				// we assume the user is interested in this result. 
+				// we visually set the focus to the new node, 
+				// and select the node so user can see the result)
+				if (pendingNodeFocused){
+					projectTree.setSelectionPath(new TreePath(newNode.getPath()));
+					selection.setNodeSelection(newNode);
+				}
 				// PS: this post processing event has to follow the node selection. otherwise it might affect wrong node.
 				// ex: significance result set will add a significant markers in the panel for wrong node.
 				publishPostProcessingEvent(new ProjectNodePostCompletedEvent(ancillaryDataSet.getDataSetName(),
