@@ -101,10 +101,10 @@ public class CSAffyMarkerValue extends CSExpressionMarkerValue implements
     	  }
     	  
     	  // Notice below that there are values "competing" for the same semantic concept.
-    	  // E.g., "Avg Diff", "Signal" can both populate AffyMarkerValue.signal. The
+    	  // E.g., "Avg Diff", "Signal", "Signal Log Ratio" can all populate AffyMarkerValue.signal.
     	  // relative ordering of the if-blocks corresponding to such values imposes
-    	  // a relative importance that resolves conflicts: e.g., if
-    	  // both "Avg Diff" and "Signal" are present, "Signal" will be preferred.
+    	  // Their relative order of processing below resolves conflicts: "Signal Log Ratio"
+    	  // takes priority over "Signal" and "Signal" takes priority over "Avg Diff".
     	  if (columns.containsKey("Avg Diff")) {
     		  value = columns.get("Avg Diff");
     		  if (value instanceof Double){
@@ -121,8 +121,8 @@ public class CSAffyMarkerValue extends CSExpressionMarkerValue implements
     		  
     	  }
     	  
-    	  if (columns.containsKey("Log2(ratio)")) {
-    		  value = columns.get("Log2(ratio)");
+    	  if (columns.containsKey("Signal Log Ratio")) {
+    		  value = columns.get("Signal Log Ratio");
     		  if (value instanceof Double){
     			  setValue(( (Double) value).doubleValue());
     		  }
