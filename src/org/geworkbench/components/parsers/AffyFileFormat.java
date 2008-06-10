@@ -111,7 +111,7 @@ public class AffyFileFormat extends DataSetFileFormat {
 	        List<String> markers = new ArrayList<String>();
 	        int lineIndex = 0;
 	        while ((line = reader.readLine()) != null) { //for each line
-	        	if (line.indexOf("Probe Set Name") > 0) {
+	        	if (line.indexOf("Probe Set Name") >= 0) {
 	                headerExist = true;
 	            }
 	        	if (headerExist){//we'll skip anything before header
@@ -185,6 +185,7 @@ public class AffyFileFormat extends DataSetFileFormat {
             ctu.add("Probe Set Name");
             ctu.add("Avg Diff");
             ctu.add("Signal");
+            ctu.add("Signal Log Ratio");
             ctu.add("Detection");
             ctu.add("Detection p-value");
             ctu.add("Abs Call");
