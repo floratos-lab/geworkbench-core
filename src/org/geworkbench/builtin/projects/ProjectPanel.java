@@ -94,6 +94,7 @@ import org.geworkbench.events.CommentsEvent;
 import org.geworkbench.events.ImageSnapshotEvent;
 import org.geworkbench.events.MicroarrayNameChangeEvent;
 import org.geworkbench.events.NormalizationEvent;
+import org.geworkbench.events.PendingNodeCancelledEvent;
 import org.geworkbench.events.PendingNodeLoadedFromWorkspaceEvent;
 import org.geworkbench.events.ProjectEvent;
 import org.geworkbench.events.ProjectNodeAddedEvent;
@@ -168,6 +169,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	private JPopupMenu dataSetMenu = new JPopupMenu();
 
 	private JPopupMenu dataSetSubMenu = new JPopupMenu();
+
+	private JPopupMenu pendingMenu = new JPopupMenu();
 
 	/**
 	 * Add MenuItem Listeners here;
@@ -392,6 +395,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 		dataSetSubMenu.add(jRenameSubItem);
 		dataSetSubMenu.add(jRemoveSubItem);
+
+		pendingMenu.add(jRemoveDatasetItem);
 
 		jRemoveProjectItem.setText("Remove Project");
 		jRemoveProjectItem.addActionListener(new ActionListener() {
@@ -1069,11 +1074,12 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 					jRootMenu.show(projectTree, e.getX(), e.getY());
 				} else if (mNode instanceof ProjectNode) {
 					jProjectMenu.show(projectTree, e.getX(), e.getY());
-
 				} else if (mNode instanceof DataSetNode) {
 					dataSetMenu.show(projectTree, e.getX(), e.getY());
 				} else if (mNode instanceof DataSetSubNode) {
 					dataSetMenu.show(projectTree, e.getX(), e.getY());
+				} else if (mNode instanceof PendingTreeNode) {
+					pendingMenu.show(projectTree, e.getX(), e.getY());
 				}
 			}
 		}
@@ -1742,13 +1748,19 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	protected void fileRemove_actionPerformed(ActionEvent e) {
 		if (projectTree == null
 				|| selection == null
-				|| !((selection.getSelectedNode() instanceof DataSetNode) || (selection
-						.getSelectedNode() instanceof DataSetSubNode))) {
+				|| !((selection.getSelectedNode() instanceof DataSetNode) 
+						|| (selection
+						.getSelectedNode() instanceof DataSetSubNode) 
+						|| (selection.getSelectedNode() instanceof PendingTreeNode))) {
 			JOptionPane.showMessageDialog(null, "Select a microarray set.",
 					"Delete Error", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
+		if (selection.getSelectedNode() instanceof PendingTreeNode){ //if it's a pending node, we fire a PendingNodeCancelledEvent.
+			publishPendingNodeCancelledEvent(new PendingNodeCancelledEvent(((PendingTreeNode)selection.getSelectedNode()).getGridEpr()));
+		}
+			
 		ProjectTreeNode node = selection.getSelectedNode();
 		ProjectTreeNode parentNode = (ProjectTreeNode) node.getParent();
 
@@ -1777,6 +1789,12 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		} else {
 			setNodeSelection(parentNode);
 		}
+	}
+
+	@Publish
+	public PendingNodeCancelledEvent publishPendingNodeCancelledEvent(
+			PendingNodeCancelledEvent event) {
+		return event;
 	}
 
 	/**
