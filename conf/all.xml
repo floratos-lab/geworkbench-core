@@ -257,9 +257,9 @@
 	<!--<plugin id="genomeBrowser" name="Genome Browser" class="org.geworkbench.components.genomebrowser.GenomeBrowser" source="genomebrowser">
 		<gui-area name="VisualArea"/>
 	</plugin>-->
-	<!-- plugin id="GenSpaceLogPreferences" name="genSpace" 
+	<!--plugin id="GenSpaceLogPreferences" name="genSpace" 
  	        class="org.geworkbench.components.genspace.GenSpaceLogPreferences" 
  	        source="genspace">
- 	    <gui-area name="VisualArea"/>
-	</plugin> -->
+ 	    <gui-area name="CommandArea"/>
+	</plugin -->
 </geaw-config>
