@@ -183,6 +183,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	private JMenuItem jRemoveProjectItem = new JMenuItem();
 
 	private JMenuItem jRemoveDatasetItem = new JMenuItem();
+	
+	private JMenuItem jRemovePendingItem = new JMenuItem();
 
 	private JMenuItem jRemoveSubItem = new JMenuItem();
 
@@ -274,6 +276,13 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			}
 		});
 
+		jRemovePendingItem.setText("Remove");
+		jRemovePendingItem.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				fileRemove_actionPerformed(e);
+			}
+		});
+		
 		jRenameSubItem.setText("Rename");
 		jRenameSubItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -396,7 +405,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		dataSetSubMenu.add(jRenameSubItem);
 		dataSetSubMenu.add(jRemoveSubItem);
 
-		pendingMenu.add(jRemoveDatasetItem);
+		pendingMenu.add(jRemovePendingItem);
 
 		jRemoveProjectItem.setText("Remove Project");
 		jRemoveProjectItem.addActionListener(new ActionListener() {
@@ -2544,7 +2553,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	protected JMenuItem jRenameProjectItem = new JMenuItem();
 
 	protected JMenuItem jRemoveDataSetItem = new JMenuItem();
-
+	
 	protected JMenuItem jRenameDataset = new JMenuItem();
 
 	/**
