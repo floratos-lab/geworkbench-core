@@ -119,6 +119,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
 	private String[] currentSelectedBioAssayName;
 	private CaArray2Experiment[] currentLoadedExps;
 	private String currentQuantitationType;
+	private static final int INTERNALTIMEOUTLIMIT = 600;
 
 	public CaARRAYPanel(LoadData p) {
 		parent = p;
@@ -352,6 +353,11 @@ public class CaARRAYPanel extends JPanel implements Observer {
 							if (i > 4) {
 								progressBar.setMessage(text + i / 4
 										+ " seconds.");
+							}
+							if(i>INTERNALTIMEOUTLIMIT*4){
+								stillWaitForConnecting = false;
+								JOptionPane.showMessageDialog(null, "Cannot connect with the server in " + INTERNALTIMEOUTLIMIT + " seconds.", "Timeout", JOptionPane.ERROR_MESSAGE);
+								update(null, null);
 							}
 						} while (stillWaitForConnecting);
 
@@ -823,8 +829,8 @@ public class CaARRAYPanel extends JPanel implements Observer {
 
 		stillWaitForConnecting = true;
 		progressBar
-				.setMessage("Loading selected experiments from the remote resource...");
-		updateProgressBar("Loading selected experiments from the remote resource for ");
+				.setMessage("Loading experiments from the remote resource...");
+		updateProgressBar("Loading experiments from the remote resource for ");
 		progressBar.addObserver(this);
 		progressBar.start();
 
@@ -877,7 +883,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
 		if (task != null) {
 			task.stop();
 		}
-		log.error("Get Canceled");
+		log.error("Get Cancelled");
 		 
 		progressBar.dispose();
 		CaArrayRequestEvent event = new CaArrayRequestEvent(url, portnumber);
