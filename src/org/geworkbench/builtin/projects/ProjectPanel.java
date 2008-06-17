@@ -584,16 +584,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			    if ( dataSetSubNode._aDataSet instanceof CSTTestResultSet)
 			    {
 			    	  CSTTestResultSet tTestResultSet = (CSTTestResultSet) dataSetSubNode._aDataSet;
-			    	  JFileChooser chooser = new JFileChooser( ".");
-                      ExampleFilter filter = new ExampleFilter();
-                      filter.addExtension("csv");
-                      filter.setDescription("CSV Files");
-                      chooser.setFileFilter(filter);
-                      int returnVal = chooser.showSaveDialog(null);
-                      if (returnVal == JFileChooser.APPROVE_OPTION) {        
-                    	 tTestResultSet.saveDataToCSVFile(chooser.getSelectedFile().getAbsolutePath()+ ".csv");                           
-                      }
-			    }
+			    	  tTestResultSet.saveDataToCSVFile();                           
+                }
+			     
 			}
 		}
 		
