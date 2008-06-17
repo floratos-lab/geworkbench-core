@@ -5,10 +5,9 @@ import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarr
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
 import org.geworkbench.bison.datastructure.complex.panels.CSPanel;
-import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
+import org.geworkbench.bison.datastructure.complex.panels.DSPanel; 
 import org.geworkbench.engine.management.Script;
-
-import java.io.File;
+import java.io.File; 
 import java.io.PrintWriter;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ import java.util.HashMap;
 
 /**
  * @author John Watkinson
- * @version $Id: CSSignificanceResultSet.java,v 1.10 2008-03-31 15:36:01 my2248 Exp $
+ * @version $Id: CSSignificanceResultSet.java,v 1.11 2008-06-17 17:40:43 my2248 Exp $
  */
 public class CSSignificanceResultSet <T extends DSGeneMarker> extends CSAncillaryDataSet implements DSSignificanceResultSet<T> {
 
@@ -44,6 +43,8 @@ public class CSSignificanceResultSet <T extends DSGeneMarker> extends CSAncillar
     }
 
     private HashMap<T, Double> significance;
+    private HashMap<T, Double> foldChanges;
+    
     private double alpha;
     private String[][] labels = new String[2][];
     private DSPanel<T> panel;
@@ -52,6 +53,7 @@ public class CSSignificanceResultSet <T extends DSGeneMarker> extends CSAncillar
         super(parent, label);
         this.alpha = alpha;
         significance = new HashMap<T, Double>();
+        foldChanges = new HashMap<T, Double>();
         labels[0] = caseLabels;
         labels[1] = controlLabels;
         panel = new CSPanel<T>(label);
@@ -74,13 +76,31 @@ public class CSSignificanceResultSet <T extends DSGeneMarker> extends CSAncillar
             return v;
         }
     }
-
+    
     public void setSignificance(T marker, double value) {
         significance.put(marker, value);
         if (value < alpha) {
             panel.add(marker);
         }
     }
+
+    public void setFoldChange(T marker, double value) {
+    	foldChanges.put(marker, value);
+         
+    }
+    
+    
+    public Double getFoldChange(T marker) {
+        Double v = foldChanges.get(marker);
+        if (v == null) {
+            return 1d;
+        } else {
+            return v;
+        }
+    }
+
+  
+    
     
     public void setMarker(T marker, double value) {
         significance.put(marker, value);        
@@ -88,7 +108,7 @@ public class CSSignificanceResultSet <T extends DSGeneMarker> extends CSAncillar
     
     public void addSigGenToPanel(T marker) {
     	panel.add(marker);
-    }
+    }     
     
     
      @Script

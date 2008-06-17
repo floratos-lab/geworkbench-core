@@ -1,5 +1,7 @@
 package org.geworkbench.bison.datastructure.bioobjects.microarray;
 
+import java.io.File;
+
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
@@ -8,7 +10,7 @@ import org.geworkbench.engine.management.Script;
 
 /**
  * @author John Watkinson
- * @version $Id: DSSignificanceResultSet.java,v 1.8 2008-03-31 15:57:32 my2248 Exp $
+ * @version $Id: DSSignificanceResultSet.java,v 1.9 2008-06-17 17:40:43 my2248 Exp $
  */
 public interface DSSignificanceResultSet <T extends DSGeneMarker> extends DSAncillaryDataSet {
 
@@ -22,6 +24,10 @@ public interface DSSignificanceResultSet <T extends DSGeneMarker> extends DSAnci
 
     public void setSignificance(T marker, double signficance);
 
+    public Double getFoldChange(T marker);
+
+    public void setFoldChange(T marker, double signficance);
+    
     public DSPanel<T> getSignificantMarkers();
 
     public double getCriticalPValue();
@@ -34,8 +40,7 @@ public interface DSSignificanceResultSet <T extends DSGeneMarker> extends DSAnci
   
     public void setMarker(T marker, double signficance);
     
-    public void addSigGenToPanel(T marker);
-    
+    public void addSigGenToPanel(T marker);   
     
     @Script
     public void saveToFile(String filename);

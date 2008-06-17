@@ -63,15 +63,18 @@ import org.geworkbench.bison.datastructure.biocollections.views.CSMicroarraySetV
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.APSerializable;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
+import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.ExampleFilter;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.structure.DSProteinStructure;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.datastructure.properties.DSExtendable;
 import org.geworkbench.bison.datastructure.properties.DSNamed;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.CSTTestResultSet;
 import org.geworkbench.bison.parsers.resources.MAGEResource2;
 import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.bison.util.colorcontext.ColorContext;
+ 
 import org.geworkbench.components.parsers.CaArrayLoader;
 import org.geworkbench.components.parsers.FileFormat;
 import org.geworkbench.components.parsers.InputFileFormatException;
@@ -101,6 +104,7 @@ import org.geworkbench.events.ProjectNodeAddedEvent;
 import org.geworkbench.events.ProjectNodePostCompletedEvent;
 import org.geworkbench.events.SingleValueEditEvent;
 import org.geworkbench.events.StructureAnalysisEvent;
+import org.geworkbench.util.ProgressBar;
 import org.geworkbench.util.SaveImage;
 import org.geworkbench.util.Util;
 import org.ginkgo.labs.ws.GridEndpointReferenceType;
@@ -517,7 +521,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * jSaveMenuItem_actionPerformed
 	 */
 	public void jSaveMenuItem_actionPerformed(ActionEvent e) {
-		saveImageAsFile();
+		saveNodeAsFile();
 	}
 
 	public static ImageIcon getIconForType(Class<? extends DSNamed> type) {
@@ -534,7 +538,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		iconMap.put(type, icon);
 	}
 	
-	void saveImageAsFile()
+	void saveNodeAsFile()
 	{
 		ProjectTreeNode ds = selection.getSelectedNode();
 		if (ds != null) {
@@ -573,6 +577,23 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				if (imageFilename != null) {
 					si.save(imageFilename, ext);
 				}
+			}
+			else if (ds instanceof DataSetSubNode)  
+			{
+				DataSetSubNode dataSetSubNode = (DataSetSubNode)ds;				
+			    if ( dataSetSubNode._aDataSet instanceof CSTTestResultSet)
+			    {
+			    	  CSTTestResultSet tTestResultSet = (CSTTestResultSet) dataSetSubNode._aDataSet;
+			    	  JFileChooser chooser = new JFileChooser( ".");
+                      ExampleFilter filter = new ExampleFilter();
+                      filter.addExtension("csv");
+                      filter.setDescription("CSV Files");
+                      chooser.setFileFilter(filter);
+                      int returnVal = chooser.showSaveDialog(null);
+                      if (returnVal == JFileChooser.APPROVE_OPTION) {        
+                    	 tTestResultSet.saveDataToCSVFile(chooser.getSelectedFile().getAbsolutePath()+ ".csv");                           
+                      }
+			    }
 			}
 		}
 		
@@ -1871,7 +1892,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	protected void export_actionPerformed(ActionEvent e) {
 		// Save an image
-		saveImageAsFile();
+		saveNodeAsFile();
 	}
 
 	/**
