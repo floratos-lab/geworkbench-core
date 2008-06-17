@@ -56,11 +56,35 @@ public class AnnotationParser implements Serializable {
     public static final String PATHWAY = "Pathway"; // pathway
     public static final String GOTERM = GENE_ONTOLOGY_BIOLOGICAL_PROCESS; // Goterms
     public static final String UNIGENE = "UniGene ID"; // Unigene
+    public static final String UNIGENE_CLUSTER = "Archival UniGene Cluster";
     // Todo figure out where locus link info comes from
     public static final String LOCUSLINK = "Entrez Gene"; // LocusLink
     public static final String SWISSPROT = "SwissProt"; // swissprot
     public static final String REFSEQ = "RefSeq Transcript ID"; // RefSeq
     public static final String TRANSCRIPT = "Transcript Assignments";
+    
+    public static final String SCIENTIFIC_NAME = "Species Scientific Name";
+    public static final String GENOME_VERSION = "Genome Version";
+    public static final String ALIGNMENT = "Alignments";
+    
+    // columns read into geWorkbench
+    private static final String[] labels = {GENE_ONTOLOGY_BIOLOGICAL_PROCESS
+    	, GENE_ONTOLOGY_CELLULAR_COMPONENT
+    	, GENE_ONTOLOGY_MOLECULAR_FUNCTION
+    	, GENE_SYMBOL
+    	, PROBE_SET_ID
+    	, DESCRIPTION
+    	, PATHWAY
+    	, UNIGENE
+    	, UNIGENE_CLUSTER
+    	, LOCUSLINK
+    	, SWISSPROT
+    	, REFSEQ
+    	, TRANSCRIPT
+    	, SCIENTIFIC_NAME
+    	, GENOME_VERSION
+    	, ALIGNMENT
+    	};
 
     //// FIELDS
     private static DSDataSet currentDataSet = null;
@@ -199,7 +223,6 @@ public class AnnotationParser implements Serializable {
                 LabeledCSVParser parser = new LabeledCSVParser(new
                         CSVParser(new BufferedInputStream(new
                         FileInputStream(datafile))));
-                String[] labels = parser.getLabels();
                 while (parser.getLine() != null) {
                     String affyId = parser.getValueByLabel(labels[0]);
                     Map<String, String> values = new HashMap<String, String>();
