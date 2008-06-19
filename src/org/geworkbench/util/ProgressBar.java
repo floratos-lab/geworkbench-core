@@ -74,6 +74,7 @@ public class ProgressBar
         
         public void actionPerformed(java.awt.event.ActionEvent e){
         	doAction();
+        	ProgressBar.this.dispose();
         }
         
         public void doAction(){
