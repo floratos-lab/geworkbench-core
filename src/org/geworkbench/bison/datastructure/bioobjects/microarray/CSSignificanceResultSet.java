@@ -17,7 +17,7 @@ import java.util.HashMap;
 
 /**
  * @author John Watkinson
- * @version $Id: CSSignificanceResultSet.java,v 1.11 2008-06-17 17:40:43 my2248 Exp $
+ * @version $Id: CSSignificanceResultSet.java,v 1.12 2008-06-19 14:57:17 my2248 Exp $
  */
 public class CSSignificanceResultSet <T extends DSGeneMarker> extends CSAncillaryDataSet implements DSSignificanceResultSet<T> {
 
@@ -91,12 +91,16 @@ public class CSSignificanceResultSet <T extends DSGeneMarker> extends CSAncillar
     
     
     public Double getFoldChange(T marker) {
-        Double v = foldChanges.get(marker);
-        if (v == null) {
-            return 1d;
-        } else {
-            return v;
-        }
+        if ( foldChanges != null )
+    	{
+        	Double v = foldChanges.get(marker);
+            if (v == null)  
+               return 1d;
+            else  
+               return v;
+        } 
+        else
+        	 return 1d;
     }
 
   
