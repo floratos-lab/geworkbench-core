@@ -8,7 +8,7 @@
 		<gui-area name="ProjectArea"/>
 	</plugin>
 	
-	<plugin id="edgeListFilter" name="Edge List File Format" class="org.geworkbench.components.parsers.EdgeListFileFormat"/>
+	
 	<plugin id="affyFilter" name="Affy File Format" class="org.geworkbench.components.parsers.AffyFileFormat"/>
 	<plugin id="annotationsPanel" name="Marker Annotations" class="org.geworkbench.components.annotations.AnnotationsPanel" source="annotations">
 		<gui-area name="VisualArea"/>
@@ -27,8 +27,9 @@
 	<plugin id="cytoscapePanel" name="Cytoscape" class="org.geworkbench.components.cytoscape.CytoscapeWidget" source="cytoscape">
 		<gui-area name="VisualArea"/>
 	</plugin>
+		<plugin id="detectionCall" name="Affy Detection Call Filter" class="org.geworkbench.components.filtering.AffyDetectionCallFilter" source="filtering"/>
 	<plugin id="deviationFilter" name="Deviation Filter" class="org.geworkbench.components.filtering.DeviationBasedFilter" source="filtering"/>
-	<plugin id="detectionCall" name="Affy Detection Call Filter" class="org.geworkbench.components.filtering.AffyDetectionCallFilter" source="filtering"/>
+
 	<plugin id="expressionFileFilter" name="Exp. Format" class="org.geworkbench.components.parsers.ExpressionFileFormat"/>
 	<plugin id="rmaExpressFileFilter" name="RMA Express Format" class="org.geworkbench.components.parsers.RMAExpressFileFormat"/>
 	<plugin id="CELLoader" name="CEL File Loader" class="org.geworkbench.components.parsers.CELFileFormat"/>
@@ -87,14 +88,28 @@
 	<plugin id="phenotypePanel2" name="Arrays/Phenotypes" class="org.geworkbench.components.selectors.PhenotypePanel" source="selectors">
 		<gui-area name="SelectionArea"/>
 	</plugin>
+	<plugin id="anova" name="Anova Analysis" class="org.geworkbench.components.anova.AnovaAnalysis" source="anova"/>
+
+	<plugin id="aracne" name="ARACNE Analysis" class="org.geworkbench.components.aracne.AracneAnalysis" source="aracne-java"/>
 	<plugin id="fastHierarchicalClusteringAnalysis" name="Fast Hierachical Clustering Analysis" class="org.geworkbench.components.clustering.FastHierClustAnalysis" source="clustering"/>
 	<plugin id="matrixReduce" name="Matrix Reduce" class="org.geworkbench.components.matrixreduce.MatrixReduceAnalysis" source="matrixreduce"/>
 	<plugin id="matrixReduceViewer" name="MatrixREDUCE" class="org.geworkbench.components.matrixreduce.MatrixReduceViewer" source="matrixreduce">
 		<gui-area name="VisualArea"/>
 	</plugin>
 	<plugin id="mindy" name="MINDY Analysis" class="org.geworkbench.components.mindy.MindyAnalysis" source="mindy"/>
-	<plugin id="aracne" name="ARACNE Analysis" class="org.geworkbench.components.aracne.AracneAnalysis" source="aracne-java"/>
-	<!-- Uncomment this to enable the Evidence Integration analysis component
+	
+
+	<plugin id="knnAnalysis_30" name="KNN Analysis_3.0" class="org.geworkbench.components.gpmodule.classification.knn.KNNTraining" source="gpmodule_v3_0"/>
+	<plugin id="PCAAnalysis_30" name="PCA Analysis 3.0" class="org.geworkbench.components.gpmodule.pca.PCAAnalysis" source="gpmodule_v3_0"/>
+		<plugin id="somAnalysis" name="SOM Analysis" class="org.geworkbench.components.clustering.SOMAnalysis" source="clustering"/>
+	
+	<plugin id="PCAViewer_30" name="PCA Viewer 3.0" class="org.geworkbench.components.gpmodule.pca.PCA" source="gpmodule_v3_0">
+		<gui-area name="VisualArea"/>
+	</plugin>
+	<plugin id="tTestAnalysis" name="t Test Analysis" class="org.geworkbench.components.analysis.clustering.TtestAnalysis" source="analysis"/>
+	<plugin id="wvAnalysis_30" name="WV Analysis 3.0" class="org.geworkbench.components.gpmodule.classification.wv.WVTraining" source="gpmodule_v3_0"/>
+	
+		<!-- Uncomment this to enable the Evidence Integration analysis component
     <plugin id="evidenceintegration" name="Evidence Integration Analysis" class="org.geworkbench.components.ei.EvidenceIntegrationAnalysis" source="evidenceintegration"/>
     -->
 	<!--Disable Meduse and some analysis modules-->
@@ -118,16 +133,7 @@
 		<gui-area name="VisualArea"/>
 	</plugin>
 -->
-	<plugin id="somAnalysis" name="SOM Analysis" class="org.geworkbench.components.clustering.SOMAnalysis" source="clustering"/>
-	<plugin id="knnAnalysis_30" name="KNN Analysis_3.0" class="org.geworkbench.components.gpmodule.classification.knn.KNNTraining" source="gpmodule_v3_0"/>
-	<plugin id="wvAnalysis_30" name="WV Analysis 3.0" class="org.geworkbench.components.gpmodule.classification.wv.WVTraining" source="gpmodule_v3_0"/>
-	<plugin id="PCAAnalysis_30" name="PCA Analysis 3.0" class="org.geworkbench.components.gpmodule.pca.PCAAnalysis" source="gpmodule_v3_0"/>
-	<plugin id="PCAViewer_30" name="PCA Viewer 3.0" class="org.geworkbench.components.gpmodule.pca.PCA" source="gpmodule_v3_0">
-		<gui-area name="VisualArea"/>
-	</plugin>
-	<plugin id="tTestAnalysis" name="t Test Analysis" class="org.geworkbench.components.analysis.clustering.TtestAnalysis" source="analysis"/>
 	
-	<plugin id="anova" name="Anova Analysis" class="org.geworkbench.components.anova.AnovaAnalysis" source="anova"/>
 	<plugin id="thresholdNormalizer" name="Threshold Normalizer" class="org.geworkbench.components.normalization.ThresholdNormalizer" source="normalization"/>
 	<plugin id="QuantileNormalizer" name="Quantile Normalizer" class="org.geworkbench.components.normalization.QuantileNormalizer" source="normalization"/>
 	<plugin id="TwoChannelFilter" name="Genepix Filter" class="org.geworkbench.components.filtering.GenepixExpressionThresholdFilter" source="filtering"/>
@@ -140,6 +146,7 @@
 		<gui-area name="VisualArea"/>
 	</plugin>
 	<!--
+<plugin id="edgeListFilter" name="Edge List File Format" class="org.geworkbench.components.parsers.EdgeListFileFormat"/>
 <plugin id="patternDiscoveryAlgorithm" name="Pattern Discovery Algorithm" class="org.geworkbench.components.associationdiscovery.PatternDiscovery" source="associationdiscovery"/>
 	<plugin id="reverseEngineering" name="Reverse Engineering" class="org.geworkbench.components.pathwaydecoder.GeneProfiler" source="pathwaydecoder">
 		<gui-area name="VisualArea"/>
