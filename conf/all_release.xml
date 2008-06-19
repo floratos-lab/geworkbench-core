@@ -7,27 +7,20 @@
 	<plugin id="projectWindow" name="Project Panel" class="org.geworkbench.builtin.projects.ProjectPanel">
 		<gui-area name="ProjectArea"/>
 	</plugin>
-	<plugin id="evidenceintegration" name="Evidence Integration Analysis" class="org.geworkbench.components.ei.EvidenceIntegrationAnalysis" source="evidenceintegration"/>
+	
 	<plugin id="edgeListFilter" name="Edge List File Format" class="org.geworkbench.components.parsers.EdgeListFileFormat"/>
 	<plugin id="affyFilter" name="Affy File Format" class="org.geworkbench.components.parsers.AffyFileFormat"/>
 	<plugin id="annotationsPanel" name="Marker Annotations" class="org.geworkbench.components.annotations.AnnotationsPanel" source="annotations">
 		<gui-area name="VisualArea"/>
 	</plugin>
-	<plugin id="cgemsPanel" name="Cancer GEMS" class="org.geworkbench.components.cgems.CGemsPanel" source="cgems">
-		<gui-area name="VisualArea"/>
-	</plugin>
+	
 	<plugin id="colorMosaicPanel" name="Color Mosaic" class="org.geworkbench.components.colormosaic.ColorMosaicPanel" source="colormosaic">
 		<gui-area name="VisualArea"/>
 	</plugin>
 	<plugin id="blastResults" name="Alignment Results" class="org.geworkbench.components.alignment.panels.BlastViewComponent" source="alignment">
 		<gui-area name="VisualArea"/>
 	</plugin>
-	<plugin id="tprofilerView" name="T-Profiler Results" class="org.geworkbench.components.tprofiler.TProfilerVisualComponent" source="tprofiler">
-		<gui-area name="VisualArea"/>
-	</plugin>
-	<plugin id="tprofiler" name="T-Profiler" class="org.geworkbench.components.tprofiler.TProfiler" source="tprofiler">
-		<gui-area name="VisualArea"/>
-	</plugin>
+
 	<plugin id="cytoscapePanel_V2_4" name="Cytoscape_V2_4" class="org.geworkbench.components.cytoscape_v2_4.CytoscapeWidget" source="cutenet">
 		<gui-area name="VisualArea"/>
 	</plugin>
@@ -115,6 +108,15 @@
 	<plugin id="EvidenceIntegrationViewer" name="Evidence Integration Viewer" class="org.geworkbench.components.ei.EvidenceIntegrationVisualization" source="evidenceintegration">
 		<gui-area name="VisualArea"/>
 	</plugin>
+<plugin id="cgemsPanel" name="Cancer GEMS" class="org.geworkbench.components.cgems.CGemsPanel" source="cgems">
+		<gui-area name="VisualArea"/>
+	</plugin>
+	<plugin id="tprofilerView" name="T-Profiler Results" class="org.geworkbench.components.tprofiler.TProfilerVisualComponent" source="tprofiler">
+		<gui-area name="VisualArea"/>
+	</plugin>
+	<plugin id="tprofiler" name="T-Profiler" class="org.geworkbench.components.tprofiler.TProfiler" source="tprofiler">
+		<gui-area name="VisualArea"/>
+	</plugin>
 -->
 	<plugin id="somAnalysis" name="SOM Analysis" class="org.geworkbench.components.clustering.SOMAnalysis" source="clustering"/>
 	<plugin id="knnAnalysis_30" name="KNN Analysis_3.0" class="org.geworkbench.components.gpmodule.classification.knn.KNNTraining" source="gpmodule_v3_0"/>
@@ -124,7 +126,7 @@
 		<gui-area name="VisualArea"/>
 	</plugin>
 	<plugin id="tTestAnalysis" name="t Test Analysis" class="org.geworkbench.components.analysis.clustering.TtestAnalysis" source="analysis"/>
-	<plugin id="multiTTestAnalysis" name="Multi t Test Analysis" class="org.geworkbench.components.analysis.clustering.MultiTTestAnalysis" source="analysis"/>
+	
 	<plugin id="anova" name="Anova Analysis" class="org.geworkbench.components.anova.AnovaAnalysis" source="anova"/>
 	<plugin id="thresholdNormalizer" name="Threshold Normalizer" class="org.geworkbench.components.normalization.ThresholdNormalizer" source="normalization"/>
 	<plugin id="QuantileNormalizer" name="Quantile Normalizer" class="org.geworkbench.components.normalization.QuantileNormalizer" source="normalization"/>
@@ -151,6 +153,7 @@
 	<plugin id="Interactions" name="Interaction" class="interactions.InteractionsUserInterface" source="interactions">
 		<gui-area name="VisualArea"/>
 	</plugin>
+<plugin id="multiTTestAnalysis" name="Multi t Test Analysis" class="org.geworkbench.components.analysis.clustering.MultiTTestAnalysis" source="analysis"/>
 -->
 	<plugin id="CellularNetWork" name="Cellular NetWork" class="org.geworkbench.components.interactions.cellularnetwork.CellularNetworkKnowledgeWidget" source="interactions">
 		<gui-area name="VisualArea"/>
