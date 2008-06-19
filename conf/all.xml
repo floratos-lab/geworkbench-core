@@ -7,6 +7,7 @@
 	<plugin id="projectWindow" name="Project Panel" class="org.geworkbench.builtin.projects.ProjectPanel">
 		<gui-area name="ProjectArea"/>
 	</plugin>
+	
 	<plugin id="EvidenceIntegrationViewer" name="Evidence Integration Viewer" class="org.geworkbench.components.ei.EvidenceIntegrationVisualization" source="evidenceintegration">
 		<gui-area name="VisualArea"/>
 	</plugin>
