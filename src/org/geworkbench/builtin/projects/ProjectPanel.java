@@ -2746,14 +2746,19 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		// Let the main frame listen to window-closing event ZJ 2008-05-01
 		GeawConfigObject.getGuiWindow().addWindowListener( new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
-				if (JOptionPane.NO_OPTION == JOptionPane.showConfirmDialog(
+            	int n = JOptionPane.showConfirmDialog(
 						null,
 						"You're closing geWorkbench. \nDo you want to save the current workspace?",
-						"Save or not?", JOptionPane.YES_NO_OPTION)) {
-					// do nothing here; unrelated actions for window-closing happend as they should
-				} else {
+						"Save or not?", JOptionPane.YES_NO_CANCEL_OPTION);
+            	if( n == JOptionPane.CANCEL_OPTION)return; 
+            	
+				if (n == JOptionPane.YES_OPTION ) {
 					saveWorkspace_actionPerformed();
+				} else { // if choosing No
+					// do nothing here; unrelated actions for window-closing happend as they should
 				}
+				GeawConfigObject.getGuiWindow().dispose();
+				System.exit(0);
             }
         });
 		

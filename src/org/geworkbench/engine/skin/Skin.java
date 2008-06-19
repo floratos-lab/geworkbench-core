@@ -134,7 +134,7 @@ public class Skin extends GUIFramework {
             e.printStackTrace();
         }
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     }
 
     private void jbInit() throws Exception {
