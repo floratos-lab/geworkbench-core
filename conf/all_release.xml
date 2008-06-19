@@ -7,7 +7,6 @@
 	<plugin id="projectWindow" name="Project Panel" class="org.geworkbench.builtin.projects.ProjectPanel">
 		<gui-area name="ProjectArea"/>
 	</plugin>
-
 	<plugin id="evidenceintegration" name="Evidence Integration Analysis" class="org.geworkbench.components.ei.EvidenceIntegrationAnalysis" source="evidenceintegration"/>
 	<plugin id="edgeListFilter" name="Edge List File Format" class="org.geworkbench.components.parsers.EdgeListFileFormat"/>
 	<plugin id="affyFilter" name="Affy File Format" class="org.geworkbench.components.parsers.AffyFileFormat"/>
@@ -26,7 +25,7 @@
 	<plugin id="tprofilerView" name="T-Profiler Results" class="org.geworkbench.components.tprofiler.TProfilerVisualComponent" source="tprofiler">
 		<gui-area name="VisualArea"/>
 	</plugin>
-    <plugin id="tprofiler" name="T-Profiler" class="org.geworkbench.components.tprofiler.TProfiler" source="tprofiler">
+	<plugin id="tprofiler" name="T-Profiler" class="org.geworkbench.components.tprofiler.TProfiler" source="tprofiler">
 		<gui-area name="VisualArea"/>
 	</plugin>
 	<plugin id="cytoscapePanel_V2_4" name="Cytoscape_V2_4" class="org.geworkbench.components.cytoscape_v2_4.CytoscapeWidget" source="cutenet">
@@ -77,7 +76,6 @@
 	<plugin id="missingValueNorm" name="Missing Values" class="org.geworkbench.components.normalization.MissingValueNormalizer" source="normalization"/>
 	<plugin id="missingValuesFilter" name="Missing Values Filter" class="org.geworkbench.components.filtering.MissingValuesFilter" source="filtering"/>
 	<plugin id="sequenceFileFilter" name="FASTA Format" class="org.geworkbench.components.parsers.sequences.SequenceFileFormat"/>
-	
 	<plugin id="scatterPlot" name="Scatter Plot" class="org.geworkbench.components.plots.ScatterPlot" source="plots">
 		<gui-area name="VisualArea"/>
 	</plugin>
@@ -86,13 +84,13 @@
 	</plugin>
 	<plugin id="SOMClusteringPanel" name="SOM Clusters" class="org.geworkbench.components.plots.SOMDisplay" source="plots">
 		<gui-area name="VisualArea"/>
-	</plugin>	 
+	</plugin>
 	<plugin id="tabularMicroarrayPanel" name="Tabular Microarray Viewer" class="org.geworkbench.components.microarrays.TabularMicroarrayPanel" source="microarrays">
 		<gui-area name="VisualArea"/>
 	</plugin>
-    <plugin id="tabularDataViewer" name="Tabular Viewer" class="org.geworkbench.components.anova.gui.TabularDataViewer" source="anova">
-        <gui-area name="VisualArea"/>
-    </plugin>		
+	<plugin id="tabularDataViewer" name="Tabular Viewer" class="org.geworkbench.components.anova.gui.TabularDataViewer" source="anova">
+		<gui-area name="VisualArea"/>
+	</plugin>
 	<plugin id="phenotypePanel2" name="Arrays/Phenotypes" class="org.geworkbench.components.selectors.PhenotypePanel" source="selectors">
 		<gui-area name="SelectionArea"/>
 	</plugin>
@@ -103,11 +101,10 @@
 	</plugin>
 	<plugin id="mindy" name="MINDY Analysis" class="org.geworkbench.components.mindy.MindyAnalysis" source="mindy"/>
 	<plugin id="aracne" name="ARACNE Analysis" class="org.geworkbench.components.aracne.AracneAnalysis" source="aracne-java"/>
-	
 	<!-- Uncomment this to enable the Evidence Integration analysis component
     <plugin id="evidenceintegration" name="Evidence Integration Analysis" class="org.geworkbench.components.ei.EvidenceIntegrationAnalysis" source="evidenceintegration"/>
     -->
-<!--Disable Meduse and some analysis modules-->
+	<!--Disable Meduse and some analysis modules-->
 	<!--
 <plugin id="netboost" name="Net Boost Analysis" class="org.geworkbench.components.netboost.NetBoostAnalysis" source="netboost"/>
 <plugin id="wvAnalysis" name="WV Analysis" class="org.geworkbench.components.gpmodule.classification.wv.WVTraining" source="gpmodule"/>
@@ -119,11 +116,7 @@
 		<gui-area name="VisualArea"/>
 	</plugin>
 -->
-	
-
-	
 	<plugin id="somAnalysis" name="SOM Analysis" class="org.geworkbench.components.clustering.SOMAnalysis" source="clustering"/>
-	
 	<plugin id="knnAnalysis_30" name="KNN Analysis_3.0" class="org.geworkbench.components.gpmodule.classification.knn.KNNTraining" source="gpmodule_v3_0"/>
 	<plugin id="wvAnalysis_30" name="WV Analysis 3.0" class="org.geworkbench.components.gpmodule.classification.wv.WVTraining" source="gpmodule_v3_0"/>
 	<plugin id="PCAAnalysis_30" name="PCA Analysis 3.0" class="org.geworkbench.components.gpmodule.pca.PCAAnalysis" source="gpmodule_v3_0"/>
@@ -159,7 +152,6 @@
 		<gui-area name="VisualArea"/>
 	</plugin>
 -->
-	
 	<plugin id="CellularNetWork" name="Cellular NetWork" class="org.geworkbench.components.interactions.cellularnetwork.CellularNetworkKnowledgeWidget" source="interactions">
 		<gui-area name="VisualArea"/>
 	</plugin>
@@ -213,9 +205,8 @@
 	<!-- Example Component -->
 	<!--<gui-area name="CommandArea"/>-->
 	<!--</plugin>-->
-
-    <!-- SkyLine Component -->
-<!--
+	<!-- SkyLine Component -->
+	<!--
     <plugin id="SkyLine" name="Structure Analysis" class="org.geworkbench.components.skyline.SkyLineComponent" source="skyline">
     <gui-area name="CommandArea"/>
     </plugin>
@@ -231,11 +222,10 @@
     </plugin>
  -->
 	<!-- MINDY -->
-
 	<plugin id="mindyViewer" name="MINDY Viewer" class="org.geworkbench.components.mindy.MindyVisualComponent" source="mindy">
 		<gui-area name="VisualArea"/>
 	</plugin>
-<!---->
+	<!---->
 	<!-- NetBoost -->
 	<!-- <plugin id="netboostViewer" name="Net Boost" class="org.geworkbench.components.netboost.NetBoostVisualComponent" source="netboost">
 		<gui-area name="VisualArea"/>
@@ -252,7 +242,6 @@
 	<plugin id="CELImageViewer" name="CELImageViewer" class="org.geworkbench.components.celprocessing.CELImageViewerComponent" source="celprocessing">
 		<gui-area name="VisualArea"/>
 	</plugin>
-	
 	<!--
 <plugin id="networkBrowser" name="Network Browser" class="org.geworkbench.components.pathwaydecoder.GeneNetworkPanel" source="pathwaydecoder">
 		<gui-area name="VisualArea"/>
@@ -265,13 +254,10 @@
 	</plugin>
    
      -->
- <plugin id="aracne" name="Aracne" class="org.geworkbench.components.pathwaydecoder.ARACNE" source="pathwaydecoder">
-        <gui-area name="VisualArea"/>
-    </plugin>
-		
-	 <plugin id="goTree" name="Gene Ontology Tree" class="org.geworkbench.components.goterms.tree.GeneOntologyTreePopulateComponent" source="goterms">
+ 
+	<plugin id="goTree" name="Gene Ontology Tree" class="org.geworkbench.components.goterms.tree.GeneOntologyTreePopulateComponent" source="goterms">
 </plugin>
-  <plugin id="caArray2Panel" name="CaArray2" class="org.geworkbench.components.caarray.arraydata.CaArray2Component" source="caarray">
+	<plugin id="caArray2Panel" name="CaArray2" class="org.geworkbench.components.caarray.arraydata.CaArray2Component" source="caarray">
             </plugin>
 	<!--<plugin id="genomeBrowser" name="Genome Browser" class="org.geworkbench.components.genomebrowser.GenomeBrowser" source="genomebrowser">
 		<gui-area name="VisualArea"/>
