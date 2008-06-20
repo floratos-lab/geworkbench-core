@@ -588,6 +588,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
                 }
 			     
 			}
+			else
+				saveAsFile();
+
 		}
 		
 		
@@ -601,6 +604,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			File f = ds.getFile();
 			jFileChooser1 = new JFileChooser(f);
 			jFileChooser1.setSelectedFile(f);
+			ExpFileFilter filter = new ExpFileFilter();
+            jFileChooser1.setFileFilter(filter);
 
 			// Use the SAVE version of the dialog, test return for
 			// Approve/Cancel
@@ -609,6 +614,11 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				// Set the current file name to the user's selection,
 				// then do a regular saveFile
 				String newFileName = jFileChooser1.getSelectedFile().getPath();
+				newFileName = jFileChooser1.getSelectedFile().getAbsolutePath();
+				if (!newFileName.toLowerCase().endsWith("." + filter.getExtension().toLowerCase())) {
+					newFileName += "." + filter.getExtension();
+				}
+				
 				// repaints menu after item is selected
 				log.info(newFileName);
 				// if(f != null) {
@@ -2978,5 +2988,26 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	@Publish
 	public ProjectNodePostCompletedEvent publishPostProcessingEvent(ProjectNodePostCompletedEvent event){
 		return event;
+	}
+
+	private class ExpFileFilter extends FileFilter {
+		public String getDescription() {
+			return "Exp Files";
+		}
+
+		public boolean accept(File f) {
+			String name = f.getName();
+			boolean tabFile = name.endsWith("exp") || name.endsWith("EXP");
+			if (f.isDirectory() || tabFile) {
+				return true;
+			}
+
+			return false;
+		}
+
+		public String getExtension() {
+			return "exp";
+		}
+
 	}
 }
