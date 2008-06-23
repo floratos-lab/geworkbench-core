@@ -67,24 +67,26 @@ public class AnnotationParser implements Serializable {
     public static final String GENOME_VERSION = "Genome Version";
     public static final String ALIGNMENT = "Alignments";
     
-    // columns read into geWorkbench
-    private static final String[] labels = {GENE_ONTOLOGY_BIOLOGICAL_PROCESS
-    	, GENE_ONTOLOGY_CELLULAR_COMPONENT
-    	, GENE_ONTOLOGY_MOLECULAR_FUNCTION
-    	, GENE_SYMBOL
-    	, PROBE_SET_ID
-    	, DESCRIPTION
-    	, PATHWAY
-    	, UNIGENE
+    //  columns read into geWorkbench
+    //  probe id must be first column read in, and the rest of the columns must follow the same order
+    //  as the columns in the annotation file.
+    private static final String[] labels = {PROBE_SET_ID // probe id must be the first item in this list
+    	, SCIENTIFIC_NAME
     	, UNIGENE_CLUSTER
+    	, UNIGENE
+    	, GENOME_VERSION
+    	, ALIGNMENT
+    	, DESCRIPTION
+    	, GENE_SYMBOL
     	, LOCUSLINK
     	, SWISSPROT
     	, REFSEQ
+    	, GENE_ONTOLOGY_BIOLOGICAL_PROCESS
+    	, GENE_ONTOLOGY_CELLULAR_COMPONENT
+    	, GENE_ONTOLOGY_MOLECULAR_FUNCTION
+    	, PATHWAY
     	, TRANSCRIPT
-    	, SCIENTIFIC_NAME
-    	, GENOME_VERSION
-    	, ALIGNMENT
-    	};
+    };
 
     //// FIELDS
     private static DSDataSet currentDataSet = null;
