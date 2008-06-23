@@ -21,9 +21,7 @@
 		<gui-area name="VisualArea"/>
 	</plugin>
 
-	<plugin id="cytoscapePanel_V2_4" name="Cytoscape_V2_4" class="org.geworkbench.components.cytoscape_v2_4.CytoscapeWidget" source="cutenet">
-		<gui-area name="VisualArea"/>
-	</plugin>
+	
 	<plugin id="cytoscapePanel" name="Cytoscape" class="org.geworkbench.components.cytoscape.CytoscapeWidget" source="cytoscape">
 		<gui-area name="VisualArea"/>
 	</plugin>
@@ -96,7 +94,6 @@
 	<plugin id="matrixReduceViewer" name="MatrixREDUCE" class="org.geworkbench.components.matrixreduce.MatrixReduceViewer" source="matrixreduce">
 		<gui-area name="VisualArea"/>
 	</plugin>
-	<plugin id="mindy" name="MINDY Analysis" class="org.geworkbench.components.mindy.MindyAnalysis" source="mindy"/>
 	
 
 	<plugin id="knnAnalysis_30" name="KNN Analysis_3.0" class="org.geworkbench.components.gpmodule.classification.knn.KNNTraining" source="gpmodule_v3_0"/>
@@ -130,6 +127,14 @@
 		<gui-area name="VisualArea"/>
 	</plugin>
 	<plugin id="tprofiler" name="T-Profiler" class="org.geworkbench.components.tprofiler.TProfiler" source="tprofiler">
+		<gui-area name="VisualArea"/>
+	</plugin>
+	<plugin id="cytoscapePanel_V2_4" name="Cytoscape_V2_4" class="org.geworkbench.components.cytoscape_v2_4.CytoscapeWidget" source="cutenet">
+		<gui-area name="VisualArea"/>
+	</plugin>
+	
+	<plugin id="mindy" name="MINDY Analysis" class="org.geworkbench.components.mindy.MindyAnalysis" source="mindy"/>
+	<plugin id="mindyViewer" name="MINDY Viewer" class="org.geworkbench.components.mindy.MindyVisualComponent" source="mindy">
 		<gui-area name="VisualArea"/>
 	</plugin>
 -->
@@ -232,9 +237,7 @@
     </plugin>
  -->
 	<!-- MINDY -->
-	<plugin id="mindyViewer" name="MINDY Viewer" class="org.geworkbench.components.mindy.MindyVisualComponent" source="mindy">
-		<gui-area name="VisualArea"/>
-	</plugin>
+	
 	<!---->
 	<!-- NetBoost -->
 	<!-- <plugin id="netboostViewer" name="Net Boost" class="org.geworkbench.components.netboost.NetBoostVisualComponent" source="netboost">
