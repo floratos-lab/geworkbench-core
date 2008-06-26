@@ -1,29 +1,21 @@
 package org.geworkbench.util.patterns;
 
-import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
-import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeqPattern; //import polgara.soapPD_wsdl.SOAPOffset;
-
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
-import org.geworkbench.bison.datastructure.bioobjects.sequence.CSSequence;
-
-import java.util.TreeSet;
-
-import org.geworkbench.bison.datastructure.complex.pattern.sequence.CSSeqRegistration;
-import org.geworkbench.bison.datastructure.biocollections.sequences.CSSequenceSet;
-import org.geworkbench.bison.datastructure.complex.pattern.DSPatternMatch;
-import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import org.geworkbench.bison.datastructure.biocollections.DSCollection;
+import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
+import org.geworkbench.bison.datastructure.bioobjects.sequence.CSSequence;
+import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import org.geworkbench.bison.datastructure.complex.pattern.DSMatchedPattern;
-
-import java.util.List;
-
 import org.geworkbench.bison.datastructure.complex.pattern.DSPattern;
-
-import java.util.Set;
+import org.geworkbench.bison.datastructure.complex.pattern.DSPatternMatch;
+import org.geworkbench.bison.datastructure.complex.pattern.sequence.CSSeqRegistration;
+import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeqPattern;
 
 /**
  * <p>
@@ -100,7 +92,8 @@ public class PatternOperations {
 
 			CSMatchedSeqPattern p = (CSMatchedSeqPattern) pattern;
 			p.updateASCII();
-			String ascii = new String();
+
+
 			// SOAPOffset[] offsets = p.offset.value;
 			// int j = offsets[0].getDx();
 			// for (int i = 0; i < offsets.length; i++, j++) {
@@ -188,7 +181,7 @@ public class PatternOperations {
 	public static HashMap<CSSequence, PatternSequenceDisplayUtil> processPatterns(
 			DSCollection<DSMatchedPattern<DSSequence, CSSeqRegistration>> patterns,
 			DSSequenceSet sequenceDB, String patternType) {
- 		if (patterns != null && sequenceDB != null) {
+		if (patterns != null && sequenceDB != null) {
 			try {
 				HashMap<CSSequence, PatternSequenceDisplayUtil> sequencePatternMatches = new HashMap<CSSequence, PatternSequenceDisplayUtil>();
 				HashMap<String, CSSequence> sequenceNameMap = new HashMap<String, CSSequence>();
@@ -207,15 +200,18 @@ public class PatternOperations {
 					for (int row = 0; row < patterns.size(); row++) {
 						DSMatchedSeqPattern pattern = (DSMatchedSeqPattern) patterns
 								.get(row);
-						Set<String> sequencesNames = sequenceNameMap.keySet();
+						HashMap<String, Boolean> sequencesNames = new HashMap<String, Boolean>();
+						Set<String> set = sequenceNameMap.keySet();
+						for (String seqName : set) {
+							sequencesNames.put(seqName, true);
+							// init step, make all sequences require processing.
+						}
 						if (pattern != null) {
 							PatternOperations.setPatternColor(new Integer(
 									pattern.hashCode()), PatternOperations
 									.getPatternColor(row));
 							for (int locusId = 0; locusId < pattern
 									.getSupport(); locusId++) {
-								int seqId = ((CSMatchedSeqPattern) pattern)
-										.getId(locusId);
 								DSPatternMatch<DSSequence, CSSeqRegistration> sp = pattern
 										.get(locusId);
 								if (sp != null) {
@@ -230,22 +226,26 @@ public class PatternOperations {
 									// sequenceSet.
 									if (sequenceNameMap.containsKey(hitSeq
 											.getLabel())) {
-										// sequencesNames
-										// .remove(hitSeq.getLabel());// remove
-										// sequences
-										// that
-										// has
-										// hits
-										// already.
+										sequencesNames.put(hitSeq.getLabel(),
+												false);// remove the sequence
+										// from the list which
+										// need reprocess, bug
+										// 660.
+
 										PatternSequenceDisplayUtil pu = (PatternSequenceDisplayUtil) sequencePatternMatches
 												.get(sequenceNameMap.get(hitSeq
 														.getLabel()));
+
 										PatternLocations pl = new PatternLocations(
 												pattern.getASCII(), reg);
 										pl.setPatternType(patternType);
 										pl.setIDForDisplay(pattern.hashCode());
-										pu.addPattern(pl);
-
+										if (pu != null) {
+											pu.addPattern(pl);
+										} else {
+											// System.out.println(pu + " "
+											// + pattern.getASCII() + reg);
+										}
 									}
 								}
 							}// end loop of for. finish process one pattern
@@ -253,22 +253,26 @@ public class PatternOperations {
 							// Follow loop is used to try to scan the left
 							// sequences to see whether there is any new
 							// patterns. For bug 660.
-
-							for (String seqeunceName : sequencesNames) {
-								CSSequence sequence = sequenceNameMap
-										.get(seqeunceName);
-								CSSeqRegistration[] regs = PatternOperations
-										.getSeqRegistrations(sequence, pattern
-												.getASCII());
-								if (regs != null) {
-									PatternSequenceDisplayUtil pu = (PatternSequenceDisplayUtil) sequencePatternMatches
-											.get(sequence);
-									for (CSSeqRegistration reg : regs) {
-										PatternLocations pl = new PatternLocations(
-												pattern.getASCII(), reg);
-										pl.setPatternType(patternType);
-										pl.setIDForDisplay(pattern.hashCode());
-										pu.addPattern(pl);
+							Set<String> needProcessSeqSet = sequencesNames
+									.keySet();
+							for (String seqeunceName : needProcessSeqSet) {
+								if (sequencesNames.get(seqeunceName)) {
+									CSSequence sequence = sequenceNameMap
+											.get(seqeunceName);
+									CSSeqRegistration[] regs = PatternOperations
+											.getSeqRegistrations(sequence,
+													pattern.getASCII());
+									if (regs != null) {
+										PatternSequenceDisplayUtil pu = (PatternSequenceDisplayUtil) sequencePatternMatches
+												.get(sequence);
+										for (CSSeqRegistration reg : regs) {
+											PatternLocations pl = new PatternLocations(
+													pattern.getASCII(), reg);
+											pl.setPatternType(patternType);
+											pl.setIDForDisplay(pattern
+													.hashCode());
+											pu.addPattern(pl);
+										}
 									}
 								}
 							}
