@@ -229,12 +229,12 @@ public class CaARRAYQueryPanel extends JDialog {
 	JCheckBox jCheckBox1 = new JCheckBox();
 	BorderLayout borderLayout1 = new BorderLayout();
 	JComboBox jcatagoryComboBox = new JComboBox(new String[] {
-			"Please select one catagory", EXPERIMENT });
+			"Please select one category", EXPERIMENT });
 	static final String EXPERIMENT = "Experiments";
 	TitledBorder titledBorder1 = new TitledBorder("");
 	Border border1 = BorderFactory.createEtchedBorder(Color.white, new Color(
 			165, 163, 151));
-	Border border2 = new TitledBorder(border1, "Catagory");
+	Border border2 = new TitledBorder(border1, "Category");
 	Border border3 = BorderFactory.createEtchedBorder(Color.white, new Color(
 			165, 163, 151));
 	Border border4 = new TitledBorder(border3, "Field Selection");
