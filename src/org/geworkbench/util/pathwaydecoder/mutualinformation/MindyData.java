@@ -30,6 +30,7 @@ public class MindyData implements Serializable {
     private HashMap<DSGeneMarker, ModulatorStatistics> modulatorStatistics = new HashMap<DSGeneMarker, ModulatorStatistics>();
     
     private float setFraction;
+    private boolean annotated = false;
 
     /**
      * Constructor.
@@ -67,6 +68,14 @@ public class MindyData implements Serializable {
             log.warn("Data passed in had 0 records, unable to determine transcription factor under consideration.");
         }
         calculateModulatorStatistics();
+    }
+    
+    public boolean isAnnotated(){
+    	return this.annotated;
+    }
+    
+    public void setAnnotated(boolean annotated){
+    	this.annotated = annotated;
     }
 
     /**
@@ -349,7 +358,7 @@ public class MindyData implements Serializable {
      * Represents a row in the MINDY result data.
      * 
      * @author mhall
-     * @version $Id: MindyData.java,v 1.11 2007-10-26 16:59:00 hungc Exp $
+     * @version $Id: MindyData.java,v 1.12 2008-06-27 21:55:33 hungc Exp $
      */
     public static class MindyResultRow implements Serializable{
         private DSGeneMarker modulator;
@@ -512,7 +521,7 @@ public class MindyData implements Serializable {
      * Munder(M-)
      * 
      * @author mhall
-     * @version $Id: MindyData.java,v 1.11 2007-10-26 16:59:00 hungc Exp $
+     * @version $Id: MindyData.java,v 1.12 2008-06-27 21:55:33 hungc Exp $
      */
     public static class ModulatorStatistics implements Serializable {
         protected int count;
