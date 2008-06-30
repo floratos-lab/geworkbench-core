@@ -586,10 +586,11 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			    	  CSTTestResultSet tTestResultSet = (CSTTestResultSet) dataSetSubNode._aDataSet;
 			    	  tTestResultSet.saveDataToCSVFile();                           
                 }
-			     
+			    else
+                	saveAsFile();	//TODO: this is an old method, we should have one which can save to files with extensions. (as in bug #1206) 
 			}
 			else
-				saveAsFile();
+            	saveAsFile();		//TODO: this is an old method, we should have one which can save to files with extensions. (as in bug #1206) 
 
 		}
 		
