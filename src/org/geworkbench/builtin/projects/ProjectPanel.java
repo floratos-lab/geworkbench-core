@@ -1041,7 +1041,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * @param e
 	 */
 	protected void jProjectTree_mouseClicked(MouseEvent e) {
-
+		
 		TreePath path = projectTree.getSelectionPath();
 		if (path != null) {
 			path.getLastPathComponent();
@@ -1095,11 +1095,14 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			ProjectTreeNode mNode = (ProjectTreeNode) path
 					.getLastPathComponent();
 			selection.setMenuNode(mNode);
+			 
 			if (e.isMetaDown() || e.getClickCount() >= 2) {
+				 
 				if (!isPathSelected(path)) {
 					// Force selection of this path
 					projectTree.setSelectionPath(path);
-					jProjectTree_mouseClicked(e);
+				    jProjectTree_mouseClicked(e);
+					 
 				}
 				// Make the jPopupMenu visible relative to the current mouse
 				// position in the container.
@@ -1115,6 +1118,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 					pendingMenu.show(projectTree, e.getX(), e.getY());
 				}
 			}
+			else
+				jProjectTree_mouseClicked(e);
 		}
 	}
 	
@@ -2663,25 +2668,15 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		jMArrayMenu.add(jMergeDatasets);
 		jMArrayMenu.add(jRenameDataset);
 		projectTree.addMouseListener(new java.awt.event.MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				jProjectTree_mouseClicked(e);
-			}
-
+			
 			public void mouseReleased(MouseEvent e) {
-				jProjectTree_mouseReleased(e);
+				jProjectTree_mouseReleased(e);				 
 			}
 
 		});
 		
-		projectTree.addKeyListener(new KeyListener() {
-			public void keyTyped(KeyEvent e) {
-				//do nothing;
-			}
-
-			public void keyPressed(KeyEvent e) {
-				//do nothing;
-			}
-			
+		projectTree.addKeyListener(new java.awt.event.KeyAdapter() {
+			 			
 			public void keyReleased(KeyEvent e) {
 				jProjectTree_keyReleased(e);
 			}
