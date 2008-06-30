@@ -1,13 +1,14 @@
 package org.geworkbench.util.pathwaydecoder.mutualinformation;
 
+import java.io.Serializable;
 import java.text.CollationKey;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 
-public class MindyGeneMarker {
+public class MindyGeneMarker implements Serializable {
 	private DSGeneMarker marker;		// the original gene marker
 	
-	private CollationKey nameSortKey;	// for sorting
-	private CollationKey descSortKey;	// for sorting
+	transient private CollationKey nameSortKey;	// for sorting
+	transient private CollationKey descSortKey;	// for sorting
 	
 	public MindyGeneMarker(DSGeneMarker marker, CollationKey nameKey, CollationKey descKey){
 		this.marker = marker;

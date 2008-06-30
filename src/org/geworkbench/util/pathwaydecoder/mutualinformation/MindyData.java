@@ -358,7 +358,7 @@ public class MindyData implements Serializable {
      * Represents a row in the MINDY result data.
      * 
      * @author mhall
-     * @version $Id: MindyData.java,v 1.12 2008-06-27 21:55:33 hungc Exp $
+     * @version $Id: MindyData.java,v 1.13 2008-06-30 21:15:01 jiz Exp $
      */
     public static class MindyResultRow implements Serializable{
         private DSGeneMarker modulator;
@@ -369,8 +369,8 @@ public class MindyData implements Serializable {
         private float score;
         private float pvalue;
         private double correlation;  // pearson correlation (TF, target) result
-        private CollationKey modKey;	// for sorting
-        private CollationKey targetKey;	// for sorting
+        transient private CollationKey modKey;	// for sorting
+        transient private CollationKey targetKey;	// for sorting
 
         /**
          * Constructor.
@@ -521,7 +521,7 @@ public class MindyData implements Serializable {
      * Munder(M-)
      * 
      * @author mhall
-     * @version $Id: MindyData.java,v 1.12 2008-06-27 21:55:33 hungc Exp $
+     * @version $Id: MindyData.java,v 1.13 2008-06-30 21:15:01 jiz Exp $
      */
     public static class ModulatorStatistics implements Serializable {
         protected int count;
