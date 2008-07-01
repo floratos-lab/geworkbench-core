@@ -6,60 +6,60 @@
 	<target name="init" description="Initializes the build environment.">
 		<!-- Project-wide properties -->
 		<!-- App name -->
-		<property name="app" value="geWorkBench"/>
-		<property name="version" value="3.1b"/>
+		<property name="app" value="geWorkBench" />
+		<property name="version" value="3.1b" />
 		<!-- DEBUG setting -->
-		<property name="debug" value="on"/>
+		<property name="debug" value="on" />
 		<!-- Paths -->
-		<property name="classes" value="classes"/>
-		<property name="conf" value="conf"/>
-		<property name="temp" value="temp"/>
-		<property name="testing" value="testing"/>
-		<property name="test.reports" value="${testing}/junitreport"/>		
+		<property name="classes" value="classes" />
+		<property name="conf" value="conf" />
+		<property name="temp" value="temp" />
+		<property name="testing" value="testing" />
+		<property name="test.reports" value="${testing}/junitreport" />
 		<!-- Java Source -->
-		<property name="src" value="src"/>
-		<property name="test" value="test"/>
-		<property name="conf" value="conf"/>
+		<property name="src" value="src" />
+		<property name="test" value="test" />
+		<property name="conf" value="conf" />
 		<!-- Directory for releases -->
-		<property name="dist" value="dist"/>
+		<property name="dist" value="dist" />
 		<!-- Directory for releases -->
-		<property name="cleanFolder" value="../cleanFolder"/>
+		<property name="cleanFolder" value="../cleanFolder" />
 		<!-- Directory for developer kit releases -->
-		<property name="dev" value="devkit"/>
+		<property name="dev" value="devkit" />
 		<!-- Source directory for resources -->
-		<property name="res" value="res"/>
+		<property name="res" value="res" />
 		<!-- Directory for Javadoc -->
-		<property name="docs" value="web/api"/>
+		<property name="docs" value="web/api" />
 		<!-- The executable libs -->
-		<property name="lib" value="lib"/>
-		<property name="cabio40_lib" value="components/annotations/lib/cabio40_java_client"/>
+		<property name="lib" value="lib" />
+		<property name="cabio40_lib" value="components/annotations/lib/cabio40_java_client" />
 		<!-- The components directory -->
-		<property name="components" value="components"/>
+		<property name="components" value="components" />
 		<!-- Release info -->
-		<property name="release.file" value="${dist}/${app}-${version}"/>
+		<property name="release.file" value="${dist}/${app}-${version}" />
 		<!-- Release info -->
-		<property name="devkit.file" value="${dist}/devkit-${app}-${version}"/>
+		<property name="devkit.file" value="${dist}/devkit-${app}-${version}" />
 		<!-- Location to write reports -->
-		<property name="reports" value="reports"/>
+		<property name="reports" value="reports" />
 	</target>
 	<!-- ===================================================================== -->
 	<!-- PREPARE  -->
 	<!-- ===================================================================== -->
 	<target name="prepare" depends="init" description="Prepares for compilation.">
-		<mkdir dir="${classes}"/>
+		<mkdir dir="${classes}" />
 		<path id="classpath">
 			<fileset dir="${lib}">
-				<include name="**/*.jar"/>
-			</fileset>		
+				<include name="**/*.jar" />
+			</fileset>
 			<fileset dir="${cabio40_lib}">
-							<include name="**/*.jar"/>
-			</fileset>		
+				<include name="**/*.jar" />
+			</fileset>
 		</path>
 		<!-- Classpath for running -->
 		<path id="run.classpath">
-			<pathelement location="${classes}"/>
-			<pathelement location="${conf}"/>
-			<path refid="classpath"/>
+			<pathelement location="${classes}" />
+			<pathelement location="${conf}" />
+			<path refid="classpath" />
 		</path>
 	</target>
 	<!-- ===================================================================== -->
@@ -68,40 +68,40 @@
 	<target name="compile" depends="prepare" description="Compiles core and component .java source code.">
 		<javac srcdir="${src}" destdir="${classes}" debug="${debug}" source="1.5" target="1.5" memorymaximumsize="256M" fork="true">
 			<classpath>
-				<path refid="classpath"/>
+				<path refid="classpath" />
 			</classpath>
 		</javac>
 		<copy todir="${classes}">
 			<fileset dir="${src}">
-				<exclude name="CVS"/>
-				<exclude name="**/*.java"/>
+				<exclude name="CVS" />
+				<exclude name="**/*.java" />
 			</fileset>
 		</copy>
 		<!-- Compile components -->
 		<subant target="compile" genericantfile="build-component.xml">
-			<dirset dir="components" includes="*"/>
+			<dirset dir="components" includes="*" />
 		</subant>
 	</target>
 	<!-- ===================================================================== -->
 	<!-- DIST  -->
 	<!-- ===================================================================== -->
 	<target name="dist" depends="compile" description="Builds a zip file distribution.">
-		<delete dir="${dist}"/>
-		<mkdir dir="${dist}"/>
+		<delete dir="${dist}" />
+		<mkdir dir="${dist}" />
 		<zip destfile="${release.file}.zip">
 			<fileset dir=".">
-				<include name="${classes}/**/*"/>
-				<include name="${components}/**/*"/>
-				<exclude name="${components}/**/src/*"/>
-				<include name="annotation/**/*"/>
-				<include name="${lib}/**/*"/>
-				<include name="plugins/**/*"/>
-				<include name="caWorkbenchLicense.txt"/>
-				<include name="java.policy"/>
-				<include name="*annot.csv"/>
+				<include name="${classes}/**/*" />
+				<include name="${components}/**/*" />
+				<exclude name="${components}/**/src/*" />
+				<include name="annotation/**/*" />
+				<include name="${lib}/**/*" />
+				<include name="plugins/**/*" />
+				<include name="caWorkbenchLicense.txt" />
+				<include name="java.policy" />
+				<include name="*annot.csv" />
 			</fileset>
 			<fileset dir="bin">
-				<include name="build.xml"/>
+				<include name="build.xml" />
 			</fileset>
 		</zip>
 	</target>
@@ -109,97 +109,97 @@
 	<!-- DEV  -->
 	<!-- ===================================================================== -->
 	<target name="dev" depends="compile,javadoc" description="Builds a developer kit (zip file).">
-		<mkdir dir="${dist}"/>
-		<delete dir="${dev}"/>
-		<mkdir dir="${dev}"/>
-		<mkdir dir="${dev}/components"/>
-		<mkdir dir="${dev}/conf"/>
-		<mkdir dir="${dev}/core"/>
-		<mkdir dir="${dev}/sampleData"/>
+		<mkdir dir="${dist}" />
+		<delete dir="${dev}" />
+		<mkdir dir="${dev}" />
+		<mkdir dir="${dev}/components" />
+		<mkdir dir="${dev}/conf" />
+		<mkdir dir="${dev}/core" />
+		<mkdir dir="${dev}/sampleData" />
 		<copy todir="${dev}/libraries">
-			<fileset dir="${lib}"/>
+			<fileset dir="${lib}" />
 		</copy>
 		<copy todir="${dev}/components">
 			<fileset dir="${components}">
-				<include name="analysis/**/*"/>
-				<include name="clustering/**/*"/>
-				<include name="colormosaic/**/*"/>
-				<include name="example/**/*"/>
-				<include name="filtering/**/*"/>
-				<include name="hierarchicalclustering/**/*"/>
-				<include name="microarrays/**/*"/>
-				<include name="normalization/**/*"/>
-				<include name="plots/**/*"/>
-				<include name="selectors/**/*"/>
-				<include name="sequences/**/*"/>
-				<include name="versioninfo/**/*"/>
-				<include name="viewers/**/*"/>
+				<include name="analysis/**/*" />
+				<include name="clustering/**/*" />
+				<include name="colormosaic/**/*" />
+				<include name="example/**/*" />
+				<include name="filtering/**/*" />
+				<include name="hierarchicalclustering/**/*" />
+				<include name="microarrays/**/*" />
+				<include name="normalization/**/*" />
+				<include name="plots/**/*" />
+				<include name="selectors/**/*" />
+				<include name="sequences/**/*" />
+				<include name="versioninfo/**/*" />
+				<include name="viewers/**/*" />
 			</fileset>
 		</copy>
 		<copy todir="${dev}/sampleData">
 			<fileset dir="data">
-				<include name="web100.exp"/>
-				<include name="rmaExpressSample.txt"/>
-				<include name="histoall.fa"/>
-				<include name="aml8_924_ab_hu68_4000markers.txt"/>
-				<include name="aml8_965_ab_hu68_4000markers.txt"/>
-				<include name="21161 neu10-4000markers.gpr"/>
-				<include name="21162 ras7-4000markers.gpr"/>
+				<include name="web100.exp" />
+				<include name="rmaExpressSample.txt" />
+				<include name="histoall.fa" />
+				<include name="aml8_924_ab_hu68_4000markers.txt" />
+				<include name="aml8_965_ab_hu68_4000markers.txt" />
+				<include name="21161 neu10-4000markers.gpr" />
+				<include name="21162 ras7-4000markers.gpr" />
 			</fileset>
 		</copy>
 		<copy todir="${dev}/docs">
-			<fileset dir="${docs}"/>
+			<fileset dir="${docs}" />
 		</copy>
-		<copy todir="${dev}/conf" file="${conf}/minimal.xml"/>
-		<copy todir="${dev}/conf" file="${conf}/application.properties"/>
-		<copy file="devBuild.xml" tofile="${dev}/build.xml"/>
-		<copy file="devReadme.txt" tofile="${dev}/readme.txt"/>
-		<copy file="devSource.txt" tofile="${dev}/src/readme.txt"/>
-		<copy file="devLib.txt" tofile="${dev}/lib/readme.txt"/>
-		<copy todir="${dev}" file="java.policy"/>
-		<mkdir dir="${dev}/src"/>
-		<mkdir dir="${dev}/lib"/>
+		<copy todir="${dev}/conf" file="${conf}/minimal.xml" />
+		<copy todir="${dev}/conf" file="${conf}/application.properties" />
+		<copy file="devBuild.xml" tofile="${dev}/build.xml" />
+		<copy file="devReadme.txt" tofile="${dev}/readme.txt" />
+		<copy file="devSource.txt" tofile="${dev}/src/readme.txt" />
+		<copy file="devLib.txt" tofile="${dev}/lib/readme.txt" />
+		<copy todir="${dev}" file="java.policy" />
+		<mkdir dir="${dev}/src" />
+		<mkdir dir="${dev}/lib" />
 		<jar destfile="${dev}/core/geworkbench-core.jar">
-			<fileset dir="${classes}"/>
+			<fileset dir="${classes}" />
 			<manifest>
-				<attribute name="core-version" value="${version}"/>
+				<attribute name="core-version" value="${version}" />
 			</manifest>
 		</jar>
 		<zip destfile="${devkit.file}.zip">
-			<fileset dir="devkit"/>
+			<fileset dir="devkit" />
 		</zip>
 	</target>
 	<!-- ===================================================================== -->
 	<!-- SRC-DIST  -->
 	<!-- ===================================================================== -->
 	<target name="src-dist" depends="compile" description="Builds a zip file distribution, including source.">
-		<delete dir="${dist}"/>
-		<mkdir dir="${dist}"/>
+		<delete dir="${dist}" />
+		<mkdir dir="${dist}" />
 		<zip destfile="${release.file}.zip">
 			<fileset dir=".">
-				<include name="${classes}/**/*"/>
-				<include name="${src}/**/*"/>
-				<include name="${docs}/**/*"/>
-				<include name="${components}/**/*"/>
+				<include name="${classes}/**/*" />
+				<include name="${src}/**/*" />
+				<include name="${docs}/**/*" />
+				<include name="${components}/**/*" />
 				<!-- Leave out the following components due to prohibitive size -->
-				<exclude name="${components}/sequenceretriever/**/*"/>
-				<exclude name="${components}/goterms/**/*"/>
-				<exclude name="${components}/gsea/**/*"/>
-				<exclude name="${components}/gominer/**/*"/>
+				<exclude name="${components}/sequenceretriever/**/*" />
+				<exclude name="${components}/goterms/**/*" />
+				<exclude name="${components}/gsea/**/*" />
+				<exclude name="${components}/gominer/**/*" />
 				<!-- Leave out the following components due to Windows native calls -->
-				<exclude name="${components}/associationdiscovery/**/*"/>
-				<exclude name="${components}/cytoscape/**/*"/>
+				<exclude name="${components}/associationdiscovery/**/*" />
+				<exclude name="${components}/cytoscape/**/*" />
 				<!-- Leave out the following components due to dependence on one of the above components -->
-				<exclude name="${components}/pathwaydecoder/**/*"/>
-				<include name="annotation/**/*"/>
-				<include name="${lib}/**/*"/>
-				<include name="plugins/**/*"/>
-				<include name="caWorkbenchLicense.txt"/>
-				<include name="java.policy"/>
+				<exclude name="${components}/pathwaydecoder/**/*" />
+				<include name="annotation/**/*" />
+				<include name="${lib}/**/*" />
+				<include name="plugins/**/*" />
+				<include name="caWorkbenchLicense.txt" />
+				<include name="java.policy" />
 				<!-- <include name="*annot.csv"/> -->
 			</fileset>
 			<fileset dir="bin">
-				<include name="build.xml"/>
+				<include name="build.xml" />
 			</fileset>
 		</zip>
 	</target>
@@ -207,11 +207,11 @@
 	<!-- CLEAN  -->
 	<!-- ===================================================================== -->
 	<target name="clean" description="Clean all build products." depends="init">
-		<delete dir="${classes}"/>
-		<delete dir="${temp}"/>
+		<delete dir="${classes}" />
+		<delete dir="${temp}" />
 		<!-- Compile components -->
 		<subant target="clean" genericantfile="build-component.xml">
-			<dirset dir="components" includes="*"/>
+			<dirset dir="components" includes="*" />
 		</subant>
 	</target>
 	<!-- ====================================================================== -->
@@ -219,9 +219,9 @@
 	<!-- ====================================================================== -->
 	<target name="javadoc" depends="prepare" description="Creates javadocs for core only.">
 		<javadoc maxmemory="256M" destdir="${docs}" packagenames="*">
-			<classpath refid="classpath"/>
+			<classpath refid="classpath" />
 			<packageset dir="${src}" defaultexcludes="yes">
-				<include name="org/geworkbench/**"/>
+				<include name="org/geworkbench/**" />
 			</packageset>
 		</javadoc>
 	</target>
@@ -230,43 +230,43 @@
 	<!-- ====================================================================== -->
 	<target name="run" depends="compile" description="Runs geWorkbench.">
 		<java fork="true" classname="org.geworkbench.engine.config.UILauncher">
-			<jvmarg value="-Xmx640M"/>
-			<jvmarg value="-Djava.library.path=lib"/>
-			<classpath refid="run.classpath"/>
+			<jvmarg value="-Xmx640M" />
+			<jvmarg value="-Djava.library.path=lib" />
+			<classpath refid="run.classpath" />
 		</java>
 	</target>
 	<!-- ECLIPSE: USE THIS RUN CONFIGURATION IF YOU HAVE AN ECLIPSE CONFIG ON YOUR FILESYSTEM -->
 	<target name="check-eclipse-env-cond">
-		<property environment="env"/>
+		<property environment="env" />
 		<condition property="eclipse.env.set">
-			<available file="${env.ECLIPSE_HOME}"/>
+			<available file="${env.ECLIPSE_HOME}" />
 		</condition>
 	</target>
 	<target name="eclipse-cond-if" depends="check-eclipse-env-cond" if="eclipse.env.set">
-		<echo message="ECLIPSE_HOME successfully set to ${env.ECLIPSE_HOME}.  Executing target."/>
+		<echo message="ECLIPSE_HOME successfully set to ${env.ECLIPSE_HOME}.  Executing target." />
 	</target>
 	<target name="eclipse-cond-else" depends="check-eclipse-env-cond" unless="eclipse.env.set">
-		<echo message="ECLIPSE_HOME not set.  Cannot execute target."/>
+		<echo message="ECLIPSE_HOME not set.  Cannot execute target." />
 	</target>
 	<target name="run-eclipse-config" depends="eclipse-cond-if,eclipse-cond-else,compile">
 		<java fork="true" classname="org.geworkbench.engine.config.UILauncher">
-			<jvmarg value="-Xmx640M"/>
-			<jvmarg value="-Dcomponents.dir=${env.ECLIPSE_HOME}"/>
-			<jvmarg value="-Djava.library.path=lib"/>
-			<classpath refid="run.classpath"/>
+			<jvmarg value="-Xmx640M" />
+			<jvmarg value="-Dcomponents.dir=${env.ECLIPSE_HOME}" />
+			<jvmarg value="-Djava.library.path=lib" />
+			<classpath refid="run.classpath" />
 		</java>
 	</target>
 	<!-- END ECLIPSE -->
 	<target name="run-mindy" depends="compile" description="Runs mindy test application.">
 		<path id="mindy.classpath">
-			<pathelement location="components/mindy/${classes}"/>
-			<pathelement location="components/mindy/lib/swingx-2006_10_27.jar"/>
-			<path refid="run.classpath"/>
+			<pathelement location="components/mindy/${classes}" />
+			<pathelement location="components/mindy/lib/swingx-2006_10_27.jar" />
+			<path refid="run.classpath" />
 		</path>
 		<java fork="true" classname="org.geworkbench.components.mindy.test.MindyTest">
-			<jvmarg value="-Xmx640M"/>
-			<jvmarg value="-Djava.library.path=lib"/>
-			<classpath refid="mindy.classpath"/>
+			<jvmarg value="-Xmx640M" />
+			<jvmarg value="-Djava.library.path=lib" />
+			<classpath refid="mindy.classpath" />
 		</java>
 	</target>
 	<!-- ====================================================================== -->
@@ -274,10 +274,10 @@
 	<!-- ====================================================================== -->
 	<target name="run-prod" depends="compile" description="Runs geWorkbench.">
 		<java fork="true" classname="org.geworkbench.engine.config.UILauncher">
-			<jvmarg value="-Xmx640M"/>
-			<jvmarg value="-Djava.library.path=lib"/>
-			<arg value="all_release.xml"/>
-			<classpath refid="run.classpath"/>
+			<jvmarg value="-Xmx640M" />
+			<jvmarg value="-Djava.library.path=lib" />
+			<arg value="all_release.xml" />
+			<classpath refid="run.classpath" />
 		</java>
 	</target>
 	<!-- ====================================================================== -->
@@ -285,10 +285,10 @@
 	<!-- ====================================================================== -->
 	<target name="run-silent" depends="compile" description="Runs geWorkbench.">
 		<java fork="true" classname="org.geworkbench.engine.config.UILauncher">
-			<jvmarg value="-Xmx640M"/>
-			<jvmarg value="-Djava.library.path=lib"/>
-			<redirector output="NUL"/>
-			<classpath refid="run.classpath"/>
+			<jvmarg value="-Xmx640M" />
+			<jvmarg value="-Djava.library.path=lib" />
+			<redirector output="NUL" />
+			<classpath refid="run.classpath" />
 		</java>
 	</target>
 	<!-- ====================================================================== -->
@@ -296,10 +296,10 @@
 	<!-- ====================================================================== -->
 	<target name="runNewFlavor" depends="compile" description="Runs geWorkbench.">
 		<java fork="true" classname="org.geworkbench.engine.config.UILauncher">
-			<jvmarg value="-Xmx640M"/>
-			<jvmarg value="-Djava.library.path=lib"/>
-			<arg value="all_combobox.xml"/>
-			<classpath refid="run.classpath"/>
+			<jvmarg value="-Xmx640M" />
+			<jvmarg value="-Djava.library.path=lib" />
+			<arg value="all_combobox.xml" />
+			<classpath refid="run.classpath" />
 		</java>
 	</target>
 	<!-- ====================================================================== -->
@@ -311,84 +311,84 @@
 		<!--<pathelement location="lib/junit.jar"/>-->
 		<!--</classpath>-->
 		<!--</taskdef>-->
-		<delete dir="testResults"/>
-		<mkdir dir="testResults"/>
+		<delete dir="testResults" />
+		<mkdir dir="testResults" />
 		<junit printsummary="yes" haltonfailure="false">
-			<classpath refid="run.classpath"/>
-			<formatter type="xml"/>
+			<classpath refid="run.classpath" />
+			<formatter type="xml" />
 			<!--
                         <test name="org.geworkbench.bison.testing.TestAll" haltonfailure="no" todir="testResults">
                             <formatter type="xml"/>
                         </test>
             -->
 			<batchtest fork="yes" todir="testResults">
-				<formatter type="xml"/>
+				<formatter type="xml" />
 				<fileset dir="${src}">
-					<include name="org/geworkbench/**/test/Test*.java"/>
-					<include name="org/geworkbench/bison/testing/TestCSPanel.java"/>
+					<include name="org/geworkbench/**/test/Test*.java" />
+					<include name="org/geworkbench/bison/testing/TestCSPanel.java" />
 				</fileset>
 			</batchtest>
 		</junit>
-		<property name="junitreport" value="${reports}/junitreport"/>
-		<delete dir="${junitreport}"/>
-		<mkdir dir="${junitreport}"/>
+		<property name="junitreport" value="${reports}/junitreport" />
+		<delete dir="${junitreport}" />
+		<mkdir dir="${junitreport}" />
 		<junitreport todir="${reports}">
 			<fileset dir="testResults">
-				<include name="TEST-*.xml"/>
+				<include name="TEST-*.xml" />
 			</fileset>
-			<report format="frames" todir="${junitreport}"/>
+			<report format="frames" todir="${junitreport}" />
 		</junitreport>
 	</target>
 	<!-- ====================================================================== -->
 	<!-- Prepare a clean file for depositing to NCI CVS -->
 	<!-- ====================================================================== -->
 	<target name="createCleanSource" depends="compile" description="Creating a new folder for depositing...">
-		<delete dir="../cleanResource"/>
-		<mkdir dir="../cleanResource"/>
+		<delete dir="../cleanResource" />
+		<mkdir dir="../cleanResource" />
 		<copy todir="../cleanResource">
 			<fileset dir=".">
-				<exclude name="CVS"/>
-				<exclude name="**/*.cvsignore"/>
+				<exclude name="CVS" />
+				<exclude name="**/*.cvsignore" />
 			</fileset>
 		</copy>
 	</target>
 	<target name="gear" depends="init" description="Create a .gear file out of a component. Specify a directory containing a component like -Dcomponent=name">
-		<property name="component" value=""/>
-		<echo message="Going to create .gear file out of directory: ${components}/${component}"/>
+		<property name="component" value="" />
+		<echo message="Going to create .gear file out of directory: ${components}/${component}" />
 		<jar destfile="${component}.gear" basedir="${components}/${component}" includes="classes/**,lib/**">
 			<manifest>
-				<attribute name="core-version" value="${version}"/>
+				<attribute name="core-version" value="${version}" />
 			</manifest>
 		</jar>
 	</target>
 	<!-- JUnit Run and Report -->
 	<target name="junit-run" depends="compile" description="Run JUnit tests and produce success report.">
-		<taskdef name="junit" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask"/>
-		<delete dir="${testing}"/>
-		<mkdir dir="${testing}"/>
+		<taskdef name="junit" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask" />
+		<delete dir="${testing}" />
+		<mkdir dir="${testing}" />
 		<junit fork="yes" dir="${basedir}" failureProperty="test.failed" printsummary="yes">
-			<jvmarg value="-Xmx640M"/>
-			<jvmarg value="-Djava.awt.headless=true"/>
-			<classpath refid="run.classpath"/>
-			<formatter type="xml"/>
+			<jvmarg value="-Xmx640M" />
+			<jvmarg value="-Djava.awt.headless=true" />
+			<classpath refid="run.classpath" />
+			<formatter type="xml" />
 			<!--<test name="wb.test.TestAll" todir="${testing}"/>-->
 			<batchtest todir="${testing}" unless="testcase">
 				<fileset dir="${src}">
-					<include name="**/*Test.java"/>
-					<exclude name="**/BulkTest.java"/>
+					<include name="**/*Test.java" />
+					<exclude name="**/BulkTest.java" />
 				</fileset>
 			</batchtest>
 		</junit>
-		<mkdir dir="${test.reports}"/>
+		<mkdir dir="${test.reports}" />
 		<junitreport todir="${test.reports}">
 			<fileset dir="${testing}">
-				<include name="TEST-*.xml"/>
+				<include name="TEST-*.xml" />
 			</fileset>
-			<report todir="${test.reports}"/>
+			<report todir="${test.reports}" />
 		</junitreport>
 		<fail>
 			<condition>
-				<isset property="test.failed"/>
+				<isset property="test.failed" />
 			</condition>
 		</fail>
 	</target>
@@ -396,69 +396,92 @@
 	<!-- CLEAR   DISTRIBUTION-->
 	<!-- ====================================================================== -->
 	<target name="cleanDist" depends="init" description="Clean the folder for depositing...">
-		<delete dir="${cleanFolder}"/>
+		<delete dir="${cleanFolder}" />
 	</target>
 	<!-- ====================================================================== -->
 	<!-- CREATE CLEAN DISTRIBUTION-->
 	<!-- ====================================================================== -->
 	<target name="createCleanDist" depends="cleanDist, createDist" description="Creating a new folder for depositing...">
-		 
-</target>
+
+	</target>
 	<!-- ====================================================================== -->
 	<!-- CREATE   DISTRIBUTION-->
 	<!-- ====================================================================== -->
 	<target name="createDist" depends="compile" description="Creating a new folder for depositing...">
-		<mkdir dir="${cleanFolder}"/>
+		<mkdir dir="${cleanFolder}" />
 		<echo>Begin to create a new source, which is located at ${cleanFolder}, please wait...</echo>
 		<copy todir="${cleanFolder}" includeEmptyDirs="NO">
 			<fileset dir=".">
-				<exclude name="bin"/>
-				<exclude name="CVS"/>
-				<exclude name="${conf}/**/*"/>
-				<include name="${conf}/all_release.xml"/>
-				<include name="${classes}/**/*"/>
-				<include name="${components}/**/*"/>
-				<!-- Leave out the following components for distribution 1.0.5-->
-				<!-- The splash uses the ad! <exclude name="${components}/associationdiscovery/**/*"/>-->
-				<exclude name="**/*.iml"/>
-				<exclude name="${components}/cascript/**/*"/>
-				<exclude name="${components}/associationdiscovery/**/*"/>
-				<exclude name="${components}/cutenet/**/*"/>
-				<exclude name="${components}/example/**/*"/>
-				<exclude name="${components}/gears_exploded/**/*"/>
-				<exclude name="${components}/gominer/**/*"/>
-				<exclude name="${components}/gsea/**/*"/>
-				<exclude name="${components}/interactions/**/*"/>
-				<exclude name="${components}/matrixreduce/**/*"/>
-				<exclude name="${components}/simulation/**/*"/>
-				<exclude name="${components}/tprofiler/**/*"/>
-				<exclude name="${components}/cytoscape/**/*"/>
-				<exclude name="${components}/mindy/**/*"/>
-				<exclude name="${components}/am/**/*"/>
-				<exclude name="${components}/cagrid/**/*"/>
-				<exclude name="${components}/cgems/**/*"/>
-				<exclude name="plugins/**/*"/>
-				<exclude name="**/synteny/*"/>
-				<exclude name="**/src/**"/>
-				<exclude name="**/test/**"/>
-				<include name="annotation/**/*"/>
-				<include name="${lib}/**/*"/>
-				<include name="geWorkbenchLicense.txt"/>
-				<include name="ReleaseNotes1.0.5.txt"/>
-				<include name="java.policy"/>
-				<include name="build-component.xml"/>
-				<exclude name="**/*.cvsignore"/>
-				<exclude name="data"/>
-				<exclude name="nbproject"/>
-				<include name="data/public_data/**"/>
+				<exclude name="bin" />
+				<exclude name="CVS" />
+				<exclude name="${conf}/**/*" />
+				<include name="${conf}/all_release.xml" />
+				<include name="${classes}/**/*" />
+
+				<!-- Include the following components for distribution 1.5-->
+				<include name="${components}/alignment/**/*" />
+				<include name="${components}/analysis/**/*" />
+				<include name="${components}/annotations/**/*" />
+				<include name="${components}/alignment/**/*" />
+				<include name="${components}/anova/**/*" />
+				<include name="${components}/aracne-java/**/*" />
+				<include name="${components}/caarray/**/*" />
+				<include name="${components}/celprocessing/**/*" />
+				<include name="${components}/classification/**/*" />
+				<include name="${components}/clustering/**/*" />
+				<include name="${components}/colormosaic/**/*" />
+				<include name="${components}/cytoscape/**/*" />
+				<include name="${components}/discovery/**/*" />
+				<include name="${components}/filtering/**/*" />
+				<include name="${components}/genepattern/**/*" />
+				<include name="${components}/genspace/**/*" />
+				<include name="${components}/goterms/**/*" />
+				<include name="${components}/gpmodule_v3_0/**/*" />
+				<include name="${components}/hierarchicalclustering/**/*" />
+				<include name="${components}/interactions/**/*" />
+				<include name="${components}/jmol/**/*" />
+				<include name="${components}/matrixreduce/**/*" />
+				<include name="${components}/microarrays/**/*" />
+
+				<include name="${components}/normalization/**/*" />
+				<include name="${components}/pathwaydecoder/**/*" />
+				<include name="${components}/patterns/**/*" />
+				<include name="${components}/plots/**/*" />
+				<include name="${components}/poshistogram/**/*" />
+				<include name="${components}/promoter/**/*" />
+				<include name="${components}/selectors/**/*" />
+				<include name="${components}/sequenceretriever/**/*" />
+				<include name="${components}/alignment/**/*" />
+				<include name="${components}/alignment/**/*" />
+				<include name="${components}/sequences/**/*" />
+				<include name="${components}/simulation/**/*" />
+				<include name="${components}/versioninfo/**/*" />
+				<include name="${components}/viewers/**/*" />
+				
+
+				<include name="plugins/**/*" />
+				<!-- Leave out the following components for distribution 1.5-->
+				<exclude name="**/synteny/*" />
+				<exclude name="**/src/**" />
+				<exclude name="**/test/**" />
+				<include name="annotation/**/*" />
+				<include name="${lib}/**/*" />
+				<include name="geWorkbenchLicense.txt" />
+				<include name="ReleaseNotes1.5.txt" />
+				<include name="java.policy" />
+				<include name="build-component.xml" />
+				<exclude name="**/*.cvsignore" />
+				<exclude name="data" />
+				<exclude name="nbproject" />
+				<include name="data/public_data/**" />
 			</fileset>
 		</copy>
 		<copy todir="${cleanFolder}/conf" includeEmptyDirs="NO">
 			<fileset dir="./conf">
-				<include name="application.properties"/>
-				<include name="all_release.xml"/>
+				<include name="application.properties" />
+				<include name="all_release.xml" />
 			</fileset>
 		</copy>
-		<copy file="build_runDirect.xml" tofile="${cleanFolder}/build.xml"/>
+		<copy file="build_runDirect.xml" tofile="${cleanFolder}/build.xml" />
 	</target>
 </project>
