@@ -48,7 +48,7 @@ public class MindyData implements Serializable {
         } else {
             log.warn("Data passed in had 0 records, unable to determine transcription factor under consideration.");
         }
-        calculateModulatorStatistics();     
+        calculateModulatorStatistics(false);     
         
             
         // for convenience....
@@ -67,7 +67,7 @@ public class MindyData implements Serializable {
         } else {
             log.warn("Data passed in had 0 records, unable to determine transcription factor under consideration.");
         }
-        calculateModulatorStatistics();
+        calculateModulatorStatistics(false);
     }
     
     public boolean isAnnotated(){
@@ -145,7 +145,7 @@ public class MindyData implements Serializable {
      */
     public void setData(List<MindyResultRow> data) {
         this.data = data;
-        calculateModulatorStatistics();
+        calculateModulatorStatistics(true);
     }
 
     /**
@@ -266,11 +266,14 @@ public class MindyData implements Serializable {
         return results;
     }
 
-    private void calculateModulatorStatistics() {
+    private void calculateModulatorStatistics(boolean recalculate) {
         log.debug("Calculating modulator stats...");
         for (MindyResultRow row : data) {
             dataMap.put(row.getModulator(), row.getTranscriptionFactor(), row.getTarget(), row);
             ModulatorStatistics modStats = modulatorStatistics.get(row.getModulator());
+            if (recalculate){
+            	modStats = null;
+            }
             if (modStats == null) {
                 modStats = new ModulatorStatistics(0, 0, 0);
                 modulatorStatistics.put(row.getModulator(), modStats);
@@ -284,7 +287,7 @@ public class MindyData implements Serializable {
                 modStats.count++;
             }
         }
-        log.debug("Done calculating modulator stats...");
+        log.debug("Done calculating modulator stats.");
     }
 
     /**
@@ -358,7 +361,7 @@ public class MindyData implements Serializable {
      * Represents a row in the MINDY result data.
      * 
      * @author mhall
-     * @version $Id: MindyData.java,v 1.13 2008-06-30 21:15:01 jiz Exp $
+     * @version $Id: MindyData.java,v 1.14 2008-07-01 19:36:08 hungc Exp $
      */
     public static class MindyResultRow implements Serializable{
         private DSGeneMarker modulator;
@@ -521,7 +524,7 @@ public class MindyData implements Serializable {
      * Munder(M-)
      * 
      * @author mhall
-     * @version $Id: MindyData.java,v 1.13 2008-06-30 21:15:01 jiz Exp $
+     * @version $Id: MindyData.java,v 1.14 2008-07-01 19:36:08 hungc Exp $
      */
     public static class ModulatorStatistics implements Serializable {
         protected int count;
