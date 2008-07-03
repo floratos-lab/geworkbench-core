@@ -1,9 +1,9 @@
-geWorkBench v1.0.5
+geWorkBench v1.5
  
  
 SOFTWARE LICENSE AGREEMENT
 
-Copyright 2004-2007 Columbia University. 
+Copyright 2004-2008 Columbia University. 
 
 This software was developed by Columbia University in conjunction with First Genetic 
 Trust and the National Cancer Institute, and so to the extent government employees are 
