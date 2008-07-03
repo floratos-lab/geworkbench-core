@@ -36,6 +36,7 @@
 		<path id="run.classpath">
 			<pathelement location="${classes}"/>
 			<pathelement location="${conf}"/>
+	<pathelement location="."/>
 			<path refid="classpath"/>
 		</path>
 	</target>
