@@ -412,13 +412,15 @@
 		<echo>Begin to create a new source, which is located at ${cleanFolder}, please wait...</echo>
 		<copy todir="${cleanFolder}" includeEmptyDirs="NO">
 			<fileset dir=".">
-				<exclude name="bin" />
+				
 				<exclude name="CVS" />
 				<exclude name="${conf}/**/*" />
 				<include name="${conf}/all_release.xml" />
+				<include name="${conf}/client-config.wsdd" />
 				<include name="${classes}/**/*" />
 
 				<!-- Include the following components for distribution 1.5-->
+				<include name="bin" />
 				<include name="${components}/alignment/**/*" />
 				<include name="${components}/analysis/**/*" />
 				<include name="${components}/annotations/**/*" />
@@ -454,7 +456,7 @@
 				<include name="${components}/alignment/**/*" />
 				<include name="${components}/alignment/**/*" />
 				<include name="${components}/sequences/**/*" />
-				<include name="${components}/simulation/**/*" />
+	 
 				<include name="${components}/versioninfo/**/*" />
 				<include name="${components}/viewers/**/*" />
 				
@@ -469,7 +471,9 @@
 				<include name="geWorkbenchLicense.txt" />
 				<include name="ReleaseNotes1.5.txt" />
 				<include name="java.policy" />
-				<include name="build-component.xml" />
+				 
+				<include name="launch_geworkbench.bat" />
+				<include name="launch_geworkbench.sh" />
 				<exclude name="**/*.cvsignore" />
 				<exclude name="data" />
 				<exclude name="nbproject" />
