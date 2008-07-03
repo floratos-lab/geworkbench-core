@@ -1,8 +1,8 @@
 Release Notes
     
-                       geWorkbench V1.5 RC1 (beta)
+                       geWorkbench V1.5
                
-                          June 26, 2008
+                          July 3, 2008
 
        Joint Centers for Systems Biology, Columbia University
                         New York, NY  10032
