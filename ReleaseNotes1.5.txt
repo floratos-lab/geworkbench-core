@@ -50,16 +50,22 @@ Release Notes
     New features added in geWorkbench 1.5:
 
         New Modules:
-          * ARACNE – gene network reverse engineering
-          * ANOVA – Analysis of variance, ported from MEV (TIGR)
+          * ARACNE – gene network reverse engineering (from Andrea
+              Califano's lab at Columbia University, 
+              http://wiki.c2b2.columbia.edu/califanolab/index.php/Software). 
+          * ANOVA – Analysis of variance, ported from TIGR's MEV,
+              http://www.tm4.org/mev.html). 
           * caArray2.0 connectivity – query for and download data from
               caArray 2.0 directly into geWorkbench.
           * Cellular Networks Knowledge Base – database of molecular 
-              interactions.
-          * GeneSpace - provide social networking capabilities and 
+              interactions.  (from Andrea Califano's lab at Columbia University, 
+              http://amdec-bioinfo.cu-genome.org/html/BCellInteractome.html).
+          * GenSpace - provide social networking capabilities and 
 		  allow you to connect with other geWorkbench users.
           * MatrixReduce – transcription factor binding site prediction
-          * Analysis components ported from GenePattern
+              (from Harmen Bussemaker's lab at Columbia University, 
+              http://bussemaker.bio.columbia.edu/software/MatrixREDUCE/).
+          * Analysis components ported from GenePattern (http://www.genepattern.org) 
               - Principle Component Analysis (PCA)
               - K-nearest neighbors (KNN)
               - Weighted Voting (WV)
@@ -67,11 +73,28 @@ Release Notes
         New File types supported
            * The NCBI GEO series matrix file for microarray data (tab-delimited)
 
+        New server side architecture
+           * Invocation of caGrid services is now delagated to an independent 
+              component (the Dispatcher). This makes it possible to exit geWorkbench 
+              after submitting a long-running job and then automatically pick up any 
+              results next time the application starts. 
+
         Other changes
-           * Markers can be returned from BioCarta pathway diagrams.
-           * Choice of human or mouse CGAP annotation pages (Marker
-                 Annotations component)
-           * Integration with caCore API Version 3.1
+          * The Marker and Array/Phenotypes components now support algebraic operations 
+              (union, intersection, xor) on marker and array groups.
+          * Upon exiting the application, the user is prompted to store their workspace.
+          * Workspace persistence problems have been resolved.
+          * The Marker Annotations component has been enhanced in several ways:
+              ** The integration with caBIO has been updated to use API Version 3.1
+              ** The caBIO Pathway component (previously an independent geWorkbench 
+                    component that would display BioCarta pathway images) has been 
+                    integrated into the Marker Annotations component.
+              ** Markers can be returned from BioCarta pathway diagrams.
+              ** A new option is provided to choose between human or mouse CGAP 
+                    annotation pages.
+
+
+    ***Changes in previous versions***
 
     New features added in geWorkbench 1.0.6:
 
