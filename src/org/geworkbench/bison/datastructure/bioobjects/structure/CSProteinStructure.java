@@ -3,7 +3,8 @@ package org.geworkbench.bison.datastructure.bioobjects.structure;
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 
-import java.io.File;
+import java.io.*;
+import java.util.*;
 
 /**
  * User: mhall
@@ -13,6 +14,7 @@ import java.io.File;
 public class CSProteinStructure extends CSAncillaryDataSet implements DSProteinStructure {
 
     File dataFile = null;
+    int chainoffset = 21;
 
     public CSProteinStructure(DSDataSet parent, String label) {
         super(parent, label);
@@ -24,5 +26,27 @@ public class CSProteinStructure extends CSAncillaryDataSet implements DSProteinS
 
     public void setDataSetFile(File file) {
         dataFile = file;
+    }
+    public HashMap<String, Integer> getChains()
+    {
+    	///get chains from pdb file
+    	File prtfile = this.getFile();
+    	File pdbfile = prtfile.getAbsoluteFile();
+    	HashMap<String, Integer> chainhm = new HashMap<String, Integer>();
+    	try{
+    		BufferedReader br = new BufferedReader(new FileReader(pdbfile));
+    		String line = null;
+    		while ((line = br.readLine())!= null)
+    		{
+    			if (line.startsWith("ATOM  ")|| line.startsWith("HETATM"))
+    			{
+    				chainhm.put(line.substring(chainoffset, chainoffset+1), 1);
+    			}
+    		}
+    		br.close();
+        }catch(Exception e){
+        	e.printStackTrace();
+        }
+	return chainhm;
     }
 }
