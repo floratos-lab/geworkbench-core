@@ -47,6 +47,11 @@ public class CSProteinStructure extends CSAncillaryDataSet implements DSProteinS
         }catch(Exception e){
         	e.printStackTrace();
         }
+	if (chainhm.get(" ") != null) 
+	{
+	    chainhm.remove(" ");
+	    chainhm.put("_", 1);
+	}
 	return chainhm;
     }
 }
