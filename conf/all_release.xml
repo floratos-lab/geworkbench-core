@@ -89,7 +89,7 @@
 	<plugin id="anova" name="Anova Analysis" class="org.geworkbench.components.anova.AnovaAnalysis" source="anova"/>
 
 	<plugin id="aracne" name="ARACNE Analysis" class="org.geworkbench.components.aracne.AracneAnalysis" source="aracne-java"/>
-	<plugin id="fastHierarchicalClusteringAnalysis" name="Fast Hierachical Clustering Analysis" class="org.geworkbench.components.clustering.FastHierClustAnalysis" source="clustering"/>
+	<plugin id="fastHierarchicalClusteringAnalysis" name="Hierachical Clustering" class="org.geworkbench.components.clustering.FastHierClustAnalysis" source="clustering"/>
 	<plugin id="matrixReduce" name="Matrix Reduce" class="org.geworkbench.components.matrixreduce.MatrixReduceAnalysis" source="matrixreduce"/>
 	<plugin id="matrixReduceViewer" name="MatrixREDUCE" class="org.geworkbench.components.matrixreduce.MatrixReduceViewer" source="matrixreduce">
 		<gui-area name="VisualArea"/>
