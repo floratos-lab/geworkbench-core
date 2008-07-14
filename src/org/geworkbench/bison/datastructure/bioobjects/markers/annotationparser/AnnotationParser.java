@@ -247,26 +247,29 @@ public class AnnotationParser implements Serializable {
     }
 
     private static void populateGeneNameMap(String chipType) {
-        if (chipType != null) {
-            for (String affyid : chipTypeToAnnotations.get(chipType).keySet()) {
-                String geneName = getGeneName(affyid.trim());
-                if (geneName != null) {
-                    if (geneNameMap.get(chipType) == null) {
-                        geneNameMap.put(chipType, new ListOrderedMap<String,
-                                Vector<String>>());
-                    }
-                    Vector<String>
-                            ids = geneNameMap.get(chipType).get(geneName.
-                            trim());
-                    if (ids == null) {
-                        ids = new Vector<String>();
-                    }
-                    ids.add(affyid.trim());
-                    geneNameMap.get(chipType).put(geneName.trim(), ids);
-                }
-            }
-        }
-    }
+		if (chipType != null) {
+			for (String affyid : chipTypeToAnnotations.get(chipType).keySet()) {
+				if (affyid != null) {
+					String geneName = getGeneName(affyid.trim());
+					if (geneName != null) {
+						if (geneNameMap.get(chipType) == null) {
+							geneNameMap
+									.put(
+											chipType,
+											new ListOrderedMap<String, Vector<String>>());
+						}
+						Vector<String> ids = geneNameMap.get(chipType).get(
+								geneName.trim());
+						if (ids == null) {
+							ids = new Vector<String>();
+						}
+						ids.add(affyid.trim());
+						geneNameMap.get(chipType).put(geneName.trim(), ids);
+					}
+				}
+			}
+		}
+	}
 
     private static File createFilewithID() {
 
