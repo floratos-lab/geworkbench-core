@@ -1566,8 +1566,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 					String mergedName = null;
 					if (dataSetFiles.length == 1) {
 						try {
-							dataSets[0] = ((DataSetFileFormat) inputFormat)
-									.getDataFile(dataSetFiles[0]);
+							DataSetFileFormat dataSetFileFormat = (DataSetFileFormat)inputFormat;
+							dataSetFileFormat.setProgressMessage("Checking File Format");
+							dataSets[0] = dataSetFileFormat.getDataFile(dataSetFiles[0]);
 							dataSets[0].setAbsPath(dataSetFiles[0].getAbsolutePath());
 						} catch (InputFileFormatException iffe) {
 							// Let the user know that there was a problem
@@ -1601,16 +1602,16 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 						for (int i = 0; i < dataSetFiles.length; i++) {
 							File dataSetFile = dataSetFiles[i];
 							try {
+								DataSetFileFormat dataSetFileFormat = (DataSetFileFormat)inputFormat;
+								String progressMessage = "Completed " + i + " out of " + dataSetFiles.length + " files.";
+								dataSetFileFormat.setProgressMessage(progressMessage);
 								if (chipType == null) {
-									dataSets[i] = ((DataSetFileFormat) inputFormat)
-											.getDataFile(dataSetFile);
+									dataSets[i] = dataSetFileFormat.getDataFile(dataSetFile);
 									chipType = dataSets[i]
 											.getCompatibilityLabel();
 								} else {
 									try {
-										dataSets[i] = ((DataSetFileFormat) inputFormat)
-												.getDataFile(dataSetFile,
-														chipType);
+										dataSets[i] = dataSetFileFormat.getDataFile(dataSetFile, chipType);
 									} catch (UnsupportedOperationException e) {
 										log
 												.warn("This data type doesn't support chip type overrides, will have to ask user again.");

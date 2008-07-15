@@ -102,7 +102,8 @@ public class AffyFileFormat extends DataSetFileFormat {
         boolean valuesAreExpectedType = true;
     	try{
 	        FileInputStream fileIn = new FileInputStream(f);
-	        ProgressMonitorInputStream progressIn = new ProgressMonitorInputStream(null, "Checking File Format", fileIn);
+	        ProgressMonitorInputStream progressIn = new ProgressMonitorInputStream(null, getProgressMessage(), fileIn);
+	        progressIn.getProgressMonitor().setNote("Currently being processed is "+f.getName()+".");
 	        BufferedReader reader = new BufferedReader(new InputStreamReader(progressIn));
 	
 	        String line = null;
