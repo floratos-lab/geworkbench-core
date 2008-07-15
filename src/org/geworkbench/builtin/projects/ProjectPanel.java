@@ -11,7 +11,6 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -2698,7 +2697,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		listeners.put("File.Save.Workspace", listener);
 		listener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				openWorkspace_actionPerformed(e);
+				openWorkspace_actionPerformed();
 			}
 
 		};
@@ -2761,122 +2760,22 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				if (n == JOptionPane.YES_OPTION ) {
 					saveWorkspace_actionPerformed();
 				} else { // if choosing No
-					// do nothing here; unrelated actions for window-closing happend as they should
+					GeawConfigObject.getGuiWindow().dispose();
+					System.exit(0);
 				}
-				GeawConfigObject.getGuiWindow().dispose();
-				System.exit(0);
             }
         });
 		
 	}
 
 	protected void saveWorkspace_actionPerformed() {
-		PropertiesManager properties = PropertiesManager.getInstance();
-		String workspaceDir = ".";
-		try {
-			workspaceDir = properties.getProperty(ProjectPanel.class,
-					WORKSPACE_DIR, workspaceDir);
-		} catch (IOException exception) {
-			exception.printStackTrace(); // To change body of catch statement
-			// use File | Settings | File
-			// Templates.
-		}
-
-		JFileChooser fc = new JFileChooser(workspaceDir);
-		String wsFilename = null;
-		FileFilter filter = new WorkspaceFileFilter();
-		fc.setFileFilter(filter);
-		fc.setDialogTitle("Save Current Workspace");
-		String extension = ((WorkspaceFileFilter) filter).getExtension();
-		int choice = fc.showSaveDialog(jProjectPanel);
-		if (choice == JFileChooser.APPROVE_OPTION) {
-			wsFilename = fc.getSelectedFile().getAbsolutePath();
-
-			if (fc.getSelectedFile().exists()) {
-				if (JOptionPane.NO_OPTION == JOptionPane.showConfirmDialog(
-						null,
-						"Are you sure you want to overwrite this workspace?",
-						"Overwrite?", JOptionPane.YES_NO_OPTION)) {
-					JOptionPane.showMessageDialog(null, "Save cancelled.");
-					return;
-				}
-			}
-
-			// Store directory that we opened this from
-			try {
-				properties.setProperty(ProjectPanel.class, WORKSPACE_DIR, fc
-						.getSelectedFile().getParent());
-			} catch (IOException e1) {
-				e1.printStackTrace(); // To change body of catch statement use
-				// File | Settings | File Templates.
-			}
-
-			if (!wsFilename.endsWith(extension)) {
-				wsFilename += extension;
-			}
-
-			serialize(wsFilename);
-			JOptionPane.showMessageDialog(null, "Workspace saved.");
-		}
-
+		WorkspaceHandler ws = new WorkspaceHandler(this);
+		ws.save(WORKSPACE_DIR);
 	}
 
-	protected void openWorkspace_actionPerformed(ActionEvent e) {
-		PropertiesManager properties = PropertiesManager.getInstance();
-		String workspaceDir = ".";
-		try {
-			workspaceDir = properties.getProperty(ProjectPanel.class,
-					WORKSPACE_DIR, workspaceDir);
-		} catch (IOException exception) {
-			exception.printStackTrace(); // To change body of catch statement
-			// use File | Settings | File
-			// Templates.
-		}
-
-		// Prompt user for designating the file containing the workspace to be
-		// opened.
-		JFileChooser fc = new JFileChooser(workspaceDir);
-		String wsFilename = null;
-		FileFilter filter = new WorkspaceFileFilter();
-		fc.setFileFilter(filter);
-		fc.setDialogTitle("Open Workspace");
-		String extension = ((WorkspaceFileFilter) filter).getExtension();
-		int choice = fc.showOpenDialog(jProjectPanel);
-		if (choice == JFileChooser.APPROVE_OPTION) {
-			wsFilename = fc.getSelectedFile().getAbsolutePath();
-			if (!wsFilename.endsWith(extension)) {
-				wsFilename += extension;
-			}
-
-			try {
-				// Store directory that we opened this from
-				properties.setProperty(ProjectPanel.class, WORKSPACE_DIR, fc
-						.getSelectedFile().getParent());
-
-				FileInputStream in = new FileInputStream(wsFilename);
-				ObjectInputStream s = new ObjectInputStream(in);
-				SaveTree saveTree = (SaveTree) s.readObject();
-				clear();
-				populateFromSaveTree(saveTree);
-				APSerializable aps = (APSerializable) s.readObject();
-				AnnotationParser.setFromSerializable(aps);
-				// ProjectTreeNode tempNode = (ProjectTreeNode) s.readObject();
-				// // Clean up local structures and notify interested components
-				// to clean
-				// // themselves up.
-				// root = tempNode;
-				// projectRenderer.clearNodeSelections();
-				// projectTreeModel = new DefaultTreeModel(root);
-				// projectTree.setModel(projectTreeModel);
-			} catch (Exception exc) {
-				exc.printStackTrace();
-				JOptionPane.showMessageDialog(null,
-						"Check that the file contains a valid workspace.",
-						"Open Workspace Error", JOptionPane.ERROR_MESSAGE);
-			}
-
-		}
-
+	protected void openWorkspace_actionPerformed() {
+		WorkspaceHandler ws = new WorkspaceHandler(this);
+		ws.open(WORKSPACE_DIR);
 	}
 
 	/**
