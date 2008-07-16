@@ -17,7 +17,7 @@ import java.util.HashMap;
 
 /**
  * @author John Watkinson
- * @version $Id: CSSignificanceResultSet.java,v 1.12 2008-06-19 14:57:17 my2248 Exp $
+ * @version $Id: CSSignificanceResultSet.java,v 1.13 2008-07-16 21:36:25 chiangy Exp $
  */
 public class CSSignificanceResultSet <T extends DSGeneMarker> extends CSAncillaryDataSet implements DSSignificanceResultSet<T> {
 
@@ -44,6 +44,7 @@ public class CSSignificanceResultSet <T extends DSGeneMarker> extends CSAncillar
 
     private HashMap<T, Double> significance;
     private HashMap<T, Double> foldChanges;
+    private HashMap<T, Double> tValue;
     
     private double alpha;
     private String[][] labels = new String[2][];
@@ -54,6 +55,7 @@ public class CSSignificanceResultSet <T extends DSGeneMarker> extends CSAncillar
         this.alpha = alpha;
         significance = new HashMap<T, Double>();
         foldChanges = new HashMap<T, Double>();
+        tValue = new HashMap<T, Double>();
         labels[0] = caseLabels;
         labels[1] = controlLabels;
         panel = new CSPanel<T>(label);
@@ -76,12 +78,25 @@ public class CSSignificanceResultSet <T extends DSGeneMarker> extends CSAncillar
             return v;
         }
     }
-    
+
+    public Double getTValue(T marker) {
+        Double v = tValue.get(marker);
+        if (v == null) {
+            return Double.NaN;
+        } else {
+            return v;
+        }
+    }
+
     public void setSignificance(T marker, double value) {
         significance.put(marker, value);
         if (value < alpha) {
             panel.add(marker);
         }
+    }
+
+    public void setTValue(T marker, double value) {
+        tValue.put(marker, value);
     }
 
     public void setFoldChange(T marker, double value) {

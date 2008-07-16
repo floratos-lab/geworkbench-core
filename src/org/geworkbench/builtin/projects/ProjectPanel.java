@@ -101,6 +101,8 @@ import org.geworkbench.events.PendingNodeLoadedFromWorkspaceEvent;
 import org.geworkbench.events.ProjectEvent;
 import org.geworkbench.events.ProjectNodeAddedEvent;
 import org.geworkbench.events.ProjectNodePostCompletedEvent;
+import org.geworkbench.events.ProjectNodeRemovedEvent;
+import org.geworkbench.events.ProjectNodeRenamedEvent;
 import org.geworkbench.events.SingleValueEditEvent;
 import org.geworkbench.events.StructureAnalysisEvent;
 import org.geworkbench.util.ProgressBar;
@@ -1799,6 +1801,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		if (selection.getSelectedNode() instanceof PendingTreeNode){ //if it's a pending node, we fire a PendingNodeCancelledEvent.
 			publishPendingNodeCancelledEvent(new PendingNodeCancelledEvent(((PendingTreeNode)selection.getSelectedNode()).getGridEpr()));
 		}
+		
+		if(selection.getSelectedNode() instanceof DataSetSubNode)
+			publishNodeRemovedEvent(new ProjectNodeRemovedEvent("remove", null, ((DataSetSubNode)(selection.getSelectedNode()))._aDataSet));
 			
 		ProjectTreeNode node = selection.getSelectedNode();
 		ProjectTreeNode parentNode = (ProjectTreeNode) node.getParent();
@@ -1888,6 +1893,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			dsNode = selection.getSelectedDataSetSubNode();
 			ds = selection.getDataSubSet();
 		}
+		String oldName = ds.getLabel();
 		if (ds != null && dsNode != null) {
 			String inputValue = JOptionPane.showInputDialog("Dataset Name:",
 					dsNode.toString());
@@ -1895,6 +1901,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				dsNode.setUserObject(inputValue);
 				ds.setLabel(inputValue);
 				projectTreeModel.nodeChanged(dsNode);
+				publishNodeRenamedEvent(new ProjectNodeRenamedEvent("rename",selection.getDataSubSet(),oldName,inputValue));
 			}
 		}
 	}
@@ -2904,4 +2911,15 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 
 	}
+	
+	@Publish
+	public ProjectNodeRemovedEvent publishNodeRemovedEvent(ProjectNodeRemovedEvent event){
+		return event;
+	}
+
+	@Publish
+	public ProjectNodeRenamedEvent publishNodeRenamedEvent(ProjectNodeRenamedEvent event){
+		return event;
+	}
+	
 }

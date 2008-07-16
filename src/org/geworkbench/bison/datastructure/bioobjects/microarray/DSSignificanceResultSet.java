@@ -10,7 +10,7 @@ import org.geworkbench.engine.management.Script;
 
 /**
  * @author John Watkinson
- * @version $Id: DSSignificanceResultSet.java,v 1.9 2008-06-17 17:40:43 my2248 Exp $
+ * @version $Id: DSSignificanceResultSet.java,v 1.10 2008-07-16 21:36:25 chiangy Exp $
  */
 public interface DSSignificanceResultSet <T extends DSGeneMarker> extends DSAncillaryDataSet {
 
@@ -24,6 +24,10 @@ public interface DSSignificanceResultSet <T extends DSGeneMarker> extends DSAnci
 
     public void setSignificance(T marker, double signficance);
 
+    public void setTValue(T marker, double value);
+    
+    public Double getTValue(T marker);
+    
     public Double getFoldChange(T marker);
 
     public void setFoldChange(T marker, double signficance);
