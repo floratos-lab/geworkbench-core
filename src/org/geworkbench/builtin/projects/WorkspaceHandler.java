@@ -64,7 +64,7 @@ public class WorkspaceHandler {
 	/**
 	 * Prompt the user to save the current workspace.
 	 */
-	public void save(String WORKSPACE_DIR) {
+	public void save(String WORKSPACE_DIR, boolean terminating) {
 		PropertiesManager properties = PropertiesManager.getInstance();
 		String workspaceDir = ".";
 		try {
@@ -109,7 +109,7 @@ public class WorkspaceHandler {
 				wsFilename += extension;
 			}
 
-			SaveTask task = new SaveTask(wsFilename);
+			SaveTask task = new SaveTask(wsFilename, terminating);
 			task.execute();
 			pb = new ProgressBarFrame("Workspace is being saved.");
 
@@ -192,18 +192,22 @@ public class WorkspaceHandler {
 
 	private class SaveTask extends SwingWorker<Void, Void> {
 		private String filename;
+		private boolean terminating;
 
-		SaveTask(String filename) {
+		SaveTask(String filename, boolean terminating) {
 			super();
 			this.filename = filename;
+			this.terminating = terminating;
 		}
 
 		@Override
 		protected void done() {
 			JOptionPane.showMessageDialog(null, "Workspace saved.");
 			pb.dispose();
-			GeawConfigObject.getGuiWindow().dispose();
-			System.exit(0);
+			if(terminating) {
+				GeawConfigObject.getGuiWindow().dispose();
+				System.exit(0);
+			}
 		}
 
 		@Override

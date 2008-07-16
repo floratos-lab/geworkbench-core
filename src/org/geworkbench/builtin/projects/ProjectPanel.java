@@ -2689,9 +2689,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		// and popup selections.
 		listener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// ZJ 2008-05-01
-				// parameter ActionEvent e is not used in saveWorkspace_actionPerformed and should not be passed in
-				saveWorkspace_actionPerformed();
+				saveWorkspace_actionPerformed(false);
 			}
 
 		};
@@ -2759,7 +2757,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
             	if( n == JOptionPane.CANCEL_OPTION)return; 
             	
 				if (n == JOptionPane.YES_OPTION ) {
-					saveWorkspace_actionPerformed();
+					saveWorkspace_actionPerformed(true);
 				} else { // if choosing No
 					GeawConfigObject.getGuiWindow().dispose();
 					System.exit(0);
@@ -2769,9 +2767,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		
 	}
 
-	protected void saveWorkspace_actionPerformed() {
+	protected void saveWorkspace_actionPerformed(boolean terminating) {
 		WorkspaceHandler ws = new WorkspaceHandler(this);
-		ws.save(WORKSPACE_DIR);
+		ws.save(WORKSPACE_DIR, terminating);
 	}
 
 	protected void openWorkspace_actionPerformed() {
