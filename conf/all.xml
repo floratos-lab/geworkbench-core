@@ -134,6 +134,10 @@
 	<plugin id="TwoChannelFilter" name="Genepix Filter" class="org.geworkbench.components.filtering.GenepixExpressionThresholdFilter" source="filtering"/>
 	<plugin id="preferences" name="preferences" class="org.geworkbench.engine.config.PreferencesMenu"/>
 	<plugin id="versioninfo" name="Version Infomation" class="org.geworkbench.components.versioninfo.VersionInfoComponent" source="versioninfo"/>
+	<plugin id="mra" name="MRA Analysis" class="org.geworkbench.components.analysis.clustering.MasterRegulatorAnalysis" source="analysis"/>
+	<plugin id="mraViewer" name="MRA Viewer" class="org.geworkbench.components.analysis.clustering.MasterRegulatorViewer" source="analysis">
+        <gui-area name="VisualArea"/>
+    </plugin>		
 	<plugin id="promoterPanel" name="Promoter" class="org.geworkbench.components.promoter.PromoterView" source="promoter">
 		<gui-area name="VisualArea"/>
 	</plugin>
