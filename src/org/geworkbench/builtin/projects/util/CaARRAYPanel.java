@@ -55,6 +55,7 @@ import org.geworkbench.util.ProgressBar;
  */
 
 public class CaARRAYPanel extends JPanel implements Observer {
+	private static final String CAARRAY_TITLE = "caARRAY";
 
 	private static Log log = LogFactory.getLog(CaARRAYPanel.class);
 	/**
@@ -386,6 +387,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
 					.setMessage("Loading selected bioassays - elapsed time: ");
 			updateProgressBar("Loading selected bioassays - elapsed time: ");
 			progressBar.addObserver(this);
+			progressBar.setTitle(CAARRAY_TITLE);
 			progressBar.start();
 			task = new ConnectionTask();
 			task.getBioAssayThread();
@@ -396,6 +398,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
 	public void startProgressBar() {
 		stillWaitForConnecting = true;
 		updateProgressBar("Loading the filtered experiments - elapsed time: ");
+		progressBar.setTitle(CAARRAY_TITLE);
 		progressBar.start();
 
 	}
@@ -832,6 +835,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
 				.setMessage("Loading experiments from the remote resource...");
 		updateProgressBar("Loading experiments from the remote resource for ");
 		progressBar.addObserver(this);
+		progressBar.setTitle(CAARRAY_TITLE);
 		progressBar.start();
 
 		try {
