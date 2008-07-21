@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.complex.panels.CSItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
@@ -17,16 +18,22 @@ public class CSMasterRegulatorResultSet <T extends DSGeneMarker> extends CSAncil
 	HashMap<String,Double> TFGeneAndTargetGene2PValue = new HashMap();
 	HashMap<String,Double> TFGeneAndTargetGene2TTestValue = new HashMap();
 	DSSignificanceResultSet<DSGeneMarker> sigSet = null;
+	DSMicroarraySet maSet = null;
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public CSMasterRegulatorResultSet(DSDataSet parent, String label) {
+	public CSMasterRegulatorResultSet(DSMicroarraySet parent, String label) {
 		super(parent, label);
+		this.maSet = parent;
 		// TODO Auto-generated constructor stub
 	}
 
+	public DSMicroarraySet getMicroarraySet(){
+		return maSet;
+	}
+	
 	public File getDataSetFile() {
 		// TODO Auto-generated method stub
 		return null;

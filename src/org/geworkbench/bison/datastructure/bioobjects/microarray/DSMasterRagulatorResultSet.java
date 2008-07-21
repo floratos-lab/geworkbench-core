@@ -10,7 +10,7 @@ public interface DSMasterRagulatorResultSet <T extends DSGeneMarker> extends DSA
 
 /**
  * @author Yih-Shien Chiang
- * @version $Id: DSMasterRagulatorResultSet.java,v 1.1 2008-07-16 21:36:25 chiangy Exp $
+ * @version $Id: DSMasterRagulatorResultSet.java,v 1.2 2008-07-21 23:15:44 chiangy Exp $
  */
 
     public static final int CASE = 0;
@@ -19,6 +19,7 @@ public interface DSMasterRagulatorResultSet <T extends DSGeneMarker> extends DSA
     /**
      * Gets information for the marker.
      */
+	public DSMicroarraySet getMicroarraySet();
     public void setGenesInRegulon(DSGeneMarker TF, DSItemList<DSGeneMarker> markers);
     public void setGenesInTargetList(DSGeneMarker TF, DSItemList<DSGeneMarker> markers);
     public DSItemList<DSGeneMarker> getGenesInRegulon(DSGeneMarker TF);
