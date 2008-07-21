@@ -72,8 +72,7 @@ import org.geworkbench.bison.datastructure.properties.DSNamed;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSTTestResultSet;
 import org.geworkbench.bison.parsers.resources.MAGEResource2;
 import org.geworkbench.bison.util.RandomNumberGenerator;
-import org.geworkbench.bison.util.colorcontext.ColorContext;
- 
+import org.geworkbench.bison.util.colorcontext.ColorContext; 
 import org.geworkbench.components.parsers.CaArrayLoader;
 import org.geworkbench.components.parsers.FileFormat;
 import org.geworkbench.components.parsers.InputFileFormatException;
@@ -2240,12 +2239,18 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		updateColorContext(resultMA);
 		// Set up the "history" information for the new dataset.
 		Object[] prevHistory = sourceMA.getValuesForName(HISTORY);
+		
+		Object[] historyDetail = sourceMA.getValuesForName(HISTORYDETAIL);
+		String detail = (historyDetail == null ? "" : (String) historyDetail[0]);
+		sourceMA.clearName(HISTORYDETAIL);
+		
 		if (prevHistory != null) {
 			sourceMA.clearName(HISTORY);
 		}
 		sourceMA.addNameValuePair(HISTORY, (prevHistory == null ? ""
 				: (String) prevHistory[0])
-				+ "Normalized with " + ne.getInformation() + "\n");
+				+ "Normalized with " + ne.getInformation() + "\n" + detail);
+		
 		// Notify interested components that the selected dataset has changed
 		// The event is thrown only if the normalized dataset is the one
 		// currently selectd in the project panel.
@@ -2300,8 +2305,16 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         }
     }
 
+	public static void addHistoryDetail(DSExtendable objectWithHistory,
+			String detail) {
+		   objectWithHistory.clearName(HISTORYDETAIL);
+		   objectWithHistory.addNameValuePair(HISTORYDETAIL, detail);
+	}
+	
+	
 	public static void addToHistory(DSExtendable objectWithHistory,
 			String newHistory) {
+		
 		Object[] prevHistory = objectWithHistory.getValuesForName(HISTORY);
 		if (prevHistory != null) {
 			objectWithHistory.clearName(HISTORY);
@@ -2310,6 +2323,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				: (String) prevHistory[0])
 				+ newHistory + "\n");
 	}
+	
+	
 
 	/**
 	 * For receiving the results of applying a filter to a microarray set.
@@ -2367,6 +2382,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * of changes that a given dataset is being submitted to.
 	 */
 	public static final String HISTORY = "History";
+	public static final String HISTORYDETAIL = "HistoryDetail";
 
 	/**
 	 * Used as the "name" in the name-value pair that keeps track of the
