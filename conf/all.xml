@@ -32,6 +32,11 @@
     <plugin id="tprofiler" name="T-Profiler" class="org.geworkbench.components.tprofiler.TProfiler" source="tprofiler">
 		<gui-area name="VisualArea"/>
 	</plugin>
+	<plugin id="genspaceLogPreferences" name="genSpace Log Preferences"
+		class="org.geworkbench.components.genspace.GenSpaceLogPreferences"
+		source="genspace">
+		<gui-area name="VisualArea" />
+	</plugin>
 	<plugin id="cytoscapePanel_V2_4" name="Cytoscape_V2_4" class="org.geworkbench.components.cytoscape_v2_4.CytoscapeWidget" source="cutenet">
 		<gui-area name="VisualArea"/>
 	</plugin>
@@ -278,11 +283,6 @@
  	        source="genspace">
  	    <gui-area name="CommandArea"/>
 	</plugin -->
-	<plugin id="genspaceLogPreferences" name="genSpace Log Preferences"
-		class="org.geworkbench.components.genspace.GenSpaceLogPreferences"
-		source="genspace">
-		<gui-area name="VisualArea" />
-	</plugin>
 
 	<plugin id="genspaceLogger" name="Genspace"
 		class="org.geworkbench.components.genspace.GenspaceLogger"
