@@ -1,5 +1,7 @@
 package org.geworkbench.util;
 
+import java.awt.Component;
+
 import javax.swing.JComponent;
 
 import org.apache.commons.logging.Log;
@@ -12,18 +14,17 @@ public class Cursor {
 
 	private static Cursor cursor;
 
-	private static JComponent component; // this is the component to which
-											// the cursor is set
+	private static Component component; // this is the component to which
+
+	// the cursor is set
 
 	private static JComponent[] components; // this is the list of components to
-											// be disabled while the cursor is
-											// "waiting"
 
 	private static final java.awt.Cursor hourglassCursor = new java.awt.Cursor(
 			java.awt.Cursor.WAIT_CURSOR);
 
-	private static final java.awt.Cursor normalCursor = new java.awt.Cursor(
-			java.awt.Cursor.DEFAULT_CURSOR);
+	private static final java.awt.Cursor normalCursor = java.awt.Cursor
+			.getPredefinedCursor(java.awt.Cursor.DEFAULT_CURSOR);
 
 	private static boolean finished = false;
 
@@ -35,17 +36,17 @@ public class Cursor {
 		cm = new CursorMonitor(this);
 	}
 
-	public JComponent getAssociatedComponent() {
+	public Component getAssociatedComponent() {
 		return component;
 	}
 
-	public void setAssociatedComponent(JComponent c) {
+	public void setAssociatedComponent(Component c) {
 		started = false;
 		finished = false;
 		component = c;
 	}
 
-	public JComponent[] getCursorLinkedComponents() {
+	public Component[] getCursorLinkedComponents() {
 		return components;
 	}
 
@@ -89,8 +90,6 @@ public class Cursor {
 			throw new RuntimeException(
 					"Cannot start geWorkbench cursor: Cursor is already running");
 		}
-		cm.start();
-		component.setCursor(hourglassCursor);
 		if ((components != null) && (components.length > 0)) {
 			log.debug("disabling components...");
 			for (JComponent c : components) {
@@ -103,6 +102,10 @@ public class Cursor {
 		}
 		started = true;
 		finished = false;
+		log.debug("cursor start: component setting cursor: "
+				+ component.getClass().getName());
+		component.setCursor(hourglassCursor);
+		cm.start();
 	}
 
 	public void stop() {
@@ -127,6 +130,8 @@ public class Cursor {
 		started = false;
 		finished = true;
 		cm = new CursorMonitor(this);
+		log.debug("cursor stop: component setting cursor: "
+				+ component.getClass().getName());
 		component.setCursor(normalCursor);
 	}
 
@@ -179,7 +184,8 @@ public class Cursor {
 			} catch (Exception e) {
 				startTime = 0;
 				currentTime = 0;
-				if(started) this.cursor.stop();
+				if (started)
+					this.cursor.stop();
 				log.error("Cannot properly run the cursor monitor: "
 						+ e.getMessage());
 				return;
