@@ -1,6 +1,6 @@
 package org.geworkbench.util;
 
-import java.awt.Component;
+import javax.swing.JComponent;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -12,7 +12,9 @@ public class Cursor {
 	
 	private static Cursor cursor;
 	
-	private static Component component;
+	private static JComponent component; // this is the component to which the cursor is set
+	
+	private static JComponent[] components; // this is the list of components to be disabled while the cursor is "waiting"
 	
 	private static final java.awt.Cursor hourglassCursor = new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR);
 
@@ -28,14 +30,22 @@ public class Cursor {
 		cm = new CursorMonitor(this);
 	}
 	
-	public Component getAssociatedComponent(){
+	public JComponent getAssociatedComponent(){
 		return component;
 	}
 	
-	public void setAssociatedComponent(Component c){
+	public void setAssociatedComponent(JComponent c){
 		started = false;
 		finished = false;
 		component = c;
+	}
+	
+	public JComponent[] getCursorLinkedComponents(){
+		return components;
+	}
+	
+	public void linkCursorToComponents(JComponent[] cs){
+		components = cs;
 	}
 	
 	public boolean isFinished(){
@@ -68,8 +78,19 @@ public class Cursor {
 		if(started){
 			throw new RuntimeException("Cannot start geWorkbench cursor: Cursor already started.");
 		}
+		if(cm.isAlive()){
+			throw new RuntimeException("Cannot start geWorkbench cursor: Cursor is already running");
+		}
 		cm.start();		
 		component.setCursor(hourglassCursor);
+		if((components != null) && (components.length > 0)){
+			log.debug("disabling components...");
+			for(JComponent c: components){
+				log.debug("component=" + c.getClass().getName());
+				c.setEnabled(false);
+			}
+			component.repaint();
+		}
 		started = true;
 		finished = false;
 	}
@@ -81,12 +102,19 @@ public class Cursor {
 		if(!started){
 			throw new RuntimeException("Cannot stop geWorkbench cursor: Cursor was not started.");
 		}
+		if((components != null) && (components.length > 0)){
+			log.debug("Enabling components...");
+			for(JComponent c: components){
+				log.debug("component=" + c.getClass().getName());
+				c.setEnabled(true);
+			}
+			component.repaint();
+		}
 		component.setCursor(normalCursor);
 		started = false;
 		finished = true;
 		cm = new CursorMonitor(this);
 	}	
-	
 	
 	class CursorMonitor extends Thread {		
 		private static final long THREAD_SLEEP_INTERVAL = 100; //ms
