@@ -271,7 +271,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
 		jPanel16.add(Box.createRigidArea(new Dimension(10, 0)));
 		derivedField.setEditable(false);
 		jScrollPane2.getViewport().add(experimentInfoArea, null);
-		jScrollPane2.setPreferredSize(new Dimension(300, 300));
+		jScrollPane2.setPreferredSize(new Dimension(300, 500));
 		jPanel14.setLayout(new BoxLayout(jPanel14, BoxLayout.X_AXIS));
 		jPanel14.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 		jPanel14.add(Box.createHorizontalGlue());
