@@ -277,7 +277,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
 		jPanel14.add(Box.createHorizontalGlue());
 		jPanel14.add(Box.createRigidArea(new Dimension(10, 0)));
 		jPanel14.add(Box.createRigidArea(new Dimension(10, 0)));
-		experimentInfoArea.setPreferredSize(new Dimension(300, 300));
+		experimentInfoArea.setPreferredSize(new Dimension(300, 600));
 		experimentInfoArea.setText("");
 		experimentInfoArea.setEditable(false);
 		experimentInfoArea.setLineWrap(true);
