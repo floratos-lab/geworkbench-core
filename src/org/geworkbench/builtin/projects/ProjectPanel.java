@@ -180,7 +180,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * Add MenuItem Listeners here;
 	 */
 
-	private JProgressBar progressBar = new JProgressBar();
+	protected JProgressBar progressBar = new JProgressBar();
 
 	private JMenuItem jMenuItem1 = new JMenuItem();
 
@@ -1466,7 +1466,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		doMergeSets(sets);
 	}
 
-	private void doMergeSets(DSMicroarraySet[] sets) {
+	protected void doMergeSets(DSMicroarraySet[] sets) {
 		DSMicroarraySet mergedSet = null;
 		int i;
 		DSMicroarraySet<DSMicroarray> set;
@@ -1551,148 +1551,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 		final boolean mergeFiles = dataSetFiles.length == 1 ? false : merge;
 		if (inputFormat instanceof DataSetFileFormat) {
-
-			// super.fileOpenAction(dataSetFiles, inputFormat);
-			progressBar.setStringPainted(true);
-			progressBar.setString("Loading");
-			progressBar.setIndeterminate(true);
-			jDataSetPanel.setCursor(Cursor
-					.getPredefinedCursor(Cursor.WAIT_CURSOR));
-			Runnable dataLoader = new Runnable() {
-				public void run() {
-					boolean didMerge = false;
-					int n = dataSetFiles.length;
-					DSDataSet[] dataSets = new DSDataSet[n];
-					DSMicroarraySet mergedSet = null;
-					String mergedName = null;
-					if (dataSetFiles.length == 1) {
-						try {
-							DataSetFileFormat dataSetFileFormat = (DataSetFileFormat)inputFormat;
-							dataSetFileFormat.setProgressMessage("Checking File Format");
-							dataSets[0] = dataSetFileFormat.getDataFile(dataSetFiles[0]);
-							dataSets[0].setAbsPath(dataSetFiles[0].getAbsolutePath());
-						} catch (InputFileFormatException iffe) {
-							// Let the user know that there was a problem
-							// parsing the file.
-							JOptionPane
-									.showMessageDialog(
-											null,
-											iffe.getMessage(),
-											"Parsing Error",
-											JOptionPane.ERROR_MESSAGE);
-						}
-
-					} else {
-						// watkin - none of the file filters implement the
-						// multiple getDataFile method.
-						// dataSets[0] =
-						// ((DataSetFileFormat)inputFormat).getDataFile(dataSetFiles);
-						// If the data sets are microarray sets, then merge them
-						// if "merge files" is checked
-						boolean cancelled = false;
-						// if (mergeFiles) {
-						// mergedName = JOptionPane.showInputDialog("Please
-						// enter the name of the merged Microarray Set");
-						// if (mergedName == null) {
-						// // Cancelled
-						// cancelled = true;
-						// }
-						// }
-						// if (!cancelled) {
-						String chipType = null;
-						for (int i = 0; i < dataSetFiles.length; i++) {
-							File dataSetFile = dataSetFiles[i];
-							try {
-								DataSetFileFormat dataSetFileFormat = (DataSetFileFormat)inputFormat;
-								String progressMessage = "Completed " + i + " out of " + dataSetFiles.length + " files.";
-								dataSetFileFormat.setProgressMessage(progressMessage);
-								if (chipType == null) {
-									dataSets[i] = dataSetFileFormat.getDataFile(dataSetFile);
-									chipType = dataSets[i]
-											.getCompatibilityLabel();
-								} else {
-									try {
-										dataSets[i] = dataSetFileFormat.getDataFile(dataSetFile, chipType);
-									} catch (UnsupportedOperationException e) {
-										log
-												.warn("This data type doesn't support chip type overrides, will have to ask user again.");
-										dataSets[i] = ((DataSetFileFormat) inputFormat)
-												.getDataFile(dataSetFile);
-									}
-								}
-								dataSets[i].setAbsPath(dataSetFiles[i].getAbsolutePath());
-							} catch (InputFileFormatException iffe) {
-								// Let the user know that there was a problem
-								// parsing the file.
-								JOptionPane
-										.showMessageDialog(
-												null,
-												"The input file does not comply with the designated format.",
-												"Parsing Error",
-												JOptionPane.ERROR_MESSAGE);
-							}
-
-						}
-						if (mergeFiles) {
-							if (dataSets[0] instanceof DSMicroarraySet) {
-								DSMicroarraySet[] maSets = new DSMicroarraySet[dataSets.length];
-								for (int i = 0; i < dataSets.length; i++) {
-									maSets[i] = (DSMicroarraySet) dataSets[i];
-								}
-								doMergeSets(maSets);
-								didMerge = true;
-							}
-						}
-						// }
-					}
-					progressBar.setString("");
-					progressBar.setIndeterminate(false);
-					jDataSetPanel.setCursor(Cursor
-							.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-					if (didMerge) {
-						// We're done
-						return;
-					}
-
-					if (mergedSet != null) {
-						mergedSet.setLabel(mergedName);
-						dataSets = new DSDataSet[] { mergedSet };
-					}
-					// If everything went OK, register the newly created
-					// microarray set.
-					// String directory = dataSetFile.getPath();
-					// System.setProperty("data.files.dir", directory);
-					boolean selected = false;
-					for (int i = 0; i < dataSets.length; i++) {
-						DSDataSet set = dataSets[i];
-
-						if (set != null) {
-							// Do intial color context update if it is a
-							// microarray
-							if (set instanceof DSMicroarraySet) {
-								DSMicroarraySet maSet = (DSMicroarraySet) set;
-								// Add color context
-								addColorContext(maSet);
-							}
-							// String directory = dataSetFile.getPath();
-							// System.setProperty("data.files.dir", directory);
-							if (!selected) {
-								addDataSetNode(set, true);
-								selected = true;
-							} else {
-								addDataSetNode(set, false);
-							}
-						} else {
-							log.info("Datafile not loaded");
-						}
-					}
-
-				}
-			};
-			Thread t = new Thread(dataLoader);
-			t.setPriority(Thread.MIN_PRIORITY);
-			t.start();
-
+			FileOpenHandler handler = new FileOpenHandler(dataSetFiles, inputFormat,
+					mergeFiles, this);
+			handler.openFiles();
 		} else {
 			// The call to getMArraySet() may result in an
 			// InputFileFormatException
@@ -1722,7 +1583,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 	}
 
-	private void addColorContext(DSMicroarraySet maSet) {
+	protected void addColorContext(DSMicroarraySet maSet) {
 		GlobalPreferences prefs = GlobalPreferences.getInstance();
 		Class<? extends ColorContext> type = prefs.getColorContextClass();
 		try {
