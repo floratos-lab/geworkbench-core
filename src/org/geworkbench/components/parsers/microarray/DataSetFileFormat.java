@@ -25,14 +25,4 @@ public abstract class DataSetFileFormat extends FileFormat {
       throw new UnsupportedOperationException();
   }
   abstract public DSDataSet getDataFile(File[] files) throws InputFileFormatException;
-  
-  /**
-   * The reason that this field progressMessage needs to be added here:
-   * Progress message is updated by ProjectPanel 
-   * and used by ProgressMonitorInputStream through DataSetFileFormat interface in ProjectPanel's
-   * fileOpenAction(final File[] dataSetFiles,	final org.geworkbench.components.parsers.FileFormat inputFormat, boolean merge) .
-   */
-  private String progressMessage;
-  public String getProgressMessage() {return progressMessage; }
-  public void setProgressMessage(String p) { progressMessage=p; }
 }
