@@ -102,17 +102,27 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet implements DSAnci
                     if (ctr++ % 100 == 0) {
                         log.debug("Reading line " + ctr);
                     }
+                    //skip comments
+                    if (line.startsWith(">")) continue;
                     if (line.length() > 0 && line.charAt(0) != '-') {
                         StringTokenizer tr = new StringTokenizer(line, "\t:");
 
                         //String geneAccess = new String(tr.nextToken());
                         String strGeneId1 = new String(tr.nextToken());
                         DSGeneMarker m = maSet.getMarkers().get(strGeneId1);
+                        if (m == null) { //we don't have this gene in our MicroarraySet
+                        	//we skip it
+                        	continue;
+                        }
                         int geneId1 = m.getSerial();
                         if (geneId1 >= 0) {
                             while (tr.hasMoreTokens()) {
                                 String strGeneId2 = new String(tr.nextToken());
                                 DSGeneMarker m2 = maSet.getMarkers().get(strGeneId2);
+                                if (m2 == null) { //we don't have this gene in our MicroarraySet
+                                	//we skip it
+                                	continue;
+                                }                                
                                 int geneId2 = m2.getSerial();
                                 if (geneId2 >= 0) {
                                     String strMi = new String(tr.nextToken());
