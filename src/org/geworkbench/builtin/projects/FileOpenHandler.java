@@ -55,7 +55,7 @@ import org.geworkbench.util.threading.SwingWorker;
  * especially tackles the progress bar requirement for multiple files.
  * 
  * @author zji
- * @version $Id$
+ * @version $Id: FileOpenHandler.java,v 1.1 2008/07/25 18:40:06 jiz Exp $
  * 
  */
 public class FileOpenHandler {
@@ -273,6 +273,11 @@ public class FileOpenHandler {
 										"The input file does not comply with the designated format.",
 										"Parsing Error",
 										JOptionPane.ERROR_MESSAGE);
+						enclosingProjectPanel.progressBar.setString("");
+						enclosingProjectPanel.progressBar.setIndeterminate(false);
+						enclosingProjectPanel.jDataSetPanel.setCursor(Cursor
+								.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+						return null;
 					} // end of for loop
 					setProgress(i + 1);
 				}
