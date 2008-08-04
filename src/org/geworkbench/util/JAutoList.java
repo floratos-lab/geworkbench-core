@@ -313,6 +313,11 @@ public class JAutoList extends JPanel {
     public void setPrefixMode(boolean prefixMode) {
         this.prefixMode = prefixMode;
     }
+    
+    public void clearSelections(){
+    	this.list.clearSelection();
+    	this.repaint();
+    }
 
     /**
      * Test program for JAutoList
