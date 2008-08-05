@@ -686,8 +686,11 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				// then do a regular saveFile
 				String newFileName = jFileChooser1.getSelectedFile().getPath();
 				newFileName = jFileChooser1.getSelectedFile().getAbsolutePath();
-				if (!newFileName.toLowerCase().endsWith(
-						"." + filter.getExtension().toLowerCase())) {
+				 
+					
+				if (filter.accept(new File(newFileName))) {
+					//Use the current file name.
+				}else{
 					newFileName += "." + filter.getExtension();
 				}
 
