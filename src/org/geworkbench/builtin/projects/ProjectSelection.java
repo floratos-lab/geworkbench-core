@@ -127,6 +127,7 @@ public class ProjectSelection {
             } else if (node instanceof DataSetSubNode) {
                 selectedDataSetSubNode = (DataSetSubNode) node;
                 selectedDataSetNode = (DataSetNode) getNodeOfClass(node, DataSetNode.class);
+                AnnotationParser.setCurrentDataSet(selectedDataSetNode.dataFile);//Fix bug 1471
                 GeawConfigObject.getGuiWindow().setVisualizationType(selectedDataSetSubNode._aDataSet);
                 subNode = true;
             } else if (node instanceof ProjectNode && node.getChildCount() == 0) {
