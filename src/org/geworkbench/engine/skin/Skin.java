@@ -40,7 +40,7 @@ import java.util.*;
 
 public class Skin extends GUIFramework {
 
-    static Log log = LogFactory.getLog(GUIFramework.class);
+    static Log log = LogFactory.getLog(Skin.class);
 
     static HashMap visualRegistry = new HashMap();
     JPanel contentPane;
@@ -727,7 +727,7 @@ public class Skin extends GUIFramework {
             if (visualRegistry.get(component).equals(screenRegion)) {
                 Class mainclass = mainComponentClass.get(component);
                 if (acceptors.contains(mainclass)) {
-                    log.trace("Found component in visual area to show: " + mainclass.toString());
+                    log.trace("Found component in "+screenRegion+" to show: " + mainclass.toString());
                     PluginDescriptor desc = ComponentRegistry.getRegistry().getDescriptorForPluginClass(mainclass);
                     tabsToAdd.put(desc.getPreferredOrder(), component);
                 }
