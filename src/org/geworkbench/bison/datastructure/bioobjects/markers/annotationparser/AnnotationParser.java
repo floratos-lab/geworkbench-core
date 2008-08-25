@@ -222,9 +222,13 @@ public class AnnotationParser implements Serializable {
                         String>>
                         annots = new ListOrderedMap<String, Map<String,
                         String>>();
-                LabeledCSVParser parser = new LabeledCSVParser(new
+                CSVParser cvsParser = new
                         CSVParser(new BufferedInputStream(new
-                        FileInputStream(datafile))));
+                        FileInputStream(datafile)));
+                
+                cvsParser.setCommentStart("#;!");//Skip all comments line. XQ. The bug is reported by Bernd.
+                
+                LabeledCSVParser parser = new LabeledCSVParser(cvsParser);
                 while (parser.getLine() != null) {
                     String affyId = parser.getValueByLabel(labels[0]);
                     Map<String, String> values = new HashMap<String, String>();
