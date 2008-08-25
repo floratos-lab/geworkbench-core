@@ -1,6 +1,8 @@
 package org.geworkbench.util.pathwaydecoder.mutualinformation;
 
-public class Edge {
+import java.io.Serializable;
+
+public class Edge implements Serializable{
 	private String startNode;
 	private String endNode;
 	
