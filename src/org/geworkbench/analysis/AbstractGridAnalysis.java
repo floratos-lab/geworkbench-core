@@ -9,6 +9,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.views.DSMicroarraySetView;
+import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
+import org.geworkbench.bison.model.analysis.ParamValidationResults;
 
 /**
  * Analyses that have a corresponding (ca)Grid component should extend this
@@ -92,4 +95,6 @@ public abstract class AbstractGridAnalysis extends AbstractAnalysis {
 
 		return serviceParameterList;
 	}
+	
+	public abstract ParamValidationResults validInputData(DSMicroarraySetView<DSGeneMarker, DSMicroarray> maSetView, DSDataSet refMASet);
 }
