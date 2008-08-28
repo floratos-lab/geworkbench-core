@@ -33,7 +33,7 @@ public class PrintUtils implements Pageable, Printable {
     public void print() {
         printJob = PrinterJob.getPrinterJob();
         printJob.setPageable(this);
-        pageFormat = printJob.pageDialog(printJob.defaultPage());
+        pageFormat = printJob.defaultPage();
         if (printJob.printDialog())
             try {
                 printJob.print();
