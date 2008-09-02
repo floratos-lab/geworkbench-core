@@ -9,6 +9,7 @@
         <!-- Project-wide properties -->
         <!-- Paths -->
         <property name="classes" value="classes"/>
+    	<property name="conf" value="conf"/>
         <property name="debug" value="on"/>
         <!-- Java Source -->
         <property name="src" value="src"/>
@@ -79,6 +80,8 @@
     <!-- ===================================================================== -->
     <target name="clean" description="Clean all build products." depends="init">
         <delete dir="${classes}"/>
+    	<!-- the line below is for Mantis issue #1489 -->
+    	<delete dir="genspace/${conf}"/>
     </target>
 
     <!-- ====================================================================== -->
