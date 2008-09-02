@@ -39,6 +39,7 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.A
 import org.geworkbench.builtin.projects.ProjectPanel.WorkspaceFileFilter;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.properties.PropertiesManager;
+import org.geworkbench.util.ProgressBar;
 import org.geworkbench.util.threading.SwingWorker;
 
 /**
@@ -59,7 +60,7 @@ public class WorkspaceHandler {
 		this.enclosingProjectPanel = enclosingProjectPanel;
 	}
 
-	ProgressBarFrame pb = null;
+	ProgressBar pb = null;
 
 	/**
 	 * Prompt the user to save the current workspace.
@@ -111,7 +112,9 @@ public class WorkspaceHandler {
 
 			SaveTask task = new SaveTask(wsFilename, terminating);
 			task.execute();
-			pb = new ProgressBarFrame("Workspace is being saved.");
+			pb = ProgressBar.create(ProgressBar.INDETERMINATE_TYPE);
+			pb.setTitle("Workspace is being saved.");
+			pb.start();
 
 		}
 	}
@@ -157,37 +160,12 @@ public class WorkspaceHandler {
 
 			OpenTask openTask = new OpenTask(wsFilename);
 			openTask.execute();
-			pb = new ProgressBarFrame("Workspace is being loaded.");
+			pb = ProgressBar.create(ProgressBar.INDETERMINATE_TYPE);
+			pb.setTitle("Workspace is being loaded.");
+			pb.start();
 
 		}
 
-	}
-
-	private class ProgressBarFrame extends JFrame {
-		private static final long serialVersionUID = 6180380664707864305L;
-
-		ProgressBarFrame(String title) {
-			super(title);
-
-			JProgressBar progress = new JProgressBar(0, 100);
-			progress.setIndeterminate(true);
-			progress.setMinimumSize(new Dimension(300, 22));
-			progress.setPreferredSize(new Dimension(300, 22));
-
-			add(progress);
-
-			// centering
-			Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-			this.setLocation((dim.width - this.getWidth()) / 2,
-					(dim.height - this.getHeight()) / 2);
-
-			pack();
-
-			// disable exit
-			setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-
-			setVisible(true);
-		}
 	}
 
 	private class SaveTask extends SwingWorker<Void, Void> {
