@@ -15,12 +15,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
@@ -65,7 +63,7 @@ import org.geworkbench.bison.datastructure.biocollections.views.CSMicroarraySetV
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.APSerializable;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
-import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.ExampleFilter;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.CSTTestResultSet;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.structure.CSProteinStructure;
 import org.geworkbench.bison.datastructure.bioobjects.structure.DSProteinStructure;
@@ -73,7 +71,6 @@ import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.datastructure.properties.DSExtendable;
 import org.geworkbench.bison.datastructure.properties.DSNamed;
-import org.geworkbench.bison.datastructure.bioobjects.microarray.CSTTestResultSet;
 import org.geworkbench.bison.parsers.resources.MAGEResource2;
 import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.bison.util.colorcontext.ColorContext;
@@ -81,6 +78,7 @@ import org.geworkbench.components.parsers.CaArrayLoader;
 import org.geworkbench.components.parsers.FileFormat;
 import org.geworkbench.components.parsers.InputFileFormatException;
 import org.geworkbench.components.parsers.microarray.DataSetFileFormat;
+import org.geworkbench.engine.config.GUIFramework;
 import org.geworkbench.engine.config.MenuListener;
 import org.geworkbench.engine.config.VisualPlugin;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
@@ -89,7 +87,6 @@ import org.geworkbench.engine.management.Script;
 import org.geworkbench.engine.management.Subscribe;
 import org.geworkbench.engine.management.TypeMap;
 import org.geworkbench.engine.preferences.GlobalPreferences;
-import org.geworkbench.engine.properties.PropertiesManager;
 import org.geworkbench.engine.skin.Skin;
 import org.geworkbench.events.CaArrayEvent;
 import org.geworkbench.events.CaArrayQueryEvent;
@@ -108,7 +105,6 @@ import org.geworkbench.events.ProjectNodeRemovedEvent;
 import org.geworkbench.events.ProjectNodeRenamedEvent;
 import org.geworkbench.events.SingleValueEditEvent;
 import org.geworkbench.events.StructureAnalysisEvent;
-import org.geworkbench.util.ProgressBar;
 import org.geworkbench.util.SaveImage;
 import org.geworkbench.util.Util;
 import org.ginkgo.labs.ws.GridEndpointReferenceType;
@@ -219,6 +215,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		// Initializes Random number generator to generate unique ID's
 		// because of the unique seed
 		RandomNumberGenerator.setSeed(System.currentTimeMillis());
+				
 		try {
 			jbInit();
 		} catch (Exception e) {
@@ -686,11 +683,10 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				// then do a regular saveFile
 				String newFileName = jFileChooser1.getSelectedFile().getPath();
 				newFileName = jFileChooser1.getSelectedFile().getAbsolutePath();
-				 
-					
+
 				if (filter.accept(new File(newFileName))) {
-					//Use the current file name.
-				}else{
+					// Use the current file name.
+				} else {
 					newFileName += "." + filter.getExtension();
 				}
 
@@ -2225,6 +2221,18 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		if (sourceMA == null) {
 			return;
 		}
+
+		// TODO: double check that this code is sufficient for saving data
+		// before changes
+		int n = JOptionPane
+				.showConfirmDialog(
+						null,
+						"You're making changes to the data. \nDo you want to save the current workspace before the change takes place?",
+						"Save or not?", JOptionPane.YES_NO_CANCEL_OPTION);
+		if (n == JOptionPane.YES_OPTION) {
+			saveWorkspace_actionPerformed(false);
+		}
+
 		DSMicroarraySet resultMA = ne.getNormalizedMASet();
 		updateColorContext(resultMA);
 		// Set up the "history" information for the new dataset.
@@ -2328,6 +2336,18 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		if (sourceMA == null) {
 			return;
 		}
+
+		// TODO: double check that this code is sufficient for saving data
+		// before changes
+		int n = JOptionPane
+				.showConfirmDialog(
+						null,
+						"You're making changes to the data. \nDo you want to save the current workspace before the change takes place?",
+						"Save or not?", JOptionPane.YES_NO_CANCEL_OPTION);
+		if (n == JOptionPane.YES_OPTION) {
+			saveWorkspace_actionPerformed(false);
+		}
+
 		// Set up the "history" information for the new dataset.
 		Object[] prevHistory = sourceMA.getValuesForName(HISTORY);
 		if (prevHistory != null) {
@@ -2370,6 +2390,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * of changes that a given dataset is being submitted to.
 	 */
 	public static final String HISTORY = "History";
+
 	public static final String HISTORYDETAIL = "HistoryDetail";
 
 	/**
@@ -2783,11 +2804,13 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	protected void saveWorkspace_actionPerformed(boolean terminating) {
 		WorkspaceHandler ws = new WorkspaceHandler(this);
 		ws.save(WORKSPACE_DIR, terminating);
+		GUIFramework.getFrame().setTitle(System.getProperty("application.title") + " [" + ws.getWorkspacePath() + "]");
 	}
 
 	protected void openWorkspace_actionPerformed() {
 		WorkspaceHandler ws = new WorkspaceHandler(this);
 		ws.open(WORKSPACE_DIR);
+		GUIFramework.getFrame().setTitle(System.getProperty("application.title") + " [" + ws.getWorkspacePath() + "]");
 	}
 
 	/**
@@ -2803,6 +2826,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	protected void newWorkspace_actionPerformed(ActionEvent e) {
 		clear();
+		GUIFramework.getFrame().setTitle(System.getProperty("application.title"));
 	}
 
 	protected void imageRemove_actionPerformed(ActionEvent e) {

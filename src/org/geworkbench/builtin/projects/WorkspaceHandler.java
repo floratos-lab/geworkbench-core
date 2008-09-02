@@ -61,6 +61,8 @@ public class WorkspaceHandler {
 	}
 
 	ProgressBar pb = null;
+	
+	private String wsFilePath = "";
 
 	/**
 	 * Prompt the user to save the current workspace.
@@ -115,6 +117,8 @@ public class WorkspaceHandler {
 			pb = ProgressBar.create(ProgressBar.INDETERMINATE_TYPE);
 			pb.setTitle("Workspace is being saved.");
 			pb.start();
+			
+			wsFilePath = wsFilename;
 
 		}
 	}
@@ -163,9 +167,15 @@ public class WorkspaceHandler {
 			pb = ProgressBar.create(ProgressBar.INDETERMINATE_TYPE);
 			pb.setTitle("Workspace is being loaded.");
 			pb.start();
+			
+			wsFilePath = wsFilename;
 
 		}
 
+	}
+	
+	public String getWorkspacePath(){
+		return this.wsFilePath;
 	}
 
 	private class SaveTask extends SwingWorker<Void, Void> {
