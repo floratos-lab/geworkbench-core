@@ -39,7 +39,7 @@ import org.geworkbench.events.SubpanelChangedEvent;
 /**
  * @author unattributable
  * @see VisualPlugin
- * @version $Id: MicroarrayViewEventBase.java,v 1.23 2008-05-15 16:40:43 hungc Exp $
+ * @version $Id: MicroarrayViewEventBase.java,v 1.24 2008-09-02 18:08:21 chiangy Exp $
  */
 public abstract class MicroarrayViewEventBase implements VisualPlugin {
 
@@ -166,7 +166,9 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 		else
 			numMarkersSelectedLabel.setText(markerLabelPrefix);
 
-		refreshMaSetView();
+		if (markers!=null)
+			refreshMaSetView();
+
 	}
 
 	/**
