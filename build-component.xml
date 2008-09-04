@@ -80,7 +80,6 @@
     <!-- ===================================================================== -->
     <target name="clean" description="Clean all build products." depends="init">
         <delete dir="${classes}"/>
-    	<delete dir="${conf}"/>
     </target>
 
     <!-- ====================================================================== -->
