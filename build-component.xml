@@ -80,8 +80,7 @@
     <!-- ===================================================================== -->
     <target name="clean" description="Clean all build products." depends="init">
         <delete dir="${classes}"/>
-    	<!-- the line below is for Mantis issue #1489 -->
-    	<delete dir="genspace/${conf}"/>
+    	<delete dir="${conf}"/>
     </target>
 
     <!-- ====================================================================== -->
