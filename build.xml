@@ -213,6 +213,7 @@
 		<subant target="clean" genericantfile="build-component.xml">
 			<dirset dir="components" includes="*" />
 		</subant>
+		<delete dir="components/genspace/conf" />
 	</target>
 	<!-- ====================================================================== -->
 	<!-- JAVADOC -->
