@@ -112,7 +112,8 @@ public class WorkspaceHandler {
 				wsFilename += extension;
 			}
 
-			SaveTask task = new SaveTask(wsFilename, terminating);
+		    PanelFocusedListener wfl = new PanelFocusedListener();
+			SaveTask task = new SaveTask(wsFilename, terminating, wfl);
 			task.execute();
 			pb = ProgressBar.create(ProgressBar.INDETERMINATE_TYPE);
 			pb.setTitle("Workspace is being saved.");
@@ -166,6 +167,7 @@ public class WorkspaceHandler {
 			openTask.execute();
 			pb = ProgressBar.create(ProgressBar.INDETERMINATE_TYPE);
 			pb.setTitle("Workspace is being loaded.");
+			pb.setAlwaysOnTop(true);
 			pb.start();
 			
 			wsFilePath = wsFilename;
@@ -181,16 +183,19 @@ public class WorkspaceHandler {
 	private class SaveTask extends SwingWorker<Void, Void> {
 		private String filename;
 		private boolean terminating;
+		private PanelFocusedListener wfl = null;
 
-		SaveTask(String filename, boolean terminating) {
+		SaveTask(String filename, boolean terminating, PanelFocusedListener wfl ) {
 			super();
 			this.filename = filename;
 			this.terminating = terminating;
+			this.wfl = wfl;
 		}
 
 		@Override
 		protected void done() {
 			JOptionPane.showMessageDialog(null, "Workspace saved.");
+			GeawConfigObject.getGuiWindow().removeWindowFocusListener(wfl); 
 			pb.dispose();
 			if(terminating) {
 				GeawConfigObject.getGuiWindow().dispose();
@@ -200,6 +205,7 @@ public class WorkspaceHandler {
 
 		@Override
 		protected Void doInBackground() throws Exception {
+			GeawConfigObject.getGuiWindow().addWindowFocusListener(wfl);
 			enclosingProjectPanel.serialize(filename);
 			return null;
 		}
@@ -254,4 +260,30 @@ public class WorkspaceHandler {
 		}
 
 	}
+	
+	private class PanelFocusedListener
+    implements java.awt.event.WindowFocusListener {
+	 
+		public void windowGainedFocus(java.awt.event.WindowEvent e) {
+      		  
+       	   if (pb.isShowing())
+       	   {  
+       		   pb.setFocusable(true);
+       	       pb.requestFocus();
+       	       
+       	   }
+       		
+        }
+
+        public void windowLostFocus(java.awt.event.WindowEvent e) {
+      		    	//do nothing; 
+           	    
+        }
+     
+   
+ }
+   
+
+	
+	
 }
