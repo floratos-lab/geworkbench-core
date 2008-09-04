@@ -194,9 +194,10 @@ public class WorkspaceHandler {
 
 		@Override
 		protected void done() {
-			JOptionPane.showMessageDialog(null, "Workspace saved.");
-			GeawConfigObject.getGuiWindow().removeWindowFocusListener(wfl); 
+			GeawConfigObject.getGuiWindow().removeWindowFocusListener(wfl); 			 
 			pb.dispose();
+			JOptionPane.getRootFrame().setAlwaysOnTop(true);
+			JOptionPane.showMessageDialog(null, "Workspace saved.");			
 			if(terminating) {
 				GeawConfigObject.getGuiWindow().dispose();
 				System.exit(0);
