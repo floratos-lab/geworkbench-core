@@ -51,6 +51,7 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import org.apache.commons.collections15.map.ListOrderedMap;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
@@ -2804,13 +2805,15 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	protected void saveWorkspace_actionPerformed(boolean terminating) {
 		WorkspaceHandler ws = new WorkspaceHandler(this);
 		ws.save(WORKSPACE_DIR, terminating);
-		GUIFramework.getFrame().setTitle(System.getProperty("application.title") + " [" + ws.getWorkspacePath() + "]");
+		if(!StringUtils.isEmpty(ws.getWorkspacePath()))
+			GUIFramework.getFrame().setTitle(System.getProperty("application.title") + " [" + ws.getWorkspacePath() + "]");
 	}
 
 	protected void openWorkspace_actionPerformed() {
 		WorkspaceHandler ws = new WorkspaceHandler(this);
 		ws.open(WORKSPACE_DIR);
-		GUIFramework.getFrame().setTitle(System.getProperty("application.title") + " [" + ws.getWorkspacePath() + "]");
+		if(!StringUtils.isEmpty(ws.getWorkspacePath()))
+			GUIFramework.getFrame().setTitle(System.getProperty("application.title") + " [" + ws.getWorkspacePath() + "]");
 	}
 
 	/**
