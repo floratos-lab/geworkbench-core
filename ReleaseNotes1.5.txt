@@ -85,7 +85,7 @@ Release Notes
           * Upon exiting the application, the user is prompted to store their workspace.
           * Workspace persistence problems have been resolved.
           * The Marker Annotations component has been enhanced in several ways:
-              ** The integration with caBIO has been updated to use API Version 3.1
+              ** The integration with caBIO has been updated to use API Version 4.0
               ** The caBIO Pathway component (previously an independent geWorkbench 
                     component that would display BioCarta pathway images) has been 
                     integrated into the Marker Annotations component.
