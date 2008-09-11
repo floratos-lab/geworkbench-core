@@ -21,4 +21,8 @@ public interface DSMatrixReduceSet extends DSAncillaryDataSet<DSPositionSpecific
     
     void setMatrixReduceExperiments(ListOrderedMap<String, List<DSMatrixReduceExperiment>> experiments);
     
+    void setRunLog(String runlog);
+    
+    String getRunLog();
+    
 }

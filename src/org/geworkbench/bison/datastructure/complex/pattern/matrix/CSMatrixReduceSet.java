@@ -19,6 +19,8 @@ public class CSMatrixReduceSet extends
 
 	// key=psam id; value=list of experiment data associated with the psam id
 	private ListOrderedMap<String, List<DSMatrixReduceExperiment>> experiments;
+	
+	private String runlog = "";
 
 	public CSMatrixReduceSet(DSDataSet parent, String label) {
 		super(parent, label);
@@ -46,6 +48,14 @@ public class CSMatrixReduceSet extends
 	public void setMatrixReduceExperiments(ListOrderedMap<String, List<DSMatrixReduceExperiment>> experiments) {
 		this.experiments = experiments;
 	}	
+	
+	public void setRunLog(String runlog){
+		this.runlog = runlog;
+	}
+	
+	public String getRunLog(){
+		return this.runlog;
+	}
 }
 
 
