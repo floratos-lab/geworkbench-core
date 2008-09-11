@@ -136,8 +136,8 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 
     public DSMicroarraySet getMArraySet(File file) throws InputFileFormatException {
 
-//        if (!checkFormat(file))
-//            throw new InputFileFormatException("AffyFileFormat::getMArraySet - " + "Attempting to open a file that does not comply with the " + "Affy format.");
+        if (!checkFormat(file))
+            throw new InputFileFormatException("RMAExpressFileFormat::getMArraySet - " + "Attempting to open a file that does not comply with the " + "RMA express file format.");
     	
         CSExprMicroarraySet maSet = new CSExprMicroarraySet();
         String fileName = file.getName();
