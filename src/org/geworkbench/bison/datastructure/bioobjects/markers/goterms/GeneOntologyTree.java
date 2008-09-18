@@ -125,7 +125,7 @@ public class GeneOntologyTree {
 	private ListOrderedMap<String, GOTerm> roots;
 	private HashMap<Integer, GOTerm> terms;
 
-	public GeneOntologyTree() {
+	private GeneOntologyTree() {
 		roots = new ListOrderedMap<String, GOTerm>();
 		terms = new HashMap<Integer, GOTerm>();
 	}
