@@ -67,7 +67,7 @@
        geWorkbench is supplied in a Zip file which will work on
        any platform.
 
-       File: geWorkbench_v1.5.1_Generic.zip
+       File: geWorkbench_v1.5.1_Vista_and_Generic.zip
 
           Installation: 
     
