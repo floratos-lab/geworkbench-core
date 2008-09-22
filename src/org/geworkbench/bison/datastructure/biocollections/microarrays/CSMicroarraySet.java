@@ -205,27 +205,29 @@ public class CSMicroarraySet<T extends DSMicroarray> extends CSDataSet<T> implem
     }
 
     // Serializes a microarray set
-    private void writeMArrays() {
-        String name = System.getProperty("temporary.files.directory") + System.getProperty("file.separator") + "MA" + timeStamp.getTime() + ".jds";
-        try {
-            FileOutputStream f = new FileOutputStream(name);
-            ObjectOutput s = new ObjectOutputStream(f);
-            for (int i = 0; i < size(); i++) {
-                s.writeObject(get(i));
-            }
-            s.flush();
-        } catch (IOException ex) {
-            System.err.println("Error: " + ex);
-        }
-    }
+    //
+    // 2008-09-22: <Aris>as of this date (file version 1.14) the method writeMArrays() is 
+    //             dead code. I am commenting it out</Aris>
+    //
+//    private void writeMArrays() {
+//        String name = System.getProperty("temporary.files.directory") + System.getProperty("file.separator") + "MA" + timeStamp.getTime() + ".jds";
+//        try {
+//            FileOutputStream f = new FileOutputStream(name);
+//            ObjectOutput s = new ObjectOutputStream(f);
+//            for (int i = 0; i < size(); i++) {
+//                s.writeObject(get(i));
+//            }
+//            s.flush();
+//        } catch (IOException ex) {
+//            System.err.println("Error: " + ex);
+//        }
+//    }
 
+    
     private void writeObject(ObjectOutputStream oos) throws IOException {
         oos.defaultWriteObject();
         // Write/save additional fields
         oos.writeObject(new java.util.Date());
-        if (get(0) != null) {
-            writeMArrays();
-        }
     }
 
     private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
