@@ -23,7 +23,9 @@
         <!-- The parent project -->
         <property name="parentClasses" value="../../classes"/>
         <property name="parentLibs" value="../../lib"/>
-
+		<property name="testing" value="testing" />
+		<property name="test.reports" value="${testing}/junitreport" />
+		<property name="reports" value="reports" />
     </target>
 
     <!-- ===================================================================== -->
@@ -43,7 +45,11 @@
                 <include name="**/*.jar"/>
             </fileset>
         </path>
-
+		<path id="run.classpath">
+			<pathelement location="${classes}" />
+			<pathelement location="${conf}" />
+			<path refid="classpath" />
+		</path>
     </target>
 
     <target name="compile-check" depends="prepare">
@@ -108,5 +114,31 @@
             </batchtest>
         </junit>
     </target>
+
+	<target name="junit-run" depends="compile" description="Run JUnit tests and produce success report." if="src-exists">
+		<taskdef name="junit" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask" />
+		<delete dir="${testing}" />
+		<mkdir dir="${testing}" />
+		<junit fork="yes" dir="${basedir}" failureProperty="test.failed" printsummary="yes">
+			<jvmarg value="-Xmx640M" />
+			<jvmarg value="-Djava.awt.headless=true" />
+			<classpath refid="run.classpath" />
+			<formatter type="xml" />
+			<!--<test name="wb.test.TestAll" todir="${testing}"/>-->
+			<batchtest todir="${testing}" unless="testcase">
+				<fileset dir="${test}">
+					<include name="**/*Test.java" />
+					<exclude name="**/BulkTest.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+		<mkdir dir="${test.reports}" />
+		<junitreport todir="${test.reports}">
+			<fileset dir="${testing}">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report todir="${test.reports}" />
+		</junitreport>
+	</target>
 
 </project>

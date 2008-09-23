@@ -387,6 +387,9 @@
 			</fileset>
 			<report todir="${test.reports}" />
 		</junitreport>
+		<subant target="junit-run" genericantfile="build-component.xml">
+			<dirset dir="components" includes="*" />
+		</subant>
 		<fail>
 			<condition>
 				<isset property="test.failed" />
