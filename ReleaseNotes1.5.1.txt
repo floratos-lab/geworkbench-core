@@ -43,7 +43,7 @@
 
     1. Windows (tested on XP/Vista)
 
-       File: geWorkbench_v1.5.1_WindowsXP_noJRE_installer.exe -
+       File: geWorkbench_v1.5.1_Windows_installer_noJRE.exe -
 
              You can use this file if you know you have Java JRE 1.5
              already installed.
