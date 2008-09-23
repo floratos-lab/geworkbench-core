@@ -2,7 +2,7 @@
     
                        geWorkbench V1.5.1
                
-                       September 22, 2008
+                       September 23, 2008
 
        Joint Centers for Systems Biology, Columbia University
                        New York, NY  10032
@@ -31,7 +31,7 @@
     We recommend running it on your computer under Java 1.5 *.
           
     To run geWorkbench, you must either have the Java 1.5 JRE 
-    installed on your computer, or, for WindowsXP only, we provide
+    installed on your computer, or, for Windows only, we provide
     a version of geWorkbench that includes the Java1.5 JRE.
 
     See geworkbench.org for further details.
@@ -41,14 +41,14 @@
     release of geWorkbench:
 
 
-    1. Windows XP  (See item 4 below for Windows Vista)
+    1. Windows (tested on XP/Vista)
 
        File: geWorkbench_v1.5.1_WindowsXP_noJRE_installer.exe -
 
              You can use this file if you know you have Java JRE 1.5
              already installed.
 
-       File: geWorkbench_v1.5.1_WindowsXP_installer_with_Jre1.5.exe -
+       File: geWorkbench_v1.5.1_Windows_installer_with_Jre1.5.exe -
 
              This version includes the Java 1.5 JRE bundled in.
              Use this version if you don't know if you have the right
@@ -66,11 +66,11 @@
        File: geWorkbench_v1.5.1_Linux_installer.bin.
 
 
-    4. Generic / Windows Vista -   A non-installer-based version of
+    4. Generic -   A non-installer-based version of
        geWorkbench is supplied in a Zip file which will work on
        any platform.
 
-       File: geWorkbench_v1.5.1_Vista_and_Generic.zip
+       File: geWorkbench_v1.5.1_Generic.zip
 
           Installation: 
     
@@ -122,7 +122,8 @@
     geWorkbench 1.5.1 is a maintenance release.  It addresses changes in
     the APIs for the caArray and caBIO data services since geWorkbench 1.5
     was released.  geWorkbench 1.5.1 can currently connect
-    with caArray 2.1 and caBIO 4.0/4.1.
+    with caArray 2.1 and caBIO 4.0/4.1.  It also includes an update to parse
+    the new release 26 of Affymetrix annotation files.
 
 ================================================================
     3.0 New Features and Updates
@@ -132,11 +133,14 @@
 
 
 Changes included in geWorkbench 1.5.1:
-
-        geWorkbench 1.5.1 is a maintenance release.  It addresses changes in
-        the APIs for the caArray and caBIO data services since geWorkbench 1.5
-        was released.  geWorkbench 1.5.1 can currently connect
-        with caArray 2.1 and caBIO 4.0/4.1.
+. 
+        *  It addresses changes in the APIs for the caArray and caBIO
+           data services since geWorkbench 1.5 was released.  geWorkbench 1.5.1
+           can currently connect with caArray 2.1 and caBIO 4.0/4.1.
+        *  It also includes an update to parse the new release 26 of Affymetrix
+           annotation files.
+        *  Fixes a problem where annotation information was not associated with
+           arrays that were merged.
 
 
 ***Changes in previous versions***
