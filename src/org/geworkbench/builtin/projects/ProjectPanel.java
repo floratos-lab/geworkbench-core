@@ -1607,7 +1607,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 							mergedSet.add(set.get(k).deepCopy());
 						}
 						desc += set.getLabel() + " ";
-						//XQ fix bug 1539, add annotation information to the merged dataset.
+						//XQ fix bug 1539, add annotation information to the merged dataset.  
 						String chipType = AnnotationParser.getChipType(set);
 						AnnotationParser.setChipType(mergedSet, chipType);
 					} catch (InstantiationException ie) {

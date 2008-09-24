@@ -55,7 +55,7 @@ import org.geworkbench.util.threading.SwingWorker;
  * especially tackles the progress bar requirement for multiple files.
  * 
  * @author zji
- * @version $Id: FileOpenHandler.java,v 1.1 2008/07/25 18:40:06 jiz Exp $
+ * @version $Id: FileOpenHandler.java,v 1.2 2008/07/25 19:13:17 jiz Exp $
  * 
  */
 public class FileOpenHandler {
@@ -256,6 +256,7 @@ public class FileOpenHandler {
 						try {
 							dataSets[i] = dataSetFileFormat.getDataFile(
 									dataSetFile, chipType);
+							AnnotationParser.setChipType(dataSets[i], chipType);
 						} catch (UnsupportedOperationException e) {
 							log
 									.warn("This data type doesn't support chip type overrides, will have to ask user again.");
@@ -284,6 +285,7 @@ public class FileOpenHandler {
 				if (mergeFiles) {
 					if (dataSets[0] instanceof DSMicroarraySet) {
 						DSMicroarraySet[] maSets = new DSMicroarraySet[dataSets.length];
+						
 						for (int i = 0; i < dataSets.length; i++) {
 							maSets[i] = (DSMicroarraySet) dataSets[i];
 						}
