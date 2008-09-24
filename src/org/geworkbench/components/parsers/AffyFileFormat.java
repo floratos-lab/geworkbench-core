@@ -137,7 +137,7 @@ public class AffyFileFormat extends DataSetFileFormat {
 		            		totalColumns=columnIndex;
 		            	else if (columnIndex!=totalColumns){//if not equal 
 		            		columnsMatch=false;
-		            		log.info("In the file"+f.getName()+", header contains "+totalColumns+" columns, but line "+lineIndex+" only contains "+columnIndex+" columns.");
+		            		log.debug("In the file"+f.getName()+", header contains "+totalColumns+" columns, but line "+lineIndex+" only contains "+columnIndex+" columns.");
 		            	}
 		            }
 	        	}
