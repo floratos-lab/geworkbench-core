@@ -90,7 +90,7 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 	        int lineIndex=0;
 	        int headerLineIndex=0;
 	        while ((line = reader.readLine()) != null) { //for each line
-	        	if ((line.indexOf("#") < 0)){//we'll skip comments and anything before header
+	        	if ((line.indexOf("#") < 0)&&(line.indexOf("!")!=0)&&(line.length()>0)){//we'll skip comments and anything before header
 	        		if (headerLineIndex==0)//no header detected yet, then this is the header.
 	        			headerLineIndex=lineIndex;
 		            String token=null;
