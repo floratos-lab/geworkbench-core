@@ -213,6 +213,10 @@ public class AffyFileFormat extends DataSetFileFormat {
             for (Iterator it = v.iterator(); it.hasNext();) {
                 String acc = ((String) it.next()).toString();
                 markerVector.setLabel(count, acc);
+                String[] geneNames = AnnotationParser.getInfo(acc, AnnotationParser.ABREV);
+                if (geneNames != null) {
+                    markerVector.get(count).setGeneName(geneNames[0]);
+                }                
                 markerVector.get(count).setDisPlayType(DSGeneMarker.AFFY_TYPE);
                 markerVector.get(count++).setDescription(acc);
             }
