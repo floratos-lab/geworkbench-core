@@ -6,12 +6,12 @@
  */
 package org.geworkbench.builtin.projects;
 
-import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.FileNotFoundException;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
+
+import junit.framework.TestCase;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -19,7 +19,6 @@ import org.geworkbench.bison.datastructure.biocollections.CSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.skin.Workbench;
-import junit.framework.TestCase;
 
 /**
  * Test cases for ProjectPanel. Tests the functionality of saving and loading
@@ -28,7 +27,7 @@ import junit.framework.TestCase;
  * @author keshav
  * 
  */
-public class ProjectPanelTest extends TestCase {
+public class ProjectPanelGuiTest extends TestCase {
     private Log log = LogFactory.getLog(this.getClass());
 
     ProjectPanel projectPanel = null;
