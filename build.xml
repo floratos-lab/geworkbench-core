@@ -374,9 +374,10 @@
 			<formatter type="xml" />
 			<!--<test name="wb.test.TestAll" todir="${testing}"/>-->
 			<batchtest todir="${testing}" unless="testcase">
-				<fileset dir="${src}">
+				<fileset dir="${test}">
 					<include name="**/*Test.java" />
 					<exclude name="**/BulkTest.java" />
+					<exclude name="**/*GuiTest.java" />
 				</fileset>
 			</batchtest>
 		</junit>
