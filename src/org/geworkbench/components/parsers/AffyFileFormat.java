@@ -47,7 +47,6 @@ public class AffyFileFormat extends DataSetFileFormat {
     /**
      * The file extensions expected for Affy files.
      */	
-	boolean unitTestMode = false;
     String[] affyExtensions = {"affy", "txt", "TXT"};
     private Log log = LogFactory.getLog(this.getClass());
     AffyResource resource = new AffyResource();
@@ -203,7 +202,6 @@ public class AffyFileFormat extends DataSetFileFormat {
 
             Vector v = parser.getAccessions();
             microarraySet.setLabel(file.getName());
-            if (!unitTestMode)
             if (microarraySet.getCompatibilityLabel() == null || microarraySet.getCompatibilityLabel().equals("")) {
                 microarraySet.setCompatibilityLabel(AnnotationParser.matchChipType(maSet, "", false));
             }
@@ -301,8 +299,5 @@ public class AffyFileFormat extends DataSetFileFormat {
                 }
             return returnVal;
         }
-    }
-    public void setUnitTestMode(boolean unitTestMode){
-    	this.unitTestMode = unitTestMode;
     }
 }
