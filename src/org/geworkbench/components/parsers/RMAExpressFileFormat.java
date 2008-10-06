@@ -44,7 +44,8 @@ import org.geworkbench.components.parsers.microarray.DataSetFileFormat;
  * 
  * @author xuegong wang
  * @author yc2480
- * @version $Id: RMAExpressFileFormat.java,v 1.13 2008-10-06 22:02:35 chiangy Exp $
+ * @version $Id: RMAExpressFileFormat.java,v 1.13 2008/10/06 22:02:35 chiangy
+ *          Exp $
  */
 
 public class RMAExpressFileFormat extends DataSetFileFormat {
@@ -113,9 +114,9 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 				if ((line.indexOf(commentSign1) < 0)
 						&& (line.indexOf(commentSign2) != 0)
 						&& (line.length() > 0)) {// we'll skip comments and
-													// anything before header
+					// anything before header
 					if (headerLineIndex == 0)// no header detected yet, then
-												// this is the header.
+						// this is the header.
 						headerLineIndex = lineIndex;
 					String token = null;
 					int columnIndex = 0;
@@ -127,19 +128,19 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 						if (token.equals("")) {// header
 							accessionIndex = columnIndex;
 						} else if ((headerLineIndex > 0) && (columnIndex == 0)) { // if
-																					// this
-																					// line
-																					// is
-																					// after
-																					// header,
-																					// then
-																					// first
-																					// column
-																					// should
-																					// be
-																					// our
-																					// marker
-																					// name
+							// this
+							// line
+							// is
+							// after
+							// header,
+							// then
+							// first
+							// column
+							// should
+							// be
+							// our
+							// marker
+							// name
 							if (markers.contains(token)) {// duplicate markers
 								noDuplicateMarkers = false;
 								log.error("Duplicate Markers");
@@ -148,9 +149,9 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 								markers.add(token);
 							}
 						} else if (headerLineIndex == lineIndex) { // this is
-																	// header
-																	// line for
-																	// RMA file
+							// header
+							// line for
+							// RMA file
 							if (arrays.contains(token)) {// duplicate arrays
 								noDuplicateArrays = false;
 								log.error("Duplicate Arrays labels " + token
@@ -164,9 +165,9 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 					}
 					// check if column match or not
 					if (headerLineIndex > 0) { // if this line is real data, we
-												// assume lines after header are
-												// real data. (we might have bug
-												// here)
+						// assume lines after header are
+						// real data. (we might have bug
+						// here)
 						if (totalColumns == 0)// not been set yet
 							totalColumns = columnIndex - accessionIndex;
 						else if (columnIndex != totalColumns)// if not equal
@@ -193,7 +194,7 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 	public DSMicroarraySet getMArraySet(File file)
 			throws InputFileFormatException {
 		final int extSeperater = '.'; // the sign between file name and
-										// extesion, ex: file.ext
+		// extesion, ex: file.ext
 
 		if (!checkFormat(file))
 			throw new InputFileFormatException(
@@ -218,9 +219,9 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 				while (header != null
 						&& (header.startsWith(commentSign1) || header
 								.startsWith(commentSign2)) // for mantis issue:
-															// 1349
+						// 1349
 						|| StringUtils.isEmpty(header) // for mantis issue:
-														// 1349
+				// 1349
 				) {
 					header = in.readLine();
 				}
@@ -230,7 +231,7 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 									+ "RMAExpressFileFormat expected");
 				}
 				header = StringUtils.replace(header, "\"", ""); // for mantis
-																// issue:1349
+				// issue:1349
 				StringTokenizer headerTokenizer = new StringTokenizer(header,
 						columnSeperator, false);
 				int n = headerTokenizer.countTokens();
@@ -258,8 +259,8 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 								DSMicroarraySet.affyTxtType);
 						maSet.add(array);
 						if (maSet.size() != (i + 1)) { // this occurs when we
-														// have duplicate array
-														// name?
+							// have duplicate array
+							// name?
 							array.setLabel(array.getLabel() + "_2");
 							maSet.add(array);
 							duplicateLabels++;
@@ -279,10 +280,10 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 								+ ". Line should have " + (n + 1)
 								+ " lines, has " + length + ".");
 						if ((m == 0) && (length == n + 2)) // this file
-															// probably comes
-															// from R's RMA,
-															// without first
-															// column in header
+							// probably comes
+							// from R's RMA,
+							// without first
+							// column in header
 							throw new InputFileFormatException(
 									"Attempting to open a file that does not comply with the "
 											+ "RMA Express format."
@@ -330,7 +331,8 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 							try {
 								value = Float.parseFloat(valString);
 							} catch (NumberFormatException nfe) {
-
+								log.error("We expect a number, but we got: "
+										+ valString);
 							}
 							// put values directly into CSMicroarray inside of
 							// maSet
