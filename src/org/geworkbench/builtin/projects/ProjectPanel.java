@@ -1710,27 +1710,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 	}
 
-	public void fileOpenAction(File dataSetFile,
-			org.geworkbench.components.parsers.FileFormat inputFormat)
-			throws InputFileFormatException {
-
-		// The call to getMArraySet() may result in an InputFileFormatException
-		// which is expected to be handled by the calling function.
-		if (inputFormat instanceof DataSetFileFormat) {
-			DSDataSet dataSet = ((DataSetFileFormat) inputFormat)
-					.getDataFile(dataSetFile);
-			// If everything went OK, register the newly created microarray set.
-			if (dataSet != null) {
-				// String directory = dataSetFile.getPath();
-				// System.setProperty("data.files.dir", directory);
-				addDataSetNode(dataSet, true);
-			} else {
-				log.info("Could not load file: " + dataSetFile);
-			}
-		} else {
-		}
-	}
-
 	/**
 	 * Action listener handling user requests for renaming a project.
 	 * 
