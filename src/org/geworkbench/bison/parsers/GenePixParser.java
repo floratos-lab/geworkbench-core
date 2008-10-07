@@ -13,9 +13,28 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 /**
  * A parser of GenePix gpr file.
  * @author manjunath
- * @version $Id: GenePixParser.java,v 1.6 2008-10-07 15:56:10 jiz Exp $
+ * @version $Id: GenePixParser.java,v 1.7 2008-10-07 19:05:50 jiz Exp $
  */
 public class GenePixParser {
+	private static final String B635_MEAN = "B635 Mean";
+
+	private static final String F635_MEAN = "F635 Mean";
+
+	private static final String B532_MEAN = "B532 Mean";
+
+	private static final String F532_MEAN = "F532 Mean";
+
+	private static final String FLAGS = "Flags";
+
+	private static final String B635_MEDIAN = "B635 Median";
+
+	private static final String B532_MEDIAN = "B532 Median";
+
+	private static final String F532_MEDIAN = "F532 Median";
+
+	private static final String F635_MEDIAN = "F635 Median";
+
+	private static final String FIELD_DELMITER = "[\\t\\n]+";
 
     /**
      * List of the column names (among those available in the Geenpix gpr file format and
@@ -63,9 +82,9 @@ public class GenePixParser {
 
     /** Process one line of data file. */
     public void process(String line) {
-        if(line.indexOf("F635 Median") >= 0) {// the case of header line. this should be handled the first
+        if(line.indexOf(F635_MEDIAN) >= 0) {// the case of header line. this should be handled the first
             headerFound = true;
-            String[] tokens = line.split("[\\t\\n]+");
+            String[] tokens = line.split(FIELD_DELMITER);
             for(int i=0; i<tokens.length; i++) {
             	String t = tokens[i];
 
@@ -76,7 +95,7 @@ public class GenePixParser {
             	}
             }
         } else if(headerFound) { // now is the case after the header is reached and has been processed in the first if case
-            String[] tokens = line.split("[\\t\\n]+");
+            String[] tokens = line.split(FIELD_DELMITER);
             accessions.add(new String[]{tokens[idIndex], tokens[nameIndex]});
         }
     	// before the header is reached, this method does nothing and just return
@@ -127,9 +146,9 @@ public class GenePixParser {
      */
     @SuppressWarnings("unchecked")
 	public void parseLine(String line) {
-        if(line.indexOf("F635 Median") >=0) { // Read in the header line
+        if(line.indexOf(F635_MEDIAN) >=0) { // Read in the header line
             headerFound = true;
-            String[] tokens = line.split("[\\t\\n]+");
+            String[] tokens = line.split(FIELD_DELMITER);
             for(int i=0; i<tokens.length; i++) {
             	String t = tokens[i];
 
@@ -146,20 +165,18 @@ public class GenePixParser {
             Map<String, Object> ctu = context.getColumnsToUse();
             Object value = null;
 
-            String[] tokens = line.split("[\\t\\n]+");
+            String[] tokens = line.split(FIELD_DELMITER);
             for(int i=1; i<tokens.length; i++) {
             	String t = tokens[i];
                 String column = (String) columnOrder.get(new Integer(i));
                 if (column != null) {
                     String type = (String) ctu.get(column);
-                    if (type.equals("String")) {
+                    if (type.equals(GenepixParseContext.TYPE_STRING)) {
                         value = new String(t.toCharArray());
-                    } else if (type.equals("Integer")) {//FIXME these are defined GenepixParseContext
+                    } else if (type.equals(GenepixParseContext.TYPE_INTEGER)) {
                         value = Integer.valueOf(t);
-                    } else if (type.equals("Double")) {//FIXME these are defined GenepixParseContext
+                    } else if (type.equals(GenepixParseContext.TYPE_DOUBLE)) {
                         value = Double.valueOf(t);
-                    } else if (type.equals("Character")) {//FIXME these are defined GenepixParseContext
-                        value = new Character(t.charAt(0));
                     }
                     if (value != null) {
                         ctu.put(column, value);
@@ -173,8 +190,10 @@ public class GenePixParser {
     }
 
     /**
-	 * Calculate the signal value from the channel values.
-	 */
+     * Calculate the signal value from the channel values.
+     * @param columns
+     * @param gmv
+     */
 	private void populateValues(Map<String, Object> columns,
 			DSGenepixMarkerValue gmv) {
 		Object value = null;
@@ -182,32 +201,32 @@ public class GenePixParser {
 
 		boolean medianMissing = false;
 		if (!CSGenepixMarkerValue.getComputeSignalMethod().usesMean()) {
-			if (columns.containsKey("F532 Median")) {
-				value = columns.get("F532 Median");
+			if (columns.containsKey(F532_MEDIAN)) {
+				value = columns.get(F532_MEDIAN);
 				if (value instanceof Double) {
 					ch1f = ((Double) value).doubleValue();
 				}
 			} else {
 				medianMissing = true;
 			}
-			if (columns.containsKey("B532 Median")) {
-				value = columns.get("B532 Median");
+			if (columns.containsKey(B532_MEDIAN)) {
+				value = columns.get(B532_MEDIAN);
 				if (value instanceof Double) {
 					ch1b = ((Double) value).doubleValue();
 				}
 			} else {
 				medianMissing = true;
 			}
-			if (columns.containsKey("F635 Median")) {
-				value = columns.get("F635 Median");
+			if (columns.containsKey(F635_MEDIAN)) {
+				value = columns.get(F635_MEDIAN);
 				if (value instanceof Double) {
 					ch2f = ((Double) value).doubleValue();
 				}
 			} else {
 				medianMissing = true;
 			}
-			if (columns.containsKey("B635 Median")) {
-				value = columns.get("B635 Median");
+			if (columns.containsKey(B635_MEDIAN)) {
+				value = columns.get(B635_MEDIAN);
 				if (value instanceof Double) {
 					ch2b = ((Double) value).doubleValue();
 				}
@@ -216,8 +235,8 @@ public class GenePixParser {
 			}
 		}
 		
-		if (columns.containsKey("Flags")) {
-			value = columns.get("Flags");
+		if (columns.containsKey(FLAGS)) {
+			value = columns.get(FLAGS);
 			if (value instanceof String) {
 
 				if (!value.equals("0")) {
@@ -230,26 +249,26 @@ public class GenePixParser {
 
 		if (CSGenepixMarkerValue.getComputeSignalMethod().usesMean()
 				|| medianMissing) {
-			if (columns.containsKey("F532 Mean")) {
-				value = columns.get("F532 Mean");
+			if (columns.containsKey(F532_MEAN)) {
+				value = columns.get(F532_MEAN);
 				if (value instanceof Double) {
 					ch1f = ((Double) value).doubleValue();
 				}
 			}
-			if (columns.containsKey("B532 Mean")) {
-				value = columns.get("B532 Mean");
+			if (columns.containsKey(B532_MEAN)) {
+				value = columns.get(B532_MEAN);
 				if (value instanceof Double) {
 					ch1b = ((Double) value).doubleValue();
 				}
 			}
-			if (columns.containsKey("F635 Mean")) {
-				value = columns.get("F635 Mean");
+			if (columns.containsKey(F635_MEAN)) {
+				value = columns.get(F635_MEAN);
 				if (value instanceof Double) {
 					ch2f = ((Double) value).doubleValue();
 				}
 			}
-			if (columns.containsKey("B635 Mean")) {
-				value = columns.get("B635 Mean");
+			if (columns.containsKey(B635_MEAN)) {
+				value = columns.get(B635_MEAN);
 				if (value instanceof Double) {
 					ch2b = ((Double) value).doubleValue();
 				}
