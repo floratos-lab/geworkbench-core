@@ -20,7 +20,7 @@ import org.geworkbench.util.ProgressBar;
 import org.geworkbench.util.threading.SwingWorker;
 
 /**
- * this class handles workspace's saving and opening: showing progress bar
+ * This class handles workspace's saving and opening: showing progress bar
  * 
  * the main purpose to build this class is to take some tasks out of the super
  * large ProjectPanel
@@ -43,14 +43,16 @@ public class WorkspaceHandler {
 	private String wsFilePath = "";
 
 	/**
-	 * Prompt the user to save the current workspace.
+	 * 
+	 * @param wsp_dir
+	 * @param terminating
 	 */
-	public void save(String WORKSPACE_DIR, boolean terminating) {
+	public void save(String wsp_dir, boolean terminating) {
 		PropertiesManager properties = PropertiesManager.getInstance();
 		String workspaceDir = ".";
 		try {
 			workspaceDir = properties.getProperty(ProjectPanel.class,
-					WORKSPACE_DIR, workspaceDir);
+					wsp_dir, workspaceDir);
 		} catch (IOException exception) {
 			exception.printStackTrace(); // To change body of catch statement
 			// use File | Settings | File
@@ -79,7 +81,7 @@ public class WorkspaceHandler {
 
 			// Store directory that we opened this from
 			try {
-				properties.setProperty(ProjectPanel.class, WORKSPACE_DIR, fc
+				properties.setProperty(ProjectPanel.class, wsp_dir, fc
 						.getSelectedFile().getParent());
 			} catch (IOException e1) {
 				e1.printStackTrace(); // To change body of catch statement use
@@ -104,13 +106,14 @@ public class WorkspaceHandler {
 
 	/**
 	 * Prompt the user to open a saved workspace.
+	 * @param wsp_dir
 	 */
-	public void open(String WORKSPACE_DIR) {
+	public void open(String wsp_dir) {
 		PropertiesManager properties = PropertiesManager.getInstance();
 		String workspaceDir = ".";
 		try {
 			workspaceDir = properties.getProperty(ProjectPanel.class,
-					WORKSPACE_DIR, workspaceDir);
+					wsp_dir, workspaceDir);
 		} catch (IOException exception) {
 			exception.printStackTrace(); // To change body of catch statement
 			// use File | Settings | File
@@ -134,7 +137,7 @@ public class WorkspaceHandler {
 
 			// Store directory that we opened this from
 			try {
-				properties.setProperty(ProjectPanel.class, WORKSPACE_DIR, fc
+				properties.setProperty(ProjectPanel.class, wsp_dir, fc
 						.getSelectedFile().getParent());
 			} catch (IOException e) {
 				log.info("current directory was not successfuly stored.");
@@ -153,11 +156,20 @@ public class WorkspaceHandler {
 		}
 
 	}
-	
+		
+	/**
+	 * 
+	 * @return
+	 */
 	public String getWorkspacePath(){
 		return this.wsFilePath;
 	}
-
+	
+	/**
+	 * 
+	 * @author zji
+	 *
+	 */
 	private class SaveTask extends SwingWorker<Void, Void> {
 		private String filename;
 		private boolean terminating;
@@ -190,7 +202,12 @@ public class WorkspaceHandler {
 		}
 
 	}
-
+	
+	/**
+	 * 
+	 * @author zji
+	 *
+	 */
 	private class OpenTask extends SwingWorker<Void, Void> {
 		private String filename;
 
@@ -240,29 +257,28 @@ public class WorkspaceHandler {
 
 	}
 	
-	private class PanelFocusedListener
-    implements java.awt.event.WindowFocusListener {
-	 
+	/**
+	 * 
+	 * @author zji
+	 *
+	 */
+	private class PanelFocusedListener implements
+			java.awt.event.WindowFocusListener {
+
 		public void windowGainedFocus(java.awt.event.WindowEvent e) {
-      		  
-       	   if (pb.isShowing())
-       	   {  
-       		   pb.setFocusable(true);
-       	       pb.requestFocus();
-       	       
-       	   }
-       		
-        }
 
-        public void windowLostFocus(java.awt.event.WindowEvent e) {
-      		    	//do nothing; 
-           	    
-        }
-     
-   
- }
-   
+			if (pb.isShowing()) {
+				pb.setFocusable(true);
+				pb.requestFocus();
 
-	
-	
+			}
+
+		}
+
+		public void windowLostFocus(java.awt.event.WindowEvent e) {
+			//do nothing; 
+
+		}
+
+	}
 }
