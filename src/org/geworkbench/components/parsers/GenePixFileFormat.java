@@ -20,20 +20,14 @@ import java.util.List;
 import java.util.Vector;
 
 /**
- * <p>Title: Bioworks</p>
- * <p>Description: Modular Application Framework for Gene Expession, Sequence and Genotype Analysis</p>
- * <p>Copyright: Copyright (c) 2003 -2004</p>
- * <p>Company: Columbia University</p>
- * @author manjunath at genomecenter dot columbia dot edu
- * @version 1.0
- */
-
-/**
  * Handles the parsing of Affymetrix .txt files (MAS 5.0).
  * Translates GenePix (gpr) into
  * <code>MicroarraySet</code> objects.
+ * 
+ * @author manjunath
+ * @author zji
+ * @version $Id: GenePixFileFormat.java,v 1.3 2008-10-07 15:56:49 jiz Exp $
  */
-
 public class GenePixFileFormat extends DataSetFileFormat {
     /**
      * The file extensions expected for Genepix files.
@@ -97,6 +91,7 @@ public class GenePixFileFormat extends DataSetFileFormat {
      * @throws org.geworkbench.components.parsers.InputFileFormatException When the input file deviates from the
      *                                  Genepix format.
      */
+    @SuppressWarnings("unchecked")
     public DSMicroarraySet getMArraySet(File file) throws org.geworkbench.components.parsers.InputFileFormatException {
         // Check that the file is OK before starting allocating space for it.
         if (!checkFormat(file))
@@ -143,10 +138,10 @@ public class GenePixFileFormat extends DataSetFileFormat {
             CSMarkerVector markerVector = (CSMarkerVector) microarraySet.getMarkers();
             int count = 0;
             for (Iterator it = v.iterator(); it.hasNext();) {
-                String acc = ((String) it.next()).toString();
-                markerVector.setLabel(count, acc);
+                String[] acc = (String[]) (it.next());
+                markerVector.setLabel(count, acc[0]);
                 markerVector.get(count).setDisPlayType(DSGeneMarker.GENEPIX_TYPE);
-                markerVector.get(count++).setDescription(acc);
+                markerVector.get(count++).setDescription(acc[1]);
             }
             reader.close();
             fileIn = new FileInputStream(file);
