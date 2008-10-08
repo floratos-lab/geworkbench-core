@@ -32,7 +32,8 @@ import org.geworkbench.components.parsers.microarray.DataSetFileFormat;
  * Sequence and Pattern Plugin
  * 
  * @author yc2480
- * @version $Id: RMAExpressFileFormat.java,v 1.16 2008-10-08 16:26:57 chiangy Exp $
+ * @version $Id: RMAExpressFileFormat.java,v 1.16 2008/10/08 16:26:57 chiangy
+ *          Exp $
  * 
  */
 public class RMAExpressFileFormat extends DataSetFileFormat {
@@ -51,7 +52,7 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 	ExpressionResource resource = new ExpressionResource();
 	RMAExpressFilter maFilter = null;
 	private int possibleMarkers = 0;
-	
+
 	/**
 	 * 
 	 */
@@ -60,9 +61,10 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 		maFilter = new RMAExpressFilter();
 		Arrays.sort(maExtensions);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.geworkbench.components.parsers.FileFormat#getResource(java.io.File)
 	 */
 	public Resource getResource(File file) {
@@ -74,9 +76,10 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 		}
 		return resource;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.geworkbench.components.parsers.FileFormat#getFileExtensions()
 	 */
 	public String[] getFileExtensions() {
@@ -200,12 +203,15 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 		/* the sign between file name and extesion, ex: file.ext */
 		final int extSeperater = '.';
 
-		if (!checkFormat(file))
-			throw new InputFileFormatException(
-					"RMAExpressFileFormat::getMArraySet - "
+		if (!checkFormat(file)) {
+			log
+					.info("RMAExpressFileFormat::getMArraySet - "
 							+ "Attempting to open a file that does not comply with the "
 							+ "RMA express file format.");
-
+			throw new InputFileFormatException(
+					"Attempting to open a file that does not comply with the "
+							+ "RMA express file format.");
+		}
 		CSExprMicroarraySet maSet = new CSExprMicroarraySet();
 		String fileName = file.getName();
 		int dotIndex = fileName.lastIndexOf(extSeperater);
@@ -418,6 +424,7 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.geworkbench.components.parsers.FileFormat#getFileFilter()
 	 */
 	public FileFilter getFileFilter() {
@@ -426,6 +433,7 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.geworkbench.components.parsers.microarray.DataSetFileFormat#getDataFile(java.io.File[])
 	 */
 	@SuppressWarnings("unchecked")
