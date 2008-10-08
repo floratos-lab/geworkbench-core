@@ -29,25 +29,12 @@ import org.geworkbench.bison.parsers.resources.Resource;
 import org.geworkbench.components.parsers.microarray.DataSetFileFormat;
 
 /**
- * <p>
- * Title: Sequence and Pattern Plugin
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company:
- * </p>
+ * Sequence and Pattern Plugin
  * 
- * @author xuegong wang
  * @author yc2480
- * @version $Id: RMAExpressFileFormat.java,v 1.13 2008/10/06 22:02:35 chiangy
- *          Exp $
+ * @version $Id: RMAExpressFileFormat.java,v 1.15 2008-10-08 15:39:02 keshav Exp $
+ * 
  */
-
 public class RMAExpressFileFormat extends DataSetFileFormat {
 
 	static Log log = LogFactory.getLog(RMAExpressFileFormat.class);
@@ -60,13 +47,20 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 	ExpressionResource resource = new ExpressionResource();
 	RMAExpressFilter maFilter = null;
 	private int possibleMarkers = 0;
-
+	
+	/**
+	 * 
+	 */
 	public RMAExpressFileFormat() {
 		formatName = "Tab-Delimited (RMAExpress, GEO series matrix etc)";
 		maFilter = new RMAExpressFilter();
 		Arrays.sort(maExtensions);
 	}
-
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.geworkbench.components.parsers.FileFormat#getResource(java.io.File)
+	 */
 	public Resource getResource(File file) {
 		try {
 			resource.setReader(new BufferedReader(new FileReader(file)));
@@ -76,27 +70,28 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 		}
 		return resource;
 	}
-
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.geworkbench.components.parsers.FileFormat#getFileExtensions()
+	 */
 	public String[] getFileExtensions() {
 		return maExtensions;
 	}
 
-	/**
-	 * This method is not used in getMArraySet(), since we don't need to spend
-	 * time parse file twice. In this method, we check that: number of columns
-	 * in header line is same as number of columns in data. There are no
-	 * duplicate markers (ie., no 2 markers have the same name).
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.geworkbench.components.parsers.FileFormat#checkFormat(java.io.File)
+	 *      FIXME In here we should also check (among other things) that: The
+	 *      values of the data points respect their expected type. IMPORTANT!
+	 *      After Mantis #1551, this step will be required even if you don't
+	 *      want to checkFormat.
 	 */
-	// FIXME
-	// In here we should also check (among other things) that:
-	// * The values of the data points respect their expected type.
-	// IMPORTENT! After Mantis #1551, this step will be required even if you
-	// don't want to checkFormat.
 	public boolean checkFormat(File file) {
 		boolean columnsMatch = true;
 		boolean noDuplicateMarkers = true;
 		boolean noDuplicateArrays = true;
-		boolean valuesAreExpectedType = true;
 		try {
 			FileInputStream fileIn = new FileInputStream(file);
 			ProgressMonitorInputStream progressIn = new ProgressMonitorInputStream(
@@ -127,20 +122,11 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 						token = st.nextToken().trim();
 						if (token.equals("")) {// header
 							accessionIndex = columnIndex;
-						} else if ((headerLineIndex > 0) && (columnIndex == 0)) { // if
-							// this
-							// line
-							// is
-							// after
-							// header,
-							// then
-							// first
-							// column
-							// should
-							// be
-							// our
-							// marker
-							// name
+						} else if ((headerLineIndex > 0) && (columnIndex == 0)) { 
+							/*
+							 * if this line is after header, then first column
+							 * should be our marker name
+							 */
 							if (markers.contains(token)) {// duplicate markers
 								noDuplicateMarkers = false;
 								log.error("Duplicate Markers");
@@ -149,9 +135,9 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 								markers.add(token);
 							}
 						} else if (headerLineIndex == lineIndex) { // this is
-							// header
-							// line for
-							// RMA file
+							/*
+							 * header line for RMA file
+							 */
 							if (arrays.contains(token)) {// duplicate arrays
 								noDuplicateArrays = false;
 								log.error("Duplicate Arrays labels " + token
@@ -218,10 +204,8 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 				}
 				while (header != null
 						&& (header.startsWith(commentSign1) || header
-								.startsWith(commentSign2)) // for mantis issue:
-						// 1349
-						|| StringUtils.isEmpty(header) // for mantis issue:
-				// 1349
+								.startsWith(commentSign2)) 
+						|| StringUtils.isEmpty(header) 
 				) {
 					header = in.readLine();
 				}
@@ -258,17 +242,16 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 								possibleMarkers, arrayName, null, null, false,
 								DSMicroarraySet.affyTxtType);
 						maSet.add(array);
-						if (maSet.size() != (i + 1)) { // this occurs when we
-							// have duplicate array
-							// name?
+						if (maSet.size() != (i + 1)) { 
 							array.setLabel(array.getLabel() + "_2");
 							maSet.add(array);
 							duplicateLabels++;
 						}
 					}
 				} catch (OutOfMemoryError e) {
+					log.error(e);
 					throw new InputFileFormatException(
-							"Attempting to open a file that larger then your Java Virtual Machine can handle.");
+							"Attempting to open a file that is larger than allocated memory can handle.");
 				}
 				while ((line != null) // modified for mantis issue: 1349
 						&& (!StringUtils.isEmpty(line))
@@ -279,11 +262,8 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 						log.error("Warning: Could not parse line #" + (m + 1)
 								+ ". Line should have " + (n + 1)
 								+ " lines, has " + length + ".");
-						if ((m == 0) && (length == n + 2)) // this file
-							// probably comes
-							// from R's RMA,
-							// without first
-							// column in header
+						if ((m == 0) && (length == n + 2)) 
+							// TODO Is this file from R's RMA, without first column in header?
 							throw new InputFileFormatException(
 									"Attempting to open a file that does not comply with the "
 											+ "RMA Express format."
@@ -352,7 +332,6 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 						}
 					}
 					m++;
-					// System.out.println("marker "+m+" / "+possibleMarkers);
 					line = in.readLine();
 					line = StringUtils.replace(line, "\"", "");
 				}
@@ -403,9 +382,13 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 		}
 		return maSet;
 	}
-
+	
+	/**
+	 * 
+	 * @return
+	 */
 	public List getOptions() {
-		// todo Implement this org.geworkbench.components.parsers.FileFormat
+		// TODO Implement this org.geworkbench.components.parsers.FileFormat
 		// abstract method
 		throw new UnsupportedOperationException(
 				"Method getOptions() not yet implemented.");
@@ -415,12 +398,9 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 		return maFilter;
 	}
 
-	/**
-	 * getDataFile
-	 * 
-	 * @param files
-	 *            File[]
-	 * @return DataSet
+	/*
+	 * (non-Javadoc)
+	 * @see org.geworkbench.components.parsers.microarray.DataSetFileFormat#getDataFile(java.io.File[])
 	 */
 	public DSDataSet getDataFile(File[] files) {
 		return null;
@@ -431,6 +411,9 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 	 * to select Affymetrix input files. The filter will only display files
 	 * whose extension belongs to the list of file extension defined in {@link
 	 * #affyExtensions}.
+	 * 
+	 * @author yc2480
+	 * 
 	 */
 	class RMAExpressFilter extends FileFilter {
 
