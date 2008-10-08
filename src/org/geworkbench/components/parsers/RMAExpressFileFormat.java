@@ -45,10 +45,9 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 	private static final String columnSeperator = "\t";
 	private static final String lineSeperator = "\n";
 	private static final String[] maExtensions = { "txt", "tsv", "TSV" };
-	private static final String duplicateLabelModificator = "_2"; /*
-																	 * test =>
-																	 * test_2
-																	 */
+	private static final String duplicateLabelModificator = "_2";
+	/* ex: test => test_2 */
+
 	ExpressionResource resource = new ExpressionResource();
 	RMAExpressFilter maFilter = null;
 	private int possibleMarkers = 0;
@@ -266,6 +265,10 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 								possibleMarkers, arrayName, null, null, false,
 								DSMicroarraySet.affyTxtType);
 						maSet.add(array);
+						/*
+						 * FIXME: this will only fix one duplicate per unique
+						 * label. should handle unlimited duplicate.
+						 */
 						if (maSet.size() != (i + 1)) {
 							log.info("We got a duplicate label of array");
 							array.setLabel(array.getLabel()
