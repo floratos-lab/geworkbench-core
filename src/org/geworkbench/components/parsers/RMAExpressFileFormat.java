@@ -32,7 +32,7 @@ import org.geworkbench.components.parsers.microarray.DataSetFileFormat;
  * Sequence and Pattern Plugin
  * 
  * @author yc2480
- * @version $Id: RMAExpressFileFormat.java,v 1.15 2008-10-08 15:39:02 keshav Exp $
+ * @version $Id: RMAExpressFileFormat.java,v 1.16 2008-10-08 16:26:57 chiangy Exp $
  * 
  */
 public class RMAExpressFileFormat extends DataSetFileFormat {
@@ -44,6 +44,10 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 	private static final String columnSeperator = "\t";
 	private static final String lineSeperator = "\n";
 	private static final String[] maExtensions = { "txt", "tsv", "TSV" };
+	private static final String duplicateLabelModificator = "_2"; /*
+																	 * test =>
+																	 * test_2
+																	 */
 	ExpressionResource resource = new ExpressionResource();
 	RMAExpressFilter maFilter = null;
 	private int possibleMarkers = 0;
@@ -122,7 +126,7 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 						token = st.nextToken().trim();
 						if (token.equals("")) {// header
 							accessionIndex = columnIndex;
-						} else if ((headerLineIndex > 0) && (columnIndex == 0)) { 
+						} else if ((headerLineIndex > 0) && (columnIndex == 0)) {
 							/*
 							 * if this line is after header, then first column
 							 * should be our marker name
@@ -134,9 +138,9 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 							} else {
 								markers.add(token);
 							}
-						} else if (headerLineIndex == lineIndex) { // this is
+						} else if (headerLineIndex == lineIndex) {
 							/*
-							 * header line for RMA file
+							 * this is header line for RMA file
 							 */
 							if (arrays.contains(token)) {// duplicate arrays
 								noDuplicateArrays = false;
@@ -149,12 +153,13 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 						}
 						columnIndex++;
 					}
-					// check if column match or not
-					if (headerLineIndex > 0) { // if this line is real data, we
-						// assume lines after header are
-						// real data. (we might have bug
-						// here)
-						if (totalColumns == 0)// not been set yet
+					/* check if column match or not */
+					if (headerLineIndex > 0) {
+						/*
+						 * if this line is real data, we assume lines after
+						 * header are real data. (we might have bug here)
+						 */
+						if (totalColumns == 0) /* not been set yet */
 							totalColumns = columnIndex - accessionIndex;
 						else if (columnIndex != totalColumns)// if not equal
 							columnsMatch = false;
@@ -173,14 +178,27 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 			return false;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.geworkbench.components.parsers.microarray.DataSetFileFormat#getDataFile(java.io.File)
+	 */
+	@SuppressWarnings("unchecked")
 	public DSDataSet getDataFile(File file) throws InputFileFormatException {
 		return (DSDataSet) getMArraySet(file);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.geworkbench.components.parsers.FileFormat#getMArraySet(java.io.File)
+	 */
+	@SuppressWarnings("unchecked")
 	public DSMicroarraySet getMArraySet(File file)
 			throws InputFileFormatException {
-		final int extSeperater = '.'; // the sign between file name and
-		// extesion, ex: file.ext
+
+		/* the sign between file name and extesion, ex: file.ext */
+		final int extSeperater = '.';
 
 		if (!checkFormat(file))
 			throw new InputFileFormatException(
@@ -204,9 +222,8 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 				}
 				while (header != null
 						&& (header.startsWith(commentSign1) || header
-								.startsWith(commentSign2)) 
-						|| StringUtils.isEmpty(header) 
-				) {
+								.startsWith(commentSign2))
+						|| StringUtils.isEmpty(header)) {
 					header = in.readLine();
 				}
 				if (header == null) {
@@ -214,8 +231,10 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 							"File is empty or consists of only comments.\n"
 									+ "RMAExpressFileFormat expected");
 				}
-				header = StringUtils.replace(header, "\"", ""); // for mantis
-				// issue:1349
+
+				/* for mantis issue:1349 */
+				header = StringUtils.replace(header, "\"", "");
+
 				StringTokenizer headerTokenizer = new StringTokenizer(header,
 						columnSeperator, false);
 				int n = headerTokenizer.countTokens();
@@ -229,9 +248,8 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 				String line = in.readLine();
 				line = StringUtils.replace(line, "\"", "");
 				int m = 0;
-				// while (line != null) { // original code
 
-				// Skip first token
+				/* Skip first token */
 				headerTokenizer.nextToken();
 				int duplicateLabels = 0;
 
@@ -242,8 +260,10 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 								possibleMarkers, arrayName, null, null, false,
 								DSMicroarraySet.affyTxtType);
 						maSet.add(array);
-						if (maSet.size() != (i + 1)) { 
-							array.setLabel(array.getLabel() + "_2");
+						if (maSet.size() != (i + 1)) {
+							log.info("We got a duplicate label of array");
+							array.setLabel(array.getLabel()
+									+ duplicateLabelModificator);
 							maSet.add(array);
 							duplicateLabels++;
 						}
@@ -262,8 +282,9 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 						log.error("Warning: Could not parse line #" + (m + 1)
 								+ ". Line should have " + (n + 1)
 								+ " lines, has " + length + ".");
-						if ((m == 0) && (length == n + 2)) 
-							// TODO Is this file from R's RMA, without first column in header?
+						if ((m == 0) && (length == n + 2))
+							// TODO Is this file from R's RMA, without first
+							// column in header?
 							throw new InputFileFormatException(
 									"Attempting to open a file that does not comply with the "
 											+ "RMA Express format."
@@ -382,11 +403,12 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 		}
 		return maSet;
 	}
-	
+
 	/**
 	 * 
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public List getOptions() {
 		// TODO Implement this org.geworkbench.components.parsers.FileFormat
 		// abstract method
@@ -394,6 +416,10 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 				"Method getOptions() not yet implemented.");
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.geworkbench.components.parsers.FileFormat#getFileFilter()
+	 */
 	public FileFilter getFileFilter() {
 		return maFilter;
 	}
@@ -402,8 +428,13 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 	 * (non-Javadoc)
 	 * @see org.geworkbench.components.parsers.microarray.DataSetFileFormat#getDataFile(java.io.File[])
 	 */
+	@SuppressWarnings("unchecked")
 	public DSDataSet getDataFile(File[] files) {
-		return null;
+		// TODO Implement this
+		// org.geworkbench.components.parsers.microarray.DataSetFileFormat
+		// abstract method
+		throw new UnsupportedOperationException(
+				"Method getDataFile(File[] files) not yet implemented.");
 	}
 
 	/**
