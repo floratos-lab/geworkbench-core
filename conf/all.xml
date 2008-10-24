@@ -122,6 +122,9 @@
 	<plugin id="knnAnalysis_30" name="KNN Analysis 3.0" class="org.geworkbench.components.gpmodule.classification.knn.KNNTraining" source="gpmodule_v3_0"/>
 	<plugin id="wvAnalysis_30" name="WV Analysis 3.0" class="org.geworkbench.components.gpmodule.classification.wv.WVTraining" source="gpmodule_v3_0"/>
     <plugin id="SVMAnalysis_30" name="SVM Analysis 3.0" class="org.geworkbench.components.gpmodule.classification.svm.SVMTraining" source="gpmodule_v3_0"/>		
+    <plugin id="svmVisualComponent_30" name="SVM Visual Component" class="org.geworkbench.components.gpmodule.classification.svm.gui.SVMVisualComponent" source="gpmodule_v3_0">
+        <gui-area name="VisualArea"/>
+    </plugin>
     <plugin id="PCAAnalysis_30" name="PCA Analysis 3.0" class="org.geworkbench.components.gpmodule.pca.PCAAnalysis" source="gpmodule_v3_0"/>
 	<plugin id="PCAViewer_30" name="PCA Viewer 3.0" class="org.geworkbench.components.gpmodule.pca.PCA" source="gpmodule_v3_0">
 		<gui-area name="VisualArea"/>
