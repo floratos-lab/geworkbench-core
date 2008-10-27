@@ -21,15 +21,12 @@ import org.geworkbench.events.ProjectEvent;
 import org.geworkbench.events.PhenotypeSelectorEvent;
 import org.geworkbench.engine.management.Publish;
 import org.geworkbench.engine.management.Subscribe;
-import org.geworkbench.algorithms.AbstractTrainingPanel;
 import org.geworkbench.util.ProgressBar;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import javax.swing.*;
 import java.util.List;
 import java.util.ArrayList;
-import java.awt.*;
 
 /**
  * An abstract trainer for a machine learning algorithm.
@@ -60,17 +57,28 @@ public abstract class AbstractTraining extends AbstractAnalysis implements Clust
 
         CSClassifier classifier = trainClassifier(caseData, controlData);
 
-        if (classifier != null) {
-            publishProjectNodeAddedEvent(new ProjectNodeAddedEvent(classifier.getLabel(), null, classifier));
-            if (testData.size() > 0) {
-                DSPanel<DSMicroarray> predictedCasePanel = new CSPanel<DSMicroarray>("Predicted Cases");
-                DSPanel<DSMicroarray> predictedControlPanel = new CSPanel<DSMicroarray>("Predicted Controls");
-                classifyData(testPanel, classifier, predictedCasePanel, predictedControlPanel);
-                publishSubpanelChangedEvent(new SubpanelChangedEvent<DSMicroarray>(DSMicroarray.class, predictedCasePanel, SubpanelChangedEvent.NEW));
-                publishSubpanelChangedEvent(new SubpanelChangedEvent<DSMicroarray>(DSMicroarray.class, predictedControlPanel, SubpanelChangedEvent.NEW));
+        if (classifier != null)
+        {
+            if (testData.size() > 0)
+            {
+                runClassifier(testPanel, classifier);
             }
+
+            publishProjectNodeAddedEvent(new ProjectNodeAddedEvent(classifier.getLabel(), null, classifier));
         }
+
         return null;
+    }
+
+    public void runClassifier(DSPanel<DSMicroarray> testPanel, CSClassifier classifier)
+    {
+        DSPanel<DSMicroarray> predictedCasePanel = new CSPanel<DSMicroarray>("Predicted Cases");
+        DSPanel<DSMicroarray> predictedControlPanel = new CSPanel<DSMicroarray>("Predicted Controls");
+
+        classifyData(testPanel, classifier, predictedCasePanel, predictedControlPanel);
+
+        publishSubpanelChangedEvent(new SubpanelChangedEvent<DSMicroarray>(DSMicroarray.class, predictedCasePanel, SubpanelChangedEvent.NEW));
+        publishSubpanelChangedEvent(new SubpanelChangedEvent<DSMicroarray>(DSMicroarray.class, predictedControlPanel, SubpanelChangedEvent.NEW));
     }
 
     public static void addMicroarrayData(DSPanel<DSMicroarray> panel, List<float[]> dataToAddTo, DSItemList<DSGeneMarker> markers) {
@@ -92,7 +100,7 @@ public abstract class AbstractTraining extends AbstractAnalysis implements Clust
         progressBar.setBounds(new org.geworkbench.util.ProgressBar.IncrementModel(0, size, 0, size, 1));
         progressBar.setAlwaysOnTop(true);
         progressBar.showValues(false);
-        
+
         progressBar.start();
 
         int count = 0;
@@ -128,6 +136,8 @@ public abstract class AbstractTraining extends AbstractAnalysis implements Clust
     }
 
     @Subscribe public void receive(ProjectEvent event, Object source) {
+        System.out.println("abstracttraining received project event.");
+
         DSDataSet dataSet = event.getDataSet();
         if ((dataSet != null) && (dataSet instanceof DSMicroarraySet)) {
             panel.setMaSet((DSMicroarraySet) dataSet);
@@ -146,6 +156,18 @@ public abstract class AbstractTraining extends AbstractAnalysis implements Clust
 
     @Subscribe public void receive(PhenotypeSelectorEvent event, Object source) {
         panel.rebuildForm();
+    }
+
+    @Subscribe
+    public void receive(org.geworkbench.events.ProjectNodeRemovedEvent e, Object source)
+    {
+        System.out.println("abstracttraining received project node removed event.");
+    }
+
+    @Subscribe
+    public void receive(org.geworkbench.events.ProjectNodeAddedEvent e, Object source)
+    {
+        System.out.println("abstracttraining received project node added event.");
     }
 
     public int getAnalysisType() {
