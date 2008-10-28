@@ -13,7 +13,7 @@ import org.geworkbench.bison.parsers.resources.Resource;
 /**
  * 
  * @author yc2480
- * @version $Id: AffyFileFormatTest.java,v 1.1 2008-10-03 16:48:20 chiangy Exp $
+ * @version $Id: AffyFileFormatTest.java,v 1.2 2008-10-28 16:55:18 keshav Exp $
  */
 public class AffyFileFormatTest extends TestCase {
 

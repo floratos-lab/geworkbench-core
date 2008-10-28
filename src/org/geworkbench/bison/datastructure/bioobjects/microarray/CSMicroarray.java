@@ -260,7 +260,8 @@ public class CSMicroarray implements DSMicroarray, Serializable {
         // @todo - xiaoqing - for every new CSGeneMarker, the default markerId =0
         // so it always return the first marker to the query. Need change soon...
         if (mInfo != null) {
-            if ((markerIndex = mInfo.getSerial()) >= 0) {
+            if (((markerIndex = mInfo.getSerial()) >= 0) 
+            		&& (markerIndex < markerArray.length)){
                 return markerArray[markerIndex];
             } else{
             return null;

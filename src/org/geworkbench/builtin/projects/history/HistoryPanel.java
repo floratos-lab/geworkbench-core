@@ -89,5 +89,27 @@ import java.awt.*;
             historyTextArea.setCaretPosition(0); // For long text.
         }
     }
+
+    /**
+     * UPdate data history for pattern discovery.
+     * @param e
+     * @param source
+     */
+    @Subscribe
+	public void receive(org.geworkbench.events.HistoryEvent e, Object source) {
+		maSet = e.getDataSet();
+		if (maSet != null) {
+			datasetHistory = DEFAULT_MESSAGE;
+
+			Object[] values = maSet.getValuesForName(ProjectPanel.HISTORY);
+			if (values != null && values.length > 0) {
+				datasetHistory = (String) values[0];
+				if (datasetHistory.trim().equals(""))
+					datasetHistory = DEFAULT_MESSAGE;
+			}
+			historyTextArea.setText(datasetHistory);
+			historyTextArea.setCaretPosition(0);
+		}
+	}
 }
 

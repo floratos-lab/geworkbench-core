@@ -5,6 +5,7 @@ import java.io.File;
 
 /**
  * @author John Watkinson
+ * @version $Id: FileField.java,v 1.2 2008-10-28 16:55:18 keshav Exp $
  */
 public class FileField extends Field {
 
@@ -38,8 +39,11 @@ public class FileField extends Field {
         }
     }
 
-    public void fromString(String s) {
-        value = new File(s);
+    public void fromString(String s) throws ValidationException{
+         
+    	value = new File(s);
+        if (! value.exists() )
+        	throw new ValidationException(s + " is not valid.");
     }
 
     public String toString() {

@@ -21,6 +21,8 @@
 		<!-- Release info -->
 		<property name="release.file" value="${dist}/${app}-${version}"/>
 		<!-- Release info -->
+		<property name="cabio40_lib" value="components/annotations/lib/cabio40_java_client" />
+
 	</target>
 	<!-- ===================================================================== -->
 	<!-- PREPARE  -->
@@ -31,6 +33,10 @@
 			<fileset dir="${lib}">
 				<include name="**/*.jar"/>
 			</fileset>
+			<fileset dir="${cabio40_lib}">
+				<include name="**/*.jar" />
+			</fileset>
+
 		</path>
 		<!-- Classpath for running -->
 		<path id="run.classpath">

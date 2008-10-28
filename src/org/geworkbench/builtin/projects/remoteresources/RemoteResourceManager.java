@@ -1,307 +1,271 @@
 package org.geworkbench.builtin.projects.remoteresources;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.net.URL;
-import javax.xml.namespace.QName;
-//import edu.columbia.stubs.CaARRAYIndexService.service.*;
-//import edu.columbia.stubs.CaARRAYIndexService.CaARRAYIndexPortType;
 
 /**
- * <p>Title: </p>
- *
- * <p>Description: </p>
- *
- * <p>Copyright: Copyright (c) 2005</p>
- *
- * <p>Company: </p>
- *
- * @author not attributable
- * @version 1.0
+ * Remote resource manager.
+ * 
+ * @author xiaoqing, zji
+ * @version $Id: RemoteResourceManager.java,v 1.25 2008-10-28 16:55:18 keshav Exp $
  */
 public class RemoteResourceManager {
-    private ArrayList<RemoteResource> existedResources;
-    private static final String DEFAULTRESOURCEFILE = "defaultResources.csv";
-    private String filename;
-    private String cloumnseparator = ",";
+	private ArrayList<RemoteResource> existedResources;
+	private static final String DEFAULTRESOURCEFILE = "defaultResources.csv";
+	private String filename;
+	private String cloumnseparator = ",";
 
-    public RemoteResourceManager() {
-        existedResources = new ArrayList<RemoteResource>();
-        String propertyfilename = System.getProperty("remotepropertyfile");
-        propertyfilename = System.getProperty("temporary.files.directory") +
-                           File.separator + DEFAULTRESOURCEFILE;
-        filename = new File(propertyfilename).getAbsolutePath();
-        if (filename != null && new File(filename).canRead()) {
+	public RemoteResourceManager() {
+		existedResources = new ArrayList<RemoteResource>();
+		String propertyfilename = System.getProperty("remotepropertyfile");
+		propertyfilename = System.getProperty("temporary.files.directory")
+				+ File.separator + DEFAULTRESOURCEFILE;
+		filename = new File(propertyfilename).getAbsolutePath();
+		if (filename != null && new File(filename).canRead()) {
+			init(new File(filename));
 
-            init(new File(filename));
+			deleteRemoteResource("caARRAYStage");
+			RemoteResource rr = new RemoteResource("caARRAYStage",
+					"array-stage.nci.nih.gov", "8080", "http:", "", "");
+			existedResources.add(rr);
+		} else {
+			init();
+		}
 
-            //changed for bug 395
-            deleteRemoteResource("caARRAYStage");
-//            init();
-              RemoteResource rr = new RemoteResource("caARRAYStage",
-                                               "array-stage.nci.nih.gov",
-                                               "8080", "http:",
-                                               "", "");
-         existedResources.add(rr);
-        } else {
-            init();
-        }
+	}
 
-    }
+	/**
+	 * A default setup when no property file is found. init
+	 */
+	protected void init() {
+		RemoteResource rr1 = new RemoteResource("caARRAY", "array.nci.nih.gov",
+				"8080", "http:", "", "");
+		existedResources.add(rr1);
+		RemoteResource rr2 = new RemoteResource("caARRAYStage",
+				"array-stage.nci.nih.gov", "8080", "http:", "", "");
+		existedResources.add(rr2);
+	}
 
-    /**
-     * A default setup when no property file is found.
-     * init
-     */
-    protected void init() {
-//        RemoteResource rr = new RemoteResource("caARRAY",
-//                                               "caarray-mageom-server.nci.nih.gov",
-//                                               "8080", "http:",
-//                                               "PUBLIC", "");
-       RemoteResource rr = new RemoteResource("caARRAYStage",
-                                               "caarray-mageom-server-stage.nci.nih.gov",
-                                               "8080", "http:",
-                                               "PUBLIC", "");
-//        # caARRAY username/password
-//caarray.mage.user=KustagiM
-//caarray.mage.password=Tbf38!a
+	/**
+	 * Init the existed resources from a file.
+	 * 
+	 * @param propertyfilename
+	 *            File
+	 */
+	private void init(File propertyfilename) {
+		try {
 
-        existedResources.add(rr);
-    }
+			InputStream input = new FileInputStream(propertyfilename);
+			BufferedReader br = new BufferedReader(new InputStreamReader(input));
+			String line = null;
 
-    /**
-     * Init the existed resources from a file.
-     * @param propertyfilename File
-     */
-    private void init(File propertyfilename) {
-        try {
+			while ((line = br.readLine()) != null) {
 
-            InputStream input = new FileInputStream(propertyfilename);
-            BufferedReader br = new BufferedReader(new InputStreamReader(input));
-            String line = null;
+				String[] cols = line.split(",");
+				if (cols.length > 0) {
+					RemoteResource rr = RemoteResource.createNewInstance(cols);
+					if (rr != null) {
+						existedResources.add(rr);
 
-            while ((line = br.readLine()) != null) {
+					}
+				}
+			}
+			br.close();
+			input.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
 
-                String[] cols = line.split(",");
-                if (cols.length > 0) {
-                    RemoteResource rr = RemoteResource.createNewInstance(cols);
-                    if (rr != null) {
-                        existedResources.add(rr);
+		}
 
-                    }
-                }
-            }
-            br.close();
-            input.close();
-        } catch (Exception ex) {
-            ex.printStackTrace();
+	}
 
-        }
+	/**
+	 * Init the existed resources from a Index service.
+	 * 
+	 * @param url
+	 *            name
+	 */
+	protected boolean init(String urlname) {
+		try {
+			String test = null;
 
-    }
+			if (test == null) {
+				return false;
+			}
+			removeIndexResources();
 
-    /**
-     * Init the existed resources from a Index service.
-     * @param url name
-     */
-    protected boolean init(String urlname) {
-        try {
-//            urlname =  "http://adparacel.cu-genome.org/axis/servlet/AxisServlet";
-//            Service service = new Service();
-//
-//            Call call = (Call) service.createCall();
-//
-//            call.setTargetEndpointAddress(new URL(urlname));
-//            call.setOperationName(new QName("urn:downloadfileService",
-//                                            "getServerInfo")); //This is the target services method to invoke.
-//
-//            call.addParameter("testParam", org.apache.axis.Constants.XSD_STRING,
-//                              javax.xml.rpc.ParameterMode.IN);
-//
-//            call.setReturnType(org.apache.axis.Constants.XSD_STRING);
-            URL GSH = new java.net.URL(urlname);
+			String[] lists = test.split("!");
+			if (lists != null) {
+				for (String s : lists) {
+					String[] cols = s.split(",");
+					if (cols != null && cols.length > 0) {
+						RemoteResource rr = RemoteResource
+								.createNewInstance(cols);
+						if (rr != null) {
+							rr.setEditable(false);
+							existedResources.add(rr);
 
-            String cmd = "caARRAY";
-            //Object result = call.invoke(new Object[] {cmd});
+						}
+					}
 
-            // Disabled for caGRID
-//            CaARRAYIndexServiceGridLocator caArrayServiceLocator = new
-//                    CaARRAYIndexServiceGridLocator();
-//
-//            CaARRAYIndexPortType caARRAYPortType = caArrayServiceLocator.
-//                    getCaARRAYIndexPort(GSH); //getsequenceAlignmentPort(GSH);// getSequenceAlignmentPort(GSH);
-//
-//            String test = (String) caARRAYPortType.getServer(cmd);
-            String test = null;
+				}
+			}
+			return true;
 
-            if (test == null) {
-                return false;
-            }
-            removeIndexResources();
+		} catch (Exception e) {
+			System.out.println(e + "RemoteResourceManager.init" + urlname);
+			e.printStackTrace();
+		}
+		return false;
 
-            String[] lists = test.split("!");
-            if (lists != null) {
-                for (String s : lists) {
-                    String[] cols = s.split(",");
-                    if (cols != null && cols.length > 0) {
-                        RemoteResource rr = RemoteResource.createNewInstance(
-                                cols);
-                        if (rr != null) {
-                            rr.setEditable(false);
-                            existedResources.add(rr);
+	}
 
-                        }
-                    }
+	public void removeIndexResources() {
+		int size = existedResources.size();
+		ArrayList<RemoteResource> newExistedResources = new ArrayList<RemoteResource>();
+		boolean[] removeIndex = new boolean[size];
+		for (int i = 0; i < existedResources.size(); i++) {
+			RemoteResource rr = existedResources.get(i);
+			removeIndex[i] = rr.isEditable();
+			if (rr.isEditable()) {
+				newExistedResources.add(rr);
+			}
 
-                }
-            }
-            return true;
+		}
+		existedResources = newExistedResources;
+	}
 
-        } catch (Exception e) {
-             System.out.println(e + "RemoteResourceManager.init" + urlname);
-             e.printStackTrace();
-        }
-        return false;
+	/**
+	 * getFristItem
+	 */
+	public String getFirstItemName() {
+		if (existedResources != null && existedResources.size() > 0) {
+			return existedResources.get(0).getShortname();
+		}
+		return null;
 
-    }
+	}
 
-    public void removeIndexResources() {
-        int size = existedResources.size();
-        ArrayList<RemoteResource>
-                newExistedResources = new ArrayList<RemoteResource>();
-        boolean[] removeIndex = new boolean[size];
-        for (int i = 0; i < existedResources.size(); i++) {
-            RemoteResource rr = existedResources.get(i);
-            removeIndex[i] = rr.isEditable();
-            if (rr.isEditable()) {
-                newExistedResources.add(rr);
-            }
+	public String[] getItems() {
+		int size = existedResources.size();
+		String[] shortnames = new String[size];
+		for (int i = 0; i < size; i++) {
+			shortnames[i] = existedResources.get(i).getShortname();
+		}
+		return shortnames;
+	}
 
-        }
-        existedResources = newExistedResources;
-    }
+	public RemoteResource getSelectedResouceByName(String name) {
+		for (RemoteResource rr : existedResources) {
+			if (rr.getShortname().equals(name)) {
+				return rr;
+			}
+		}
+		return null;
 
-    /**
-     * getFristItem
-     */
-    public String getFirstItemName() {
-        if (existedResources != null && existedResources.size() > 0) {
-            return existedResources.get(0).getShortname();
-        }
-        return null;
+	}
 
-    }
+	/**
+	 * Edit the properties of a romoteResource
+	 */
+	public void editRemoteResource(int i, RemoteResource rResource) {
+		RemoteResource rr = existedResources.get(i);
+		rr.update(rResource);
+	}
 
-    public String[] getItems() {
-        int size = existedResources.size();
-        String[] shortnames = new String[size];
-        for (int i = 0; i < size; i++) {
-            shortnames[i] = existedResources.get(i).getShortname();
-        }
-        return shortnames;
-    }
+	/**
+	 * Delete one resource object
+	 * 
+	 * @param rResource
+	 *            RemoteResource
+	 * @return boolean
+	 */
+	public boolean deleteRemoteResource(RemoteResource rResource) {
+		if (existedResources.remove(rResource)) {
+			saveToFile();
+			return true;
+		}
+		return false;
+	}
 
-    public RemoteResource getSelectedResouceByName(String name) {
-        for (RemoteResource rr : existedResources) {
-            if (rr.getShortname().equals(name)) {
-                return rr;
-            }
-        }
-        return null;
+	/**
+	 * Delete one resource based on its index position.
+	 * 
+	 * @param rResourceIndex
+	 *            int
+	 * @return boolean
+	 */
+	public boolean deleteRemoteResource(int rResourceIndex) {
+		if (existedResources.remove(rResourceIndex) != null) {
+			saveToFile();
+			return true;
+		}
+		return false;
+	}
 
-    }
+	/**
+	 * Delete one resource based on its shortname.
+	 * 
+	 * @param name
+	 *            String
+	 * @return boolean
+	 */
+	public boolean deleteRemoteResource(String name) {
+		if (getSelectedResouceByName(name) != null) {
+			existedResources.remove(getSelectedResouceByName(name));
+		}
+		return false;
+	}
 
-    /**
-     * Edit the properties of a romoteResource
-     */
-    public void editRemoteResource(int i, RemoteResource rResource) {
-        //existedResources.remove(i);
-        RemoteResource rr = existedResources.get(i);
-        rr.update(rResource);
-    }
+	/**
+	 * Add one new resource.
+	 * 
+	 * @param newResource
+	 *            RemoteResource
+	 * @return boolean
+	 */
+	public boolean addRemoteResource(RemoteResource newResource) {
+		if (existedResources.contains(newResource)) {
+			deleteRemoteResource(newResource);
+		}
+		return existedResources.add(newResource);
+	}
 
-    /**
-     * Delete  one resource object
-     * @param rResource RemoteResource
-     * @return boolean
-     */
-    public boolean deleteRemoteResource(RemoteResource rResource) {
-        if(existedResources.remove(rResource)){
-            saveToFile();
-            return true;
-        }
-        return false;
-    }
+	/**
+	 * saveToFile
+	 */
+	public void saveToFile() {
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
+					filename)));
+			if (existedResources.size() == 0) {
 
-    /**
-     * Delete one resource based on its index position.
-     * @param rResourceIndex int
-     * @return boolean
-     */
-    public boolean deleteRemoteResource(int rResourceIndex) {
-        if (existedResources.remove(rResourceIndex) != null) {
-            saveToFile();
-            return true;
-        }
-        return false;
-    }
+				return;
+			}
 
-    /**
-     * Delete one resource based on its shortname.
-     * @param name String
-     * @return boolean
-     */
-    public boolean deleteRemoteResource(String name) {
-        if (getSelectedResouceByName(name) != null) {
-            existedResources.remove(getSelectedResouceByName(name));
-        }
-        return false;
-    }
+			for (RemoteResource s : existedResources) {
 
+				writer.write(s.getShortname() + cloumnseparator + s.getUri()
+						+ cloumnseparator + s.getPortnumber() + cloumnseparator
+						+ s.getConnectProtocal() + cloumnseparator
+						+ s.getUsername() + cloumnseparator + s.getPassword()
+						+ cloumnseparator + s.isEditable());
+				writer.newLine();
+			}
 
-    /**
-     * Add one new resource.
-     * @param newResource RemoteResource
-     * @return boolean
-     */
-    public boolean addRemoteResource(RemoteResource newResource) {
-        if (existedResources.contains(newResource)) {
-            deleteRemoteResource(newResource);
-        }
-        return existedResources.add(newResource);
-    }
+			writer.flush();
+			writer.close();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
 
-    /**
-     * saveToFile
-     */
-    public void saveToFile() {
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
-                    filename)));
-            String line = null;
-            if (existedResources.size() == 0) {
-
-                return;
-            }
-
-            for (RemoteResource s : existedResources) {
-
-                writer.write(s.getShortname()
-                             + cloumnseparator + s.getUri()
-                             + cloumnseparator + s.getPortnumber()
-                             + cloumnseparator + s.getConnectProtocal()
-                             + cloumnseparator + s.getUsername()
-                             + cloumnseparator + s.getPassword()
-                             + cloumnseparator + s.isEditable());
-                writer.newLine();
-            }
-
-            writer.flush();
-            writer.close();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
-
-    }
+	}
 
 }

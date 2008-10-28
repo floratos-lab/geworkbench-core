@@ -10,7 +10,7 @@ import java.awt.*;
  * <p>Copyright: Copyright (c) 2003 -2004</p>
  * <p>Company: Columbia University</p>
  *
- * @author $Author: xiaoqing $
+ * @author $Author: keshav $
  * @version 1.0
  */
 public class AlgorithmSelectionPanel extends JPanel {
@@ -42,7 +42,8 @@ public class AlgorithmSelectionPanel extends JPanel {
         hierarc.setBorder(null);
         discovery.setBorder(null);
         this.add(discovery, null);
-        this.add(hierarc, null);
+        // remove the hierarchical clustering option for geWorkbencg 1.6 release 
+        //this.add(hierarc, null);
         this.add(exhaustive, null);
     }
 
@@ -61,10 +62,10 @@ public class AlgorithmSelectionPanel extends JPanel {
         algorithmGroup.add(discovery);
         algorithmGroup.add(exhaustive);
         algorithmGroup.add(hierarc);
-        //@todo disable the button for geworkbench-v_1_0_5
-        //hierarc.setEnabled(false);
+
         add(discovery);
-        add(hierarc);
+        // remove the hierarchical clustering option for geWorkbencg 1.6 release 
+        //add(hierarc);
         add(exhaustive);
     }
 

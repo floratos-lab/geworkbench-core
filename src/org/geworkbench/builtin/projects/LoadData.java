@@ -338,7 +338,8 @@ public class LoadData extends JDialog {
 		// jPanel3.add(jRadioButton2, null);
 		// deletion ends here.
 		jPanel1.add(jPanel7, null);
-		jPanel1.add(gridButtonPanel, null);
+		// remove grid radio button for geWorkbench 1.6 release
+		//jPanel1.add(gridButtonPanel, null);
 		jRadioButton8.setText("Remote");
 		gridButton.setText("Grid");
 		jPanel7.add(jRadioButton8, null);

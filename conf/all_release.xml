@@ -21,6 +21,12 @@
 		<gui-area name="VisualArea"/>
 	</plugin>
 
+	<!--  this plugin must be before cytoscapePanel -->
+	<plugin id="genspaceLogPreferences" name="genSpace Log Preferences"
+		class="org.geworkbench.components.genspace.GenSpaceLogPreferences"
+		source="genspace">
+		<gui-area name="VisualArea" />
+	</plugin>
 	
 	<plugin id="cytoscapePanel" name="Cytoscape" class="org.geworkbench.components.cytoscape.CytoscapeWidget" source="cytoscape">
 		<gui-area name="VisualArea"/>
@@ -41,9 +47,6 @@
 		<gui-area name="VisualArea"/>
 	</plugin>
 	<plugin id="genepixFilter" name="Genepix File Format" class="org.geworkbench.components.parsers.GenePixFileFormat"/>
-	<plugin id="goPanel" name="Gene Ontology" class="org.geworkbench.components.goterms.GOPanel" source="goterms">
-		<gui-area name="VisualArea"/>
-	</plugin>
 	<plugin id="GenepixFlagsFilter" name="Genepix Flag Filter" class="org.geworkbench.components.filtering.GenepixFlagsFilter" source="filtering"/>
 	<!--
 	<plugin id="genePanel" name="Gene Panel" class="org.geworkbench.components.selectors.GenericMarkerSelectorPanel">
@@ -89,6 +92,7 @@
 	<plugin id="anova" name="Anova Analysis" class="org.geworkbench.components.anova.AnovaAnalysis" source="anova"/>
 
 	<plugin id="aracne" name="ARACNE Analysis" class="org.geworkbench.components.aracne.AracneAnalysis" source="aracne-java"/>
+	<plugin id="mindy" name="MINDY Analysis" class="org.geworkbench.components.mindy.MindyAnalysis" source="mindy"/>
 	<plugin id="fastHierarchicalClusteringAnalysis" name="Hierachical Clustering" class="org.geworkbench.components.clustering.FastHierClustAnalysis" source="clustering"/>
 	<plugin id="matrixReduce" name="Matrix Reduce" class="org.geworkbench.components.matrixreduce.MatrixReduceAnalysis" source="matrixreduce"/>
 	<plugin id="matrixReduceViewer" name="MatrixREDUCE" class="org.geworkbench.components.matrixreduce.MatrixReduceViewer" source="matrixreduce">
@@ -133,10 +137,6 @@
 		<gui-area name="VisualArea"/>
 	</plugin>
 	
-	<plugin id="mindy" name="MINDY Analysis" class="org.geworkbench.components.mindy.MindyAnalysis" source="mindy"/>
-	<plugin id="mindyViewer" name="MINDY Viewer" class="org.geworkbench.components.mindy.MindyVisualComponent" source="mindy">
-		<gui-area name="VisualArea"/>
-	</plugin>
 -->
 	
 	<plugin id="thresholdNormalizer" name="Threshold Normalizer" class="org.geworkbench.components.normalization.ThresholdNormalizer" source="normalization"/>
@@ -237,6 +237,9 @@
     </plugin>
  -->
 	<!-- MINDY -->
+	<plugin id="mindyViewer" name="MINDY Viewer" class="org.geworkbench.components.mindy.MindyVisualComponent" source="mindy">
+		<gui-area name="VisualArea"/>
+	</plugin>
 	
 	<!---->
 	<!-- NetBoost -->
@@ -268,16 +271,7 @@
    
      -->
  
-	<plugin id="goTree" name="Gene Ontology Tree" class="org.geworkbench.components.goterms.tree.GeneOntologyTreePopulateComponent" source="goterms">
-</plugin>
 	<plugin id="caArray2Panel" name="CaArray2" class="org.geworkbench.components.caarray.arraydata.CaArray2Component" source="caarray">
-            </plugin>
-	<!--<plugin id="genomeBrowser" name="Genome Browser" class="org.geworkbench.components.genomebrowser.GenomeBrowser" source="genomebrowser">
-		<gui-area name="VisualArea"/>
-	</plugin>-->
-	<plugin id="GenSpaceLogPreferences" name="genSpace" 
- 	        class="org.geworkbench.components.genspace.GenSpaceLogPreferences" 
- 	        source="genspace">
- 	    <gui-area name="CommandArea"/>
-	</plugin>
+    </plugin>
+
 </geaw-config>

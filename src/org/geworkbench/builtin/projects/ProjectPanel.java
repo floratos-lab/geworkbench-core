@@ -94,6 +94,8 @@ import org.geworkbench.events.CaArrayQueryEvent;
 import org.geworkbench.events.CaArrayQueryResultEvent;
 import org.geworkbench.events.CaArrayRequestEvent;
 import org.geworkbench.events.CommentsEvent;
+import org.geworkbench.events.CleanDataEvent;
+import org.geworkbench.events.DirtyDataEvent;
 import org.geworkbench.events.ImageSnapshotEvent;
 import org.geworkbench.events.MicroarrayNameChangeEvent;
 import org.geworkbench.events.NormalizationEvent;
@@ -435,6 +437,11 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			/* add data sets next */
 			java.util.List<DataSetSaveNode> dataSets = project.getChildren();
 			for (DataSetSaveNode dataNode : dataSets) {
+				/* 
+				 * publish an event so others know the data is being accessed by the project
+				 * panel at this time 
+				 */
+				publishDirtyDataEvent(new DirtyDataEvent());
 				setComponents(dataNode);
 				DSDataSet dataSet = dataNode.getDataSet();
 				/* pending node */
@@ -465,7 +472,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 					setComponents(ancNode);
 
 					/* pending node */
-
 					if (ancNode.getDataSet().getDataSetName() != null
 							&& ancNode.getDataSet().getDataSetName().equals(
 									PendingTreeNode.class.getName())) {
@@ -500,6 +506,12 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				}
 				selection.setNodeSelection((ProjectTreeNode) selection
 						.getSelectedDataSetNode().getParent());
+				
+				/*
+				 *  publish an event so others know the data is not being accessed by the project
+				 * panel at this time 
+				 */
+				publishCleanDataEvent(new CleanDataEvent());
 			}
 			publishPendingNodeLoadedFromWorkspaceEvent(new PendingNodeLoadedFromWorkspaceEvent(
 					pendingGridEprs, null));
@@ -511,6 +523,14 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			projectTree.setSelectionPath(new TreePath(selectedNode.getPath()));
 			selection.setNodeSelection(selectedNode);
 		}
+	}
+	@Publish
+	public DirtyDataEvent publishDirtyDataEvent(DirtyDataEvent event) {
+		return event;
+	}
+	@Publish
+	public CleanDataEvent publishCleanDataEvent(CleanDataEvent event) {
+		return event;
 	}
 
 	private void setComponents(DataSetSaveNode saveNode) {
@@ -1710,6 +1730,27 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 	}
 
+	public void fileOpenAction(File dataSetFile,
+			org.geworkbench.components.parsers.FileFormat inputFormat)
+			throws InputFileFormatException {
+
+		// The call to getMArraySet() may result in an InputFileFormatException
+		// which is expected to be handled by the calling function.
+		if (inputFormat instanceof DataSetFileFormat) {
+			DSDataSet dataSet = ((DataSetFileFormat) inputFormat)
+					.getDataFile(dataSetFile);
+			// If everything went OK, register the newly created microarray set.
+			if (dataSet != null) {
+				// String directory = dataSetFile.getPath();
+				// System.setProperty("data.files.dir", directory);
+				addDataSetNode(dataSet, true);
+			} else {
+				log.info("Could not load file: " + dataSetFile);
+			}
+		} else {
+		}
+	}
+
 	/**
 	 * Action listener handling user requests for renaming a project.
 	 * 
@@ -2205,17 +2246,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			return;
 		}
 
-		// TODO: double check that this code is sufficient for saving data
-		// before changes
-		int n = JOptionPane
-				.showConfirmDialog(
-						null,
-						"You're making changes to the data. \nDo you want to save the current workspace before the change takes place?",
-						"Save or not?", JOptionPane.YES_NO_CANCEL_OPTION);
-		if (n == JOptionPane.YES_OPTION) {
-			saveWorkspace_actionPerformed(false);
-		}
-
 		DSMicroarraySet resultMA = ne.getNormalizedMASet();
 		updateColorContext(resultMA);
 		// Set up the "history" information for the new dataset.
@@ -2318,17 +2348,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		DSMicroarraySet sourceMA = fe.getOriginalMASet();
 		if (sourceMA == null) {
 			return;
-		}
-
-		// TODO: double check that this code is sufficient for saving data
-		// before changes
-		int n = JOptionPane
-				.showConfirmDialog(
-						null,
-						"You're making changes to the data. \nDo you want to save the current workspace before the change takes place?",
-						"Save or not?", JOptionPane.YES_NO_CANCEL_OPTION);
-		if (n == JOptionPane.YES_OPTION) {
-			saveWorkspace_actionPerformed(false);
 		}
 
 		// Set up the "history" information for the new dataset.

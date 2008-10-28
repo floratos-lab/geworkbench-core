@@ -1,37 +1,57 @@
 package org.geworkbench.events;
 
 /**
- * <p>Title: Sequence and Pattern Plugin</p>
- * <p>Description: Encapsulate an event progress from an algorithm.
- * If an algorithm has different progress parameter/s that needed to be updated
- * then this class should be extended. (The model for the view of this algorithm
- * will need to cast the event to the
- * right class inoreder to get the extra parameters.</p>
- * <p>Copyright: Copyright (c) 2003</p>
- * <p>Company: </p>
- *
- * @author not attributable
- * @version 1.0
+ * The event of the status change of pattern discovery algorithms.
+ * 
+ * @author zji
+ * @version $Id: ProgressChangeEvent.java,v 1.2 2008-10-28 16:55:18 keshav Exp $
+ * 
+ * TODO this class should be renamed to reflect its role in pattern discovery.
  */
-
 public class ProgressChangeEvent {
-    //number of patterns found.
-    private int patternFound = 0;
+	/* the initial event of listener being added */
+	private boolean initial;
+	/* number of patterns found. */
+	private int patternFound = 0;
 
-    public ProgressChangeEvent(int patternFound) {
-        this.patternFound = patternFound;
-    }
+	/**
+	 * General constructor with the option to set to be initial or not.
+	 * 
+	 * @param initial
+	 * @param patternFound
+	 */
+	public ProgressChangeEvent(boolean initial, int patternFound) {
+		this.initial = initial;
+		this.patternFound = patternFound;
+	}
 
-    /**
-     * Returns the number of patterns found.
-     *
-     * @return pattern the number of patterns found so far.
-     */
-    public int getPatternFound() {
-        return patternFound;
-    }
+	/**
+	 * Constructor for the non-initial case.
+	 * 
+	 * @param initial -
+	 *            whether it is initial adding of listener
+	 * @param patternFound
+	 */
+	public ProgressChangeEvent(int patternFound) {
+		this.initial = false;
+		this.patternFound = patternFound;
+	}
 
-    public void setPatternFound() {
-        this.patternFound = patternFound;
-    }
+	/**
+	 * Returns the number of patterns found.
+	 * 
+	 * @return pattern the number of patterns found so far.
+	 */
+	public int getPatternFound() {
+		return patternFound;
+	}
+
+	/**
+	 * Whether this event is the one for initially adding listener.
+	 * 
+	 * @return
+	 */
+	public boolean isInitial() {
+		return initial;
+	}
 }
