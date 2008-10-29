@@ -63,8 +63,6 @@ public abstract class AbstractTraining extends AbstractAnalysis implements Clust
             {
                 runClassifier(testPanel, classifier);
             }
-
-            publishProjectNodeAddedEvent(new ProjectNodeAddedEvent(classifier.getLabel(), null, classifier));
         }
 
         return null;
