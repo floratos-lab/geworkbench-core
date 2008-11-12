@@ -6,7 +6,7 @@
 	<target name="init" description="Initializes the build environment.">
 		<!-- Project-wide properties -->
 		<!-- App name -->
-		<property name="app" value="geWorkBench1.0.5"/>
+		<property name="app" value="geWorkbench"/>
 		<!-- Paths -->
 		<property name="classes" value="classes"/>
 		<property name="conf" value="conf"/>

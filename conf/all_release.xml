@@ -1,13 +1,11 @@
 <geaw-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ConfigurationFile Schema.xsd">
-	<!--<gui-window name="Main GUI" class="geaw.GUIApp"/>-->
 	<description>
-        Enables all available plug-ins.
+        Enables all plug-ins include in the release version.
     </description>
 	<gui-window name="Main GUI" class="org.geworkbench.engine.skin.Skin"/>
 	<plugin id="projectWindow" name="Project Panel" class="org.geworkbench.builtin.projects.ProjectPanel">
 		<gui-area name="ProjectArea"/>
 	</plugin>
-	
 	
 	<plugin id="affyFilter" name="Affy File Format" class="org.geworkbench.components.parsers.AffyFileFormat"/>
 	<plugin id="annotationsPanel" name="Marker Annotations" class="org.geworkbench.components.annotations.AnnotationsPanel" source="annotations">
@@ -21,13 +19,6 @@
 		<gui-area name="VisualArea"/>
 	</plugin>
 
-	<!--  this plugin must be before cytoscapePanel -->
-	<plugin id="genspaceLogPreferences" name="genSpace Log Preferences"
-		class="org.geworkbench.components.genspace.GenSpaceLogPreferences"
-		source="genspace">
-		<gui-area name="VisualArea" />
-	</plugin>
-	
 	<plugin id="cytoscapePanel" name="Cytoscape" class="org.geworkbench.components.cytoscape.CytoscapeWidget" source="cytoscape">
 		<gui-area name="VisualArea"/>
 	</plugin>
@@ -38,7 +29,7 @@
 	<plugin id="rmaExpressFileFilter" name="RMA Express Format" class="org.geworkbench.components.parsers.RMAExpressFileFormat"/>
 	<plugin id="CELLoader" name="CEL File Loader" class="org.geworkbench.components.parsers.CELFileFormat"/>
 	<plugin id="pdbFileFilter" name="PDB Structure Format" class="org.geworkbench.components.parsers.PDBFileFormat"/>
-	<!--<plugin id="chipchipFileFilter" name="ChIP-chip Format" class="org.geworkbench.components.parsers.ChipChipFileFormat"/>-->
+
 	<plugin id="expressionProfilePanel" name="Expression Profiles" class="org.geworkbench.components.microarrays.ExpressionProfilePanel" source="microarrays">
 		<gui-area name="VisualArea"/>
 	</plugin>
@@ -48,12 +39,7 @@
 	</plugin>
 	<plugin id="genepixFilter" name="Genepix File Format" class="org.geworkbench.components.parsers.GenePixFileFormat"/>
 	<plugin id="GenepixFlagsFilter" name="Genepix Flag Filter" class="org.geworkbench.components.filtering.GenepixFlagsFilter" source="filtering"/>
-	<!--
-	<plugin id="genePanel" name="Gene Panel" class="org.geworkbench.components.selectors.GenericMarkerSelectorPanel">
-		<gui-area name="SelectionArea"/>
-	</plugin>
-	-->
-	<!-- New Gene Panel implementation -->
+
 	<plugin id="genePanel" name="Markers" class="org.geworkbench.components.selectors.GenePanel" source="selectors">
 		<gui-area name="SelectionArea"/>
 	</plugin>
@@ -99,7 +85,6 @@
 		<gui-area name="VisualArea"/>
 	</plugin>
 	
-
 	<plugin id="knnAnalysis_30" name="KNN Analysis_3.0" class="org.geworkbench.components.gpmodule.classification.knn.KNNTraining" source="gpmodule_v3_0"/>
 	<plugin id="PCAAnalysis_30" name="PCA Analysis 3.0" class="org.geworkbench.components.gpmodule.pca.PCAAnalysis" source="gpmodule_v3_0"/>
 		<plugin id="somAnalysis" name="SOM Analysis" class="org.geworkbench.components.clustering.SOMAnalysis" source="clustering"/>
@@ -109,35 +94,6 @@
 	</plugin>
 	<plugin id="tTestAnalysis" name="t Test Analysis" class="org.geworkbench.components.analysis.clustering.TtestAnalysis" source="analysis"/>
 	<plugin id="wvAnalysis_30" name="WV Analysis 3.0" class="org.geworkbench.components.gpmodule.classification.wv.WVTraining" source="gpmodule_v3_0"/>
-	
-		<!-- Uncomment this to enable the Evidence Integration analysis component
-    <plugin id="evidenceintegration" name="Evidence Integration Analysis" class="org.geworkbench.components.ei.EvidenceIntegrationAnalysis" source="evidenceintegration"/>
-    -->
-	<!--Disable Meduse and some analysis modules-->
-	<!--
-<plugin id="netboost" name="Net Boost Analysis" class="org.geworkbench.components.netboost.NetBoostAnalysis" source="netboost"/>
-<plugin id="wvAnalysis" name="WV Analysis" class="org.geworkbench.components.gpmodule.classification.wv.WVTraining" source="gpmodule"/>
-	<plugin id="knnAnalysis" name="KNN Analysis" class="org.geworkbench.components.gpmodule.classification.knn.KNNTraining" source="gpmodule"/>
-<plugin id="smlrAnalysis" name="SMLR Analysis" class="org.geworkbench.components.classification.smlr.SMLRTraining" source="classification"/>
-	<plugin id="svmAnalysis" name="SVM Analysis" class="org.geworkbench.components.classification.svm.SVMTraining" source="classification"/>
-<plugin id="MedusaAnalysis" name="MEDUSA Analysis" class="org.geworkbench.components.medusa.MedusaAnalysis" source="medusa"/>	 
-	<plugin id="EvidenceIntegrationViewer" name="Evidence Integration Viewer" class="org.geworkbench.components.ei.EvidenceIntegrationVisualization" source="evidenceintegration">
-		<gui-area name="VisualArea"/>
-	</plugin>
-<plugin id="cgemsPanel" name="Cancer GEMS" class="org.geworkbench.components.cgems.CGemsPanel" source="cgems">
-		<gui-area name="VisualArea"/>
-	</plugin>
-	<plugin id="tprofilerView" name="T-Profiler Results" class="org.geworkbench.components.tprofiler.TProfilerVisualComponent" source="tprofiler">
-		<gui-area name="VisualArea"/>
-	</plugin>
-	<plugin id="tprofiler" name="T-Profiler" class="org.geworkbench.components.tprofiler.TProfiler" source="tprofiler">
-		<gui-area name="VisualArea"/>
-	</plugin>
-	<plugin id="cytoscapePanel_V2_4" name="Cytoscape_V2_4" class="org.geworkbench.components.cytoscape_v2_4.CytoscapeWidget" source="cutenet">
-		<gui-area name="VisualArea"/>
-	</plugin>
-	
--->
 	
 	<plugin id="thresholdNormalizer" name="Threshold Normalizer" class="org.geworkbench.components.normalization.ThresholdNormalizer" source="normalization"/>
 	<plugin id="QuantileNormalizer" name="Quantile Normalizer" class="org.geworkbench.components.normalization.QuantileNormalizer" source="normalization"/>
@@ -150,31 +106,11 @@
 	<plugin id="sequencePanel" name="Sequence" class="org.geworkbench.components.sequences.SequenceViewAppComponent" source="sequences">
 		<gui-area name="VisualArea"/>
 	</plugin>
-	<!--
-<plugin id="edgeListFilter" name="Edge List File Format" class="org.geworkbench.components.parsers.EdgeListFileFormat"/>
-<plugin id="patternDiscoveryAlgorithm" name="Pattern Discovery Algorithm" class="org.geworkbench.components.associationdiscovery.PatternDiscovery" source="associationdiscovery"/>
-	<plugin id="reverseEngineering" name="Reverse Engineering" class="org.geworkbench.components.pathwaydecoder.GeneProfiler" source="pathwaydecoder">
-		<gui-area name="VisualArea"/>
-	</plugin>
-    <plugin id="genetegratePanel" name="Genetegrate" class="org.geworkbench.components.pudge.GenetegrateViewAppComponent" source="sequences">
-		<gui-area name="VisualArea"/>
-	</plugin>
-<plugin id="pudgePanel" name="Pudge" class="org.geworkbench.components.cagrid.GenetegrateViewAppComponent" source="cagrid">
-		<gui-area name="VisualArea"/>
-	</plugin>
-	<plugin id="Interactions" name="Interaction" class="interactions.InteractionsUserInterface" source="interactions">
-		<gui-area name="VisualArea"/>
-	</plugin>
-<plugin id="multiTTestAnalysis" name="Multi t Test Analysis" class="org.geworkbench.components.analysis.clustering.MultiTTestAnalysis" source="analysis"/>
--->
+
 	<plugin id="CellularNetWork" name="Cellular NetWork" class="org.geworkbench.components.interactions.cellularnetwork.CellularNetworkKnowledgeWidget" source="interactions">
 		<gui-area name="VisualArea"/>
 	</plugin>
-	<!-- geneways plugin
-	<plugin id="Geneways" name="Geneways" class="org.geworkbench.components.cutenet.GenewaysWidget" source="cutenet">
-		<gui-area name="VisualArea"/>
-	</plugin>
- -->
+
 	<plugin id="SequenceRetriever" name="Sequence Retriever" class="org.geworkbench.components.sequenceretriever.SequenceRetriever" source="sequenceretriever">
 		<gui-area name="VisualArea"/>
 	</plugin>
@@ -213,65 +149,31 @@
 	<plugin id="normalizationPanel" name="Normalization" class="org.geworkbench.components.analysis.NormalizationPanel" source="analysis">
 		<gui-area name="CommandArea"/>
 	</plugin>
-	<!-- Example Component -->
-	<!--<plugin id="Example" name="Example" class="org.geworkbench.components.example.ExampleComponent" source="example">-->
-	<!--<gui-area name="VisualArea"/>-->
-	<!--</plugin>-->
-	<!-- Example Component -->
-	<!--<gui-area name="CommandArea"/>-->
-	<!--</plugin>-->
-	<!-- SkyLine Component -->
-	<!--
-    <plugin id="SkyLine" name="Structure Analysis" class="org.geworkbench.components.skyline.SkyLineComponent" source="skyline">
-    <gui-area name="CommandArea"/>
-    </plugin>
 
-    <plugin id="SkyLineComparativeModeling" name="SkyLine Comparative Modeling" class="org.geworkbench.components.skyline.SkyLineAnalysis" source="skyline"/>
-
-    <plugin id="SkyLineViewAllPanel" name="SkyLine Output for All Models" class="org.geworkbench.components.skylineview.SkyLineViewAllPanel" source="skylineview">
-    <gui-area name="VisualArea"/>
-    </plugin>
-
-    <plugin id="SkyLineViewEachPanel" name="SkyLine Output for Each Model" class="org.geworkbench.components.skylineview.SkyLineViewEachPanel" source="skylineview">
-    <gui-area name="VisualArea"/>
-    </plugin>
- -->
 	<!-- MINDY -->
 	<plugin id="mindyViewer" name="MINDY Viewer" class="org.geworkbench.components.mindy.MindyVisualComponent" source="mindy">
 		<gui-area name="VisualArea"/>
 	</plugin>
-	
-	<!---->
-	<!-- NetBoost -->
-	<!-- <plugin id="netboostViewer" name="Net Boost" class="org.geworkbench.components.netboost.NetBoostVisualComponent" source="netboost">
-		<gui-area name="VisualArea"/>
-	</plugin>
-	-->
-	<!-- 
-	<plugin id="medusaViewer" name="MEDUSA Viewer" class="org.geworkbench.components.medusa.gui.MedusaVisualComponent" source="medusa">
-		<gui-area name="VisualArea"/>
-	</plugin>
-	-->
 	<plugin id="Jmol" name="Jmol" class="org.geworkbench.components.jmol.JmolComponent" source="jmol">
 		<gui-area name="VisualArea"/>
 	</plugin>
 	<plugin id="CELImageViewer" name="CELImageViewer" class="org.geworkbench.components.celprocessing.CELImageViewerComponent" source="celprocessing">
 		<gui-area name="VisualArea"/>
 	</plugin>
-	<!--
-<plugin id="networkBrowser" name="Network Browser" class="org.geworkbench.components.pathwaydecoder.GeneNetworkPanel" source="pathwaydecoder">
-		<gui-area name="VisualArea"/>
-	</plugin>
-<plugin id="cagrid" name="caGrid" class="org.geworkbench.components.cagrid.CaGridPanel" source="cagrid">
-		<gui-area name="CommandArea"/>
-	</plugin>
-<plugin id="cascriptPanel" name="caSCRIPT" class="org.geworkbench.components.cascript.CaSCRIPTEditor" source="cagrid">
-		<gui-area name="CommandArea"/>
-	</plugin>
-   
-     -->
- 
 	<plugin id="caArray2Panel" name="CaArray2" class="org.geworkbench.components.caarray.arraydata.CaArray2Component" source="caarray">
     </plugin>
+    
+	<plugin id="genspaceLogPreferences" name="genSpace Log Preferences"
+		class="org.geworkbench.components.genspace.GenSpaceLogPreferences"
+		source="genspace">
+		<gui-area name="CommandArea" />
+	</plugin>
+	<plugin id="genspaceLogger" name="Genspace"
+		class="org.geworkbench.components.genspace.GenspaceLogger"
+		source="genspace">
+	</plugin>
+	
+	<!-- Example Component -->
+	<!--<plugin id="Example" name="Example" class="org.geworkbench.components.example.ExampleComponent" source="example">-->
 
 </geaw-config>

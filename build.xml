@@ -7,7 +7,7 @@
 		<!-- Project-wide properties -->
 		<!-- App name -->
 		<property name="app" value="geWorkBench" />
-		<property name="version" value="1.6" />
+		<property name="version" value="1.6.1" />
 		<!-- DEBUG setting -->
 		<property name="debug" value="on" />
 		<!-- Paths -->
@@ -424,7 +424,7 @@
 				
 				<include name="${classes}/**/*" />
 
-				<!-- Include the following components for distribution 1.6-->
+				<!-- Include the following components for distribution 1.6.1-->
 				<include name="bin/matrixreduce/*" />
 				<include name="${components}/alignment/**/*" />
 				<include name="${components}/analysis/**/*" />
@@ -442,7 +442,6 @@
 				<include name="${components}/filtering/**/*" />
 				<include name="${components}/genepattern/**/*" />
 				<include name="${components}/genspace/**/*" />
-				<include name="${components}/goterms/**/*" />
 				<include name="${components}/gpmodule_v3_0/**/*" />
 				<include name="${components}/hierarchicalclustering/**/*" />
 				<include name="${components}/interactions/**/*" />
@@ -468,7 +467,7 @@
 				
 
 				<include name="plugins/**/*" />
-				<!-- Leave out the following components for distribution 1.6-->
+				<!-- Leave out the following components for distribution 1.6.1-->
 				<exclude name="**/synteny/*" />
 				<exclude name="**/src/**" />
 				<exclude name="**/test/**" />
@@ -476,7 +475,7 @@
 				<include name="annotation/**/*" />
 				<include name="${lib}/**/*" />
 				<include name="geWorkbenchLicense.txt" />
-				<include name="ReleaseNotes1.6.0.txt" />
+				<include name="ReleaseNotes1.6.1.txt" />
 				<include name="java.policy" />
 				 
 				<include name="launch_geworkbench.bat" />
