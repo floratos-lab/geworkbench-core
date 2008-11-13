@@ -18,9 +18,15 @@ public class VisualPropertiesDialog extends JDialog {
     private PanelVisualProperties properties;
     private PanelVisualProperties defaultProperties;
     private boolean defaults = false;
+    
+    // these variables store the change until they are saved when OK is clicked
+    private Color transientColor;
+    private int transientShapeIndex;
 
     public VisualPropertiesDialog(Frame owner, String title, Object item, int defaultIndex) throws HeadlessException {
         super(owner, title, true);
+        propertiesChanged = false;
+        
         // Look for existing visual properties
         PanelVisualPropertiesManager manager = PanelVisualPropertiesManager.getInstance();
         properties = manager.getVisualProperties(item);
@@ -29,6 +35,10 @@ public class VisualPropertiesDialog extends JDialog {
             properties = new PanelVisualProperties(defaultProperties.getShapeIndex(), defaultProperties.getColor());
             defaults = true;
         }
+        
+        transientColor= properties.getColor();
+        transientShapeIndex = properties.getShapeIndex();
+
         Container content = getContentPane();
         content.setLayout(new BorderLayout());
         display = new JShapeButton(properties.getShape(), properties.getColor());
@@ -61,10 +71,9 @@ public class VisualPropertiesDialog extends JDialog {
         // Add behavior
         changeColorButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Color newColor = JColorChooser.showDialog(VisualPropertiesDialog.this, "Choose Color", properties.getColor());
-                if (newColor != null) {
-                    properties.setColor(newColor);
-                    display.setPaint(newColor);
+                transientColor = JColorChooser.showDialog(VisualPropertiesDialog.this, "Choose Color", properties.getColor());
+                if (transientColor != null) {
+                    display.setPaint(transientColor);
                     defaults = false;
                     display.repaint();
                 }
@@ -76,17 +85,16 @@ public class VisualPropertiesDialog extends JDialog {
                 dialog.pack();
                 dialog.setSize(400, 400);
                 dialog.setVisible(true);
-                int index = dialog.getResult();
-                properties.setShapeIndex(index);
-                display.setShape(PanelVisualProperties.AVAILABLE_SHAPES[index]);
+                transientShapeIndex = dialog.getResult();
+                display.setShape(PanelVisualProperties.AVAILABLE_SHAPES[transientShapeIndex]);
                 defaults = false;
                 display.repaint();
             }
         });
         defaultButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                properties.setShapeIndex(defaultProperties.getShapeIndex());
-                properties.setColor(defaultProperties.getColor());
+                transientShapeIndex = defaultProperties.getShapeIndex();
+                transientColor = defaultProperties.getColor();
                 display.setShape(PanelVisualProperties.AVAILABLE_SHAPES[properties.getShapeIndex()]);
                 display.setPaint(properties.getColor());
                 defaults = true;
@@ -96,6 +104,8 @@ public class VisualPropertiesDialog extends JDialog {
         okButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 propertiesChanged = true;
+                properties.setColor(transientColor);
+                properties.setShapeIndex(transientShapeIndex);
                 dispose();
             }
         });
