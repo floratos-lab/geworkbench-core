@@ -1,0 +1,480 @@
+                         Release Notes
+                           (updated)
+    
+                       geWorkbench V1.6.2
+               
+                        November 14, 2008
+
+       Joint Centers for Systems Biology, Columbia University
+                       New York, NY  10032
+
+                   http://www.geworkbench.org
+
+================================================================
+                            Contents
+================================================================
+    
+    1.0 geWorkbench Installation Notes
+    2.0 geWorkbench Introduction and History
+    3.0 New Features and Updates
+    4.0 Known Issues/Defects
+    5.0 Bug Reports and Support
+    6.0 Documentation and Files
+    7.0 geWorkbench Web Pages 
+
+
+
+================================================================
+    1.0 geWorkbench Installation Notes
+================================================================
+
+
+    geWorkbench has been built and tested using Java 1.5.
+    We recommend running it on your computer under Java 1.5*.
+          
+    Windows and Linux installer versions of geWorkbench include
+    the Java JRE 1.5.  Current versions of MacOSX by default also
+    provide the Java JRE 1.5.
+
+    A generic version of geWorkbench is also available that can be
+    run on any platform.  For this version, the user must insure
+    that the Java JRE 1.5 is present and properly configured.
+
+
+    Additional installation details are provided below, and at
+    geworkbench.org.
+
+
+    Platform-specific release details:
+
+    1. Windows (tested on XP/Vista)
+
+
+       File: geWorkbench_v1.6.2_Windows_installer_with_JRE1.5.exe -
+
+             Includes Sun Java 1.5 JRE.
+
+
+    2. MacOSX
+
+       File: geWorkbench_v1.6.2_MacOSX_installer.zip.
+
+
+    3. Linux
+
+       File: geWorkbench_v1.6.2_Linux_installer_with_JRE1.5.bin.
+
+
+    4. Generic -   A non-installer-based version of
+       geWorkbench is supplied in a Zip file which will work on
+       any platform.
+
+       File: geWorkbench_v1.6.2_Generic.zip
+
+          Installation: 
+    
+             *  Unzip the file.  It will create a directory
+                geWorkbench1.6.2.
+          
+
+          Running geWorkbench (generic):
+
+             * You must have the Java 1.5 JRE/JDK installed and the
+               JRE must be in the path for geWorkbench.
+
+             * Windows: you can double click on the file
+                   "launch_geWorkbench.bat" to launch geWorkbench, or
+                   run it from a command window.
+            
+             * Linux/Unix:   Execute the script"launch_geworkbench.sh".
+      
+             * Any: Alternatively, if you have Apache Ant installed,
+                   you can type "ant run" in the geWorkbench directory.
+
+
+
+    * Note on Java 1.6 - connectivity to caArray 2.1.* is known not to work
+           under Java 1.6.
+
+
+
+
+================================================================
+    2.0 - geWorkbench Introduction and History
+================================================================
+
+
+    geWorkBench, an open source bioinformatics platform 
+    written in Java, makes sophisticated  tools for data management, 
+    analysis and visualization available to the community in a 
+    convenient fashion.
+ 
+    geWorkbench evolved from a project, caWorkbench, which was originally
+    sponsored by the National Cancer Institute Center for Bioinformatics
+    (NCICB). Some of the most fully developed capabilities of the platform
+    include microarray data analysis, pathway analysis, sequence
+    analysis, transcription factor binding site analysis,
+    and pattern discovery. 
+
+    geWorkbench 1.6.2 includes only two changes.  It provides improved
+    proxy communication with its grid service dispatcher component. It also
+    fixes a problem in the grid implementation of hierarchical clustering.
+
+
+
+================================================================
+    3.0 New Features and Updates
+================================================================ 
+
+    Changes included in geWorkbench 1.6.2
+    * geWorkbench 1.6.2 provides improved proxy communication with its grid
+    service dispatcher component (see Mantis bug 1631).
+    * A problem was fixed in the server-side grid implementation of
+      hierarchical clustering (Mantis bug 1598).
+
+
+
+  ***Changes in previous versions***
+
+
+    Changes included in geWorkbench 1.6.1
+
+    * A Java servlet now provides connectivity to the Cellular Networks
+      Knowledge Base database through the firewall.
+    * Online help for the Sequence Retriever component was added.
+    * The GenePix annotation parser was augmented to include more data fields.
+    * Added a missing GenSpace component.
+    * The GenSpace component was moved from the visual area to the command area.
+    * Volcano plot scaling was fixed to display extreme P-values (E-45).
+    
+
+  
+    Changes included in geWorkbench 1.6.0
+
+    * Adds Mindy component
+    * The GO Terms component is not included in this release.  It will
+           return in a future release.
+    * Fixed a problem (caused by a change in a server-side URL) with
+        retrieving annotations for genes in Biocarta pathway diagrams (bug 1577).
+    * The default caArray server was set to the production server at NCI
+        (array.nci.nih.gov, port 8080) (bug 1602). The URL for the staging
+      array was updated to array-stage.nci.nih.gov.
+    * An incorrect argument was being sent to NCBI's BLAST server. Due to
+        recent changes there implementing stricter checking, blastn would no
+        longer run. (bug 1597).
+    * Corrected a problem where, when using the adjusted Bonferroni correction,
+        or the Westphal-Young with MaxT, only values with positive fold-changes
+        were returned and displayed (bug 1603).
+    * Added a feature whereby the user is warned before any operation that
+        will alter the dataset, e.g. before filtering out markers, or before
+        a log2 transformation.
+    * Added a feature to allow adding a new empty marker set. This can then
+        be used to receive markers selected interactively in Cytoscape (bug 1541).
+    * Fixed a problem displaying patterns in the sequence viewer after running
+        Pattern Discovery (SPLASH) (bug 1415).
+    * Fixed a problem with displaying adjacency matrices generated by ARACNE
+        in the Cytoscape component (bug 1449). 
+
+
+    * Numerous changes were made to improve responsiveness, including when
+          - selecting a marker in a large dataset (bug 1346),
+          - right-clicking on Project with a large dataset (bug 1337),
+          - saving a workspace (bug 1525), and
+          - starting an analysis (bug 1544). 
+     * Remaining changes, not listed here in detail, included
+          - internal issues within geWorkbench,
+          - improved verification of parameters and set selections before
+            beginning a calculation,
+          - improvements to the graphical user interfaces of many components, and
+          - corrections to the grid implementations of analytical services
+            (Hierarchical Clustering, SOM, ANOVA etc). 
+
+
+
+
+    Changes included in geWorkbench 1.5.1:
+. 
+        *  It addresses changes in the APIs for the caArray and caBIO
+           data services since geWorkbench 1.5 was released.  geWorkbench 1.5.1
+           can currently connect with caArray 2.1 and caBIO 4.0/4.1.
+        *  It also includes an update to parse the new release 26 of Affymetrix
+           annotation files.
+        *  Fixes a problem where annotation information was not associated with
+           arrays that were merged.
+
+
+    New features added in geWorkbench 1.5:
+
+        New Modules:
+          * ARACNE – gene network reverse engineering (from Andrea
+              Califano's lab at Columbia University, 
+              http://wiki.c2b2.columbia.edu/califanolab/index.php/Software). 
+          * ANOVA – Analysis of variance, ported from TIGR's MEV,
+              http://www.tm4.org/mev.html). 
+          * caArray2.0 connectivity – query for and download data from
+              caArray 2.0 directly into geWorkbench.
+          * Cellular Networks Knowledge Base – database of molecular 
+              interactions.  (from Andrea Califano's lab at Columbia University, 
+              http://amdec-bioinfo.cu-genome.org/html/BCellInteractome.html).
+          * GenSpace - provide social networking capabilities and 
+		  allow you to connect with other geWorkbench users.
+          * MatrixReduce – transcription factor binding site prediction
+              (from Harmen Bussemaker's lab at Columbia University, 
+              http://bussemaker.bio.columbia.edu/software/MatrixREDUCE/).
+          * Analysis components ported from GenePattern (http://www.genepattern.org) 
+              - Principle Component Analysis (PCA)
+              - K-nearest neighbors (KNN)
+              - Weighted Voting (WV)
+
+        New File types supported
+           * The NCBI GEO series matrix file for microarray data (tab-delimited)
+
+        New server side architecture
+           * Invocation of caGrid services is now delagated to an independent 
+              component (the Dispatcher). This makes it possible to exit geWorkbench 
+              after submitting a long-running job and then automatically pick up any 
+              results next time the application starts. 
+
+        Other changes
+          * The Marker and Array/Phenotypes components now support algebraic operations 
+              (union, intersection, xor) on marker and array groups.
+          * Upon exiting the application, the user is prompted to store their workspace.
+          * Workspace persistence problems have been resolved.
+          * The Marker Annotations component has been enhanced in several ways:
+              ** The integration with caBIO has been updated to use API Version 4.0
+              ** The caBIO Pathway component (previously an independent geWorkbench 
+                    component that would display BioCarta pathway images) has been 
+                    integrated into the Marker Annotations component.
+              ** Markers can be returned from BioCarta pathway diagrams.
+              ** A new option is provided to choose between human or mouse CGAP 
+                    annotation pages.
+
+
+    
+
+    New features added in geWorkbench 1.0.6:
+
+          geWorkbench 1.0.6 fixes a problem with parsing of BLAST output
+          from NCBI.  The format changed.
+
+
+    New features added in geWorkbench 1.0.5:
+
+          No new Modules were added in this release.  This is a base release
+          of well-tested modules.
+
+
+    Changes from release 1.0.4:
+
+
+        General
+
+          All components using the Apache Axis code for SOAP
+          communications were revamped such that each component now
+          has its own copy of Axis.
+
+          The caCORE code included in geWorkbench was updated to version
+          3.1 to maintain compatibility with NCI servers.  The was
+          necessary for such modules as the BioCarta Pathways retrieval.
+
+
+        Annotations Panel
+
+          caBIO database searches for gene information:
+
+          - If the input dataset was associated with an annotations
+          file when it was opened, then we retrieve the HUGO gene symbol
+          associated with a marker (e.g., for marker 31335_at the HUGO
+          symbol is IGF1R) and search caBIO using this gene symbol as
+          a query. 
+
+          - If the input dataset does not have an associated
+          annotation file, then we do the caBIO search using the marker
+          name. In this case we are restricted, as the only markers for
+          which we will be able to retrieve information are the ones in
+          the HU133 chip.
+
+          Browser access to CGAP gene annotations:
+
+          - In the past, clicking on a gene name hyperlink would
+          directly bring up the corresponding CGAP page. Now, the
+          users are provided with an option; namely they are asked
+          which of the supported CGAP organisms (human or mouse)
+          they want to retrieve info for. In the (near) future we
+          plan to provide additional options here, such as searching
+          Entrez Gene instead of CGAP.
+
+          Extract markers/genes from pathways:
+
+          - In the past, the only operation available for BioCarta
+          pathways was the ability to visualize the pathway image
+          in the caBIO Pathways component. Now, 2 more options
+          are avaible:
+
+          -- Add pathway genes to set: Selecting this option results in
+          retrieving the HUGO sysmbols of all genes that comprise the
+          pathway. For each such symbol XXX the application will try to
+          find if the currently selected microarray set has a marker
+          whose associated gene is XXX (obviously this will work only
+          if the mocroarray set has been associated with an annotations
+          file). If one (or more) such markers exist, then they will be
+          placed in a marker set which will be named after the pathway
+          and will be added in the Markers panel.
+
+          -- Export genes to CSV: Information about all genes in the pathway
+          is exported to a text file. The file contains as many rows as
+          the genes extracted and each row contains 2 comma separated
+          values: (1) a gene symbol, and (2) the description associated
+          with that gene.
+
+
+
+        Affymetrix Annotation files:
+
+          Previous releases have included a copy of an Affymetrix
+          annotation file for the HG-U95aV2 chip.  Due to licensing
+          restrictions, this file is no longer included.  geWorkbench
+          users who are working with Affymetrix chip data should retrieve
+          the latest version of the appropriate annotation file for the
+          chip type they using directly from
+
+          https://www.affymetrix.com/site/login/login.affx
+
+          A free account at Affymetrix.com is required.
+
+          Current annotation files in CSV format are listed there.
+          If you need an annotation file for an older file you can use
+          its name in the search field on the web page, e.g. "HG_U95Av2".
+
+          An example file from the Affymetrix site is
+          "HG_U95Av2.na21.annot.csv.zip".  This file would need to be
+          unzipped before use.  You can place the file in any convenient
+          directory.  When you load a new data file, you will be asked
+          for the location of the annotation file and can browse to it.
+
+        
+        Special Purpose hardware support removed:
+
+          The JCSB no longer supports the Paracel BLAST machine or
+          GeneMatcher 2 hardware. The interfaces to these special purpose
+          computers have been removed from geWorkbench.  BLAST is
+          still available in geWorkbench via an interface to NCBI.
+          A replacement interface to run NCBI BLAST on a local JCSB
+          cluster is under development.
+
+
+        The following components are not included in this distribution, but
+        were included in 1.0.4:   
+
+          * ARACNE
+          * Column Major Format
+          * Frequency Threshold Filter
+          * GCRMA Via R CEL Loader
+          * Genotypic File Format
+          * Interactions DB
+          * Network Browser
+          * Pattern Discovery Algorithm (association analysis)
+          * Reverse Engineering
+          * SVM Format
+          * Synteny 
+
+        
+          A new, pure-Java version of ARACNE has been developed and will return
+          to geWorkbench in a future release.  The Reverse Engineering component
+          and associated Network Browser component are also being redeveloped.
+          Other components may return in a future distribution as needed.
+
+
+
+
+
+================================================================
+    4.0 Known Issues/Defects
+================================================================
+    Grid Computations
+        The reference implementations of the server-side grid-enabled algorithms
+        currently are only running on a single front-end server not meant for
+        production use.  That server is not configured for computing on large
+        datasets or for long-running jobs.
+
+        Online Help does not yet cover the grid computing additions.
+
+    
+    Gene Ontology
+
+        The Gene Ontology component uses data files obtained from
+        www.geneontology.org.  These files are in the older GO format,
+        which is deprecated but still generated on a weekly basis at
+        that site.  The geWorkbench download includes the three data
+        files process, function and location, current as of the time
+        of this release.  However, geWorkbench at present contains no
+        method of updating these files.
+
+        To update the gene ontology files, download them from:
+        http://www.geneontology.org/GO.downloads.ontology.shtml.
+        These files must be copied into the GO
+        Terms component class directory on your machine:
+
+    geworkbench_root\components\goterms\classes\org\geworkbench\components\goterms,
+
+        where geworkbench_root is the directory you downloaded geworkbench
+        into.
+
+        Due to the large size of these files, we have found that mapping
+        the Process tree will work best if more than 1 GB of memory is
+        installed in the computer.
+
+
+ 
+
+
+================================================================
+    5.0 Bug Reports and Support
+================================================================
+    
+    Support is provided via the geWorkbench project on the NCI's Gforge
+    site.  See the Forums section at:
+
+    https://gforge.nci.nih.gov/projects/geworkbench/
+
+    
+
+================================================================
+    6.0 Documentation and Files
+================================================================
+
+    
+    The documents and support files in this distribution include:
+
+    geWorkbench Release Notes:
+        ReleaseNotes-v1.5.txt (this file)
+		 
+  
+    geWorkbench License: 
+        geWorkbenchLicense.txt
+
+
+    Online Help:
+        Within geWorkbench, users can access "Help Topics" by clicking the
+	top menu. It has detailed information about each module.
+
+       
+    For other documentation not directly included as part of the
+    distribution, see the following section (6.0) Web Resources.
+
+   
+
+================================================================
+    7.0 geWorkbench Web Resources
+================================================================
+     
+ 
+    The geWorkbench team maintains a Wiki containing extensive documentation,
+    a User Manual, tutorials and training slides.  It is available at:
+        http://www.geworkbench.org
+
+    
+    For the majority of newer features, detailed requirements 
+    specification documents are available at the caBIG CVS site:
+        http://cabigcvs.nci.nih.gov/viewcvs/viewcvs.cgi/caworkbenchcabig
+
