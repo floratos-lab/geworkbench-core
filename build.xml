@@ -413,6 +413,15 @@
 	<!-- CREATE   DISTRIBUTION-->
 	<!-- ====================================================================== -->
 	<target name="createDist" depends="compile" description="Creating a new folder for depositing...">
+		<java classname="org.geworkbench.components.versioninfo.VersionInfoDialog" failonerror="true" >
+			<arg value="1.7.0"/>
+			<arg value="./components/versioninfo/classes/org/geworkbench/components/versioninfo/" />
+			<classpath>
+				<path refid="classpath" />
+				<pathelement location="./components/versioninfo/classes" />
+			</classpath>
+		</java>
+
 		<mkdir dir="${cleanFolder}" />
 		<mkdir dir="${cleanFolder}/log" />
 		<echo>Begin to create a new source, which is located at ${cleanFolder}, please wait...</echo>
