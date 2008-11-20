@@ -48,28 +48,30 @@ public abstract class AbstractTraining extends AbstractAnalysis implements Clust
         DSAnnotationContext<DSMicroarray> context = CSAnnotationContextManager.getInstance().getCurrentContext(maSet);
 
         List<float[]> caseData = new ArrayList<float[]>();
-        addMicroarrayData(context.getActivatedItemsForClass(CSAnnotationContext.CLASS_CASE), caseData, markers);
+        DSPanel<DSMicroarray> casePanel = context.getActivatedItemsForClass(CSAnnotationContext.CLASS_CASE);
+        addMicroarrayData(casePanel, caseData, markers);
+
         List<float[]> controlData = new ArrayList<float[]>();
-        addMicroarrayData(context.getActivatedItemsForClass(CSAnnotationContext.CLASS_CONTROL), controlData, markers);
+        DSPanel<DSMicroarray> controlPanel = context.getActivatedItemsForClass(CSAnnotationContext.CLASS_CONTROL);
+        addMicroarrayData(controlPanel, controlData, markers);
+
         List<float[]> testData = new ArrayList<float[]>();
         DSPanel<DSMicroarray> testPanel = context.getActivatedItemsForClass(CSAnnotationContext.CLASS_TEST);
         addMicroarrayData(testPanel, testData, markers);
-
         CSClassifier classifier = trainClassifier(caseData, controlData);
 
         if (classifier != null)
         {
-            if (testData.size() > 0)
-            {
-                runClassifier(testPanel, classifier);
-            }
+            runClassifier(casePanel, controlPanel, testPanel, classifier);
         }
 
         return null;
     }
 
-    public void runClassifier(DSPanel<DSMicroarray> testPanel, CSClassifier classifier)
+    public void runClassifier(DSPanel<DSMicroarray> casePanel, DSPanel<DSMicroarray> controlPanel, DSPanel<DSMicroarray> testPanel, CSClassifier classifier)
     {
+        if(testPanel == null || testPanel.size() == 0)
+            return;
         DSPanel<DSMicroarray> predictedCasePanel = new CSPanel<DSMicroarray>("Predicted Cases");
         DSPanel<DSMicroarray> predictedControlPanel = new CSPanel<DSMicroarray>("Predicted Controls");
 
