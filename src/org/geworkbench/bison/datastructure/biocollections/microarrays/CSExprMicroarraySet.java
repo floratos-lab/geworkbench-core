@@ -294,7 +294,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
 
                         if (locus.compareTo(" ") != 0) {
                             try {
-                                markerVector.get(currGeneId).setGeneId(Integer.parseInt(locus));
+                                markerVector.get(currGeneId).setGeneId(Integer.parseInt(locus.trim()));
                             } catch (NumberFormatException e) {
                                 log.debug("Invalid locus link for gene "+currGeneId);
                             }
