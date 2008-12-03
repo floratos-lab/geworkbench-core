@@ -214,6 +214,7 @@
 			<dirset dir="components" includes="*" />
 		</subant>
 		<delete dir="components/genspace/conf" />
+		<delete dir="components/analysis/conf" />
 	</target>
 	<!-- ====================================================================== -->
 	<!-- JAVADOC -->
