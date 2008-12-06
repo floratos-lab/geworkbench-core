@@ -2,7 +2,7 @@
 A bare-bones all.xml file that is useful when creating a new component.
 
 author: keshav 
-version: $Id: all-minimal.xml,v 1.5 2008-05-16 02:55:00 xiaoqing Exp $
+version: $Id: all-minimal.xml,v 1.6 2008-12-06 19:48:33 keshav Exp $
 -->
 
 <geaw-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ConfigurationFile Schema.xsd">
@@ -28,12 +28,12 @@ version: $Id: all-minimal.xml,v 1.5 2008-05-16 02:55:00 xiaoqing Exp $
 		<gui-area name="SelectionArea"/>
 	</plugin>
 	
-	<!-- 
+	
 	<plugin id="microarrayPanel" name="Microarray Viewer" class="org.geworkbench.components.microarrays.MicroarrayPanel" source="microarrays">
 		<gui-area name="VisualArea"/>
 		<subscription type="org.geworkbench.events.ProjectEvent" enabled="Yes"/>
 	</plugin>
-	 --> 
+
 	 <plugin id="hierarchicalClusteringPanel" name="Dendrogram" class="org.geworkbench.components.hierarchicalclustering.HierClusterViewAppComponent" source="hierarchicalclustering">
 		<gui-area name="VisualArea"/>
 	</plugin> 
