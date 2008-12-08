@@ -10,8 +10,6 @@ import java.awt.*;
  * <p>Copyright: Copyright (c) 2003 -2004</p>
  * <p>Company: Columbia University</p>
  *
- * @author $Author: keshav $
- * @version 1.0
  */
 public class AlgorithmSelectionPanel extends JPanel {
     //algorithm names
