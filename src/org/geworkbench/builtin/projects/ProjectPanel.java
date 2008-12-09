@@ -1537,7 +1537,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 
 
-		new PDBDialog(this);
+		PDBDialog pd = new PDBDialog(this);
+		pd.create();
 	}
 
 	/**

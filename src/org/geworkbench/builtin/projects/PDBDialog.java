@@ -21,14 +21,15 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * TODO document me
+ * A popup window for user to enter a 4-digit PDB id;
+ * the PDB file from RCSB website will be downloaded and displayed
  * 
  * @author mw2518
- * @version $Id: PDBDialog.java,v 1.3 2008-12-09 18:45:58 keshav Exp $
+ * @version $Id: PDBDialog.java,v 1.4 2008-12-09 21:19:58 wangm Exp $
  * 
  */
 class PDBDialog extends JFrame implements ActionListener {
-	
+
 	private static final long serialVersionUID = 1L;
 
 	private Log log = LogFactory.getLog(this.getClass());
@@ -37,7 +38,8 @@ class PDBDialog extends JFrame implements ActionListener {
 	public ProjectPanel pp = null;
 
 	/*
-	 * (non-Javadoc)
+	 * save pdb file from rcsb website to local disk, 
+	 * let project panel open the downloaded pdb file
 	 * 
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
@@ -74,7 +76,7 @@ class PDBDialog extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * TODO document me
+	 * specify parent project panel
 	 * 
 	 * @param mainpp
 	 */
@@ -83,7 +85,12 @@ class PDBDialog extends JFrame implements ActionListener {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 		pp = mainpp;
+	}
 
+	/*
+	 * ask for user input and register with action listener
+	 */
+	public void create() {
 		JButton btn = new JButton("Search RCSB PDB");
 		btn.addActionListener(this);
 
@@ -98,7 +105,7 @@ class PDBDialog extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * TODO document me
+	 * read web content from url fname, return as a string
 	 * 
 	 * @param fname
 	 * @return
