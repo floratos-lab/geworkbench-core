@@ -140,7 +140,7 @@ import com.Ostermiller.util.CSVPrinter;
  * @author First Genetic Trust
  * @version 1.0
  */
-
+@SuppressWarnings("unchecked")
 public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	static Log log = LogFactory.getLog(ProjectPanel.class);
@@ -1267,7 +1267,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 */
 	protected void jProjectTree_keyReleased(KeyEvent e) {
 		TreePath path = projectTree.getSelectionPath();
-		if ((e.getKeyCode() == e.VK_DOWN || e.getKeyCode() == e.VK_UP)
+		if ((e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_UP)
 				&& path != null) {
 			ProjectTreeNode mNode = (ProjectTreeNode) path
 					.getLastPathComponent();
@@ -1538,7 +1538,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 
 
-		PDBDialog dg = new PDBDialog(this);
+		new PDBDialog(this);
 	}
 
 	/**
