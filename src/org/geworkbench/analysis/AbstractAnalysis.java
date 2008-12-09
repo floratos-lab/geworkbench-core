@@ -100,6 +100,8 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 		
 	public static final int MRA_TYPE = 28;
 
+        public static final int SKYBASE_TYPE = 29;
+
 	/**
 	 * The parameters panel to be use from within the AnalysisPane in order to
 	 * collect the analysis parameters from the user.

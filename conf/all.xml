@@ -213,6 +213,15 @@
 	<!--<gui-area name="CommandArea"/>-->
 	<!--</plugin>-->
 
+    <!-- SkyBase Component -->
+    <plugin id="SkyBase" name="SkyBase Component" class="org.geworkbench.components.skybase.SkyBaseComponent" source="skybase">
+    <gui-area name="CommandArea"/>
+    </plugin>
+    <plugin id="SkyBaseAnalysis" name="SkyBase Analysis" class="org.geworkbench.components.skybase.SkyBaseAnalysis" source="skybase"/>
+    <plugin id="SkyBaseViewer" name="SkyBase Viewer" class="org.geworkbench.components.skybaseview.SkyBaseViewer" source="skybaseview">
+    <gui-area name="VisualArea"/>
+    </plugin>
+
     <!-- SkyLine Component -->
     <plugin id="SkyLine" name="Structure Analysis" class="org.geworkbench.components.skyline.SkyLineComponent" source="skyline">
     <gui-area name="CommandArea"/>
