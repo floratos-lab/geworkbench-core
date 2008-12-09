@@ -24,10 +24,13 @@ import org.apache.commons.logging.LogFactory;
  * TODO document me
  * 
  * @author mw2518
- * @version $Id: PDBDialog.java,v 1.2 2008-12-09 18:40:30 keshav Exp $
+ * @version $Id: PDBDialog.java,v 1.3 2008-12-09 18:45:58 keshav Exp $
  * 
  */
 class PDBDialog extends JFrame implements ActionListener {
+	
+	private static final long serialVersionUID = 1L;
+
 	private Log log = LogFactory.getLog(this.getClass());
 
 	private JTextField jt = new JTextField(4);
