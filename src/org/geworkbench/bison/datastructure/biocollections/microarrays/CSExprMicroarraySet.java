@@ -159,11 +159,16 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
             loadingCancelled = true;
             return;
         } catch (Exception ioe) {
-            System.out.println("Error while parsing line: " + line);
+            log.error("Error while parsing line: " + line);
             ioe.printStackTrace();
             return;
         } finally {
-            //            setPhenotype();
+			try {
+				rm.reader.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+				// nothing further necessary
+			}
 
         }
     }
