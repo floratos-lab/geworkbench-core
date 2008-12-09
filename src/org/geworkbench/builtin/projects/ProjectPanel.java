@@ -39,6 +39,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.ToolTipManager;
 import javax.swing.border.EmptyBorder;
@@ -1521,6 +1522,26 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	}
 
 	/**
+	 * Action listener handling user requests for opening a pdb file from
+	 * RCSB Protein Data Bank.
+	 * 
+	 * @param e
+	 */
+	protected void jOpenRemotePDBItem_actionPerformed(ActionEvent e) {
+		// Proceed only if there is a single node selected and that node
+		// is a project node.
+		if (projectTree.getSelectionCount() != 1
+				|| !(projectTree.getSelectionPath().getLastPathComponent() instanceof ProjectNode)) {
+			JOptionPane.showMessageDialog(null, "Select a project node.",
+					"Open File Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+
+		PDBDialog dg = new PDBDialog(this);
+	}
+
+	/**
 	 * Action listener handling user requests to merge 2 or more microarray sets
 	 * into 1.
 	 * 
@@ -2598,6 +2619,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	protected TreeNodeRenderer projectRenderer = new TreeNodeRenderer(selection);
 
+	private JTextField jt = new JTextField(30);
+
 	protected JPopupMenu jRootMenu = new JPopupMenu();
 
 	protected JPopupMenu jProjectMenu = new JPopupMenu();
@@ -2609,6 +2632,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	protected JMenuItem jNewProjectItem = new JMenuItem();
 
 	protected JMenuItem jLoadMArrayItem = new JMenuItem();
+	
+	protected JMenuItem jOpenRemotePDBItem = new JMenuItem();
 
 	protected JMenuItem jLoadRemoteMArrayItem = new JMenuItem();
 
@@ -2696,8 +2721,21 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		};
 		listeners.put("File.Merge Datasets", listener);
 		jMergeDatasets.addActionListener(listener);
+
+		jOpenRemotePDBItem.setText("Open PDB File from RCSB Protein Data Bank");
+		listener = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				jOpenRemotePDBItem_actionPerformed(e);
+			}
+
+		};
+		listeners.put("File.OpenRemotePDB.File", listener);
+		jOpenRemotePDBItem.addActionListener(listener);
+
 		jRootMenu.add(jNewProjectItem);
 		jProjectMenu.add(jLoadMArrayItem);
+		jProjectMenu.addSeparator();
+		jProjectMenu.add(jOpenRemotePDBItem);
 		jProjectMenu.addSeparator();
 		jProjectMenu.add(jRenameProjectItem);
 		jMArrayMenu.add(jMergeDatasets);
