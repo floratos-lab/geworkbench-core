@@ -2,7 +2,7 @@
 A bare-bones all.xml file that is useful when creating a new component.
 
 author: keshav 
-version: $Id: all-minimal.xml,v 1.6 2008-12-06 19:48:33 keshav Exp $
+version: $Id: all-minimal.xml,v 1.7 2008-12-09 18:23:12 keshav Exp $
 -->
 
 <geaw-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ConfigurationFile Schema.xsd">
@@ -38,8 +38,13 @@ version: $Id: all-minimal.xml,v 1.6 2008-12-06 19:48:33 keshav Exp $
 		<gui-area name="VisualArea"/>
 	</plugin> 
 	
+	<plugin id="somClusteringPanel" name="SOM Clusters" class="org.geworkbench.components.plots.SOMDisplay" source="plots">
+		<gui-area name="VisualArea"/>
+	</plugin>	 
+	
 	<!-- Analyses must go here, before the analysis panel -->
-	<plugin id="fastHierarchicalClusteringAnalysis" name="Fast Hierachical Clustering Analysis" class="org.geworkbench.components.clustering.FastHierClustAnalysis" source="clustering"/>
+	<plugin id="fastHierarchicalClusteringAnalysis" name="Fast Hierachical Clustering Analysis" class="org.geworkbench.components.hierarchicalclustering.FastHierClustAnalysis" source="hierarchicalclustering"/>
+	<plugin id="somAnalysis" name="SOM Analysis" class="org.geworkbench.components.somclustering.SOMAnalysis" source="somclustering"/>
 	<plugin id="medusa" name="MEDUSA Analysis" class="org.geworkbench.components.medusa.MedusaAnalysis" source="medusa"/>
 	
 	<plugin id="analysisPanel" name="Analysis" class="org.geworkbench.components.analysis.AnalysisPanel" source="analysis">
