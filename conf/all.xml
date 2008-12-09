@@ -154,9 +154,7 @@
 		<gui-area name="VisualArea"/>
 	</plugin>
 -->
-	<plugin id="pudgePanel" name="Pudge" class="org.geworkbench.components.cagrid.GenetegrateViewAppComponent" source="cagrid">
-		<gui-area name="VisualArea"/>
-	</plugin>
+	
 	<plugin id="Interactions" name="Interaction" class="interactions.InteractionsUserInterface" source="interactions">
 		<gui-area name="VisualArea"/>
 	</plugin>
@@ -274,12 +272,7 @@
         <gui-area name="VisualArea"/>
     </plugin>
      -->
-	<plugin id="cagrid" name="caGrid" class="org.geworkbench.components.cagrid.CaGridPanel" source="cagrid">
-		<gui-area name="CommandArea"/>
-	</plugin>
-	<plugin id="cascriptPanel" name="caSCRIPT" class="org.geworkbench.components.cascript.CaSCRIPTEditor" source="cagrid">
-		<gui-area name="CommandArea"/>
-	</plugin>
+	
 	 <plugin id="goTree" name="Gene Ontology Tree" class="org.geworkbench.components.goterms.tree.GeneOntologyTreePopulateComponent" source="goterms">
 </plugin>
   <plugin id="caArray2Panel" name="CaArray2" class="org.geworkbench.components.caarray.arraydata.CaArray2Component" source="caarray">
