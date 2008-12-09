@@ -39,7 +39,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.ToolTipManager;
 import javax.swing.border.EmptyBorder;
@@ -94,8 +93,8 @@ import org.geworkbench.events.CaArrayEvent;
 import org.geworkbench.events.CaArrayQueryEvent;
 import org.geworkbench.events.CaArrayQueryResultEvent;
 import org.geworkbench.events.CaArrayRequestEvent;
-import org.geworkbench.events.CommentsEvent;
 import org.geworkbench.events.CleanDataEvent;
+import org.geworkbench.events.CommentsEvent;
 import org.geworkbench.events.DirtyDataEvent;
 import org.geworkbench.events.ImageSnapshotEvent;
 import org.geworkbench.events.MicroarrayNameChangeEvent;
@@ -943,7 +942,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				projectTreeModel.insertNodeInto(newNode, parent, index);
 				eprPendingNodeMap.remove(gridEpr);
 				// TODO: now we need to put history on new node
-				this.addToHistory(ancillaryDataSet, history);
+				ProjectPanel.addToHistory(ancillaryDataSet, history);
 
 				// Make sure the user can see the lovely new node.
 				projectTree.scrollPathToVisible(new TreePath(newNode));
@@ -2618,8 +2617,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	protected JTree projectTree = new JTree(projectTreeModel);
 
 	protected TreeNodeRenderer projectRenderer = new TreeNodeRenderer(selection);
-
-	private JTextField jt = new JTextField(30);
 
 	protected JPopupMenu jRootMenu = new JPopupMenu();
 
