@@ -131,9 +131,10 @@ public DSSequenceSet getActiveSequenceSet(DSPanel<? extends DSGeneMarker> marker
     public void readFASTAFile(File inputFile) {
         file = inputFile;
         label = file.getName();
-
+        
+        BufferedReader reader = null;
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
+            reader = new BufferedReader(new FileReader(file));
             T sequence = null;
             String data = new String();
             String s = reader.readLine();
@@ -161,7 +162,15 @@ public DSSequenceSet getActiveSequenceSet(DSPanel<? extends DSGeneMarker> marker
                 addASequence(sequence);
             }
         } catch (IOException ex) {
-            System.out.println("Exception: " + ex);
+            ex.printStackTrace();
+        } finally {
+        	if( reader != null){
+				try {
+					reader.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+        	}
         }
         parseMarkers();
         databases.put(file.getPath(), this);
