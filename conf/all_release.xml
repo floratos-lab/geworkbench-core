@@ -63,7 +63,7 @@
 	<plugin id="volcanoPlot" name="Volcano Plot" class="org.geworkbench.components.plots.VolcanoPlot" source="plots">
 		<gui-area name="VisualArea"/>
 	</plugin>
-	<plugin id="SOMClusteringPanel" name="SOM Clusters" class="org.geworkbench.components.plots.SOMDisplay" source="plots">
+	<plugin id="somClusteringPanel" name="SOM Clusters" class="org.geworkbench.components.plots.SOMDisplay" source="plots">
 		<gui-area name="VisualArea"/>
 	</plugin>
 	<plugin id="tabularMicroarrayPanel" name="Tabular Microarray Viewer" class="org.geworkbench.components.microarrays.TabularMicroarrayPanel" source="microarrays">
@@ -87,7 +87,7 @@
 	
 	<plugin id="knnAnalysis_30" name="KNN Analysis_3.0" class="org.geworkbench.components.gpmodule.classification.knn.KNNTraining" source="gpmodule_v3_0"/>
 	<plugin id="PCAAnalysis_30" name="PCA Analysis 3.0" class="org.geworkbench.components.gpmodule.pca.PCAAnalysis" source="gpmodule_v3_0"/>
-		<plugin id="somAnalysis" name="SOM Analysis" class="org.geworkbench.components.clustering.SOMAnalysis" source="clustering"/>
+	<plugin id="somAnalysis" name="SOM Analysis" class="org.geworkbench.components.somclustering.SOMAnalysis" source="somclustering"/>
 	
 	<plugin id="PCAViewer_30" name="PCA Viewer 3.0" class="org.geworkbench.components.gpmodule.pca.PCA" source="gpmodule_v3_0">
 		<gui-area name="VisualArea"/>
