@@ -100,9 +100,10 @@ public class AffyFileFormat extends DataSetFileFormat {
         boolean columnsMatch = true;
         boolean noDuplicateMarkers = true;
         boolean valuesAreExpectedType = true;
+        BufferedReader reader = null;
     	try{
 	        FileInputStream fileIn = new FileInputStream(f);
-	        BufferedReader reader = new BufferedReader(new InputStreamReader(fileIn));
+	        reader = new BufferedReader(new InputStreamReader(fileIn));
 	
 	        String line = null;
 	        int totalColumns = 0;
@@ -146,6 +147,12 @@ public class AffyFileFormat extends DataSetFileFormat {
 	        fileIn.close();
 	    } catch (Exception e) {
 	        e.printStackTrace();
+	    } finally {
+	    	try {
+				reader.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 	    }
 	  //if (headerExist && columnsMatch && noDuplicateMarkers)
 	    if (headerExist && noDuplicateMarkers)
@@ -177,6 +184,8 @@ public class AffyFileFormat extends DataSetFileFormat {
         // Check that the file is OK before starting allocating space for it.
         if (!checkFormat(file))
             throw new InputFileFormatException("AffyFileFormat::getMArraySet - " + "Attempting to open a file that does not comply with the " + "Affy format.");
+        
+        BufferedReader reader = null;
         try {
             // microarraySet = new CSExprMicroarraySet((AffyResource) getResource(file));
             microarraySet = maSet;
@@ -191,7 +200,7 @@ public class AffyFileFormat extends DataSetFileFormat {
             AffymetrixParser parser = new AffymetrixParser(ctu);
             FileInputStream fileIn = new FileInputStream(file);
             ProgressMonitorInputStream progressIn = new ProgressMonitorInputStream(null, "Scanning File", fileIn);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(progressIn));
+            reader = new BufferedReader(new InputStreamReader(progressIn));
 
             String line = null;
             while ((line = reader.readLine()) != null) {
@@ -240,6 +249,12 @@ public class AffyFileFormat extends DataSetFileFormat {
             microarraySet.setFile(file);
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+        	try {
+				reader.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
         }
     }
 
