@@ -98,11 +98,12 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 		boolean columnsMatch = true;
 		boolean noDuplicateMarkers = true;
 		boolean noDuplicateArrays = true;
+		BufferedReader reader = null;
 		try {
 			FileInputStream fileIn = new FileInputStream(file);
 			ProgressMonitorInputStream progressIn = new ProgressMonitorInputStream(
 					null, "Checking File Format", fileIn);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
+			reader = new BufferedReader(new InputStreamReader(
 					progressIn));
 
 			String line = null;
@@ -173,6 +174,12 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 			fileIn.close();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+    		try {
+				reader.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		if (columnsMatch && noDuplicateMarkers && noDuplicateArrays)
 			return true;
@@ -218,8 +225,9 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 			fileName = fileName.substring(0, dotIndex);
 		}
 		maSet.setLabel(fileName);
+		BufferedReader in = null;
 		try {
-			BufferedReader in = new BufferedReader(new FileReader(file));
+			in = new BufferedReader(new FileReader(file));
 			if (in != null) {
 				String header = in.readLine();
 				if (header == null) {
@@ -409,6 +417,12 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 			throw e;
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+    		try {
+				in.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		return maSet;
 	}
