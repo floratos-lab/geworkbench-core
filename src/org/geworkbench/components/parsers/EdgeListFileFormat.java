@@ -23,7 +23,7 @@ import java.util.StringTokenizer;
 /**
  * 
  * @author ch2514
- * @version $Id: EdgeListFileFormat.java,v 1.1 2007-08-31 15:58:20 hungc Exp $
+ * @version $Id: EdgeListFileFormat.java,v 1.2 2008-12-11 21:15:47 jiz Exp $
  */
 public class EdgeListFileFormat extends DataSetFileFormat {
 	private Log log = LogFactory.getLog(EdgeListFileFormat.class);
@@ -135,10 +135,11 @@ public class EdgeListFileFormat extends DataSetFileFormat {
     
     private EdgeList parseEdgeListDataFile(File file) throws InputFileFormatException {
     	EdgeList el = new EdgeList();
+    	BufferedReader reader = null;
     	try{ 
 	        FileInputStream fileIn = new FileInputStream(file);
 	        ProgressMonitorInputStream progressIn = new ProgressMonitorInputStream(null, "Scanning File", fileIn);
-	        BufferedReader reader = new BufferedReader(new InputStreamReader(progressIn));
+	        reader = new BufferedReader(new InputStreamReader(progressIn));
 	
 	        String line = null;
 	        StringTokenizer st = null;
@@ -157,16 +158,23 @@ public class EdgeListFileFormat extends DataSetFileFormat {
     	} catch (Exception e){
     		log.debug("Problems parsing file: " + file.getName(), e);
     		throw new InputFileFormatException("Cannot parse Net Boost file: " + file.getName());
+    	} finally {
+    		try {
+				reader.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
     	}
         return el;
     }
     
     private EdgeList parseAdjacencyMatrixDataFile(File file) throws InputFileFormatException {
     	EdgeList el = new EdgeList();
+    	BufferedReader reader = null;
     	try{ 
 	        FileInputStream fileIn = new FileInputStream(file);
 	        ProgressMonitorInputStream progressIn = new ProgressMonitorInputStream(null, "Scanning File", fileIn);
-	        BufferedReader reader = new BufferedReader(new InputStreamReader(progressIn));
+	        reader = new BufferedReader(new InputStreamReader(progressIn));
 	
 	        String line = null;
 	        StringTokenizer st = null;
@@ -200,6 +208,12 @@ public class EdgeListFileFormat extends DataSetFileFormat {
     	} catch (Exception e){
     		log.debug("Problems parsing file: " + file.getName(), e);
     		throw new InputFileFormatException("Cannot parse Net Boost file: " + file.getName());
+    	} finally {
+    		try {
+				reader.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
     	}
     	return el;
     }
