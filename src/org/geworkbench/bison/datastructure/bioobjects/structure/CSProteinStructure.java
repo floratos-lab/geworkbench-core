@@ -33,8 +33,9 @@ public class CSProteinStructure extends CSAncillaryDataSet implements DSProteinS
     	File prtfile = this.getFile();
     	File pdbfile = prtfile.getAbsoluteFile();
     	HashMap<String, Integer> chainhm = new HashMap<String, Integer>();
+    	BufferedReader br = null;
     	try{
-    		BufferedReader br = new BufferedReader(new FileReader(pdbfile));
+    		br = new BufferedReader(new FileReader(pdbfile));
     		String line = null;
     		while ((line = br.readLine())!= null)
     		{
@@ -46,6 +47,12 @@ public class CSProteinStructure extends CSAncillaryDataSet implements DSProteinS
     		br.close();
         }catch(Exception e){
         	e.printStackTrace();
+        } finally {
+        	try {
+				br.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
         }
 	if (chainhm.get(" ") != null) 
 	{
