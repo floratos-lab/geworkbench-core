@@ -2,7 +2,7 @@
 A bare-bones all.xml file that is useful when creating a new component.
 
 author: keshav 
-version: $Id: all-minimal.xml,v 1.8 2008-12-11 19:19:41 keshav Exp $
+version: $Id: all-minimal.xml,v 1.9 2008-12-18 16:16:02 keshav Exp $
 -->
 
 <geaw-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ConfigurationFile Schema.xsd">
@@ -29,7 +29,7 @@ version: $Id: all-minimal.xml,v 1.8 2008-12-11 19:19:41 keshav Exp $
 		<gui-area name="SelectionArea"/>
 	</plugin>
 	
-	
+	<!-- Views of corresponding analyses go here -->
 	<plugin id="microarrayPanel" name="Microarray Viewer" class="org.geworkbench.components.microarrays.MicroarrayPanel" source="microarrays">
 		<gui-area name="VisualArea"/>
 		<subscription type="org.geworkbench.events.ProjectEvent" enabled="Yes"/>
@@ -40,6 +40,14 @@ version: $Id: all-minimal.xml,v 1.8 2008-12-11 19:19:41 keshav Exp $
 	</plugin> 
 	
 	<plugin id="somClusteringPanel" name="SOM Clusters" class="org.geworkbench.components.plots.SOMDisplay" source="plots">
+		<gui-area name="VisualArea"/>
+	</plugin>
+	
+	<plugin id="medusaViewer" name="MEDUSA Viewer" class="org.geworkbench.components.medusa.gui.MedusaVisualComponent" source="medusa">
+        <gui-area name="VisualArea"/>
+    </plugin>	
+	
+	<plugin id="blastResults" name="Alignment Results" class="org.geworkbench.components.alignment.panels.BlastViewComponent" source="alignment">
 		<gui-area name="VisualArea"/>
 	</plugin>	 
 	
@@ -52,9 +60,8 @@ version: $Id: all-minimal.xml,v 1.8 2008-12-11 19:19:41 keshav Exp $
 		<gui-area name="CommandArea"/>
 	</plugin>
 	
-	<!-- Views of corresponding analyses go here -->
-	<plugin id="medusaViewer" name="MEDUSA Viewer" class="org.geworkbench.components.medusa.gui.MedusaVisualComponent" source="medusa">
-        <gui-area name="VisualArea"/>
-    </plugin>	
+	<plugin id="sequenceAlignment" name="Sequence Alignment" class="org.geworkbench.components.alignment.panels.BlastAppComponent" source="alignment">
+		<gui-area name="CommandArea"/>
+	</plugin>
   
 </geaw-config>
