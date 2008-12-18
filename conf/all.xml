@@ -116,8 +116,10 @@
     -->
 	<plugin id="MedusaAnalysis" name="MEDUSA Analysis" class="org.geworkbench.components.medusa.MedusaAnalysis" source="medusa"/>
 	<plugin id="somAnalysis" name="SOM Analysis" class="org.geworkbench.components.somclustering.SOMAnalysis" source="somclustering"/>
+	<!--
 	<plugin id="wvAnalysis" name="WV Analysis" class="org.geworkbench.components.gpmodule.classification.wv.WVTraining" source="gpmodule"/>
 	<plugin id="knnAnalysis" name="KNN Analysis" class="org.geworkbench.components.gpmodule.classification.knn.KNNTraining" source="gpmodule"/>
+	-->
 	<plugin id="knnAnalysis_30" name="KNN Analysis 3.0" class="org.geworkbench.components.gpmodule.classification.knn.KNNTraining" source="gpmodule_v3_0"/>
 	<plugin id="wvAnalysis_30" name="WV Analysis 3.0" class="org.geworkbench.components.gpmodule.classification.wv.WVTraining" source="gpmodule_v3_0"/>
     <plugin id="SVMAnalysis_30" name="SVM Analysis 3.0" class="org.geworkbench.components.gpmodule.classification.svm.SVMTraining" source="gpmodule_v3_0"/>		
@@ -130,9 +132,13 @@
 	</plugin>
 	<!-- -->
 	<plugin id="smlrAnalysis" name="SMLR Analysis" class="org.geworkbench.components.classification.smlr.SMLRTraining" source="classification"/>
+<!--
 	<plugin id="svmAnalysis" name="SVM Analysis" class="org.geworkbench.components.classification.svm.SVMTraining" source="classification"/>
+-->
 	<plugin id="tTestAnalysis" name="t Test Analysis" class="org.geworkbench.components.analysis.clustering.TtestAnalysis" source="analysis"/>
+<!--	
 	<plugin id="multiTTestAnalysis" name="Multi t Test Analysis" class="org.geworkbench.components.analysis.clustering.MultiTTestAnalysis" source="analysis"/>
+-->
 	<plugin id="anova" name="Anova Analysis" class="org.geworkbench.components.anova.AnovaAnalysis" source="anova"/>
 	<plugin id="thresholdNormalizer" name="Threshold Normalizer" class="org.geworkbench.components.normalization.ThresholdNormalizer" source="normalization"/>
 	<plugin id="QuantileNormalizer" name="Quantile Normalizer" class="org.geworkbench.components.normalization.QuantileNormalizer" source="normalization"/>
