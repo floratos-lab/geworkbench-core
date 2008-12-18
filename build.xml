@@ -122,7 +122,7 @@
 		<copy todir="${dev}/components">
 			<fileset dir="${components}">
 				<include name="analysis/**/*" />
-				<include name="clustering/**/*" />
+				<include name="somclustering/**/*" />
 				<include name="colormosaic/**/*" />
 				<include name="example/**/*" />
 				<include name="filtering/**/*" />
@@ -445,7 +445,7 @@
 				<include name="${components}/caarray/**/*" />
 				<include name="${components}/celprocessing/**/*" />
 				<include name="${components}/classification/**/*" />
-				<include name="${components}/clustering/**/*" />
+				<include name="${components}/somclustering/**/*" />
 				<include name="${components}/colormosaic/**/*" />
 				<include name="${components}/cytoscape/**/*" />
 				<include name="${components}/discovery/**/*" />
