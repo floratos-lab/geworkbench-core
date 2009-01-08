@@ -43,7 +43,7 @@ import org.geworkbench.util.ProgressBar;
 
 /**
  * @author xiaoqing
- * @version $Id: CaARRAYPanel.java,v 1.39 2009-01-08 16:50:00 jiz Exp $
+ * @version $Id: CaARRAYPanel.java,v 1.40 2009-01-08 17:49:16 jiz Exp $
  */
 @SuppressWarnings("unchecked")
 public class CaARRAYPanel extends JPanel implements Observer {
@@ -57,8 +57,6 @@ public class CaARRAYPanel extends JPanel implements Observer {
 	 * Used to avoid querying the server for all experiments all the time.
 	 */
 	protected boolean experimentsLoaded = false;
-	// display the status of connection.
-	private boolean stopConnection = false;
 
 	private String currentResourceName = null;
 	private String previousResourceName = null;
@@ -726,14 +724,9 @@ public class CaARRAYPanel extends JPanel implements Observer {
 			Thread t = new Thread(dataLoader);
 			t.setPriority(Thread.MAX_PRIORITY);
 			t.start();
-			if (stopConnection) {
-				return;
-			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			stopConnection = true;
 		}
-
 	}
 
 	private void dispose() {
@@ -741,7 +734,6 @@ public class CaARRAYPanel extends JPanel implements Observer {
 	}
 
 	public void update(java.util.Observable ob, Object o) {
-		stopConnection = true;
 		stillWaitForConnecting = false;
 		log.error("Get Cancelled");
 
