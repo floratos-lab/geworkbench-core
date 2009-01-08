@@ -2,7 +2,7 @@
 A bare-bones all.xml file that is useful when creating a new component.
 
 author: keshav 
-version: $Id: all-minimal.xml,v 1.9 2008-12-18 16:16:02 keshav Exp $
+version: $Id: all-minimal.xml,v 1.10 2009-01-08 17:14:20 keshav Exp $
 -->
 
 <geaw-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ConfigurationFile Schema.xsd">
@@ -39,22 +39,12 @@ version: $Id: all-minimal.xml,v 1.9 2008-12-18 16:16:02 keshav Exp $
 		<gui-area name="VisualArea"/>
 	</plugin> 
 	
-	<plugin id="somClusteringPanel" name="SOM Clusters" class="org.geworkbench.components.plots.SOMDisplay" source="plots">
-		<gui-area name="VisualArea"/>
-	</plugin>
-	
-	<plugin id="medusaViewer" name="MEDUSA Viewer" class="org.geworkbench.components.medusa.gui.MedusaVisualComponent" source="medusa">
-        <gui-area name="VisualArea"/>
-    </plugin>	
-	
 	<plugin id="blastResults" name="Alignment Results" class="org.geworkbench.components.alignment.panels.BlastViewComponent" source="alignment">
 		<gui-area name="VisualArea"/>
 	</plugin>	 
 	
 	<!-- Analyses must go here, before the analysis panel -->
 	<plugin id="fastHierarchicalClusteringAnalysis" name="Fast Hierachical Clustering Analysis" class="org.geworkbench.components.hierarchicalclustering.FastHierClustAnalysis" source="hierarchicalclustering"/>
-	<plugin id="somAnalysis" name="SOM Analysis" class="org.geworkbench.components.somclustering.SOMAnalysis" source="somclustering"/>
-	<plugin id="medusa" name="MEDUSA Analysis" class="org.geworkbench.components.medusa.MedusaAnalysis" source="medusa"/>
 	
 	<plugin id="analysisPanel" name="Analysis" class="org.geworkbench.components.analysis.AnalysisPanel" source="analysis">
 		<gui-area name="CommandArea"/>
