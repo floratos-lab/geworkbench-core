@@ -1,67 +1,57 @@
 package org.geworkbench.builtin.projects.util;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Observer;
+import java.util.TreeMap;
 
-import javax.swing.*;
-import javax.swing.Timer;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.JTree;
 import javax.swing.border.Border;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 
-import gov.nih.nci.common.search.*; //import gov.nih.nci.common.search.session.SecureSession;
-//import gov.nih.nci.common.search.session.SecureSessionFactory;
-//import gov.nih.nci.mageom.domain.BioAssay.BioAssay;
-//import gov.nih.nci.mageom.domain.BioAssay.impl.*;
-//import gov.nih.nci.mageom.domain.BioAssayData.BioAssayData;
-//import gov.nih.nci.mageom.domain.Description.Description;
-//import gov.nih.nci.mageom.domain.Experiment.Experiment;
-//import gov.nih.nci.mageom.domain.Experiment.impl.ExperimentImpl;
-//import gov.nih.nci.mageom.search.SearchCriteriaFactory;
-//import gov.nih.nci.mageom.search.Experiment.ExperimentSearchCriteria;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
-import org.geworkbench.bison.parsers.resources.CaArrayResource;
 import org.geworkbench.builtin.projects.LoadData;
 import org.geworkbench.builtin.projects.remoteresources.carraydata.CaArray2Experiment;
-
-import org.geworkbench.engine.management.Publish;
 import org.geworkbench.events.CaArrayEvent;
 import org.geworkbench.events.CaArrayRequestEvent;
-import org.geworkbench.events.ProjectEvent;
 import org.geworkbench.util.ProgressBar;
 
 /**
- * <p>
- * Title: Bioworks
- * </p>
- * <p>
- * Description: Modular Application Framework for Gene Expession, Sequence and
- * Genotype Analysis
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003 -2004
- * </p>
- * <p>
- * Company: Columbia University
- * </p>
- * 
- * @author manjunath at genomecenter dot columbia dot edu
- * @version 1.0
+ * @author xiaoqing
+ * @version $Id: CaARRAYPanel.java,v 1.39 2009-01-08 16:50:00 jiz Exp $
  */
-
+@SuppressWarnings("unchecked")
 public class CaARRAYPanel extends JPanel implements Observer {
+	private static final long serialVersionUID = -4876378958265466224L;
+
 	private static final String CAARRAY_TITLE = "caARRAY";
 
 	private static Log log = LogFactory.getLog(CaARRAYPanel.class);
-	/**
-	 * Stores experiments from the remote server.
-	 */
-	protected CaArrayExperiment[] experiments = null;
 
 	/**
 	 * Used to avoid querying the server for all experiments all the time.
@@ -69,7 +59,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
 	protected boolean experimentsLoaded = false;
 	// display the status of connection.
 	private boolean stopConnection = false;
-	private boolean stillConnecting = true;
+
 	private String currentResourceName = null;
 	private String previousResourceName = null;
 	private JLabel displayLabel = new JLabel();
@@ -107,9 +97,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
 	private String passwd;
 	private String url;
 	private int portnumber;
-	private ProgressMonitor progressMonitor;
-	private ConnectionTask task;
-	private Timer timer;
+
 	private ProgressBar progressBar = ProgressBar
 			.create(ProgressBar.INDETERMINATE_TYPE);
 	private LoadData parentPanel;
@@ -141,7 +129,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
 	}
 
 	public void receive(CaArrayEvent ce) {
-		if(!stillWaitForConnecting){
+		if (!stillWaitForConnecting) {
 			return;
 		}
 		stillWaitForConnecting = false;
@@ -153,11 +141,8 @@ public class CaARRAYPanel extends JPanel implements Observer {
 				errorMessage = "Cannot connect with the server.";
 			}
 			if (!ce.isSucceed()) {
-
 				JOptionPane.showMessageDialog(null, "The error: "
 						+ errorMessage);
-				// + ce.getErrorMessage()==null? "Cannot connect with the
-				// server.":ce.getErrorMessage());
 			} else {
 				JOptionPane.showMessageDialog(null, errorMessage);
 			}
@@ -355,9 +340,13 @@ public class CaARRAYPanel extends JPanel implements Observer {
 								progressBar.setMessage(text + i / 4
 										+ " seconds.");
 							}
-							if(i>INTERNALTIMEOUTLIMIT*4){
+							if (i > INTERNALTIMEOUTLIMIT * 4) {
 								stillWaitForConnecting = false;
-								JOptionPane.showMessageDialog(null, "Cannot connect with the server in " + INTERNALTIMEOUTLIMIT + " seconds.", "Timeout", JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(null,
+										"Cannot connect with the server in "
+												+ INTERNALTIMEOUTLIMIT
+												+ " seconds.", "Timeout",
+										JOptionPane.ERROR_MESSAGE);
 								update(null, null);
 							}
 						} while (stillWaitForConnecting);
@@ -389,8 +378,15 @@ public class CaARRAYPanel extends JPanel implements Observer {
 			progressBar.addObserver(this);
 			progressBar.setTitle(CAARRAY_TITLE);
 			progressBar.start();
-			task = new ConnectionTask();
-			task.getBioAssayThread();
+
+			Runnable dataLoader = new Runnable() {
+				public void run() {
+					getBioAssay();
+				}
+			};
+			Thread t = new Thread(dataLoader);
+			t.setPriority(Thread.MAX_PRIORITY);
+			t.start();
 		}
 
 	}
@@ -444,7 +440,6 @@ public class CaARRAYPanel extends JPanel implements Observer {
 			Enumeration<DefaultMutableTreeNode> nodes = root.children();
 			if (nodes != null) {
 				while (nodes.hasMoreElements()) {
-					DefaultMutableTreeNode currentNode = nodes.nextElement();
 					// Lazy computation of the children on an experiment.
 					DefaultMutableTreeNode assayNode = null;
 
@@ -543,7 +538,6 @@ public class CaARRAYPanel extends JPanel implements Observer {
 	}
 
 	public void getExperiments(ActionEvent e) {
-		stillConnecting = true;
 		displayLabel.setText("");
 		if (!experimentsLoaded
 				|| !currentResourceName.equals(previousResourceName)) {
@@ -573,8 +567,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
 			DefaultMutableTreeNode selectedNode = ((DefaultMutableTreeNode) path
 					.getLastPathComponent());
 			Object nodeObj = selectedNode.getUserObject();
-			// if (e.isMetaDown() && (selectedNode instanceof
-			// CaArrayExperiment)) {
+
 			if (e.isMetaDown() && (treeMap.containsKey(nodeObj))) {
 				jRemoteDataPopup.show(remoteFileTree, e.getX(), e.getY());
 				if (selectedNode.getChildCount() > 0) {
@@ -586,33 +579,6 @@ public class CaARRAYPanel extends JPanel implements Observer {
 		}
 	}
 
-	/**
-	 * Prints the reporter related data to standard out.
-	 * 
-	 * @param reporterData -
-	 *            Array of reporter related data to be printed.
-	 */
-	// private static void printReporterRelatedData(ReporterRelatedData[]
-	// reporterData) {
-	// for (int x = 0; x < reporterData.length; x++) {
-	// System.out.println("\n*********************************************************");
-	// System.out.println("Reporter: " + reporterData[x].getReporterName());
-	// System.out.println("Reporter ID: " + reporterData[x].getReporterId());
-	// BioAssayDatumData[] datum = reporterData[x].getBioAssayDatumData();
-	// for (int y = 0; y < datum.length; y++) {
-	// System.out.println("\tDatum[" + y + "]: '" + datum[y].getType() + "' - "
-	// + datum[y].getValue());
-	// }
-	//
-	// System.out.println("");
-	// OntologyEntryData[] onts = reporterData[x].getSequenceOntologies();
-	// for (int y = 0; y < onts.length; y++) {
-	// System.out.println("\tOntology[" + y + "]: '" + onts[y].getCategory() +
-	// "' - " + onts[y].getValue());
-	// }
-	// System.out.println("*********************************************************\n");
-	// }
-	// }
 	/**
 	 * Action listener invoked when a remote file is selected in the remote file
 	 * tree. Updates the experiment information text area.
@@ -669,7 +635,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
 				&& treeMap.size() != 0) {
 			// Lazy computation of the children on an experiment.
 			DefaultMutableTreeNode assayNode = null;
-			DefaultMutableTreeNode dataNode = null;
+
 			if (treeMap.containsKey(node.getUserObject())) {
 				String exp = (String) node.getUserObject();
 				// Add in the tree the measured bioassays
@@ -691,138 +657,42 @@ public class CaARRAYPanel extends JPanel implements Observer {
 		}
 	}
 
-	/**
-	 * The actionPerformed method in this class is called each time the Timer
-	 * "goes off".
-	 */
-	class TimerListener implements ActionListener {
-		public void actionPerformed(ActionEvent evt) {
-			int taskStatus = 10;
-			if (task != null) {
-				taskStatus = task.getStatus() * 100;
-				// progressBar.updateTo(taskStatus);
-
-				if (task.isDone()) {
-					progressMonitor.close();
-					if (parentPanel != null && !stopConnection) {
-						// update the GUI with new loaded panel.
-						parentPanel.addRemotePanel();
-					}
-					Toolkit.getDefaultToolkit().beep();
-					timer.stop();
-					progressBar.dispose();
-				}
-			}
+	private void getBioAssay() {
+		CaArrayRequestEvent event = new CaArrayRequestEvent(url, portnumber);
+		if (user == null || user.trim().length() == 0) {
+			event.setUsername(null);
+		} else {
+			event.setUsername(user);
+			event.setPassword(passwd);
 		}
+		event.setRequestItem(CaArrayRequestEvent.BIOASSAY);
+		event.setMerge(merge);
+		HashMap<String, String[]> filterCrit = new HashMap<String, String[]>();
+		filterCrit.put(CaArrayRequestEvent.EXPERIMENT,
+				new String[] { currentSelectedExperimentName });
+		filterCrit.put(CaArrayRequestEvent.BIOASSAY,
+				currentSelectedBioAssayName);
+		event.setFilterCrit(filterCrit);
+		event.setQType(currentQuantitationType);
+		log.info("publish CaArrayEvent at CaArrayPanel");
+		publishCaArrayEvent(event);
 	}
 
-	/**
-	 * For connection to remote resource
-	 */
-	class ConnectionTask {
-		CaArrayExperiment[] exps = new CaArrayExperiment[0];
-		Vector temp = new Vector();
-		private int status = 0;
-		private boolean done = false;
-		private boolean stopped = false;
-
-		// SecureSession sess;
-
-		public ConnectionTask() {
+	private void connect() {
+		// update the progress message.
+		stillWaitForConnecting = true;
+		progressBar
+				.setMessage("Connecting with the server... The initial step may take a few minutes.");
+		CaArrayRequestEvent event = new CaArrayRequestEvent(url, portnumber);
+		if (user == null || user.trim().length() == 0) {
+			event.setUsername(null);
+		} else {
+			event.setUsername(user);
+			event.setPassword(passwd);
 
 		}
-
-		public ConnectionTask(String _url, String _user, String _passwd) {
-
-		}
-
-		// public ConnectionTask(SecureSession _sess) {
-		// sess = _sess;
-		// }
-
-		public void go() {
-			Runnable dataLoader = new Runnable() {
-				public void run() {
-					connect();
-				}
-			};
-			Thread t = new Thread(dataLoader);
-			t.setPriority(Thread.MAX_PRIORITY);
-			t.start();
-
-		}
-
-		public void getBioAssayThread() {
-			Runnable dataLoader = new Runnable() {
-				public void run() {
-					getBioAssay();
-				}
-			};
-			Thread t = new Thread(dataLoader);
-			t.setPriority(Thread.MAX_PRIORITY);
-			t.start();
-
-		}
-
-		public void getBioAssay() {
-			// CaArrayRequestEvent event = new CaArrayRequestEvent(
-			// "array-stage.nci.nih.gov", 8080);
-			CaArrayRequestEvent event = new CaArrayRequestEvent(url, portnumber);
-			if (user == null || user.trim().length() == 0) {
-				event.setUsername(null);
-			} else {
-				event.setUsername(user);
-				event.setPassword(passwd);
-			}
-			event.setRequestItem(CaArrayRequestEvent.BIOASSAY);
-			event.setMerge(merge);
-			HashMap<String, String[]> filterCrit = new HashMap<String, String[]>();
-			filterCrit.put(CaArrayRequestEvent.EXPERIMENT,
-					new String[] { currentSelectedExperimentName });
-			filterCrit.put(CaArrayRequestEvent.BIOASSAY,
-					currentSelectedBioAssayName);
-			event.setFilterCrit(filterCrit);
-			event.setQType(currentQuantitationType);
-			log.info("publish CaArrayEvent at CaArrayPanel");
-			publishCaArrayEvent(event);
-		}
-
-		public void connect() {
-
-			// update the progress message.
-			 
-			//stillWaitForConnecting = false;
-			 stillWaitForConnecting = true;
-			progressBar
-					.setMessage("Connecting with the server... The initial step may take a few minutes.");
-			// CaArrayRequestEvent event = new CaArrayRequestEvent(
-			CaArrayRequestEvent event = new CaArrayRequestEvent(url, portnumber);
-			if (user == null || user.trim().length() == 0) {
-				event.setUsername(null);
-			} else {
-				event.setUsername(user);
-				event.setPassword(passwd);
-
-			}
-			event.setRequestItem(CaArrayRequestEvent.EXPERIMENT);
-			publishCaArrayEvent(event);
-			stillConnecting = false;
-
-		}
-
-		public int getStatus() {
-			status++;
-			return status;
-		}
-
-		public boolean isDone() {
-			return done;
-		}
-
-		public void stop() {
-			stopped = true;
-		}
-
+		event.setRequestItem(CaArrayRequestEvent.EXPERIMENT);
+		publishCaArrayEvent(event);
 	}
 
 	/**
@@ -846,30 +716,22 @@ public class CaARRAYPanel extends JPanel implements Observer {
 				url = System.getProperty("SecureSessionManagerURL");
 			}
 
-			// System.setProperty("RMIServerURL", url +
-			// "/SearchCriteriaHandler");
 			System.setProperty("SecureSessionManagerURL", url);
-			task = new ConnectionTask();
-			timer = new Timer(2500, new TimerListener());
-			timer.start();
-			task.go();
+
+			Runnable dataLoader = new Runnable() {
+				public void run() {
+					connect();
+				}
+			};
+			Thread t = new Thread(dataLoader);
+			t.setPriority(Thread.MAX_PRIORITY);
+			t.start();
 			if (stopConnection) {
 				return;
 			}
-
-			if (task.isDone()) {
-				timer.stop();
-			}
-
-			// return experiments;
-
-		}
-
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			stopConnection = true;
-			// pb.stop();
-
 		}
 
 	}
@@ -881,14 +743,8 @@ public class CaARRAYPanel extends JPanel implements Observer {
 	public void update(java.util.Observable ob, Object o) {
 		stopConnection = true;
 		stillWaitForConnecting = false;
-		if (timer != null) {
-			timer.stop();
-		}
-		if (task != null) {
-			task.stop();
-		}
 		log.error("Get Cancelled");
-		 
+
 		progressBar.dispose();
 		CaArrayRequestEvent event = new CaArrayRequestEvent(url, portnumber);
 		if (user == null || user.trim().length() == 0) {
@@ -901,413 +757,6 @@ public class CaARRAYPanel extends JPanel implements Observer {
 		event.setRequestItem(CaArrayRequestEvent.CANCEL);
 		publishCaArrayEvent(event);
 
-	}
-
-	/**
-	 * This class provides a GUI wrapper for a BioAssayImpl object. This object
-	 * will be displayed as a node in the JTree.
-	 */
-	// class CaArrayBioassay {
-	// private String m_id = null;
-	// private BioAssay ba = null;
-	// private BioAssayData[] baData = null;
-	// private int dataCount = 0;
-	// // Convenience flag.
-	// private boolean countFlag = false;
-	// // Convenience flag.
-	// private boolean flag = false;
-	//
-	// public CaArrayBioassay(BioAssay b) {
-	// ba = b;
-	// try {
-	// m_id = b.getIdentifier();
-	// } catch (Exception e) {
-	// System.out.println("Error getting id for bioasay: " +
-	// e.toString());
-	// e.printStackTrace();
-	// }
-	// }
-	//
-	// public String getId() {
-	// String id = "";
-	// if (m_id != null) {
-	// return m_id;
-	// }
-	// return id;
-	// }
-	//
-	// public BioAssay getBioAssayImpl() {
-	// return ba;
-	// }
-	//
-	// public int getDataCount() {
-	// if (ba == null) {
-	// return 0;
-	// }
-	// if (countFlag) {
-	// return dataCount;
-	// }
-	// try {
-	// if (ba instanceof MeasuredBioAssayImpl) {
-	// dataCount = ((MeasuredBioAssayImpl) ba).
-	// getMeasuredBioAssayDataCount();
-	// } else if (ba instanceof DerivedBioAssayImpl) {
-	// dataCount = ((DerivedBioAssayImpl) ba).
-	// getDerivedBioAssayDataCount();
-	// } else {
-	// dataCount = 0;
-	// }
-	// } catch (Exception e) {
-	// return 0;
-	// }
-	// countFlag = true;
-	// return dataCount;
-	// }
-	//
-	// BioAssayData[] getData() {
-	// if (ba == null) {
-	// return null;
-	// }
-	// if (flag) {
-	// return baData;
-	// }
-	// try {
-	// if (ba instanceof MeasuredBioAssayImpl) {
-	// baData = ((MeasuredBioAssayImpl) ba).
-	// getMeasuredBioAssayData();
-	// } else if (ba instanceof DerivedBioAssayImpl) {
-	// baData = ((DerivedBioAssayImpl) ba).
-	// getDerivedBioAssayData();
-	// } else {
-	// baData = null;
-	// }
-	// } catch (Exception e) {
-	// return null;
-	// }
-	// flag = true;
-	// return baData;
-	// }
-	//
-	// /**
-	// * Return the display name for the bioassay.
-	// */
-	// public String toString() {
-	// if (ba == null) {
-	// return "null";
-	// } else if (ba.getName() != null) {
-	// return ba.getName();
-	// } else if (ba instanceof MeasuredBioAssayImpl) {
-	// StringBuffer name = new StringBuffer("Measured");
-	// if (m_id != null) {
-	// name.append(": ");
-	// name.append(m_id);
-	// }
-	// return name.toString();
-	// } else if (ba instanceof DerivedBioAssayImpl) {
-	// StringBuffer name = new StringBuffer("Derived");
-	// if (m_id != null) {
-	// name.append(":");
-	// name.append(m_id);
-	// }
-	// return name.toString();
-	// } else {
-	// return "Unknown";
-	// }
-	// }
-	// }
-	//
-	/**
-	 * This class represents an experiment in the load data JTree.
-	 */
-	class CaArrayExperiment implements Comparable {
-		/**
-		 * The ID of this experiment.
-		 */
-		Long m_id = null;
-		/**
-		 * The name of this experiment.
-		 */
-		String m_name = null;
-		String m_platform = "Unknown";
-		/**
-		 * The reference <code>ExperimentImpl</code> object.
-		 */
-		// ExperimentImpl exp = null; //xq
-		/**
-		 * The number of measured Bioassays that are part of the experiment.
-		 */
-		private int measuredNum = 0;
-		/**
-		 * The number of derived Bioassays that are part of the experiment.
-		 */
-		private int derivedNum = 0;
-		/**
-		 * Convenience flag
-		 */
-		private boolean expInfoComputed = false;
-		/**
-		 * Convenience flags.
-		 */
-		private boolean hasBeenComputedFlag = false;
-		/**
-		 * The text of the experiment information
-		 */
-		private String experimentInfo = "";
-		/**
-		 * The list of measured bioassays in the experiment.
-		 */
-		// private CaArrayBioassay[] measuredAssays = null;
-		/**
-		 * The list of derived bioassays in the experiment.
-		 */
-		// private CaArrayBioassay[] derivedAssays = null;
-		/**
-		 * This is set to true when the tree node corresponding to the
-		 * experiment has been populated with the proper bioassays.
-		 */
-		private boolean treeNodePopulated = false;
-
-		/**
-		 * Creates a new experiment object that will wrap the specified
-		 * ExperimentImpl.
-		 * 
-		 * @param e -
-		 *            The ExperimentImpl that this object represents.
-		 */
-		// public CaArrayExperiment(ExperimentImpl e) {
-		// exp = e;
-		// //get the experiment id and name and store them locally
-		// try {
-		// m_id = e.getId();
-		// m_name = e.getName();
-		// //m_platform = e.getPlatformType;
-		// } catch (Exception ex) {
-		// System.out.println(
-		// "Error getting experiment information: " +
-		// ex.toString());
-		// ex.printStackTrace();
-		// }
-		// }
-		/**
-		 * Returns the ID of this experiment if known, -1 otherwise.
-		 */
-		public long getId() {
-			long id = -1;
-			if (m_id != null) {
-				id = m_id.longValue();
-			}
-			return id;
-		}
-
-		/**
-		 * Returns the platform of this experiment.
-		 */
-		public String getPlatform() {
-			return m_platform;
-		}
-
-		/**
-		 * Checks if the platform of this experiment is usable by caWorkbench.
-		 * 
-		 * @return true if the platform type is usable, false otherwise.
-		 */
-		public boolean isPlatformTypeUsable() {
-			boolean ret = false;
-			if (isGenepix() || isAffymetrix()) {
-				ret = true;
-			}
-			return ret;
-		}
-
-		/**
-		 * Checks if the experiment platform is Affymetrix.
-		 * 
-		 * @return <code>true</code> if the experiment platform is Affy.
-		 *         <code>false</code> otherwise.
-		 */
-		public boolean isAffymetrix() {
-			boolean ret = false;
-			if (m_platform.equalsIgnoreCase("Affymetrix")
-					|| m_platform.equalsIgnoreCase("Affy-MAS 5.0")) {
-				ret = true;
-			}
-			return ret;
-		}
-
-		/**
-		 * Checks if the experiment platform is Genepix.
-		 * 
-		 * @return <code>true</code> if the experiment platform is Genepix.
-		 *         <code>false</code> otherwise.
-		 */
-		public boolean isGenepix() {
-			boolean ret = false;
-			if (m_platform.equalsIgnoreCase("Long Oligo - Spotted")
-					|| m_platform.equalsIgnoreCase("cDNA - Spotted")) {
-				ret = true;
-			}
-			return ret;
-		}
-
-		/**
-		 * Return the number of measured bioassays in the experiment.
-		 * 
-		 * @return
-		 */
-		public int getMeasuredBioassaysCount() {
-			computeArrayNum();
-			return measuredNum;
-		}
-
-		/**
-		 * Return the number of derived bioassays in the experiment.
-		 * 
-		 * @return
-		 */
-		public int getDerivedBioassaysCount() {
-			computeArrayNum();
-			return derivedNum;
-		}
-
-		/**
-		 * Returns the experiment name, which will be displayed within the
-		 * experiment tree. This method is impicitly invoked by the
-		 * <code>DefaultMutableTreeNode</code> "hosting" this experiment
-		 * within the experiment tree.
-		 * 
-		 * @return The name of this experiment.
-		 */
-		public String toString() {
-			StringBuffer nameBuff = new StringBuffer();
-			if (m_id != null) {
-				nameBuff.append(m_id);
-				nameBuff.append(": ");
-			}
-
-			if (m_name != null) {
-				nameBuff.append(m_name);
-			}
-			nameBuff.append(" - ");
-			nameBuff.append(getPlatform());
-			return nameBuff.toString();
-		}
-
-		/**
-		 * This method will compare this Experiment to another object.
-		 * 
-		 * @param rhs -
-		 *            The object to compare to.
-		 * @return 0 if the objects are equal or cannot be compared, negative
-		 *         int if this object has an ID less than that of rhs object,
-		 *         positive otherwise.
-		 */
-		public int compareTo(Object rhs) {
-			int ret = 0;
-			if (rhs instanceof CaArrayExperiment) {
-				ret = (int) (getId() - ((CaArrayExperiment) rhs).getId());
-			}
-			return ret;
-		}
-
-		/**
-		 * Returns the wrapped ExperimentImpl object.
-		 */
-		// public ExperimentImpl getExperiment() {
-		// return exp;
-		// }
-		/**
-		 * Return the information associated with this experiment.
-		 * 
-		 * @return
-		 */
-		public String getExperimentInformation() {
-			// if (exp != null && !expInfoComputed) {
-			// Description[] desc = exp.getDescriptions();
-			// if (desc == null || desc.length == 0) {
-			// experimentInfo = "";
-			// } else {
-			// return experimentInfo = desc[0].getText();
-			// }
-			// expInfoComputed = true;
-			// }
-			return experimentInfo;
-		}
-
-		/**
-		 * Return an array containing the measured bioassays (if there are any).
-		 * 
-		 * @return
-		 */
-		// public CaArrayBioassay[] getMeasuredAssays() {
-		// computeArrayNum();
-		// return measuredAssays;
-		// }
-		/**
-		 * Return an array containing the derived bioassays (if there are any).
-		 * 
-		 * @return
-		 */
-		// public CaArrayBioassay[] getDerivedAssays() {
-		// computeArrayNum();
-		// return derivedAssays;
-		// }
-		public boolean hasBeenPopulated() {
-			return treeNodePopulated;
-		}
-
-		public void setPopulated() {
-			treeNodePopulated = true;
-		}
-
-		/**
-		 * Compute the number of measured and derived bioassays in the
-		 * experiment.
-		 */
-		private void computeArrayNum() {
-			// No need for repeated computation.
-			// if (hasBeenComputedFlag || exp == null) {
-			// return;
-			// }
-			// try {
-			// measuredNum = derivedNum = 0;
-			// BioAssay[] bioassays = exp.getBioAssays();
-			// if (bioassays.length > 0) {
-			// for (int j = 0; j < bioassays.length; ++j) {
-			// if (bioassays[j] instanceof
-			// MeasuredBioAssayImpl) {
-			// measuredNum++;
-			// } else if (bioassays[j] instanceof
-			// DerivedBioAssayImpl) {
-			// derivedNum++;
-			// }
-			// }
-			// }
-			//
-			// // Allocate space for the assays.
-			// if (bioassays.length > 0) {
-			// measuredAssays = new CaArrayBioassay[measuredNum];
-			// derivedAssays = new CaArrayBioassay[derivedNum];
-			// int k = 0, l = 0;
-			// for (int j = 0; j < bioassays.length; ++j) {
-			// if (bioassays[j] instanceof
-			// MeasuredBioAssayImpl) {
-			// measuredAssays[k++] = new CaArrayBioassay(
-			// bioassays[
-			// j]);
-			// } else if (bioassays[j] instanceof
-			// DerivedBioAssayImpl) {
-			// derivedAssays[l++] = new CaArrayBioassay(
-			// bioassays[
-			// j]);
-			// }
-			// }
-			// }
-			// hasBeenComputedFlag = true;
-			// } catch (Exception e) {
-			// measuredNum = derivedNum = 0;
-			// measuredAssays = derivedAssays = null;
-			// }
-		}
 	}
 
 	public boolean isConnectionSuccess() {
@@ -1370,57 +819,18 @@ public class CaARRAYPanel extends JPanel implements Observer {
 		this.currentResourceName = currentResourceName;
 	}
 
-	public void setExperiments(
-			org.geworkbench.builtin.projects.util.CaARRAYPanel.CaArrayExperiment[] experiments) {
-		this.experiments = experiments;
+	/*
+	 * FIXME: this method is used by LoadData for some purpose that is very different from the original name and original intention
+	 */
+	public void setExperiments(Object experiments) {
 		if (experiments == null) {
 			root = new DefaultMutableTreeNode("caARRAY experiments");
 			remoteTreeModel.setRoot(root);
 			repaint();
+		} else {
+			log.error("this method is never called with parameter that is not null");
 		}
 	}
-
-	// public void setCaExperiments(Experiment[] experiment) {
-	// if (experiment == null || experiment.length == 0) {
-	// JOptionPane.showMessageDialog(null, "0 result retrieved.", "0
-	// experiment", JOptionPane.ERROR_MESSAGE);
-	// return;
-	// }
-	// CaArrayExperiment[] newExperiments = new
-	// CaArrayExperiment[experiment.length];
-	// for (int x = 0; x < experiment.length; x++) {
-	// if (experiment[x] instanceof ExperimentImpl) {
-	// CaArrayExperiment exp = new CaArrayExperiment((
-	// ExperimentImpl) experiment[x]);
-	// // pb.updateTo(x / totalexpNum * model.getMaximum());
-	//
-	// newExperiments[x] = exp;
-	//
-	// }
-	// experiments = newExperiments;
-	// jScrollPane1.getViewport().removeAll();
-	// DefaultMutableTreeNode queryResultRoot = new DefaultMutableTreeNode(
-	// "selected caARRAY experiments");
-	// for (int i = 0; i < experiments.length; ++i) {
-	// DefaultMutableTreeNode node = new DefaultMutableTreeNode(
-	// experiments[i]);
-	// remoteTreeModel.insertNodeInto(node, queryResultRoot,
-	// queryResultRoot.getChildCount());
-	// }
-	// remoteFileTree.expandRow(0);
-	// experimentsLoaded = true;
-	// previousResourceName = currentResourceName;
-	// connectionSuccess = true;
-	// //done = true;
-	//
-	// remoteTreeModel = new DefaultTreeModel(queryResultRoot);
-	// remoteFileTree.setModel(remoteTreeModel);
-	// //remoteFileTree = new JTree(remoteTreeModel);
-	// jScrollPane1.getViewport().add(remoteFileTree, null);
-	// revalidate();
-	// repaint();
-	// }
-	// }
 
 	public void setParentPanel(LoadData parentPanel) {
 		this.parentPanel = parentPanel;
