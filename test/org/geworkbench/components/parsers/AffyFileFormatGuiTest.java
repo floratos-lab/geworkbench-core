@@ -2,15 +2,15 @@ package org.geworkbench.components.parsers;
 
 import java.io.File;
 
-import javax.swing.filechooser.FileFilter;
-
 import junit.framework.TestCase;
 
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
-import org.geworkbench.bison.parsers.resources.AffyResource;
-import org.geworkbench.bison.parsers.resources.Resource;
 
+/**
+ * @author yc2480
+ * @version $Id: AffyFileFormatGuiTest.java,v 1.2 2009-01-09 15:55:25 chiangy Exp $
+ */
 public class AffyFileFormatGuiTest extends TestCase {
 
 	AffyFileFormat affyFileFormat; 
