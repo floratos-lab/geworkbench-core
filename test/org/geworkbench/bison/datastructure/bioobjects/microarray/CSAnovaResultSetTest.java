@@ -15,6 +15,10 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 
+/**
+ * @author yc2480
+ * @version $id$
+ */
 public class CSAnovaResultSetTest extends TestCase {
 
 	DSMicroarraySetView<DSGeneMarker, DSMicroarray> view = null;
