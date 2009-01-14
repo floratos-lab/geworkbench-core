@@ -1,36 +1,53 @@
 package org.geworkbench.builtin.projects.remoteresources.query;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.Vector;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JToolBar;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
+import javax.swing.table.AbstractTableModel;
+
+import org.geworkbench.builtin.projects.LoadData;
 import org.geworkbench.builtin.projects.remoteresources.RemoteResource;
 import org.geworkbench.builtin.projects.remoteresources.RemoteResourceDialog;
 import org.geworkbench.builtin.projects.util.CaARRAYPanel;
-import org.geworkbench.builtin.projects.LoadData;
 import org.geworkbench.engine.properties.PropertiesManager;
 import org.geworkbench.events.CaArrayQueryEvent;
 import org.geworkbench.events.CaArrayQueryResultEvent;
 import org.geworkbench.events.CaArrayRequestEvent;
 
-import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.border.TitledBorder;
-import javax.swing.border.Border;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.Vector;
-import java.awt.BorderLayout;
-import java.io.IOException;
-
 /**
- * Created by IntelliJ IDEA. User: xiaoqing Date: Mar 19, 2007 Time: 2:53:11 PM
- * To change this template use File | Settings | File Templates.
+ * @author xiaoqing
+ * @version $Id: CaARRAYQueryPanel.java,v 1.15 2009-01-14 22:00:09 jiz Exp $
  */
-
 public class CaARRAYQueryPanel extends JDialog {
+	private static final long serialVersionUID = -5214948658970068347L;
 
 	public CaARRAYQueryPanel(Frame frame, String title) {
 		super(frame, title, false);
@@ -110,8 +127,6 @@ public class CaARRAYQueryPanel extends JDialog {
 								resourceDialog.getPortnumber()).toString());
 
 			}
-			// CaARRAYQueryPanel caARRAYQueryPanel = new
-			// CaARRAYQueryPanel(frame, "Query the CaARRAY Server.");
 			this.repaint();
 			this.setVisible(true);
 		} catch (IOException e) {
@@ -120,16 +135,6 @@ public class CaARRAYQueryPanel extends JDialog {
 	}
 
 	private void jbInit() throws Exception {
-		allButton.setText("AND");
-		allButton.setToolTipText("The search will based on criteria.");
-		deleteButton.setText("Delete");
-		deleteButton
-				.addActionListener(new CaARRAYQueryPanel_deleteButton_actionAdapter(
-						this));
-		clearAllButton.setText("Clear All");
-		clearAllButton
-				.addActionListener(new CaARRAYQueryPanel_clearAllButton_actionAdapter(
-						this));
 		searchButton.setToolTipText("Click here to run the search");
 		searchButton.setText("Search");
 		searchButton
@@ -140,8 +145,7 @@ public class CaARRAYQueryPanel extends JDialog {
 		cancelButton
 				.addActionListener(new CaARRAYQueryPanel_cancelButton_actionAdapter(
 						this));
-		jCheckBox1.setToolTipText("");
-		jCheckBox1.setText("Delete");
+
 		this.setLayout(borderLayout1);
 		jScrollPane1
 				.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -183,7 +187,9 @@ public class CaARRAYQueryPanel extends JDialog {
 		jPanel1.add(jcatagoryComboBox, BorderLayout.NORTH);
 		JPanel allCheckBoxPanel = new JPanel();
 		// allCheckBoxPanel.add(allButton, BorderLayout.CENTER);
-		jPanel1.add(allCheckBoxPanel);
+		jPanel1.add(allCheckBoxPanel);// BorderLayout interprets the absence
+		// of a string specification the same as
+		// the constant CENTER:
 		this.getContentPane().add(jSplitPane1, java.awt.BorderLayout.CENTER);
 		pack();
 	}
@@ -204,7 +210,9 @@ public class CaARRAYQueryPanel extends JDialog {
 	private String url;
 
 	public static String[] listContent = new String[] { CHIPPROVIDER, ORGANISM,
-			PINAME};//, TISSUETYPE};// Remove TissueType because it takes too long to get any result back., TISSUETYPE }; // The
+			PINAME };// , TISSUETYPE};// Remove TissueType because it takes
+	// too long to get any result back., TISSUETYPE }; //
+	// The
 	// content
 	// of
 	// search
@@ -221,9 +229,7 @@ public class CaARRAYQueryPanel extends JDialog {
 	JProgressBar progressBar = new JProgressBar();
 	JComboBox jComboBox1 = new JComboBox();
 	JToolBar jToolBar1 = new JToolBar();
-	JCheckBox allButton = new JCheckBox();
-	JButton deleteButton = new JButton();
-	JButton clearAllButton = new JButton();
+
 	JButton searchButton = new JButton();
 	JButton cancelButton = new JButton();
 	JCheckBox jCheckBox1 = new JCheckBox();
@@ -242,7 +248,7 @@ public class CaARRAYQueryPanel extends JDialog {
 	Border border5 = BorderFactory.createEtchedBorder(Color.white, new Color(
 			165, 163, 151));
 	Border border6 = new TitledBorder(border5, "Value");
-	valueTableModel tableModel = new valueTableModel();
+	ValueTableModel tableModel = new ValueTableModel();
 	LoadData loadData;
 	boolean loaded = false; // To present whether the values are retrieved
 
@@ -282,7 +288,9 @@ public class CaARRAYQueryPanel extends JDialog {
 	JComboBox orginsmBox = new JComboBox();
 	JComboBox tissueTypeBox = new JComboBox();
 
-	private class valueTableModel extends AbstractTableModel {
+	private class ValueTableModel extends AbstractTableModel {
+		private static final long serialVersionUID = -3400659955278259350L;
+
 		/* array of the column names in order from left to right */
 		final String[] columnNames = { "Value", "Include" };
 		private Vector<SelectedValue> hits;
@@ -322,7 +330,7 @@ public class CaARRAYQueryPanel extends JDialog {
 		}
 
 		/* returns the Class type of the column c */
-		public Class getColumnClass(int c) {
+		public Class<?> getColumnClass(int c) {
 			return getValueAt(0, c).getClass();
 		}
 
@@ -341,8 +349,7 @@ public class CaARRAYQueryPanel extends JDialog {
 		 * table
 		 */
 		public void setValueAt(Object value, int row, int col) {
-			// Set the selection to single selection as requested by Aris.
-			// 04/19/2007
+			// Set the selection to single selection as requested by Aris. 04/19/2007
 
 			if (hits != null) {
 				for (int i = 0; i < hits.size(); i++) {
@@ -425,7 +432,7 @@ public class CaARRAYQueryPanel extends JDialog {
 	}
 
 	/**
-	 * Respsond to the change of selected search criteria content.
+	 * Respond to the change of selected search criteria content.
 	 * 
 	 * @param selectedCritiria
 	 */
@@ -466,20 +473,6 @@ public class CaARRAYQueryPanel extends JDialog {
 			return;
 		}
 
-		// JTable jTable = new JTable();
-		// jScrollPane2 = new JScrollPane();
-		// if (selectedCritiria.equalsIgnoreCase(ORGANISM)) {
-		// tableModel.setHits(valueHits);
-		//
-		// } else if (selectedCritiria.equalsIgnoreCase(TISSUETYPE)) {
-		// tableModel.setHits(tissueHits);
-		// }
-		//
-		// jTable.setModel(tableModel);
-		// jPanel2.setLayout(new BorderLayout());
-		// jScrollPane2.getViewport().add(jTable);
-		// jPanel2.add(jScrollPane2, BorderLayout.CENTER);
-		// jPanel2.revalidate();
 		repaint();
 		return;
 	}
@@ -501,38 +494,6 @@ public class CaARRAYQueryPanel extends JDialog {
 		repaint();
 	}
 
-	// What for?
-
-	public void deleteButton_actionPerformed(ActionEvent e) {
-		switch (currentSelectedContentIndex) {
-		// case 0:
-		// if (tissueHits != null) {
-		// for (SelectedValue selectedValue : tissueHits) {
-		// selectedValue.setSelected(false);
-		// }
-		// tableModel.fireTableDataChanged();
-		// }
-		// break;
-		// case 1:
-		// chipPlatformNameField.setText(ChipFieldDefaultMessage);
-		// break;
-		// case 2:
-		// if (valueHits != null) {
-		// for (SelectedValue selectedValue : valueHits) {
-		// selectedValue.setSelected(false);
-		// }
-		// tableModel.fireTableDataChanged();
-		// }
-		// break;
-		//
-		// case 3:
-		// piTextField.setText(PIFieldDefaultMessage);
-		// break;
-		}
-		jPanel2.revalidate();
-		jPanel2.repaint();
-	}
-
 	/**
 	 * Start the search based on the selection of search criteria.
 	 * 
@@ -540,7 +501,7 @@ public class CaARRAYQueryPanel extends JDialog {
 	 */
 	public void searchButton_actionPerformed(ActionEvent e) {
 		// get parameters.
-		HashMap<String, String[]> filterCrit = new HashMap<String, String[]>();
+		Map<String, String> filterCrit = new HashMap<String, String>();
 		String piName = ((String) piComboxBox.getSelectedItem()).trim();
 		if (piName != null && piName.startsWith(PIFieldDefaultMessage)) {
 			piName = "";
@@ -558,40 +519,28 @@ public class CaARRAYQueryPanel extends JDialog {
 			organismName = "";
 		}
 		String tissueTypeName = null;
-		if(tissueTypeBox!=null){
-		 tissueTypeName = ((String) (tissueTypeBox.getSelectedItem()));
+		if (tissueTypeBox != null) {
+			tissueTypeName = ((String) (tissueTypeBox.getSelectedItem()));
 		}
 
-		//
-		// for (SelectedValue selectedValue : valueHits) {
-		// if (selectedValue.getSelected()) {
-		// speciesValue += selectedValue.value;
-		// }
-		// }
-		// for (SelectedValue selectedValue : tissueHits) {
-		// if (selectedValue.getSelected()) {
-		// tissueType += selectedValue.value;
-		// }
-		// }
 		this.setVisible(false);
 
 		try {
 			switch (currentSelectedContentIndex) {
 			case 0:
-				filterCrit.put(listContent[0],
-						new String[] { chipPlatformName });
+				filterCrit.put(listContent[0], chipPlatformName);
 
 				break;
 			case 1:
-				filterCrit.put(listContent[1], new String[] { organismName });
+				filterCrit.put(listContent[1], organismName);
 
 				break;
 			case 2:
-				filterCrit.put(listContent[2], new String[] { piName });
+				filterCrit.put(listContent[2], piName);
 				break;
 
 			case 3:
-				filterCrit.put(listContent[3], new String[] { tissueTypeName });
+				filterCrit.put(listContent[3], tissueTypeName);
 				break;
 			}
 
@@ -601,10 +550,10 @@ public class CaARRAYQueryPanel extends JDialog {
 			event.setRequestItem(CaArrayRequestEvent.EXPERIMENT);
 			event.setFilterCrit(filterCrit);
 			event.setUseFilterCrit(true);
-			if (username != null && username.trim().length()>0) {
+			if (username != null && username.trim().length() > 0) {
 				event.setUsername(username);
 				event.setPassword(password);
-			}else{
+			} else {
 				event.setUsername(null);
 			}
 			CaARRAYPanel caArrayPanel = loadData.getCaArrayDisplayPanel();
@@ -613,7 +562,7 @@ public class CaARRAYQueryPanel extends JDialog {
 			caArrayPanel.setPortnumber(portnumber);
 			caArrayPanel.setPasswd(password);
 			caArrayPanel.startProgressBar();
-	
+
 			Runnable thread = new Runnable() {
 				public void run() {
 					loadData.publishCaArrayRequestEvent(event);
@@ -633,77 +582,60 @@ public class CaARRAYQueryPanel extends JDialog {
 		progressBar.setIndeterminate(false);
 		dispose();
 	}
-}
 
-class CaARRAYQueryPanel_cancelButton_actionAdapter implements ActionListener {
-	private CaARRAYQueryPanel adaptee;
+	private class CaARRAYQueryPanel_cancelButton_actionAdapter implements
+			ActionListener {
+		private CaARRAYQueryPanel adaptee;
 
-	CaARRAYQueryPanel_cancelButton_actionAdapter(CaARRAYQueryPanel adaptee) {
-		this.adaptee = adaptee;
+		CaARRAYQueryPanel_cancelButton_actionAdapter(CaARRAYQueryPanel adaptee) {
+			this.adaptee = adaptee;
+		}
+
+		public void actionPerformed(ActionEvent e) {
+			adaptee.cancelButton_actionPerformed(e);
+		}
 	}
 
-	public void actionPerformed(ActionEvent e) {
-		adaptee.cancelButton_actionPerformed(e);
-	}
-}
+	private class CaARRAYQueryPanel_searchButton_actionAdapter implements
+			ActionListener {
+		private CaARRAYQueryPanel adaptee;
 
-class CaARRAYQueryPanel_searchButton_actionAdapter implements ActionListener {
-	private CaARRAYQueryPanel adaptee;
+		CaARRAYQueryPanel_searchButton_actionAdapter(CaARRAYQueryPanel adaptee) {
+			this.adaptee = adaptee;
+		}
 
-	CaARRAYQueryPanel_searchButton_actionAdapter(CaARRAYQueryPanel adaptee) {
-		this.adaptee = adaptee;
-	}
-
-	public void actionPerformed(ActionEvent e) {
-		adaptee.searchButton_actionPerformed(e);
-	}
-}
-
-class CaARRAYQueryPanel_deleteButton_actionAdapter implements ActionListener {
-	private CaARRAYQueryPanel adaptee;
-
-	CaARRAYQueryPanel_deleteButton_actionAdapter(CaARRAYQueryPanel adaptee) {
-		this.adaptee = adaptee;
+		public void actionPerformed(ActionEvent e) {
+			adaptee.searchButton_actionPerformed(e);
+		}
 	}
 
-	public void actionPerformed(ActionEvent e) {
-		adaptee.deleteButton_actionPerformed(e);
-	}
-}
+	private class CaARRAYQueryPanel_jcatagoryComboBox_actionAdapter implements
+			ActionListener {
+		private CaARRAYQueryPanel adaptee;
 
-class CaARRAYQueryPanel_clearAllButton_actionAdapter implements ActionListener {
-	private CaARRAYQueryPanel adaptee;
+		CaARRAYQueryPanel_jcatagoryComboBox_actionAdapter(
+				CaARRAYQueryPanel adaptee) {
+			this.adaptee = adaptee;
+		}
 
-	CaARRAYQueryPanel_clearAllButton_actionAdapter(CaARRAYQueryPanel adaptee) {
-		this.adaptee = adaptee;
-	}
+		public void actionPerformed(ActionEvent e) {
+			System.out
+					.println("WARNING: following action is very suspicious... in CaARRATQueryPanel.CaARRAYQueryPanel_jcatagoryComboBox_actionAdapter");
 
-	public void actionPerformed(ActionEvent e) {
-		adaptee.clearAllButton_actionPerformed(e);
-	}
-}
-
-class CaARRAYQueryPanel_jcatagoryComboBox_actionAdapter implements
-		ActionListener {
-	private CaARRAYQueryPanel adaptee;
-
-	CaARRAYQueryPanel_jcatagoryComboBox_actionAdapter(CaARRAYQueryPanel adaptee) {
-		this.adaptee = adaptee;
+			adaptee.jcatagoryComboBox_actionPerformed(e);
+		}
 	}
 
-	public void actionPerformed(ActionEvent e) {
-		adaptee.jcatagoryComboBox_actionPerformed(e);
-	}
-}
+	private class CaARRAYQueryPanel_jList_mouseAdapter extends MouseAdapter {
+		private CaARRAYQueryPanel adaptee;
 
-class CaARRAYQueryPanel_jList_mouseAdapter extends MouseAdapter {
-	private CaARRAYQueryPanel adaptee;
+		CaARRAYQueryPanel_jList_mouseAdapter(CaARRAYQueryPanel adaptee) {
+			this.adaptee = adaptee;
+		}
 
-	CaARRAYQueryPanel_jList_mouseAdapter(CaARRAYQueryPanel adaptee) {
-		this.adaptee = adaptee;
+		public void mouseClicked(MouseEvent e) {
+			adaptee.jList_mouseClicked(e);
+		}
 	}
 
-	public void mouseClicked(MouseEvent e) {
-		adaptee.jList_mouseClicked(e);
-	}
 }
