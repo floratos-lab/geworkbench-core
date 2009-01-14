@@ -1,17 +1,23 @@
 package org.geworkbench.engine.config;
 
-import com.jgoodies.looks.plastic.PlasticLookAndFeel;
-import com.jgoodies.looks.plastic.theme.SkyBlue;
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.swing.JOptionPane;
+import javax.swing.ToolTipManager;
+import javax.swing.UIManager;
+
 import org.apache.commons.digester.Digester;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParserListener;
 import org.geworkbench.engine.config.rules.GeawConfigRule;
 import org.geworkbench.engine.config.rules.PluginRule;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.util.SplashBitmap;
 
-import javax.swing.*;
-import java.io.IOException;
-import java.io.InputStream;
+import com.jgoodies.looks.plastic.PlasticLookAndFeel;
+import com.jgoodies.looks.plastic.theme.SkyBlue;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
@@ -27,6 +33,9 @@ import java.io.InputStream;
  */
 
 public class UILauncher implements AnnotationParserListener {
+	
+	private static Log log = LogFactory.getLog(UILauncher.class);
+	
     /**
      * The name of the string in the <code>application.properties</code> file
      * that contains the location of the application configuration file.
@@ -99,7 +108,7 @@ public class UILauncher implements AnnotationParserListener {
     static void initProperties() {
         InputStream reader = null;
         try {
-            reader = Class.forName("org.geworkbench.engine.config.UILauncher").getResourceAsStream("/application.properties");
+            reader = Class.forName(UILauncher.class.getName()).getResourceAsStream("/application.properties");
             System.getProperties().load(reader);
             if (System.getSecurityManager() == null) {
                 System.setSecurityManager(new SecurityManager());
@@ -126,6 +135,7 @@ public class UILauncher implements AnnotationParserListener {
      * @param args
      */
     public static void main(String[] args) {
+    	
         // Sort out arguments
         String configFileArg = null;
         String lookAndFeelArg = null;
@@ -165,9 +175,9 @@ public class UILauncher implements AnnotationParserListener {
                     UIManager.setLookAndFeel("com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
                 }
             }
-        } catch (Exception e) {
-            System.out.println("Problem applying look and feel:");
-            e.printStackTrace();
+        } 
+        catch (Exception e) {
+            log.error(e,e);
         }
         // Add hook for AnnotationParser listener
 
@@ -182,16 +192,16 @@ public class UILauncher implements AnnotationParserListener {
         // Initialize component classloaders
 
         if (!devMode) {
-            System.out.println("Scanning plugins...");
+           log.info("Scanning plugins...");
             String componentsDir = System.getProperty(COMPONENTS_DIR_PROPERTY);
             if (componentsDir == null) {
                 componentsDir = DEFAULT_COMPONENTS_DIR;
             }
             ComponentRegistry.getRegistry().initializeComponentResources(componentsDir);
             ComponentRegistry.getRegistry().initializeGearResources(DEFAULT_GEAR_DIR);
-            System.out.println("... scan complete.");
+            log.info("... scan complete.");
         } else {
-            System.out.println("Development mode-- skipping plugin scan.");
+            log.info("Development mode-- skipping plugin scan.");
         }
 
         // Redirecting System.out and System.err to a log file
@@ -212,7 +222,7 @@ public class UILauncher implements AnnotationParserListener {
         }
 
         try {
-            InputStream is = Class.forName("org.geworkbench.engine.config.UILauncher").getResourceAsStream("/" + configFileName);
+            InputStream is = Class.forName(UILauncher.class.getName()).getResourceAsStream("/" + configFileName);
             if (is == null) {
                 exitOnErrorMessage("Invalid or absent configuration file.");
             }
@@ -225,8 +235,7 @@ public class UILauncher implements AnnotationParserListener {
             org.geworkbench.util.Debug.debug("Closing input stream ...");
             is.close();
         } catch (Exception e) {
-            System.out.println("Problem parsing configuration file: " + configFileName + ".");
-            e.printStackTrace();
+            log.error(e,e);
         }
 
         PluginRegistry.debugPrint();
