@@ -286,14 +286,16 @@
 	<!--<plugin id="genomeBrowser" name="Genome Browser" class="org.geworkbench.components.genomebrowser.GenomeBrowser" source="genomebrowser">
 		<gui-area name="VisualArea"/>
 	</plugin>-->
-
-	<plugin id="genspaceLogPreferences" name="genSpace Log Preferences"
-		class="org.geworkbench.components.genspace.GenSpaceLogPreferences"
-		source="genspace">
-		<gui-area name="CommandArea" />
-	</plugin>
+	
 	<plugin id="genspaceLogger" name="Genspace"
-		class="org.geworkbench.components.genspace.GenspaceLogger"
-		source="genspace">
-	</plugin>
+        class="org.geworkbench.components.genspace.GenspaceLogger"
+        source="genspace">
+    </plugin>
+
+    <plugin id="GenSpace" name="GenSpace"
+        class="org.geworkbench.components.genspace.GenSpace"
+        source="genspace">
+        <gui-area name="VisualArea" />
+    </plugin>
+	
 </geaw-config>
