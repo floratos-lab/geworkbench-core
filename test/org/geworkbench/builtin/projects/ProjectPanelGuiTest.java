@@ -7,6 +7,8 @@
 package org.geworkbench.builtin.projects;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
@@ -75,8 +77,16 @@ public class ProjectPanelGuiTest extends TestCase {
         projectPanel.addToProject(projectNode, true);
 
         // FIXME set path to test/data
-        projectPanel
-                .serialize("test/org/geworkbench/builtin/projects/target/test1.wsp");
+        try {
+			projectPanel
+			        .serialize("test/org/geworkbench/builtin/projects/target/test1.wsp");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
     }
 
@@ -104,8 +114,16 @@ public class ProjectPanelGuiTest extends TestCase {
         projectPanel.addToProject(projectNode, true);
 
         // FIXME set path to test/data
-        projectPanel
-                .serialize("test/org/geworkbench/builtin/projects/target/test2.wsp");
+        try {
+			projectPanel
+			        .serialize("test/org/geworkbench/builtin/projects/target/test2.wsp");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
     }
 
@@ -167,8 +185,16 @@ public class ProjectPanelGuiTest extends TestCase {
         projectPanel.addToProject(projectNode, true);
 
         // FIXME set path to test/data
-        projectPanel
-                .serialize("test/org/geworkbench/builtin/projects/target/test4.wsp");
+        try {
+			projectPanel
+			        .serialize("test/org/geworkbench/builtin/projects/target/test4.wsp");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
     }
 
@@ -200,8 +226,16 @@ public class ProjectPanelGuiTest extends TestCase {
         projectPanel.addToProject(projectNode, true);
 
         // FIXME set path to test/data
-        projectPanel
-                .serialize("test/org/geworkbench/builtin/projects/target/test5.wsp");
+        try {
+			projectPanel
+			        .serialize("test/org/geworkbench/builtin/projects/target/test5.wsp");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
     }
 
