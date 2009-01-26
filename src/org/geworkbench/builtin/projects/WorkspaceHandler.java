@@ -72,20 +72,6 @@ public class WorkspaceHandler {
 		String extension = ((WorkspaceFileFilter) filter).getExtension();
 		int choice = fc.showSaveDialog(enclosingProjectPanel.jProjectPanel);
 		if (choice == JFileChooser.APPROVE_OPTION) {
-
-			File file = fc.getSelectedFile(); 
-			String tempAbsolutePath = file.getAbsolutePath();
-			if (tempAbsolutePath.contains(".")){
-				int x = tempAbsolutePath.lastIndexOf(File.separatorChar);
-				tempAbsolutePath = tempAbsolutePath.substring(0, x);
-			}
-			File dummyFile = new File(tempAbsolutePath);
-			if (!dummyFile.isDirectory()){
-				JOptionPane.showMessageDialog(null, "not a valid directory");
-				JOptionPane.showMessageDialog(null, "Save cancelled.");
-				return;
-			}
-						
 			wsFilename = fc.getSelectedFile().getAbsolutePath();
 
 			if (fc.getSelectedFile().exists()) {
