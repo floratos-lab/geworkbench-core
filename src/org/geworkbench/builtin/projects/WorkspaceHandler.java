@@ -1,8 +1,13 @@
 package org.geworkbench.builtin.projects;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.JFileChooser;
@@ -67,6 +72,20 @@ public class WorkspaceHandler {
 		String extension = ((WorkspaceFileFilter) filter).getExtension();
 		int choice = fc.showSaveDialog(enclosingProjectPanel.jProjectPanel);
 		if (choice == JFileChooser.APPROVE_OPTION) {
+
+			File file = fc.getSelectedFile(); 
+			String tempAbsolutePath = file.getAbsolutePath();
+			if (tempAbsolutePath.contains(".")){
+				int x = tempAbsolutePath.lastIndexOf(File.separatorChar);
+				tempAbsolutePath = tempAbsolutePath.substring(0, x);
+			}
+			File dummyFile = new File(tempAbsolutePath);
+			if (!dummyFile.isDirectory()){
+				JOptionPane.showMessageDialog(null, "not a valid directory");
+				JOptionPane.showMessageDialog(null, "Save cancelled.");
+				return;
+			}
+						
 			wsFilename = fc.getSelectedFile().getAbsolutePath();
 
 			if (fc.getSelectedFile().exists()) {
@@ -186,11 +205,21 @@ public class WorkspaceHandler {
 		protected void done() {
 			GeawConfigObject.getGuiWindow().removeWindowFocusListener(wfl); 			 
 			pb.dispose();
-			JOptionPane.getRootFrame().setAlwaysOnTop(true);
-			JOptionPane.showMessageDialog(null, "Workspace saved.");			
-			if(terminating) {
-				GeawConfigObject.getGuiWindow().dispose();
-				System.exit(0);
+			
+			try{
+				// TODO Put check loop here with status bar
+				this.get();
+	
+				JOptionPane.getRootFrame().setAlwaysOnTop(true);
+				JOptionPane.showMessageDialog(null, "Workspace saved.");
+	
+				if(terminating) {
+					GeawConfigObject.getGuiWindow().dispose();
+					System.exit(0);
+				}
+			}catch(Exception e){
+				JOptionPane.showMessageDialog(null, "\nError while saving Workspace. \nSave cancelled.");
+				log.error("Error: " + e);
 			}
 		}
 

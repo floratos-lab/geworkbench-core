@@ -17,6 +17,7 @@ import java.awt.event.WindowEvent;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -2431,9 +2432,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * Store the currently loaded workspace to a file withe the designated name.
 	 * 
 	 * @param filename
+	 * @throws FileNotFoundException 
 	 */
-	protected void serialize(String filename) {
-		try {
+	protected void serialize(String filename) throws FileNotFoundException, IOException {
 			FileOutputStream f = new FileOutputStream(filename);
 			ObjectOutput s = new ObjectOutputStream(f);
 			SaveTree saveTree = new SaveTree(this, getDataSet());
@@ -2441,10 +2442,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			APSerializable aps = AnnotationParser.getSerializable();
 			s.writeObject(aps);
 			s.flush();
-		} catch (IOException ex) {
-			log.error("Error: " + ex);
-		}
-
 	}
 
 	/**
