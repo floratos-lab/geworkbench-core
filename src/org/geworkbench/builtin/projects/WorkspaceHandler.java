@@ -84,13 +84,23 @@ public class WorkspaceHandler {
 				}
 			}
 
+			// This will happen for the case x:\ where x: is not a valid directory
+			String parent = fc.getSelectedFile().getParent();
+			if (parent == null){
+				JOptionPane.showMessageDialog(null,
+						"Could not create workspace file. \nSave cancelled.", 
+						"Error", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+
 			// Store directory that we opened this from
 			try {
-				properties.setProperty(ProjectPanel.class, wsp_dir, fc
-						.getSelectedFile().getParent());
+				properties.setProperty(ProjectPanel.class, wsp_dir, parent);
 			} catch (IOException e1) {
-				e1.printStackTrace(); // To change body of catch statement use
-				// File | Settings | File Templates.
+				JOptionPane.showMessageDialog(null,
+						"Could not create workspace file. \nSave cancelled.", 
+						"Error", JOptionPane.ERROR_MESSAGE);
+				log.error("Error: " + e1);
 			}
 
 			if (!wsFilename.endsWith(extension)) {
@@ -204,7 +214,9 @@ public class WorkspaceHandler {
 					System.exit(0);
 				}
 			}catch(Exception e){
-				JOptionPane.showMessageDialog(null, "\nError while saving Workspace. \nSave cancelled.");
+				JOptionPane.showMessageDialog(null,
+						"Could not create workspace file. \nSave cancelled.", 
+						"Error", JOptionPane.ERROR_MESSAGE);
 				log.error("Error: " + e);
 			}
 		}
