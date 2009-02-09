@@ -227,12 +227,12 @@ public class UILauncher implements AnnotationParserListener {
                 exitOnErrorMessage("Invalid or absent configuration file.");
             }
             // FIXME - Make sure that the input is validated against the proper DTD.
-            org.geworkbench.util.Debug.debug("Digester Test Program");
-            org.geworkbench.util.Debug.debug("Opening input stream ...");
-            org.geworkbench.util.Debug.debug("Creating new digester ...");
-            org.geworkbench.util.Debug.debug("Parsing input stream ...");
+            log.debug("Digester Test Program");
+            log.debug("Opening input stream ...");
+            log.debug("Creating new digester ...");
+            log.debug("Parsing input stream ...");
             uiLauncher.parse(is);
-            org.geworkbench.util.Debug.debug("Closing input stream ...");
+            log.debug("Closing input stream ...");
             is.close();
         } catch (Exception e) {
             log.error(e,e);
