@@ -15,13 +15,31 @@ public class ComponentConfigurationManagerTest extends TestCase {
 
 	ComponentConfigurationManager ccm = null;
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see junit.framework.TestCase#setUp()
+	 */
 	@Override
 	protected void setUp() throws Exception {
+		super.setUp();
+
 		String componentsDir = System.getProperty("components.dir");
 
 		assertNotNull(componentsDir);
 
 		ccm = new ComponentConfigurationManager(componentsDir);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see junit.framework.TestCase#tearDown()
+	 */
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		ccm = null;
 	}
 
 	/**
@@ -46,7 +64,7 @@ public class ComponentConfigurationManagerTest extends TestCase {
 	 * @throws Exception
 	 */
 	public void testParseComponentDescriptor() throws Exception {
-		
+
 	}
 
 	/**
