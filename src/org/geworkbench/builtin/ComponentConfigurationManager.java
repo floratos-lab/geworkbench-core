@@ -5,10 +5,13 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.digester.Digester;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.geworkbench.engine.config.rules.PluginRule;
 import org.geworkbench.engine.management.ComponentResource;
+import org.xml.sax.SAXException;
 
 /**
  * Manages the dynamic loading and removal of components.
@@ -21,6 +24,7 @@ public class ComponentConfigurationManager {
 
 	private Log log = LogFactory.getLog(this.getClass());
 	private String[] files = null;
+	private Digester digester = null;
 
 	/**
 	 * 
@@ -29,10 +33,12 @@ public class ComponentConfigurationManager {
 	public ComponentConfigurationManager(String componentsDir) {
 		File dir = new File(componentsDir);
 		if (!dir.isDirectory()) {
-			log.warn("Component resource path is not a directory: "
+			log.warn("Supplied components directory is not a directory: "
 					+ componentsDir);
+			return;
 		}
 		files = dir.list();
+		digester = new Digester(new org.apache.xerces.parsers.SAXParser());
 	}
 
 	/**
@@ -79,11 +85,28 @@ public class ComponentConfigurationManager {
 	 * Parse the component descriptor (cwb.xml).
 	 * 
 	 * @param componentResource
+	 * @throws SAXException
+	 * @throws IOException
 	 */
-	public void parseComponentDescriptor(ComponentResource componentResource) {
-		// TODO implement me (see how this is currently done in PluginObject's
-		// processComponentDescriptor method
-		throw new UnsupportedOperationException("Method not yet implemented!");
+	public Object parseComponentDescriptor(ComponentResource componentResource) {
+		// TODO change the xml rules so we are using cwb.xml tags.
+		digester.addRule("geaw-config/plugin", new PluginRule(
+				"org.geworkbench.engine.config.rules.PluginObject"));
+
+		String dir = componentResource.getDir();
+		File f = new File(dir);
+
+		Object parsedObject = null;
+		try {
+			parsedObject = digester.parse(f);
+		} catch (Exception e) {
+			log.error(e, e);
+			throw new RuntimeException(
+					"Error parsing component descriptor for component resource "
+							+ componentResource.getName());
+		}
+
+		return parsedObject;
 	}
 
 	/**
