@@ -17,6 +17,7 @@ import org.xml.sax.SAXException;
  * Manages the dynamic loading and removal of components.
  * 
  * @author keshav
+ * @author tg2321
  * @version $Id: ComponentConfigurationManager.java,v 1.1 2009/02/09 19:54:43
  *          keshav Exp $
  */
