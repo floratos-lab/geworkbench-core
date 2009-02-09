@@ -11,9 +11,11 @@ import org.apache.commons.logging.LogFactory;
 import org.geworkbench.engine.management.ComponentResource;
 
 /**
+ * Manages the dynamic loading and removal of components.
  * 
  * @author keshav
- * @version $Id: ComponentConfigurationManager.java,v 1.1 2009-02-09 19:54:43 keshav Exp $
+ * @version $Id: ComponentConfigurationManager.java,v 1.1 2009/02/09 19:54:43
+ *          keshav Exp $
  */
 public class ComponentConfigurationManager {
 
@@ -50,7 +52,7 @@ public class ComponentConfigurationManager {
 			File file = new File(list.get(index));
 			try {
 				componentResource = new ComponentResource(file.getPath(), false);
-				log.debug("Created resource " + file.getName());
+				log.debug("Created component resource " + file.getName());
 			} catch (IOException e) {
 				log.error("Could not initialize component resource '"
 						+ file.getName() + "'.", e);
@@ -63,6 +65,7 @@ public class ComponentConfigurationManager {
 	}
 
 	/**
+	 * Creates a {@link ComponentResource}.
 	 * 
 	 * @return
 	 */
@@ -73,7 +76,7 @@ public class ComponentConfigurationManager {
 	}
 
 	/**
-	 * Parse the component descriptor (cwb.xml)
+	 * Parse the component descriptor (cwb.xml).
 	 * 
 	 * @param componentResource
 	 */
@@ -84,7 +87,7 @@ public class ComponentConfigurationManager {
 	}
 
 	/**
-	 * Loads a component
+	 * Loads a component.
 	 * 
 	 * @param resource
 	 */

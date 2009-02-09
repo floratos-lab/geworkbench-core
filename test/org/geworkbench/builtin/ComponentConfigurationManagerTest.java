@@ -8,9 +8,21 @@ import org.geworkbench.engine.management.ComponentResource;
  * A test class for the {@link ComponentConfigurationManager}.
  * 
  * @author keshav
- * @version $Id: ComponentConfigurationManagerTest.java,v 1.1 2009-02-09 19:54:43 keshav Exp $
+ * @version $Id: ComponentConfigurationManagerTest.java,v 1.1 2009/02/09
+ *          19:54:43 keshav Exp $
  */
 public class ComponentConfigurationManagerTest extends TestCase {
+
+	ComponentConfigurationManager ccm = null;
+
+	@Override
+	protected void setUp() throws Exception {
+		String componentsDir = System.getProperty("components.dir");
+
+		assertNotNull(componentsDir);
+
+		ccm = new ComponentConfigurationManager(componentsDir);
+	}
 
 	/**
 	 * Tests creating a {@link ComponentResource}.
@@ -18,13 +30,9 @@ public class ComponentConfigurationManagerTest extends TestCase {
 	 * @throws Exception
 	 */
 	public void testCreateComponentResource() throws Exception {
-		String componentsDir = System.getProperty("components.dir");
 
-		assertNotNull(componentsDir);
-
-		ComponentConfigurationManager ccm = new ComponentConfigurationManager(
-				componentsDir);
 		String resource = "hierarchicalclustering";
+
 		ComponentResource componentResource = ccm
 				.createComponentResource(resource);
 
@@ -38,7 +46,7 @@ public class ComponentConfigurationManagerTest extends TestCase {
 	 * @throws Exception
 	 */
 	public void testParseComponentDescriptor() throws Exception {
-
+		
 	}
 
 	/**
