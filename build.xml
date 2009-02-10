@@ -447,7 +447,7 @@
 				<include name="${components}/classification/**/*" />
 				<include name="${components}/somclustering/**/*" />
 				<include name="${components}/colormosaic/**/*" />
-				<include name="${components}/cytoscape/**/*" />
+				<include name="${components}/cutenet/**/*" />
 				<include name="${components}/discovery/**/*" />
 				<include name="${components}/filtering/**/*" />
 				<include name="${components}/genepattern/**/*" />
