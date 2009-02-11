@@ -475,8 +475,8 @@
 				<include name="${components}/versioninfo/**/*" />
 				<include name="${components}/viewers/**/*" />
 				
-
 				<include name="plugins/**/*" />
+				<include name="plugins_v2_4/**/*" />
 				<!-- Leave out the following components for distribution 1.6.2-->
 				<exclude name="**/synteny/*" />
 				<exclude name="**/src/**" />
