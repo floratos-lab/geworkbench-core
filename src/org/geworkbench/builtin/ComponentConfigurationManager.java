@@ -63,7 +63,8 @@ public class ComponentConfigurationManager {
 			int index = list.indexOf(resource);
 			File file = new File(list.get(index));
 			try {
-				String path = file.getAbsolutePath();
+				String path = System.getProperty("components.dir")
+						+ System.getProperty("file.separator") + file.getPath();
 				componentResource = new ComponentResource(path, false);
 				log.debug("Created component resource " + file.getName());
 			} catch (IOException e) {
@@ -133,9 +134,7 @@ public class ComponentConfigurationManager {
 		resourceMap.put(resource, componentResource);
 
 		/* get input stream for ccm.xml */
-		String componentsDir = System.getProperty("components.dir");
-		String sep = System.getProperty("file.separator");
-		String path = "/hierarchicalclustering.ccm.xml";
+		String path = "/"+resource+".ccm.xml";
 		InputStream is = ComponentConfigurationManager.class
 				.getResourceAsStream(path);
 
