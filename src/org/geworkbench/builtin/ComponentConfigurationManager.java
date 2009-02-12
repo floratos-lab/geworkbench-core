@@ -89,7 +89,7 @@ public class ComponentConfigurationManager {
 		return initializeComponentResource(resource);
 
 	}
-	
+
 	/**
 	 * Parse the component descriptor (cwb.xml).
 	 * 
@@ -134,6 +134,8 @@ public class ComponentConfigurationManager {
 		resourceMap.put(resource, componentResource);
 
 		/* get input stream for ccm.xml */
+		// FIXME need to put this ccm.xml file in component dir and read it from
+		// there
 		String path = "/" + resource + ".ccm.xml";
 		InputStream is = ComponentConfigurationManager.class
 				.getResourceAsStream(path);
