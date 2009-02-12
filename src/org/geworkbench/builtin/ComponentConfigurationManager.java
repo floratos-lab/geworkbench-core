@@ -12,10 +12,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.engine.config.UILauncher;
-import org.geworkbench.engine.config.rules.PluginRule;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.engine.management.ComponentResource;
-import org.xml.sax.SAXException;
 
 /**
  * Manages the dynamic loading and removal of components.
@@ -91,34 +89,6 @@ public class ComponentConfigurationManager {
 	}
 
 	/**
-	 * Parse the component descriptor (cwb.xml).
-	 * 
-	 * @param componentResource
-	 * @throws SAXException
-	 * @throws IOException
-	 */
-	public Object parseComponentDescriptor(ComponentResource componentResource) {
-		// TODO change the xml rules so we are using cwb.xml tags.
-		digester.addRule("geaw-config/plugin", new PluginRule(
-				"org.geworkbench.engine.config.rules.PluginObject"));
-
-		String dir = componentResource.getDir();
-		File f = new File(dir);
-
-		Object parsedObject = null;
-		try {
-			parsedObject = digester.parse(f);
-		} catch (Exception e) {
-			log.error(e, e);
-			throw new RuntimeException(
-					"Error parsing component descriptor for component resource "
-							+ componentResource.getName());
-		}
-
-		return parsedObject;
-	}
-
-	/**
 	 * Loads a component.
 	 * 
 	 * @param resource
@@ -134,7 +104,7 @@ public class ComponentConfigurationManager {
 		resourceMap.put(resource, componentResource);
 
 		/* get input stream for ccm.xml */
-		String path = "/"+resource+".ccm.xml";
+		String path = "/" + resource + ".ccm.xml";
 		InputStream is = ComponentConfigurationManager.class
 				.getResourceAsStream(path);
 
