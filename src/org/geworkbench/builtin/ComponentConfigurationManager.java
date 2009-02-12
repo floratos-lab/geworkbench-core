@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.digester.Digester;
 import org.apache.commons.lang.StringUtils;
@@ -42,7 +43,8 @@ public class ComponentConfigurationManager {
 			return;
 		}
 		files = dir.list();
-		digester = new Digester(new org.apache.xerces.parsers.SAXParser());
+		digester = UILauncher.uiLauncher;// new Digester(new
+		// org.apache.xerces.parsers.SAXParser());
 	}
 
 	/**
@@ -61,7 +63,8 @@ public class ComponentConfigurationManager {
 			int index = list.indexOf(resource);
 			File file = new File(list.get(index));
 			try {
-				componentResource = new ComponentResource(file.getPath(), false);
+				String path = file.getAbsolutePath();
+				componentResource = new ComponentResource(path, false);
 				log.debug("Created component resource " + file.getName());
 			} catch (IOException e) {
 				log.error("Could not initialize component resource '"
@@ -80,6 +83,7 @@ public class ComponentConfigurationManager {
 	 * @return
 	 */
 	public ComponentResource createComponentResource(String resource) {
+		log.info("Create component resource " + resource);
 
 		return initializeComponentResource(resource);
 
@@ -124,13 +128,16 @@ public class ComponentConfigurationManager {
 		ComponentResource componentResource = createComponentResource(resource);
 
 		/* add resource to registry */
-		ComponentRegistry.getRegistry().getAllComponentResources().add(
-				componentResource);
+		Map<String, ComponentResource> resourceMap = ComponentRegistry
+				.getRegistry().getComponentResourceMap();
+		resourceMap.put(resource, componentResource);
 
 		/* get input stream for ccm.xml */
+		String componentsDir = System.getProperty("components.dir");
+		String sep = System.getProperty("file.separator");
+		String path = "/hierarchicalclustering.ccm.xml";
 		InputStream is = ComponentConfigurationManager.class
-				.getResourceAsStream(resource
-						+ "hierarchicalclustering.ccm.xml");
+				.getResourceAsStream(path);
 
 		/* parse using digester */
 		try {
@@ -142,5 +149,4 @@ public class ComponentConfigurationManager {
 
 		// refreshGui
 	}
-
 }
