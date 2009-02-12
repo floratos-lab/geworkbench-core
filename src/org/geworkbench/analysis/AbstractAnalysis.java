@@ -1,16 +1,21 @@
 package org.geworkbench.analysis;
 
+import java.beans.XMLDecoder;
+import java.beans.XMLEncoder;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.PrintStream;
 import java.io.Serializable;
-import java.util.Enumeration;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Vector;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.properties.CSDescribable;
@@ -18,8 +23,10 @@ import org.geworkbench.bison.model.analysis.Analysis;
 import org.geworkbench.bison.model.analysis.ParamValidationResults;
 import org.geworkbench.bison.model.analysis.ParameterPanel;
 import org.geworkbench.bison.util.DefaultIdentifiable;
-import org.geworkbench.engine.management.ComponentObjectInputStream;
+import org.geworkbench.engine.management.ComponentClassLoader;
+import org.geworkbench.engine.management.ComponentResource;
 import org.geworkbench.engine.management.Script;
+import org.ginkgo.labs.util.FileTools;
 
 /**
  * <p>
@@ -34,13 +41,18 @@ import org.geworkbench.engine.management.Script;
  * implementation for the validateParameters method by calling the corresponding
  * method in the <code>AbstractSaveableParameterPanel</code>.
  * 
- * @author First Genetic Trust
- * @version 1.0
+ * @author First Genetic Trust Inc.
+ * @author keshav
+ * @author yc2480
+ * @version $Id: AbstractAnalysis.java,v 1.23 2009-02-12 22:28:14 keshav Exp $
  */
+@SuppressWarnings("unchecked")
 public abstract class AbstractAnalysis implements Analysis, Serializable,
 		java.util.Observer {
 
 	private Log log = LogFactory.getLog(this.getClass());
+
+	// Analysis types
 
 	public static final int AFFY_DETECTION_CALL_FILTER = 0;
 
@@ -91,16 +103,22 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	public static final int QUANTILE_NORMALIZER_TYPE = 23;
 
 	public static final int ALLELIC_FREQUENCY_TYPE = 24;
-	
+
 	public static final int NETBOOST_TYPE = 25;
 
 	public static final int SKYLINE_TYPE = 26;
-	
+
 	public static final int MARKUS_TYPE = 27;
-		
+
 	public static final int MRA_TYPE = 28;
 
-        public static final int SKYBASE_TYPE = 29;
+	public static final int SKYBASE_TYPE = 29;
+
+	/**
+	 * Parameters will be saved as XML files in "savedParams" directory under
+	 * each component directory.
+	 */
+	private static final String paramsDir = "savedParams";
 
 	/**
 	 * The parameters panel to be use from within the AnalysisPane in order to
@@ -110,26 +128,21 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 
 	/**
 	 * Contains indices that are used in order to recover the set of named
-	 * parameted settings that have been saved for a particular analysis. The
+	 * parameter settings that have been saved for a particular analysis. The
 	 * indices are (key, value) tuples, where 'key', 'value' are defined as:
 	 * <UL>
 	 * <LI>key = (this.getIndex(), parameterSetName),</LI>
-	 * <LI>value = parameterSetFileName</LI>
+	 * <LI>value = parameterSet</LI>
 	 * This is a static variable, used by all classes that extend
 	 * <code>AbstractAnaysis</code>
 	 * </UL>
 	 */
-	protected static Hashtable indices = null;
+	protected Hashtable<ParameterKey, Map<Serializable, Serializable>> parameterHash = null;
 
-	/**
-	 * The file where the <code>indices</code> are stored.
-	 */
-	protected File dbFile = null;
-
-	/**
-	 * Temporary directory name that is obtained from
-	 * <code>System.properties</code>. This is the place where the named
-	 * parameter files will be stored.
+	/*
+	 * Temporary directory name that is obtained from each Component. This is
+	 * the place where the named parameter files will be stored. ex: tmpDir will
+	 * be "hierarchicalclustering/savedParams/" for hierarchicalclustering
 	 */
 	protected String tmpDir = null;
 
@@ -143,267 +156,251 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	 */
 	DefaultIdentifiable analysisId = new DefaultIdentifiable();
 
+	/**
+	 * Set <code>stopAlgorithm</code> to true to stop the Algorithm, in the
+	 * Algorithm, you'll need to check this variable periodically.
+	 */
 	public boolean stopAlgorithm;
 
 	/**
-	 * Default Constructor
+	 * 
 	 */
 	public AbstractAnalysis() {
-		init();
+		parameterHash = new Hashtable<ParameterKey, Map<Serializable, Serializable>>();
+		aspp = new AbstractSaveableParameterPanel();
+	}
+
+	/*
+	 * This variable to used to store the last saved parameter set's name, so we
+	 * can high light it on start up.
+	 */
+	private String lastParameterSetName = "";
+
+	/**
+	 * load all saved parameter sets in tmpDir
+	 */
+	protected void loadSavedParameterSets() {
+		// FIXME: It assume all xml files are parameter files, we should check
+		// if it's parameter files or not
+		// FIXME: we should check parameter versions, see if we know how to load
+		// that version.
+		String path = tmpDir;
+		String files;
+		File folder = new File(path);
+		File[] listOfFiles = folder.listFiles();
+		if (listOfFiles.length > 0) {
+			java.util.Arrays.sort(listOfFiles, new Comparator() {
+				public int compare(Object a, Object b) {
+					return (int) (((File) a).lastModified() - ((File) b)
+							.lastModified());
+				}
+			});
+			lastParameterSetName = unscrubFilename(listOfFiles[listOfFiles.length - 1]
+					.getName());
+			for (int i = 0; i < listOfFiles.length; i++) {
+				if (listOfFiles[i].isFile()) {
+					files = listOfFiles[i].getName();
+					if (files.endsWith(".xml") || files.endsWith(".XML")) {
+						String setName = unscrubFilename(files);
+						Map<Serializable, Serializable> parameters = deserializeNamedParameterSet(setName);
+						ParameterKey key = new ParameterKey(getIndex(), setName);
+						/*
+						 * Since one package can contain multiple components
+						 * which have different panels, we need to make sure we
+						 * got the right one.
+						 */
+						if (parameters != null)
+							if (parameters.get("ParameterKey").equals(
+									key.toString())) {
+								parameterHash.put(key, parameters);
+								lastParameterSetName = setName;
+							}
+					}
+				}
+			}
+		}
 	}
 
 	/**
-	 * Initializes the indices <code>Properties</code> object and
-	 * storedParameters <code>Vector</code> object
+	 * 
+	 * @return Return the name of last saved parameter set.
 	 */
-	protected void init() {
-		String fileName = System.getProperty("analyses.parameter.file.name");
-		tmpDir = System.getProperty("temporary.files.directory");
-		if (tmpDir == null) {
-			tmpDir = System.getProperty("java.io.tmpdir");
-		}
-		assert tmpDir != null && fileName != null : "Parameter file and / or temporary file entries in application.properties "
-				+ "file missing";
-		File td = new File(tmpDir);
-		if (!td.exists())
-			td.mkdirs();
-		dbFile = new File(tmpDir + fileName);
-		FileOutputStream fos = null;
-		ObjectOutputStream oos = null;
-		if (!dbFile.exists()) {
-			try {
-				fos = new FileOutputStream(dbFile);
-				oos = new ObjectOutputStream(fos);
-				oos.writeInt(0); // Initialize an empty database
-				oos.flush();
-				oos.close();
-				fos.close();
-			} catch (IOException ioe) {
-				ioe.printStackTrace();
-			}
-
-		}
-
-		FileInputStream fis = null;
-		ObjectInputStream ois = null;
-		try {
-			fis = new FileInputStream(dbFile);
-			ois = new ObjectInputStream(fis);
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		}
-
-		// The first time that an AbstractAnalysis gets instantiated, read from
-		// the dbFile the list of available named parameter sets.
-		if (indices != null)
-			return;
-
-		indices = new Hashtable();
-		try {
-			int indexCount = ois.readInt();
-			for (int i = 0; i < indexCount; ++i) {
-				Tuple key = (Tuple) ois.readObject();
-				String paramFileName = (String) ois.readObject();
-				indices.put(key, paramFileName);
-			}
-			ois.close();
-			fis.close();
-		} catch (Exception exc) {
-			System.err
-					.println("\n\nThe format of the parameters file \""
-							+ tmpDir
-							+ fileName
-							+ "\" is not compatible with the current version of the program. "
-							+ "Please remove this file from your disk.");
-		}
+	public String getLastSavedParameterSetName() {
+		// FIXME: currently it return the name of last saved parameter set from
+		// last launch of geworkbench, it didn't reflect the name of last saved
+		// parameter set from this launch.
+		return lastParameterSetName;
 	}
 
-	public void setDefaultPanel(AbstractSaveableParameterPanel panel) {
-		aspp = panel;
-		if (aspp != null)
-			aspp.setVisible(true);
-	}
-
-	/**
-	 * Return the parameter panel associated with this analysis..
+	/*
+	 * Translate filename back to set name
 	 */
-	public ParameterPanel getParameterPanel() {
-		return aspp;
+	private String unscrubFilename(String filename) {
+		if (StringUtils.contains(filename, File.separatorChar))
+			filename = StringUtils.substringAfterLast(filename, System
+					.getProperty("file.separator"));
+		if (StringUtils.contains(filename, FileTools.FILE_EXTENSION_SEPARATOR
+				+ FileTools.XML))
+			filename = StringUtils.substringBeforeLast(filename,
+					FileTools.FILE_EXTENSION_SEPARATOR + FileTools.XML);
+		return filename;
 	}
 
-	/**
-	 * Stores (under the designated 'name') the parameters values currently in
-	 * 'aspp'.
-	 */
-	public void saveParametersUnderName(String name) {
-		aspp.setName(name);
-		// Tuple key = new Tuple(this.getClass().getSimpleName(), name);
-		Tuple key = new Tuple(getIndex(), name);
-		assert tmpDir != null;
-		String fileName = tmpDir + name + System.currentTimeMillis();
-		if (!indices.containsKey(key))
-			indices.put(key, fileName);
-		else
-			fileName = (String) indices.get(key);
-		FileOutputStream fos = null;
-		ObjectOutputStream oos = null;
-		try {
-			fos = new FileOutputStream(dbFile);
-			oos = new ObjectOutputStream(fos);
-			int indexCount = indices.size();
-			oos.writeInt(indexCount);
-			for (Enumeration e = indices.keys(); e.hasMoreElements();) {
-				Tuple t = (Tuple) e.nextElement();
-				String paramFileName = (String) indices.get(t);
-				oos.writeObject(t);
-				oos.writeObject(paramFileName);
-			}
-			oos.flush();
-			fos = new FileOutputStream(new File(fileName));
-			oos = new ObjectOutputStream(fos);
-			oos.writeObject(aspp);
-			oos.flush();
-			oos.close();
-			fos.close();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		}
-
-	}
-	
 	/**
 	 * Deletes a saved setting based on the saved parameter name.
 	 * 
-	 * @param name - name of the saved parameter
+	 * @param name -
+	 *            name of the saved parameter
 	 */
-	public void removeNamedParameter(String name){
-		Tuple key = new Tuple(getIndex(), name);
-		if(indices.containsKey(key)){
-			String fileName = (String) indices.get(key);
-			indices.remove(key);
-			
-			FileOutputStream fos = null;
-			ObjectOutputStream oos = null;
-			File f = null;
-			try {
-				fos = new FileOutputStream(dbFile);
-				oos = new ObjectOutputStream(fos);
-				int indexCount = indices.size();
-				oos.writeInt(indexCount);
-				for (Enumeration e = indices.keys(); e.hasMoreElements();) {
-					Tuple t = (Tuple) e.nextElement();
-					String paramFileName = (String) indices.get(t);
-					oos.writeObject(t);
-					oos.writeObject(paramFileName);
-				}
-				oos.flush();
-				oos.close();
-				fos.close();
-				log.info("Modified saved parameter db file [" + dbFile + "]");
-				
-				f = new File(fileName);
-				log.info("Removing file [" + f.getCanonicalPath() + "]:file exists? " + f.exists());
-				f.delete();
-				log.debug("\tFile deleted.  File still exists? " + f.exists());
-				
-			} catch (IOException ioe) {
-				ioe.printStackTrace();
-			}	
-		}		
+	public void removeNamedParameter(String name) {
+		// remove from memory
+		parameterHash.remove(new ParameterKey(getIndex(), name));
+		// remove from file
+		deleteParameters(name);
 	}
 
 	/**
-	 * Returns the names of all parameter sets that were ever saved through a
-	 * call to saveParametersUnderName().
+	 * Returns the names of the parameter sets that were saved through a call to
+	 * saveParameters(String filename). Names can be removed using
+	 * <code>removeNamedParameter()</code>
+	 * 
+	 * @return Names of parameterSets as an array of Strings.
 	 */
 	public String[] getNamesOfStoredParameterSets() {
-		// Query the database for all strings XXX, where (this.getClass(), XXX)
-		// is an existing index.
-		Tuple key = null;
-		Vector pn = new Vector();
-		for (Enumeration e = indices.keys(); e.hasMoreElements();) {
-			key = (Tuple) e.nextElement();
-			if (key.className.equals(getIndex())) {
-				pn.add(key.parameterName);
+		Vector paramNames = new Vector();
+		for (ParameterKey key : parameterHash.keySet()) {
+			if (key.getClassName().equals(getIndex())) {
+				paramNames.add(key.getParameterName());
 			}
-
 		}
 
-		String[] toBeReturned = new String[pn.size()];
-		pn.toArray(toBeReturned);
-		return toBeReturned;
+		String[] parameterGroups = new String[paramNames.size()];
+		paramNames.toArray(parameterGroups);
+		return parameterGroups;
+	}
+
+	/**
+	 * Returns a new parameter panel that has parameters as stored (in
+	 * parameterHash in memory) under the designated name, and has Object type
+	 * as current parameter panel.
+	 * 
+	 * ex: If current parameter panel (stored in aspp) is a HierClustPanel, this
+	 * method returns a HierClustPanel.
+	 * 
+	 * @param name
+	 *            Name of the parameterSet
+	 * @return
+	 */
+	@Deprecated
+	public ParameterPanel getNamedParameterSetPanel(String name) {
+		Map<Serializable, Serializable> returnedParams = parameterHash
+				.get(new ParameterKey(getIndex(), name));
+		AbstractSaveableParameterPanel pp = aspp.clone();
+		pp.setParameters(returnedParams);
+		return pp;
+	}
+
+	/**
+	 * Similar to getNamedParameterSetPanel, but instead of return the panel, it
+	 * directly set (reuse) the current panel.
+	 * 
+	 * @param name
+	 */
+	public void setNamedParameterSetPanel(String name) {
+		Map<Serializable, Serializable> returnedParams = parameterHash
+				.get(new ParameterKey(getIndex(), name));
+		aspp.setParameters(returnedParams);
+	}
+
+	/**
+	 * Returns the parameter values that were stored (in parameterHash in
+	 * memory) under the designated name.
+	 * 
+	 * @param name
+	 * @return Return a Map<Serializable, Serializable>, which use parameter
+	 *         name as the key and parameter value as the value.
+	 */
+	public Map<Serializable, Serializable> getNamedParameterSet(String name) {
+		Map<Serializable, Serializable> returnedParams = parameterHash
+				.get(new ParameterKey(getIndex(), name));
+		return returnedParams;
 	}
 
 	/**
 	 * Returns the parameters panel populated with the parameter values that
 	 * where stored under the designated 'name'.
+	 * 
+	 * @param name
+	 * @return
 	 */
-	public ParameterPanel getNamedParameterSetPanel(String name) {
-		// Look in the database for the 'fileName' that is mapped
-		// to the index (this.getClass(), name).
-		Tuple key = new Tuple(getIndex(), name);
-		if (indices.containsKey(key)) {
-			File file = new File((String) indices.get(key));
-			try {
-				FileInputStream fis = new FileInputStream(file);
-				ClassLoader classLoader = getClass().getClassLoader();
-				ComponentObjectInputStream ois = new ComponentObjectInputStream(
-						fis, classLoader);
-				aspp = (AbstractSaveableParameterPanel) ois.readObject();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+	public ParameterPanel deserializeNamedParameterSetPanel(String name) {
+		try {
+			FileInputStream fis = new FileInputStream(new File(
+					scrubFilename(name)));
+			XMLDecoder ois = new XMLDecoder(fis);
+			Thread.currentThread().setContextClassLoader(
+					this.getClass().getClassLoader()); // to avoid java bug
+			// #6329581
+			// newaspp = (AbstractSaveableParameterPanel) ois.readObject();
+			HashMap parameters = (HashMap) ois.readObject();
+			this.setParameters(parameters);
+		} catch (Exception e) {
+			log.error(e, e);
 		}
 
-		// aspp.setResource(res);
-		// aspp.readFromResource(); // Reconstitute the stored values.
-		return aspp;
+		return this.getParameterPanel();
 	}
 
 	/**
-	 * Validates the user-entered parameter values.
+	 * Returns the parameters panel populated with the parameter values that
+	 * where stored under the designated 'name'.
+	 * 
+	 * @param name
+	 * @return
 	 */
-	public ParamValidationResults validateParameters() {
-		// Delegates the validation to the panel.
-		if (aspp == null)
-			return new ParamValidationResults(true, null);
-		else
-			return aspp.validateParameters();
+	public Map<Serializable, Serializable> deserializeNamedParameterSet(
+			String name) {
+		HashMap parameters = null;
+		try {
+			FileInputStream fis = new FileInputStream(new File(
+					scrubFilename(name)));
+			XMLDecoder ois = new XMLDecoder(fis);
+			Thread.currentThread().setContextClassLoader(
+					this.getClass().getClassLoader()); // to avoid java bug
+			// #6329581
+			parameters = (HashMap) ois.readObject();
+		} catch (Exception e) {
+			log.error(e, e);
+		}
+
+		return parameters;
 	}
 
-	public void addDescription(String desc) {
-		descriptions.addDescription(desc);
-	}
-
-	public String[] getDescriptions() {
-		return descriptions.getDescriptions();
-	}
-
-	public void removeDescription(String desc) {
-		descriptions.removeDescription(desc);
-	}
-
-	public String getID() {
-		return analysisId.getID();
-	}
-
-	public void setID(String id) {
-		analysisId.setID(id, "Analysis");
-	}
-
-	public String getLabel() {
-		return analysisId.getLabel();
-	}
-
-	public void setLabel(String name) {
-		analysisId.setLabel(name);
-	}
-
-	public void update(java.util.Observable ob, Object o) {
-
-		log.debug("initiated close");
-
-		stopAlgorithm = true;
+	/**
+	 * Check if the inputed parameterSet already exist in memory or not.
+	 * 
+	 * @param parameterSet
+	 * @return
+	 */
+	public boolean parameterSetExist(
+			Map<Serializable, Serializable> parameterSet) {
+		boolean result = false;
+		if (parameterSet.get("ParameterKey") != null)
+			result = parameterHash.values().contains(parameterSet);
+		else {// I'll need to loop through all the records. disregard the
+			// ParameterKey and compare others.
+			for (Iterator iterator = parameterHash.values().iterator(); iterator
+					.hasNext();) {
+				Map<Serializable, Serializable> property = (Map<Serializable, Serializable>) iterator
+						.next();
+				Map<Serializable, Serializable> pureParameter = new HashMap<Serializable, Serializable>();
+				pureParameter.putAll(property);
+				pureParameter.remove("ParameterKey");
+				if (pureParameter.equals(parameterSet))
+					result = true;
+			}
+		}
+		return result;
 	}
 
 	/**
@@ -421,61 +418,276 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	}
 
 	/**
+	 * Set the panel for this analysis to the specific component's 'panel'. This
+	 * method also set the tmpDir to the tmpDir under that parameter panel's
+	 * directory, and load all saved parameter files under that directory.
+	 * 
+	 * @param panel
+	 */
+	public void setDefaultPanel(AbstractSaveableParameterPanel panel) {
+		aspp = panel;
+		if (aspp != null)
+			aspp.setVisible(true);
+		setParameterFilesPath(aspp);
+		loadSavedParameterSets();
+	}
+
+	/**
+	 * Set the path to the parameter's temporary directory for the component. If
+	 * the directory does not exist, create it.
+	 * 
+	 * @param aspp
+	 */
+	private void setParameterFilesPath(AbstractSaveableParameterPanel aspp) {
+		try {
+			ComponentClassLoader ccl = (ComponentClassLoader) aspp.getClass()
+					.getClassLoader();
+			ComponentResource componentResource = ccl.getComponentResource();
+			File parentDir = new File(componentResource.getDir(), paramsDir);
+			tmpDir = parentDir.getPath() + File.separatorChar;
+			File pFile = new File(tmpDir);
+			if (!pFile.exists())
+				FileTools.createDir(tmpDir);
+		} catch (Exception e) {
+			log.error(e, e);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.geworkbench.bison.model.analysis.Analysis#getParameterPanel()
+	 */
+	public ParameterPanel getParameterPanel() {
+		return aspp;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.geworkbench.bison.model.analysis.Analysis#validateParameters()
+	 */
+	public ParamValidationResults validateParameters() {
+		// Delegates the validation to the panel.
+		if (aspp == null)
+			return new ParamValidationResults(true, null);
+		else
+			return aspp.validateParameters();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.geworkbench.bison.datastructure.properties.DSDescribable#addDescription(java.lang.String)
+	 */
+	public void addDescription(String desc) {
+		descriptions.addDescription(desc);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.geworkbench.bison.datastructure.properties.DSDescribable#getDescriptions()
+	 */
+	public String[] getDescriptions() {
+		return descriptions.getDescriptions();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.geworkbench.bison.datastructure.properties.DSDescribable#removeDescription(java.lang.String)
+	 */
+	public void removeDescription(String desc) {
+		descriptions.removeDescription(desc);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.geworkbench.bison.datastructure.properties.DSIdentifiable#getID()
+	 */
+	public String getID() {
+		return analysisId.getID();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.geworkbench.bison.datastructure.properties.DSIdentifiable#setID(java.lang.String)
+	 */
+	public void setID(String id) {
+		analysisId.setID(id, "Analysis");
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getLabel() {
+		return analysisId.getLabel();
+	}
+
+	/**
+	 * 
+	 * @param name
+	 */
+	public void setLabel(String name) {
+		analysisId.setLabel(name);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
+	public void update(java.util.Observable ob, Object o) {
+
+		log.debug("initiated close");
+
+		stopAlgorithm = true;
+	}
+
+	/**
 	 * Return a code identifying the type of the analysis.
 	 * 
 	 * @return
 	 */
 	public abstract int getAnalysisType();
 
+	@Script
+	public void setParameter(String key, String value) {
 
-    @Script
-    public  void setParameter(String key, String value){
-        
-    };
-    /**
-	 * Convenience class modeling the 'key' part of the (key, value) pairs
-	 * stored in the variable <code>indices</code>.
-	 */
-	static class Tuple implements Serializable {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = -8967255706305280349L;
+	};
 
-		protected String className = null;
-
-		protected String parameterName = null;
-
-		public Tuple(String cn, String pn) {
-			className = cn;
-			parameterName = pn;
-		}
-
-		public int hashCode() {
-			return (className + parameterName).hashCode();
-		}
-
-		public boolean equals(Object tuple) {
-			if (tuple instanceof Tuple) {
-				return ((Tuple) tuple).className.equals(className)
-						&& ((Tuple) tuple).parameterName.equals(parameterName);
-			}
-
-			return false;
-		}
-
-		public String toString() {
-			return "Key: " + className + "+" + parameterName;
-		}
-
-	}
-	
 	/**
 	 * 
 	 * @return
 	 */
-	public String createHistory(){
+	public String createHistory() {
 		return aspp.toString();
 	}
-	
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.geworkbench.bison.model.analysis.Analysis#getParameters()
+	 */
+	public Map<Serializable, Serializable> getParameters() {
+		return aspp.getParameters();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.geworkbench.bison.model.analysis.Analysis#setParameters(java.util.Map)
+	 */
+	public void setParameters(Map<Serializable, Serializable> parameters) {
+		this.aspp.setParameters(parameters);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.geworkbench.bison.model.analysis.Analysis#saveParameters(java.lang.String)
+	 * 
+	 * Current parameters will be saved in both memory and files under given
+	 * name.
+	 */
+	public void saveParameters(String setName) {
+
+		/*
+		 * Cache the parameters stored under filename in a hash table. The key
+		 * is the ParameterKey, and the value is the parameters.
+		 */
+		ParameterKey key = new ParameterKey(getIndex(), setName);
+		if (!parameterHash.containsKey(key)) {
+			parameterHash.put(key, aspp.getParameters());
+		}
+
+		writeParametersAsXml(setName);
+	}
+
+	/**
+	 * Saves current parameters for a SerializedInstance using the
+	 * {@link XMLEncoder}.
+	 */
+	private void writeParametersAsXml(String name) {
+		FileOutputStream fos = null;
+		XMLEncoder oos = null;
+		ClassLoader currentClassLoader = null;
+		PrintStream orgErrStream = null;
+		try {
+			fos = new FileOutputStream(new File(scrubFilename(name)));
+			oos = new XMLEncoder(fos);
+
+			/*
+			 * Swap the loader to the loader that loads the actual panel, and
+			 * redirect the System.err printed by XMLEncoder when writing the
+			 * xml object.
+			 * 
+			 * See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6329581.
+			 */
+			currentClassLoader = Thread.currentThread().getContextClassLoader();
+			ClassLoader cl = aspp.getClass().getClassLoader();
+			Thread.currentThread().setContextClassLoader(cl);
+
+			orgErrStream = System.err;
+
+			PrintStream fileErrStream = new PrintStream(new FileOutputStream(
+					"err.txt", true));
+			System.setErr(fileErrStream);
+			ParameterKey key = new ParameterKey(getIndex(), name);
+			Map<Serializable, Serializable> pMap = aspp.getParameters();
+			pMap.put("ParameterKey", key.toString());
+			oos.writeObject(pMap);
+
+			oos.flush();
+			oos.close();
+			fos.close();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		} finally {
+			Thread.currentThread().setContextClassLoader(currentClassLoader);
+			System.setErr(orgErrStream);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.geworkbench.bison.model.analysis.Analysis#deleteParameters(java.lang.String)
+	 * 
+	 * We generate the filename from the set's name, and delete the file
+	 */
+	public void deleteParameters(String name) {
+		File pFile = new File(scrubFilename(name));
+		pFile.delete();
+		log.debug("\tFile deleted.  File still exists? " + pFile.exists());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.geworkbench.bison.model.analysis.Analysis#refreshGUI()
+	 */
+	public void refreshGUI() {
+		// It's up to the component to specify how to refresh its analysis gui.
+	}
+
+	/*
+	 * Add path and extension to the file name if needed.
+	 */
+	public String scrubFilename(String filename) {
+		if (!StringUtils.startsWith(filename, tmpDir)) {
+			filename = tmpDir + filename;
+		}
+		if (!StringUtils.endsWith(filename, FileTools.FILE_EXTENSION_SEPARATOR
+				+ FileTools.XML)) {
+			filename = filename + FileTools.FILE_EXTENSION_SEPARATOR
+					+ FileTools.XML;
+		}
+		return filename;
+	}
+
 }

@@ -141,7 +141,7 @@ public abstract class AbstractTraining extends AbstractAnalysis implements Clust
     }
 
     @Subscribe public void receive(ProjectEvent event, Object source) {
-        System.out.println("abstracttraining received project event.");
+        log.debug("abstracttraining received project event.");
 
         DSDataSet dataSet = event.getDataSet();
         if ((dataSet != null) && (dataSet instanceof DSMicroarraySet)) {
@@ -166,13 +166,13 @@ public abstract class AbstractTraining extends AbstractAnalysis implements Clust
     @Subscribe
     public void receive(org.geworkbench.events.ProjectNodeRemovedEvent e, Object source)
     {
-        System.out.println("abstracttraining received project node removed event.");
+    	log.debug("abstracttraining received project node removed event.");
     }
 
     @Subscribe
     public void receive(org.geworkbench.events.ProjectNodeAddedEvent e, Object source)
     {
-        System.out.println("abstracttraining received project node added event.");
+    	log.debug("abstracttraining received project node added event.");
     }
 
     public int getAnalysisType() {

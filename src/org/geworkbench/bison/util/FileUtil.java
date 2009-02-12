@@ -8,6 +8,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.ginkgo.labs.util.FileTools;
+
 /**
  * <p>Title: caWorkbench</p>
  * <p/>
@@ -22,6 +26,7 @@ import java.util.Vector;
  * @version 3.0
  */
 public class FileUtil {
+	private static Log log = LogFactory.getLog(FileTools.class);
     public FileUtil() {
     }
 
@@ -103,7 +108,7 @@ public class FileUtil {
             String line;
             for (int lineCtr = startIndex; lineCtr < endIndex; lineCtr++) {
                 if (lineCtr % 100 == 0) {
-                    System.out.println("Read line " + lineCtr);
+                    log.debug("Read line " + lineCtr);
                 }
                 if ((line = reader.readLine()) != null) {
                     String[] arrLine = line.split("\t");

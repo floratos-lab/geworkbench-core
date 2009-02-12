@@ -26,6 +26,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Map;
 
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -36,7 +37,7 @@ import com.jgoodies.forms.builder.DefaultFormBuilder;
  *
  * @author John Watkinson
  */
-public abstract class AbstractTrainingPanel extends AbstractSaveableParameterPanel implements Serializable, TrainingProgressListener {
+public abstract class AbstractTrainingPanel extends AbstractSaveableParameterPanel implements TrainingProgressListener {
     static Log log = LogFactory.getLog(AbstractTrainingPanel.class);
 
     public static final String DEFAULT_TRAINING_MESSAGE = "Training Progress";

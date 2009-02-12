@@ -1,111 +1,57 @@
 <!-- 
-	A bare-bones all.xml file that is useful when creating a new component.
-	
-	author: keshav 
-	version: $Id: all-minimal.xml,v 1.11 2009-01-14 16:29:25 keshav Exp $
+A bare-bones all.xml file that is useful when creating a new component.
+
+author: keshav 
+version: $Id: all-minimal.xml,v 1.12 2009-02-12 22:28:16 keshav Exp $
 -->
 
-<geaw-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="ConfigurationFile Schema.xsd">
+<geaw-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ConfigurationFile Schema.xsd">
 
-	<!-- Core Stuff -->
 	<description>
-		This is useful when writing new components as it speeds up the
-		starting time of geworkbench. To use, rename as all.xml.
-	</description>
+        This is useful when writing new components as it speeds up the starting time of geworkbench.  To use, rename as all.xml.
+    </description>
 
-	<gui-window name="Main GUI"
-		class="org.geworkbench.engine.skin.Skin" />
+	<gui-window name="Main GUI" class="org.geworkbench.engine.skin.Skin"/>
 
-	<plugin id="projectWindow" name="Project Panel"
-		class="org.geworkbench.builtin.projects.ProjectPanel">
-		<gui-area name="ProjectArea" />
+	<plugin id="projectWindow" name="Project Panel" class="org.geworkbench.builtin.projects.ProjectPanel">
+		<gui-area name="ProjectArea"/>
+	</plugin>
+	
+	<plugin id="expressionFileFilter" name="Exp. Format" class="org.geworkbench.components.parsers.ExpressionFileFormat"/>
+	<plugin id="sequenceFileFilter" name="FASTA Format" class="org.geworkbench.components.parsers.sequences.SequenceFileFormat"/>
+	 
+	<!-- New Gene Panel implementation -->
+	<plugin id="genePanel" name="Markers" class="org.geworkbench.components.selectors.GenePanel" source="selectors">
+		<gui-area name="SelectionArea"/>
 	</plugin>
 
-	<!-- File Parsers (Don't mistake these filters with the filters below.)-->
-	<plugin id="expressionFileFilter" name="Exp. Format"
-		class="org.geworkbench.components.parsers.ExpressionFileFormat" />
-	<plugin id="sequenceFileFilter" name="FASTA Format"
-		class="org.geworkbench.components.parsers.sequences.SequenceFileFormat" />
-
-	<!-- Selectors -->
-	<plugin id="genePanel" name="Markers"
-		class="org.geworkbench.components.selectors.GenePanel"
-		source="selectors">
-		<gui-area name="SelectionArea" />
+	<plugin id="phenotypePanel2" name="Arrays/Phenotypes" class="org.geworkbench.components.selectors.PhenotypePanel" source="selectors">
+		<gui-area name="SelectionArea"/>
+	</plugin>
+	
+	<!-- Views of corresponding analyses go here -->
+	<plugin id="microarrayPanel" name="Microarray Viewer" class="org.geworkbench.components.microarrays.MicroarrayPanel" source="microarrays">
+		<gui-area name="VisualArea"/>
+		<subscription type="org.geworkbench.events.ProjectEvent" enabled="Yes"/>
 	</plugin>
 
-	<plugin id="phenotypePanel2" name="Arrays/Phenotypes"
-		class="org.geworkbench.components.selectors.PhenotypePanel"
-		source="selectors">
-		<gui-area name="SelectionArea" />
+	 <plugin id="hierarchicalClusteringPanel" name="Dendrogram" class="org.geworkbench.components.hierarchicalclustering.HierClusterViewAppComponent" source="hierarchicalclustering">
+		<gui-area name="VisualArea"/>
+	</plugin> 
+	
+	<plugin id="blastResults" name="Alignment Results" class="org.geworkbench.components.alignment.panels.BlastViewComponent" source="alignment">
+		<gui-area name="VisualArea"/>
+	</plugin>	 
+	
+	<!-- Analyses must go here, before the analysis panel -->
+	<plugin id="fastHierarchicalClusteringAnalysis" name="Fast Hierachical Clustering Analysis" class="org.geworkbench.components.hierarchicalclustering.FastHierClustAnalysis" source="hierarchicalclustering"/>
+	
+	<plugin id="analysisPanel" name="Analysis" class="org.geworkbench.components.analysis.AnalysisPanel" source="analysis">
+		<gui-area name="CommandArea"/>
 	</plugin>
-
-	<!-- Component Analysis Views -->
-	<plugin id="microarrayPanel" name="Microarray Viewer"
-		class="org.geworkbench.components.microarrays.MicroarrayPanel"
-		source="microarrays">
-		<gui-area name="VisualArea" />
-		<subscription type="org.geworkbench.events.ProjectEvent"
-			enabled="Yes" />
+	
+	<plugin id="sequenceAlignment" name="Sequence Alignment" class="org.geworkbench.components.alignment.panels.BlastAppComponent" source="alignment">
+		<gui-area name="CommandArea"/>
 	</plugin>
-
-	<plugin id="hierarchicalClusteringPanel" name="Dendrogram"
-		class="org.geworkbench.components.hierarchicalclustering.HierClusterViewAppComponent"
-		source="hierarchicalclustering">
-		<gui-area name="VisualArea" />
-	</plugin>
-
-	<!-- Normalizers and filters don't have views. -->
-
-	<!-- Other Views -->
-	<plugin id="blastResults" name="Alignment Results"
-		class="org.geworkbench.components.alignment.panels.BlastViewComponent"
-		source="alignment">
-		<gui-area name="VisualArea" />
-	</plugin>
-
-	<!-- Component Analyses (must go before the analysis panel) -->
-	<plugin id="fastHierarchicalClusteringAnalysis"
-		name="Fast Hierachical Clustering Analysis"
-		class="org.geworkbench.components.hierarchicalclustering.FastHierClustAnalysis"
-		source="hierarchicalclustering" />
-
-	<plugin id="analysisPanel" name="Analysis"
-		class="org.geworkbench.components.analysis.AnalysisPanel"
-		source="analysis">
-		<gui-area name="CommandArea" />
-	</plugin>
-
-	<!-- Component Normalizers (must go before the normalization panel) -->
-	<plugin id="MarkerCenteringNormalizer"
-		name="Marker Centering Normalizer"
-		class="org.geworkbench.components.normalization.MarkerCenteringNormalizer"
-		source="normalization" />
-
-	<plugin id="normalizationPanel" name="Normalization"
-		class="org.geworkbench.components.analysis.NormalizationPanel"
-		source="analysis">
-		<gui-area name="CommandArea" />
-	</plugin>
-
-	<!-- Component Filters (must go before the FilteringPanel) -->
-	<plugin id="deviationFilter" name="Deviation Filter"
-		class="org.geworkbench.components.filtering.DeviationBasedFilter"
-		source="filtering" />
-
-	<plugin id="filteringPanel" name="Filtering"
-		class="org.geworkbench.components.filtering.FilteringPanel"
-		source="filtering">
-		<gui-area name="CommandArea" />
-	</plugin>
-
-	<!-- Other Command Areas -->
-	<plugin id="sequenceAlignment" name="Sequence Alignment"
-		class="org.geworkbench.components.alignment.panels.BlastAppComponent"
-		source="alignment">
-		<gui-area name="CommandArea" />
-	</plugin>
-
-
+  
 </geaw-config>

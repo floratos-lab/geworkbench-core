@@ -1,5 +1,8 @@
 package org.geworkbench.bison.model.analysis;
 
+import java.io.Serializable;
+import java.util.Map;
+
 import org.geworkbench.bison.datastructure.properties.DSDescribable;
 import org.geworkbench.bison.datastructure.properties.DSIdentifiable;
 
@@ -27,12 +30,14 @@ import org.geworkbench.bison.datastructure.properties.DSIdentifiable;
  * </li>
  * </ul>
  *
- * @author First Genetic Trust
- * @version 1.0
+ * @author First Genetic Trust Inc.
+ * @author keshav
+ * @author yc2480
+ * @version $Id: Analysis.java,v 1.2 2009-02-12 22:28:15 keshav Exp $
  */
 public interface Analysis extends DSDescribable, DSIdentifiable {
     /**
-     * returns a GUI for entering analysis-specific paramater values.
+     * returns a GUI for entering analysis-specific parameter values.
      *
      * @return parameterPanel
      */
@@ -52,4 +57,14 @@ public interface Analysis extends DSDescribable, DSIdentifiable {
      * @return Results of algorithm execution
      */
     AlgorithmExecutionResults execute(Object input);
+     
+    public Map<Serializable, Serializable> getParameters();
+    
+    public void setParameters(Map<Serializable, Serializable> parameters);
+
+	public void saveParameters(String filename);
+	
+	public void deleteParameters(String filename);
+
+	public void refreshGUI();
 }
