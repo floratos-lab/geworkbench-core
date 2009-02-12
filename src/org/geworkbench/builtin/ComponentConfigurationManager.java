@@ -2,6 +2,7 @@ package org.geworkbench.builtin;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
@@ -9,7 +10,9 @@ import org.apache.commons.digester.Digester;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.geworkbench.engine.config.UILauncher;
 import org.geworkbench.engine.config.rules.PluginRule;
+import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.engine.management.ComponentResource;
 import org.xml.sax.SAXException;
 
@@ -117,12 +120,27 @@ public class ComponentConfigurationManager {
 	 */
 	public void loadComponent(String resource) {
 
+		/* create component resource */
 		ComponentResource componentResource = createComponentResource(resource);
 
-		parseComponentDescriptor(componentResource);
+		/* add resource to registry */
+		ComponentRegistry.getRegistry().getAllComponentResources().add(
+				componentResource);
+
+		/* get input stream for ccm.xml */
+		InputStream is = ComponentConfigurationManager.class
+				.getResourceAsStream(resource
+						+ "hierarchicalclustering.ccm.xml");
+
+		/* parse using digester */
+		try {
+			digester.parse(is);
+		} catch (Exception e) {
+			log.error(e, e);
+			throw new RuntimeException(e);
+		}
 
 		// refreshGui
-
 	}
 
 }
