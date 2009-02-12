@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.digester.Digester;
 import org.apache.commons.lang.StringUtils;
@@ -13,7 +12,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.engine.config.UILauncher;
 import org.geworkbench.engine.config.rules.PluginRule;
-import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.engine.management.ComponentResource;
 import org.xml.sax.SAXException;
 
@@ -129,10 +127,10 @@ public class ComponentConfigurationManager {
 		ComponentResource componentResource = createComponentResource(resource);
 
 		/* add resource to registry */
-		Map<String, ComponentResource> resourceMap = ComponentRegistry
-				.getRegistry().getComponentResourceMap();
-		resourceMap.put(resource, componentResource);
-
+		// TODO Add me back in
+		// Map<String, ComponentResource> resourceMap = ComponentRegistry
+		// .getRegistry().getComponentResourceMap();
+		// resourceMap.put(resource, componentResource);
 		/* get input stream for ccm.xml */
 		// FIXME need to put this ccm.xml file in component dir and read it from
 		// there
