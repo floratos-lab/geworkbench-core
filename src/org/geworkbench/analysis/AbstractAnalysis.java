@@ -44,7 +44,7 @@ import org.ginkgo.labs.util.FileTools;
  * @author First Genetic Trust Inc.
  * @author keshav
  * @author yc2480
- * @version $Id: AbstractAnalysis.java,v 1.23 2009-02-12 22:28:14 keshav Exp $
+ * @version $Id: AbstractAnalysis.java,v 1.24 2009-02-18 21:17:53 chiangy Exp $
  */
 @SuppressWarnings("unchecked")
 public abstract class AbstractAnalysis implements Analysis, Serializable,
@@ -167,7 +167,6 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	 */
 	public AbstractAnalysis() {
 		parameterHash = new Hashtable<ParameterKey, Map<Serializable, Serializable>>();
-		aspp = new AbstractSaveableParameterPanel();
 	}
 
 	/*
@@ -210,7 +209,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 						 * got the right one.
 						 */
 						if (parameters != null)
-							if (parameters.get("ParameterKey").equals(
+							if (parameters.get(ParameterKey.class.getSimpleName()).equals(
 									key.toString())) {
 								parameterHash.put(key, parameters);
 								lastParameterSetName = setName;
@@ -277,27 +276,6 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 		String[] parameterGroups = new String[paramNames.size()];
 		paramNames.toArray(parameterGroups);
 		return parameterGroups;
-	}
-
-	/**
-	 * Returns a new parameter panel that has parameters as stored (in
-	 * parameterHash in memory) under the designated name, and has Object type
-	 * as current parameter panel.
-	 * 
-	 * ex: If current parameter panel (stored in aspp) is a HierClustPanel, this
-	 * method returns a HierClustPanel.
-	 * 
-	 * @param name
-	 *            Name of the parameterSet
-	 * @return
-	 */
-	@Deprecated
-	public ParameterPanel getNamedParameterSetPanel(String name) {
-		Map<Serializable, Serializable> returnedParams = parameterHash
-				.get(new ParameterKey(getIndex(), name));
-		AbstractSaveableParameterPanel pp = aspp.clone();
-		pp.setParameters(returnedParams);
-		return pp;
 	}
 
 	/**
@@ -385,7 +363,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	public boolean parameterSetExist(
 			Map<Serializable, Serializable> parameterSet) {
 		boolean result = false;
-		if (parameterSet.get("ParameterKey") != null)
+		if (parameterSet.get(ParameterKey.class.getSimpleName()) != null)
 			result = parameterHash.values().contains(parameterSet);
 		else {// I'll need to loop through all the records. disregard the
 			// ParameterKey and compare others.
@@ -395,7 +373,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 						.next();
 				Map<Serializable, Serializable> pureParameter = new HashMap<Serializable, Serializable>();
 				pureParameter.putAll(property);
-				pureParameter.remove("ParameterKey");
+				pureParameter.remove(ParameterKey.class.getSimpleName());
 				if (pureParameter.equals(parameterSet))
 					result = true;
 			}
@@ -565,7 +543,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	 * @return
 	 */
 	public String createHistory() {
-		return aspp.toString();
+		return aspp.getDataSetHistory();
 	}
 
 	/*
@@ -609,7 +587,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	}
 
 	/**
-	 * Saves current parameters for a SerializedInstance using the
+	 * Saves current parameters this analysis using the
 	 * {@link XMLEncoder}.
 	 */
 	private void writeParametersAsXml(String name) {
@@ -639,7 +617,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 			System.setErr(fileErrStream);
 			ParameterKey key = new ParameterKey(getIndex(), name);
 			Map<Serializable, Serializable> pMap = aspp.getParameters();
-			pMap.put("ParameterKey", key.toString());
+			pMap.put(ParameterKey.class.getSimpleName(), key.toString());
 			oos.writeObject(pMap);
 
 			oos.flush();
