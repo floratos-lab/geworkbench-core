@@ -79,9 +79,11 @@
 	<plugin id="missingValuesFilter" name="Missing Values Filter" class="org.geworkbench.components.filtering.MissingValuesFilter" source="filtering"/>
 	<plugin id="sequenceFileFilter" name="FASTA Format" class="org.geworkbench.components.parsers.sequences.SequenceFileFormat"/>
 	<plugin id="patternDiscoveryAlgorithm" name="Pattern Discovery Algorithm" class="org.geworkbench.components.associationdiscovery.PatternDiscovery" source="associationdiscovery"/>
+	<!--
 	<plugin id="reverseEngineering" name="Reverse Engineering" class="org.geworkbench.components.pathwaydecoder.GeneProfiler" source="pathwaydecoder">
 		<gui-area name="VisualArea"/>
 	</plugin>
+	-->
 	<plugin id="scatterPlot" name="Scatter Plot" class="org.geworkbench.components.plots.ScatterPlot" source="plots">
 		<gui-area name="VisualArea"/>
 	</plugin>
@@ -158,10 +160,11 @@
 		<gui-area name="VisualArea"/>
 	</plugin>
 -->
-	
+	<!--
 	<plugin id="Interactions" name="Interaction" class="interactions.InteractionsUserInterface" source="interactions">
 		<gui-area name="VisualArea"/>
 	</plugin>
+	-->
 	<plugin id="CellularNetWork" name="Cellular NetWork" class="org.geworkbench.components.interactions.cellularnetwork.CellularNetworkKnowledgeWidget" source="interactions">
 		<gui-area name="VisualArea"/>
 	</plugin>
@@ -263,9 +266,11 @@
 	<plugin id="CELImageViewer" name="CELImageViewer" class="org.geworkbench.components.celprocessing.CELImageViewerComponent" source="celprocessing">
 		<gui-area name="VisualArea"/>
 	</plugin>
+	<!--
 	<plugin id="networkBrowser" name="Network Browser" class="org.geworkbench.components.pathwaydecoder.GeneNetworkPanel" source="pathwaydecoder">
 		<gui-area name="VisualArea"/>
 	</plugin>
+	   -->
 	<!--
     <plugin id="aracne" name="Aracne" class="org.geworkbench.components.pathwaydecoder.ARACNE" source="pathwaydecoder">
         <gui-area name="VisualArea"/>
