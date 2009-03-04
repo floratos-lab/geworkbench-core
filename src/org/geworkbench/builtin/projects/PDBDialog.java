@@ -9,14 +9,17 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import org.apache.commons.lang.NumberUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -25,7 +28,7 @@ import org.apache.commons.logging.LogFactory;
  * the PDB file from RCSB website will be downloaded and displayed
  * 
  * @author mw2518
- * @version $Id: PDBDialog.java,v 1.4 2008-12-09 21:19:58 wangm Exp $
+ * @version $Id: PDBDialog.java,v 1.5 2009-03-04 22:14:48 wangm Exp $
  * 
  */
 class PDBDialog extends JFrame implements ActionListener {
@@ -36,6 +39,10 @@ class PDBDialog extends JFrame implements ActionListener {
 
 	private JTextField jt = new JTextField(4);
 	public ProjectPanel pp = null;
+	String message = "<html><b>Invalid PDB ID!  Please try again.</b></html>\n"
+			+ "<html>Each structure in the PDB is represented by a PDB ID with </html>\n"
+			+ "<html><b>4 characters</b> in the form of <b>[0-9][a-z,0-9][a-z,0-9][a-z,0-9]</b>.</html>\n"
+			+ "For example, 4HHB, 9INS are PDB IDs for hemoglobin and insulin.";
 
 	/*
 	 * save pdb file from rcsb website to local disk, 
@@ -46,8 +53,15 @@ class PDBDialog extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		String pdbid = jt.getText();
 		log.info("entered pdb: " + pdbid);
+		if (pdbid.length() != 4 || !NumberUtils.isDigits(pdbid.substring(0, 1))) {
+			JOptionPane.showMessageDialog(new JFrame(), message,
+					"Invalid PDB ID", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
 		String url = "http://www.rcsb.org/pdb/files/" + pdbid + ".pdb";
 		String contents = getContent(url);
+		if (contents == null)
+			return;
 
 		String dir = LoadData.getLastDataDirectory() + "/webpdb/";
 		File nd = new File(dir);
@@ -82,7 +96,7 @@ class PDBDialog extends JFrame implements ActionListener {
 	 */
 	public PDBDialog(ProjectPanel mainpp) {
 		super("Open RCSB PDB File");
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
 		pp = mainpp;
 	}
@@ -100,6 +114,7 @@ class PDBDialog extends JFrame implements ActionListener {
 
 		contentPane.add(jt);
 		contentPane.add(btn);
+		getRootPane().setDefaultButton(btn);
 		pack();
 		setVisible(true);
 	}
@@ -115,7 +130,19 @@ class PDBDialog extends JFrame implements ActionListener {
 		try {
 			URL url = new URL(fname);
 			URLConnection uc = url.openConnection();
-			BufferedReader br = new BufferedReader(new InputStreamReader(uc
+
+			HttpURLConnection.setFollowRedirects(false);
+			HttpURLConnection huc = (HttpURLConnection) uc;
+			huc.connect();
+
+			if (huc.getResponseCode() != HttpURLConnection.HTTP_OK) {
+				JOptionPane.showMessageDialog(new JFrame(), message,
+						"Invalid PDB ID", JOptionPane.ERROR_MESSAGE);
+				huc.disconnect();
+				return null;
+			}
+
+			BufferedReader br = new BufferedReader(new InputStreamReader(huc
 					.getInputStream()));
 
 			contents = new StringBuffer();
