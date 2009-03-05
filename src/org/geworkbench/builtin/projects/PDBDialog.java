@@ -19,7 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-import org.apache.commons.lang.NumberUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -28,7 +28,7 @@ import org.apache.commons.logging.LogFactory;
  * the PDB file from RCSB website will be downloaded and displayed
  * 
  * @author mw2518
- * @version $Id: PDBDialog.java,v 1.5 2009-03-04 22:14:48 wangm Exp $
+ * @version $Id: PDBDialog.java,v 1.6 2009-03-05 22:22:08 wangm Exp $
  * 
  */
 class PDBDialog extends JFrame implements ActionListener {
