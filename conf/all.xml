@@ -228,10 +228,6 @@
     </plugin>
 
     <!-- SkyLine Component -->
-    <plugin id="SkyLine" name="Structure Analysis" class="org.geworkbench.components.skyline.SkyLineComponent" source="skyline">
-    <gui-area name="CommandArea"/>
-    </plugin>
-
     <plugin id="SkyLineComparativeModeling" name="SkyLine Comparative Modeling" class="org.geworkbench.components.skyline.SkyLineAnalysis" source="skyline"/>
 
     <plugin id="SkyLineViewAllPanel" name="SkyLine Output for All Models" class="org.geworkbench.components.skylineview.SkyLineViewAllPanel" source="skylineview">
