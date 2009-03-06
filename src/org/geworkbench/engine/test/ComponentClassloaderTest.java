@@ -1,18 +1,15 @@
 package org.geworkbench.engine.test;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import junit.framework.TestCase;
 
 import org.apache.commons.digester.Digester;
-import org.geworkbench.builtin.ComponentConfigurationManager;
 import org.geworkbench.engine.config.UILauncher;
-import org.geworkbench.engine.config.rules.PluginObject;
 import org.geworkbench.engine.config.rules.PluginRule;
 import org.geworkbench.engine.management.ComponentResource;
 import org.xml.sax.SAXException;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * User: matt
@@ -59,16 +56,5 @@ public class ComponentClassloaderTest extends TestCase {
     	digester.addCallParam("plugin/gui-area", 0, "name");
 
 //    	digester.parse(inputStream);
-    }
-    
-    public void testParseCmmXmlFile() throws IOException {
-    	String componentsDir = "c:\\unittest\\";
-    	
-    	ComponentConfigurationManager ccm = new ComponentConfigurationManager(componentsDir); 
-
-    	ComponentResource componentResource = new ComponentResource("gears", false); 
-    	ccm.parseComponentDescriptor(componentResource);
-    }	
-    
-    
+    }   
 }
