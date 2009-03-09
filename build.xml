@@ -476,6 +476,7 @@
 				<include name="${components}/viewers/**/*" />
 				<include name="${components}/markus/**/*" />
 				<include name="${components}/skyline/**/*" />
+				<include name="${components}/skylineview/**/*" />
 				
 				<include name="plugins/**/*" />
 				<include name="plugins_v2_4/**/*" />
