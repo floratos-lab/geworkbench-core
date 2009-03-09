@@ -16,6 +16,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Comparator;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -49,7 +51,7 @@ import org.geworkbench.events.CaArrayRequestEvent;
  *  Popup to select a file (local or remote) to open.
  *  
  * @author First Genetic Trust Inc.
- * @version $Id: LoadData.java,v 1.38 2009-03-09 15:29:27 jiz Exp $
+ * @version $Id: LoadData.java,v 1.39 2009-03-09 16:42:16 jiz Exp $
  */
 public class LoadData extends JDialog {
 	private static final long serialVersionUID = -1983039293757013174L;
@@ -429,6 +431,7 @@ public class LoadData extends JDialog {
 		 */
 		supportedInputFormats = ComponentRegistry.getRegistry().getModules(
 				org.geworkbench.components.parsers.FileFormat.class);
+		Arrays.sort(supportedInputFormats, new FileFormatComparator());
 
 		// Setup the file chooser options.
 		jFileChooser1.resetChoosableFileFilters();
@@ -448,6 +451,19 @@ public class LoadData extends JDialog {
 		}
 	}
 
+	/**
+	 * Comparator for sorting file format based on their names.
+	 * @author zji
+	 *
+	 */
+	private static class FileFormatComparator implements Comparator<FileFormat> {
+
+		public int compare(FileFormat o1, FileFormat o2) {
+			return (o1.getFormatName().compareToIgnoreCase(o2.getFormatName()));
+		}
+		
+	}
+	
 	/**
 	 * displayRemoteResourceDiolog for add a new resouce.
 	 * 
