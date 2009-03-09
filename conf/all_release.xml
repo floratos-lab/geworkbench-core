@@ -151,6 +151,15 @@
 		<gui-area name="CommandArea"/>
 	</plugin>
 
+    <!-- SkyLine Component -->
+    <plugin id="SkyLineComparativeModeling" name="SkyLine Comparative Modeling" class="org.geworkbench.components.skyline.SkyLineAnalysis" source="skyline"/>
+    <plugin id="SkyLineViewAllPanel" name="SkyLine Output for All Models" class="org.geworkbench.components.skylineview.SkyLineViewAllPanel" source="skylineview">
+    <gui-area name="VisualArea"/>
+    </plugin>
+    <plugin id="SkyLineViewEachPanel" name="SkyLine Output for Each Model" class="org.geworkbench.components.skylineview.SkyLineViewEachPanel" source="skylineview">
+    <gui-area name="VisualArea"/>
+    </plugin>
+
 	<!-- MarkUs -->
     <plugin id="MarkUsAnalysis" name="MarkUs Analysis" class="org.geworkbench.components.markus.MarkUsAnalysis" source="markus"/>
     <plugin id="MarkUsBrowser" name="MarkUs Browser" class="org.geworkbench.components.markus.MarkUsBrowser" source="markus">
