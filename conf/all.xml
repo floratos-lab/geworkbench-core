@@ -107,6 +107,7 @@
 	<plugin id="matrixReduceViewer" name="MatrixREDUCE" class="org.geworkbench.components.matrixreduce.MatrixReduceViewer" source="matrixreduce">
 		<gui-area name="VisualArea"/>
 	</plugin>
+	<plugin id="mindy" name="MINDY Analysis" class="org.geworkbench.components.mindy.MindyAnalysis" source="mindy"/>
 	<plugin id="aracne" name="ARACNE Analysis" class="org.geworkbench.components.aracne.AracneAnalysis" source="aracne-java"/>
 	<plugin id="netboost" name="Net Boost Analysis" class="org.geworkbench.components.netboost.NetBoostAnalysis" source="netboost"/>
 	<!-- Uncomment this to enable the Evidence Integration analysis component
@@ -243,7 +244,11 @@
     <plugin id="MarkUsBrowser" name="MarkUs Browser" class="org.geworkbench.components.markus.MarkUsBrowser" source="markus">
     <gui-area name="VisualArea"/>
     </plugin>
-
+	
+	<!-- MINDY -->
+	<plugin id="mindyViewer" name="MINDY Viewer" class="org.geworkbench.components.mindy.MindyVisualComponent" source="mindy">
+		<gui-area name="VisualArea"/>
+	</plugin>
 	<!-- NetBoost -->
 	<plugin id="netboostViewer" name="Net Boost" class="org.geworkbench.components.netboost.NetBoostVisualComponent" source="netboost">
 		<gui-area name="VisualArea"/>
