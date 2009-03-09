@@ -1,35 +1,59 @@
 package org.geworkbench.builtin.projects;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
-import javax.swing.*;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.filechooser.FileFilter;
 
 import org.geworkbench.builtin.projects.remoteresources.RemoteResourceDialog;
 import org.geworkbench.builtin.projects.remoteresources.query.CaARRAYQueryPanel;
 import org.geworkbench.builtin.projects.util.CaARRAYPanel;
-import org.geworkbench.builtin.projects.util.NCIPanel;
+import org.geworkbench.components.parsers.FileFormat;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.events.CaArrayEvent;
 import org.geworkbench.events.CaArrayQueryEvent;
 import org.geworkbench.events.CaArrayQueryResultEvent;
 import org.geworkbench.events.CaArrayRequestEvent;
-import org.geworkbench.components.parsers.FileFormat;
 
 /**
- * <p>Copyright: Copyright (c) 2003</p>
- * <p>Company: First Genetic Trust Inc.</p>
+ *  Popup to select a file (local or remote) to open.
+ *  
  * @author First Genetic Trust Inc.
- * @version 1.0
- */
-
-/**
- * Popup to select a file (local or remote) to open.
+ * @version $Id: LoadData.java,v 1.38 2009-03-09 15:29:27 jiz Exp $
  */
 public class LoadData extends JDialog {
+	private static final long serialVersionUID = -1983039293757013174L;
+	
 	private BorderLayout borderLayout1 = new BorderLayout();
 	private JPanel jPanel1 = new JPanel();
 	private GridLayout gridLayout1 = new GridLayout();
@@ -64,20 +88,20 @@ public class LoadData extends JDialog {
 	private GridLayout gridLayout2 = new GridLayout();
 	private GridLayout grid4 = new GridLayout();
 	private String format = null;
-	// private NCIPanel jPanel6 = new NCIPanel(this);
+
 	private CaARRAYPanel caArrayDisplayPanel = new CaARRAYPanel(this);
 	private JCheckBox mergeCheckBox;
 	private JPanel lowerPanel;
 	private JPanel mergePanel;
 	private RemoteResourceDialog remoteResourceDialog;
-	private JPanel remoteControlPanel;
+
 	private JTabbedPane lowTabPane;
-	private JPanel caArrayIndexServicePanel;
+
 	private String indexURL = "";
 	private JTextField indexField;
 	private JButton updateIndexButton;
 	private String currentRemoteResourceName;
-	private String currentDetailedResourceName; // current resurcename which
+	private String currentDetailedResourceName; // current resource name which
 												// shows detail at the top
 												// panel.
 	private CaARRAYQueryPanel caARRAYQueryPanel;
@@ -128,7 +152,6 @@ public class LoadData extends JDialog {
 	}
 
 	public LoadData() {
-		// parentProjectPanel = new ProjectPanel();
 		try {
 			jbInit();
 		} catch (Exception e) {
@@ -165,10 +188,6 @@ public class LoadData extends JDialog {
 	}
 
 	private void jbInit() throws Exception {
-		// format = getLastDataFormat();
-
-		// change it to false in order to provide a progress bar for loading
-		// remote data.
 		this.setModal(false);
 		this.getContentPane().setLayout(borderLayout1);
 
@@ -261,8 +280,6 @@ public class LoadData extends JDialog {
 		deleteButton.setText("Delete");
 		deleteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// displayRemoteResourceDiolog(jComboBox1.getSelectedItem(),
-				// RemoteResourceDialog.DELETE);
 				deleteButton_actionPerformed(e);
 			}
 
@@ -285,29 +302,20 @@ public class LoadData extends JDialog {
 				merge = mergeCheckBox.isSelected();
 			}
 		});
-		// jComboBox1 = new JComboBox(remoteResourceDialog.getResourceNames());
-		// jComboBox1 = new JComboBox(new String[]{"TEST"});
+
 		jPanel10.add(jComboBox1);
 		jPanel10.add(openRemoteResourceButton);
 		jPanel10.add(queryButton);
 		jPanel10.add(addButton);
 		jPanel10.add(editButton);
 		jPanel10.add(deleteButton);
-		remoteControlPanel = new JPanel();
-		// lowerPanel.add(mergePanel);
+
 		mergePanel.add(mergeCheckBox);
 		mergePanel.add(Box.createGlue());
 		lowerPanel.add(jPanel1);
-		// lowerPanel.add(jPanel10);
-		// lowTabPane = new JTabbedPane();
-		// lowTabPane.add(lowerPanel, "Main");
-		// caArrayIndexServicePanel = new JPanel();
-		// lowTabPane.add(caArrayIndexServicePanel, "caARRAY Index Service");
-		// lowTabPane.setSelectedIndex(0);
+
 		indexField = new JTextField(indexURL);
 		updateIndexButton = new JButton("Update");
-		// caArrayIndexServicePanel.add(indexField);
-		// caArrayIndexServicePanel.add(updateIndexButton);
 
 		updateIndexButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -326,17 +334,11 @@ public class LoadData extends JDialog {
 		});
 
 		this.getContentPane().add(lowerPanel, BorderLayout.SOUTH);
-		// this.getContentPane().add(lowTabPane, BorderLayout.SOUTH);
-		// Merge Merge panel and Jpanel 1 in 1 line.
+
 		jPanel1.add(mergePanel);
 		jPanel1.add(jPanel2, null);
 		jPanel2.add(jRadioButton1, null);
-		// removed by XQ
-		// jPanel1.add(jPanel7, null);
-		// jPanel7.add(jRadioButton7, null);
-		// jPanel1.add(jPanel3, null);
-		// jPanel3.add(jRadioButton2, null);
-		// deletion ends here.
+
 		jPanel1.add(jPanel7, null);
 		// remove grid radio button for geWorkbench 1.6 release
 		//jPanel1.add(gridButtonPanel, null);
@@ -499,7 +501,7 @@ public class LoadData extends JDialog {
 	 * remoteresource is clicked.
 	 */
 	private void updateExistedResourcesGUI() {
-		String[] resources = remoteResourceDialog.getResourceNames();
+		String[] resources = RemoteResourceDialog.getResourceNames();
 		if (resources != null) {
 			resourceModel.removeAllElements();
 			for (String s : resources) {
@@ -562,8 +564,6 @@ public class LoadData extends JDialog {
 	 * @param e
 	 */
 	private void jFileChooser1_actionPerformed(ActionEvent e) {
-		// The FileFormat corresponding to the user selected FileFilter.
-		FileFormat selectedFormat = null;
 		int i;
 		if (e.getActionCommand() == JFileChooser.APPROVE_SELECTION) {
 			// Get the format that the user designated for the selected file.
@@ -603,21 +603,6 @@ public class LoadData extends JDialog {
 		} else if (e.getActionCommand() == JFileChooser.CANCEL_SELECTION) {
 			dispose();
 		}
-	}
-
-	/**
-	 * Automatically update the RemoteResources Information from an Index
-	 * service.
-	 */
-	private void autoUpdateIndexService() {
-		if (remoteResourceDialog != null
-				&& (remoteResourceDialog.updateResource(indexURL))) {
-
-			updateExistedResourcesGUI();
-		}
-
-		this.validate();
-		this.repaint();
 	}
 
 	/**
@@ -802,7 +787,6 @@ public class LoadData extends JDialog {
 
 	public void openRemoteResourceButton_actionPerformed(ActionEvent e) {
 		mageButtonSelection_actionPerformed(e);
-
 	}
 
 	public boolean isMerge() {
