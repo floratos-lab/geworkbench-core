@@ -237,28 +237,6 @@
 			<classpath refid="run.classpath" />
 		</java>
 	</target>
-	<!-- ECLIPSE: USE THIS RUN CONFIGURATION IF YOU HAVE AN ECLIPSE CONFIG ON YOUR FILESYSTEM -->
-	<target name="check-eclipse-env-cond">
-		<property environment="env" />
-		<condition property="eclipse.env.set">
-			<available file="${env.ECLIPSE_HOME}" />
-		</condition>
-	</target>
-	<target name="eclipse-cond-if" depends="check-eclipse-env-cond" if="eclipse.env.set">
-		<echo message="ECLIPSE_HOME successfully set to ${env.ECLIPSE_HOME}.  Executing target." />
-	</target>
-	<target name="eclipse-cond-else" depends="check-eclipse-env-cond" unless="eclipse.env.set">
-		<echo message="ECLIPSE_HOME not set.  Cannot execute target." />
-	</target>
-	<target name="run-eclipse-config" depends="eclipse-cond-if,eclipse-cond-else,compile">
-		<java fork="true" classname="org.geworkbench.engine.config.UILauncher">
-			<jvmarg value="-Xmx640M" />
-			<jvmarg value="-Dcomponents.dir=${env.ECLIPSE_HOME}" />
-			<jvmarg value="-Djava.library.path=lib" />
-			<classpath refid="run.classpath" />
-		</java>
-	</target>
-	<!-- END ECLIPSE -->
 	<target name="run-mindy" depends="compile" description="Runs mindy test application.">
 		<path id="mindy.classpath">
 			<pathelement location="components/mindy/${classes}" />
