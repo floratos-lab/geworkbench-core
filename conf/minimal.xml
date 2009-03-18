@@ -74,7 +74,7 @@
 	<plugin id="analysisPanel" name="Analysis" class="org.geworkbench.components.analysis.AnalysisPanel" source="analysis">
 		<gui-area name="CommandArea"/>
 	</plugin>
-	<plugin id="filteringPanel" name="Filtering Panel" class="org.geworkbench.components.filtering.FilteringPanel" source="analysis">
+	<plugin id="filteringPanel" name="Filtering Panel" class="org.geworkbench.components.filtering.FilteringPanel" source="filtering">
 		<gui-area name="CommandArea"/>
 	</plugin>
 	<plugin id="normalizationPanel" name="Normalization Panel" class="org.geworkbench.components.analysis.NormalizationPanel" source="analysis">
