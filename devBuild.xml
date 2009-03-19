@@ -119,17 +119,17 @@
 
     <target name="gear" depends="init"
 	description="Create a .gear file out of a component. Specify a directory containing a component like -Dcomponent=name">
-	<echo
-		message="Going to create .gear file out of directory: ${components}/${component}"></echo>
-	<unzip src="core/geworkbench-core.jar" dest=".">
-		<patternset>
-			<include name="META-INF/MANIFEST.MF" />
-		</patternset>
-	</unzip>
-	<jar destfile="${component}.gear" basedir="${components}/${component}"
-		includes="classes/**,lib/**" manifest="META-INF/MANIFEST.MF" />
-	<delete includeemptydirs="true">
-		<fileset dir="META-INF" />
-	</delete>
-</target>
+		<echo
+			message="Going to create .gear file out of directory: ${components}/${component}"></echo>
+		<unzip src="core/geworkbench-core.jar" dest=".">
+			<patternset>
+				<include name="META-INF/MANIFEST.MF" />
+			</patternset>
+		</unzip>
+		<jar destfile="${component}.gear" basedir="${components}/${component}"
+			includes="classes/**,lib/**" manifest="META-INF/MANIFEST.MF" />
+		<delete includeemptydirs="true">
+			<fileset dir="META-INF" />
+		</delete>
+	</target>
 </project>
