@@ -38,7 +38,7 @@
 		<!-- Release info -->
 		<property name="release.file" value="${dist}/${app}-${version}" />
 		<!-- Release info -->
-		<property name="devkit.file" value="${dist}/devkit-${app}-${version}" />
+		<property name="devkit.file" value="${dist}/${app}_v${version}-SDK" />
 		<!-- Location to write reports -->
 		<property name="reports" value="reports" />
 	</target>
