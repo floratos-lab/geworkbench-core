@@ -55,7 +55,7 @@
     <plugin id="phenotypePanel" name="Phenotype Panel" class="org.geworkbench.components.selectors.PhenotypePanel" source="selectors">
         <gui-area name="SelectionArea"/>
     </plugin>
-	<plugin id="fastHierarchicalClusteringAnalysis" name="Hierachical Clustering Analysis" class="org.geworkbench.components.clustering.FastHierClustAnalysis" source="clustering"/>
+	<plugin id="fastHierarchicalClusteringAnalysis" name="Hierachical Clustering Analysis" class="org.geworkbench.components.clustering.FastHierClustAnalysis" source="hierarchicalclustering"/>
 	<plugin id="somAnalysis" name="SOM Analysis" class="org.geworkbench.components.clustering.SOMAnalysis" source="clustering"/>
 	<plugin id="tTestAnalysis" name="t Test Analysis" class="org.geworkbench.components.analysis.clustering.TtestAnalysis" source="analysis"/>
 	<plugin id="thresholdNormalizer" name="Threshold Normalizer" class="org.geworkbench.components.normalization.ThresholdNormalizer" source="normalization"/>
