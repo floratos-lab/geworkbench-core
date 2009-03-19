@@ -6,7 +6,7 @@
 	<target name="init" description="Initializes the build environment.">
 		<!-- Project-wide properties -->
 		<!-- App name -->
-		<property name="app" value="geWorkBench" />
+		<property name="app" value="geWorkbench" />
 		<property name="version" value="development" />
 		<!-- DEBUG setting -->
 		<property name="debug" value="on" />
