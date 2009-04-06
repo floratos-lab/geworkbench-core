@@ -61,6 +61,11 @@
 			<pathelement location="${conf}" />
 			<path refid="classpath" />
 		</path>
+		<!-- BootClasspath for running jdic on mac -->
+		<path id="bootclasspath">
+		  <pathelement path="/Library/Java/Home/lib/plugin.jar:/Library/Java/Home/lib/deploy.jar"/>
+		</path>
+		<property name="bootclasspath" refid="bootclasspath"/>
 	</target>
 	<!-- ===================================================================== -->
 	<!-- COMPILE  -->
@@ -234,6 +239,7 @@
 		<java fork="true" classname="org.geworkbench.engine.config.UILauncher">
 			<jvmarg value="-Xmx640M" />
 			<jvmarg value="-Djava.library.path=lib" />
+			<jvmarg value="-Xbootclasspath/p:${bootclasspath}" />
 			<classpath refid="run.classpath" />
 		</java>
 	</target>
