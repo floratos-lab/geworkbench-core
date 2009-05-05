@@ -14,7 +14,7 @@
 	<plugin id="evidenceintegration" name="Evidence Integration Analysis" class="org.geworkbench.components.ei.EvidenceIntegrationAnalysis" source="evidenceintegration"/>
 	<plugin id="edgeListFilter" name="Edge List File Format" class="org.geworkbench.components.parsers.EdgeListFileFormat"/>
 	<plugin id="affyFilter" name="Affy File Format" class="org.geworkbench.components.parsers.AffyFileFormat"/>
-	<plugin id="annotationsPanel" name="Marker Annotations" class="org.geworkbench.components.annotations.AnnotationsPanel" source="annotations">
+	<plugin id="annotationsPanel" name="Marker Annotations" class="org.geworkbench.components.annotations.AnnotationsPanel2" source="cabio">
 		<gui-area name="VisualArea"/>
 	</plugin>
 	<plugin id="cgemsPanel" name="Cancer GEMS" class="org.geworkbench.components.cgems.CGemsPanel" source="cgems">
