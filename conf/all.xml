@@ -109,7 +109,7 @@
 	</plugin>
 	<plugin id="mindy" name="MINDY Analysis" class="org.geworkbench.components.mindy.MindyAnalysis" source="mindy"/>
 	<plugin id="aracne" name="ARACNE Analysis" class="org.geworkbench.components.aracne.AracneAnalysis" source="aracne-java"/>
-	<plugin id="netboost" name="Net Boost Analysis" class="org.geworkbench.components.netboost.NetBoostAnalysis" source="netboost"/>
+	<plugin id="netboost" name="NetBoost Analysis" class="org.geworkbench.components.netboost.NetBoostAnalysis" source="netboost"/>
 	<!-- Uncomment this to enable the Evidence Integration analysis component
     <plugin id="evidenceintegration" name="Evidence Integration Analysis" class="org.geworkbench.components.ei.EvidenceIntegrationAnalysis" source="evidenceintegration"/>
     -->
