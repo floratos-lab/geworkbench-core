@@ -44,7 +44,7 @@ import org.ginkgo.labs.util.FileTools;
  * @author First Genetic Trust Inc.
  * @author keshav
  * @author yc2480
- * @version $Id: AbstractAnalysis.java,v 1.24 2009-02-18 21:17:53 chiangy Exp $
+ * @version $Id: AbstractAnalysis.java,v 1.25 2009-05-11 19:09:12 wangm Exp $
  */
 @SuppressWarnings("unchecked")
 public abstract class AbstractAnalysis implements Analysis, Serializable,
@@ -113,7 +113,8 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	public static final int MRA_TYPE = 28;
 
 	public static final int SKYBASE_TYPE = 29;
-
+	
+    public static final int PUDGE_TYPE = 30;
 	/**
 	 * Parameters will be saved as XML files in "savedParams" directory under
 	 * each component directory.
