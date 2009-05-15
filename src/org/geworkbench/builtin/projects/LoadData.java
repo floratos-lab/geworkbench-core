@@ -46,12 +46,13 @@ import org.geworkbench.events.CaArrayEvent;
 import org.geworkbench.events.CaArrayQueryEvent;
 import org.geworkbench.events.CaArrayQueryResultEvent;
 import org.geworkbench.events.CaArrayRequestEvent;
+import org.geworkbench.events.CaArraySuccessEvent;
 
 /**
  *  Popup to select a file (local or remote) to open.
  *  
  * @author First Genetic Trust Inc.
- * @version $Id: LoadData.java,v 1.39 2009-03-09 16:42:16 jiz Exp $
+ * @version $Id: LoadData.java,v 1.40 2009-05-15 20:11:51 chiangy Exp $
  */
 public class LoadData extends JDialog {
 	private static final long serialVersionUID = -1983039293757013174L;
@@ -162,6 +163,10 @@ public class LoadData extends JDialog {
 	}
 
 	public void receive(CaArrayEvent ce) {
+		caArrayDisplayPanel.receive(ce);
+	}
+
+	public void receive(CaArraySuccessEvent ce) {
 		caArrayDisplayPanel.receive(ce);
 	}
 
@@ -504,12 +509,13 @@ public class LoadData extends JDialog {
 	 */
 	void displayRemoteResourceDialog(Object shortname, int option) {
 		if (shortname != null) {
-			RemoteResourceDialog.showDialog(this, null, option, shortname
-					.toString());
+			if (RemoteResourceDialog.showDialog(this, null, option, shortname
+					.toString()))
+				updateExistedResourcesGUI();
 		} else {
-			RemoteResourceDialog.showDialog(this, null, option, null);
+			if (RemoteResourceDialog.showDialog(this, null, option, null))
+				updateExistedResourcesGUI();
 		}
-		updateExistedResourcesGUI();
 	}
 
 	/**
