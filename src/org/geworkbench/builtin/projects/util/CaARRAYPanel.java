@@ -39,13 +39,15 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.builtin.projects.LoadData;
 import org.geworkbench.builtin.projects.remoteresources.carraydata.CaArray2Experiment;
+import org.geworkbench.engine.management.Subscribe;
 import org.geworkbench.events.CaArrayEvent;
 import org.geworkbench.events.CaArrayRequestEvent;
+import org.geworkbench.events.CaArraySuccessEvent;
 import org.geworkbench.util.ProgressBar;
 
 /**
  * @author xiaoqing
- * @version $Id: CaARRAYPanel.java,v 1.41 2009-01-14 22:00:09 jiz Exp $
+ * @version $Id: CaARRAYPanel.java,v 1.42 2009-05-15 21:36:56 chiangy Exp $
  */
 @SuppressWarnings("unchecked")
 public class CaARRAYPanel extends JPanel implements Observer {
@@ -109,6 +111,8 @@ public class CaARRAYPanel extends JPanel implements Observer {
 	private CaArray2Experiment[] currentLoadedExps;
 	private String currentQuantitationType;
 	private static final int INTERNALTIMEOUTLIMIT = 600;
+	private static final int INCREASE_EACHTIME = 300;
+	private int internalTimeoutLimit = INTERNALTIMEOUTLIMIT;
 
 	public CaARRAYPanel(LoadData p) {
 		parent = p;
@@ -333,6 +337,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
 				try {
 					if (text.startsWith("Loading")) {
 						int i = 0;
+						internalTimeoutLimit = INTERNALTIMEOUTLIMIT;
 						do {
 							Thread.sleep(250);
 							i++;
@@ -340,11 +345,11 @@ public class CaARRAYPanel extends JPanel implements Observer {
 								progressBar.setMessage(text + i / 4
 										+ " seconds.");
 							}
-							if (i > INTERNALTIMEOUTLIMIT * 4) {
+							if (i > internalTimeoutLimit * 4) {
 								stillWaitForConnecting = false;
 								JOptionPane.showMessageDialog(null,
 										"Cannot connect with the server in "
-												+ INTERNALTIMEOUTLIMIT
+												+ internalTimeoutLimit
 												+ " seconds.", "Timeout",
 										JOptionPane.ERROR_MESSAGE);
 								update(null, null);
@@ -360,6 +365,25 @@ public class CaARRAYPanel extends JPanel implements Observer {
 		// SwingUtilities.invokeLater(r);
 	}
 
+	/**
+	 * 
+	 * @param seconds
+	 */
+	public void increaseInternalTimeoutLimitBy(int seconds){
+		System.out.println("Due time has been increased from "+internalTimeoutLimit+" seconds to " +(internalTimeoutLimit+seconds)+" seconds.");
+		internalTimeoutLimit += seconds;
+	}
+
+	/**
+	 * 
+	 * @param ce
+	 * @param source
+	 */
+	@Subscribe
+	public void receive(CaArraySuccessEvent ce) {
+		increaseInternalTimeoutLimitBy(INCREASE_EACHTIME);
+	}
+	
 	/**
 	 * Action listener invoked when the user presses the "Open" button after
 	 * having selected a remote microarray. The listener will attempt to get the
