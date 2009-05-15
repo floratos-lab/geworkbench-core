@@ -1,11 +1,13 @@
 package org.geworkbench.bison.datastructure.bioobjects.structure;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -16,7 +18,7 @@ import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
  * 
  * @author mhall
  * @author zji
- * @version $Id: CSProteinStructure.java,v 1.5 2009-02-17 21:59:39 jiz Exp $
+ * @version $Id: CSProteinStructure.java,v 1.6 2009-05-15 20:33:24 chiangy Exp $
  * 
  */
 @SuppressWarnings("unchecked")
@@ -103,4 +105,29 @@ public class CSProteinStructure extends CSAncillaryDataSet implements
         content = getContent(file);
     }
 
+	/**
+	 * For now, it works by calling setFile() when create a protein object.
+	 * The content will be load to the <code>content</code> variable.
+	 * This writeToFile() will write the content to the given filename.
+	 * 
+	 * If in the future, we have some protein object which only exist in
+	 * memory and doesn't have file associated with it, then this mechanism
+	 * needs to be modified.
+	 */
+	@Override
+	public void writeToFile(String fileName) {
+		if (content == null)
+			throw new RuntimeException("Must call setFile() before invoking this method.");
+		else {
+			try {
+				BufferedWriter writer = new BufferedWriter(new FileWriter(
+						fileName));
+				writer.write(content);
+				writer.flush();
+				writer.close();
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+			}
+		}
+	}
 }
