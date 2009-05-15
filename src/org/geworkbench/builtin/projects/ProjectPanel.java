@@ -94,6 +94,7 @@ import org.geworkbench.events.CaArrayEvent;
 import org.geworkbench.events.CaArrayQueryEvent;
 import org.geworkbench.events.CaArrayQueryResultEvent;
 import org.geworkbench.events.CaArrayRequestEvent;
+import org.geworkbench.events.CaArraySuccessEvent;
 import org.geworkbench.events.CleanDataEvent;
 import org.geworkbench.events.CommentsEvent;
 import org.geworkbench.events.DirtyDataEvent;
@@ -729,12 +730,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 				ds.writeToFile(newFileName);
 
-				File newFile = new File(newFileName);
-
-				if (!newFile.exists() && f.canRead()) {
-					copy(f.getAbsolutePath(), newFileName);
-				}
-				// }
 			} else {
 				// this.repaint();
 				return false;
@@ -769,15 +764,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				}
 				ds.writeToFile(newFileName);
 
-				// Follow code fixs bug 1476, and for a new dataset which does
-				// not implement writeToFile(), it will try to
-				// copy the original backend file to the new file.
-				File newFile = new File(newFileName);
-
-				if (!newFile.exists() && f.canRead()) {
-					copy(f.getAbsolutePath(), newFileName);
-				}
-				// }
 			} else {
 				// this.repaint();
 				return false;
@@ -2243,6 +2229,12 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	@Subscribe
 	public void receive(CaArrayEvent ce, Object source) {
+
+		loadData.receive(ce);
+	}
+
+	@Subscribe
+	public void receive(CaArraySuccessEvent ce, Object source) {
 
 		loadData.receive(ce);
 	}
