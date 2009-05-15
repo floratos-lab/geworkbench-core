@@ -1,10 +1,23 @@
 package org.geworkbench.builtin.projects.remoteresources;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 
@@ -18,8 +31,8 @@ import javax.swing.border.EtchedBorder;
  *
  * <p>Company: </p>
  *
- * @author not attributable
- * @version 1.0
+ * @author unknown
+ * @version $Id: RemoteResourceDialog.java,v 1.24 2009-05-15 20:12:52 chiangy Exp $
  */
 public class RemoteResourceDialog extends JDialog {
     private static RemoteResourceManager remoteResourceManager = new
@@ -324,6 +337,12 @@ public class RemoteResourceDialog extends JDialog {
     }
 
     public void jButton1_actionPerformed(ActionEvent e) {
+        /*
+		 * if this method been called, it means user clicked OK. Let's set
+		 * executed to true, so the dialog will return true.
+		 */
+        executed = true;
+
         RemoteResource rr = collectResourceInfo();
         if (rr != null) {
             if(previousResourceName != null && previousResourceName.equals(currentResourceName)){
@@ -341,15 +360,17 @@ public class RemoteResourceDialog extends JDialog {
 
     }
 
+    private static boolean executed = false; /* executed means user click OK */
     /**
      * Set up and show the dialog.
      */
-    public static String showDialog(Component frameComp,
+    public static boolean showDialog(Component frameComp,
 
                                     String title,
                                     int option,
                                     String initialValue
             ) {
+    	executed = false;
         if(initialValue!=null){
             previousResourceName = initialValue;
         }
@@ -360,7 +381,7 @@ public class RemoteResourceDialog extends JDialog {
                                           initialValue);
 
         dialog.setVisible(true);
-        return null;
+        return executed;
     }
 
     public static String getPreviousResourceName() {
