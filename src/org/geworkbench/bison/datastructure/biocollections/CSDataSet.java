@@ -1,14 +1,14 @@
 package org.geworkbench.bison.datastructure.biocollections;
 
+import java.io.File;
+import java.util.HashMap;
+
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.datastructure.complex.panels.CSSequentialItemList;
 import org.geworkbench.bison.datastructure.properties.CSDescribable;
 import org.geworkbench.bison.datastructure.properties.CSExtendable;
 import org.geworkbench.bison.parsers.resources.Resource;
 import org.geworkbench.bison.util.DefaultIdentifiable;
-
-import java.io.File;
-import java.util.HashMap;
 
 /**
  * An abstract implementation of {@link DSDataSet}.
@@ -367,5 +367,6 @@ public class CSDataSet <T extends DSBioObject> extends CSSequentialItemList<T> i
     }
 
     public void writeToFile(String fileName) {
-    }
+		throw new RuntimeException("Method must be overridden by child class.");
+	}
 }
