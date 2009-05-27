@@ -1822,15 +1822,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		projectTreeModel.removeNodeFromParent(node);
 		if (parentNode.getChildCount() == 0
 				&& parentNode instanceof ProjectNode) {
-			if (parentNode.getSiblingCount() > 0) {
-				DefaultMutableTreeNode dmtn = null;
-				while ((dmtn = parentNode.getNextSibling()) != null) {
-					if (((ProjectNode) dmtn).getChildCount() > 0) {
-						setNodeSelection((DataSetNode) parentNode.getChildAt(0));
-						return;
-					}
-				}
-			}
 			setNodeSelection(parentNode);
 			publishProjectEvent(new ProjectEvent(ProjectEvent.CLEARED, null,
 					parentNode));
