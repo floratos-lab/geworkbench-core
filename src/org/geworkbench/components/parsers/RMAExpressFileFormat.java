@@ -136,7 +136,7 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 							 */
 							if (markers.contains(token)) {// duplicate markers
 								noDuplicateMarkers = false;
-								log.error("Duplicate Markers");
+								log.error("Duplicate Markers: "+token);
 								return false;
 							} else {
 								markers.add(token);
