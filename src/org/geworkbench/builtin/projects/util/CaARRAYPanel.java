@@ -47,7 +47,7 @@ import org.geworkbench.util.ProgressBar;
 
 /**
  * @author xiaoqing
- * @version $Id: CaARRAYPanel.java,v 1.42 2009-05-15 21:36:56 chiangy Exp $
+ * @version $Id: CaARRAYPanel.java,v 1.43 2009-05-27 15:35:09 chiangy Exp $
  */
 @SuppressWarnings("unchecked")
 public class CaARRAYPanel extends JPanel implements Observer {
@@ -341,9 +341,12 @@ public class CaARRAYPanel extends JPanel implements Observer {
 						do {
 							Thread.sleep(250);
 							i++;
+							String currentState = "";
+							if (numTotalArrays>1)
+								currentState = "Downloaded " + numCurrentArray + " of "+numTotalArrays + " arrays.";
 							if (i > 4) {
-								progressBar.setMessage(text + i / 4
-										+ " seconds.");
+								String htmltext = "<html>" + text + i / 4 + " seconds." + "<br>" + currentState +"</html>";
+								progressBar.setMessage(htmltext);
 							}
 							if (i > internalTimeoutLimit * 4) {
 								stillWaitForConnecting = false;
@@ -381,9 +384,13 @@ public class CaARRAYPanel extends JPanel implements Observer {
 	 */
 	@Subscribe
 	public void receive(CaArraySuccessEvent ce) {
+		this.numCurrentArray = ce.getCurrentArrayIndex();
+		this.numTotalArrays = ce.getTotalArrays();
 		increaseInternalTimeoutLimitBy(INCREASE_EACHTIME);
 	}
 	
+	private int numTotalArrays = 0;
+	private int numCurrentArray = 0;
 	/**
 	 * Action listener invoked when the user presses the "Open" button after
 	 * having selected a remote microarray. The listener will attempt to get the
