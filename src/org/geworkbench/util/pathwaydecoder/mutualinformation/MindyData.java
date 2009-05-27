@@ -17,20 +17,11 @@ import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarr
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
-/*
-import org.geworkbench.components.mindy.MindyGeneMarker;
-import org.geworkbench.components.mindy.MindyResultRow;
-import org.geworkbench.components.mindy.ModulatorInfo;
-import org.geworkbench.components.mindy.ModulatorStatistics;
-import org.geworkbench.components.mindy.TargetInfo;
-
-import edu.columbia.c2b2.mindy.MindyResults;
-*/
 /**
  * Class containing MINDY run results.
  * @author mhall
  * @author oshteynb
- * @version $Id: MindyData.java,v 1.18 2009-04-29 19:59:39 oshteynb Exp $
+ * @version $Id: MindyData.java,v 1.19 2009-05-27 15:31:22 oshteynb Exp $
  */
 @SuppressWarnings("serial")
 public class MindyData implements Serializable {
@@ -53,22 +44,10 @@ public class MindyData implements Serializable {
     private HashMap<DSGeneMarker, ModulatorInfo> modulatorInfoMap = new HashMap<DSGeneMarker, ModulatorInfo>();
 
 	/*  needed to display stats after markers filtering  */
-	/* don't need to keep collection of rows for filtering, change later or use it for display instead of modulatorInfoMap  */
     private HashMap<DSGeneMarker, ModulatorInfo> filteredModulatorInfoMap = new HashMap<DSGeneMarker, ModulatorInfo>();
-//    private HashMap<DSGeneMarker, ModulatorStatistics> filteredModulatorStatistics = new HashMap<DSGeneMarker, ModulatorStatistics>();
 
     private float setFraction;
     private boolean annotated = false;
-
-    /* remove, data will require some changes, other two used in a method that will be removed too */
-    private List<MindyResultRow> data;
-    public void setData(List<MindyResultRow> data) {
-		this.data = data;
-	}
-
-//	private HashMap<DSGeneMarker, ModulatorStatistics> modulatorStatistics = new HashMap<DSGeneMarker, ModulatorStatistics>();
-//    private MultiKeyMap<DSGeneMarker, MindyResultRow> dataMap = new MultiKeyMap<DSGeneMarker, MindyResultRow>();
-
 
 	public MindyData(CSMicroarraySet arraySet, ArrayList<DSMicroarray> arrayForMindyRun, float setFraction, DSGeneMarker transFac) {
 
@@ -86,97 +65,6 @@ public class MindyData implements Serializable {
 	}
 
 
-/*	static public MindyData createMindyData(MindyResults results, CSMicroarraySet arraySet, ArrayList<DSMicroarray> arrayForMindyRun, float setFraction, DSGeneMarker transFac){
-		MindyData result = new MindyData(arraySet, arrayForMindyRun, setFraction, transFac);
-
-	}
-*/
-/*	@SuppressWarnings("unchecked")
-	public MindyData(MindyResults results, CSMicroarraySet arraySet, ArrayList<DSMicroarray> arrayForMindyRun, float setFraction, DSGeneMarker transFac) {
-
-        this.arraySet = arraySet;
-
-        this.transcriptionFactor = transFac;
-
-    	if ( arrayForMindyRun == null){
-    		this.arrayForMindyRun = MindyData.createArrayForMindyRun(arraySet, null);
-    	} else {
-            this.arrayForMindyRun = arrayForMindyRun;
-    	}
-        this.setFraction = setFraction;
-
-
-    	processResults(results, arraySet);
-
-	}
-
-*/
-	/**
-	 * @param results
-	 * @param arraySet
-	 */
-/*	static private void processResults(MindyData mindyData, MindyResults results, CSMicroarraySet arraySet) {
-		int numWithSymbols = 0;
-		List<MindyResultRow> dataRows = new ArrayList<MindyResultRow>();
-
-		// process mindy run results
-		// consider iterating over modulators first
-		Collator myCollator = Collator.getInstance();
-		for (MindyResults.MindyResultForTarget result : results) {
-			DSItemList<DSGeneMarker> markers = arraySet.getMarkers();
-			DSGeneMarker target = markers.get(result.getTarget().getName());
-
-			// used to find out if annotations file was loaded
-			// reminder: look at the class that does file processing, in should process annotation file too.
-			if (!StringUtils.isEmpty(target.getGeneName()))
-				numWithSymbols++;
-
-			for (MindyResults.MindyResultForTarget.ModulatorSpecificResult specificResult : result) {
-
-				// process results with nonzero scores
-				float score = specificResult.getScore();
-				if (score != 0.0){
-					mindyData.addToSortkeyMap(myCollator, target);
-
-					DSGeneMarker mod = markers.get(specificResult
-							.getModulator().getName());
-
-					// used to find out if annotations file was loaded
-					if (!StringUtils.isEmpty(mod.getGeneName()))
-						numWithSymbols++;
-
-					mindyData.addToSortkeyMap(myCollator, mod);
-
-					double correlation = mindyData.calcPearsonCorrelation(target);
-					mindyData.addToTargetInfoMap(correlation, target);
-
-					// load data
-					MindyResultRow row = new MindyResultRow(mod, target, score);
-
-		            ModulatorInfo modInfo = mindyData.modulatorInfoMap.get(mod);
-		            if (modInfo == null) {
-		            	modInfo = new ModulatorInfo(mod);
-		            	mindyData.modulatorInfoMap.put(mod, modInfo);
-		            }
-					modInfo.insertRow(row);
-
-
-					dataRows.add(row);
-
-				}
-			}
-
-			mindyData.setFilteredModulatorInfoMap(mindyData.modulatorInfoMap);
-		}
-
-		mindyData.data = dataRows;
-
-		mindyData.calculateModulatorInfo(false);
-
-		if (numWithSymbols > 0)
-			mindyData.setAnnotated(true);
-	}
-*/
 	public void setFilteredModulatorInfoMap(
 			HashMap<DSGeneMarker, ModulatorInfo> filteredModulatorInfoMap) {
 		this.filteredModulatorInfoMap = filteredModulatorInfoMap;
@@ -288,13 +176,24 @@ public static ArrayList<DSMicroarray> createArrayForMindyRun(
     	return result;
     }
 
-    /**
-     * Get the MINDY result rows.
-     *
-     * @return MINDY result rows
-     */
-    public List<MindyResultRow> getData() {
-        return data;
+    public int getDataSize(){
+    	int size = 0;
+
+        for (Map.Entry<DSGeneMarker, ModulatorInfo> entry : modulatorInfoMap.entrySet()) {
+            size += entry.getValue().getDataSize();
+        }
+
+        return size;
+    }
+
+    public int getFilteredDataSize(){
+    	int size = 0;
+
+        for (Map.Entry<DSGeneMarker, ModulatorInfo> entry : filteredModulatorInfoMap.entrySet()) {
+            size += entry.getValue().getDataSize();
+        }
+
+        return size;
     }
 
     /**
@@ -389,45 +288,6 @@ public static ArrayList<DSMicroarray> createArrayForMindyRun(
 
 
     /**
-     *  remove later
-     *
-     * @param recalculate
-     *
-     * code looks suspiciously wrong when recalculate is true, but will be ok if one row per modulator
-     * but it never get called with true, change later
-     *
-     */
-/*    public void calculateModulatorInfo(boolean recalculate) {
-        log.debug("Calculating modulator info...");
-        for (MindyResultRow row : data) {
-
-			// add to map
-//            dataMap.put(row.getModulator(), getTranscriptionFactor(), row.getTarget(), row);
-
-            // calculate modulator statistics
-            ModulatorStatistics modStats = modulatorStatistics.get(row.getModulator());
-
-            if (recalculate){
-            	modStats = null;
-            }
-
-            if (modStats == null) {
-                modStats = new ModulatorStatistics(0, 0, 0);
-                modulatorStatistics.put(row.getModulator(), modStats);
-            }
-
-            if (row.getScore() < 0) {
-                modStats.munder++;
-                modStats.count++;
-            } else if(row.getScore() > 0){
-                modStats.mover++;
-                modStats.count++;
-            }
-        }
-        log.debug("Done calculating modulator info.");
-    }
-*/
-    /**
      * Pearson correlation between the transcription factor and the target gene.
      * Used primarily for the heat map.
      * @return result of Pearson correlation
@@ -509,7 +369,7 @@ public static ArrayList<DSMicroarray> createArrayForMindyRun(
     @SuppressWarnings("unchecked")
 	public MindyData(CSMicroarraySet arraySet, List<MindyResultRow> data, float setFraction) {
         this.arraySet = arraySet;
-        this.data = data;
+//        this.data = data;
         this.setFraction = setFraction;
 //        calculateModulatorInfo(false);
 
@@ -519,11 +379,9 @@ public static ArrayList<DSMicroarray> createArrayForMindyRun(
     @SuppressWarnings("unchecked")
 	public MindyData(CSMicroarraySet arraySet, List<MindyResultRow> data) {
         this.arraySet = arraySet;
-        this.data = data;
+//        this.data = data;
 //        calculateModulatorInfo(false);
     }
 
     // end - tmp for refactoring two ctr
-
-
 }

@@ -9,7 +9,7 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 
 /**
  * @author oshteynb
- * @version $Id: ModulatorInfo.java,v 1.1 2009-04-29 19:59:39 oshteynb Exp $
+ * @version $Id: ModulatorInfo.java,v 1.2 2009-05-27 15:31:22 oshteynb Exp $
  *
  */
 public class ModulatorInfo implements Serializable {
@@ -45,6 +45,10 @@ public class ModulatorInfo implements Serializable {
     public List<MindyResultRow> getData() {
 		return data;
 	}
+
+    public int getDataSize(){
+    	return this.data.size();
+    }
 
     public float getScore(DSGeneMarker target) {
     	MindyResultRow row = getRow(target);
