@@ -208,7 +208,7 @@
 	<plugin id="splash" name="Pattern Discovery" class="org.geworkbench.components.discovery.SequenceDiscoveryViewAppComponent" source="discovery">
 		<gui-area name="CommandArea"/>
 	</plugin>
-	<plugin id="normalizationPanel" name="Normalization" class="org.geworkbench.components.analysis.NormalizationPanel" source="analysis">
+	<plugin id="normalizationPanel" name="Normalization" class="org.geworkbench.components.normalization.NormalizationPanel" source="normalization">
 		<gui-area name="CommandArea"/>
 	</plugin>
 	<!-- Example Component -->
