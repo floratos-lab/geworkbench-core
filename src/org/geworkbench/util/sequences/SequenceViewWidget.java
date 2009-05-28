@@ -62,7 +62,7 @@ import org.geworkbench.util.patterns.PatternSequenceDisplayUtil;
  * </p>
  * 
  * @author
- * @version $Id: SequenceViewWidget.java,v 1.31 2008-12-09 20:36:28 jiz Exp $
+ * @version $Id: SequenceViewWidget.java,v 1.32 2009-05-28 22:04:53 jiz Exp $
  */
 
 @SuppressWarnings("unchecked")
@@ -94,7 +94,7 @@ public class SequenceViewWidget extends JPanel {
 	private JButton rightShiftButton = new JButton();
 	private JScrollPane seqScrollPane = new JScrollPane();
 
-	private JToggleButton showAllBtn = new JToggleButton();
+	private JCheckBox showAllBtn = new JCheckBox();
 	private JCheckBox jAllSequenceCheckBox = new JCheckBox();
 	private JLabel jViewLabel = new JLabel();
 	private JComboBox jViewComboBox = new JComboBox();
@@ -144,7 +144,7 @@ public class SequenceViewWidget extends JPanel {
 			}
 		});
 		showAllBtn
-				.setToolTipText("Push down to show sequences with selected patterns.");
+				.setToolTipText("Click to show sequences with selected patterns.");
 		showAllBtn.setText("All / Matching Pattern");
 		showAllBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
