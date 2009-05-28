@@ -2,6 +2,8 @@ package org.geworkbench.events.listeners;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -19,7 +21,7 @@ import org.geworkbench.analysis.AbstractSaveableParameterPanel;
  *          keshav Exp $
  */
 public class ParameterActionListener implements ActionListener,
-		ListDataListener, ChangeListener, PropertyChangeListener {
+		ListDataListener, ChangeListener, PropertyChangeListener, FocusListener{
 
 	private AbstractSaveableParameterPanel aspp = null;
 
@@ -95,6 +97,14 @@ public class ParameterActionListener implements ActionListener,
 	}
 
 	public void propertyChange(PropertyChangeEvent arg0) {
+		notifyAnalysisPanelIfNeeded();
+	}
+
+	public void focusGained(FocusEvent e) {
+		// TODO Auto-generated method stub		
+	}
+
+	public void focusLost(FocusEvent e) {
 		notifyAnalysisPanelIfNeeded();
 	}
 }
