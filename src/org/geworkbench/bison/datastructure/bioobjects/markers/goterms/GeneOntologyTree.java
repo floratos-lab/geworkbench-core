@@ -110,7 +110,9 @@ public class GeneOntologyTree {
 		return i;
 	}
 
-	private static final String FILE_HEADER = "format-version: 1.0";
+	private static final String FILE_HEADER1_0 = "format-version: 1.0";
+	private static final String FILE_HEADER1_2 = "format-version: 1.2";
+
 	private static final String TERM_START = "[Term]";
 
 	private static final String KEY_ID = "id";
@@ -133,9 +135,10 @@ public class GeneOntologyTree {
 	public void parseOBOFile(String fileName) throws Exception {
 		BufferedReader in = new BufferedReader(new FileReader(fileName));
 		String header = in.readLine();
-		if (!FILE_HEADER.equals(header)) {
-			throw new Exception("This is not a version 1.0 OBO file.");
+		if (!FILE_HEADER1_0.equals(header) && !FILE_HEADER1_2.equals(header)) {
+			throw new Exception("This is not a version 1.0 or 1.2 OBO file.");
 		}
+		System.out.println("GeneOntologyTree: reading file: " + fileName);
 		String line = in.readLine();
 		HashMap<Integer, Term> termMap = new HashMap<Integer, Term>();
 		while (line != null) {
