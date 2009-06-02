@@ -155,10 +155,25 @@ public class UILauncher implements AnnotationParserListener {
             }
         }
         try {
-            if (System.getProperty("os.name").toUpperCase().indexOf("WINDOWS") == -1) {
-                // If we're not on windows, then use native look and feel no matter what
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } else {
+            if (System.getProperty("os.name").toUpperCase().indexOf("MAC OS X") > -1) {
+				// In Mac, SystemLookAndFeel has Mantis issue #1740, so we
+				// use plastic.
+				PlasticLookAndFeel.setMyCurrentTheme(new SkyBlue());
+				UIManager
+						.setLookAndFeel("com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
+			} else if (System.getProperty("os.name").toUpperCase().indexOf(
+					"Solaris") > -1) {
+				// In Solaris, SystemLookAndFeel has Mantis issue #1740, so we
+				// use plastic.
+				PlasticLookAndFeel.setMyCurrentTheme(new SkyBlue());
+				UIManager
+						.setLookAndFeel("com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
+			} else if (System.getProperty("os.name").toUpperCase().indexOf(
+					"WINDOWS") == -1) {
+				// If we're on other OS, then use native look and feel
+				UIManager.setLookAndFeel(UIManager
+						.getSystemLookAndFeelClassName());
+			} else {
 
                 if (lookAndFeelArg != null) {
                     if ("native".equals(lookAndFeelArg)) {
