@@ -93,17 +93,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/jdo-1.0.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/kodo-jdo.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/kodo-jdo-runtime.jar"/>
-	<classpathentry exported="true" kind="lib" path="plugins/control.jar"/>
-	<classpathentry exported="true" kind="lib" path="plugins/diff.jar"/>
-	<classpathentry exported="true" kind="lib" path="plugins/filter.jar"/>
-	<classpathentry exported="true" kind="lib" path="plugins/HierarchicalLayout.jar"/>
-	<classpathentry exported="true" kind="lib" path="plugins/jgraphLayout.jar"/>
-	<classpathentry exported="true" kind="lib" path="plugins/layout.jar"/>
-	<classpathentry exported="true" kind="lib" path="plugins/MCODE.jar"/>
-	<classpathentry exported="true" kind="lib" path="plugins/NetworkLinkerPlugin.jar"/>
-	<classpathentry exported="true" kind="lib" path="plugins/SigAttributes.jar"/>
-	<classpathentry exported="true" kind="lib" path="plugins/yeast-context.jar"/>
-	<classpathentry exported="true" kind="lib" path="plugins/yLayouts.jar"/>
+
 	<classpathentry exported="true" kind="lib" path="lib/medusa/saxpath-1.0-FCS.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-codec-1.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/cryptix.jar"/>
