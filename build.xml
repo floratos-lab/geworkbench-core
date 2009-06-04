@@ -462,7 +462,6 @@
 				<include name="${components}/skyline/**/*" />
 				<include name="${components}/skylineview/**/*" />
 				
-				<include name="plugins/**/*" />
 				<include name="plugins_v2_4/**/*" />
 				<!-- Leave out the following components for distribution 1.6.2-->
 				<exclude name="**/synteny/*" />
@@ -481,7 +480,9 @@
 				<exclude name="data" />
 				<exclude name="nbproject" />
 				<include name="data/public_data/**" />
-				<include name="data/gene_ontology.obo"/>
+				<include name="data/gene_ontology.1_2.obo"/>
+				<include name="cutenet.properties"/>
+				<include name="loader.properties"/>
 			</fileset>
 		</copy>
 		<copy todir="${cleanFolder}/conf" includeEmptyDirs="NO">
