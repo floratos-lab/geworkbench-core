@@ -31,7 +31,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/commons-digester.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-discovery.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-logging.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/commons-math-1.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/distributions.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/docking.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/dom4j-1.6.1.jar"/>
@@ -93,7 +92,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/jdo-1.0.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/kodo-jdo.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/kodo-jdo-runtime.jar"/>
-
 	<classpathentry exported="true" kind="lib" path="lib/medusa/saxpath-1.0-FCS.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-codec-1.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/cryptix.jar"/>
@@ -127,5 +125,6 @@
 	<classpathentry kind="lib" path="components/annotations/lib/cabio40_java_client/sdk-client-framework.jar"/>
 	<classpathentry kind="lib" path="components/annotations/lib/cabio40_java_client/spring.jar"/>
 	<classpathentry kind="lib" path="components/annotations/lib/cabio40_java_client/xercesImpl.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-math-1.2.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
