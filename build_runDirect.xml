@@ -51,7 +51,7 @@
 	<!-- ====================================================================== -->
 	<target name="run" depends="init" description="Runs geWorkbench.">
 		<java fork="true" classname="org.geworkbench.engine.config.UILauncher">
-			<jvmarg value="-Xmx512M"/>
+			<jvmarg value="-Xmx640M"/>
 			<jvmarg value="-Djava.library.path=lib"/>
 			<arg value="all_release.xml"/>
 			<classpath refid="run.classpath"/>
