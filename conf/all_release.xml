@@ -176,6 +176,8 @@
 	<plugin id="CELImageViewer" name="CELImageViewer" class="org.geworkbench.components.celprocessing.CELImageViewerComponent" source="celprocessing">
 		<gui-area name="VisualArea"/>
 	</plugin>
+	<plugin id="goTree" name="Gene Ontology Tree" class="org.geworkbench.util.GeneOntologyTreePopulateComponent" >
+	</plugin>
 	<plugin id="caArray2Panel" name="CaArray2" class="org.geworkbench.components.caarray.arraydata.CaArray2Component" source="caarray">
     </plugin>
     
