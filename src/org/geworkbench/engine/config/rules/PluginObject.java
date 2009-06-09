@@ -61,12 +61,12 @@ public class PluginObject {
     /**
      * Used to count up as we load plugins because of the digester.
      */
-    private static int loadOrderTracker = 0;
+    protected static int loadOrderTracker = 0;
 
     /**
      * The <code>PluginDescriptor</code> created for this plugin.
      */
-    private PluginDescriptor compDes = null;
+    protected PluginDescriptor compDes = null;
     /**
      * Maintains the list of event sources that will throw coupled events to
      * this plugin. The actual registration of the coupled event relationships

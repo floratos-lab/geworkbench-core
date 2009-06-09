@@ -3,6 +3,7 @@ package org.geworkbench.engine.management;
 import net.sf.cglib.proxy.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.geworkbench.engine.config.IdentifiableImpl;
 import org.geworkbench.engine.config.PluginDescriptor;
 import org.geworkbench.engine.config.VisualPlugin;
 import org.geworkbench.util.Util;
@@ -18,6 +19,7 @@ import java.util.*;
 /**
  * Component registry implementation.
  */
+@SuppressWarnings("unchecked")
 public class ComponentRegistry {
 
     static Log log = LogFactory.getLog(ComponentRegistry.class);
@@ -79,7 +81,7 @@ public class ComponentRegistry {
     }
 
     /**
-     * Inner class that manages the selction of @Subscribe methods for a subscriber and a published object.
+     * Inner class that manages the selection of @Subscribe methods for a subscriber and a published object.
      */
     private static class Subscriptions {
 
@@ -167,7 +169,7 @@ public class ComponentRegistry {
                     descriptor.setModule(methodName, module);
                     return null;
                 } else {
-                    System.out.println("Should not be a non-get non-set @Module method here!");
+                    System.out.println("Should be a non-get non-set @Module method here!");
                     // Just call super
                     return methodProxy.invokeSuper(callingObject, params);
                 }
@@ -353,6 +355,7 @@ public class ComponentRegistry {
                 Subscribe annotation = method.getAnnotation(Subscribe.class);
                 if (annotation != null) {
                     Class[] paramTypes = method.getParameterTypes();
+                    //TODO figure out what the 2nd argument does
                     if (paramTypes.length != 2) {
                         throw new EventException("Invalid @Subscribe method: " + method + ".");
                     } else {
@@ -700,6 +703,7 @@ public class ComponentRegistry {
         try {
             ComponentResource rootResource = new ComponentResource((URLClassLoader)getClass().getClassLoader());
             nameToComponentResource.put(".", rootResource);
+            
         } catch (Exception e) {
             System.out.println("Unable to create root component resource.");
             e.printStackTrace();
@@ -714,4 +718,41 @@ public class ComponentRegistry {
     public Collection<ComponentResource> getAllComponentResources() {
         return nameToComponentResource.values();
     }
+    
+    public Map<String, ComponentResource> getComponentResourceMap(){
+    	return nameToComponentResource;
+    }
+    
+    /*
+	 * These methods have been exposed for use by the
+	 * ComponentConfigurationManager
+	 */
+
+	public TypeMap<List> getListenersTypeMap() {
+		return listeners;
+	}
+
+	public HashMap<Class, List<Class>> getAcceptorsHashMap() {
+		return acceptors;
+	}
+
+	public void setAcceptorsHashMap(HashMap<Class, List<Class>> acceptors) {
+		this.acceptors = acceptors;
+	}
+
+	public Map<Class, SynchModel> getSynchModelsMap() {
+		return synchModels;
+	}
+
+	public List<Object> getComponentsList() {
+		return components;
+	}
+
+	public void setComponentsList(List localComponents) {
+		this.components = localComponents;
+	}
+
+	public Map<String, PluginDescriptor> getIdToDescriptorMap() {
+		return idToDescriptor;
+	}
 }

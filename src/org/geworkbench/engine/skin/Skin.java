@@ -6,6 +6,7 @@ import net.eleritec.docking.DockingPort;
 import net.eleritec.docking.defaults.ComponentProviderAdapter;
 import net.eleritec.docking.defaults.DefaultDockingPort;
 import org.apache.commons.collections15.map.ReferenceMap;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
@@ -27,6 +28,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * <p>Title: Bioworks</p>
@@ -66,13 +68,13 @@ public class Skin extends GUIFramework {
     DockingNotifier eventSink = new DockingNotifier();
 
     private Set<Class> acceptors;
-    private Set<String> fixedComponents;
     private HashMap<Component, Class> mainComponentClass = new HashMap<Component, Class>();
     private ReferenceMap<DSDataSet, String> visualLastSelected = new ReferenceMap<DSDataSet, String>();
     private ReferenceMap<DSDataSet, String> commandLastSelected = new ReferenceMap<DSDataSet, String>();
     private ReferenceMap<DSDataSet, String> selectionLastSelected = new ReferenceMap<DSDataSet, String>();
     private ArrayList<DockableImpl> visualDockables = new ArrayList<DockableImpl>();
     private ArrayList<DockableImpl> commandDockables = new ArrayList<DockableImpl>();
+    private ArrayList<DockableImpl> selectorDockables = new ArrayList<DockableImpl>();
     private DSDataSet currentDataSet;
     private boolean tabSwappingMode = false;
     public static final String APP_SIZE_FILE = "appCoords.txt";
@@ -110,7 +112,6 @@ public class Skin extends GUIFramework {
 
     public Skin() {
         registerAreas();
-        fixedComponents = new HashSet<String>();
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 Dimension finalSize = getSize();
@@ -228,23 +229,16 @@ public class Skin extends GUIFramework {
         VisualPlugin[] plugins = registry.getModules(VisualPlugin.class);
         ArrayList<String> availablePlugins = new ArrayList<String>();
         for (int i = 0; i < plugins.length; i++) {
-            String name = registry.getDescriptorForPlugin(plugins[i]).getLabel();
-            if (fixedComponents.contains(name)) {
-                availablePlugins.add(name);
-            } else {
-                for (Iterator<Class> iterator = acceptors.iterator(); iterator.hasNext();) {
-                    Class type = iterator.next();
-                    if (registry.getDescriptorForPluginClass(type).getLabel().equals(name)) {
-                        availablePlugins.add(name);
-                        break;
-                    }
-                }
-            }
-        }
+			String name = registry.getDescriptorForPlugin(plugins[i]).getLabel();
+			for (Iterator<Class> iterator = acceptors.iterator(); iterator.hasNext();) {
+				Class type = iterator.next();
+				if (registry.getDescriptorForPluginClass(type).getLabel().equals(name)) {
+					availablePlugins.add(name);
+					break;
+				}
+			}
+		}
         final String[] names = availablePlugins.toArray(new String[0]);
-//        for (int i = 0; i < plugins.length; i++) {
-//            names[i] = registry.getDescriptorForPlugin(plugins[i]).getLabel();
-//        }
         // 2) Sort alphabetically
         Arrays.sort(names);
         // 3) Create dialog with JAutoText (prefix mode)
@@ -349,10 +343,8 @@ public class Skin extends GUIFramework {
         areas.put(PROJECT_AREA, projectPanel);
     }
 
+    // Is this used?
     public void addToContainer(String areaName, Component visualPlugin) {
-        if (!areaName.equals(VISUAL_AREA) && !areaName.equals(COMMAND_AREA)) {
-            fixedComponents.add(visualPlugin.getName());
-        }
         DockableImpl wrapper = new DockableImpl(visualPlugin, visualPlugin.getName());
         DockingManager.registerDockable(wrapper);
         DefaultDockingPort port = (DefaultDockingPort) areas.get(areaName);
@@ -365,25 +357,79 @@ public class Skin extends GUIFramework {
      *
      * @param visualPlugin component to be removed
      */
-    public void remove(Component visualPlugin) {
-        Collection containers = areas.values();
-        Iterator iterator = containers.iterator();
-        JPanel container = null;
-        Component[] components = null;
-        while (iterator.hasNext()) {
-            Component comp = (Component) iterator.next();
-            if (comp instanceof JPanel) {
-                container = (JPanel) comp;
-                components = container.getComponents();
-                for (int i = 0; i < components.length; i++) {
-                    if (components[i] == visualPlugin) {
-                        container.remove(visualPlugin);
-                        return;
-                    }
-                }
-            }
-        }
-        visualRegistry.remove(visualPlugin);
+    public void remove(Component visualPluginComponent) {    
+//    public void remove(Component visualPlugin) {
+//        Collection containers = areas.values();
+//        Iterator iterator = containers.iterator();
+//        JPanel container = null;
+//        Component[] components = null;
+//        while (iterator.hasNext()) {
+//            Component comp = (Component) iterator.next();
+//            if (comp instanceof JPanel) {
+//                container = (JPanel) comp;
+//                components = container.getComponents();
+//                for (int i = 0; i < components.length; i++) {
+//                    if (components[i] == visualPlugin) {
+//                        container.remove(visualPlugin);
+//                    		return;
+//                    }
+//                }
+//            }
+//        }
+//      visualRegistry.remove(visualPlugin);
+
+    	
+/* The above code probably never worked because of the "return" 
+ * Because this was not working, the visualRegistry.remove(visualPluginComponent);
+ * at the bottom of this method was able to function.
+ * The VISUAL_AREAand the COMMAND_AREA were being rebuilt by the 
+ * addAppropriateComponents() method. 
+ * 
+ * The below code works, is more readable and removes components from jTabbed Panels. 
+ * However it is not needed because of the adding of  
+ * selectorDockables. 
+ * addAppropriateComponents() uses selectorDockables to rebuild the 
+ * SELECTION_AREA
+ * area of the GUI.
+ * 
+ * setVisualizationType() if the method in projectSelection, and now in ProjectPanel,
+ * which calls addAppropriateComponents()
+ * 
+ * */
+    	
+    	
+//		Set areasEntrySet = areas.entrySet();
+//		Iterator areasEntrySetIterator = areasEntrySet.iterator();
+//		while (areasEntrySetIterator.hasNext()) {
+//			Map.Entry mapEntry = (Map.Entry) areasEntrySetIterator.next();
+//			Component comp = (Component)mapEntry.getValue();
+//            if (comp instanceof JPanel) {
+//            	JPanel jPanel = (JPanel) comp;
+//            	Component[] jPanelComponents = jPanel.getComponents();
+//                for (int i = 0; i < jPanelComponents.length; i++) {
+//                	Component jPanelComponent = jPanelComponents[i];
+//                    if (jPanelComponent == visualPluginComponent) {
+//                        jPanel.remove(visualPluginComponent);
+//                        break;
+//                    }else
+//                    if (jPanelComponent instanceof JTabbedPane){
+//                    	JTabbedPane jTabbedPane = (JTabbedPane) jPanelComponent;
+//                        int n = jTabbedPane.getTabCount();
+//                        for (int j = 0; j < n; j++) {
+//                            String tabbedPaneTitle = jTabbedPane.getTitleAt(j);
+//                            String pluginName = visualPluginComponent.getName();
+//                            if (tabbedPaneTitle.equals(pluginName)){
+//                            	jTabbedPane.remove(j);
+//                            	break;
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//		}
+
+        mainComponentClass.remove(visualPluginComponent);
+        visualRegistry.remove(visualPluginComponent);
     }
 
     public String getVisualArea(Component visualPlugin) {
@@ -392,9 +438,6 @@ public class Skin extends GUIFramework {
 
     public void addToContainer(String areaName, Component visualPlugin, String pluginName, Class mainPluginClass) {
         visualPlugin.setName(pluginName);
-        if (!areaName.equals(VISUAL_AREA) && !areaName.equals(COMMAND_AREA)) {
-            fixedComponents.add(visualPlugin.getName());
-        }
         DockableImpl wrapper = new DockableImpl(visualPlugin, pluginName);
         DockingManager.registerDockable(wrapper);
         if (!areaName.equals(GUIFramework.VISUAL_AREA) && !areaName.equals(GUIFramework.COMMAND_AREA)) {
@@ -706,6 +749,7 @@ public class Skin extends GUIFramework {
         addAppropriateComponents(acceptors, GUIFramework.COMMAND_AREA, commandDockables);
         selectLastComponent(GUIFramework.COMMAND_AREA, commandLastSelected.get(type));
         selectLastComponent(GUIFramework.SELECTION_AREA, selectionLastSelected.get(type));
+        addAppropriateComponents(acceptors, GUIFramework.SELECTION_AREA, selectorDockables);
         tabSwappingMode = false;
         contentPane.revalidate();
         contentPane.repaint();

@@ -47,4 +47,9 @@ public class PluginClassRegistry {
 
     }
 
+	public static HashMap getPluginClassesHashMap(){
+		return pluginClasses;
+	}
+
+    
 }

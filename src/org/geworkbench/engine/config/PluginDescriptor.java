@@ -459,4 +459,10 @@ public class PluginDescriptor extends IdentifiableImpl implements Comparable {
     public String toString() {
         return getID() + ": " + getLabel();
     }
+    
+    public static Vector<String> getUsedIds(){
+    	return usedIds;
+    }
+    
+    
 }

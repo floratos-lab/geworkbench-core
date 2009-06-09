@@ -23,10 +23,13 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
@@ -73,6 +76,7 @@ import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.datastructure.properties.DSExtendable;
 import org.geworkbench.bison.datastructure.properties.DSNamed;
+import org.geworkbench.bison.model.clusters.CSHierClusterDataSet;
 import org.geworkbench.bison.parsers.resources.MAGEResource2;
 import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.bison.util.colorcontext.ColorContext;
@@ -84,6 +88,7 @@ import org.geworkbench.engine.config.GUIFramework;
 import org.geworkbench.engine.config.MenuListener;
 import org.geworkbench.engine.config.VisualPlugin;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
+import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.engine.management.Publish;
 import org.geworkbench.engine.management.Script;
 import org.geworkbench.engine.management.Subscribe;
@@ -97,6 +102,7 @@ import org.geworkbench.events.CaArrayRequestEvent;
 import org.geworkbench.events.CaArraySuccessEvent;
 import org.geworkbench.events.CleanDataEvent;
 import org.geworkbench.events.CommentsEvent;
+import org.geworkbench.events.ComponentConfigurationManagerUpdateEvent;
 import org.geworkbench.events.DirtyDataEvent;
 import org.geworkbench.events.ImageSnapshotEvent;
 import org.geworkbench.events.MicroarrayNameChangeEvent;
@@ -1781,7 +1787,111 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			projectTreeModel.nodeChanged(project);
 		}
 	}
+	
+	/**
+	 * Action listener handling user request to prune tree
+	 * 
+	 * @param event
+	 */
+	@Subscribe
+	public void receive(ComponentConfigurationManagerUpdateEvent event,
+			Object source) {
 
+		GeawConfigObject.getGuiWindow().setVisualizationType(null);
+		if (root != null) {
+			// FIXME This almost works, but you need to click on the DataNode 
+			// before you click on visual node, to make it work.  
+//			projectTreeModel.reload((selection.getSelectedNode()).getParent());
+			projectTreeModel.reload(root);
+		}
+
+		removeDeletedAcceptorComponents(event.getAcceptors());
+		selection.setNodeSelection(null);
+	}
+
+//	protected void removeDeletedAcceptorComponents() {
+//		ComponentRegistry componentRegistry = ComponentRegistry.getRegistry();
+//		HashMap<Class, List<Class>> acceptors = componentRegistry
+//				.getAcceptorsHashMap();
+//		
+//		removeDeletedAcceptorComponents(acceptors);
+//	}
+
+	protected void removeDeletedAcceptorComponents(
+			HashMap<Class, List<Class>> acceptors) {
+
+		if (projectTree == null) {
+			return;
+		}
+
+		/* User this to Prune the Project Panel Tree
+		DataSetSubNode localDataSetSubNode = null;
+		Enumeration enumeration = root.depthFirstEnumeration();
+		while (enumeration.hasMoreElements()) {
+			ProjectTreeNode node = (ProjectTreeNode) enumeration.nextElement();
+
+			if (node instanceof DataSetSubNode) {
+				localDataSetSubNode = (DataSetSubNode) node;
+
+				Class keyClass = localDataSetSubNode._aDataSet.getClass();
+
+				Class keyClassOrInterface = classOrInterfaceInKey(keyClass,
+						acceptors);
+				if (keyClassOrInterface == null) {
+					projectTreeModel.removeNodeFromParent(node);
+					enumeration = root.depthFirstEnumeration();
+					continue;
+				}
+
+				List visualComponents = acceptors.get(keyClassOrInterface);
+				if (visualComponents == null || visualComponents.size() == 0) {
+					projectTreeModel.removeNodeFromParent(node);
+					enumeration = root.depthFirstEnumeration();
+					continue;
+				}
+			}
+		}
+		*/
+
+		DataSetNode selectedDataSetNode = selection.getSelectedDataSetNode();
+		String message = "CCM update";
+        DSMicroarraySet maSet = null;
+        if (selectedDataSetNode != null) {
+            if (selectedDataSetNode.dataFile instanceof DSMicroarraySet) {
+                maSet = (DSMicroarraySet) selectedDataSetNode.dataFile;
+                publishProjectEvent(new ProjectEvent(message, maSet, selectedDataSetNode));
+            } else {
+                publishProjectEvent(new ProjectEvent(message, selectedDataSetNode.dataFile, selectedDataSetNode));
+            }
+            sendCommentsEvent(selectedDataSetNode);
+        }
+	}			
+	
+	private Class classOrInterfaceInKey(Class keyClass, Map map){
+		
+		/* If the Class is in the key of the map return that Class */
+		Object value = map.get(keyClass);
+		if (value != null){
+			return keyClass;
+		}
+
+		/* If the Class has in Interface that is in the Key of the map, return that Interface*/
+		Class keyClassInterfaces[] = keyClass.getInterfaces();
+		Class keyClassInterface = null;
+		for (int i=0; i<keyClassInterfaces.length; i++){
+			keyClassInterface = keyClassInterfaces[i];
+			value = map.get(keyClassInterface);
+			if (value != null  ){
+				return keyClassInterface;
+			}
+		}
+		
+		/* Else return null */
+		return null;
+	}
+	
+	
+	
 	/**
 	 * Action listener handling user requests for removing a dataset.
 	 * 
@@ -1923,6 +2033,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	protected void jNewProjectItem_actionPerformed(ActionEvent e) {
 		ProjectNode childNode = new ProjectNode("Project");
 		addToProject(childNode, true);
+		
+		//removeDeletedAcceptorComponents();
 	}
 
 	/**

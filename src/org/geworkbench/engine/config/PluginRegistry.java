@@ -2,10 +2,13 @@ package org.geworkbench.engine.config;
 
 import org.geworkbench.engine.config.events.BroadcastEventRegistry;
 import org.geworkbench.engine.config.events.EventSource;
+import org.geworkbench.engine.management.ComponentResource;
+import org.geworkbench.engine.management.TypeMap;
 
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -317,6 +320,24 @@ public class PluginRegistry {
         }
 
     }
+
+	public static HashMap getExtensionPointsMap(){
+		return extensionPointsMap;
+	}
+	public static HashMap getVisualAreaMap(){
+		return visualAreaMap;
+	}
+	public static Vector getComponentVector(){
+		return componentVector;
+	}
+//    public static Vector getUsedIds(PluginDescriptor pluginDescriptor){
+//    	return pluginDescriptor.getUsedIds();
+//    }
+    public static Vector<String> getUsedIds(){
+    	return PluginDescriptor.getUsedIds();
+    }
+
+    
 
 }
 

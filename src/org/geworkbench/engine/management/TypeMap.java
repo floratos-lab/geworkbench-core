@@ -22,8 +22,15 @@ public class TypeMap<T> extends HashMap<Class, T> {
             return super.get(null);
         }
         Class type = (Class) key;
+        if (type == Object.class) {
+        	T returnType = super.get(type); 
+            return returnType;
+        }
         T result = null;
         while ((result == null) && (type != null)) {
+            if (type == Object.class) {
+                return null;
+            }
             result = super.get(type);
             if (result != null) {
                 return result;

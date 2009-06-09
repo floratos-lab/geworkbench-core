@@ -12,7 +12,7 @@ import org.xml.sax.Attributes;
  * @author non-attributable
  * 
  */
-public class PluginRule extends ObjectCreateRule {
+public class PluginRuleCCM extends ObjectCreateRule {
 
 	private Log log = LogFactory.getLog(this.getClass());
 
@@ -28,7 +28,7 @@ public class PluginRule extends ObjectCreateRule {
 	 * 
 	 * @param className
 	 */
-	public PluginRule(String className) {
+	public PluginRuleCCM(String className) {
 		super(className);
 	}
 
@@ -49,14 +49,10 @@ public class PluginRule extends ObjectCreateRule {
 
 		log.info("begin rule");
 
-		PluginObject pginObj;
+		
+		PluginObjectCCM pginObj;
 		super.begin(namespace, name, attributes);
-		pginObj = (PluginObject) super.getDigester().peek();
-
-		// if (pluginObjects == null)
-		// pluginObjects = new Vector<PluginObject>();
-		//
-		// pluginObjects.add(pginObj);
+		pginObj = (PluginObjectCCM) super.getDigester().peek();
 
 		/*
 		 * We need to instantiate the plugin descriptor before the various

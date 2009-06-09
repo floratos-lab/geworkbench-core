@@ -1,21 +1,32 @@
 package org.geworkbench.engine.config.rules;
 
-import org.geworkbench.engine.config.GUIFramework;
-import org.geworkbench.util.SplashBitmap;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import javax.help.*;
-import javax.swing.*;
-
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.net.URL;
-import java.util.*;
+import java.util.Comparator;
 import java.util.Map;
+import java.util.TreeMap;
+
+import javax.help.CSH;
+import javax.help.HelpBroker;
+import javax.help.HelpSet;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.geworkbench.engine.config.GUIFramework;
+import org.geworkbench.util.SplashBitmap;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
@@ -64,8 +75,8 @@ public class GeawConfigObject {
      * componenents will be appended to the master help in the order in which
      * they are encountered within the configuration file.
      */
-    private static HelpSet masterHelp = null;
-    private static TreeMap<String, HelpSet> sortedHelpSets = new TreeMap<String, HelpSet>();
+    protected static HelpSet masterHelp = null;
+    protected static TreeMap<String, HelpSet> sortedHelpSets = new TreeMap<String, HelpSet>();
     // ---------------------------------------------------------------------------
     // --------------- Properties
     // ---------------------------------------------------------------------------
@@ -75,7 +86,7 @@ public class GeawConfigObject {
      * The font to use for the menu items.
      */
     // static Font              menuItemFont = new java.awt.Font("Dialog", 1, 11);
-    /**
+	/**
      * The titles of the default top level menus. Menus will appear in the
      * order listed in this array.
      */
@@ -318,4 +329,16 @@ public class GeawConfigObject {
                 g.drawImage(image.getImage(), 0, 0, Color.white, this);
         }
     }
+    
+    public static HelpSet getMasterHelp() {
+		return masterHelp;
+	}
+
+    public static void setMasterHelp(HelpSet helpSet) {
+    	masterHelp = helpSet;
+	}
+    
+	public static TreeMap<String, HelpSet> getSortedHelpSets() {
+		return sortedHelpSets;
+	}
 }

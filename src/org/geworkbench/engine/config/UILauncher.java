@@ -11,9 +11,9 @@ import org.apache.commons.digester.Digester;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParserListener;
+import org.geworkbench.builtin.ComponentConfigurationManager;
 import org.geworkbench.engine.config.rules.GeawConfigRule;
 import org.geworkbench.engine.config.rules.PluginRule;
-import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.util.SplashBitmap;
 
 import com.jgoodies.looks.plastic.PlasticLookAndFeel;
@@ -41,18 +41,7 @@ public class UILauncher implements AnnotationParserListener {
      * that contains the location of the application configuration file.
      */
     final static String CONFIG_FILE_NAME = "component.configuration.file";
-    // ---------------------------------------------------------------------------
-    // --------------- Instance variables
-    // ---------------------------------------------------------------------------
-    public static Digester uiLauncher;
 
-    static {
-        try {
-            uiLauncher = new Digester(new org.apache.xerces.parsers.SAXParser());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
     // ---------------------------------------------------------------------------
     // --------------- Methods
     // ---------------------------------------------------------------------------
@@ -62,8 +51,8 @@ public class UILauncher implements AnnotationParserListener {
     public static final String DEVELOPMENT_FLAG = "-dev";
     public static final String DEFAULT_COMPONENTS_DIR = "components";
     public static final String COMPONENTS_DIR_PROPERTY = "components.dir";
-    private static final String DEFAULT_GEAR_DIR = DEFAULT_COMPONENTS_DIR;
 
+    public static String componentsDir = null;
     static {
         splash = new org.geworkbench.util.SplashBitmap(SplashBitmap.class.getResource("splashscreen.png"));
     }
@@ -71,7 +60,7 @@ public class UILauncher implements AnnotationParserListener {
     /**
      * Configure the rules for translating the appication configuration file.
      */
-    static void configure() {
+    public static void configure(Digester uiLauncher) {
         uiLauncher.setUseContextClassLoader(true);
         // Opening tag <geaw-config>
         uiLauncher.addRule("geaw-config", new GeawConfigRule("org.geworkbench.engine.config.rules.GeawConfigObject"));
@@ -155,25 +144,10 @@ public class UILauncher implements AnnotationParserListener {
             }
         }
         try {
-            if (System.getProperty("os.name").toUpperCase().indexOf("MAC OS X") > -1) {
-				// In Mac, SystemLookAndFeel has Mantis issue #1740, so we
-				// use plastic.
-				PlasticLookAndFeel.setMyCurrentTheme(new SkyBlue());
-				UIManager
-						.setLookAndFeel("com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
-			} else if (System.getProperty("os.name").toUpperCase().indexOf(
-					"Solaris") > -1) {
-				// In Solaris, SystemLookAndFeel has Mantis issue #1740, so we
-				// use plastic.
-				PlasticLookAndFeel.setMyCurrentTheme(new SkyBlue());
-				UIManager
-						.setLookAndFeel("com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
-			} else if (System.getProperty("os.name").toUpperCase().indexOf(
-					"WINDOWS") == -1) {
-				// If we're on other OS, then use native look and feel
-				UIManager.setLookAndFeel(UIManager
-						.getSystemLookAndFeelClassName());
-			} else {
+            if (System.getProperty("os.name").toUpperCase().indexOf("WINDOWS") == -1) {
+                // If we're not on windows, then use native look and feel no matter what
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } else {
 
                 if (lookAndFeelArg != null) {
                     if ("native".equals(lookAndFeelArg)) {
@@ -204,29 +178,25 @@ public class UILauncher implements AnnotationParserListener {
         // Read the properties file
         initProperties();
 
-        // Initialize component classloaders
-
+        /* Read all.xml */
+        
         if (!devMode) {
            log.info("Scanning plugins...");
-            String componentsDir = System.getProperty(COMPONENTS_DIR_PROPERTY);
+           componentsDir = System.getProperty(COMPONENTS_DIR_PROPERTY);
             if (componentsDir == null) {
                 componentsDir = DEFAULT_COMPONENTS_DIR;
             }
-            ComponentRegistry.getRegistry().initializeComponentResources(componentsDir);
-            ComponentRegistry.getRegistry().initializeGearResources(DEFAULT_GEAR_DIR);
+            
             log.info("... scan complete.");
         } else {
             log.info("Development mode-- skipping plugin scan.");
         }
-
-        // Redirecting System.out and System.err to a log file
-        //        System.setErr(new PrintStream(new LoggingOutputStream(Category.getRoot(), Priority.WARN), true));
-        //        System.setOut(new PrintStream(new LoggingOutputStream(Category.getRoot(), Priority.INFO), true));
-
-        // Configure the digester for the rules used in the configuration file.
-        configure();
+        
+      //TODO Retire this section.  The entries existing in all.xml should be handled by our ComponentConfigurationManager instead of this custom block.
+        Digester uiLauncher = new Digester(new org.apache.xerces.parsers.SAXParser());
+        configure(uiLauncher);
         org.geworkbench.util.Debug.debugStatus = false; // debugging toggle
-        // Locate and open the appication configuration file.
+        // Locate and open the application configuration file.
         String configFileName = null;
         if (configFileArg != null) {
             configFileName = configFileArg;
@@ -253,6 +223,11 @@ public class UILauncher implements AnnotationParserListener {
             log.error(e,e);
         }
 
+        /* Load Components */
+        ComponentConfigurationManager ccm = new ComponentConfigurationManager(); 
+        ccm.loadAllComponentFolders();
+        ccm.loadSelectedComponents();
+        
         PluginRegistry.debugPrint();
         // Testing: write the config back out
         //        try {
