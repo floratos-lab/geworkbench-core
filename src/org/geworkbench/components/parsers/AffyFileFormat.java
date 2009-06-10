@@ -7,8 +7,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -42,6 +44,11 @@ import org.geworkbench.components.parsers.microarray.DataSetFileFormat;
  * Handles the parsing of Affymetrix .txt files (MAS 5.0).
  * Translates Affymetrix formatted files (MAS 4.0/5.0) into
  * <code>MicroarraySet</code> objects.
+ *
+ * @author unknown
+ * @author yc2480
+ * @version $Id: AffyFileFormat.java,v 1.16 2009-06-10 21:42:55 chiangy Exp $
+ * 
  */
 public class AffyFileFormat extends DataSetFileFormat {
     /**
@@ -108,7 +115,7 @@ public class AffyFileFormat extends DataSetFileFormat {
 	        String line = null;
 	        int totalColumns = 0;
 	        int accessionIndex= -1;
-	        List<String> markers = new ArrayList<String>();
+	        Set<String> markers = new HashSet<String>();
 	        int lineIndex = 0;
 	        while ((line = reader.readLine()) != null) { //for each line
 	        	if (line.indexOf("Probe Set Name") >= 0) {
@@ -182,9 +189,17 @@ public class AffyFileFormat extends DataSetFileFormat {
 
     public void getMArraySet(File file, CSExprMicroarraySet maSet) throws InputFileFormatException {
         // Check that the file is OK before starting allocating space for it.
-        if (!checkFormat(file))
-            throw new InputFileFormatException("AffyFileFormat::getMArraySet - " + "Attempting to open a file that does not comply with the " + "Affy format.");
-        
+    	try {
+			if (!checkFormat(file))
+				throw new InputFileFormatException(
+						"Attempting to open a file that does not comply with the "
+								+ "Affy format.");
+	        log.info(file.getAbsoluteFile() + " passed file format check");
+		} catch (OutOfMemoryError er) {
+			log.error(er, er);
+			throw new InputFileFormatException(
+					"Out of memory error.\n\nAttempting to open a file that larger then memory size left in JVM.\nThe geWorkbench might become unstable, please close geWorkbench.");
+		}
         BufferedReader reader = null;
         try {
             // microarraySet = new CSExprMicroarraySet((AffyResource) getResource(file));
@@ -247,8 +262,12 @@ public class AffyFileFormat extends DataSetFileFormat {
             parser.getMicroarray().setLabel(file.getName());
             microarraySet.add(0, parser.getMicroarray());
             microarraySet.setFile(file);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ec) {
+            log.error(ec,ec);
+        } catch (OutOfMemoryError er) {
+			log.error(er, er);
+			throw new InputFileFormatException(
+					"Out of memory error.\n\nAttempting to open a file that larger then memory size left in JVM.\nThe geWorkbench might become unstable, please close geWorkbench.");        	
         } finally {
         	try {
 				reader.close();
