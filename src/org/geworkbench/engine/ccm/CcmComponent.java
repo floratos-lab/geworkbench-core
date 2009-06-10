@@ -1,15 +1,16 @@
-package org.geworkbench.builtin;
+package org.geworkbench.engine.ccm;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.geworkbench.builtin.Plugin;
 
 /**
  * A java bean to hold the contents of a xxx.ccm.xml file.
  * 
  * @author tg2321
- * @version $Id: CcmComponent.java,v 1.2 2009-06-09 20:27:29 keshav Exp $
+ * @version $Id: CcmComponent.java,v 1.1 2009-06-10 18:53:48 tgarben Exp $
  * 
  */
 public class CcmComponent {

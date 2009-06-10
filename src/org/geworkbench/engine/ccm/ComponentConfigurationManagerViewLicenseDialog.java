@@ -1,4 +1,4 @@
-package org.geworkbench.engine.config;
+package org.geworkbench.engine.ccm;
 
 import java.awt.Frame;
 

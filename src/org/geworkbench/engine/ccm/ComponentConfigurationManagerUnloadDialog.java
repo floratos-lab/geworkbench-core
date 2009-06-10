@@ -1,4 +1,4 @@
-package org.geworkbench.engine.config;
+package org.geworkbench.engine.ccm;
 
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
@@ -16,7 +16,7 @@ import javax.swing.JTextPane;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.geworkbench.engine.config.ComponentConfigurationManagerWindow.CCMTableModel;
+import org.geworkbench.engine.ccm.ComponentConfigurationManagerWindow.CCMTableModel;
 
 class ComponentConfigurationManagerUnloadDialog extends JDialog implements
 		ActionListener, PropertyChangeListener {
@@ -40,7 +40,7 @@ class ComponentConfigurationManagerUnloadDialog extends JDialog implements
 	 * Constructor
 	 * 
 	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerUnloadDialog.java,v 1.2 2009-06-09 20:27:28 keshav Exp $
+	 * @version $Id: ComponentConfigurationManagerUnloadDialog.java,v 1.1 2009-06-10 18:53:48 tgarben Exp $
 	 */
 	public ComponentConfigurationManagerUnloadDialog(Frame aFrame,
 			int unselectedRow, List<Integer> dependentPlugins,

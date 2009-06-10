@@ -4,6 +4,7 @@ import junit.framework.TestCase;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.geworkbench.engine.ccm.ComponentConfigurationManager;
 
 /**
  * A test class for the {@link ComponentConfigurationManager}.

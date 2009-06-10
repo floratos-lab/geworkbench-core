@@ -3,7 +3,7 @@ package org.geworkbench.engine.test;
 import junit.framework.TestCase;
 
 import org.apache.commons.digester.Digester;
-import org.geworkbench.builtin.ComponentConfigurationManager;
+import org.geworkbench.engine.ccm.ComponentConfigurationManager;
 import org.geworkbench.engine.config.UILauncher;
 import org.geworkbench.engine.config.rules.PluginObject;
 import org.geworkbench.engine.config.rules.PluginRule;

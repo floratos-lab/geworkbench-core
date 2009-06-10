@@ -11,7 +11,7 @@ import org.apache.commons.digester.Digester;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParserListener;
-import org.geworkbench.builtin.ComponentConfigurationManager;
+import org.geworkbench.engine.ccm.ComponentConfigurationManager;
 import org.geworkbench.engine.config.rules.GeawConfigRule;
 import org.geworkbench.engine.config.rules.PluginRule;
 import org.geworkbench.util.SplashBitmap;

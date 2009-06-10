@@ -21,7 +21,7 @@
 	</plugin>
 	<!--  -->
 	<plugin id="configurationMenu" name="configurationMenu"
-		class="org.geworkbench.engine.config.ComponentConfigurationManagerMenu" />
+		class="org.geworkbench.engine.ccm.ComponentConfigurationManagerMenu" />
 	<plugin id="preferences" name="preferences"
 		class="org.geworkbench.engine.config.PreferencesMenu" />
 

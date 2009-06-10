@@ -1,4 +1,4 @@
-package org.geworkbench.builtin;
+package org.geworkbench.engine.ccm;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,6 +26,7 @@ import org.apache.commons.digester.Digester;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.geworkbench.builtin.Plugin;
 import org.geworkbench.engine.config.ComponentMetadata;
 import org.geworkbench.engine.config.PluginDescriptor;
 import org.geworkbench.engine.config.PluginRegistry;

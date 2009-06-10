@@ -2,7 +2,7 @@
 	A bare-bones all.xml file that is useful when creating a new component.
 	
 	author: keshav 
-	version: $Id: all-minimal.xml,v 1.13 2009-06-09 20:27:28 keshav Exp $
+	version: $Id: all-minimal.xml,v 1.14 2009-06-10 18:54:10 tgarben Exp $
 -->
 
 <geaw-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -23,7 +23,7 @@
 	</plugin>
 	<!--  -->
 	<plugin id="configurationMenu" name="configurationMenu"
-		class="org.geworkbench.engine.config.ComponentConfigurationManagerMenu" />
+		class="org.geworkbench.engine.ccm.ComponentConfigurationManagerMenu" />
 	<plugin id="preferences" name="preferences"
 		class="org.geworkbench.engine.config.PreferencesMenu" />
 

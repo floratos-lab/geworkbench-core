@@ -1,4 +1,4 @@
-package org.geworkbench.engine.config;
+package org.geworkbench.engine.ccm;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -49,8 +49,6 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
 import org.apache.commons.lang.StringUtils;
-import org.geworkbench.builtin.CcmComponent;
-import org.geworkbench.builtin.ComponentConfigurationManager;
 import org.geworkbench.builtin.Plugin;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.events.ComponentConfigurationManagerUpdateEvent;
@@ -63,7 +61,7 @@ import com.jgoodies.forms.layout.FormLayout;
  * This is the main menu for the Component Configuration Manager.
  * 
  * @author tg2321
- * @version $Id: ComponentConfigurationManagerWindow.java,v 1.3 2009-06-09 21:02:21 keshav Exp $
+ * @version $Id: ComponentConfigurationManagerWindow.java,v 1.1 2009-06-10 18:53:48 tgarben Exp $
  */
 public class ComponentConfigurationManagerWindow {
 
@@ -717,7 +715,6 @@ public class ComponentConfigurationManagerWindow {
 	 * @return void
 	 */
 	private void cancelCcmSelections_actionPerformed(ActionEvent e) {
-		//FIXME see bug 1896
 		//resetCcmSelections_actionPerformed(e);
 		frame.dispose();
 		ccmWindow = null;
@@ -1457,7 +1454,7 @@ public class ComponentConfigurationManagerWindow {
 	 * GUI row structure
 	 * 
 	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.3 2009-06-09 21:02:21 keshav Exp $
+	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.1 2009-06-10 18:53:48 tgarben Exp $
 	 */
 	private class TableRow {
 		private boolean selected = false;

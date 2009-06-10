@@ -1,6 +1,6 @@
 package org.geworkbench.engine.config.rules;
 
-import org.geworkbench.builtin.ComponentConfigurationManager;
+import org.geworkbench.engine.ccm.ComponentConfigurationManager;
 import org.geworkbench.engine.config.*;
 import org.geworkbench.engine.config.events.AppEventListener;
 import org.geworkbench.engine.config.events.EventSource;

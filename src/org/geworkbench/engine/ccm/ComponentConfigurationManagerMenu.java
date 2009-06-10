@@ -1,8 +1,9 @@
-package org.geworkbench.engine.config;
+package org.geworkbench.engine.ccm;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import org.geworkbench.engine.config.MenuListener;
 import org.geworkbench.engine.management.Publish;
 import org.geworkbench.events.ComponentConfigurationManagerUpdateEvent;
 
