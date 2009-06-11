@@ -32,7 +32,6 @@
 		<property name="docs" value="web/api" />
 		<!-- The executable libs -->
 		<property name="lib" value="lib" />
-		<property name="cabio40_lib" value="components/annotations/lib/cabio40_java_client" />
 		<!-- The components directory -->
 		<property name="components" value="components" />
 		<!-- Release info -->
@@ -49,9 +48,6 @@
 		<mkdir dir="${classes}" />
 		<path id="classpath">
 			<fileset dir="${lib}">
-				<include name="**/*.jar" />
-			</fileset>
-			<fileset dir="${cabio40_lib}">
 				<include name="**/*.jar" />
 			</fileset>
 		</path>
