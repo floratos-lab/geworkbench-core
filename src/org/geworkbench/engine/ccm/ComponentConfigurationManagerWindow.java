@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.ItemSelectable;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -39,6 +40,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -61,7 +63,7 @@ import com.jgoodies.forms.layout.FormLayout;
  * This is the main menu for the Component Configuration Manager.
  * 
  * @author tg2321
- * @version $Id: ComponentConfigurationManagerWindow.java,v 1.1 2009-06-10 18:53:48 tgarben Exp $
+ * @version $Id: ComponentConfigurationManagerWindow.java,v 1.2 2009-06-11 16:54:43 tgarben Exp $
  */
 public class ComponentConfigurationManagerWindow {
 
@@ -571,7 +573,7 @@ public class ComponentConfigurationManagerWindow {
         }
         
         JDialog licenseDialog = new JDialog();
-        JEditorPane jEditorPane = new JEditorPane("text/html", "");
+        final JEditorPane jEditorPane = new JEditorPane("text/html", "");
         jEditorPane.getDocument().putProperty("IgnoreCharsetDirective",Boolean.TRUE);
         jEditorPane.setText(license);
 		JScrollPane scrollPane = new JScrollPane(jEditorPane);
@@ -580,6 +582,13 @@ public class ComponentConfigurationManagerWindow {
 		licenseDialog.setSize(400,300);
 		licenseDialog.setLocationRelativeTo(frame);
 		licenseDialog.setVisible(true);
+		
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				jEditorPane.scrollRectToVisible(new Rectangle(1,1,1,1));
+			}
+		});
+		
 	}
 	
 	/**
@@ -1454,7 +1463,7 @@ public class ComponentConfigurationManagerWindow {
 	 * GUI row structure
 	 * 
 	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.1 2009-06-10 18:53:48 tgarben Exp $
+	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.2 2009-06-11 16:54:43 tgarben Exp $
 	 */
 	private class TableRow {
 		private boolean selected = false;
