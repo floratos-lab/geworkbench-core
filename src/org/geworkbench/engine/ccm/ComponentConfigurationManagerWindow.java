@@ -63,7 +63,7 @@ import com.jgoodies.forms.layout.FormLayout;
  * This is the main menu for the Component Configuration Manager.
  * 
  * @author tg2321
- * @version $Id: ComponentConfigurationManagerWindow.java,v 1.2 2009-06-11 16:54:43 tgarben Exp $
+ * @version $Id: ComponentConfigurationManagerWindow.java,v 1.3 2009-06-12 13:47:36 tgarben Exp $
  */
 public class ComponentConfigurationManagerWindow {
 
@@ -93,13 +93,11 @@ public class ComponentConfigurationManagerWindow {
 	private JButton viewLicenseButton = new JButton("View License");
 	private JButton viewDocumentationButton = new JButton("View Documentation");
 	private JButton viewExternalSiteButton = new JButton("View External Site");
-//	private JButton acceptButton = new JButton("Accept");
 	private JButton applyButton = new JButton("Apply");
 	private JButton resetButton = new JButton("Reset");
-	private JButton cancelButton = new JButton("Close");
 	private JButton closeButton = new JButton("Close");
 
-//  Use this in case duplicate URLs are not to be browsed. 	
+	/* Use this in case duplicate URLs are not to be browsed. */ 	
 	private static String launchedURL = "";
 	
 	public final static String DISPLAY_FILTER_ALL = "All";
@@ -196,12 +194,6 @@ public class ComponentConfigurationManagerWindow {
 		    	}
 		     } );
 	     
-	     
-//		acceptButton.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent e) {
-//				acceptCcmSelections_actionPerformed(e);
-//			}
-//		});
 		applyButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				applyCcmSelections_actionPerformed(e);
@@ -210,12 +202,6 @@ public class ComponentConfigurationManagerWindow {
 		resetButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				resetCcmSelections_actionPerformed(e);
-			}
-
-		});
-		cancelButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				cancelCcmSelections_actionPerformed(e);
 			}
 
 		});
@@ -464,13 +450,9 @@ public class ComponentConfigurationManagerWindow {
 					resetButton.setText("Reset");
 					bottompanel.add(resetButton, cc.xy(12, 1));
 
-					//---- cancelButton ----
-					cancelButton.setText("Close");
-					bottompanel.add(cancelButton, cc.xy(14, 1));
-					
-//					//---- closeButton ----
-//					closeButton.setText("Close");
-//					bottompanel.add(closeButton, cc.xy(15, 1));
+					//---- closeButton ----
+					closeButton.setText("Close");
+					bottompanel.add(closeButton, cc.xy(14, 1));
 					
 				} //======== bottompanel ========.
 				frameContentPane.add(bottompanel, BorderLayout.SOUTH);
@@ -694,11 +676,8 @@ public class ComponentConfigurationManagerWindow {
 		ComponentConfigurationManagerUpdateEvent ccmEvent = new ComponentConfigurationManagerUpdateEvent(
 				acceptors);
 		
-		// IF YOU UPDATE GEWORKBENCH, YOU WILL TAKE FOCUS AWAY FROM THE CMMWINDOW???
 		publishComponentConfigurationManagerUpadateEvent(ccmEvent);
-		
-		// TODO add an event to update the viewPanel 
-		
+
 		setOriginalChoices();
 	}
 	
@@ -717,18 +696,6 @@ public class ComponentConfigurationManagerWindow {
 
 	}
 
-	/**
-	 * Reset selections Close CCM Window
-	 * 
-	 * @param ActionEvent
-	 * @return void
-	 */
-	private void cancelCcmSelections_actionPerformed(ActionEvent e) {
-		//resetCcmSelections_actionPerformed(e);
-		frame.dispose();
-		ccmWindow = null;
-	}
-
 	/*
 	 * Reset selections Close CCM Window
 	 * 
@@ -736,8 +703,8 @@ public class ComponentConfigurationManagerWindow {
 	 * @return void
 	 */
 	private void closeCcmSelections_actionPerformed(ActionEvent e) {
-
-		// cancelCcmSelections_actionPerformed(e);
+		frame.dispose();
+		ccmWindow = null;
 	}
 
 	/**
@@ -1463,7 +1430,7 @@ public class ComponentConfigurationManagerWindow {
 	 * GUI row structure
 	 * 
 	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.2 2009-06-11 16:54:43 tgarben Exp $
+	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.3 2009-06-12 13:47:36 tgarben Exp $
 	 */
 	private class TableRow {
 		private boolean selected = false;
