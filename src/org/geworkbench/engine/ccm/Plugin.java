@@ -1,10 +1,10 @@
-package org.geworkbench.builtin;
+package org.geworkbench.engine.ccm;
 
 /**
  * A java bean to hold the contents of a xxx.ccm.xml file.
  * 
  * @author tg2321
- * @version $Id: Plugin.java,v 1.2 2009-06-09 20:27:29 keshav Exp $
+ * @version $Id: Plugin.java,v 1.1 2009-06-12 16:02:23 tgarben Exp $
  * 
  */
 public class Plugin {

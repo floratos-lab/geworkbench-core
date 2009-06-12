@@ -51,7 +51,6 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
 import org.apache.commons.lang.StringUtils;
-import org.geworkbench.builtin.Plugin;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.events.ComponentConfigurationManagerUpdateEvent;
 import org.geworkbench.util.BrowserLauncher;
@@ -63,7 +62,7 @@ import com.jgoodies.forms.layout.FormLayout;
  * This is the main menu for the Component Configuration Manager.
  * 
  * @author tg2321
- * @version $Id: ComponentConfigurationManagerWindow.java,v 1.3 2009-06-12 13:47:36 tgarben Exp $
+ * @version $Id: ComponentConfigurationManagerWindow.java,v 1.4 2009-06-12 16:06:49 tgarben Exp $
  */
 public class ComponentConfigurationManagerWindow {
 
@@ -558,19 +557,13 @@ public class ComponentConfigurationManagerWindow {
         final JEditorPane jEditorPane = new JEditorPane("text/html", "");
         jEditorPane.getDocument().putProperty("IgnoreCharsetDirective",Boolean.TRUE);
         jEditorPane.setText(license);
+        jEditorPane.setCaretPosition(1);
 		JScrollPane scrollPane = new JScrollPane(jEditorPane);
 		licenseDialog.setTitle(componentName + " License");
 		licenseDialog.setContentPane(scrollPane);
 		licenseDialog.setSize(400,300);
 		licenseDialog.setLocationRelativeTo(frame);
 		licenseDialog.setVisible(true);
-		
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				jEditorPane.scrollRectToVisible(new Rectangle(1,1,1,1));
-			}
-		});
-		
 	}
 	
 	/**
@@ -1430,7 +1423,7 @@ public class ComponentConfigurationManagerWindow {
 	 * GUI row structure
 	 * 
 	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.3 2009-06-12 13:47:36 tgarben Exp $
+	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.4 2009-06-12 16:06:49 tgarben Exp $
 	 */
 	private class TableRow {
 		private boolean selected = false;
