@@ -47,10 +47,12 @@ import org.geworkbench.util.ProgressBar;
 
 /**
  * @author xiaoqing
- * @version $Id: CaARRAYPanel.java,v 1.43 2009-05-27 15:35:09 chiangy Exp $
+ * @version $Id: CaARRAYPanel.java,v 1.44 2009-06-15 21:21:29 chiangy Exp $
  */
 @SuppressWarnings("unchecked")
 public class CaARRAYPanel extends JPanel implements Observer {
+	private static final String LOADING_SELECTED_BIOASSAYS_ELAPSED_TIME = "Loading selected bioassays - elapsed time: ";
+
 	private static final long serialVersionUID = -4876378958265466224L;
 
 	private static final String CAARRAY_TITLE = "caARRAY";
@@ -323,7 +325,6 @@ public class CaARRAYPanel extends JPanel implements Observer {
 		jPanel6.setMinimumSize(new Dimension(500, 285));
 		jPanel6.setPreferredSize(new Dimension(500, 285));
 		this.add(jPanel6, BorderLayout.CENTER);
-
 	}
 
 	/**
@@ -348,19 +349,20 @@ public class CaARRAYPanel extends JPanel implements Observer {
 								String htmltext = "<html>" + text + i / 4 + " seconds." + "<br>" + currentState +"</html>";
 								progressBar.setMessage(htmltext);
 							}
-							if (i > internalTimeoutLimit * 4) {
-								stillWaitForConnecting = false;
-								JOptionPane.showMessageDialog(null,
-										"Cannot connect with the server in "
-												+ internalTimeoutLimit
-												+ " seconds.", "Timeout",
-										JOptionPane.ERROR_MESSAGE);
-								update(null, null);
-							}
+							//FIXME: Bug #1797, temporarily disabled for code freeze. 
+//							if (i > internalTimeoutLimit * 4) {
+//								stillWaitForConnecting = false;
+//								JOptionPane.showMessageDialog(null,
+//										"Cannot connect with the server in "
+//												+ internalTimeoutLimit
+//												+ " seconds.", "Timeout",
+//										JOptionPane.ERROR_MESSAGE);
+//								update(null, null);
+//							}
 						} while (stillWaitForConnecting);
-
 					}
-				} catch (Exception e) {
+				} catch (InterruptedException e) {
+					log.info("caArray Data Download Thread Interrupted: ",e);
 				}
 			}
 		};
@@ -373,7 +375,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
 	 * @param seconds
 	 */
 	public void increaseInternalTimeoutLimitBy(int seconds){
-		System.out.println("Due time has been increased from "+internalTimeoutLimit+" seconds to " +(internalTimeoutLimit+seconds)+" seconds.");
+		log.debug("Due time has been increased from "+internalTimeoutLimit+" seconds to " +(internalTimeoutLimit+seconds)+" seconds.");
 		internalTimeoutLimit += seconds;
 	}
 
@@ -384,7 +386,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
 	 */
 	@Subscribe
 	public void receive(CaArraySuccessEvent ce) {
-		this.numCurrentArray = ce.getCurrentArrayIndex();
+		this.numCurrentArray = numCurrentArray+1;
 		this.numTotalArrays = ce.getTotalArrays();
 		increaseInternalTimeoutLimitBy(INCREASE_EACHTIME);
 	}
@@ -402,10 +404,12 @@ public class CaARRAYPanel extends JPanel implements Observer {
 		String qType = checkQuantationTypeSelection();
 
 		if (qType != null) {
+			numCurrentArray = 0;
+			numTotalArrays = 0;
 			stillWaitForConnecting = true;
 			progressBar
-					.setMessage("Loading selected bioassays - elapsed time: ");
-			updateProgressBar("Loading selected bioassays - elapsed time: ");
+					.setMessage(LOADING_SELECTED_BIOASSAYS_ELAPSED_TIME);
+			updateProgressBar(LOADING_SELECTED_BIOASSAYS_ELAPSED_TIME);
 			progressBar.addObserver(this);
 			progressBar.setTitle(CAARRAY_TITLE);
 			progressBar.start();
