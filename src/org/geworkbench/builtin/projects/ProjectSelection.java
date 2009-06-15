@@ -99,6 +99,9 @@ public class ProjectSelection {
      * @return
      */
     public ProjectTreeNode getNodeOfClass(ProjectTreeNode node, Class aClass) {
+        if (node == null) {
+            return null;
+        }
         while (!(aClass.isInstance(node))) {
             node = (ProjectTreeNode) node.getParent();
             if (node == null) {
