@@ -47,7 +47,7 @@ public class PluginRule extends ObjectCreateRule {
 	public void begin(String namespace, String name, Attributes attributes)
 			throws Exception {
 
-		log.info("begin rule");
+		log.debug("begin rule");
 
 		PluginObject pginObj;
 		super.begin(namespace, name, attributes);

@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -85,7 +84,7 @@ public class ComponentConfigurationManager {
 	 * @return {@link ComponentResource}
 	 */
 	private ComponentResource createComponentResource(String resource) {
-		log.info("Create component resource " + resource);
+		log.debug("Create component resource " + resource);
 
 		if (StringUtils.isEmpty(resource)) {
 			log.error("Input resource is null.  Returning ...");
