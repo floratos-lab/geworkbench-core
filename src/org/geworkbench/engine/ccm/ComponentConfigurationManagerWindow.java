@@ -62,7 +62,7 @@ import com.jgoodies.forms.layout.FormLayout;
  * This is the main menu for the Component Configuration Manager.
  * 
  * @author tg2321
- * @version $Id: ComponentConfigurationManagerWindow.java,v 1.4 2009-06-12 16:06:49 tgarben Exp $
+ * @version $Id: ComponentConfigurationManagerWindow.java,v 1.5 2009-06-15 14:01:09 tgarben Exp $
  */
 public class ComponentConfigurationManagerWindow {
 
@@ -557,7 +557,9 @@ public class ComponentConfigurationManagerWindow {
         final JEditorPane jEditorPane = new JEditorPane("text/html", "");
         jEditorPane.getDocument().putProperty("IgnoreCharsetDirective",Boolean.TRUE);
         jEditorPane.setText(license);
-        jEditorPane.setCaretPosition(1);
+        if (jEditorPane.getCaretPosition() > 1){
+            jEditorPane.setCaretPosition(1);        	
+        }
 		JScrollPane scrollPane = new JScrollPane(jEditorPane);
 		licenseDialog.setTitle(componentName + " License");
 		licenseDialog.setContentPane(scrollPane);
@@ -1423,7 +1425,7 @@ public class ComponentConfigurationManagerWindow {
 	 * GUI row structure
 	 * 
 	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.4 2009-06-12 16:06:49 tgarben Exp $
+	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.5 2009-06-15 14:01:09 tgarben Exp $
 	 */
 	private class TableRow {
 		private boolean selected = false;
