@@ -1,19 +1,29 @@
 package org.geworkbench.bison.datastructure.bioobjects.markers.goterms;
 
-import org.apache.commons.collections15.map.ListOrderedMap;
-import org.geworkbench.bison.annotation.CSAnnotationContextManager;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.commons.collections15.map.ListOrderedMap;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Represents the Gene Ontology Tree and provides methods to access it.
  * 
- * @author John Watkinson, Xiaoqing Zhang
+ * @author John Watkinson
+ * @author Xiaoqing Zhang
+ * @version $Id: GeneOntologyTree.java,v 1.9 2009-06-15 16:37:43 keshav Exp $
  */
 public class GeneOntologyTree {
-
+	
+	private Log log = LogFactory.getLog(this.getClass());
+	
 	private static GeneOntologyTree instance;
 
 	public static GeneOntologyTree getInstance() {
@@ -138,7 +148,7 @@ public class GeneOntologyTree {
 		if (!FILE_HEADER1_0.equals(header) && !FILE_HEADER1_2.equals(header)) {
 			throw new Exception("This is not a version 1.0 or 1.2 OBO file.");
 		}
-		System.out.println("GeneOntologyTree: reading file: " + fileName);
+		log.info("GeneOntologyTree: reading file: " + fileName);
 		String line = in.readLine();
 		HashMap<Integer, Term> termMap = new HashMap<Integer, Term>();
 		while (line != null) {
