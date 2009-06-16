@@ -486,7 +486,7 @@
 		<copy todir="${cleanFolder}/conf" includeEmptyDirs="NO">
 			<fileset dir="./conf">
 				<include name="application.properties" />
-				<include name="all_release.xml" />
+				<include name="all.xml" />
 				<include name="client-config.wsdd" />
 				<include name="*.xsd" />
 				<include name="*.dtd" />
