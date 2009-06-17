@@ -44,7 +44,7 @@ import org.ginkgo.labs.util.FileTools;
  * @author First Genetic Trust Inc.
  * @author keshav
  * @author yc2480
- * @version $Id: AbstractAnalysis.java,v 1.25 2009-05-11 19:09:12 wangm Exp $
+ * @version $Id: AbstractAnalysis.java,v 1.26 2009-06-17 21:04:31 jiz Exp $
  */
 @SuppressWarnings("unchecked")
 public abstract class AbstractAnalysis implements Analysis, Serializable,
@@ -422,7 +422,19 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 			ComponentClassLoader ccl = (ComponentClassLoader) aspp.getClass()
 					.getClassLoader();
 			ComponentResource componentResource = ccl.getComponentResource();
-			File parentDir = new File(componentResource.getDir(), paramsDir);
+
+			String userSettingDirectory =  System.getProperty("user.setting.directory");
+			if(userSettingDirectory!=null) {
+				userSettingDirectory = System.getProperty("user.home")
+						+ System.getProperty("file.separator")
+						+ userSettingDirectory
+						+ System.getProperty("file.separator")
+						+ componentResource.getName();
+			} else {
+				userSettingDirectory = componentResource.getDir();
+			}
+			
+			File parentDir = new File(userSettingDirectory, paramsDir);
 			tmpDir = parentDir.getPath() + File.separatorChar;
 			File pFile = new File(tmpDir);
 			if (!pFile.exists())
