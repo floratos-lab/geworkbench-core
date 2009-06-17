@@ -60,6 +60,7 @@ public class ComponentConfigurationManager {
 	private ArrayList<String> allComponentFolders = new ArrayList<String>();
 	private Map<String, List<String>> foldersToCcmFiles = new HashMap<String, List<String>>();
 
+	private static String propertiesDirectory = null;
 	/**
 	 * Constructor
 	 * 
@@ -76,6 +77,16 @@ public class ComponentConfigurationManager {
 
 		digester = new Digester(new org.apache.xerces.parsers.SAXParser());
 		this.configure();
+		
+		String userSettingDirectory =  System.getProperty("user.setting.directory");
+		if(userSettingDirectory!=null) {
+			propertiesDirectory = userSettingDirectory = System.getProperty("user.home")
+					+ FILE_DEL
+					+ userSettingDirectory;
+		} else {
+			propertiesDirectory = UILauncher.componentsDir;
+		}
+
 	}
 
 	/**
@@ -631,7 +642,7 @@ public class ComponentConfigurationManager {
 	public static void writeProperty(String folder, String propertyFileName,
 			String key, String value) {
 
-		String fullPropertiesPath = UILauncher.componentsDir + FILE_DEL
+		String fullPropertiesPath = propertiesDirectory + FILE_DEL
 				+ folder + FILE_DEL + propertyFileName;
 		FileInputStream in = null;
 		try {
@@ -641,6 +652,8 @@ public class ComponentConfigurationManager {
 			if (f.exists()) {
 				in = new FileInputStream(f);
 				pro.load(in);
+			} else {
+				f.getParentFile().mkdirs();
 			}
 
 			pro.setProperty(key, value);
@@ -673,7 +686,7 @@ public class ComponentConfigurationManager {
 			String key) {
 		String returnValue = null;
 
-		String fullPropertiesPath = UILauncher.componentsDir + FILE_DEL
+		String fullPropertiesPath = propertiesDirectory + FILE_DEL
 				+ folder + FILE_DEL + propertyFileName;
 
 		FileInputStream in = null;
