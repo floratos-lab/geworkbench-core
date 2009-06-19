@@ -463,6 +463,11 @@ public class PluginDescriptor extends IdentifiableImpl implements Comparable {
     public static Vector<String> getUsedIds(){
     	return usedIds;
     }
-    
+ 
+    public ComponentResource getResource() {
+		return resource;
+	}
+
+
     
 }

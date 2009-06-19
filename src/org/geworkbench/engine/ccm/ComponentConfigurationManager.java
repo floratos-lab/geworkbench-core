@@ -196,7 +196,7 @@ public class ComponentConfigurationManager {
 			for (int j = 0; j < ccmFiles.size(); j++) {
 				String ccmFileName = ccmFiles.get(j);
 				String propFileName = ccmFileName.replace(CCM_EXTENSION,
-						".properties");
+						".ccmproperties");
 
 				String onOff = readProperty(folder, propFileName, "on-off");
 				CcmComponent ccmComponent = getPluginsFromCcmFile(folder, ccmFileName );
@@ -220,6 +220,7 @@ public class ComponentConfigurationManager {
 	 * @param ccmFileName
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public boolean loadComponent(String folder, String ccmFileName) {
 
 		/* create component resource */
@@ -228,7 +229,10 @@ public class ComponentConfigurationManager {
 		/* add resource to registry */
 		Map<String, ComponentResource> resourceMap = ComponentRegistry
 				.getRegistry().getComponentResourceMap();
-		resourceMap.put(folder, componentResource);
+		ComponentResource existingComponentResource = resourceMap.get(folder);
+		if (existingComponentResource==null){
+			resourceMap.put(folder, componentResource);
+		}
 		/* get input stream for ccm.xml */
 		String ccmFullPath = UILauncher.componentsDir + FILE_DEL + folder
 				+ FILE_DEL + ccmFileName;
@@ -506,11 +510,37 @@ public class ComponentConfigurationManager {
 		}// for
 
 		/* ComponentRegistry.idToDescriptor */
-		ComponentResource resourceToRemove = resourceMap.get(folderName);
-		if (resourceToRemove != null) {
-			resourceMap.remove(folderName);
+		/* If other Plugins are using the same Component Resource, don't remove the Resource */
+		int foldersInUse = 0;
+		for (int i = 0; i < componentVector.size(); i++) {
+			PluginDescriptor pd = componentVector.get(i);
+			if (pd == null){
+				continue;
+			}
+			
+			String pluginName = pd.getLabel();// For Debugging
+			ComponentResource componentResource = pd.getResource();
+			if (componentResource == null){
+				continue;	
+			}
+			
+			String name = componentResource.getName();
+			if (name == null){
+				continue;
+			}
+				
+			if (name.equalsIgnoreCase(folderName)) {
+				foldersInUse++;
+			}
 		}
 
+		if (foldersInUse < 1 ){
+			ComponentResource resourceToRemove = resourceMap.get(folderName);
+			if (resourceToRemove != null) {
+				resourceMap.remove(folderName);
+			}
+		}
+		
 		componentRegistry.setComponentsList(updatedComponentList);
 
 		return true;
