@@ -9,10 +9,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.Vector;
 import java.util.Map.Entry;
@@ -257,25 +259,25 @@ public class ComponentConfigurationManager {
 		/* Remove HelpSets from Master Help*/
 		HelpSet localMasterHelp = GeawConfigObject.getMasterHelp();
 		Enumeration<HelpSet> helpSets =  localMasterHelp.getHelpSets();
-		ArrayList<HelpSet> helpSetList = new ArrayList<HelpSet>();
+		Set<HelpSet> helpSetTemp = new HashSet<HelpSet>();  
 		while (helpSets.hasMoreElements()){
 			HelpSet helpSet = helpSets.nextElement();
-			helpSetList.add(helpSet);
+			helpSetTemp.add(helpSet);
 		}
-		for (int i=0;i<helpSetList.size(); i++){
-			localMasterHelp.remove(helpSetList.get(i));
+		for (HelpSet hs : helpSetTemp){
+			localMasterHelp.remove(hs);
 		}
 		
 		/* Remove Combined Maps from Master Help*/
 		TryMap combinedMap =  (TryMap)localMasterHelp.getCombinedMap();
 		Enumeration<?>  maps = combinedMap.getMaps();
-		ArrayList<javax.help.Map> mapsList = new ArrayList<javax.help.Map>();
+		Set<javax.help.Map> mapsTemp = new HashSet<javax.help.Map>();
 		while (maps.hasMoreElements()){
 			javax.help.Map map = (javax.help.Map)maps.nextElement();
-			mapsList.add(map);
+			mapsTemp.add(map);
 		}
-		for (int i=0;i<mapsList.size(); i++){
-			combinedMap.remove(mapsList.get(i));
+		for (javax.help.Map map: mapsTemp){
+			combinedMap.remove(map);
 		}
 
 		/* Rebuild Help here */
