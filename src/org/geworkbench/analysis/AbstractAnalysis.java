@@ -44,7 +44,7 @@ import org.ginkgo.labs.util.FileTools;
  * @author First Genetic Trust Inc.
  * @author keshav
  * @author yc2480
- * @version $Id: AbstractAnalysis.java,v 1.26 2009-06-17 21:04:31 jiz Exp $
+ * @version $Id: AbstractAnalysis.java,v 1.27 2009-06-19 19:32:23 jiz Exp $
  */
 @SuppressWarnings("unchecked")
 public abstract class AbstractAnalysis implements Analysis, Serializable,
@@ -288,6 +288,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	public void setNamedParameterSetPanel(String name) {
 		Map<Serializable, Serializable> returnedParams = parameterHash
 				.get(new ParameterKey(getIndex(), name));
+		aspp.fillDefaultValues(returnedParams);
 		aspp.setParameters(returnedParams);
 	}
 
@@ -574,6 +575,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	 * @see org.geworkbench.bison.model.analysis.Analysis#setParameters(java.util.Map)
 	 */
 	public void setParameters(Map<Serializable, Serializable> parameters) {
+		this.aspp.fillDefaultValues(parameters);
 		this.aspp.setParameters(parameters);
 	}
 
