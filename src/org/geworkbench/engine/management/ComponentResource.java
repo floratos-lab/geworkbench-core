@@ -109,7 +109,7 @@ public class ComponentResource {
                 File file = libFiles[i];
                 if (!file.isDirectory()) {
                     String name = file.getName().toLowerCase();
-                    if (name.endsWith(".jar") || name.endsWith(".zip") || name.endsWith(".xsd") || name.endsWith(".xml") || name.endsWith(".dtd") || name.endsWith(".properties") || name.endsWith(".dll")) {
+                    if (name.endsWith(".jar") || name.endsWith(".zip") || name.endsWith(".xsd") || name.endsWith(".xml") || name.endsWith(".dtd") || name.endsWith(".properties") || name.endsWith(".ccmproperties")|| name.endsWith(".dll")) {
                         log.debug("Adding " + file.toURL() + " to classpath.");
                         urls.add(file.toURL());
                     }

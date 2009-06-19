@@ -62,7 +62,7 @@ import com.jgoodies.forms.layout.FormLayout;
  * This is the main menu for the Component Configuration Manager.
  * 
  * @author tg2321
- * @version $Id: ComponentConfigurationManagerWindow.java,v 1.5 2009-06-15 14:01:09 tgarben Exp $
+ * @version $Id: ComponentConfigurationManagerWindow.java,v 1.6 2009-06-19 18:30:34 tgarben Exp $
  */
 public class ComponentConfigurationManagerWindow {
 
@@ -650,7 +650,7 @@ public class ComponentConfigurationManagerWindow {
 			String ccmFileName = ((String) ccmTableModel.getModelValueAt(i,
 					CCMTableModel.CCM_FILE_NAME_INDEX));
 
-			String propFileName = ccmFileName.replace(".ccm.xml", ".properties");
+			String propFileName = ccmFileName.replace(".ccm.xml", ".ccmproperties");
 			String sChoice = (new Boolean(choice)).toString();
 			
 			ComponentConfigurationManager.writeProperty(resource, propFileName, "on-off", sChoice);
@@ -1182,7 +1182,7 @@ public class ComponentConfigurationManagerWindow {
 
 				if (currentChoice.booleanValue()) {
 					/* PLUGIN SELECTED */
-					String propFileName = ccmFileName.replace(".ccm.xml", ".properties");
+					String propFileName = ccmFileName.replace(".ccm.xml", ".ccmproperties");
 					String licenseAccepted = ComponentConfigurationManager.readProperty(folder, propFileName, "licenseAccepted");
 					Boolean boolRequired = record.isMustAccept();
 					boolean bRequired = boolRequired.booleanValue();
@@ -1372,7 +1372,7 @@ public class ComponentConfigurationManagerWindow {
 							folderName, ccmFileName, license, bMustAccept, documentation, requiredComponents,
 							relatedComponents, bParser, bAnalysis, bVisualizer, bLoadByDefault) ;
 
-					String propFileName = ccmFileName.replace(".ccm.xml", ".properties");
+					String propFileName = ccmFileName.replace(".ccm.xml", ".ccmproperties");
 	
 					String onOff = ComponentConfigurationManager.readProperty(folderName, propFileName, "on-off");
 
@@ -1425,7 +1425,7 @@ public class ComponentConfigurationManagerWindow {
 	 * GUI row structure
 	 * 
 	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.5 2009-06-15 14:01:09 tgarben Exp $
+	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.6 2009-06-19 18:30:34 tgarben Exp $
 	 */
 	private class TableRow {
 		private boolean selected = false;
