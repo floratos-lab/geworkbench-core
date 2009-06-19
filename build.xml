@@ -218,6 +218,22 @@
 		</subant>
 		<delete dir="components/genspace/conf" />
 		<delete dir="components/analysis/conf" />
+		<property file="conf/application.properties" />
+		<antcall target="cleanSettingFromDefaultLocation" />
+		<antcall target="cleanSettingFromUserLocation" />
+	</target>
+	<target name="cleanSettingFromDefaultLocation" unless="user.setting.directory">
+		<echo message="clean settings from default location"/>
+		<delete verbose="true">
+			<fileset dir="components" includes="*/*.ccmproperties"/>
+			<fileset dir="components" includes="*/savedParams/*"/>
+		</delete>
+	</target>
+	<target name="cleanSettingFromUserLocation" if="user.setting.directory">
+		<echo message="clean settings from user location ${user.home}${file.separator}${user.setting.directory} "/>
+		<delete verbose="true">
+			<fileset dir="${user.home}${file.separator}${user.setting.directory}" />
+		</delete>
 	</target>
 	<!-- ====================================================================== -->
 	<!-- JAVADOC -->
