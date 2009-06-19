@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -19,13 +18,12 @@ import java.util.Vector;
 import java.util.Map.Entry;
 
 import javax.help.HelpSet;
-import javax.swing.ImageIcon;
+import javax.help.TryMap;
 
 import org.apache.commons.digester.Digester;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.geworkbench.engine.config.ComponentMetadata;
 import org.geworkbench.engine.config.PluginDescriptor;
 import org.geworkbench.engine.config.PluginRegistry;
 import org.geworkbench.engine.config.UILauncher;
@@ -256,18 +254,31 @@ public class ComponentConfigurationManager {
 			}
 		}
 
-
-		/* Load Help */
-		
-
-		// TODO ADD SORTING
-//		class ValSorter implements Comparator<String> {
-//			  public int compare(String s1, String s2) {
-//			    return s1.compareTo(s2);
-//			  }
-//		}
-		
+		/* Remove HelpSets from Master Help*/
 		HelpSet localMasterHelp = GeawConfigObject.getMasterHelp();
+		Enumeration<HelpSet> helpSets =  localMasterHelp.getHelpSets();
+		ArrayList<HelpSet> helpSetList = new ArrayList<HelpSet>();
+		while (helpSets.hasMoreElements()){
+			HelpSet helpSet = helpSets.nextElement();
+			helpSetList.add(helpSet);
+		}
+		for (int i=0;i<helpSetList.size(); i++){
+			localMasterHelp.remove(helpSetList.get(i));
+		}
+		
+		/* Remove Combined Maps from Master Help*/
+		TryMap combinedMap =  (TryMap)localMasterHelp.getCombinedMap();
+		Enumeration<?>  maps = combinedMap.getMaps();
+		ArrayList<javax.help.Map> mapsList = new ArrayList<javax.help.Map>();
+		while (maps.hasMoreElements()){
+			javax.help.Map map = (javax.help.Map)maps.nextElement();
+			mapsList.add(map);
+		}
+		for (int i=0;i<mapsList.size(); i++){
+			combinedMap.remove(mapsList.get(i));
+		}
+
+		/* Rebuild Help here */
 		TreeMap<String, HelpSet> localSortedHelpSets = GeawConfigObject.getSortedHelpSets();
 		for (Map.Entry<String, HelpSet> entry : localSortedHelpSets.entrySet()) {
 			if (!helpSetContainsTitle(localMasterHelp, entry.getValue().getTitle())){
@@ -545,13 +556,13 @@ public class ComponentConfigurationManager {
 
 		return true;
 	}
-
 	/**
 	 * A custom parser for the ccm descriptor.
 	 * 
 	 * @param path
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public CcmComponent getPluginsFromCcmFile(String folder, String fileName) {
 		CcmComponent ccmComponent = new CcmComponent();
 
@@ -790,70 +801,6 @@ public class ComponentConfigurationManager {
 		digester.addCallParam("geaw-config/plugin/coupled-event", 1, "source");
 	}	
 
-    
-    public static ComponentMetadata processComponentDescriptor(String resourceName, Class type) throws IOException, JDOMException{
-        // Look for descriptor file
-        ComponentMetadata metadata = new ComponentMetadata(type, resourceName);
-        String filename = type.getSimpleName() + CCM_EXTENSION;
-        SAXBuilder builder = new SAXBuilder();
-        InputStream in = type.getResourceAsStream(filename);
-        if (in != null) {
-            Document doc = builder.build(in);
-            Element root = doc.getRootElement();
-            if (root.getName().equals("component-descriptor")) {
-                root = root.getChild("component");
-                if (root != null) {
-                    // Check for optional attributes
-                    String iconName = root.getAttributeValue("icon");
-                    if (iconName != null) {
-                        URL url = type.getResource(iconName);
-                        if (url != null) {
-                            ImageIcon icon = new ImageIcon(url);
-                            if (icon != null) {
-                                metadata.setIcon(icon);
-                            }
-                        } else {
-                            System.out.println("Icon for component '" + type + "' not found: " + iconName);
-                        }
-                    }
-                    String commonName = root.getAttributeValue("name");
-                    if (commonName != null) {
-                        metadata.setName(commonName);
-                    }
-                    String version = root.getAttributeValue("version");
-                    if (version != null) {
-                        metadata.setVersion(version);
-                    }
-                    String description = root.getText().trim();
-                    if ((description != null) && (description.length() > 0)) {
-                        metadata.setDescription(description);
-                    }
-                    java.util.List<Element> elements = root.getChildren();
-                    for (int i = 0; i < elements.size(); i++) {
-                        Element element = elements.get(i);
-                        if (element.getName().equals("menu-item")) {
-                            metadata.addMenuInfo(
-                                    element.getAttributeValue("path"),
-                                    element.getAttributeValue("mode"),
-                                    element.getAttributeValue("var"),
-                                    element.getAttributeValue("icon"),
-                                    element.getAttributeValue("accelerator")
-                            );
-                        } else if (element.getName().equals("online-help")) {
-                            metadata.setHelpSet(element.getAttributeValue("helpSet"));
-                        }
-                    }
-                    if (metadata.getName() == null) {
-                        metadata.setName(type.getSimpleName());
-                    }
-                    return metadata;
-                }
-            }
-        }
-        ComponentMetadata defaultData = new ComponentMetadata(type, resourceName);
-        defaultData.setName(type.getSimpleName());
-        return defaultData;
-    }
 
     
 }
