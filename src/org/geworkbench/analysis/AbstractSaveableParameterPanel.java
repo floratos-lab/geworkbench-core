@@ -23,7 +23,7 @@ import org.geworkbench.bison.model.analysis.ParameterPanel;
  * @author First Genetic Trust Inc.
  * @author keshav
  * @author yc2480
- * @version $Id: AbstractSaveableParameterPanel.java,v 1.6 2009-02-18 21:17:53 chiangy Exp $
+ * @version $Id: AbstractSaveableParameterPanel.java,v 1.7 2009-06-19 19:28:01 jiz Exp $
  */
 public abstract class AbstractSaveableParameterPanel extends ParameterPanel {
 	/**
@@ -156,4 +156,10 @@ public abstract class AbstractSaveableParameterPanel extends ParameterPanel {
 	public boolean getStopNotifyAnalysisPanelTemporaryFlag() {
 		return stopNotifyTemporaryFlag;
 	}
+	
+	/**
+	 * For the parameter fields that are not in the input map, add them as default value
+	 */
+	public abstract void fillDefaultValues(Map<Serializable, Serializable> parameters);
+
 }
