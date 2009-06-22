@@ -44,7 +44,7 @@ import org.ginkgo.labs.util.FileTools;
  * @author First Genetic Trust Inc.
  * @author keshav
  * @author yc2480
- * @version $Id: AbstractAnalysis.java,v 1.27 2009-06-19 19:32:23 jiz Exp $
+ * @version $Id: AbstractAnalysis.java,v 1.28 2009-06-22 17:25:52 chiangy Exp $
  */
 @SuppressWarnings("unchecked")
 public abstract class AbstractAnalysis implements Analysis, Serializable,
@@ -204,6 +204,9 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 						String setName = unscrubFilename(files);
 						Map<Serializable, Serializable> parameters = deserializeNamedParameterSet(setName);
 						ParameterKey key = new ParameterKey(getIndex(), setName);
+						log.debug("Try loading saved parameter file "+files);
+						log.debug("We are looking for "+key.toString());
+						log.debug("This one looks like it's for "+parameters.get(ParameterKey.class.getSimpleName()));
 						/*
 						 * Since one package can contain multiple components
 						 * which have different panels, we need to make sure we
@@ -212,6 +215,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 						if (parameters != null)
 							if (parameters.get(ParameterKey.class.getSimpleName()).equals(
 									key.toString())) {
+								log.debug("put it in to parameterHash");
 								parameterHash.put(key, parameters);
 								lastParameterSetName = setName;
 							}
