@@ -62,7 +62,7 @@ import com.jgoodies.forms.layout.FormLayout;
  * This is the main menu for the Component Configuration Manager.
  * 
  * @author tg2321
- * @version $Id: ComponentConfigurationManagerWindow.java,v 1.6 2009-06-19 18:30:34 tgarben Exp $
+ * @version $Id: ComponentConfigurationManagerWindow.java,v 1.7 2009-06-22 14:11:15 tgarben Exp $
  */
 public class ComponentConfigurationManagerWindow {
 
@@ -1425,7 +1425,7 @@ public class ComponentConfigurationManagerWindow {
 	 * GUI row structure
 	 * 
 	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.6 2009-06-19 18:30:34 tgarben Exp $
+	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.7 2009-06-22 14:11:15 tgarben Exp $
 	 */
 	private class TableRow {
 		private boolean selected = false;
@@ -1649,8 +1649,8 @@ public class ComponentConfigurationManagerWindow {
 	@SuppressWarnings("unchecked")
 	private class TableNameComparator implements Comparator{
 		public int compare(Object row1, Object row2){
-			String name1 = ( (TableRow) row1).getName();
-			String name2 = ( (TableRow) row2).getName();
+			String name1 = ( (TableRow) row1).getName().toLowerCase();
+			String name2 = ( (TableRow) row2).getName().toLowerCase();
 			return name1.compareTo(name2);
 		}
 	}
