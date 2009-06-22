@@ -222,6 +222,7 @@ public class ProgressBar
     public void setMessage(String message) {
         jProgressBar.setToolTipText(message);
         jLabel1.setText(message);
+        this.pack();
     }
 
     /**
