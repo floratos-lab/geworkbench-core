@@ -37,10 +37,4 @@ public interface DSGSEAResultDataSet extends DSAncillaryDataSet
 	 * @return
 	 */
 	public abstract String getReportFile();
-
-	/**
-	 *
-	 * @return
-	 */
-	public abstract String getGSDatabaseFile();
 }

@@ -20,14 +20,11 @@ public class CSGSEAResultDataSet extends CSAncillaryDataSet implements DSGSEARes
 
 	static Log log = LogFactory.getLog(CSGSEAResultDataSet.class);
 	private String reportFile;
-	private String gsDatabaseFile;
 
 
-	public CSGSEAResultDataSet(DSDataSet parent, String label, String reportFile,
-			String gsDatabaseFile) {
+	public CSGSEAResultDataSet(DSDataSet parent, String label, String reportFile) {
 		super(parent, label);
 		this.reportFile = reportFile;
-		this.gsDatabaseFile = gsDatabaseFile;
 	}
 
 	/*
