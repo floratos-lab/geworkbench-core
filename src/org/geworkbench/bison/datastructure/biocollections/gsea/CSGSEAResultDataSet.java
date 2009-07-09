@@ -66,16 +66,6 @@ public class CSGSEAResultDataSet extends CSAncillaryDataSet implements DSGSEARes
 		return reportFile;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.geworkbench.bison.datastructure.biocollections.gsea.DSGSEAResultDataSet#getGSDatabaseFile()
-	 */
-	public String getGSDatabaseFile()
-    {
-		return gsDatabaseFile;
-	}
-
 
 	/*
 	 * (non-Javadoc)
