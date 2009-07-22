@@ -12,6 +12,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParserListener;
 import org.geworkbench.engine.ccm.ComponentConfigurationManager;
+import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.config.rules.GeawConfigRule;
 import org.geworkbench.engine.config.rules.PluginRule;
 import org.geworkbench.util.SplashBitmap;
@@ -224,6 +225,8 @@ public class UILauncher implements AnnotationParserListener {
         }
 
         /* Load Components */
+        GUIFramework guiWindow = GeawConfigObject.getGuiWindow();
+        guiWindow.setVisible(false);
         ComponentConfigurationManager ccm = new ComponentConfigurationManager(); 
         ccm.loadAllComponentFolders();
         ccm.loadSelectedComponents();
@@ -237,6 +240,8 @@ public class UILauncher implements AnnotationParserListener {
         //            e.printStackTrace();
         //        }
         splash.hideSplash();
+        guiWindow.setVisible(true);
+		GeawConfigObject.getGuiWindow().setVisualizationType(null);
     }
 
     public boolean annotationParserUpdate(String text) {

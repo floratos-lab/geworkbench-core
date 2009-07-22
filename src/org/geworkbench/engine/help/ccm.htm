@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html dir="ltr" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en"><head>
+
+        </head><body>
+<br>
+</p>
+<a name="Overview"></a><h2>Overview</h2>
+<p>geWorkbench  supports the dynamic loading and
+unloading of individual components for analysis and visualization. The
+Component Configuartion Manager (CCM) lists each available component,
+provides descriptive and license information, and controls loading and
+unloading. The ability to customize the loaded components may be useful
+to those who intend only to use particular types of analysis. It may in
+some cases also increase the responsiveness of the application, as
+potentially fewer viewers may need to respond to particular data events
+(new data set, marker set activation etc.).
+</p><p><br>As shipped, the CCM may appear as in the figure below, with
+only basic components configured. Individual components can be added by
+clicking on their check boxes.
+</p><p><br>
+<img src="ccm_files/T_Component_Configuration_Manager.png" alt="Image:T_Component_Configuration_Manager.png" longdesc="/workbench/index.php/Image:T_Component_Configuration_Manager.png" width="706" height="606">
+</p><p><br>
+</p><p>As each component is added, additional components may also be
+required, e.g. adding an analysis may require a particular viewer.
+These dependencies are all handled in the CCM. An example is shown in
+the following figure, where adding the ARACNe component also requires
+adding the Cytoscape component.
+</p><p><br>
+<img src="ccm_files/T_CCM_ARACNE.png" alt="Image:T_CCM_ARACNE.png" longdesc="/workbench/index.php/Image:T_CCM_ARACNE.png" width="502" height="398">
+</p><p><br>If a component requires agreeing to a license, the license
+will also be displayed at this time, with the option to accept or
+reject it.
+</p>
+<a name="Individual_controls"></a><h2>Individual controls</h2>
+<ul><li> <b>Display</b>&nbsp;: All, Only Loaded, Only Unloaded - selects which components to display.
+</li><li> <b>Show by type</b>: All, Parsers, Analysis plugins, Visualizers - filters displayed components by their category of action.
+</li></ul>
+<p><br>
+</p>
+<ul><li> <b>Name</b>: Component name
+</li><li> <b>Version</b>: Component version
+</li><li> <b>Author</b>: Component author or source of primary calculation code.
+</li><li> <b>Author URL</b>: some components have a URL to the author's website configured.
+</li><li> <b>Tool URL</b>: some components have a URL to their own website configured.
+</li></ul>
+<p><br>
+</p>
+<ul><li> <b>View license</b> - If a license is required for a
+component, it can be displayed by highlighting the component in the
+list and pressing this button.
+</li><li> <b>View documentation</b> - Provided for displaying extra documentation about the component if available.
+</li><li> <b>View external site</b> - same as the Tool URL link.
+</li></ul>
+<p><br>
+</p>
+<ul><li> <b>Apply</b> - if any changes have been made to the
+check-boxes indicating which components are to be loaded, pushing
+"Apply" causes the changes to actually be be made. </li><li> <b>Reset</b> - If changes have been made but "Apply" has not been pushed, set all checkboxes  back to their previous state.
+</li><li> <b>Close</b> - Close the CCM window.
+</li></ul>
+<p><br>
+</p>
+<ul><li> <b>On/Off</b> - checking/unchecking this box will
+select/deselect all optional components. As implemented, it will
+require responding to all dependency messages, so its use is not
+recommended at this time.
+</li></ul>
+</body></html>

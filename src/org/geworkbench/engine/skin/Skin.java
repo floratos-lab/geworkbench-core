@@ -469,25 +469,31 @@ public class Skin extends GUIFramework {
     private class DockableImpl extends DockableAdapter {
 
         private JPanel wrapper = null;
-        private JLabel initiator = null;
-        private String description = null;
-        private Component plugin = null;
-        private JPanel buttons = new JPanel();
-        private JPanel topBar = new JPanel();
-        private JButton docker = new JButton();
-        private JButton minimize = new JButton();
-        private JButton remove = new JButton();
-        private boolean docked = true;
+		private JLabel initiator = null;
+		private String description = null;
+		private Component plugin = null;
+		private JPanel buttons = new JPanel();
+		private JPanel topBar = new JPanel();
+		private JButton docker = new JButton();
+		/*	TODO implement me 
+		private JButton minimize = new JButton(); 
+		private JButton remove = new JButton();
+		*/
+		private boolean docked = true;
 
+		/*	TODO implement me
         private ImageIcon close_grey = new ImageIcon(Skin.class.getResource("close_grey.gif"));
         private ImageIcon close = new ImageIcon(Skin.class.getResource("close.gif"));
         private ImageIcon close_active = new ImageIcon(Skin.class.getResource("close_active.gif"));
+        */
         private ImageIcon min_grey = new ImageIcon(Skin.class.getResource("min_grey.gif"));
         private ImageIcon min = new ImageIcon(Skin.class.getResource("min.gif"));
         private ImageIcon min_active = new ImageIcon(Skin.class.getResource("min_active.gif"));
+        /*	TODO implement me
         private ImageIcon max_grey = new ImageIcon(Skin.class.getResource("max_grey.gif"));
         private ImageIcon max = new ImageIcon(Skin.class.getResource("max.gif"));
         private ImageIcon max_active = new ImageIcon(Skin.class.getResource("max_active.gif"));
+        */
         private ImageIcon dock_grey = new ImageIcon(Skin.class.getResource("dock_grey.gif"));
         private ImageIcon dock = new ImageIcon(Skin.class.getResource("dock.gif"));
         private ImageIcon dock_active = new ImageIcon(Skin.class.getResource("dock_active.gif"));
@@ -511,6 +517,7 @@ public class Skin extends GUIFramework {
                 }
             });
 
+            /*	TODO implement me
             minimize.setPreferredSize(new Dimension(16, 16));
             minimize.setBorderPainted(false);
             minimize.setIcon(min_grey);
@@ -534,12 +541,13 @@ public class Skin extends GUIFramework {
                     remove_actionPerformed(e);
                 }
             });
-
+			*/
             buttons.setLayout(new GridLayout(1, 3));
             buttons.add(docker);
+            /*	TODO implement me
             buttons.add(minimize);
             buttons.add(remove);
-
+             */
             initiator = new JLabel(" ");
             initiator.setForeground(Color.darkGray);
             initiator.setBackground(Color.getHSBColor(0.0f, 0.0f, 0.6f));
@@ -622,7 +630,7 @@ public class Skin extends GUIFramework {
         }
 
         private void minimize_actionPerformed(ActionEvent e) {
-
+        	//TODO Implement me
         }
 
         private void remove_actionPerformed(AWTEvent e) {

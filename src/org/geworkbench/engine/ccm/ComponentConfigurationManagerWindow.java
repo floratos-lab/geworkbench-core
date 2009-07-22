@@ -4,8 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Frame;
 import java.awt.ItemSelectable;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Vector;
 
 import javax.swing.AbstractButton;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -40,7 +41,6 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -54,6 +54,7 @@ import org.apache.commons.lang.StringUtils;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.events.ComponentConfigurationManagerUpdateEvent;
 import org.geworkbench.util.BrowserLauncher;
+import org.geworkbench.util.Util;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -62,7 +63,7 @@ import com.jgoodies.forms.layout.FormLayout;
  * This is the main menu for the Component Configuration Manager.
  * 
  * @author tg2321
- * @version $Id: ComponentConfigurationManagerWindow.java,v 1.7 2009-06-22 14:11:15 tgarben Exp $
+ * @version $Id: ComponentConfigurationManagerWindow.java,v 1.8 2009-07-22 15:34:32 jiz Exp $
  */
 public class ComponentConfigurationManagerWindow {
 
@@ -96,8 +97,8 @@ public class ComponentConfigurationManagerWindow {
 	private JButton resetButton = new JButton("Reset");
 	private JButton closeButton = new JButton("Close");
 
-	/* Use this in case duplicate URLs are not to be browsed. */ 	
-	private static String launchedURL = "";
+	private static int launchedRow = 999;
+	private static int launchedColumn = 999;
 	
 	public final static String DISPLAY_FILTER_ALL = "All";
 	public final static String DISPLAY_ONLY_LOADED = "Only loaded";
@@ -140,6 +141,7 @@ public class ComponentConfigurationManagerWindow {
 		if(ccmWindow == null){
 			ccmWindow = new ComponentConfigurationManagerWindow(menu);
 		}
+		ccmWindow.frame.setExtendedState(Frame.NORMAL);
 		ccmWindow.frame.setVisible(true);
 	}
 	
@@ -166,6 +168,7 @@ public class ComponentConfigurationManagerWindow {
 		splitPane = new JSplitPane();
 		scrollPaneForTextPane = new JScrollPane();
 		textPane = new JTextPane();
+		textPane.setText("\n\n\n\n\n");
 		bottompanel = new JPanel();
 		CellConstraints cc = new CellConstraints();
 		
@@ -309,7 +312,7 @@ public class ComponentConfigurationManagerWindow {
 				//======== splitPane ========
 				{
 					splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-					splitPane.setDividerLocation(.9d);
+					splitPane.setDividerLocation(.7d);
 					splitPane.setResizeWeight(0.5);
 
 					//======== scrollPaneForTable ========
@@ -341,14 +344,20 @@ public class ComponentConfigurationManagerWindow {
 							}
 						};
 						
-						table.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
+						TableCellRenderer defaultRenderer;
+						defaultRenderer = table.getDefaultRenderer(JButton.class);
+					    table.setDefaultRenderer(JButton.class, new JTableButtonRenderer(defaultRenderer));
+					    table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
 						ListSelectionModel cellSM = table.getSelectionModel();
 						cellSM.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 						cellSM.addListSelectionListener(new ListSelectionListener() {
 						    public void valueChanged(ListSelectionEvent e) {
+						    	boolean adjusting = e.getValueIsAdjusting();
+						    	if (adjusting){
+							    	return;
+						    	}
 						        int[] selectedRow = table.getSelectedRows();
-//						        int[] selectedColumn = table.getSelectedColumns();
 						        ListSelectionModel lsm = (ListSelectionModel)e.getSource();
 						        if (lsm.isSelectionEmpty()) {
 									textPane.setText(" ");
@@ -356,7 +365,9 @@ public class ComponentConfigurationManagerWindow {
 						            String description = (String)ccmTableModel.getValueAt(selectedRow[0], CCMTableModel.DESCRIPTION_INDEX);
 						        	textPane.setText(description);
 						        	
-						        	splitPane.setDividerLocation(.9d);
+						            if (textPane.getCaretPosition() > 1){
+						            	textPane.setCaretPosition(1);        	
+						            }
 						        }
 
 						        launchBrowser();
@@ -367,6 +378,10 @@ public class ComponentConfigurationManagerWindow {
 						columnSM.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 						columnSM.addListSelectionListener(new ListSelectionListener() {
 						    public void valueChanged(ListSelectionEvent e) {
+						    	boolean adjusting = e.getValueIsAdjusting();
+						    	if (adjusting){
+						    		return;
+						    	}
 
 						    	launchBrowser();
 						    }
@@ -382,21 +397,22 @@ public class ComponentConfigurationManagerWindow {
 								column.setMinWidth(60);
 								break;
 							case CCMTableModel.NAME_INDEX:
-								column.setMinWidth(140);
-								column.setPreferredWidth(100);
+								column.setPreferredWidth(300);
 								break;
 							case CCMTableModel.VERSION_INDEX:
 								column.setMaxWidth(50);
 								column.setMinWidth(50);
 								break;
 							case CCMTableModel.AUTHOR_INDEX:
-								column.setPreferredWidth(100);
+								column.setPreferredWidth(300);
 								break;
 							case CCMTableModel.AUTHOR_URL_INDEX:
-								column.setPreferredWidth(100);
+								column.setMinWidth(75);
+								column.setMaxWidth(75);
 								break;
 							case CCMTableModel.TOOL_URL_INDEX:
-								column.setPreferredWidth(100);
+								column.setMinWidth(75);
+								column.setMaxWidth(75);
 								break;
 							default:
 							}
@@ -460,10 +476,8 @@ public class ComponentConfigurationManagerWindow {
 			frame.setLocationRelativeTo(frame.getOwner());
 		} // ============ frame ============
 
-		// For Debugging purposes only
 		 TableColumn tc = table.getColumnModel().getColumn(0);
-		 tc.setHeaderRenderer(new CheckBoxHeader(new MyItemListener()));  
-		//For Debugging purposed only.
+		 tc.setHeaderRenderer(new CheckBoxHeader(new CheckBoxHeaderListener()));  
 
 		topPanel.setVisible(true);
 		splitPane.setVisible(true);
@@ -472,6 +486,7 @@ public class ComponentConfigurationManagerWindow {
 		scrollPaneForTextPane.setVisible(true);
 		textPane.setVisible(true);
 		bottompanel.setVisible(true);
+		ccmTableModel.updateView();
 		frame.setVisible(true);
 	}
 
@@ -488,14 +503,15 @@ public class ComponentConfigurationManagerWindow {
 			|| selectedColumn[0] == CCMTableModel.TOOL_URL_INDEX)) {
 	        	
     		int modelRow = ccmTableModel.getModelRow(selectedRow[0]);
-    		String url = (String) ccmTableModel.getModelValueAt(modelRow, selectedColumn[0]);
-
-    		// TODO figure out how to capture a row or a column change event without capturing both.
-    		// or keep track of row/column changes via the model.
-//    		if (launchedURL.equals(url)){
-//    			return;
-//    		}
-    		launchedURL = url;
+    		if (launchedRow == modelRow && launchedColumn == selectedColumn[0]){
+    			return;
+    		}
+    		launchedRow = modelRow;
+    		launchedColumn = selectedColumn[0];
+    		
+    		String url = "";
+   			JButton button = (JButton) ccmTableModel.getModelValueAt(modelRow, selectedColumn[0]);
+   			url = button.getToolTipText();
     		
 			try {
 				BrowserLauncher.openURL(url);
@@ -518,9 +534,8 @@ public class ComponentConfigurationManagerWindow {
 
         	
     		int modelRow = ccmTableModel.getModelRow(selectedRow[0]);
-    		String url = (String) ccmTableModel.getModelValueAt(modelRow, CCMTableModel.TOOL_URL_INDEX);
-
-    		launchedURL = url;
+    		JButton jButton = (JButton) ccmTableModel.getModelValueAt(modelRow, CCMTableModel.TOOL_URL_INDEX);
+    		String url = jButton.getToolTipText();
     		
 			try {
 				BrowserLauncher.openURL(url);
@@ -531,7 +546,6 @@ public class ComponentConfigurationManagerWindow {
 			}
 		}
 	}
-
 	
 	
 	/**
@@ -779,7 +793,7 @@ public class ComponentConfigurationManagerWindow {
 
 			for (int i = 0; i < viewRows.size(); i++) {
 				if (loadedFilter(i) || showByTypeFilter(i)
-						|| keyWordSearchFilter(i)) {
+						|| keyWordSearchFilter(i) || hiddenFilter(i)) {
 					viewRows.set(i, Boolean.FALSE);
 				} else {
 					viewRows.set(i, Boolean.TRUE);
@@ -834,6 +848,20 @@ public class ComponentConfigurationManagerWindow {
 			return true;
 		}
 
+		/**
+		 * 
+		 * @param modelRow
+		 * @return
+		 */
+		private boolean hiddenFilter(int modelRow){
+			Boolean isHidden = (Boolean)getModelValueAt(modelRow, CCMTableModel.HIDDEN_INDEX);
+
+			if (isHidden){
+				return true;
+			}
+			
+			return false;
+		}
 		
 		/**
 		 * 
@@ -881,7 +909,7 @@ public class ComponentConfigurationManagerWindow {
 			
 			keywordFilterValue = keywordFilterValue.toLowerCase().trim(); 
 			
-			for (int j=FIRST_STRING_COLUMN; j<LAST_STRING_COLUMN; j++ ){
+			for (int j=FIRST_STRING_COLUMN; j<AUTHOR_INDEX; j++ ){
 				String fieldValue = ((String)getModelValueAt(modelRow, j)).toLowerCase();
 				
 				if (fieldValue.contains(keywordFilterValue)){
@@ -915,10 +943,7 @@ public class ComponentConfigurationManagerWindow {
 			Object value = getModelValueAt(modelRow, column);
 
 			if (column == AUTHOR_URL_INDEX || column == TOOL_URL_INDEX){
-				String sValue = (String) value;
-				sValue = "<html><a href=\"__noop\">" +sValue+ "</a></html>";
-				
-				return (String)sValue;
+				return (JButton)value;
 			}
 			
 			return value;
@@ -961,9 +986,10 @@ public class ComponentConfigurationManagerWindow {
 		public static final int PARSER_INDEX = 15;
 		public static final int ANALYSIS_INDEX = 16;
 		public static final int VISUALIZER_INDEX = 17;
-		public static final int LOAD_BY_DEFAULT = 18;
+		public static final int LOAD_BY_DEFAULT_INDEX = 18;
+		public static final int HIDDEN_INDEX = 19;
 		public static final int LAST_VISIBLE_COLUMN = TOOL_URL_INDEX;
-		public static final int LAST_COLUMN = LOAD_BY_DEFAULT;
+		public static final int LAST_COLUMN = HIDDEN_INDEX;
 		public static final int FIRST_STRING_COLUMN = NAME_INDEX;
 		public static final int LAST_STRING_COLUMN = LICENSE_INDEX;
 		private String[] columnNames = { "On/Off", "Name", "Version", "Author",
@@ -1031,6 +1057,10 @@ public class ComponentConfigurationManagerWindow {
 				return Boolean.class;
 			}
 
+			if(column == AUTHOR_URL_INDEX || column == TOOL_URL_INDEX){
+				return JButton.class;
+			}
+
 			return String.class;
 		}
 
@@ -1073,13 +1103,11 @@ public class ComponentConfigurationManagerWindow {
 			case VERSION_INDEX:
 				return (String) record.getVersion();
 			case AUTHOR_INDEX:
-			// TODO take this out for production
 				return (String) record.getAuthor();
-//				return (String) record.getAuthor()+" - "+record.getFolder()+"\\"+record.getFileName();
 			case AUTHOR_URL_INDEX:
-				return (String) record.getAuthorURL();
+				return (JButton) record.getAuthorURL();
 			case TOOL_URL_INDEX:
-				return (String) record.getToolURL();
+				return (JButton) record.getToolURL();
 			case CLASS_INDEX:
 				return (String) record.getClazz();
 			case DESCRIPTION_INDEX:
@@ -1104,9 +1132,11 @@ public class ComponentConfigurationManagerWindow {
 				return (Boolean) record.isAnalysis();
 			case VISUALIZER_INDEX:
 				return (Boolean)  record.isVisualizer();
-			case LOAD_BY_DEFAULT:
+			case LOAD_BY_DEFAULT_INDEX:
 				return (Boolean)  record.isLoadByDefault();
-		
+			case HIDDEN_INDEX:
+				return (Boolean)  record.isHidden();
+				
 			default:
 				return null;
 			}
@@ -1210,7 +1240,7 @@ public class ComponentConfigurationManagerWindow {
 					}
 
 					if (!validation) {
-						fireTableCellUpdated(modelRow, column);
+						ccmTableModel.fireTableDataChanged();
 						return true;
 					}
 
@@ -1304,6 +1334,7 @@ public class ComponentConfigurationManagerWindow {
 			String analysis = null;
 			String visualizer = null;
 			String loadByDefault = null;
+			String hidden = null;
 			
 			ArrayList<String> allComponentFolders = this.manager.loadAllComponentFolders();
 			
@@ -1344,12 +1375,14 @@ public class ComponentConfigurationManagerWindow {
 					analysis = ccmComponent.getAnalysis();
 					visualizer = ccmComponent.getVisualizer();
 					loadByDefault = ccmComponent.getLoadByDefault();
+					hidden = ccmComponent.getHidden();
 
 					boolean bMustAccept = false;
 					boolean bParser = false;
 					boolean bAnalysis = false;
 					boolean bVisualizer = false;
 					boolean bLoadByDefault = false;
+					boolean bHidden = false;
 
 					if (mustAccept!=null && mustAccept.equalsIgnoreCase("true")){
 						bMustAccept = true;
@@ -1366,11 +1399,14 @@ public class ComponentConfigurationManagerWindow {
 					if (loadByDefault!=null && loadByDefault.equalsIgnoreCase("true")){
 						bLoadByDefault = true;
 					}
+					if (hidden!=null && hidden.equalsIgnoreCase("true")){
+						bHidden = true;
+					}
 					
 					TableRow tableRow = new TableRow(false, name, version,
 							author, authorURL, toolURL, clazz, description,
 							folderName, ccmFileName, license, bMustAccept, documentation, requiredComponents,
-							relatedComponents, bParser, bAnalysis, bVisualizer, bLoadByDefault) ;
+							relatedComponents, bParser, bAnalysis, bVisualizer, bLoadByDefault, bHidden);
 
 					String propFileName = ccmFileName.replace(".ccm.xml", ".ccmproperties");
 	
@@ -1425,7 +1461,7 @@ public class ComponentConfigurationManagerWindow {
 	 * GUI row structure
 	 * 
 	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.7 2009-06-22 14:11:15 tgarben Exp $
+	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.8 2009-07-22 15:34:32 jiz Exp $
 	 */
 	private class TableRow {
 		private boolean selected = false;
@@ -1447,6 +1483,7 @@ public class ComponentConfigurationManagerWindow {
 		private boolean analysis = false;
 		private boolean visualizer = false;
 		private boolean loadByDefault = false;
+		private boolean hidden = false;
 		
 		/**
 		 * Constructor
@@ -1467,7 +1504,7 @@ public class ComponentConfigurationManagerWindow {
 		public TableRow(boolean selected, String name, String version,
 				String author, String authorURL, String toolURL, String clazz,
 				String description, String folder, String fileName, String license, boolean mustAccept, String documentation,
-				List<String> requiredComponents, List<String> relatedComponents, boolean parser, boolean analysis, boolean visualizer, boolean loadByDefault) {
+				List<String> requiredComponents, List<String> relatedComponents, boolean parser, boolean analysis, boolean visualizer, boolean loadByDefault, boolean hidden) {
 			super();
 			this.selected = selected;
 			this.name = name;
@@ -1488,6 +1525,7 @@ public class ComponentConfigurationManagerWindow {
 			this.analysis = analysis;
 			this.visualizer = visualizer;
 			this.loadByDefault = loadByDefault;
+			this.hidden = hidden;
 		}
 
 		public boolean isSelected() {
@@ -1522,16 +1560,25 @@ public class ComponentConfigurationManagerWindow {
 			this.author = author;
 		}
 
-		public String getAuthorURL() {
-			return authorURL;
+		public JButton getAuthorURL() {
+			ImageIcon image = Util.createImageIcon("/org/geworkbench/engine/visualPlugin.png", this.authorURL);
+			
+			JButton button = new JButton(image);
+			button.setToolTipText(this.authorURL);
+			button.setBorderPainted(false);
+			return button;
 		}
-
+		
 		public void setAuthorURL(String authorURL) {
 			this.authorURL = authorURL;
 		}
 
-		public String getToolURL() {
-			return toolURL;
+		public JButton getToolURL() {
+			ImageIcon image = Util.createImageIcon("/org/geworkbench/engine/visualPlugin.png", this.authorURL);
+			JButton button = new JButton(image);
+			button.setToolTipText(this.toolURL);
+			button.setBorderPainted(false);
+			return button;
 		}
 
 		public void setToolURL(String toolURL) {
@@ -1642,6 +1689,13 @@ public class ComponentConfigurationManagerWindow {
 			this.loadByDefault = loadByDefault;
 		}
 
+		public boolean isHidden() {
+			return hidden;
+		}
+
+		public void setHidden(boolean hidden) {
+			this.hidden = hidden;
+		}
 		
 		
 	}
@@ -1656,25 +1710,22 @@ public class ComponentConfigurationManagerWindow {
 	}
 	
 	/**
-	 * FOR DEBUGING PURPOSES ONLY
+	 * CheckBoxHeaderListener
 	 * 
+	 * @author tg2321
+	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.8 2009-07-22 15:34:32 jiz Exp $
 	 */
-	class MyItemListener implements ItemListener {
+	class CheckBoxHeaderListener implements ItemListener {
 		public void itemStateChanged(ItemEvent e) {
 			Object source = e.getSource();
 			if (source instanceof AbstractButton == false)
 				return;
 			boolean checked = e.getStateChange() == ItemEvent.SELECTED;
 			for (int x = 0, y = table.getRowCount(); x < y; x++) {
-				
-				
-				String name = (String)ccmTableModel.getModelValueAt(x, CCMTableModel.NAME_INDEX);
-				
-				Boolean dummy = (Boolean)ccmTableModel.getModelValueAt(x, CCMTableModel.LOAD_BY_DEFAULT);
-				boolean bool = dummy.booleanValue();
-				
-				if (((Boolean)ccmTableModel.getModelValueAt(x, CCMTableModel.LOAD_BY_DEFAULT)).booleanValue()){
-					continue;
+
+				/* Don't unload LOAD_BY_DEFAULT_INDEX components */
+				if(!checked && ((Boolean)ccmTableModel.getModelValueAt(x, CCMTableModel.LOAD_BY_DEFAULT_INDEX)).booleanValue()){
+					continue;					
 				}
 				
 				table.setValueAt(new Boolean(checked), x, 0);
@@ -1683,8 +1734,10 @@ public class ComponentConfigurationManagerWindow {
 	}
 	
 	/**
+	 * CheckBoxHeader
 	 * 
-	 *	For Debugging purposes only.
+	 * @author tg2321
+	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.8 2009-07-22 15:34:32 jiz Exp $
 	 */
 	class CheckBoxHeader extends JCheckBox implements TableCellRenderer,
 			MouseListener {
@@ -1758,5 +1811,22 @@ public class ComponentConfigurationManagerWindow {
 		public void mouseExited(MouseEvent e) {
 		}
 	} 
+	
+	class JTableButtonRenderer implements TableCellRenderer {
+		private TableCellRenderer __defaultRenderer;
+
+		public JTableButtonRenderer(TableCellRenderer renderer) {
+			__defaultRenderer = renderer;
+		}
+
+		public Component getTableCellRendererComponent(JTable table,
+				Object value, boolean isSelected, boolean hasFocus, int row,
+				int column) {
+			if (value instanceof Component)
+				return (Component) value;
+			return __defaultRenderer.getTableCellRendererComponent(table,
+					value, isSelected, hasFocus, row, column);
+		}
+	}
 	
 }

@@ -7,6 +7,7 @@
 <map version="1.0">
 
 	<mapID target="introduction" url="introduction.htm"/>
+	<mapID target="ccm" url="ccm.htm"/>
 
 </map>
 

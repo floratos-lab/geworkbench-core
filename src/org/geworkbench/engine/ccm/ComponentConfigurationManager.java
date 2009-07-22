@@ -35,6 +35,7 @@ import org.geworkbench.engine.config.rules.PluginRuleCCM;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.engine.management.ComponentResource;
 import org.geworkbench.engine.management.TypeMap;
+import org.geworkbench.util.SplashBitmap;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -191,8 +192,8 @@ public class ComponentConfigurationManager {
 
 		for (int i = 0; i < allComponentFolders.size(); i++) {
 			String folder = allComponentFolders.get(i);
-
 			List<String> ccmFiles = this.foldersToCcmFiles.get(folder);
+
 			for (int j = 0; j < ccmFiles.size(); j++) {
 				String ccmFileName = ccmFiles.get(j);
 				String propFileName = ccmFileName.replace(CCM_EXTENSION,
@@ -200,6 +201,9 @@ public class ComponentConfigurationManager {
 
 				String onOff = readProperty(folder, propFileName, "on-off");
 				CcmComponent ccmComponent = getPluginsFromCcmFile(folder, ccmFileName );
+				String name = ccmComponent.getName();
+				SplashBitmap splash = UILauncher.splash;
+				splash.setProgressBarString(name);
 				String loadByDefault = ccmComponent.getLoadByDefault();
 				
 				if (onOff == null && loadByDefault.equalsIgnoreCase("true")){
@@ -616,7 +620,8 @@ public class ComponentConfigurationManager {
 									.getAttributeValue("documentation"));
 							ccmComponent.setLoadByDefault(element
 									.getAttributeValue("loadByDefault"));
-
+							ccmComponent.setHidden(element
+									.getAttributeValue("hidden"));
 							
 							List<Element> subElements = element.getChildren();
 							for (int j = 0; j < subElements.size(); j++) {
@@ -656,13 +661,13 @@ public class ComponentConfigurationManager {
 				}
 			}
 		} catch (Exception e) {
-			log.error(e, e);
+			log.error("ERROR LOADING:"+fileName, e);
 			return null;
 		} finally {
 			try {
 				inputStream.close();
 			} catch (IOException e) {
-				log.error(e, e);
+				log.error("ERROR LOADING:"+fileName, e);
 				return null;
 			}
 		}

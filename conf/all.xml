@@ -36,12 +36,15 @@
 
 	<plugin id="genepixFilter" name="Genepix File Format"
 		class="org.geworkbench.components.parsers.GenePixFileFormat" />
-
-	<plugin id="edgeListFilter" name="Edge List File Format"
-		class="org.geworkbench.components.parsers.EdgeListFileFormat" />
-
+	
 	<plugin id="rmaExpressFileFilter" name="RMA Express Format"
 		class="org.geworkbench.components.parsers.RMAExpressFileFormat" />
+		
+	<!-- 
+	<plugin id="edgeListFilter" name="Edge List File Format"
+		class="org.geworkbench.components.parsers.EdgeListFileFormat" />
+	
+	 -->	
 
 	<plugin id="commentsPanel" name="Dataset Annotation"
 		class="org.geworkbench.builtin.projects.comments.CommentsPanel">

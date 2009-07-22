@@ -9,7 +9,7 @@ import org.apache.commons.lang.StringUtils;
  * A java bean to hold the contents of a xxx.ccm.xml file.
  * 
  * @author tg2321
- * @version $Id: CcmComponent.java,v 1.2 2009-06-12 16:06:49 tgarben Exp $
+ * @version $Id: CcmComponent.java,v 1.3 2009-07-22 15:34:32 jiz Exp $
  * 
  */
 public class CcmComponent {
@@ -24,6 +24,7 @@ public class CcmComponent {
 	private String mustAccept = StringUtils.EMPTY;
 	private String documentation = StringUtils.EMPTY;
 	private String loadByDefault = StringUtils.EMPTY;
+	private String hidden = StringUtils.EMPTY;
 	private List<Plugin> plugins = null;
 	private List<String> requiredComponents = new ArrayList<String>();
 	private List<String> relatedComponents = new ArrayList<String>();
@@ -128,6 +129,18 @@ public class CcmComponent {
 			this.loadByDefault = "false";	
 		}else{
 			this.loadByDefault = loadByDefault;
+		}
+	}
+
+	public String getHidden() {
+		return hidden;
+	}
+
+	public void setHidden(String hidden) {
+		if (hidden == null){
+			this.hidden = "false";	
+		}else{
+			this.hidden = hidden;
 		}
 	}
 	

@@ -121,6 +121,11 @@ public class Util {
         return new ImageIcon(imgURL);
     }
 
+    public static ImageIcon createImageIcon(String path, String description) {
+        java.net.URL imgURL = Util.class.getResource(path);
+        return new ImageIcon(imgURL, description);
+    }
+    
     static public boolean deleteDirectory(File path) {
         if (path.exists()) {
             File[] files = path.listFiles();

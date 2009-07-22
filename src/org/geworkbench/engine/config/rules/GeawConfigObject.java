@@ -243,7 +243,6 @@ public class GeawConfigObject {
         // Display the main application window.
         if (startupWindow != null)
             startupWindow.dispose();
-        guiWindow.setVisible(true);
     }
 
     /**

@@ -276,7 +276,7 @@
 		<java fork="true" classname="org.geworkbench.engine.config.UILauncher">
 			<jvmarg value="-Xmx640M" />
 			<jvmarg value="-Djava.library.path=lib" />
-			<arg value="all_release.xml" />
+			<arg value="all.xml" />
 			<classpath refid="run.classpath" />
 		</java>
 	</target>
@@ -432,7 +432,7 @@
 				
 				<include name="${classes}/**/*" />
 
-				<!-- Include the following components for distribution 1.6.2-->
+				<!-- Include the following components for distribution 1.7.0-->
 				<include name="bin/matrixreduce/*" />
 				<include name="${components}/alignment/**/*" />
 				<include name="${components}/analysis/**/*" />
@@ -442,7 +442,11 @@
 				<include name="${components}/aracne-java/**/*" />
 				<include name="${components}/caarray/**/*" />
 				<include name="${components}/celprocessing/**/*" />
+				
 				<include name="${components}/classification/**/*" />
+				<exclude name="${components}/classification/smlr*" />
+				<exclude name="${components}/classification/**/smlr/*" />
+				
 				<include name="${components}/somclustering/**/*" />
 				<include name="${components}/colormosaic/**/*" />
 				<include name="${components}/cutenet/**/*" />
@@ -460,24 +464,23 @@
 
 				<include name="${components}/normalization/**/*" />
 				<include name="${components}/pathwaydecoder/**/*" />
-				<include name="${components}/patterns/**/*" />
+				
 				<include name="${components}/plots/**/*" />
 				<include name="${components}/poshistogram/**/*" />
 				<include name="${components}/promoter/**/*" />
+				<include name="${components}/pudge/**/*" />
 				<include name="${components}/selectors/**/*" />
 				<include name="${components}/sequenceretriever/**/*" />
-				<include name="${components}/alignment/**/*" />
 				<include name="${components}/alignment/**/*" />
 				<include name="${components}/sequences/**/*" />
 	 
 				<include name="${components}/versioninfo/**/*" />
 				<include name="${components}/viewers/**/*" />
 				<include name="${components}/markus/**/*" />
-				<include name="${components}/skyline/**/*" />
-				<include name="${components}/skylineview/**/*" />
+				<include name="${components}/welcome/**/*" />
 				
 				<include name="plugins_v2_4/**/*" />
-				<!-- Leave out the following components for distribution 1.6.2-->
+				<!-- Leave out the following components for distribution 1.7.0-->
 				<exclude name="**/synteny/*" />
 				<exclude name="**/src/**" />
 				<exclude name="**/test/**" />
@@ -485,7 +488,7 @@
 				<include name="annotation/**/*" />
 				<include name="${lib}/**/*" />
 				<include name="geWorkbenchLicense.txt" />
-				<include name="ReleaseNotes1.6.2.txt" />
+				<include name="ReleaseNotes1.7.0.txt" />
 				<include name="java.policy" />
 				 
 				<include name="launch_geworkbench.bat" />

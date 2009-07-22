@@ -3,6 +3,7 @@
 <toc version="1.0">
 
 		<tocitem target="introduction" text="Introduction"/>
+		<tocitem target="ccm" text="Component Configuration Manager"/>
 
 </toc>
 

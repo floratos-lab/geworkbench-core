@@ -22,7 +22,7 @@ import org.geworkbench.engine.ccm.ComponentConfigurationManagerWindow.CCMTableMo
 /**
  * 
  * @author tg2321
- * @version $Id: ComponentConfigurationManagerLoadDialog.java,v 1.1 2009-06-10 18:53:48 tgarben Exp $
+ * @version $Id: ComponentConfigurationManagerLoadDialog.java,v 1.2 2009-07-22 15:34:32 jiz Exp $
  * 
  */
 class ComponentConfigurationManagerLoadDialog extends JDialog implements
@@ -229,7 +229,7 @@ class ComponentConfigurationManagerLoadDialog extends JDialog implements
 			}
 		} else {
 			if (this.selectedRow >= 0) {
-				Boolean selection = (Boolean) ccmTableModel.getValueAt(
+				Boolean selection = (Boolean) ccmTableModel.getModelValueAt(
 						this.selectedRow, CCMTableModel.SELECTION_INDEX);
 				Boolean reset = new Boolean(!selection.booleanValue());
 				ccmTableModel.setModelValueAt(reset, this.selectedRow,

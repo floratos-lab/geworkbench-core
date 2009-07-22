@@ -23,7 +23,7 @@ import org.geworkbench.bison.model.analysis.ParameterPanel;
  * @author First Genetic Trust Inc.
  * @author keshav
  * @author yc2480
- * @version $Id: AbstractSaveableParameterPanel.java,v 1.7 2009-06-19 19:28:01 jiz Exp $
+ * @version $Id: AbstractSaveableParameterPanel.java,v 1.8 2009-07-22 15:34:33 jiz Exp $
  */
 public abstract class AbstractSaveableParameterPanel extends ParameterPanel {
 	/**
@@ -105,7 +105,7 @@ public abstract class AbstractSaveableParameterPanel extends ParameterPanel {
 	 * @see java.awt.Component#toString()
 	 */
 	public String getDataSetHistory() { // 
-		String answer = "getParametersStringForDataSetHistory() not implemented in parameter panel";
+		String answer = "getDataSetHistory() not implemented in parameter panel";
 		return answer;
 	}
 
