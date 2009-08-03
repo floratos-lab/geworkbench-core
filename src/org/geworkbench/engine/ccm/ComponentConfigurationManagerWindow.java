@@ -45,6 +45,7 @@ import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -63,7 +64,7 @@ import com.jgoodies.forms.layout.FormLayout;
  * This is the main menu for the Component Configuration Manager.
  * 
  * @author tg2321
- * @version $Id: ComponentConfigurationManagerWindow.java,v 1.8 2009-07-22 15:34:32 jiz Exp $
+ * @version $Id: ComponentConfigurationManagerWindow.java,v 1.9 2009-08-03 17:51:43 tgarben Exp $
  */
 public class ComponentConfigurationManagerWindow {
 
@@ -168,7 +169,6 @@ public class ComponentConfigurationManagerWindow {
 		splitPane = new JSplitPane();
 		scrollPaneForTextPane = new JScrollPane();
 		textPane = new JTextPane();
-		textPane.setText("\n\n\n\n\n");
 		bottompanel = new JPanel();
 		CellConstraints cc = new CellConstraints();
 		
@@ -302,7 +302,7 @@ public class ComponentConfigurationManagerWindow {
 							}
 						};
 
-						keywordSearchField.setText("text");
+						keywordSearchField.setText("Enter Text");
 						keywordSearchField.addKeyListener(actionListener3);
 					}
 					topPanel.add(keywordSearchField, cc.xy(12, 1));
@@ -312,7 +312,6 @@ public class ComponentConfigurationManagerWindow {
 				//======== splitPane ========
 				{
 					splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-					splitPane.setDividerLocation(.7d);
 					splitPane.setResizeWeight(0.5);
 
 					//======== scrollPaneForTable ========
@@ -390,14 +389,16 @@ public class ComponentConfigurationManagerWindow {
 						TableColumn column = null;
 						for (int i = 0; i < CCMTableModel.LAST_VISIBLE_COLUMN; i++) {
 							column = table.getColumnModel().getColumn(i);
+							column.setResizable(false);
 
 							switch (i) {
 							case CCMTableModel.SELECTION_INDEX:
-								column.setMaxWidth(60);
-								column.setMinWidth(60);
+								column.setMaxWidth(100);
+								column.setMinWidth(100);
 								break;
 							case CCMTableModel.NAME_INDEX:
 								column.setPreferredWidth(300);
+								column.setResizable(true);
 								break;
 							case CCMTableModel.VERSION_INDEX:
 								column.setMaxWidth(50);
@@ -405,14 +406,11 @@ public class ComponentConfigurationManagerWindow {
 								break;
 							case CCMTableModel.AUTHOR_INDEX:
 								column.setPreferredWidth(300);
+								column.setResizable(true);
 								break;
 							case CCMTableModel.AUTHOR_URL_INDEX:
-								column.setMinWidth(75);
-								column.setMaxWidth(75);
 								break;
 							case CCMTableModel.TOOL_URL_INDEX:
-								column.setMinWidth(75);
-								column.setMaxWidth(75);
 								break;
 							default:
 							}
@@ -488,6 +486,7 @@ public class ComponentConfigurationManagerWindow {
 		bottompanel.setVisible(true);
 		ccmTableModel.updateView();
 		frame.setVisible(true);
+		splitPane.setDividerLocation(.7d);
 	}
 
 	/*
@@ -676,6 +675,10 @@ public class ComponentConfigurationManagerWindow {
 
 			/* Remove Component */
 			manager.removeComponent(resource, ccmFileName);
+			ccmTableModel.fireTableDataChanged();
+            if (textPane.getCaretPosition() > 1){
+            	textPane.setCaretPosition(1);        	
+            }
 		}
 
 		ComponentRegistry componentRegistry = ComponentRegistry.getRegistry();
@@ -955,6 +958,14 @@ public class ComponentConfigurationManagerWindow {
 		public void setValueAt(Object value, int viewRow, int column ) {
 			int modelRow = getModelRow(viewRow);
 			setModelValueAt(value, modelRow, column, true);	
+		}
+		
+		/**
+		 * 
+		 */
+		public void setValueAt(Object value, int viewRow, int column, boolean validation ) {
+			int modelRow = getModelRow(viewRow);
+			setModelValueAt(value, modelRow, column, validation);	
 		}
 	}
 	
@@ -1294,6 +1305,11 @@ public class ComponentConfigurationManagerWindow {
 						}
 					}
 
+					if (!validation) {
+						ccmTableModel.fireTableDataChanged();
+						return true;
+					}
+					
 					/* If dependencies are found, then popup a dialog */
 					if (dependentPlugins.size() > 0) {
 						ComponentConfigurationManagerUnloadDialog ccmuld = new ComponentConfigurationManagerUnloadDialog(
@@ -1461,7 +1477,7 @@ public class ComponentConfigurationManagerWindow {
 	 * GUI row structure
 	 * 
 	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.8 2009-07-22 15:34:32 jiz Exp $
+	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.9 2009-08-03 17:51:43 tgarben Exp $
 	 */
 	private class TableRow {
 		private boolean selected = false;
@@ -1469,7 +1485,7 @@ public class ComponentConfigurationManagerWindow {
 		private String version = "";
 		private String author = "";
 		private String authorURL = null;
-		private String toolURL = "";
+		private String toolURL = null;
 		private String clazz = "";
 		private String description = "";
 		private String folder = "";
@@ -1574,7 +1590,7 @@ public class ComponentConfigurationManagerWindow {
 		}
 
 		public JButton getToolURL() {
-			ImageIcon image = Util.createImageIcon("/org/geworkbench/engine/visualPlugin.png", this.authorURL);
+			ImageIcon image = Util.createImageIcon("/org/geworkbench/engine/visualPlugin.png", this.toolURL);
 			JButton button = new JButton(image);
 			button.setToolTipText(this.toolURL);
 			button.setBorderPainted(false);
@@ -1713,7 +1729,7 @@ public class ComponentConfigurationManagerWindow {
 	 * CheckBoxHeaderListener
 	 * 
 	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.8 2009-07-22 15:34:32 jiz Exp $
+	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.9 2009-08-03 17:51:43 tgarben Exp $
 	 */
 	class CheckBoxHeaderListener implements ItemListener {
 		public void itemStateChanged(ItemEvent e) {
@@ -1721,14 +1737,14 @@ public class ComponentConfigurationManagerWindow {
 			if (source instanceof AbstractButton == false)
 				return;
 			boolean checked = e.getStateChange() == ItemEvent.SELECTED;
-			for (int x = 0, y = table.getRowCount(); x < y; x++) {
+			for (int x = 0, y = ccmTableModel.getRowCount(); x < y; x++) {
 
 				/* Don't unload LOAD_BY_DEFAULT_INDEX components */
 				if(!checked && ((Boolean)ccmTableModel.getModelValueAt(x, CCMTableModel.LOAD_BY_DEFAULT_INDEX)).booleanValue()){
 					continue;					
 				}
 				
-				table.setValueAt(new Boolean(checked), x, 0);
+				ccmTableModel.setValueAt(new Boolean(checked), x, 0, true);
 			}
 		}
 	}
@@ -1737,7 +1753,7 @@ public class ComponentConfigurationManagerWindow {
 	 * CheckBoxHeader
 	 * 
 	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.8 2009-07-22 15:34:32 jiz Exp $
+	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.9 2009-08-03 17:51:43 tgarben Exp $
 	 */
 	class CheckBoxHeader extends JCheckBox implements TableCellRenderer,
 			MouseListener {
@@ -1757,6 +1773,7 @@ public class ComponentConfigurationManagerWindow {
 			if (table != null) {
 				JTableHeader header = table.getTableHeader();
 				if (header != null) {
+					rendererComponent.setHorizontalAlignment(CENTER);
 					rendererComponent.setForeground(header.getForeground());
 					rendererComponent.setBackground(header.getBackground());
 					rendererComponent.setFont(header.getFont());
@@ -1822,10 +1839,21 @@ public class ComponentConfigurationManagerWindow {
 		public Component getTableCellRendererComponent(JTable table,
 				Object value, boolean isSelected, boolean hasFocus, int row,
 				int column) {
-			if (value instanceof Component)
+			if (value instanceof Component){
+				
+				if (column == CCMTableModel.AUTHOR_URL_INDEX || column == CCMTableModel.TOOL_URL_INDEX){
+					DefaultTableColumnModel colModel = (DefaultTableColumnModel) table.getColumnModel();
+				    TableColumn col = colModel.getColumn(column);
+					col.setMinWidth(75);
+					col.setMaxWidth(75);
+				}
+				
 				return (Component) value;
-			return __defaultRenderer.getTableCellRendererComponent(table,
-					value, isSelected, hasFocus, row, column);
+			}
+
+			Component component = __defaultRenderer.getTableCellRendererComponent(table,
+				value, isSelected, hasFocus, row, column);
+			return component;
 		}
 	}
 	
