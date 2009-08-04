@@ -64,7 +64,7 @@ import com.jgoodies.forms.layout.FormLayout;
  * This is the main menu for the Component Configuration Manager.
  * 
  * @author tg2321
- * @version $Id: ComponentConfigurationManagerWindow.java,v 1.10 2009-08-03 20:45:35 tgarben Exp $
+ * @version $Id: ComponentConfigurationManagerWindow.java,v 1.11 2009-08-04 14:56:06 tgarben Exp $
  */
 public class ComponentConfigurationManagerWindow {
 
@@ -1003,7 +1003,7 @@ public class ComponentConfigurationManagerWindow {
 		public static final int LAST_COLUMN = HIDDEN_INDEX;
 		public static final int FIRST_STRING_COLUMN = NAME_INDEX;
 		public static final int LAST_STRING_COLUMN = LICENSE_INDEX;
-		private String[] columnNames = { "On/Off", "Name", "Version", "Author",
+		private String[] columnNames = { "On/Off", "Name", "Author", "Version",
 				"Author URL", "Tool URL" };
 		protected Vector<TableRow> rows = new Vector<TableRow>();
 
@@ -1477,7 +1477,7 @@ public class ComponentConfigurationManagerWindow {
 	 * GUI row structure
 	 * 
 	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.10 2009-08-03 20:45:35 tgarben Exp $
+	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.11 2009-08-04 14:56:06 tgarben Exp $
 	 */
 	private class TableRow {
 		private boolean selected = false;
@@ -1729,7 +1729,7 @@ public class ComponentConfigurationManagerWindow {
 	 * CheckBoxHeaderListener
 	 * 
 	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.10 2009-08-03 20:45:35 tgarben Exp $
+	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.11 2009-08-04 14:56:06 tgarben Exp $
 	 */
 	class CheckBoxHeaderListener implements ItemListener {
 		public void itemStateChanged(ItemEvent e) {
@@ -1753,7 +1753,7 @@ public class ComponentConfigurationManagerWindow {
 	 * CheckBoxHeader
 	 * 
 	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.10 2009-08-03 20:45:35 tgarben Exp $
+	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.11 2009-08-04 14:56:06 tgarben Exp $
 	 */
 	class CheckBoxHeader extends JCheckBox implements TableCellRenderer,
 			MouseListener {
