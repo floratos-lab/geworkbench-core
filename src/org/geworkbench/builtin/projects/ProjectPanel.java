@@ -2486,47 +2486,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			publishProjectEvent(new ProjectEvent(ProjectEvent.SELECTED,
 					sourceMA, selectedNode));
 		}
-	}
+	}	
 	
-	
-	/**
-	 * For receiving the results of applying a filter to a microarray set.
-	 * 
-	 * @param e
-	 */
-	@Subscribe
-	public void receive(org.geworkbench.events.GetSequenceEvent e, Object source) {
-		
-		if (e == null) {
-			return;
-		}
-		DSMicroarraySet sourceMA = e.getOriginalMASet();
-		if (sourceMA == null) {
-			return;
-		}
-
-		// Set up the "history" information for the new dataset.
-		Object[] prevHistory = sourceMA.getValuesForName(HISTORY);
-		if (prevHistory != null) {
-			sourceMA.clearName(HISTORY);
-		}
-		sourceMA.addNameValuePair(HISTORY, (prevHistory == null ? ""
-				: (String) prevHistory[0])
-				+  e.getInformation() + "\n");
-		// Notify interested components that the selected dataset has changed
-		// The event is thrown only if the dataset filtered is the one
-		// currently selectd in the project panel.
-		DSDataSet currentDS = (selection != null ? selection.getDataSet()
-				: null);
-
-		if (currentDS != null && currentDS instanceof DSMicroarraySet
-				&& (DSMicroarraySet) currentDS == sourceMA) {
-			publishProjectEvent(new ProjectEvent(ProjectEvent.SELECTED,
-					sourceMA, selectedNode));
-		}
-	}
-	
-	
+	 
 
 	/**
 	 * Clears the current workspace from the project window and notifies all
