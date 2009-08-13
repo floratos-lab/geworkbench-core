@@ -44,7 +44,7 @@ import org.geworkbench.events.CaArrayRequestEvent;
 
 /**
  * @author xiaoqing
- * @version $Id: CaARRAYQueryPanel.java,v 1.15 2009-01-14 22:00:09 jiz Exp $
+ * @version $Id: CaARRAYQueryPanel.java,v 1.16 2009-08-13 20:53:57 jiz Exp $
  */
 public class CaARRAYQueryPanel extends JDialog {
 	private static final long serialVersionUID = -5214948658970068347L;
@@ -161,8 +161,7 @@ public class CaARRAYQueryPanel extends JDialog {
 		jList.setPreferredSize(new Dimension(149, 51));
 
 		jcatagoryComboBox
-				.addActionListener(new CaARRAYQueryPanel_jcatagoryComboBox_actionAdapter(
-						this));
+				.addActionListener(new CaARRAYQueryPanel_jcatagoryComboBox_actionAdapter());
 		jPanel1.setBorder(border2);
 		jPanel1.setLayout(new BorderLayout());
 		// chipPlatformNameField.setText(ChipFieldDefaultMessage);
@@ -611,18 +610,9 @@ public class CaARRAYQueryPanel extends JDialog {
 
 	private class CaARRAYQueryPanel_jcatagoryComboBox_actionAdapter implements
 			ActionListener {
-		private CaARRAYQueryPanel adaptee;
-
-		CaARRAYQueryPanel_jcatagoryComboBox_actionAdapter(
-				CaARRAYQueryPanel adaptee) {
-			this.adaptee = adaptee;
-		}
 
 		public void actionPerformed(ActionEvent e) {
-			System.out
-					.println("WARNING: following action is very suspicious... in CaARRATQueryPanel.CaARRAYQueryPanel_jcatagoryComboBox_actionAdapter");
-
-			adaptee.jcatagoryComboBox_actionPerformed(e);
+			CaARRAYQueryPanel.this.jcatagoryComboBox_actionPerformed(e);
 		}
 	}
 
