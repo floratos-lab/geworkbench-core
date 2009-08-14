@@ -39,6 +39,10 @@ public class PluginRegistry {
      */
     private static HashMap visualAreaMap = new HashMap();
     /**
+     * stores the info about plugin, so the plugin can query it's name even in it's constructor.
+     */
+    private static HashMap<String,String> nameMap = new HashMap();
+    /**
      * Stores all application plugins.
      */
     private static Vector componentVector = new Vector(100);
@@ -159,7 +163,15 @@ public class PluginRegistry {
 
         return null;
     }
-
+    
+    public static void setNameMap(String className, String name){
+    	nameMap.remove(className);
+    	nameMap.put(className, name);
+    }
+    public static String getNameMap(String className){
+    	return nameMap.get(className);
+    }
+    
     /**
      * @param klass Class of an actual plugin.
      * @return The corresponding <code>PluginDescripto</code> from the <

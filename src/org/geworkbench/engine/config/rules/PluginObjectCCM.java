@@ -158,6 +158,7 @@ public class PluginObjectCCM extends PluginObject{
      * @param resourceName Resource from which to load the plugin.
      */
     public void createPlugin(String id, String name, String className, String resourceName) {
+    	PluginRegistry.setNameMap(className, name);
         compDes = new PluginDescriptor(className, id, name, resourceName, loadOrderTracker);
         loadOrderTracker++;
         Debug.debug("PluginObject::createPlugIn --> Creating id = " + id + " name = " + name + " className = " + className + " resourceName = " + resourceName);
