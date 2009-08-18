@@ -44,7 +44,7 @@ import org.ginkgo.labs.util.FileTools;
  * @author First Genetic Trust Inc.
  * @author keshav
  * @author yc2480
- * @version $Id: AbstractAnalysis.java,v 1.28 2009-06-22 17:25:52 chiangy Exp $
+ * @version $Id: AbstractAnalysis.java,v 1.29 2009-08-18 20:19:32 my2248 Exp $
  */
 @SuppressWarnings("unchecked")
 public abstract class AbstractAnalysis implements Analysis, Serializable,
@@ -598,9 +598,9 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 		 * is the ParameterKey, and the value is the parameters.
 		 */
 		ParameterKey key = new ParameterKey(getIndex(), setName);
-		if (!parameterHash.containsKey(key)) {
+		//if (!parameterHash.containsKey(key)) {
 			parameterHash.put(key, aspp.getParameters());
-		}
+		//}
 
 		writeParametersAsXml(setName);
 	}
