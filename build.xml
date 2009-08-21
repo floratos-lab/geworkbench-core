@@ -80,7 +80,9 @@
 		</copy>
 		<!-- Compile components -->
 		<subant target="compile" genericantfile="build-component.xml">
-			<dirset dir="components" includes="*" />
+			<dirset dir="components" includes="*">
+				<exclude name="skylinecontour" />
+			</dirset>
 		</subant>
 		<chmod file="./bin/matrixreduce/FitModelMac" perm="700"/>
 		<chmod file="./bin/matrixreduce/FitModel" perm="700"/>		
