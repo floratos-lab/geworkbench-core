@@ -15,7 +15,7 @@ public class CaArrayRequestEvent extends Event {
 	private boolean populated = false;
 	private boolean succeed = true;
 	private Map<String, String> filterCrit;
-	private SortedMap<String, Long> assayNameFilter;
+	private SortedMap<String, String> assayNameFilter;
 	private DSDataSet dataSet = null;
 	private String url;
 	private int port;
@@ -39,7 +39,7 @@ public class CaArrayRequestEvent extends Event {
 
 	public CaArrayRequestEvent(String type, String name,
 			Map<String, String> filters,
-			SortedMap<String, Long> assayNameFilter) {
+			SortedMap<String, String> assayNameFilter) {
 		this(type, name);
 		filterCrit = filters;
 		this.assayNameFilter = assayNameFilter;
@@ -61,12 +61,12 @@ public class CaArrayRequestEvent extends Event {
 		this.filterCrit = filterCrit;
 	}
 
-	public SortedMap<String, Long> getAssayNameFilter() {
+	public SortedMap<String, String> getAssayNameFilter() {
 		return assayNameFilter;
 	}
 
 	public void setAssayNameFilter(
-			SortedMap<String, Long> assayNameFilter) {
+			SortedMap<String, String> assayNameFilter) {
 		this.assayNameFilter = assayNameFilter;
 	}
 

@@ -7,7 +7,6 @@ import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Observer;
@@ -47,7 +46,7 @@ import org.geworkbench.util.ProgressBar;
 
 /**
  * @author xiaoqing
- * @version $Id: CaARRAYPanel.java,v 1.44 2009-06-15 21:21:29 chiangy Exp $
+ * @version $Id: CaARRAYPanel.java,v 1.45 2009-08-24 14:48:22 jiz Exp $
  */
 @SuppressWarnings("unchecked")
 public class CaARRAYPanel extends JPanel implements Observer {
@@ -109,7 +108,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
 	private boolean stillWaitForConnecting = true;
 	private TreeMap<String, CaArray2Experiment> treeMap;
 	private String currentSelectedExperimentName;
-	private Map<String, Long> currentSelectedBioAssay;
+	private Map<String, String> currentSelectedBioAssay;
 	private CaArray2Experiment[] currentLoadedExps;
 	private String currentQuantitationType;
 	private static final int INTERNALTIMEOUTLIMIT = 600;
@@ -459,7 +458,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
 				if (node.getChildCount() == 0) {
 
 					// Add in the tree the derived bioassays
-					Map<String, Long> derived = treeMap.get(exp)
+					Map<String, String> derived = treeMap.get(exp)
 							.getHybridizations();
 					for (String hybName: derived.keySet()) {
 						assayNode = new DefaultMutableTreeNode(hybName);
@@ -467,32 +466,6 @@ public class CaARRAYPanel extends JPanel implements Observer {
 								.getChildCount());
 					}
 					remoteFileTree.expandPath(new TreePath(node.getPath()));
-				}
-			}
-		} else {
-			Enumeration<DefaultMutableTreeNode> nodes = root.children();
-			if (nodes != null) {
-				while (nodes.hasMoreElements()) {
-					// Lazy computation of the children on an experiment.
-					DefaultMutableTreeNode assayNode = null;
-
-					if (treeMap.containsKey(node.getUserObject())) {
-						String exp = (String) node.getUserObject();
-						// Add in the tree the measured bioassays
-						if (node.getChildCount() == 0) {
-
-							// Add in the tree the derived bioassays
-							Map<String, Long> derived = treeMap.get(exp)
-									.getHybridizations();
-							for (String hybName : derived.keySet() ) {
-								assayNode = new DefaultMutableTreeNode(hybName);
-								remoteTreeModel.insertNodeInto(assayNode, node,
-										node.getChildCount());
-							}
-							remoteFileTree.expandPath(new TreePath(node
-									.getPath()));
-						}
-					}
 				}
 			}
 		}
@@ -507,8 +480,8 @@ public class CaARRAYPanel extends JPanel implements Observer {
 			currentSelectedExperimentName = (String) ((DefaultMutableTreeNode) paths[0]
 					.getPath()[1]).getUserObject();
 			exp = treeMap.get(currentSelectedExperimentName);
-			Map<String, Long> hyb = exp.getHybridizations();
-			currentSelectedBioAssay = new HashMap<String, Long>();
+			Map<String, String> hyb = exp.getHybridizations();
+			currentSelectedBioAssay = new HashMap<String, String>();
 			for (int i = 0; i < paths.length; i++) {
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode) paths[i]
 						.getLastPathComponent();
@@ -641,7 +614,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
 			String exp = (String) ((DefaultMutableTreeNode) node.getPath()[1])
 					.getUserObject();
 			experimentInfoArea.setText(treeMap.get(exp).getDescription());
-			Map<String, Long> hybridization = treeMap.get(exp).getHybridizations();
+			Map<String, String> hybridization = treeMap.get(exp).getHybridizations();
 			if (hybridization != null) {
 				measuredField.setText(String.valueOf(hybridization.size()));
 				derivedField.setText(String.valueOf(hybridization.size()));
@@ -673,7 +646,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
 				if (node.getChildCount() == 0) {
 
 					// Add in the tree the derived bioassays
-					Map<String, Long> derived = treeMap.get(exp)
+					Map<String, String> derived = treeMap.get(exp)
 							.getHybridizations();
 					for (String hybName : derived.keySet()) {
 						assayNode = new DefaultMutableTreeNode(hybName);
@@ -698,7 +671,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
 		event.setMerge(merge);
 		Map<String, String> filterCrit = new HashMap<String, String>();
 		filterCrit.put(CaArrayRequestEvent.EXPERIMENT, currentSelectedExperimentName );
-		SortedMap<String, Long > assayNameFilter = new TreeMap<String, Long>(currentSelectedBioAssay);
+		SortedMap<String, String> assayNameFilter = new TreeMap<String, String>(currentSelectedBioAssay);
 		event.setFilterCrit(filterCrit);
 		event.setAssayNameFilter(assayNameFilter);
 		event.setQType(currentQuantitationType);
