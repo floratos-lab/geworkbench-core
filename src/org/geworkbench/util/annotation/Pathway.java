@@ -1,7 +1,5 @@
 package org.geworkbench.util.annotation;
 
-import gov.nih.nci.caBIO.util.PathwayDiagram;
-
 /**
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: First Genetic Trust Inc.</p>
