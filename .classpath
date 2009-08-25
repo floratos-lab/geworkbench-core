@@ -17,11 +17,9 @@
 	<classpathentry exported="true" kind="lib" path="lib/ant.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ant-launcher.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/antlr-2.7.5.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/caArrayMageom/mageom-client.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ArrayExpress.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/bcel-5.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/bnj-kdd.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/caBIO.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/cglib-nodep-2.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/cog-axis.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/cog-jglobus.jar"/>
@@ -74,7 +72,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/xmlsec.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/BNJ_libs/openjgraph.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/BNJ_libs/skinlf.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/caArrayMageom/caarray-client.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/caArrayMageom/commons-dbcp.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/caArrayMageom/commons-pool.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/caArrayMageom/db-ojb-1.0.rc7.jar"/>
