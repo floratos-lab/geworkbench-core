@@ -498,7 +498,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
                 StringBuilder line = new StringBuilder("Description" + '\t' + context.getName());
                 for (Iterator<DSMicroarray> iterator = this.iterator(); iterator.hasNext();) {
                     DSMicroarray microarray = iterator.next();
-                    String label = "Undefined";
+                    String label = "";
                     String[] labels = context.getLabelsForItem(microarray);
                     // watkin - Unfortunately, the file format only supports one label per context.
                     if (labels.length > 0) {
