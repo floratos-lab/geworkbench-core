@@ -19,10 +19,10 @@ import java.io.*;
 public class CSGeneMarker implements DSGeneMarker, Serializable {
 
     /**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -8778666154593978009L;
-	
+
 	protected String label = null;
     protected String description = null;
     protected String abrev = null;
@@ -30,7 +30,9 @@ public class CSGeneMarker implements DSGeneMarker, Serializable {
     //refactored locusLinkId to geneId -- AM
     protected int geneId = -1;
     protected DSUnigene unigene = new CSUnigene();
-    String geneName = new String();
+	// FIXME Why isn't this set to null? With this, it is initialized to an
+	// empty string.
+	String geneName = new String();
     protected int disPlayType = DSGeneMarker.AFFY_TYPE;
 
 
