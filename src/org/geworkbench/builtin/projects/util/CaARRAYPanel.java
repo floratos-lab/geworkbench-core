@@ -1,6 +1,7 @@
 package org.geworkbench.builtin.projects.util;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.SystemColor;
@@ -38,18 +39,22 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.builtin.projects.LoadData;
 import org.geworkbench.builtin.projects.remoteresources.carraydata.CaArray2Experiment;
+import org.geworkbench.engine.config.VisualPlugin;
+import org.geworkbench.engine.management.Publish;
 import org.geworkbench.engine.management.Subscribe;
 import org.geworkbench.events.CaArrayEvent;
 import org.geworkbench.events.CaArrayRequestEvent;
+import org.geworkbench.events.CaArrayRequestHybridizationListEvent;
+import org.geworkbench.events.CaArrayReturnHybridizationListEvent;
 import org.geworkbench.events.CaArraySuccessEvent;
 import org.geworkbench.util.ProgressBar;
 
 /**
  * @author xiaoqing
- * @version $Id: CaARRAYPanel.java,v 1.45 2009-08-24 14:48:22 jiz Exp $
+ * @version $Id: CaARRAYPanel.java,v 1.46 2009-08-28 16:45:29 jiz Exp $
  */
 @SuppressWarnings("unchecked")
-public class CaARRAYPanel extends JPanel implements Observer {
+public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 	private static final String LOADING_SELECTED_BIOASSAYS_ELAPSED_TIME = "Loading selected bioassays - elapsed time: ";
 
 	private static final long serialVersionUID = -4876378958265466224L;
@@ -114,17 +119,19 @@ public class CaARRAYPanel extends JPanel implements Observer {
 	private static final int INTERNALTIMEOUTLIMIT = 600;
 	private static final int INCREASE_EACHTIME = 300;
 	private int internalTimeoutLimit = INTERNALTIMEOUTLIMIT;
-
-	public CaARRAYPanel(LoadData p) {
-		parent = p;
+	
+	public CaARRAYPanel() {
 		try {
-
 			jbInit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	public void setParent(LoadData p) {
+		parent = p;
+	}
+	
 	public boolean isStillWaitForConnecting() {
 		return stillWaitForConnecting;
 	}
@@ -133,7 +140,8 @@ public class CaARRAYPanel extends JPanel implements Observer {
 		this.stillWaitForConnecting = stillWaitForConnecting;
 	}
 
-	public void receive(CaArrayEvent ce) {
+	@Subscribe
+	public void receive(CaArrayEvent ce, Object source) {
 		if (!stillWaitForConnecting) {
 			return;
 		}
@@ -186,8 +194,10 @@ public class CaARRAYPanel extends JPanel implements Observer {
 		}
 	}
 
-	public void publishCaArrayEvent(CaArrayRequestEvent event) {
-		parent.publishCaArrayRequestEvent(event);
+	@Publish
+	public CaArrayRequestEvent publishCaArrayRequestEvent(
+			CaArrayRequestEvent event) {
+		return event;
 	}
 
 	public void publishProjectNodeAddedEvent(
@@ -384,7 +394,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
 	 * @param source
 	 */
 	@Subscribe
-	public void receive(CaArraySuccessEvent ce) {
+	public void receive(CaArraySuccessEvent ce, Object source) {
 		this.numCurrentArray = numCurrentArray+1;
 		this.numTotalArrays = ce.getTotalArrays();
 		increaseInternalTimeoutLimitBy(INCREASE_EACHTIME);
@@ -449,28 +459,48 @@ public class CaARRAYPanel extends JPanel implements Observer {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) remoteFileTree
 				.getLastSelectedPathComponent();
 		if (node != null && node != root) {
-			// Lazy computation of the children on an experiment.
-			DefaultMutableTreeNode assayNode = null;
-
-			if (treeMap.containsKey(node.getUserObject())) {
-				String exp = (String) node.getUserObject();
-				// Add in the tree the measured bioassays
-				if (node.getChildCount() == 0) {
-
-					// Add in the tree the derived bioassays
-					Map<String, String> derived = treeMap.get(exp)
-							.getHybridizations();
-					for (String hybName: derived.keySet()) {
-						assayNode = new DefaultMutableTreeNode(hybName);
-						remoteTreeModel.insertNodeInto(assayNode, node, node
-								.getChildCount());
-					}
-					remoteFileTree.expandPath(new TreePath(node.getPath()));
+			if (treeMap.containsKey(node.getUserObject())) { // this is always true. why check?
+				if (node.getChildCount() == 0) { 
+					CaArray2Experiment caArray2Experiment = treeMap.get(node
+							.getUserObject());
+					if (caArray2Experiment.getHybridizations() == null)
+						publishCaArrayRequestHybridizationListEvent(new CaArrayRequestHybridizationListEvent(
+								null, url, portnumber, user, passwd,
+								caArray2Experiment));
 				}
 			}
 		}
 
 	}
+	
+	@Publish
+	public CaArrayRequestHybridizationListEvent publishCaArrayRequestHybridizationListEvent(CaArrayRequestHybridizationListEvent event) {
+		return event;
+	}
+	
+	@Subscribe
+	public void receive(CaArrayReturnHybridizationListEvent event, Object source) {
+		CaArray2Experiment caArray2Experiment = event.getCaArray2Experiment();
+		treeMap.put(caArray2Experiment.getName(), caArray2Experiment);
+
+		Object root = remoteTreeModel.getRoot();
+		DefaultMutableTreeNode experimentNode = null;
+		for(int i=0; i<remoteTreeModel.getChildCount(root); i++) {
+			experimentNode = (DefaultMutableTreeNode)remoteTreeModel.getChild(root, i);
+			if( ((String)experimentNode.getUserObject()).equals(caArray2Experiment.getName())) {
+				break; // found the right experiment node. done
+			}
+		}
+		// at this point, caArray2Experiment.getHybridizations() should never be null. It could be zero size though.
+		for (String hybName: caArray2Experiment.getHybridizations().keySet()) {
+			DefaultMutableTreeNode assayNode = new DefaultMutableTreeNode(hybName);
+			remoteTreeModel.insertNodeInto(assayNode, experimentNode, experimentNode
+					.getChildCount());
+		}
+		remoteFileTree.expandPath(new TreePath(experimentNode.getPath()));
+		updateTextArea();
+	}
+
 
 	private String checkQuantationTypeSelection() {
 		merge = parent.isMerge();
@@ -481,6 +511,9 @@ public class CaARRAYPanel extends JPanel implements Observer {
 					.getPath()[1]).getUserObject();
 			exp = treeMap.get(currentSelectedExperimentName);
 			Map<String, String> hyb = exp.getHybridizations();
+			if(hyb==null || paths[0].getPath().length<=2 ) { // hyb==null means 'before experiment expansion'; length<=2 means not 'a hybridization'
+				return null;
+			}
 			currentSelectedBioAssay = new HashMap<String, String>();
 			for (int i = 0; i < paths.length; i++) {
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode) paths[i]
@@ -618,6 +651,9 @@ public class CaARRAYPanel extends JPanel implements Observer {
 			if (hybridization != null) {
 				measuredField.setText(String.valueOf(hybridization.size()));
 				derivedField.setText(String.valueOf(hybridization.size()));
+			} else {
+				measuredField.setText("");
+				derivedField.setText("");
 			}
 		}
 		experimentInfoArea.setCaretPosition(0); // For long text.
@@ -676,30 +712,13 @@ public class CaARRAYPanel extends JPanel implements Observer {
 		event.setAssayNameFilter(assayNameFilter);
 		event.setQType(currentQuantitationType);
 		log.info("publish CaArrayEvent at CaArrayPanel");
-		publishCaArrayEvent(event);
-	}
-
-	private void connect() {
-		// update the progress message.
-		stillWaitForConnecting = true;
-		progressBar
-				.setMessage("Connecting with the server... The initial step may take a few minutes.");
-		CaArrayRequestEvent event = new CaArrayRequestEvent(url, portnumber);
-		if (user == null || user.trim().length() == 0) {
-			event.setUsername(null);
-		} else {
-			event.setUsername(user);
-			event.setPassword(passwd);
-
-		}
-		event.setRequestItem(CaArrayRequestEvent.EXPERIMENT);
-		publishCaArrayEvent(event);
+		publishCaArrayRequestEvent(event);
 	}
 
 	/**
 	 * Gets a list of all experiments available on the remote server.
 	 */
-	public void getExperiments() {
+	private void getExperiments() {
 
 		stillWaitForConnecting = true;
 		progressBar
@@ -719,19 +738,37 @@ public class CaARRAYPanel extends JPanel implements Observer {
 
 			System.setProperty("SecureSessionManagerURL", url);
 
-			Runnable dataLoader = new Runnable() {
-				public void run() {
-					connect();
-				}
-			};
-			Thread t = new Thread(dataLoader);
-			t.setPriority(Thread.MAX_PRIORITY);
-			t.start();
+			// update the progress message.
+			stillWaitForConnecting = true;
+			progressBar
+					.setMessage("Connecting with the server... The initial step may take a few minutes.");
+			CaArrayRequestEvent event = new CaArrayRequestEvent(url, portnumber);
+			if (user == null || user.trim().length() == 0) {
+				event.setUsername(null);
+			} else {
+				event.setUsername(user);
+				event.setPassword(passwd);
+
+			}
+			event.setRequestItem(CaArrayRequestEvent.EXPERIMENT);
+			Thread thread = new PubilshThread(event);
+			thread.start();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	private class PubilshThread extends Thread {
+		CaArrayRequestEvent event;
+		
+		PubilshThread(CaArrayRequestEvent event) {
+			this.event = event;
+		}
+		public void run() {
+			publishCaArrayRequestEvent(event);
+		}
+	}
+	
 	private void dispose() {
 		parent.dispose();
 	}
@@ -750,7 +787,7 @@ public class CaARRAYPanel extends JPanel implements Observer {
 
 		}
 		event.setRequestItem(CaArrayRequestEvent.CANCEL);
-		publishCaArrayEvent(event);
+		publishCaArrayRequestEvent(event);
 
 	}
 
@@ -814,17 +851,10 @@ public class CaARRAYPanel extends JPanel implements Observer {
 		this.currentResourceName = currentResourceName;
 	}
 
-	/*
-	 * FIXME: this method is used by LoadData for some purpose that is very different from the original name and original intention
-	 */
-	public void setExperiments(Object experiments) {
-		if (experiments == null) {
-			root = new DefaultMutableTreeNode("caARRAY experiments");
-			remoteTreeModel.setRoot(root);
-			repaint();
-		} else {
-			log.error("this method is never called with parameter that is not null");
-		}
+	public void initializeExperimentTree() {
+		root = new DefaultMutableTreeNode("caARRAY experiments");
+		remoteTreeModel.setRoot(root);
+		repaint();
 	}
 
 	public void setParentPanel(LoadData parentPanel) {
@@ -837,5 +867,9 @@ public class CaARRAYPanel extends JPanel implements Observer {
 
 	public void setMerge(boolean merge) {
 		this.merge = merge;
+	}
+
+	public Component getComponent() {
+		return this;
 	}
 }

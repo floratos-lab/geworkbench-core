@@ -18,6 +18,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -32,29 +33,33 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.filechooser.FileFilter;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.geworkbench.builtin.projects.remoteresources.RemoteResourceDialog;
 import org.geworkbench.builtin.projects.remoteresources.query.CaARRAYQueryPanel;
 import org.geworkbench.builtin.projects.util.CaARRAYPanel;
 import org.geworkbench.components.parsers.FileFormat;
 import org.geworkbench.engine.management.ComponentRegistry;
-import org.geworkbench.events.CaArrayEvent;
 import org.geworkbench.events.CaArrayQueryEvent;
 import org.geworkbench.events.CaArrayQueryResultEvent;
 import org.geworkbench.events.CaArrayRequestEvent;
-import org.geworkbench.events.CaArraySuccessEvent;
 
 /**
  *  Popup to select a file (local or remote) to open.
  *  
  * @author First Genetic Trust Inc.
- * @version $Id: LoadData.java,v 1.40 2009-05-15 20:11:51 chiangy Exp $
+ * @version $Id: LoadData.java,v 1.41 2009-08-28 16:46:20 jiz Exp $
  */
 public class LoadData extends JDialog {
+	private Log log = LogFactory.getLog(LoadData.class);
+	/* this class name must match the one in all.xml */
+	private static final String CAARRAYPANEL_CLASS_NAME = "org.geworkbench.builtin.projects.util.CaARRAYPanel";
+	/* this class name must match the one loaded through ccm */
+	private static final String CAARRAYCOMPONENT_CLASS_NAME = "org.geworkbench.components.caarray.arraydata.CaArray2Component";
+
 	private static final long serialVersionUID = -1983039293757013174L;
 	
 	private BorderLayout borderLayout1 = new BorderLayout();
@@ -64,7 +69,7 @@ public class LoadData extends JDialog {
 	private JPanel jPanel3 = new JPanel();
 	private FlowLayout flowLayout1 = new FlowLayout();
 	private FlowLayout flowLayout2 = new FlowLayout();
-	private JRadioButton jRadioButton1 = new JRadioButton();
+	private JRadioButton localFileRadioButton = new JRadioButton();
 	private JRadioButton jRadioButton2 = new JRadioButton();
 	private JPanel jPanel4 = new JPanel();
 	private BorderLayout borderLayout2 = new BorderLayout();
@@ -92,17 +97,12 @@ public class LoadData extends JDialog {
 	private GridLayout grid4 = new GridLayout();
 	private String format = null;
 
-	private CaARRAYPanel caArrayDisplayPanel = new CaARRAYPanel(this);
+	private CaARRAYPanel caArrayDisplayPanel = null;
 	private JCheckBox mergeCheckBox;
 	private JPanel lowerPanel;
 	private JPanel mergePanel;
 	private RemoteResourceDialog remoteResourceDialog;
 
-	private JTabbedPane lowTabPane;
-
-	private String indexURL = "";
-	private JTextField indexField;
-	private JButton updateIndexButton;
 	private String currentRemoteResourceName;
 	private String currentDetailedResourceName; // current resource name which
 												// shows detail at the top
@@ -121,10 +121,8 @@ public class LoadData extends JDialog {
 	private FileFormat[] supportedInputFormats = null;
 	BorderLayout borderLayout7 = new BorderLayout();
 	JPanel jPanel7 = new JPanel();
-	JPanel gridButtonPanel = new JPanel();
 	JRadioButton jRadioButton7 = new JRadioButton();
-	JRadioButton jRadioButton8 = new JRadioButton();
-	JRadioButton gridButton = new JRadioButton();
+	JRadioButton remoteRadioButton = new JRadioButton();
 	JPanel jPanel10 = new JPanel();
 
 	String[] DEFAULTRESOUCES = new String[] { "caARRAY", "GEDP" };
@@ -144,30 +142,36 @@ public class LoadData extends JDialog {
 
 	public LoadData(ProjectPanel parent) {
 		parentProjectPanel = parent;
-		indexURL = System.getProperties().getProperty("globus.url")
-				+ System.getProperties().getProperty("caarray.indexservice");
 
 		try {
 			jbInit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		checkCaArraySupportingClasses();
 	}
-
-	public LoadData() {
-		try {
-			jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
+	
+	void checkCaArraySupportingClasses () {
+		/* display remote button is classes needed are not loaded*/
+		boolean caArrayPanelAvailable = false;
+		boolean caArrayComponentAvailable = false;
+		List<Object> list = ComponentRegistry.getRegistry().getComponentsList();
+		for(Object obj: list) {
+			if(obj.getClass().getName().startsWith(CAARRAYPANEL_CLASS_NAME)) { // the name is decorated, so 'startsWith'
+				caArrayDisplayPanel = (CaARRAYPanel)obj;
+				caArrayPanelAvailable = true;
+			}
+			if(obj.getClass().getName().startsWith(CAARRAYCOMPONENT_CLASS_NAME)) { 
+				caArrayComponentAvailable = true;
+			}
+			if(caArrayPanelAvailable && caArrayComponentAvailable){
+				remoteRadioButton.setEnabled(true);
+				return;
+			}
 		}
-	}
-
-	public void receive(CaArrayEvent ce) {
-		caArrayDisplayPanel.receive(ce);
-	}
-
-	public void receive(CaArraySuccessEvent ce) {
-		caArrayDisplayPanel.receive(ce);
+		localFileRadioButton.setSelected(true);
+		switchToLocalFileDialog();
+		remoteRadioButton.setEnabled(false);
 	}
 
 	public void receive(CaArrayQueryResultEvent ce) {
@@ -201,7 +205,7 @@ public class LoadData extends JDialog {
 		jPanel1.setLayout(gridLayout1);
 		jPanel2.setLayout(flowLayout1);
 		jPanel3.setLayout(flowLayout2);
-		jRadioButton1.setText("Local File");
+		localFileRadioButton.setText("Local File");
 		jRadioButton2.setText("GEDP");
 		jPanel4.setLayout(borderLayout2);
 		jLabel3.setFont(new java.awt.Font("Dialog", 1, 11));
@@ -321,38 +325,15 @@ public class LoadData extends JDialog {
 		mergePanel.add(Box.createGlue());
 		lowerPanel.add(jPanel1);
 
-		indexField = new JTextField(indexURL);
-		updateIndexButton = new JButton("Update");
-
-		updateIndexButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-
-				String previousIndexURL = indexURL;
-				if (remoteResourceDialog.updateResource(indexField.getText())) {
-					lowTabPane.setSelectedIndex(0);
-					jRadioButton8.setSelected(true);
-					updateExistedResourcesGUI();
-					addRemotePanel_actionPerformed(e);
-
-				} else {
-					indexField.setText(previousIndexURL);
-				}
-			}
-		});
-
 		this.getContentPane().add(lowerPanel, BorderLayout.SOUTH);
 
 		jPanel1.add(mergePanel);
 		jPanel1.add(jPanel2, null);
-		jPanel2.add(jRadioButton1, null);
+		jPanel2.add(localFileRadioButton, null);
 
 		jPanel1.add(jPanel7, null);
-		// remove grid radio button for geWorkbench 1.6 release
-		//jPanel1.add(gridButtonPanel, null);
-		jRadioButton8.setText("Remote");
-		gridButton.setText("Grid");
-		jPanel7.add(jRadioButton8, null);
-		gridButtonPanel.add(gridButton);
+		remoteRadioButton.setText("Remote");
+		jPanel7.add(remoteRadioButton, null);
 
 		// XQ modification ends here.
 		this.getContentPane().add(jPanel4, BorderLayout.CENTER);
@@ -372,20 +353,19 @@ public class LoadData extends JDialog {
 		jPanel11.add(jLabel1, null);
 		jPanel11.add(jRadioButton4, null);
 		jPanel11.add(jRadioButton3, null);
-		buttonGroup1.add(jRadioButton1);
+		buttonGroup1.add(localFileRadioButton);
 		buttonGroup1.add(jRadioButton2);
 		buttonGroup1.add(jRadioButton7);
-		buttonGroup1.add(jRadioButton8);
-		buttonGroup1.add(gridButton);
+		buttonGroup1.add(remoteRadioButton);
 		buttonGroup2.add(jRadioButton5);
 		buttonGroup2.add(jRadioButton6);
 		buttonGroup3.add(jRadioButton3);
 		buttonGroup3.add(jRadioButton4);
 		jPanel9.setPreferredSize(new Dimension(200, 40));
-		jRadioButton1.setSelected(true);
-		jRadioButton1.addActionListener(new ActionListener() {
+		localFileRadioButton.setSelected(true);
+		localFileRadioButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				jRadioButton2_actionPerformed(e);
+				switchToLocalFileDialog();
 			}
 		});
 		jRadioButton2.addActionListener(new ActionListener() {
@@ -398,14 +378,9 @@ public class LoadData extends JDialog {
 				mageButtonSelection_actionPerformed(e);
 			}
 		});
-		jRadioButton8.addActionListener(new ActionListener() {
+		remoteRadioButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				addRemotePanel_actionPerformed(e);
-			}
-		});
-		gridButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				addGridPanel_actionPerformed(e);
 			}
 		});
 		jFileChooser1.addActionListener(new ActionListener() {
@@ -663,9 +638,11 @@ public class LoadData extends JDialog {
 			openRemoteResourceButton.setBackground(Color.RED);
 			openRemoteResourceButton
 					.setToolTipText("Click to get the display synchronized with Remote source.");
-			//Added by XQ to fix bug 1288
-			caArrayDisplayPanel.setExperiments(null);
-			caArrayDisplayPanel.setExperimentsLoaded(false);
+			if(caArrayDisplayPanel!=null) {
+				//Added by XQ to fix bug 1288
+				caArrayDisplayPanel.initializeExperimentTree();
+				caArrayDisplayPanel.setExperimentsLoaded(false);
+			}
 		} else {
 			openRemoteResourceButton.setBackground(null);
 			openRemoteResourceButton
@@ -693,14 +670,14 @@ public class LoadData extends JDialog {
 		// XZ, 4/4. The user name/password can be null now for caArray2.0.1.
 
 		if (!isSynchronized) {
-			caArrayDisplayPanel.setExperiments(null);
+			caArrayDisplayPanel.initializeExperimentTree();
 			caArrayDisplayPanel.setExperimentsLoaded(false);
 			caArrayDisplayPanel.getExperiments(e);
 		} else {
 			 
 			int choice = JOptionPane.showConfirmDialog(null, "You just connected to the server. Connect again?");
 			if(JOptionPane.YES_OPTION==choice){
-				caArrayDisplayPanel.setExperiments(null);
+				caArrayDisplayPanel.initializeExperimentTree();
 				caArrayDisplayPanel.setExperimentsLoaded(false);
 				caArrayDisplayPanel.getExperiments(e);	
 			} 
@@ -712,15 +689,19 @@ public class LoadData extends JDialog {
 	}
 
 	public void addRemotePanel() {
-		// if (caArrayDisplayPanel.isConnectionSuccess()) {
 		updateCurrentView();
-		// this.getContentPane().remove(jPanel6);
 		this.getContentPane().remove(jPanel4);
+
+		/* this method is never called with caArrayDisplayPanel==null */
+		if(caArrayDisplayPanel==null) {
+			log.error("caARRAYPanel was not available.");
+			return;
+		}
+		caArrayDisplayPanel.setParent(this);
+		
 		this.getContentPane().add(caArrayDisplayPanel, BorderLayout.CENTER);
 		this.validate();
 		this.repaint();
-		// }
-
 	}
 
 	private void addRemotePanel_actionPerformed(ActionEvent e) {
@@ -730,16 +711,9 @@ public class LoadData extends JDialog {
 		this.repaint();
 	}
 
-	private void addGridPanel_actionPerformed(ActionEvent e) {
-		addRemotePanel();
-		lowerPanel.add(jPanel10);
-		this.validate();
-		this.repaint();
-	}
-
-	private void jRadioButton2_actionPerformed(ActionEvent e) {
-		this.getContentPane().remove(caArrayDisplayPanel);
-		// this.getContentPane().remove(jPanel6);
+	private void switchToLocalFileDialog() {
+		if(caArrayDisplayPanel!=null)
+			this.getContentPane().remove(caArrayDisplayPanel);
 		this.getContentPane().add(jPanel4, BorderLayout.CENTER);
 		lowerPanel.remove(jPanel10);
 		this.validate();

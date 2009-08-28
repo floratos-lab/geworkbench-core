@@ -19,6 +19,10 @@
 		class="org.geworkbench.builtin.projects.ProjectPanel">
 		<gui-area name="ProjectArea" />
 	</plugin>
+
+	<plugin id="caarrayPanel" name="CaArray Panel"
+		class="org.geworkbench.builtin.projects.util.CaARRAYPanel">
+	</plugin>
 	<!--  -->
 	<plugin id="configurationMenu" name="configurationMenu"
 		class="org.geworkbench.engine.ccm.ComponentConfigurationManagerMenu" />

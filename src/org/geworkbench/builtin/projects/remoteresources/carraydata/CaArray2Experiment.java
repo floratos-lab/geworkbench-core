@@ -11,13 +11,12 @@ public class CaArray2Experiment implements Comparable<CaArray2Experiment>,
 	private Map<String, String> hybridizations;
 	private String description;
 	private String[] QuantitationTypes;
+	private String experimentReferenceId;
 
-	public CaArray2Experiment(String name, String description,
-			Map<String, String> hybridizations, String[] QuantitationTypes) {
+	public CaArray2Experiment(String experimentReferenceId, String name, String description) {
+		this.experimentReferenceId = experimentReferenceId;
 		this.name = name;
 		this.description = description;
-		this.hybridizations = hybridizations;
-		this.QuantitationTypes = QuantitationTypes;
 	}
 
 	public String getName() {
@@ -38,5 +37,26 @@ public class CaArray2Experiment implements Comparable<CaArray2Experiment>,
 
 	public int compareTo(CaArray2Experiment o) {
 		return name.compareTo(((CaArray2Experiment) o).getName());
+	}
+
+	/**
+	 * @param hybridizations the hybridizations to set
+	 */
+	public void setHybridizations(Map<String, String> hybridizations) {
+		this.hybridizations = hybridizations;
+	}
+
+	/**
+	 * @param quantitationTypes the quantitationTypes to set
+	 */
+	public void setQuantitationTypes(String[] quantitationTypes) {
+		QuantitationTypes = quantitationTypes;
+	}
+
+	/**
+	 * @return the experimentReferenceId
+	 */
+	public String getExperimentReferenceId() {
+		return experimentReferenceId;
 	}
 }

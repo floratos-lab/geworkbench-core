@@ -1510,6 +1510,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		// will be taken into account.
 		loadData.setupInputFormats();
 		loadData.validate();
+		loadData.checkCaArraySupportingClasses();
 		loadData.setVisible(true);
 	}
 
@@ -2322,26 +2323,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 
 	}
-
-	/**
-	 * get the caArray Result back from caArray server.
-	 * 
-	 * @param ce
-	 * @param source
-	 */
-
-	@Subscribe
-	public void receive(CaArrayEvent ce, Object source) {
-
-		loadData.receive(ce);
-	}
-
-	@Subscribe
-	public void receive(CaArraySuccessEvent ce, Object source) {
-
-		loadData.receive(ce);
-	}
-
+	
 	@Subscribe
 	public void receive(CaArrayQueryResultEvent ce, Object source) {
 
