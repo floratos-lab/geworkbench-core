@@ -186,11 +186,25 @@ public class FileOpenHandler {
 	} // end of class ProgressBarDialog
 
 	private class OpenMultipleFileTask extends SwingWorker<Void, Void> {
+		
+		
+		/*
+		 * (non-Javadoc)
+		 * @see org.geworkbench.util.threading.SwingWorker#done()
+		 */
 		@Override
 		protected void done() {
 			pb.dispose();
+			enclosingProjectPanel.progressBar.setString("");
+			enclosingProjectPanel.progressBar.setIndeterminate(false);
+			enclosingProjectPanel.jDataSetPanel.setCursor(Cursor
+					.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @see org.geworkbench.util.threading.SwingWorker#doInBackground()
+		 */
 		@SuppressWarnings("unchecked")
 		@Override
 		protected Void doInBackground() throws Exception {
