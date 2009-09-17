@@ -5,6 +5,7 @@ import org.geworkbench.bison.parsers.resources.Resource;
 
 import javax.swing.filechooser.FileFilter;
 import java.io.File;
+import java.io.InterruptedIOException;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 
 /**
@@ -47,7 +48,7 @@ public abstract class FileFormat {
      * @return True or false, depending on if the argument is well formed
      *         according to the format or not.
      */
-    public abstract boolean checkFormat(File file);
+    public abstract boolean checkFormat(File file) throws InterruptedIOException;
 
     /**
      * Return a <code>Resource</code> object for the designated file.
@@ -55,6 +56,8 @@ public abstract class FileFormat {
      * @param file
      * @return
      */
+    
+    
     public abstract Resource getResource(File file);
 
     /**
@@ -65,7 +68,7 @@ public abstract class FileFormat {
      * @param file The file containing the input data.
      * @return The corresponding <code>MicroarraySet</code> object.
      */
-    public abstract DSDataSet getMArraySet(File file) throws InputFileFormatException;
+    public abstract DSDataSet getMArraySet(File file) throws InputFileFormatException, InterruptedIOException;
 
     /**
      * Generates and returns a <code>MicrorarraySet</code> from the designated

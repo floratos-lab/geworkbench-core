@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.InterruptedIOException;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -225,6 +226,19 @@ public class FileOpenHandler {
 					JOptionPane.showMessageDialog(null, iffe.getMessage(),
 							"Parsing Error", JOptionPane.ERROR_MESSAGE);
 				}
+				 catch (InterruptedIOException ie) {
+				       enclosingProjectPanel.progressBar.setString("");					   
+					   enclosingProjectPanel.progressBar.setIndeterminate(false);
+					   enclosingProjectPanel.jDataSetPanel.setCursor(Cursor
+							.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+				       if ( ie.getMessage().equals("progress"))
+					        return null;
+				       else
+				    	   ie.printStackTrace();
+					  
+				 }  
+					
+				
 
 			} else {
 				// watkin - none of the file filters implement the
@@ -274,6 +288,18 @@ public class FileOpenHandler {
 								.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 						return null;
 					} // end of for loop
+				    catch (InterruptedIOException ie) {
+				       enclosingProjectPanel.progressBar.setString("");					   
+					   enclosingProjectPanel.progressBar.setIndeterminate(false);
+					   enclosingProjectPanel.jDataSetPanel.setCursor(Cursor
+							.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+				       if ( ie.getMessage().equals("progress"))
+					        return null;
+				       else
+				    	   ie.printStackTrace();
+					  
+				     }  
+					
 					setProgress(i + 1);
 				}
 				if (mergeFiles) {

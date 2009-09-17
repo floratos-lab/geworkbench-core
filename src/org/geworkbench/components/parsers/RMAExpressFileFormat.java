@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -84,6 +85,11 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 	public String[] getFileExtensions() {
 		return maExtensions;
 	}
+	
+	/*public boolean checkFormat(File file)
+	{
+		return true;
+	}*/
 
 	/*
 	 * (non-Javadoc)
@@ -94,24 +100,26 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 	 *      After Mantis #1551, this step will be required even if you don't
 	 *      want to checkFormat.
 	 */
-	public boolean checkFormat(File file) {
+	public boolean checkFormat(File file) throws InterruptedIOException {
 		boolean columnsMatch = true;
 		boolean noDuplicateMarkers = true;
 		boolean noDuplicateArrays = true;
 		BufferedReader reader = null;
+		ProgressMonitorInputStream progressIn = null;
 		try {
 			FileInputStream fileIn = new FileInputStream(file);
-			ProgressMonitorInputStream progressIn = new ProgressMonitorInputStream(
+		    progressIn = new ProgressMonitorInputStream(
 					null, "Checking File Format", fileIn);
 			reader = new BufferedReader(new InputStreamReader(
 					progressIn));
-
+			 
 			String line = null;
 			int totalColumns = 0;
 			List<String> markers = new ArrayList<String>();
 			List<String> arrays = new ArrayList<String>();
 			int lineIndex = 0;
-			int headerLineIndex = 0;
+			int headerLineIndex = 0; 
+			
 			while ((line = reader.readLine()) != null) { // for each line
 				if ((line.indexOf(commentSign1) < 0)
 						&& (line.indexOf(commentSign2) != 0)
@@ -169,11 +177,15 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 					}
 				}
 				lineIndex++;
+				
 			}
 			possibleMarkers = markers.size();
 			fileIn.close();
+		
 		} catch (Exception e) {
+			 
 			e.printStackTrace();
+			 
 		} finally {
     		try {
 				reader.close();
@@ -193,10 +205,12 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 	 * @see org.geworkbench.components.parsers.microarray.DataSetFileFormat#getDataFile(java.io.File)
 	 */
 	@SuppressWarnings("unchecked")
-	public DSDataSet getDataFile(File file) throws InputFileFormatException {
-		return (DSDataSet) getMArraySet(file);
+	public DSDataSet getDataFile(File file) throws InputFileFormatException, InterruptedIOException{
+		  
+		  return (DSDataSet) getMArraySet(file);
+	    
 	}
-
+	 
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -204,20 +218,22 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 	 */
 	@SuppressWarnings("unchecked")
 	public DSMicroarraySet getMArraySet(File file)
-			throws InputFileFormatException {
+			throws InputFileFormatException, InterruptedIOException {
 
 		/* the sign between file name and extesion, ex: file.ext */
 		final int extSeperater = '.';
 
-		if (!checkFormat(file)) {
+		 
+		 if (!checkFormat(file)) {
 			log
 					.info("RMAExpressFileFormat::getMArraySet - "
 							+ "Attempting to open a file that does not comply with the "
 							+ "RMA express file format.");
-			throw new InputFileFormatException(
+			 throw new InputFileFormatException(
 					"Attempting to open a file that does not comply with the "
 							+ "RMA express file format.");
-		}
+		 }
+		 
 		CSExprMicroarraySet maSet = new CSExprMicroarraySet();
 		String fileName = file.getName();
 		int dotIndex = fileName.lastIndexOf(extSeperater);
@@ -413,9 +429,7 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 
 				}
 			}
-		} catch (InputFileFormatException e) {
-			throw e;
-		} catch (Exception e) {
+		}catch (Exception e) {
 			e.printStackTrace();
 		} finally {
     		try {

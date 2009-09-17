@@ -18,6 +18,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InterruptedIOException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -1695,7 +1696,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	public void fileOpenAction(final File[] dataSetFiles,
 			final org.geworkbench.components.parsers.FileFormat inputFormat,
 			boolean merge)
-			throws org.geworkbench.components.parsers.InputFileFormatException {
+			throws org.geworkbench.components.parsers.InputFileFormatException,InterruptedIOException {
 
 		final boolean mergeFiles = dataSetFiles.length == 1 ? false : merge;
 		if (inputFormat instanceof DataSetFileFormat) {
@@ -1747,7 +1748,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	public void fileOpenAction(File dataSetFile,
 			org.geworkbench.components.parsers.FileFormat inputFormat)
-			throws InputFileFormatException {
+			throws InputFileFormatException, InterruptedIOException {
 
 		// The call to getMArraySet() may result in an InputFileFormatException
 		// which is expected to be handled by the calling function.
