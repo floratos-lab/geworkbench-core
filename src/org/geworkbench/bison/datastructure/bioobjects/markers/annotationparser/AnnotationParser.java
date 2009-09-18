@@ -256,10 +256,16 @@ public class AnnotationParser implements Serializable {
 
 	private static boolean loadAnnotationData(String chipType, File datafile) {
 		if (datafile.exists()) { // data file is found
+			
+			FileInputStream fis = null;
+			BufferedInputStream bis = null;
 			try {
 				ListOrderedMap<String, Map<String, String>> annots = new ListOrderedMap<String, Map<String, String>>();
-				CSVParser cvsParser = new CSVParser(new BufferedInputStream(
-						new FileInputStream(datafile)));
+				
+				fis = new FileInputStream(datafile);
+				bis = new BufferedInputStream(fis);
+				
+				CSVParser cvsParser = new CSVParser(bis);
 
 				cvsParser.setCommentStart("#;!");// Skip all comments line.
 													// XQ. The bug is reported
@@ -293,6 +299,15 @@ public class AnnotationParser implements Serializable {
 			} catch (Exception e) {
 				log.error("", e);
 				return false;
+			}finally{
+				try {
+					fis.close();
+					bis.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 			}
 		} else {
 			return false;
