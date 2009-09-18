@@ -182,6 +182,13 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 			possibleMarkers = markers.size();
 			fileIn.close();
 		
+		} catch (java.io.InterruptedIOException ie) {
+			if ( progressIn.getProgressMonitor().isCanceled())
+			{			    
+				throw ie;				 
+			}			 
+			else
+			   ie.printStackTrace();
 		} catch (Exception e) {
 			 
 			e.printStackTrace();
@@ -223,7 +230,8 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 		/* the sign between file name and extesion, ex: file.ext */
 		final int extSeperater = '.';
 
-		 
+		try
+		{
 		 if (!checkFormat(file)) {
 			log
 					.info("RMAExpressFileFormat::getMArraySet - "
@@ -233,7 +241,9 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 					"Attempting to open a file that does not comply with the "
 							+ "RMA express file format.");
 		 }
-		 
+		} catch (InterruptedIOException ie) {
+			throw ie;
+		}
 		CSExprMicroarraySet maSet = new CSExprMicroarraySet();
 		String fileName = file.getName();
 		int dotIndex = fileName.lastIndexOf(extSeperater);
@@ -429,7 +439,11 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 
 				}
 			}
-		}catch (Exception e) {
+		} catch (InputFileFormatException e) {
+			throw e;
+		} catch (InterruptedIOException ie) {
+			throw ie;
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
     		try {
