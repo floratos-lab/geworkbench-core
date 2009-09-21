@@ -450,4 +450,20 @@ public class CSMicroarraySet<T extends DSMicroarray> extends CSDataSet<T> implem
     public void readFromFile(File file) {
     }
 
+    private String annotationFileName = null;
+
+	/**
+	 * @return the annotationFileName
+	 */
+	public String getAnnotationFileName() {
+		return annotationFileName;
+	}
+
+	/**
+	 * @param annotationFileName the annotationFileName to set
+	 */
+	public void setAnnotationFileName(String annotationFileName) {
+		this.annotationFileName = annotationFileName;
+	}
+    
 }

@@ -219,11 +219,30 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	private JFileChooser jFileChooser1;
 
-	/**
-	 * Constructor. Intialize GUI and selection variables
+	/* enforce ProjectPanel to be singleton:
+	'regular' method of making constructor private is not applicable
+	 because of the cglib parsing/loading process
 	 */
+	private static ProjectPanel INSTANCE = null;
+	public static ProjectPanel getInstance() {
+		if(INSTANCE!=null)
+			return INSTANCE;
+		else
+			try {
+				return new ProjectPanel();
+			} catch (Exception e) { // exception only for INSTANCE is not null
+				return INSTANCE;
+			}
+	}
 
-	public ProjectPanel() {
+	/**
+	 * Constructor. Initialize GUI and selection variables
+	 * @throws Exception 
+	 */
+	public ProjectPanel() throws Exception {
+		// singleton: this constructor should never be called the second time. 
+		if(INSTANCE!=null)throw new Exception("Second instance of ProjectPanle cannot be created.");
+		
 		// Initializes Random number generator to generate unique ID's
 		// because of the unique seed
 		RandomNumberGenerator.setSeed(System.currentTimeMillis());
@@ -249,6 +268,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		INSTANCE = this;
 	}
 
 	/**

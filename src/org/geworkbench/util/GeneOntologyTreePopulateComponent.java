@@ -10,10 +10,10 @@ import org.geworkbench.engine.properties.PropertiesManager;
 
 public class GeneOntologyTreePopulateComponent {
 	private static final String DEFAULTOBOFILE = "data/gene_ontology.1_2.obo"; //$NON-NLS-1$
-	private String obofileName;
+	private static String obofileName;
 	private String OBOFILEKEY = "obofile_location";
 
-	public String getObofileName() {
+	public static String getObofileName() {
 		return obofileName;
 	}
 
@@ -22,7 +22,7 @@ public class GeneOntologyTreePopulateComponent {
 	 *            the obofileName to set
 	 */
 	public void setObofileName(String obofileName) {
-		this.obofileName = obofileName;
+		GeneOntologyTreePopulateComponent.obofileName = obofileName;
 		try {
 			PropertiesManager.getInstance().setProperty(getClass(), OBOFILEKEY,
 					obofileName);
@@ -59,7 +59,7 @@ public class GeneOntologyTreePopulateComponent {
 
 	public GeneOntologyTreePopulateComponent(String obofileName) {
 		super();
-		this.obofileName = obofileName;
+		GeneOntologyTreePopulateComponent.obofileName = obofileName;
 		try{
 			createGOTree();
 			}catch (Exception e){

@@ -246,6 +246,10 @@ public class AnnotationParser implements Serializable {
 			File annotationData) {
 		datasetToChipTypes.put(dataset, chiptype);
 		currentDataSet = dataset;
+		if(dataset instanceof CSMicroarraySet) {
+			CSMicroarraySet<?> d = (CSMicroarraySet<?>)dataset;
+			d.setAnnotationFileName(annotationData.getAbsolutePath());
+		}
 		return loadAnnotationData(chiptype, annotationData);
 	}
 

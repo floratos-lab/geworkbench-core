@@ -23,7 +23,6 @@ import org.geworkbench.bison.model.analysis.Analysis;
 import org.geworkbench.bison.model.analysis.ParamValidationResults;
 import org.geworkbench.bison.model.analysis.ParameterPanel;
 import org.geworkbench.bison.util.DefaultIdentifiable;
-import org.geworkbench.engine.config.PluginRegistry;
 import org.geworkbench.engine.management.ComponentClassLoader;
 import org.geworkbench.engine.management.ComponentResource;
 import org.geworkbench.engine.management.Script;
@@ -45,7 +44,7 @@ import org.ginkgo.labs.util.FileTools;
  * @author First Genetic Trust Inc.
  * @author keshav
  * @author yc2480
- * @version $Id: AbstractAnalysis.java,v 1.31 2009-09-10 16:40:26 chiangy Exp $
+ * @version $Id: AbstractAnalysis.java,v 1.32 2009-09-21 21:53:59 jiz Exp $
  */
 @SuppressWarnings("unchecked")
 public abstract class AbstractAnalysis implements Analysis, Serializable,
@@ -169,9 +168,6 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	 */
 	public AbstractAnalysis() {
 		parameterHash = new Hashtable<ParameterKey, Map<Serializable, Serializable>>();
-		className = this.getClass().getSuperclass().getName();
-		String pluginName = PluginRegistry.getNameMap(className);
-		setLabel(pluginName);
 	}
 
 	/*
@@ -179,11 +175,6 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	 * can high light it on start up.
 	 */
 	private String lastParameterSetName = "";
-
-	/*
-	 * This variable is used to store it's className
-	 */
-	private String className;
 
 	/**
 	 * load all saved parameter sets in tmpDir
@@ -407,7 +398,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 		// Using the display name of the analysis as its index is not entirely
 		// appropriate. Ideally we would like to use some sorts of a hash based
 		// on its corresponding .class file.
-		return className;
+		return getLabel();
 	}
 
 	/**
