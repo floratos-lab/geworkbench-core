@@ -462,9 +462,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		Collection<GridEndpointReferenceType> pendingGridEprs = new HashSet<GridEndpointReferenceType>();
 		for (DataSetSaveNode project : projects) {
 			ProjectNode projectNode = new ProjectNode(project.getName());
-			projectNode.setDescription(project.getDescription());
-			addToProject(projectNode, true);			
-			selection.setNodeSelection(projectNode);			 
+			addToProject(projectNode, true);
+			selection.setNodeSelection(projectNode);
 			/* add data sets next */
 			java.util.List<DataSetSaveNode> dataSets = project.getChildren();
 			for (DataSetSaveNode dataNode : dataSets) {
@@ -475,7 +474,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				publishDirtyDataEvent(new DirtyDataEvent());
 				setComponents(dataNode);
 				DSDataSet dataSet = dataNode.getDataSet();
-				dataSet.setExperimentInformation(dataNode.getDescription());
 				/* pending node */
 				if (dataSet.getLabel() != null
 						&& dataSet.getLabel().equals(
@@ -492,11 +490,10 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				}
 				/* real node */
 				else {
-					 
 					addDataSetNode(dataSet, true);
 				}
 				if (dataSet == saveTree.getSelected()) {
-					selectedNode = selection.getSelectedNode();					 
+					selectedNode = selection.getSelectedNode();
 				}
 				/* add ancillary data sets */
 				java.util.List<DataSetSaveNode> ancSets = dataNode
@@ -521,13 +518,14 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 										String.class.getName()), history, true);
 						pendingGridEprs.add(pendingGridEpr);
 					} else {
-						DSAncillaryDataSet ancSet = null;					
+						DSAncillaryDataSet ancSet = null;
+
 						if (ancNode.getDataSet() instanceof ImageData) {
 							ancSet = (ImageData) ancNode.getDataSet();
 						} else {
 							ancSet = (DSAncillaryDataSet) ancNode.getDataSet();
 						}
-						ancSet.setExperimentInformation(ancNode.getDescription());
+
 						addDataSetSubNode(ancSet);
 						if (ancSet == saveTree.getSelected()) {
 							selectedNode = selection.getSelectedNode();
@@ -554,7 +552,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			// serialize("default.ws");
 			projectTree.setSelectionPath(new TreePath(selectedNode.getPath()));
 			selection.setNodeSelection(selectedNode);
-		
 		}
 	}
 	@Publish
@@ -843,7 +840,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	@Subscribe
 	public void receive(CommentsEvent ce, Object source) {
 		ProjectTreeNode selectedNode = selection.getSelectedNode();
-		selectedNode.setDescription(ce.getText());		 
+		selectedNode.setDescription(ce.getText());
 	}
 
 	/**
@@ -872,8 +869,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		if (pNode != null) {
 			// Inserts the new node and sets the menuNode and other variables to
 			// point to it
-			DataSetNode node = new DataSetNode(_dataSet);			 
-			node.setDescription(_dataSet.getExperimentInformation());
+			DataSetNode node = new DataSetNode(_dataSet);
 			projectTreeModel.insertNodeInto(node, pNode, pNode.getChildCount());
 			if (select) {
 				// Make sure the user can see the lovely new node.
@@ -1141,7 +1137,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 		// Inserts the new node and sets the menuNode and other variables to
 		// point to it
-		node.setDescription(_ancDataSet.getExperimentInformation());
 		projectTreeModel.insertNodeInto(node, dNode, dNode.getChildCount());
 		// Make sure the user can see the lovely new node.
 		projectTree.scrollPathToVisible(new TreePath(node));
@@ -2162,15 +2157,12 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 	}
 
-	public void sendCommentsEvent(ProjectTreeNode forNode) 
-	{
-		if (forNode != null)
-		{
-			String description = forNode.getDescription();
-		    if (description == null) {
-			   description = "";
-		    }
-		    publishCommentsEvent(new CommentsEvent(description));}
+	public void sendCommentsEvent(ProjectTreeNode forNode) {
+		String description = forNode.getDescription();
+		if (description == null) {
+			description = "";
+		}
+		publishCommentsEvent(new CommentsEvent(description));
 	}
 
 	/**
