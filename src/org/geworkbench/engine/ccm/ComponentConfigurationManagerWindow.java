@@ -64,7 +64,7 @@ import com.jgoodies.forms.layout.FormLayout;
  * This is the main menu for the Component Configuration Manager.
  * 
  * @author tg2321
- * @version $Id: ComponentConfigurationManagerWindow.java,v 1.11 2009-08-04 14:56:06 tgarben Exp $
+ * @version $Id: ComponentConfigurationManagerWindow.java,v 1.12 2009-09-28 16:27:55 tgarben Exp $
  */
 public class ComponentConfigurationManagerWindow {
 
@@ -475,7 +475,15 @@ public class ComponentConfigurationManagerWindow {
 		} // ============ frame ============
 
 		 TableColumn tc = table.getColumnModel().getColumn(0);
+		 
+/*		TODO
+ *      The checkbox in the header of the CCM window functionality may be 
+ * 		desirable at some point in the future, for testing purposes only.
+ * 		If it is to be used, then it might be desirable to turn off 
+ * 		component validation for this feature.  		 
+		 
 		 tc.setHeaderRenderer(new CheckBoxHeader(new CheckBoxHeaderListener()));  
+*/
 
 		topPanel.setVisible(true);
 		splitPane.setVisible(true);
@@ -1477,7 +1485,7 @@ public class ComponentConfigurationManagerWindow {
 	 * GUI row structure
 	 * 
 	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.11 2009-08-04 14:56:06 tgarben Exp $
+	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.12 2009-09-28 16:27:55 tgarben Exp $
 	 */
 	private class TableRow {
 		private boolean selected = false;
@@ -1729,8 +1737,16 @@ public class ComponentConfigurationManagerWindow {
 	 * CheckBoxHeaderListener
 	 * 
 	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.11 2009-08-04 14:56:06 tgarben Exp $
+	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.12 2009-09-28 16:27:55 tgarben Exp $
 	 */
+	
+	/*		TODO
+     *		The checkbox in the header of the CCM window functionality may be 
+	 * 		desirable at some point in the future, for testing purposes only.
+	 * 		If it is to be used, then it might be desirable to turn off 
+	 * 		component validation for this feature.  		 
+
+	
 	class CheckBoxHeaderListener implements ItemListener {
 		public void itemStateChanged(ItemEvent e) {
 			Object source = e.getSource();
@@ -1739,7 +1755,7 @@ public class ComponentConfigurationManagerWindow {
 			boolean checked = e.getStateChange() == ItemEvent.SELECTED;
 			for (int x = 0, y = ccmTableModel.getRowCount(); x < y; x++) {
 
-				/* Don't unload LOAD_BY_DEFAULT_INDEX components */
+				/* Don't unload LOAD_BY_DEFAULT_INDEX components * /
 				if(!checked && ((Boolean)ccmTableModel.getModelValueAt(x, CCMTableModel.LOAD_BY_DEFAULT_INDEX)).booleanValue()){
 					continue;					
 				}
@@ -1749,11 +1765,13 @@ public class ComponentConfigurationManagerWindow {
 		}
 	}
 	
+	*/
+	
 	/**
 	 * CheckBoxHeader
 	 * 
 	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.11 2009-08-04 14:56:06 tgarben Exp $
+	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.12 2009-09-28 16:27:55 tgarben Exp $
 	 */
 	class CheckBoxHeader extends JCheckBox implements TableCellRenderer,
 			MouseListener {
