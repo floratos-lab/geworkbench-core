@@ -64,7 +64,7 @@ import com.jgoodies.forms.layout.FormLayout;
  * This is the main menu for the Component Configuration Manager.
  * 
  * @author tg2321
- * @version $Id: ComponentConfigurationManagerWindow.java,v 1.12 2009-09-28 16:27:55 tgarben Exp $
+ * @version $Id: ComponentConfigurationManagerWindow.java,v 1.13 2009-09-28 18:21:20 npodduturi Exp $
  */
 public class ComponentConfigurationManagerWindow {
 
@@ -162,7 +162,7 @@ public class ComponentConfigurationManagerWindow {
 		String[] displayChoices = { DISPLAY_FILTER_ALL, DISPLAY_ONLY_LOADED, DISPLAY_ONLY_UNLOADED };
 		displayComboBox = new JComboBox(displayChoices);
 		showByTypeLabel = new JLabel();
-		String[] showByTypeChoices = { SHOW_BY_TYPE_ALL, SHOW_BY_TYPE_PARSER, SHOW_BY_TYPE_ANALYSIS, SHOW_BY_TYPE_VISUALIZER };
+		String[] showByTypeChoices = { SHOW_BY_TYPE_ALL, SHOW_BY_TYPE_ANALYSIS, SHOW_BY_TYPE_VISUALIZER };
 		showByTypeComboBox = new JComboBox(showByTypeChoices);
 		keywordSearchLabel = new JLabel("Keyword search:");
 		keywordSearchField = new JTextField("Enter Text");
@@ -886,13 +886,8 @@ public class ComponentConfigurationManagerWindow {
 				return false;
 			}
 			
-			Boolean isParser = (Boolean)getModelValueAt(modelRow, CCMTableModel.PARSER_INDEX);
 			Boolean isAnalysis = (Boolean)getModelValueAt(modelRow, CCMTableModel.ANALYSIS_INDEX);
 			Boolean isVisualizer = (Boolean)getModelValueAt(modelRow, CCMTableModel.VISUALIZER_INDEX);
-			
-			if (isParser && typeFilterValue.equals(ComponentConfigurationManagerWindow.SHOW_BY_TYPE_PARSER)){
-				return false;
-			}
 			
 			if (isAnalysis && typeFilterValue.equals(ComponentConfigurationManagerWindow.SHOW_BY_TYPE_ANALYSIS)){
 				return false;
@@ -1485,7 +1480,7 @@ public class ComponentConfigurationManagerWindow {
 	 * GUI row structure
 	 * 
 	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.12 2009-09-28 16:27:55 tgarben Exp $
+	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.13 2009-09-28 18:21:20 npodduturi Exp $
 	 */
 	private class TableRow {
 		private boolean selected = false;
@@ -1737,7 +1732,7 @@ public class ComponentConfigurationManagerWindow {
 	 * CheckBoxHeaderListener
 	 * 
 	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.12 2009-09-28 16:27:55 tgarben Exp $
+	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.13 2009-09-28 18:21:20 npodduturi Exp $
 	 */
 	
 	/*		TODO
@@ -1771,7 +1766,7 @@ public class ComponentConfigurationManagerWindow {
 	 * CheckBoxHeader
 	 * 
 	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.12 2009-09-28 16:27:55 tgarben Exp $
+	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.13 2009-09-28 18:21:20 npodduturi Exp $
 	 */
 	class CheckBoxHeader extends JCheckBox implements TableCellRenderer,
 			MouseListener {
