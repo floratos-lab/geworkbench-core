@@ -1632,8 +1632,40 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 		doMergeSets(sets);
 	}
+	/**
+	 * Check for markers in DSMicroarraySets, if markers are all the same,
+	 * return true. This method assume there's no duplicate markers within each set.
+	 * 
+	 * @param sets
+	 * @return
+	 */
+	public boolean isSameMarkerSets(DSMicroarraySet[] sets) {
+		HashSet prevSet = new HashSet();
+		HashSet nextSet = new HashSet();
+		if (sets != null) {			
+			for (int i = 0; i < sets.length; i++) {
+				nextSet.addAll(sets[i].getMarkers());
+				if (prevSet.size()==0)
+					prevSet.addAll(nextSet);
+				else if (!prevSet.equals(nextSet)) {
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
+	}
 
 	protected void doMergeSets(DSMicroarraySet[] sets) {
+		if (!isSameMarkerSets(sets)) {
+			JOptionPane
+					.showMessageDialog(
+							null,
+							"Can't merge datasets.  Only datasets with the same markers can be merged.",
+							"Operation failed while merging",
+							JOptionPane.INFORMATION_MESSAGE);
+			return;
+		}
 		DSMicroarraySet mergedSet = null;
 		int i;
 		DSMicroarraySet<DSMicroarray> set;

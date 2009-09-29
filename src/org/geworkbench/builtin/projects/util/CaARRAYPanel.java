@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Observer;
 import java.util.SortedMap;
@@ -51,7 +52,7 @@ import org.geworkbench.util.ProgressBar;
 
 /**
  * @author xiaoqing
- * @version $Id: CaARRAYPanel.java,v 1.46 2009-08-28 16:45:29 jiz Exp $
+ * @version $Id: CaARRAYPanel.java,v 1.47 2009-09-29 15:59:58 chiangy Exp $
  */
 @SuppressWarnings("unchecked")
 public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
@@ -410,6 +411,23 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 	 * @param e
 	 */
 	private void openRemoteFile_action(ActionEvent e) {
+		// If there are multiple parents in the paths, it means user tries
+		// to select arrays from different experiments, it's not allowed.
+		TreePath[] paths = remoteFileTree.getSelectionPaths();
+		HashSet set = new HashSet();
+		for (TreePath treePath : paths) {
+			set.add(treePath.getParentPath());
+		}
+		if (set.size() > 1) {
+			JOptionPane
+					.showMessageDialog(
+							null,
+							"Only datasets from the same experiment can be merged.",
+							"Can't merge datasets",
+							JOptionPane.INFORMATION_MESSAGE);
+			return;
+		}
+		// If there is only one parent, we continue.
 		String qType = checkQuantationTypeSelection();
 
 		if (qType != null) {
