@@ -82,6 +82,8 @@
 		<subant target="compile" genericantfile="build-component.xml">
 			<dirset dir="components" includes="*">
 				<exclude name="skylinecontour" />
+				<exclude name="goterm" />
+				<exclude name="gpmodule" />
 			</dirset>
 		</subant>
 		<chmod file="./bin/matrixreduce/FitModelMac" perm="700"/>
