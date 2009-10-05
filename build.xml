@@ -82,7 +82,7 @@
 		<subant target="compile" genericantfile="build-component.xml">
 			<dirset dir="components" includes="*">
 				<exclude name="skylinecontour" />
-				<exclude name="goterm" />
+				<exclude name="goterms" />
 				<exclude name="gpmodule" />
 			</dirset>
 		</subant>
