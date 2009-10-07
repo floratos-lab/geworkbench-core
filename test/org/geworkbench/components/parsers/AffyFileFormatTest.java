@@ -1,6 +1,7 @@
 package org.geworkbench.components.parsers;
 
 import java.io.File;
+import java.io.InterruptedIOException;
 
 import javax.swing.filechooser.FileFilter;
 
@@ -13,7 +14,7 @@ import org.geworkbench.bison.parsers.resources.Resource;
 /**
  * 
  * @author yc2480
- * @version $Id: AffyFileFormatTest.java,v 1.2 2008-10-28 16:55:18 keshav Exp $
+ * @version $Id: AffyFileFormatTest.java,v 1.3 2009-10-07 15:38:48 my2248 Exp $
  */
 public class AffyFileFormatTest extends TestCase {
 
@@ -174,7 +175,7 @@ public class AffyFileFormatTest extends TestCase {
 	/**
 	 * testing calling getDataFile() with compatibilityLabel
 	 */
-	public final void testGetDataFileFileString() {
+	public final void testGetDataFileFileString() throws InterruptedIOException {
 		boolean invalidFormat = false;
 		try {
 			// please note that calling this way won't have GUI interaction

@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.InterruptedIOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -47,7 +48,7 @@ import org.geworkbench.components.parsers.microarray.DataSetFileFormat;
  *
  * @author unknown
  * @author yc2480
- * @version $Id: AffyFileFormat.java,v 1.16 2009-06-10 21:42:55 chiangy Exp $
+ * @version $Id: AffyFileFormat.java,v 1.17 2009-10-07 15:38:48 my2248 Exp $
  * 
  */
 public class AffyFileFormat extends DataSetFileFormat {
@@ -187,7 +188,7 @@ public class AffyFileFormat extends DataSetFileFormat {
      *                                  Affy format.
      */
 
-    public void getMArraySet(File file, CSExprMicroarraySet maSet) throws InputFileFormatException {
+    public void getMArraySet(File file, CSExprMicroarraySet maSet) throws InputFileFormatException, InterruptedIOException {
         // Check that the file is OK before starting allocating space for it.
     	try {
 			if (!checkFormat(file))
@@ -201,6 +202,7 @@ public class AffyFileFormat extends DataSetFileFormat {
 					"Out of memory error.\n\nAttempting to open a file that larger then memory size left in JVM.\nThe geWorkbench might become unstable, please close geWorkbench.");
 		}
         BufferedReader reader = null;
+        ProgressMonitorInputStream progressIn = null;
         try {
             // microarraySet = new CSExprMicroarraySet((AffyResource) getResource(file));
             microarraySet = maSet;
@@ -214,7 +216,7 @@ public class AffyFileFormat extends DataSetFileFormat {
             ctu.add("Abs Call");
             AffymetrixParser parser = new AffymetrixParser(ctu);
             FileInputStream fileIn = new FileInputStream(file);
-            ProgressMonitorInputStream progressIn = new ProgressMonitorInputStream(null, "Scanning File", fileIn);
+            progressIn = new ProgressMonitorInputStream(null, "Scanning File", fileIn);
             reader = new BufferedReader(new InputStreamReader(progressIn));
 
             String line = null;
@@ -262,6 +264,15 @@ public class AffyFileFormat extends DataSetFileFormat {
             parser.getMicroarray().setLabel(file.getName());
             microarraySet.add(0, parser.getMicroarray());
             microarraySet.setFile(file);
+        }
+        catch (java.io.InterruptedIOException ie) {
+    			if ( progressIn.getProgressMonitor().isCanceled())
+    			{	
+    				throw ie;    				 			 
+    			}			 
+    			else
+    			   ie.printStackTrace();
+        
         } catch (Exception ec) {
             log.error(ec,ec);
         } catch (OutOfMemoryError er) {
@@ -283,13 +294,13 @@ public class AffyFileFormat extends DataSetFileFormat {
      * @param file File
      * @return DataSet
      */
-    public DSDataSet getDataFile(File file) throws InputFileFormatException{
+    public DSDataSet getDataFile(File file) throws InputFileFormatException, InterruptedIOException{
         DSDataSet ds = null;
         ds = (DSDataSet) getMArraySet(file);
         return ds;
     }
 
-    public DSMicroarraySet getMArraySet(File file) throws InputFileFormatException {
+    public DSMicroarraySet getMArraySet(File file) throws InputFileFormatException, InterruptedIOException{
         CSExprMicroarraySet maSet = new CSExprMicroarraySet();
         getMArraySet(file, maSet);
         if (maSet.loadingCancelled)
@@ -297,10 +308,10 @@ public class AffyFileFormat extends DataSetFileFormat {
         return maSet;
     }
 
-    public DSDataSet getDataFile(File file, String compatibilityLabel) throws InputFileFormatException {
+    public DSDataSet getDataFile(File file, String compatibilityLabel) throws InputFileFormatException, InterruptedIOException {
         CSExprMicroarraySet maSet = new CSExprMicroarraySet();
         maSet.setCompatibilityLabel(compatibilityLabel);
-        getMArraySet(file, maSet);
+        getMArraySet(file, maSet);        
         return maSet;
     }
 

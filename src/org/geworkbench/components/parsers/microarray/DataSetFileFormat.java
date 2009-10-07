@@ -14,14 +14,14 @@ import java.io.File;
  * <p>Company: </p>
  *
  * @author not attributable
- * @version 1.0
+ * @version $Id: DataSetFileFormat.java,v 1.5 2009-10-07 15:38:48 my2248 Exp $
  */
 
 public abstract class DataSetFileFormat extends FileFormat {
   public DataSetFileFormat() {
   }
   abstract public DSDataSet getDataFile(File file) throws InputFileFormatException, InterruptedIOException;
-  public DSDataSet getDataFile(File file, String compatibilityLabel) throws InputFileFormatException, UnsupportedOperationException {
+  public DSDataSet getDataFile(File file, String compatibilityLabel) throws InputFileFormatException, InterruptedIOException, UnsupportedOperationException {
       throw new UnsupportedOperationException();
   }
      

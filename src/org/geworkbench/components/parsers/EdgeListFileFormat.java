@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.InterruptedIOException;
 import java.util.StringTokenizer;
 
 import javax.swing.ProgressMonitorInputStream;
@@ -25,7 +26,7 @@ import org.geworkbench.util.pathwaydecoder.mutualinformation.EdgeListDataSet;
 /**
  * 
  * @author ch2514
- * @version $Id: EdgeListFileFormat.java,v 1.3 2008-12-12 14:58:51 jiz Exp $
+ * @version $Id: EdgeListFileFormat.java,v 1.4 2009-10-07 15:38:48 my2248 Exp $
  */
 @SuppressWarnings("unchecked")
 public class EdgeListFileFormat extends DataSetFileFormat {
@@ -101,7 +102,7 @@ public class EdgeListFileFormat extends DataSetFileFormat {
 	 *            File
 	 * @return DataSet
 	 */
-	public DSDataSet getDataFile(File file) {
+	public DSDataSet getDataFile(File file) throws InterruptedIOException {
 		DSDataSet ds = null;
 		try {
 			ds = (DSDataSet) getEdgeListDataSet(file);
@@ -118,7 +119,7 @@ public class EdgeListFileFormat extends DataSetFileFormat {
 	}
 
 	public EdgeListDataSet getEdgeListDataSet(File file)
-			throws InputFileFormatException {
+			throws InputFileFormatException, InterruptedIOException {
 		EdgeListDataSet result = null;
 		if (!checkFormat(file))
 			throw new InputFileFormatException(
@@ -147,12 +148,13 @@ public class EdgeListFileFormat extends DataSetFileFormat {
 	}
 
 	private EdgeList parseEdgeListDataFile(File file)
-			throws InputFileFormatException {
+			throws InputFileFormatException, InterruptedIOException{
 		EdgeList el = new EdgeList();
 		BufferedReader reader = null;
+		ProgressMonitorInputStream progressIn = null;
 		try {
 			FileInputStream fileIn = new FileInputStream(file);
-			ProgressMonitorInputStream progressIn = new ProgressMonitorInputStream(
+			progressIn = new ProgressMonitorInputStream(
 					null, "Scanning File", fileIn);
 			reader = new BufferedReader(new InputStreamReader(progressIn));
 
@@ -167,6 +169,13 @@ public class EdgeListFileFormat extends DataSetFileFormat {
 					}
 				}
 			}
+		} catch (java.io.InterruptedIOException ie) {
+			if ( progressIn.getProgressMonitor().isCanceled())
+			{			    
+				throw ie;				 
+			}			 
+			else
+			   ie.printStackTrace();
 		} catch (IOException e) {
 			log.debug("Problems reading file: " + file.getName(), e);
 			throw new InputFileFormatException("Cannot read Net Boost file: "
@@ -186,12 +195,13 @@ public class EdgeListFileFormat extends DataSetFileFormat {
 	}
 
 	private EdgeList parseAdjacencyMatrixDataFile(File file)
-			throws InputFileFormatException {
+			throws InputFileFormatException, InterruptedIOException {
 		EdgeList el = new EdgeList();
 		BufferedReader reader = null;
+		ProgressMonitorInputStream progressIn = null;
 		try {
 			FileInputStream fileIn = new FileInputStream(file);
-			ProgressMonitorInputStream progressIn = new ProgressMonitorInputStream(
+			progressIn = new ProgressMonitorInputStream(
 					null, "Scanning File", fileIn);
 			reader = new BufferedReader(new InputStreamReader(progressIn));
 
@@ -224,6 +234,13 @@ public class EdgeListFileFormat extends DataSetFileFormat {
 					}
 				}
 			}
+		} catch (java.io.InterruptedIOException ie) {
+			if ( progressIn.getProgressMonitor().isCanceled())
+			{			    
+				throw ie;				 
+			}			 
+			else
+			   ie.printStackTrace();
 		} catch (IOException e) {
 			log.debug("Problems reading file: " + file.getName(), e);
 			throw new InputFileFormatException("Cannot read Net Boost file: "

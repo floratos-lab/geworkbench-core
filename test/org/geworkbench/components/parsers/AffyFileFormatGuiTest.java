@@ -1,6 +1,7 @@
 package org.geworkbench.components.parsers;
 
 import java.io.File;
+import java.io.InterruptedIOException;
 
 import junit.framework.TestCase;
 
@@ -9,7 +10,7 @@ import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicr
 
 /**
  * @author yc2480
- * @version $Id: AffyFileFormatGuiTest.java,v 1.2 2009-01-09 15:55:25 chiangy Exp $
+ * @version $Id: AffyFileFormatGuiTest.java,v 1.3 2009-10-07 15:38:48 my2248 Exp $
  */
 public class AffyFileFormatGuiTest extends TestCase {
 
@@ -28,7 +29,7 @@ public class AffyFileFormatGuiTest extends TestCase {
 		super.tearDown();
 	}
 
-	public final void testGetMArraySetFileCSExprMicroarraySet() {
+	public final void testGetMArraySetFileCSExprMicroarraySet() throws InterruptedIOException{
 		boolean invalidFormat = false;
 		try {
 			CSExprMicroarraySet result = new CSExprMicroarraySet();
@@ -48,7 +49,7 @@ public class AffyFileFormatGuiTest extends TestCase {
 		assertEquals("correct file should return false", false, invalidFormat);
 	}
 
-	public final void testGetDataFileFile() {
+	public final void testGetDataFileFile()throws InterruptedIOException {
 		boolean invalidFormat = false;
 		try {
 			DSDataSet result = affyFileFormat.getDataFile(new File("test/org/geworkbench/components/parsers/testFile8.txt"));
@@ -67,7 +68,7 @@ public class AffyFileFormatGuiTest extends TestCase {
 		assertEquals("correct file should return false", false, invalidFormat);
 	}
 
-	public final void testGetMArraySetFile() {
+	public final void testGetMArraySetFile()throws InterruptedIOException {
 		boolean invalidFormat = false;
 		try {
 			DSDataSet result = affyFileFormat.getMArraySet(new File("test/org/geworkbench/components/parsers/testFile8.txt"));

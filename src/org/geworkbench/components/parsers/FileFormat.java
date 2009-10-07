@@ -17,6 +17,10 @@ import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
  */
 
 /**
+ * 
+ * @author my2248
+ * @version $Id: FileFormat.java,v 1.4 2009-10-07 15:38:48 my2248 Exp $
+ * 
  * Base class for reading input data files complying to a desired format.
  * Support for any given microarray data format (e.g., Affymetrix MAS 5,
  * GenePix, etc), can be provide as follows:
@@ -79,7 +83,7 @@ public abstract class FileFormat {
      * @param maSet The set to load the data in
      * @return The corresponding <code>MicroarraySet</code> object.
      */
-    public void getMArraySet(File file, CSExprMicroarraySet maSet) throws InputFileFormatException {
+    public void getMArraySet(File file, CSExprMicroarraySet maSet) throws InputFileFormatException , InterruptedIOException{
         throw new UnsupportedOperationException();
     }
 

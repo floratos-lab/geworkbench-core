@@ -26,7 +26,7 @@ import java.util.Vector;
  * 
  * @author manjunath
  * @author zji
- * @version $Id: GenePixFileFormat.java,v 1.4 2008-10-07 19:07:30 jiz Exp $
+ * @version $Id: GenePixFileFormat.java,v 1.5 2009-10-07 15:38:48 my2248 Exp $
  */
 public class GenePixFileFormat extends DataSetFileFormat {
 	/**
@@ -99,13 +99,16 @@ public class GenePixFileFormat extends DataSetFileFormat {
 	 */
 	@SuppressWarnings("unchecked")
 	public DSMicroarraySet getMArraySet(File file)
-			throws org.geworkbench.components.parsers.InputFileFormatException {
+			throws org.geworkbench.components.parsers.InputFileFormatException, InterruptedIOException {
 		// Check that the file is OK before starting allocating space for it.
 		if (!checkFormat(file))
 			throw new org.geworkbench.components.parsers.InputFileFormatException(
 					"GenepixFileFormat::getMArraySet - "
 							+ "Attempting to open a file that does not comply with the "
 							+ "Genepix format.");
+		
+		ProgressMonitorInputStream progressIn = null;
+		
 		try {
 			microarraySet = new CSExprMicroarraySet();
 			microarraySet.setFile(file);
@@ -128,7 +131,7 @@ public class GenePixFileFormat extends DataSetFileFormat {
 			GenePixParser parser = new GenePixParser(ctu);
 
 			FileInputStream fileIn = new FileInputStream(file);
-			ProgressMonitorInputStream progressIn = new ProgressMonitorInputStream(
+			progressIn = new ProgressMonitorInputStream(
 					null, "Processing File", fileIn);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					progressIn));
@@ -172,6 +175,14 @@ public class GenePixFileFormat extends DataSetFileFormat {
 			}
 			reader.close();
 			microarraySet.add(0, parser.getMicroarray());
+		} catch (java.io.InterruptedIOException ie) {
+			if ( progressIn.getProgressMonitor().isCanceled())
+			{			    
+				throw ie;				 
+			}			 
+			else
+			   ie.printStackTrace();
+		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -187,7 +198,7 @@ public class GenePixFileFormat extends DataSetFileFormat {
 	 * @return DataSet
 	 */
 	@SuppressWarnings("unchecked")
-	public DSDataSet<DSMicroarray> getDataFile(File file) {
+	public DSDataSet<DSMicroarray> getDataFile(File file) throws InterruptedIOException {
 		DSDataSet<DSMicroarray> ds = null;
 		try {
 			ds = (DSDataSet<DSMicroarray>) getMArraySet(file);
