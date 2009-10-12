@@ -52,7 +52,7 @@ import org.geworkbench.util.ProgressBar;
 
 /**
  * @author xiaoqing
- * @version $Id: CaARRAYPanel.java,v 1.47 2009-09-29 15:59:58 chiangy Exp $
+ * @version $Id: CaARRAYPanel.java,v 1.48 2009-10-12 18:13:29 jiz Exp $
  */
 @SuppressWarnings("unchecked")
 public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
@@ -326,7 +326,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 		jGetRemoteDataMenu.setText("Get bioassays");
 		ActionListener listener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				jGetRemoteData_actionPerformed(e);
+				extendBioassays_action(e);
 			}
 		};
 		jGetRemoteDataMenu.addActionListener(listener);
@@ -675,42 +675,6 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 			}
 		}
 		experimentInfoArea.setCaretPosition(0); // For long text.
-	}
-
-	/**
-	 * Populate the subtree corresponding to an Experiment node with data from
-	 * the remote server.
-	 * 
-	 * @param e
-	 */
-	private void jGetRemoteData_actionPerformed(ActionEvent e) {
-		if (e == null) {
-			return;
-		}
-		DefaultMutableTreeNode node = (DefaultMutableTreeNode) remoteFileTree
-				.getLastSelectedPathComponent();
-		if (node != null && node != root && treeMap != null
-				&& treeMap.size() != 0) {
-			// Lazy computation of the children on an experiment.
-			DefaultMutableTreeNode assayNode = null;
-
-			if (treeMap.containsKey(node.getUserObject())) {
-				String exp = (String) node.getUserObject();
-				// Add in the tree the measured bioassays
-				if (node.getChildCount() == 0) {
-
-					// Add in the tree the derived bioassays
-					Map<String, String> derived = treeMap.get(exp)
-							.getHybridizations();
-					for (String hybName : derived.keySet()) {
-						assayNode = new DefaultMutableTreeNode(hybName);
-						remoteTreeModel.insertNodeInto(assayNode, node, node
-								.getChildCount());
-					}
-					remoteFileTree.expandPath(new TreePath(node.getPath()));
-				}
-			}
-		}
 	}
 
 	private void getBioAssay() {
