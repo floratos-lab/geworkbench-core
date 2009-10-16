@@ -18,19 +18,17 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InterruptedIOException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
@@ -48,7 +46,6 @@ import javax.swing.SwingConstants;
 import javax.swing.ToolTipManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileFilter;
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -62,22 +59,25 @@ import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.sequences.CSSequenceSet;
 import org.geworkbench.bison.datastructure.biocollections.views.CSMicroarraySetView;
+import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.APSerializable;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSTTestResultSet;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMutableMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.structure.CSProteinStructure;
 import org.geworkbench.bison.datastructure.bioobjects.structure.DSProteinStructure;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.datastructure.properties.DSExtendable;
 import org.geworkbench.bison.datastructure.properties.DSNamed;
-import org.geworkbench.bison.model.clusters.CSHierClusterDataSet;
 import org.geworkbench.bison.parsers.resources.MAGEResource2;
 import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.bison.util.colorcontext.ColorContext;
@@ -89,18 +89,15 @@ import org.geworkbench.engine.config.GUIFramework;
 import org.geworkbench.engine.config.MenuListener;
 import org.geworkbench.engine.config.VisualPlugin;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
-import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.engine.management.Publish;
 import org.geworkbench.engine.management.Script;
 import org.geworkbench.engine.management.Subscribe;
 import org.geworkbench.engine.management.TypeMap;
 import org.geworkbench.engine.preferences.GlobalPreferences;
 import org.geworkbench.engine.skin.Skin;
-import org.geworkbench.events.CaArrayEvent;
 import org.geworkbench.events.CaArrayQueryEvent;
 import org.geworkbench.events.CaArrayQueryResultEvent;
 import org.geworkbench.events.CaArrayRequestEvent;
-import org.geworkbench.events.CaArraySuccessEvent;
 import org.geworkbench.events.CleanDataEvent;
 import org.geworkbench.events.CommentsEvent;
 import org.geworkbench.events.ComponentConfigurationManagerUpdateEvent;
@@ -1437,7 +1434,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			for (int i = 0; i < mRes.length; i++) {
 				maSets[i] = CaArrayLoader.loadCaArrayData(mRes[i]);
 			}
-			doMergeSets(maSets);
+			doExMergeSets(maSets);
 
 		}
 		return true;
@@ -1630,7 +1627,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				return;
 			}
 		}
-		doMergeSets(sets);
+		doExMergeSets(sets);
 	}
 	/**
 	 * Check for markers in DSMicroarraySets, if markers are all the same,
@@ -1655,7 +1652,114 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 		return false;
 	}
+	
+	//This should be moved to a util package.
+	public CSExprMicroarraySet maSets2ExprSet(DSMicroarraySet[] maSets) {
+		CSExprMicroarraySet maSet = new CSExprMicroarraySet();
+		if (!maSet.initialized) {
+			// FIXME: the size in following line probably need to be
+			// consolidated from multiple microarrays
+			int markerNo = 0;
+			int arraySize = 0;
+			for (int i = 0; i < maSets.length; i++) {
+				int newSet = maSets[0].getMarkers().size();
+				if (newSet > markerNo)
+					markerNo = newSet;
+				arraySize += maSets[i].size();
+				((DSMicroarraySet<DSMicroarray>) maSet).getMarkers().addAll(
+						maSets[i].getMarkers());
+			}
 
+			int uniqMarkers = ((DSMicroarraySet<DSMicroarray>) maSet)
+					.getMarkers().size();
+			// if (uniqMarkers != markerNo)
+			// maSet.initialize(arraySize, uniqMarkers);
+			maSet.getMarkerVector().clear();
+			// maSet.setCompatibilityLabel(bioAssayImpl.getIdentifier());
+			for (int i = 0; i < maSets.length; i++) {
+				for (int z = 0; z < maSets[i].getMarkers().size(); z++) {
+					String markerName = ((CSExpressionMarker) maSets[i]
+							.getMarkers().get(z)).getLabel();
+					if (markerName != null) {
+						CSExpressionMarker marker = new CSExpressionMarker(z);
+						marker.setGeneName(markerName);
+						marker.setDisPlayType(DSGeneMarker.AFFY_TYPE);
+						marker.setLabel(markerName);
+						marker.setDescription(markerName);
+						maSet.getMarkerVector().add(marker);
+						// Why annotation information are always null? xz.
+						// maSet.getMarkers().get(z).setDescription(
+						// markersArray[z].getAnnotation().getLsid());
+					} else {
+						log
+								.error("LogicalProbes have some null values. The location is "
+										+ z);
+					}
+				}
+			}
+		}
+		// FIXME: what if chip type is different from maSets[0], maSets[1],
+		// maSets[2]...?
+		String chipType = AnnotationParser.getChipType(maSets[0]);
+		maSet.setCompatibilityLabel(chipType);
+		AnnotationParser.setChipType(maSet, chipType);
+		String desc = "Merged array set ";
+
+		// loop through sets
+		for (int i = 0; i < maSets.length; i++) { 
+			int uniqmarkerNo = maSet.getMarkerVector().size();
+			desc += maSets[i].getLabel() + " ";
+			// loop through arrays
+			for (int i2 = 0; i2 < maSets[i].size(); i2++) { 
+				String name = ((CSMicroarray) maSets[i].get(i2)).getLabel();
+				// TODO: check if the array already exist or not, if exist,
+				// reuse the array instead of creating a new one.
+				DSMicroarray microarray = maSet.get(name);
+				if (microarray == null){
+					microarray = new CSMicroarray(0, uniqmarkerNo, name, null,
+							null, true, DSMicroarraySet.geneExpType);
+				microarray.setLabel(name);
+				for (int j = 0; j < uniqmarkerNo; j++) {
+					microarray.getMarkerValue(j).setMissing(true);
+				}
+				}
+				// loop through markers
+				for (int j = 0; j < maSets[i].getMarkers().size(); j++) { 
+					DSGeneMarker oldmarker = (DSGeneMarker) maSets[i]
+							.getMarkers().get(j);
+					int newIndex = maSet.getMarkerVector().indexOf(oldmarker);
+					if (newIndex >= 0) {
+						((DSMutableMarkerValue) microarray
+								.getMarkerValue(newIndex)).setValue(maSets[i]
+								.getValue(j, i2));
+						((DSMutableMarkerValue) microarray
+								.getMarkerValue(newIndex)).setMissing(false);
+					}
+				}
+				if (maSet != null && microarray != null) {
+					maSet.add(microarray);
+				}
+			}
+		}
+
+		maSet.setLabel(desc);
+		maSet.addDescription(desc);
+		return maSet;
+	}
+
+	protected void doExMergeSets(DSMicroarraySet[] sets) {
+		CSExprMicroarraySet exMaSet = maSets2ExprSet(sets);
+		if (sets != null) {
+			// Add color context
+			addColorContext(exMaSet);
+
+			// Add the new dataset to the project tree.
+			addDataSetNode(exMaSet, true);
+		}
+		
+	}
+
+	
 	protected void doMergeSets(DSMicroarraySet[] sets) {
 		if (!isSameMarkerSets(sets)) {
 			JOptionPane
