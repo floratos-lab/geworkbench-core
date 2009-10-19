@@ -163,6 +163,7 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 							}
 						}
 						columnIndex++;
+						lineIndex++;
 					}
 					/* check if column match or not */
 					if (headerLineIndex > 0) {
@@ -176,8 +177,6 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 							columnsMatch = false;
 					}
 				}
-				lineIndex++;
-				
 			}
 			possibleMarkers = markers.size();
 			fileIn.close();
