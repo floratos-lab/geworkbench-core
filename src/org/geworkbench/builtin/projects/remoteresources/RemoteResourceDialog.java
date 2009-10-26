@@ -17,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
@@ -32,7 +33,7 @@ import javax.swing.border.EtchedBorder;
  * <p>Company: </p>
  *
  * @author unknown
- * @version $Id: RemoteResourceDialog.java,v 1.24 2009-05-15 20:12:52 chiangy Exp $
+ * @version $Id: RemoteResourceDialog.java,v 1.25 2009-10-26 21:02:57 jiz Exp $
  */
 public class RemoteResourceDialog extends JDialog {
     private static RemoteResourceManager remoteResourceManager = new
@@ -98,8 +99,10 @@ public class RemoteResourceDialog extends JDialog {
 
     private void jbInit() throws Exception {
         jLabel1.setText("Details:");
+        jLabel2.setPreferredSize(new Dimension(100, 20));
         jLabel2.setText("Port:");
-        jLabel3.setText("User Name:");
+        jLabel2.setHorizontalAlignment(JLabel.RIGHT);
+        jLabel3.setText("Username:");
         boxLayout21 = new BoxLayout(jPanel2, BoxLayout.Y_AXIS);
 
         jPanel2.setLayout(boxLayout21);
@@ -107,17 +110,18 @@ public class RemoteResourceDialog extends JDialog {
         jTextField1.setPreferredSize(new Dimension(60, 20));
         jTextField1.setToolTipText("");
         jTextField1.setText("Manju");
-        jLabel4.setText("URL:");
+        jLabel4.setPreferredSize(new Dimension(100, 20));
+        jLabel4.setText("Hostname:");
+        jLabel4.setHorizontalAlignment(JLabel.RIGHT);
         jPasswordField1.setPreferredSize(new Dimension(60, 22));
         jPasswordField1.setText("jPasswordField1");
         this.getContentPane().setLayout(xYLayout1);
         jPanel1.setLayout(borderLayout1);
 
         jLabel5.setText("Password: ");
-        jTextField2.setPreferredSize(new Dimension(122, 20));
+        jTextField2.setPreferredSize(new Dimension(120, 20));
         jTextField2.setText("www.columbia.edu");
-        jTextField3.setMinimumSize(new Dimension(45, 20));
-        jTextField3.setPreferredSize(new Dimension(40, 20));
+        jTextField3.setPreferredSize(new Dimension(120, 20));
         jTextField3.setText("80");
         jButton1.setText("OK");
         jButton1.addActionListener(new
@@ -131,7 +135,7 @@ public class RemoteResourceDialog extends JDialog {
         jLabel6.setText("Protocol:");
         jComboBox1.addActionListener(new
                                      RemoteResourceDialog_jComboBox1_actionAdapter(this));
-        shortnameLabel.setText("ShortName:");
+        shortnameLabel.setText("Profile name:");
         shortnameTextField.setPreferredSize(new Dimension(90, 20));
         shortnameTextField.setText("NCI_CaArray");
         jPanel7.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -140,6 +144,12 @@ public class RemoteResourceDialog extends JDialog {
 
         jPanel3.add(jLabel3);
         jPanel3.add(jTextField1);
+        JTextArea informative = new JTextArea("In case you wish to access non-public data, you need to supply your caArray Username and Password");
+        informative.setLineWrap(true);
+        informative.setWrapStyleWord(true);
+        informative.setPreferredSize(new Dimension(200, 50));
+        informative.setEditable(false);
+        jPanel2.add(informative);
         jPanel2.add(jPanel3);
         jPanel2.add(jPanel4);
         jPanel4.add(jLabel5);
@@ -148,6 +158,8 @@ public class RemoteResourceDialog extends JDialog {
         jPanel7.add(jPanel5);
         jPanel7.add(jPanel8);
         jPanel7.add(jPanel9);
+        JPanel portPanel = new JPanel();
+        jPanel7.add(portPanel);
         jPanel8.add(jLabel6);
         jPanel8.add(jComboBox1);
         jPanel5.add(shortnameLabel);
@@ -155,8 +167,8 @@ public class RemoteResourceDialog extends JDialog {
         jPanel7.add(jPanel2);
         jPanel9.add(jLabel4);
         jPanel9.add(jTextField2);
-        jPanel9.add(jLabel2);
-        jPanel9.add(jTextField3);
+        portPanel.add(jLabel2);
+        portPanel.add(jTextField3);
         jPanel6.add(jButton1);
         jPanel6.add(jButton6);
         this.getContentPane().add(jPanel1, BorderLayout.NORTH);
@@ -164,6 +176,7 @@ public class RemoteResourceDialog extends JDialog {
         this.getContentPane().add(jPanel6, BorderLayout.SOUTH);
 
         pack();
+        setLocationRelativeTo(null);
     }
 
     JLabel jLabel1 = new JLabel();
@@ -257,7 +270,7 @@ public class RemoteResourceDialog extends JDialog {
         String url = jTextField2.getText().trim();
         String username = jTextField1.getText().trim();
         if (shortname.length() == 0) {
-            JOptionPane.showMessageDialog(null, "Shortname can not be empty.",
+            JOptionPane.showMessageDialog(null, "Profile name can not be empty.",
                                           "Error",
                                           JOptionPane.INFORMATION_MESSAGE);
             return null;

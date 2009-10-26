@@ -51,7 +51,7 @@ import org.geworkbench.events.CaArrayRequestEvent;
  *  Popup to select a file (local or remote) to open.
  *  
  * @author First Genetic Trust Inc.
- * @version $Id: LoadData.java,v 1.41 2009-08-28 16:46:20 jiz Exp $
+ * @version $Id: LoadData.java,v 1.42 2009-10-26 21:02:43 jiz Exp $
  */
 public class LoadData extends JDialog {
 	private Log log = LogFactory.getLog(LoadData.class);
@@ -246,8 +246,8 @@ public class LoadData extends JDialog {
 		lowerPanel = new JPanel();
 		lowerPanel.setLayout(new BoxLayout(lowerPanel, BoxLayout.Y_AXIS));
 		remoteResourceDialog = new RemoteResourceDialog();
-		addButton.setToolTipText("Add a new resource");
-		addButton.setText("Add A New Resource");
+		//addButton.setToolTipText("Add a new resource");
+		addButton.setText("Add a new Profile");
 		addButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				displayRemoteResourceDialog(RemoteResourceDialog.ADD);
@@ -268,8 +268,8 @@ public class LoadData extends JDialog {
 
 		});
 
-		editButton.setToolTipText("Edit an existed source");
-		editButton.setText("Edit");
+		//editButton.setToolTipText("Edit an existed source");
+		editButton.setText("Edit Profile");
 		editButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				currentRemoteResourceName = jComboBox1.getSelectedItem()
@@ -287,8 +287,8 @@ public class LoadData extends JDialog {
 			}
 		});
 
-		deleteButton.setToolTipText("Delete an existed resource");
-		deleteButton.setText("Delete");
+		//deleteButton.setToolTipText("Delete an existed resource");
+		deleteButton.setText("Delete Profile");
 		deleteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				deleteButton_actionPerformed(e);
@@ -392,6 +392,7 @@ public class LoadData extends JDialog {
 		this.setTitle("Open File");
 		this.updateExistedResourcesGUI();
 		pack();
+		setLocationRelativeTo(null);
 	}
 
 	/**
@@ -541,7 +542,7 @@ public class LoadData extends JDialog {
 		String deleteResourceStr = (String) jComboBox1.getSelectedItem();
 		if (deleteResourceStr != null) {
 			int choice = JOptionPane.showConfirmDialog(null,
-					"Do you really want to remove the remote source: "
+					"Do you really want to remove the profile: "
 							+ deleteResourceStr + "?", "Warning",
 					JOptionPane.OK_CANCEL_OPTION);
 			if (choice != 2) {
