@@ -21,6 +21,7 @@ public class DataSetSaveNode implements Serializable {
      */
     private static final long serialVersionUID = 2094279433020194290L;
     private String name;
+    private String description = "";
     private DSDataSet dataSet;
     private String visualSelected;
     private String commandSelected;
@@ -105,4 +106,13 @@ public class DataSetSaveNode implements Serializable {
     public void setSelectionSelected(String selectionSelected) {
         this.selectionSelected = selectionSelected;
     }
+    
+    public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+    
 }

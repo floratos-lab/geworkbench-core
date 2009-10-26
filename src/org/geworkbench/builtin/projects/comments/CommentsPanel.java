@@ -8,8 +8,7 @@ import org.geworkbench.engine.management.AcceptTypes;
 import org.geworkbench.engine.management.Publish;
 import org.geworkbench.engine.management.Subscribe;
 import org.geworkbench.events.CommentsEvent;
-import org.geworkbench.events.ProjectEvent;
-
+ 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -137,9 +136,7 @@ import java.awt.*;
         if (liveMode) {
             publishCommentsEvent(new CommentsEvent(userComments));
         }
-        if (dataSet != null) {
-            dataSet.setExperimentInformation(userComments);
-        }
+        
 //        if (dataSet != null) {
 //            dataSet.clearName(COMMENTS_ID_STRING);
 //            dataSet.addNameValuePair(COMMENTS_ID_STRING, userComments);
@@ -159,15 +156,8 @@ import java.awt.*;
         commentsTextArea.setCaretPosition(0);
         liveMode = true;
     }
-
-    @Subscribe public void receive(ProjectEvent event, Object source) {
-        dataSet = event.getDataSet();
-        try {
-            commentsTextArea.setText(dataSet.getExperimentInformation());
-        } catch (Exception e) {
-            log.warn("Experiment information was null.");
-        }
-    }
+    
+  
 
     /**
      * Application listener for receiving events that modify the currently

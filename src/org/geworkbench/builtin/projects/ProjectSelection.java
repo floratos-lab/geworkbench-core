@@ -122,7 +122,7 @@ public class ProjectSelection {
             selectedNode = node;
             menuNode = node;
             selectedProjectNode = (ProjectNode) getNodeOfClass(node, ProjectNode.class);
-            boolean subNode = false;
+            boolean subNode = false;           
             if (node instanceof DataSetNode) {
                 selectedDataSetNode = (DataSetNode) node;
                 AnnotationParser.setCurrentDataSet(selectedDataSetNode.dataFile);
@@ -145,7 +145,8 @@ public class ProjectSelection {
                 throwSubNodeEvent("receiveProjectSelection");
             } else {
                 throwEvent("receiveProjectSelection", ProjectEvent.SELECTED);
-            }
+            }         
+            
         }
     }
 
@@ -196,6 +197,7 @@ public class ProjectSelection {
     public void throwEvent(String method, String message) {
         // Notify all listeners of the change in selection
         DSMicroarraySet maSet = null;
+        
         if (selectedDataSetNode != null) {
             if (selectedDataSetNode.dataFile instanceof DSMicroarraySet) {
                 maSet = (DSMicroarraySet) selectedDataSetNode.dataFile;
@@ -203,13 +205,17 @@ public class ProjectSelection {
             } else {
                 panel.publishProjectEvent(new ProjectEvent(message, selectedDataSetNode.dataFile, selectedDataSetNode));
             }
-            panel.sendCommentsEvent(selectedDataSetNode);
+            
         }
+       
+        panel.sendCommentsEvent(selectedNode);
     }
 
     public void throwSubNodeEvent(String message) {
         if ((selectedDataSetSubNode != null) && (selectedDataSetSubNode._aDataSet != null)) {
-            panel.publishProjectEvent(new ProjectEvent(message, selectedDataSetSubNode._aDataSet, selectedDataSetSubNode));
+            panel.publishProjectEvent(new ProjectEvent(message, selectedDataSetSubNode._aDataSet, selectedDataSetSubNode));           
         }
+       
+        panel.sendCommentsEvent(selectedNode);
     }
 }

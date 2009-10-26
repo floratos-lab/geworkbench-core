@@ -36,6 +36,7 @@ public class SaveTree implements Serializable {
 			ProjectTreeNode project = (ProjectTreeNode) root.getChildAt(i);
 			DataSetSaveNode saveProject = new DataSetSaveNode(project
 					.toString());
+			saveProject.setDescription(project.getDescription());
 			nodes.add(saveProject);
 			addChildren(project, saveProject);
 		}
@@ -78,6 +79,7 @@ public class SaveTree implements Serializable {
 			childSave.setSelectionSelected(skin
 					.getSelectionLastSelected(dataSet));
 			childSave.setVisualSelected(skin.getVisualLastSelected(dataSet));
+			childSave.setDescription(treeNode.getDescription());
 			saveNode.addChild(childSave);
 			addChildren(treeNode, childSave);
 		}
