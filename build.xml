@@ -84,6 +84,8 @@
 				<exclude name="skylinecontour" />
 				<exclude name="goterms" />
 				<exclude name="gpmodule" />
+				<exclude name="example" />
+				<exclude name="tprofiler" />
 			</dirset>
 		</subant>
 		<chmod file="./bin/matrixreduce/FitModelMac" perm="700"/>
