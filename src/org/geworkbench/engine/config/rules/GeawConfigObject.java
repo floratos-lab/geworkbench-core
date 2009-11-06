@@ -243,6 +243,9 @@ public class GeawConfigObject {
         // Display the main application window.
         if (startupWindow != null)
             startupWindow.dispose();
+        // FIXME this line was commented out to prevent user see the main frame before loading components
+        // this should be done in a more graceful way.
+        //guiWindow.setVisible(true);
     }
 
     /**

@@ -20,6 +20,7 @@ import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.CSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
+import org.geworkbench.engine.skin.Skin;
 import org.geworkbench.engine.skin.Workbench;
 
 /**
@@ -59,7 +60,7 @@ public class ProjectPanelGuiTest extends TestCase {
         log.debug("1. CURRENT OPERATION");
 
         /* project selection */
-        GeawConfigObject.setGuiWindow(new Workbench());
+        GeawConfigObject.setGuiWindow(new Skin());
         ProjectSelection projectSelection = new ProjectSelection(projectPanel);
 
         /* set the root (parent node) to the new project */
@@ -98,7 +99,7 @@ public class ProjectPanelGuiTest extends TestCase {
         log.debug("2. WITHOUT PROJECTTREENODE AND BISON");
 
         /* project selection */
-        GeawConfigObject.setGuiWindow(new Workbench());
+        GeawConfigObject.setGuiWindow(new Skin());
         ProjectSelection projectSelection = new ProjectSelection(projectPanel);
 
         /* set the root (parent node) to the new project */
@@ -166,7 +167,7 @@ public class ProjectPanelGuiTest extends TestCase {
     public void testSerializeWithoutProjectTreeNode() {
         log.debug("4. WITHOUT PROJECTTREENODE");
         /* project selection */
-        GeawConfigObject.setGuiWindow(new Workbench());
+        GeawConfigObject.setGuiWindow(new Skin());
         ProjectSelection projectSelection = new ProjectSelection(projectPanel);
 
         /* set the root (parent node) to the new project */
@@ -206,7 +207,7 @@ public class ProjectPanelGuiTest extends TestCase {
         log
                 .debug("5. USING DEFAULTMUTABLETREENODE AS PROJECTTREENODE (handles the class cast exception	");
         /* project selection */
-        GeawConfigObject.setGuiWindow(new Workbench());
+        GeawConfigObject.setGuiWindow(new Skin());
         ProjectSelection projectSelection = new ProjectSelection(projectPanel);
 
         /* set the root (parent node) to the new project */

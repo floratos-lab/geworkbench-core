@@ -10,7 +10,6 @@ import javax.swing.UIManager;
 import org.apache.commons.digester.Digester;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParserListener;
 import org.geworkbench.engine.ccm.ComponentConfigurationManager;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.config.rules.GeawConfigRule;
@@ -32,70 +31,69 @@ import com.jgoodies.looks.plastic.theme.SkyBlue;
  * The starting point for an application. Parses the application configuration
  * file.
  */
-
-public class UILauncher implements AnnotationParserListener {
-	
+public class UILauncher {
 	private static Log log = LogFactory.getLog(UILauncher.class);
 	
-    /**
+    public static String getComponentsDirectory() {
+    	return componentsDir;
+    }
+
+	/**
      * The name of the string in the <code>application.properties</code> file
      * that contains the location of the application configuration file.
      */
-    final static String CONFIG_FILE_NAME = "component.configuration.file";
+    private final static String CONFIG_FILE_NAME = "component.configuration.file";
 
-    // ---------------------------------------------------------------------------
-    // --------------- Methods
-    // ---------------------------------------------------------------------------
+    private static SplashBitmap splash = new org.geworkbench.util.SplashBitmap(SplashBitmap.class.getResource("splashscreen.png"));
+    
+    private static final String LOOK_AND_FEEL_FLAG = "-lookandfeel";
 
-    public static SplashBitmap splash = null;
-    public static final String LOOK_AND_FEEL_FLAG = "-lookandfeel";
-    public static final String DEVELOPMENT_FLAG = "-dev";
-    public static final String DEFAULT_COMPONENTS_DIR = "components";
-    public static final String COMPONENTS_DIR_PROPERTY = "components.dir";
-
-    public static String componentsDir = null;
-    static {
-        splash = new org.geworkbench.util.SplashBitmap(SplashBitmap.class.getResource("splashscreen.png"));
-    }
+    private static final String DEFAULT_COMPONENTS_DIR = "components";
+    private static final String COMPONENTS_DIR_PROPERTY = "components.dir";
+    private static String componentsDir = null;
 
     /**
-     * Configure the rules for translating the appication configuration file.
+     * Configure the rules for translating the application configuration file.
      */
-    public static void configure(Digester uiLauncher) {
-        uiLauncher.setUseContextClassLoader(true);
+    private static Digester createDigester() {
+        Digester digester = new Digester(new org.apache.xerces.parsers.SAXParser());
+
+        digester.setUseContextClassLoader(true);
         // Opening tag <geaw-config>
-        uiLauncher.addRule("geaw-config", new GeawConfigRule("org.geworkbench.engine.config.rules.GeawConfigObject"));
+        digester.addRule("geaw-config", new GeawConfigRule("org.geworkbench.engine.config.rules.GeawConfigObject"));
         // Creates the top-level GUI window
-        uiLauncher.addObjectCreate("geaw-config/gui-window", "org.geworkbench.engine.config.rules.GUIWindowObject");
-        uiLauncher.addCallMethod("geaw-config/gui-window", "createGUI", 1);
-        uiLauncher.addCallParam("geaw-config/gui-window", 0, "class");
+        digester.addObjectCreate("geaw-config/gui-window", "org.geworkbench.engine.config.rules.GUIWindowObject");
+        digester.addCallMethod("geaw-config/gui-window", "createGUI", 1);
+        digester.addCallParam("geaw-config/gui-window", 0, "class");
         // Instantiates a plugin and adds it in the PluginResgistry
-        uiLauncher.addRule("geaw-config/plugin", new PluginRule("org.geworkbench.engine.config.rules.PluginObject"));
+        digester.addRule("geaw-config/plugin", new PluginRule("org.geworkbench.engine.config.rules.PluginObject"));
         // Registers a plugin with an extension point
-        uiLauncher.addCallMethod("geaw-config/plugin/extension-point", "addExtensionPoint", 1);
-        uiLauncher.addCallParam("geaw-config/plugin/extension-point", 0, "name");
+        digester.addCallMethod("geaw-config/plugin/extension-point", "addExtensionPoint", 1);
+        digester.addCallParam("geaw-config/plugin/extension-point", 0, "name");
         // Registers a visual plugin with the top-level application GUI.
-        uiLauncher.addCallMethod("geaw-config/plugin/gui-area", "addGUIComponent", 1);
-        uiLauncher.addCallParam("geaw-config/plugin/gui-area", 0, "name");
+        digester.addCallMethod("geaw-config/plugin/gui-area", "addGUIComponent", 1);
+        digester.addCallParam("geaw-config/plugin/gui-area", 0, "name");
         // Associates the plugin's module methods to plugin modules
-        uiLauncher.addCallMethod("geaw-config/plugin/use-module", "addModule", 2);
-        uiLauncher.addCallParam("geaw-config/plugin/use-module", 0, "name");
-        uiLauncher.addCallParam("geaw-config/plugin/use-module", 1, "id");
+        digester.addCallMethod("geaw-config/plugin/use-module", "addModule", 2);
+        digester.addCallParam("geaw-config/plugin/use-module", 0, "name");
+        digester.addCallParam("geaw-config/plugin/use-module", 1, "id");
         // Turn subscription object on and off
-        uiLauncher.addCallMethod("geaw-config/plugin/subscription", "handleSubscription", 2);
-        uiLauncher.addCallParam("geaw-config/plugin/subscription", 0, "type");
-        uiLauncher.addCallParam("geaw-config/plugin/subscription", 1, "enabled");
+        digester.addCallMethod("geaw-config/plugin/subscription", "handleSubscription", 2);
+        digester.addCallParam("geaw-config/plugin/subscription", 0, "type");
+        digester.addCallParam("geaw-config/plugin/subscription", 1, "enabled");
         // Sets up a coupled listener relationship involving 2 plugins.
-        uiLauncher.addCallMethod("geaw-config/plugin/coupled-event", "registerCoupledListener", 2);
-        uiLauncher.addCallParam("geaw-config/plugin/coupled-event", 0, "event");
-        uiLauncher.addCallParam("geaw-config/plugin/coupled-event", 1, "source");
+        digester.addCallMethod("geaw-config/plugin/coupled-event", "registerCoupledListener", 2);
+        digester.addCallParam("geaw-config/plugin/coupled-event", 0, "event");
+        digester.addCallParam("geaw-config/plugin/coupled-event", 1, "source");
+        
+        return digester;
     }
 
     /**
      * Reads application properties from a file called
      * <bold>application.properties</bold>
      */
-    static void initProperties() {
+    private static void initProperties() {
         InputStream reader = null;
         try {
             reader = Class.forName(UILauncher.class.getName()).getResourceAsStream("/application.properties");
@@ -125,11 +123,9 @@ public class UILauncher implements AnnotationParserListener {
      * @param args
      */
     public static void main(String[] args) {
-    	
-        // Sort out arguments
         String configFileArg = null;
         String lookAndFeelArg = null;
-        boolean devMode = false;
+
         for (int i = 0; i < args.length; i++) {
             if (LOOK_AND_FEEL_FLAG.equals(args[i])) {
                 if (args.length == (i + 1)) {
@@ -138,8 +134,6 @@ public class UILauncher implements AnnotationParserListener {
                     i++;
                     lookAndFeelArg = args[i];
                 }
-            } else if (DEVELOPMENT_FLAG.equals(args[i])) {
-                devMode = true;
             } else {
                 configFileArg = args[i];
             }
@@ -169,7 +163,6 @@ public class UILauncher implements AnnotationParserListener {
         catch (Exception e) {
             log.error(e,e);
         }
-        // Add hook for AnnotationParser listener
 
         splash.hideOnClick();
         splash.addAutoProgressBarIndeterminate();
@@ -179,23 +172,13 @@ public class UILauncher implements AnnotationParserListener {
         // Read the properties file
         initProperties();
 
-        /* Read all.xml */
+        componentsDir = System.getProperty(COMPONENTS_DIR_PROPERTY);
+		if (componentsDir == null) {
+			componentsDir = DEFAULT_COMPONENTS_DIR;
+		}
         
-        if (!devMode) {
-           log.info("Scanning plugins...");
-           componentsDir = System.getProperty(COMPONENTS_DIR_PROPERTY);
-            if (componentsDir == null) {
-                componentsDir = DEFAULT_COMPONENTS_DIR;
-            }
-            
-            log.info("... scan complete.");
-        } else {
-            log.info("Development mode-- skipping plugin scan.");
-        }
-        
-      //TODO Retire this section.  The entries existing in all.xml should be handled by our ComponentConfigurationManager instead of this custom block.
-        Digester uiLauncher = new Digester(new org.apache.xerces.parsers.SAXParser());
-        configure(uiLauncher);
+        Digester digester = createDigester();
+
         org.geworkbench.util.Debug.debugStatus = false; // debugging toggle
         // Locate and open the application configuration file.
         String configFileName = null;
@@ -212,46 +195,28 @@ public class UILauncher implements AnnotationParserListener {
             if (is == null) {
                 exitOnErrorMessage("Invalid or absent configuration file.");
             }
-            // FIXME - Make sure that the input is validated against the proper DTD.
-            log.debug("Digester Test Program");
-            log.debug("Opening input stream ...");
-            log.debug("Creating new digester ...");
-            log.debug("Parsing input stream ...");
-            uiLauncher.parse(is);
-            log.debug("Closing input stream ...");
+            digester.parse(is);
             is.close();
         } catch (Exception e) {
             log.error(e,e);
+            exitOnErrorMessage("Exception in parsing the configuration file.");
         }
 
         /* Load Components */
-        GUIFramework guiWindow = GeawConfigObject.getGuiWindow();
-        guiWindow.setVisible(false);
-        ComponentConfigurationManager ccm = new ComponentConfigurationManager(); 
+        ComponentConfigurationManager ccm = ComponentConfigurationManager.getInstance(); 
         ccm.loadAllComponentFolders();
         ccm.loadSelectedComponents();
         
         PluginRegistry.debugPrint();
-        // Testing: write the config back out
-        //        try {
-        //            ConfigWriter.writeConfigForDescriptors(ComponentRegistry.getRegistry().getActivePluginDescriptors(), "src/core/config/test.cwb.xml");
-        //        } catch (IOException e) {
-        //            System.out.println("Failed to write test config file:");
-        //            e.printStackTrace();
-        //        }
+
         splash.hideSplash();
+        GUIFramework guiWindow = GeawConfigObject.getGuiWindow();
         guiWindow.setVisible(true);
-		GeawConfigObject.getGuiWindow().setVisualizationType(null);
     }
 
-    public boolean annotationParserUpdate(String text) {
-        if (splash.isVisible()) {
-            UILauncher.splash.setProgressBarString(text);
-            return true;
-        } else {
-            return false;
-        }
-    }
+	public static void setProgressBarString(String name) {
+		splash.setProgressBarString(name);
+	}
 
 }
 

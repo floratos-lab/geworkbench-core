@@ -35,7 +35,6 @@ import org.geworkbench.engine.config.rules.PluginRuleCCM;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.engine.management.ComponentResource;
 import org.geworkbench.engine.management.TypeMap;
-import org.geworkbench.util.SplashBitmap;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -62,22 +61,33 @@ public class ComponentConfigurationManager {
 	private Map<String, List<String>> foldersToCcmFiles = new HashMap<String, List<String>>();
 
 	private static String propertiesDirectory = null;
+	
+	private String componentsDirectory = UILauncher.getComponentsDirectory();
+	
+	private static ComponentConfigurationManager instance = null;
+	
+	public static ComponentConfigurationManager getInstance() {
+		if(instance==null) {
+			instance = new ComponentConfigurationManager();
+		}
+		return instance;
+	}
+	
 	/**
 	 * Constructor
 	 * 
 	 * @param
 	 */
-	public ComponentConfigurationManager() {
-		File dir = new File(UILauncher.componentsDir);
+	private ComponentConfigurationManager() {
+		File dir = new File(componentsDirectory);
 		if (!dir.isDirectory()) {
 			log.warn("Supplied components directory is not a directory: "
-					+ UILauncher.componentsDir);
+					+ componentsDirectory);
 			return;
 		}
 		files = dir.list();
 
-		digester = new Digester(new org.apache.xerces.parsers.SAXParser());
-		this.configure();
+		digester = createComponentDigester();
 		
 		String userSettingDirectory =  System.getProperty("user.setting.directory");
 		if(userSettingDirectory!=null) {
@@ -85,7 +95,7 @@ public class ComponentConfigurationManager {
 					+ FILE_DEL
 					+ userSettingDirectory;
 		} else {
-			propertiesDirectory = UILauncher.componentsDir;
+			propertiesDirectory = componentsDirectory;
 		}
 
 	}
@@ -108,7 +118,7 @@ public class ComponentConfigurationManager {
 			int index = list.indexOf(resource);
 			File file = new File(list.get(index));
 			try {
-				String path = UILauncher.componentsDir + FILE_DEL
+				String path = componentsDirectory + FILE_DEL
 						+ file.getPath();
 				componentResource = new ComponentResource(path, false);
 				log.debug("Created component resource " + file.getName());
@@ -129,19 +139,15 @@ public class ComponentConfigurationManager {
 	 * 
 	 * @return {@link ArrayList}
 	 */
-	public ArrayList<String> loadAllComponentFolders() {
+	public void loadAllComponentFolders() {
 
-		String componentsDir = System
-				.getProperty(UILauncher.COMPONENTS_DIR_PROPERTY);
-		if (componentsDir == null) {
-			componentsDir = UILauncher.DEFAULT_COMPONENTS_DIR;
-		}
+		String componentsDir = componentsDirectory;
 
 		File dir = new File(componentsDir);
 		if (!dir.isDirectory()) {
-			log.debug("Component resource path is not a directory: "
+			log.error("Component resource path is not a directory: "
 					+ componentsDir);
-			return null;
+			return;
 		}
 		File[] folders = dir.listFiles();
 		for (int i = 0; i < folders.length; i++) {
@@ -181,7 +187,6 @@ public class ComponentConfigurationManager {
 			}
 		}
 
-		return allComponentFolders;
 	}
 
 	/**
@@ -202,8 +207,7 @@ public class ComponentConfigurationManager {
 				String onOff = readProperty(folder, propFileName, "on-off");
 				CcmComponent ccmComponent = getPluginsFromCcmFile(folder, ccmFileName );
 				String name = ccmComponent.getName();
-				SplashBitmap splash = UILauncher.splash;
-				splash.setProgressBarString(name);
+				UILauncher.setProgressBarString(name);
 				String loadByDefault = ccmComponent.getLoadByDefault();
 				
 				if (onOff == null && loadByDefault.equalsIgnoreCase("true")){
@@ -225,7 +229,7 @@ public class ComponentConfigurationManager {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public boolean loadComponent(String folder, String ccmFileName) {
+	public void loadComponent(String folder, String ccmFileName) {
 
 		/* create component resource */
 		ComponentResource componentResource = createComponentResource(folder);
@@ -238,16 +242,14 @@ public class ComponentConfigurationManager {
 			resourceMap.put(folder, componentResource);
 		}
 		/* get input stream for ccm.xml */
-		String ccmFullPath = UILauncher.componentsDir + FILE_DEL + folder
+		String ccmFullPath = componentsDirectory + FILE_DEL + folder
 				+ FILE_DEL + ccmFileName;
 
 		/* parse using digester */
-		boolean successful = false;
 		InputStream is = null;
 		try {
 			is = new FileInputStream(new File(ccmFullPath));
 			digester.parse(is);
-			successful = true;
 		} catch (Exception e) {
 			log.error(e, e);
 		}
@@ -293,7 +295,6 @@ public class ComponentConfigurationManager {
 			}
 		}
 		
-		return successful;
 	}
 
 	/**
@@ -535,7 +536,6 @@ public class ComponentConfigurationManager {
 				continue;
 			}
 			
-			String pluginName = pd.getLabel();// For Debugging
 			ComponentResource componentResource = pd.getResource();
 			if (componentResource == null){
 				continue;	
@@ -572,7 +572,7 @@ public class ComponentConfigurationManager {
 	public CcmComponent getPluginsFromCcmFile(String folder, String fileName) {
 		CcmComponent ccmComponent = new CcmComponent();
 
-		String ccmPath = UILauncher.componentsDir + FILE_DEL + folder
+		String ccmPath = componentsDirectory + FILE_DEL + folder
 				+ FILE_DEL + fileName;
 		File ccmFile = new File(ccmPath);
 		if (!ccmFile.exists()) {
@@ -772,40 +772,32 @@ public class ComponentConfigurationManager {
 	/**
 	 * Configure the rules for translating the application configuration file.
 	 */
-	private void configure() {
+	private Digester createComponentDigester() {
+		Digester digester = new Digester(new org.apache.xerces.parsers.SAXParser());
 
 		digester.setUseContextClassLoader(true);
 
 		digester.addRule("geaw-config", new GeawConfigRuleCCM("org.geworkbench.engine.config.rules.GeawConfigObjectCCM"));
-      // Creates the top-level GUI window
-		digester.addObjectCreate("geaw-config/gui-window", "org.geworkbench.engine.config.rules.GUIWindowObjectCCM");
-		digester.addCallMethod("geaw-config/gui-window", "createGUI", 1);
-		digester.addCallParam("geaw-config/gui-window", 0, "class");
+
 		// Instantiates a plugin and adds it in the PluginResgistry
 		digester.addRule("geaw-config/plugin", new PluginRuleCCM(
 				"org.geworkbench.engine.config.rules.PluginObjectCCM"));
-		// Registers a plugin with an extension point
-		digester.addCallMethod("geaw-config/plugin/extension-point",
-				"addExtensionPoint", 1);
-		digester.addCallParam("geaw-config/plugin/extension-point", 0, "name");
+
 		// Registers a visual plugin with the top-level application GUI.
 		digester.addCallMethod("geaw-config/plugin/gui-area",
 				"addGUIComponent", 1);
 		digester.addCallParam("geaw-config/plugin/gui-area", 0, "name");
-		// Associates the plugin's module methods to plugin modules
-		digester.addCallMethod("geaw-config/plugin/use-module", "addModule", 2);
-		digester.addCallParam("geaw-config/plugin/use-module", 0, "name");
-		digester.addCallParam("geaw-config/plugin/use-module", 1, "id");
-		// Turn subscription object on and off
-		digester.addCallMethod("geaw-config/plugin/subscription",
-				"handleSubscription", 2);
-		digester.addCallParam("geaw-config/plugin/subscription", 0, "type");
-		digester.addCallParam("geaw-config/plugin/subscription", 1, "enabled");
-		// Sets up a coupled listener relationship involving 2 plugins.
-		digester.addCallMethod("geaw-config/plugin/coupled-event",
-				"registerCoupledListener", 2);
-		digester.addCallParam("geaw-config/plugin/coupled-event", 0, "event");
-		digester.addCallParam("geaw-config/plugin/coupled-event", 1, "source");
+		
+		return digester;
+	}
+
+	/**
+	 * 
+	 * return the component folders for ComponentCOnfigurationManagerWindow
+	 * 
+	 */
+	public ArrayList<String> getAllComponentFolders() {
+		return allComponentFolders;
 	}	
 
 

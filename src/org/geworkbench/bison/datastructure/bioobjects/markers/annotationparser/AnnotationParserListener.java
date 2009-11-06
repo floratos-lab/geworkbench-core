@@ -3,6 +3,7 @@ package org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser;
 /**
  * @author John Watkinson
  */
+@Deprecated
 public interface AnnotationParserListener {
 
     /**

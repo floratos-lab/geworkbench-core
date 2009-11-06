@@ -64,7 +64,7 @@ import com.jgoodies.forms.layout.FormLayout;
  * This is the main menu for the Component Configuration Manager.
  * 
  * @author tg2321
- * @version $Id: ComponentConfigurationManagerWindow.java,v 1.13 2009-09-28 18:21:20 npodduturi Exp $
+ * @version $Id: ComponentConfigurationManagerWindow.java,v 1.14 2009-11-06 23:52:57 jiz Exp $
  */
 public class ComponentConfigurationManagerWindow {
 
@@ -124,7 +124,7 @@ public class ComponentConfigurationManagerWindow {
 			ComponentConfigurationManagerMenu menu) {
 
 		this.menu = menu;
-		manager = new ComponentConfigurationManager();
+		manager = ComponentConfigurationManager.getInstance();
 		initComponents();
 	}
 
@@ -1355,7 +1355,7 @@ public class ComponentConfigurationManagerWindow {
 			String loadByDefault = null;
 			String hidden = null;
 			
-			ArrayList<String> allComponentFolders = this.manager.loadAllComponentFolders();
+			ArrayList<String> allComponentFolders = this.manager.getAllComponentFolders();
 			
 			
 			for (int index = 0; index < allComponentFolders.size(); index++) {
@@ -1480,7 +1480,7 @@ public class ComponentConfigurationManagerWindow {
 	 * GUI row structure
 	 * 
 	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.13 2009-09-28 18:21:20 npodduturi Exp $
+	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.14 2009-11-06 23:52:57 jiz Exp $
 	 */
 	private class TableRow {
 		private boolean selected = false;
@@ -1732,7 +1732,7 @@ public class ComponentConfigurationManagerWindow {
 	 * CheckBoxHeaderListener
 	 * 
 	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.13 2009-09-28 18:21:20 npodduturi Exp $
+	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.14 2009-11-06 23:52:57 jiz Exp $
 	 */
 	
 	/*		TODO
@@ -1766,7 +1766,7 @@ public class ComponentConfigurationManagerWindow {
 	 * CheckBoxHeader
 	 * 
 	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.13 2009-09-28 18:21:20 npodduturi Exp $
+	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.14 2009-11-06 23:52:57 jiz Exp $
 	 */
 	class CheckBoxHeader extends JCheckBox implements TableCellRenderer,
 			MouseListener {

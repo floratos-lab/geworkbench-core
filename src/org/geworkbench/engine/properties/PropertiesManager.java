@@ -30,10 +30,7 @@ public class PropertiesManager {
     }
 
     private PropertiesManager() {
-        componentsDir = System.getProperty(UILauncher.COMPONENTS_DIR_PROPERTY);
-        if (componentsDir == null) {
-            componentsDir = UILauncher.DEFAULT_COMPONENTS_DIR;
-        }
+        componentsDir = UILauncher.getComponentsDirectory();
     }
 
     private File getPropertiesPath(Class component) {

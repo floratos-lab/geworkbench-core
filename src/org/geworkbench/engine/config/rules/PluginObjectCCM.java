@@ -64,11 +64,7 @@ public class PluginObjectCCM extends PluginObject{
 
     public static ComponentMetadata processComponentDescriptor(String resourceName, Class type, String fileName) throws IOException, JDOMException, NotMenuListenerException, MalformedMenuItemException, NotVisualPluginException {
     	
-    	String componentsDir = System
-				.getProperty(UILauncher.COMPONENTS_DIR_PROPERTY);
-		if (componentsDir == null) {
-			componentsDir = UILauncher.DEFAULT_COMPONENTS_DIR;
-		}
+    	String componentsDir = UILauncher.getComponentsDirectory();
 		componentsDir += FILE_DEL + resourceName + FILE_DEL ;
     	
         // Look for descriptor file

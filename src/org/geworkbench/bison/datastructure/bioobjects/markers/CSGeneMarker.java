@@ -32,7 +32,7 @@ public class CSGeneMarker implements DSGeneMarker, Serializable {
     protected DSUnigene unigene = new CSUnigene();
 	// FIXME Why isn't this set to null? With this, it is initialized to an
 	// empty string.
-	String geneName = new String();
+	String geneName = null;
     protected int disPlayType = DSGeneMarker.AFFY_TYPE;
 
 

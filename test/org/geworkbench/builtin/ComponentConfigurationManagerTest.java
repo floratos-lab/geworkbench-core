@@ -33,7 +33,7 @@ public class ComponentConfigurationManagerTest extends TestCase {
 				"Component dir not specified.  Set VM arg -Dcomponents.dir",
 				componentsDir);
 
-		ccm = new ComponentConfigurationManager();
+		ccm = ComponentConfigurationManager.getInstance();
 		
 		assertNotNull("Component Configuration Manager not created", ccm);
 	}
@@ -60,8 +60,7 @@ public class ComponentConfigurationManagerTest extends TestCase {
 
 		String validResource = "hierarchicalclustering";
 		String ccmFileName = "hierarchicalclustering.ccm.xml";
-		boolean successful = ccm.loadComponent(validResource, ccmFileName);
-		assertTrue(successful);
+		ccm.loadComponent(validResource, ccmFileName);
 	}
 
 	// TODO need to test
@@ -76,9 +75,7 @@ public class ComponentConfigurationManagerTest extends TestCase {
 
 		String invalidResource = "yippeekiyay";
 		String ccmFileName = "hierarchicalclustering.ccm.xml";
-		boolean successful = ccm.loadComponent(invalidResource, ccmFileName);
-
-		assertFalse(successful);
+		ccm.loadComponent(invalidResource, ccmFileName);
 	}
 
 	/**
