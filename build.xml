@@ -86,6 +86,7 @@
 				<exclude name="gpmodule" />
 				<exclude name="example" />
 				<exclude name="tprofiler" />
+				<exclude name="associationdiscovery" />
 			</dirset>
 		</subant>
 		<chmod file="./bin/matrixreduce/FitModelMac" perm="700"/>
