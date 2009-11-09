@@ -54,7 +54,7 @@ public class GlobalPreferences {
 
         // Visualization
         ChoiceField field2 = new ChoiceField(GlobalPreferences.PREF_VISUALIZATION, GlobalPreferences.VISUALIZATION_VALUES);
-        field2.setSelection(0);
+        field2.setSelection(1);
 
         // GENEPIX VALUE COMPUTATION
         ChoiceField field3 = new ChoiceField(GlobalPreferences.PREF_GENEPIX_COMPUTATION, GlobalPreferences.GENEPIX_VALUES);

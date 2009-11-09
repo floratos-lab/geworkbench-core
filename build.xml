@@ -420,7 +420,7 @@
 	<!-- ====================================================================== -->
 	<target name="createDist" depends="compile" description="Creating a new folder for depositing...">
 		<java classname="org.geworkbench.components.versioninfo.VersionInfoDialog" failonerror="true" >
-			<arg value="1.7.0"/>
+			<arg value="1.8.0"/>
 			<arg value="./components/versioninfo/classes/org/geworkbench/components/versioninfo/" />
 			<classpath>
 				<path refid="classpath" />
@@ -439,7 +439,7 @@
 				
 				<include name="${classes}/**/*" />
 
-				<!-- Include the following components for distribution 1.7.0-->
+				<!-- Include the following components for distribution 1.8.0-->
 				<include name="bin/matrixreduce/*" />
 				<include name="${components}/alignment/**/*" />
 				<include name="${components}/analysis/**/*" />
@@ -459,6 +459,7 @@
 				<include name="${components}/cutenet/**/*" />
 				<include name="${components}/discovery/**/*" />
 				<include name="${components}/filtering/**/*" />
+				<include name="${components}/geneontology2/**/*" />
 				<include name="${components}/genepattern/**/*" />
 				<include name="${components}/genspace/**/*" />
 				<include name="${components}/gpmodule_v3_0/**/*" />
@@ -487,7 +488,7 @@
 				<include name="${components}/welcome/**/*" />
 				
 				<include name="plugins_v2_4/**/*" />
-				<!-- Leave out the following components for distribution 1.7.0-->
+				<!-- Leave out the following components for distribution 1.8.0-->
 				<exclude name="**/synteny/*" />
 				<exclude name="**/src/**" />
 				<exclude name="**/test/**" />
@@ -495,7 +496,7 @@
 				<include name="annotation/**/*" />
 				<include name="${lib}/**/*" />
 				<include name="geWorkbenchLicense.txt" />
-				<include name="ReleaseNotes1.7.0.txt" />
+				<include name="ReleaseNotes1.8.0.txt" />
 				<include name="java.policy" />
 				 
 				<include name="launch_geworkbench.bat" />

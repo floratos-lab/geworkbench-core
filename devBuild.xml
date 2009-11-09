@@ -67,12 +67,18 @@
             <fileset dir="${src}">
                 <exclude name="CVS"/>
                 <exclude name="**/*.java"/>
+		    <exclude name="*.ccm.xml"/>
             </fileset>
         </copy>
         <copy todir="${libs}">
             <fileset dir="${lib}">
                 <exclude name="CVS"/>
                 <exclude name="**/*.jar"/>
+            </fileset>
+        </copy>
+        <copy todir="${components}/${component}">
+            <fileset dir="${src}">
+                <include name="*.ccm.xml"/>
             </fileset>
         </copy>
     </target>
@@ -127,7 +133,7 @@
 			</patternset>
 		</unzip>
 		<jar destfile="${component}.gear" basedir="${components}/${component}"
-			includes="classes/**,lib/**" manifest="META-INF/MANIFEST.MF" />
+			includes="classes/**,lib/**,*.ccm.xml" manifest="META-INF/MANIFEST.MF" />
 		<delete includeemptydirs="true">
 			<fileset dir="META-INF" />
 		</delete>
