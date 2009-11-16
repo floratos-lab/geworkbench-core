@@ -1,27 +1,18 @@
 package org.geworkbench.engine.config.rules;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
-import java.io.File;
 import java.net.URL;
-import java.util.Comparator;
 import java.util.Map;
 import java.util.TreeMap;
 
 import javax.help.CSH;
 import javax.help.HelpBroker;
 import javax.help.HelpSet;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -49,11 +40,7 @@ public class GeawConfigObject {
      * contains the location of the master help file.
      */
     final static String MASTER_HS_PROPERTY_NAME = "master.help.set";
-    /**
-     * The name of the property within <code>applications.properties</code> which
-     * contains the image to be displayed during the application initialization.
-     */
-    final static String STARTUP_IMAGE_PROPERTY_NAME = "startup.image";
+
     // ---------------------------------------------------------------------------
     // --------------- Instance variables
     // ---------------------------------------------------------------------------
@@ -102,18 +89,6 @@ public class GeawConfigObject {
     // --------------- Constructors
     // ---------------------------------------------------------------------------
     public GeawConfigObject() {
-        // Check if there is a startup image specified.
-        String imageName = System.getProperty(STARTUP_IMAGE_PROPERTY_NAME);
-        // If there is no designate image, just continue. Otherwise, display it.
-        if (imageName != null) {
-            startupWindow = startupWindow(imageName);
-            if (startupWindow != null) {
-                startupWindow.pack();
-                startupWindow.setVisible(true);
-            }
-
-        }
-
     }
 
     // ---------------------------------------------------------------------------
@@ -137,7 +112,7 @@ public class GeawConfigObject {
      * Sets the top level application window and initializes that window's
      * menu bar.
      *
-     * @param gui The top level widnow.
+     * @param gui The top level window.
      */
     public static void setGuiWindow(GUIFramework gui) {
         guiWindow = gui;
@@ -241,8 +216,6 @@ public class GeawConfigObject {
         guiWindow.getJMenuBar().getMenu(0).add(exitMenu);
 
         // Display the main application window.
-        if (startupWindow != null)
-            startupWindow.dispose();
         // FIXME this line was commented out to prevent user see the main frame before loading components
         // this should be done in a more graceful way.
         //guiWindow.setVisible(true);
@@ -269,69 +242,6 @@ public class GeawConfigObject {
         return appMenuBar;
     }
 
-    /**
-     * Displays the startup image (if any) while the application initializes.
-     */
-    private static JFrame startupWindow = null;
-
-    private JFrame startupWindow(String imageFileName) {
-        if (imageFileName == null)
-            return null;
-        // Attempt to open the image specified by the file name
-        File imageFile = new File(imageFileName);
-        if (imageFile == null || !imageFile.exists())
-            return null;
-        URL imgURL = null;
-        try {
-            imgURL = imageFile.toURL();
-        } catch (Exception e) {
-            // if something went wrong, just proceed without the startup image.
-            return null;
-        }
-
-        if (imgURL == null)
-            return null;
-        ImageIcon icon = new ImageIcon(imgURL, "");
-        JFrame tempFrame = new JFrame();
-        ImageDisplay tempPanel = new ImageDisplay();
-        tempPanel.setImage(icon);
-        tempPanel.setPreferredSize(new Dimension(icon.getIconWidth(), icon.getIconHeight()));
-        tempFrame.getContentPane().add(tempPanel);
-        tempFrame.setUndecorated(true);
-        tempFrame.setLocation(new Point(300, 400));
-        return tempFrame;
-    }
-
-    /**
-     * Holds the startup image displayed during application initialization.
-     */
-    class ImageDisplay extends JPanel {
-        /**
-         * Image painted on this <code>Component</code>
-         */
-        ImageIcon image = null;
-
-        public ImageDisplay() {
-        }
-
-        public void setImage(ImageIcon i) {
-            image = i;
-        }
-
-        /**
-         * {@link java.awt.Component Component} method
-         *
-         * @param g <code>Graphics</code> to be painted with
-         */
-        public void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            g.setColor(Color.white);
-            g.fillRect(0, 0, this.getWidth(), this.getHeight());
-            if (image != null)
-                g.drawImage(image.getImage(), 0, 0, Color.white, this);
-        }
-    }
-    
     public static HelpSet getMasterHelp() {
 		return masterHelp;
 	}
