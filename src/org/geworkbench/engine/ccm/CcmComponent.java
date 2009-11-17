@@ -9,7 +9,7 @@ import org.apache.commons.lang.StringUtils;
  * A java bean to hold the contents of a xxx.ccm.xml file.
  * 
  * @author tg2321
- * @version $Id: CcmComponent.java,v 1.3 2009-07-22 15:34:32 jiz Exp $
+ * @version $Id: CcmComponent.java,v 1.4 2009-11-17 15:32:31 tgarben Exp $
  * 
  */
 public class CcmComponent {
@@ -18,6 +18,7 @@ public class CcmComponent {
 	private String version = StringUtils.EMPTY;
 	private String author = StringUtils.EMPTY;
 	private String authorURL = StringUtils.EMPTY;
+	private String tutorialURL = StringUtils.EMPTY;
 	private String toolURL = StringUtils.EMPTY;
 	private String description = StringUtils.EMPTY;
 	private String license = StringUtils.EMPTY;
@@ -74,6 +75,14 @@ public class CcmComponent {
 
 	public void setAuthorURL(String authorURL) {
 		this.authorURL = authorURL;
+	}
+
+	public String getTutorialURL() {
+		return tutorialURL;
+	}
+
+	public void setTutorialURL(String tutorialURL) {
+		this.tutorialURL = tutorialURL;
 	}
 
 	public String getToolURL() {

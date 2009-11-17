@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Font;
 import java.awt.Frame;
 import java.awt.ItemSelectable;
 import java.awt.event.ActionEvent;
@@ -16,12 +17,14 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.font.TextAttribute;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import javax.swing.AbstractButton;
@@ -64,7 +67,7 @@ import com.jgoodies.forms.layout.FormLayout;
  * This is the main menu for the Component Configuration Manager.
  * 
  * @author tg2321
- * @version $Id: ComponentConfigurationManagerWindow.java,v 1.14 2009-11-06 23:52:57 jiz Exp $
+ * @version $Id: ComponentConfigurationManagerWindow.java,v 1.15 2009-11-17 15:32:31 tgarben Exp $
  */
 public class ComponentConfigurationManagerWindow {
 
@@ -400,15 +403,13 @@ public class ComponentConfigurationManagerWindow {
 								column.setPreferredWidth(300);
 								column.setResizable(true);
 								break;
+							case CCMTableModel.AUTHOR_INDEX:
+								break;
 							case CCMTableModel.VERSION_INDEX:
 								column.setMaxWidth(50);
 								column.setMinWidth(50);
 								break;
-							case CCMTableModel.AUTHOR_INDEX:
-								column.setPreferredWidth(300);
-								column.setResizable(true);
-								break;
-							case CCMTableModel.AUTHOR_URL_INDEX:
+							case CCMTableModel.TUTORIAL_URL_INDEX:
 								break;
 							case CCMTableModel.TOOL_URL_INDEX:
 								break;
@@ -507,7 +508,8 @@ public class ComponentConfigurationManagerWindow {
         if (   selectedRow != null && selectedRow.length > 0 && selectedRow[0] >= 0 &&
 	       	   selectedColumn != null && selectedColumn.length > 0 && selectedColumn[0] >= 0 &&  
 	       	  (selectedColumn[0] == CCMTableModel.AUTHOR_URL_INDEX
-			|| selectedColumn[0] == CCMTableModel.TOOL_URL_INDEX)) {
+			|| selectedColumn[0] == CCMTableModel.TUTORIAL_URL_INDEX)
+			|| selectedColumn[0] == CCMTableModel.AUTHOR_INDEX) {
 	        	
     		int modelRow = ccmTableModel.getModelRow(selectedRow[0]);
     		if (launchedRow == modelRow && launchedColumn == selectedColumn[0]){
@@ -516,10 +518,13 @@ public class ComponentConfigurationManagerWindow {
     		launchedRow = modelRow;
     		launchedColumn = selectedColumn[0];
     		
-    		String url = "";
    			JButton button = (JButton) ccmTableModel.getModelValueAt(modelRow, selectedColumn[0]);
-   			url = button.getToolTipText();
+   			String url = button.getToolTipText();
     		
+   			if (url == null){
+				return;
+			}
+   			
 			try {
 				BrowserLauncher.openURL(url);
 			} catch (IOException e1) {
@@ -948,7 +953,7 @@ public class ComponentConfigurationManagerWindow {
 			int modelRow = getModelRow(viewRow);
 			Object value = getModelValueAt(modelRow, column);
 
-			if (column == AUTHOR_URL_INDEX || column == TOOL_URL_INDEX){
+			if (column == AUTHOR_INDEX || column == TUTORIAL_URL_INDEX || column == TOOL_URL_INDEX) {
 				return (JButton)value;
 			}
 			
@@ -984,30 +989,31 @@ public class ComponentConfigurationManagerWindow {
 		
 		public static final int SELECTION_INDEX = 0;
 		public static final int NAME_INDEX = 1;
-		public static final int VERSION_INDEX = 3;
 		public static final int AUTHOR_INDEX = 2;
-		public static final int AUTHOR_URL_INDEX = 4;
+		public static final int VERSION_INDEX = 3;
+		public static final int TUTORIAL_URL_INDEX = 4;
 		public static final int TOOL_URL_INDEX = 5;
-		public static final int CLASS_INDEX = 6;
-		public static final int DESCRIPTION_INDEX = 7;
-		public static final int FOLDER_INDEX = 8;
-		public static final int CCM_FILE_NAME_INDEX = 9;
-		public static final int LICENSE_INDEX = 10;
-		public static final int MUST_ACCEPT_INDEX = 11;
-		public static final int DOCUMENTATION_INDEX = 12;
-		public static final int REQUIRED_COMPONENT_INDEX = 13;
-		public static final int RELATED_COMPONENT_INDEX = 14;
-		public static final int PARSER_INDEX = 15;
-		public static final int ANALYSIS_INDEX = 16;
-		public static final int VISUALIZER_INDEX = 17;
-		public static final int LOAD_BY_DEFAULT_INDEX = 18;
-		public static final int HIDDEN_INDEX = 19;
+		public static final int AUTHOR_URL_INDEX = 6;
+		public static final int CLASS_INDEX = 7;
+		public static final int DESCRIPTION_INDEX = 8;
+		public static final int FOLDER_INDEX = 9;
+		public static final int CCM_FILE_NAME_INDEX = 10;
+		public static final int LICENSE_INDEX = 11;
+		public static final int MUST_ACCEPT_INDEX = 12;
+		public static final int DOCUMENTATION_INDEX = 13;
+		public static final int REQUIRED_COMPONENT_INDEX = 14;
+		public static final int RELATED_COMPONENT_INDEX = 15;
+		public static final int PARSER_INDEX = 16;
+		public static final int ANALYSIS_INDEX = 17;
+		public static final int VISUALIZER_INDEX = 18;
+		public static final int LOAD_BY_DEFAULT_INDEX = 19;
+		public static final int HIDDEN_INDEX = 20;
 		public static final int LAST_VISIBLE_COLUMN = TOOL_URL_INDEX;
 		public static final int LAST_COLUMN = HIDDEN_INDEX;
 		public static final int FIRST_STRING_COLUMN = NAME_INDEX;
 		public static final int LAST_STRING_COLUMN = LICENSE_INDEX;
 		private String[] columnNames = { "On/Off", "Name", "Author", "Version",
-				"Author URL", "Tool URL" };
+				"Tutorial", "Tool URL" };
 		protected Vector<TableRow> rows = new Vector<TableRow>();
 
 		ComponentConfigurationManager manager = null;
@@ -1071,7 +1077,7 @@ public class ComponentConfigurationManagerWindow {
 				return Boolean.class;
 			}
 
-			if(column == AUTHOR_URL_INDEX || column == TOOL_URL_INDEX){
+			if(column == AUTHOR_INDEX || column == TUTORIAL_URL_INDEX || column == TOOL_URL_INDEX) {
 				return JButton.class;
 			}
 
@@ -1108,7 +1114,7 @@ public class ComponentConfigurationManagerWindow {
 		 * @see javax.swing.table.TableModel#getValueAt(int, int)
 		 */
 		final public Object getModelValueAt(int row, int column) {
-			TableRow record = (TableRow) rows.get(row);
+			TableRow record = rows.get(row);
 			switch (column) {
 			case SELECTION_INDEX:
 				return (Boolean) record.isSelected();
@@ -1117,11 +1123,13 @@ public class ComponentConfigurationManagerWindow {
 			case VERSION_INDEX:
 				return (String) record.getVersion();
 			case AUTHOR_INDEX:
-				return (String) record.getAuthor();
-			case AUTHOR_URL_INDEX:
-				return (JButton) record.getAuthorURL();
+				return (JButton) record.getAuthor();
+			case TUTORIAL_URL_INDEX:
+				return (JButton) record.getTutorialURL();
 			case TOOL_URL_INDEX:
 				return (JButton) record.getToolURL();
+			case AUTHOR_URL_INDEX:
+				return (JButton) record.getAuthorURL();
 			case CLASS_INDEX:
 				return (String) record.getClazz();
 			case DESCRIPTION_INDEX:
@@ -1342,6 +1350,7 @@ public class ComponentConfigurationManagerWindow {
 			String author = null;
 			String authorURL = null;
 			String toolURL = null;
+			String tutorialURL = null;			
 			String clazz = null;
 			String description = null;
 			String license = null;
@@ -1382,6 +1391,7 @@ public class ComponentConfigurationManagerWindow {
 					version = ccmComponent.getVersion();
 					author = ccmComponent.getAuthor();
 					authorURL = ccmComponent.getAuthorURL();
+					tutorialURL = ccmComponent.getTutorialURL();
 					toolURL = ccmComponent.getToolURL();
 					clazz = ccmComponent.getClazz();
 					description = ccmComponent.getDescription();
@@ -1423,7 +1433,7 @@ public class ComponentConfigurationManagerWindow {
 					}
 					
 					TableRow tableRow = new TableRow(false, name, version,
-							author, authorURL, toolURL, clazz, description,
+							author, authorURL, tutorialURL, toolURL, clazz, description,
 							folderName, ccmFileName, license, bMustAccept, documentation, requiredComponents,
 							relatedComponents, bParser, bAnalysis, bVisualizer, bLoadByDefault, bHidden);
 
@@ -1480,7 +1490,7 @@ public class ComponentConfigurationManagerWindow {
 	 * GUI row structure
 	 * 
 	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.14 2009-11-06 23:52:57 jiz Exp $
+	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.15 2009-11-17 15:32:31 tgarben Exp $
 	 */
 	private class TableRow {
 		private boolean selected = false;
@@ -1488,6 +1498,7 @@ public class ComponentConfigurationManagerWindow {
 		private String version = "";
 		private String author = "";
 		private String authorURL = null;
+		private String tutorialURL = null;
 		private String toolURL = null;
 		private String clazz = "";
 		private String description = "";
@@ -1521,7 +1532,7 @@ public class ComponentConfigurationManagerWindow {
 		 * @param relatedComponents
 		 */
 		public TableRow(boolean selected, String name, String version,
-				String author, String authorURL, String toolURL, String clazz,
+				String author, String authorURL, String tutorialURL, String toolURL, String clazz,
 				String description, String folder, String fileName, String license, boolean mustAccept, String documentation,
 				List<String> requiredComponents, List<String> relatedComponents, boolean parser, boolean analysis, boolean visualizer, boolean loadByDefault, boolean hidden) {
 			super();
@@ -1530,6 +1541,7 @@ public class ComponentConfigurationManagerWindow {
 			this.version = version;
 			this.author = author;
 			this.authorURL = authorURL;
+			this.tutorialURL = tutorialURL;			
 			this.toolURL = toolURL;
 			this.clazz = clazz;
 			this.description = description;
@@ -1571,8 +1583,17 @@ public class ComponentConfigurationManagerWindow {
 			this.version = version;
 		}
 
-		public String getAuthor() {
-			return author;
+		public JButton getAuthor() {
+			JButton button = new JButton(this.author);
+			button.setBorderPainted(false);
+			
+			if (this.authorURL != null){
+				button.setToolTipText(this.authorURL);
+				String html = "<html><font><u>" + this.author + "</u><br></font>";
+				button.setText(html);
+			}
+
+			return button;
 		}
 
 		public void setAuthor(String author) {
@@ -1592,8 +1613,37 @@ public class ComponentConfigurationManagerWindow {
 			this.authorURL = authorURL;
 		}
 
+		public JButton getTutorialURL() {
+			ImageIcon image = null; 
+			if (this.tutorialURL == null || this.tutorialURL == ""){
+				image = Util.createImageIcon(
+						"/org/geworkbench/engine/visualPluginGrey.png", this.tutorialURL);
+			}else{
+				image = Util.createImageIcon(
+						"/org/geworkbench/engine/visualPlugin.png", this.tutorialURL);
+			}
+			
+			JButton button = new JButton(image);
+			button.setToolTipText(this.tutorialURL);
+			button.setBorderPainted(false);
+			return button;
+		}
+
+		public void setTutorialURL(String tutorialURL) {
+			this.tutorialURL = tutorialURL;
+		}
+		
 		public JButton getToolURL() {
-			ImageIcon image = Util.createImageIcon("/org/geworkbench/engine/visualPlugin.png", this.toolURL);
+			ImageIcon image = null; 
+			if (this.toolURL == null || this.toolURL == ""){
+				image = Util.createImageIcon(
+						"/org/geworkbench/engine/visualPluginGrey.png", this.tutorialURL);
+			}else{
+				image = Util.createImageIcon(
+						"/org/geworkbench/engine/visualPlugin.png", this.tutorialURL);
+			}
+
+			
 			JButton button = new JButton(image);
 			button.setToolTipText(this.toolURL);
 			button.setBorderPainted(false);
@@ -1732,7 +1782,7 @@ public class ComponentConfigurationManagerWindow {
 	 * CheckBoxHeaderListener
 	 * 
 	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.14 2009-11-06 23:52:57 jiz Exp $
+	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.15 2009-11-17 15:32:31 tgarben Exp $
 	 */
 	
 	/*		TODO
@@ -1766,7 +1816,7 @@ public class ComponentConfigurationManagerWindow {
 	 * CheckBoxHeader
 	 * 
 	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.14 2009-11-06 23:52:57 jiz Exp $
+	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.15 2009-11-17 15:32:31 tgarben Exp $
 	 */
 	class CheckBoxHeader extends JCheckBox implements TableCellRenderer,
 			MouseListener {
@@ -1852,11 +1902,28 @@ public class ComponentConfigurationManagerWindow {
 		public Component getTableCellRendererComponent(JTable table,
 				Object value, boolean isSelected, boolean hasFocus, int row,
 				int column) {
-			if (value instanceof Component){
+			if (value instanceof Component) {
+
+				if (   column == CCMTableModel.AUTHOR_INDEX ){
+					DefaultTableColumnModel colModel = (DefaultTableColumnModel) table
+					.getColumnModel();
+					TableColumn col = colModel.getColumn(column);
+					col.setPreferredWidth(300);
+					col.setResizable(true);
+
+					JButton button = (JButton)value;
+					
+					Font font = button.getFont();
+					Map attributes = font.getAttributes();
+			        attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+			        button.setFont(font.deriveFont(attributes));
+				}
 				
-				if (column == CCMTableModel.AUTHOR_URL_INDEX || column == CCMTableModel.TOOL_URL_INDEX){
-					DefaultTableColumnModel colModel = (DefaultTableColumnModel) table.getColumnModel();
-				    TableColumn col = colModel.getColumn(column);
+				if (   column == CCMTableModel.TUTORIAL_URL_INDEX
+					|| column == CCMTableModel.TOOL_URL_INDEX) {
+					DefaultTableColumnModel colModel = (DefaultTableColumnModel) table
+							.getColumnModel();
+					TableColumn col = colModel.getColumn(column);
 					col.setMinWidth(75);
 					col.setMaxWidth(75);
 				}
@@ -1864,10 +1931,11 @@ public class ComponentConfigurationManagerWindow {
 				return (Component) value;
 			}
 
-			Component component = __defaultRenderer.getTableCellRendererComponent(table,
-				value, isSelected, hasFocus, row, column);
+			Component component = __defaultRenderer
+					.getTableCellRendererComponent(table, value, isSelected,
+							hasFocus, row, column);
 			return component;
 		}
 	}
-	
+
 }

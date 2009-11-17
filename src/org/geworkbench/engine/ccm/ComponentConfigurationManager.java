@@ -610,6 +610,8 @@ public class ComponentConfigurationManager {
 									.getAttributeValue("author"));
 							ccmComponent.setAuthorURL(element
 									.getAttributeValue("authorURL"));
+							ccmComponent.setTutorialURL(element
+									.getAttributeValue("tutorialURL"));
 							ccmComponent.setToolURL(element
 									.getAttributeValue("toolURL"));
 							ccmComponent.setDescription(element
