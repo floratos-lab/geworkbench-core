@@ -67,7 +67,7 @@ import com.jgoodies.forms.layout.FormLayout;
  * This is the main menu for the Component Configuration Manager.
  * 
  * @author tg2321
- * @version $Id: ComponentConfigurationManagerWindow.java,v 1.15 2009-11-17 15:32:31 tgarben Exp $
+ * @version $Id: ComponentConfigurationManagerWindow.java,v 1.16 2009-11-18 18:55:49 tgarben Exp $
  */
 public class ComponentConfigurationManagerWindow {
 
@@ -508,8 +508,8 @@ public class ComponentConfigurationManagerWindow {
         if (   selectedRow != null && selectedRow.length > 0 && selectedRow[0] >= 0 &&
 	       	   selectedColumn != null && selectedColumn.length > 0 && selectedColumn[0] >= 0 &&  
 	       	  (selectedColumn[0] == CCMTableModel.AUTHOR_URL_INDEX
-			|| selectedColumn[0] == CCMTableModel.TUTORIAL_URL_INDEX)
-			|| selectedColumn[0] == CCMTableModel.AUTHOR_INDEX) {
+			|| selectedColumn[0] == CCMTableModel.TUTORIAL_URL_INDEX
+			|| selectedColumn[0] == CCMTableModel.AUTHOR_INDEX)) {
 	        	
     		int modelRow = ccmTableModel.getModelRow(selectedRow[0]);
     		if (launchedRow == modelRow && launchedColumn == selectedColumn[0]){
@@ -1490,7 +1490,7 @@ public class ComponentConfigurationManagerWindow {
 	 * GUI row structure
 	 * 
 	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.15 2009-11-17 15:32:31 tgarben Exp $
+	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.16 2009-11-18 18:55:49 tgarben Exp $
 	 */
 	private class TableRow {
 		private boolean selected = false;
@@ -1782,7 +1782,7 @@ public class ComponentConfigurationManagerWindow {
 	 * CheckBoxHeaderListener
 	 * 
 	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.15 2009-11-17 15:32:31 tgarben Exp $
+	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.16 2009-11-18 18:55:49 tgarben Exp $
 	 */
 	
 	/*		TODO
@@ -1816,7 +1816,7 @@ public class ComponentConfigurationManagerWindow {
 	 * CheckBoxHeader
 	 * 
 	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.15 2009-11-17 15:32:31 tgarben Exp $
+	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.16 2009-11-18 18:55:49 tgarben Exp $
 	 */
 	class CheckBoxHeader extends JCheckBox implements TableCellRenderer,
 			MouseListener {
