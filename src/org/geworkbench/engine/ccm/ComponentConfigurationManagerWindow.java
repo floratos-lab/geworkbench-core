@@ -67,7 +67,7 @@ import com.jgoodies.forms.layout.FormLayout;
  * This is the main menu for the Component Configuration Manager.
  * 
  * @author tg2321
- * @version $Id: ComponentConfigurationManagerWindow.java,v 1.16 2009-11-18 18:55:49 tgarben Exp $
+ * @version $Id: ComponentConfigurationManagerWindow.java,v 1.17 2009-11-20 14:37:27 jiz Exp $
  */
 public class ComponentConfigurationManagerWindow {
 
@@ -1267,12 +1267,8 @@ public class ComponentConfigurationManagerWindow {
 					}
 
 					if (unselectedRequired.size() > 0 || related.size() > 0) {
-						ComponentConfigurationManagerLoadDialog ccmld = new ComponentConfigurationManagerLoadDialog(
-								frame, modelRow, unselectedRequired, related,
-								this);
-						ccmld.pack();
-						ccmld.setLocationRelativeTo(frame);
-						ccmld.setVisible(true);
+						DependencyManager dmanager = new DependencyManager(this, unselectedRequired, modelRow, related);
+						dmanager.checkDependency();
 					}
 				} else {
 					/* PLUGIN UNSELECTED */
@@ -1323,11 +1319,8 @@ public class ComponentConfigurationManagerWindow {
 					
 					/* If dependencies are found, then popup a dialog */
 					if (dependentPlugins.size() > 0) {
-						ComponentConfigurationManagerUnloadDialog ccmuld = new ComponentConfigurationManagerUnloadDialog(
-								frame, modelRow, dependentPlugins, this);
-						ccmuld.pack();
-						ccmuld.setLocationRelativeTo(frame);
-						ccmuld.setVisible(true);
+						DependencyManager dmanager = new DependencyManager(this, dependentPlugins, modelRow);
+						dmanager.checkDependency();
 					}
 				}
 
@@ -1490,7 +1483,7 @@ public class ComponentConfigurationManagerWindow {
 	 * GUI row structure
 	 * 
 	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.16 2009-11-18 18:55:49 tgarben Exp $
+	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.17 2009-11-20 14:37:27 jiz Exp $
 	 */
 	private class TableRow {
 		private boolean selected = false;
@@ -1782,7 +1775,7 @@ public class ComponentConfigurationManagerWindow {
 	 * CheckBoxHeaderListener
 	 * 
 	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.16 2009-11-18 18:55:49 tgarben Exp $
+	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.17 2009-11-20 14:37:27 jiz Exp $
 	 */
 	
 	/*		TODO
@@ -1816,7 +1809,7 @@ public class ComponentConfigurationManagerWindow {
 	 * CheckBoxHeader
 	 * 
 	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.16 2009-11-18 18:55:49 tgarben Exp $
+	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.17 2009-11-20 14:37:27 jiz Exp $
 	 */
 	class CheckBoxHeader extends JCheckBox implements TableCellRenderer,
 			MouseListener {
