@@ -10,6 +10,7 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
+import javax.swing.UIManager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -195,10 +196,15 @@ public class DependencyManager {
 	}
 
 	void checkDependency() {
+		// in case other component does not like this
+		Object oldSetting = UIManager.get("Button.defaultButtonFollowsFocus");
+		UIManager.put("Button.defaultButtonFollowsFocus", Boolean.TRUE);
 		JDialog dialog = optionPane.createDialog(null,
 				"Dependency Checking Dialog");
+
 		dialog.setVisible(true);
 		Object obj = optionPane.getValue();
+		UIManager.put("Button.defaultButtonFollowsFocus", oldSetting); // restore
 		if (obj == null) {
 			rollBack();
 			return;
