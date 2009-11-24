@@ -212,6 +212,7 @@ public class UILauncher {
         splash.hideSplash();
         GUIFramework guiWindow = GeawConfigObject.getGuiWindow();
         guiWindow.setVisible(true);
+		GeawConfigObject.getGuiWindow().setVisualizationType(null); // force the welcome component to show
     }
 
 	public static void setProgressBarString(String name) {
