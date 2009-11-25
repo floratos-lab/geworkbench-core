@@ -52,7 +52,7 @@ import com.jgoodies.forms.builder.ButtonBarBuilder;
  * 
  * @author Xuegong Wang
  * @author manjunath at genomecenter dot columbia dot edu
- * @version $Id: AnnotationParser.java,v 1.40 2009-11-02 22:42:08 jiz Exp $
+ * @version $Id: AnnotationParser.java,v 1.41 2009-11-25 17:31:53 jiz Exp $
  */
 
 public class AnnotationParser implements Serializable {
@@ -112,12 +112,11 @@ public class AnnotationParser implements Serializable {
 			GENE_ONTOLOGY_BIOLOGICAL_PROCESS, GENE_ONTOLOGY_CELLULAR_COMPONENT,
 			GENE_ONTOLOGY_MOLECULAR_FUNCTION, PATHWAY, TRANSCRIPT };
 
+	// TODO all the DSDataSets handled in this class should be DSMicroarraySet
 	// FIELDS
 	private static DSDataSet<? extends DSBioObject> currentDataSet = null;
 
 	private static Map<DSDataSet<? extends DSBioObject>, String> datasetToChipTypes = new HashMap<DSDataSet<? extends DSBioObject>, String>();
-
-	private static Map<String, ListOrderedMap<String, Map<String, String>>> chipTypeToAnnotations = new HashMap<String, ListOrderedMap<String, Map<String, String>>>();
 
 	public static HashMap<String, String> chiptypeMap = new HashMap<String, String>();
 
@@ -125,25 +124,23 @@ public class AnnotationParser implements Serializable {
 
 	private static ArrayList<String> chipTypes = new ArrayList<String>();
 
-	static MultiMap<String, String> GOIDToAffy = null;
-
 	static MultiMap<String, String> affyToGOID = null;
 	// END FIELDS
 
 	public static APSerializable getSerializable() {
 		return new APSerializable(currentDataSet, datasetToChipTypes,
-				chipTypeToAnnotations, chiptypeMap,
-				geneNameMap, chipTypes, GOIDToAffy, affyToGOID);
+				chiptypeMap, geneNameMap, chipTypes, affyToGOID,
+				chipTypeToMoleculorFunctions, chipTypeToUnigenes,
+				chipTypeToDescriptions, chipTypeToGeneSymbols,
+				chipTypeToLocusLinks, chipTypeToSwissProts);
 	}
 
 	public static void setFromSerializable(APSerializable aps) {
 		currentDataSet = aps.currentDataSet;
 		datasetToChipTypes = aps.datasetToChipTypes;
-		chipTypeToAnnotations = aps.chipTypeToAnnotations;
 		chiptypeMap = aps.chiptypeMap;
 		geneNameMap = aps.geneNameMap;
 		chipTypes = aps.chipTypes;
-		GOIDToAffy = aps.GOIDToAffy;
 		affyToGOID = aps.affyToGOID;
 	}
 
@@ -218,7 +215,7 @@ public class AnnotationParser implements Serializable {
 		return false;
 	}
 
-	public static boolean setChipType(DSDataSet<? extends DSBioObject> dataset, String chiptype,
+	private static boolean setChipType(DSDataSet<? extends DSBioObject> dataset, String chiptype,
 			File annotationData) {
 		datasetToChipTypes.put(dataset, chiptype);
 		currentDataSet = dataset;
@@ -240,8 +237,6 @@ public class AnnotationParser implements Serializable {
 			FileInputStream fis = null;
 			BufferedInputStream bis = null;
 			try {
-				ListOrderedMap<String, Map<String, String>> annots = new ListOrderedMap<String, Map<String, String>>();
-				
 				fis = new FileInputStream(datafile);
 				bis = new BufferedInputStream(fis);
 				
@@ -253,9 +248,15 @@ public class AnnotationParser implements Serializable {
 
 				LabeledCSVParser parser = new LabeledCSVParser(cvsParser);
 
+				Map<String, String> moleculorFunctions = new HashMap<String, String>();
+				Map<String, String> unigenes = new HashMap<String, String>();
+				Map<String, String> descriptions = new HashMap<String, String>();
+				Map<String, String> geneSymbols = new HashMap<String, String>();
+				Map<String, String> locusLinks = new HashMap<String, String>();
+				Map<String, String> swissProts = new HashMap<String, String>();
+				
 				while (parser.getLine() != null) {
 					String affyId = parser.getValueByLabel(labels[0]);
-					Map<String, String> values = new HashMap<String, String>();
 					for (int i = 1; i < labels.length; i++) {
 						String label = labels[i];
 						String val = parser.getValueByLabel(label);
@@ -269,12 +270,30 @@ public class AnnotationParser implements Serializable {
 								val = val.substring(1);
 							}
 						}
-						values.put(label, val);
+						if (label.equals(GENE_SYMBOL))
+							geneSymbols.put(affyId, val);
+						else if (label.equals(LOCUSLINK))
+							locusLinks.put(affyId, val);
+						else if (label.equals(SWISSPROT))
+							swissProts.put(affyId, val);
+						else if (label.equals(DESCRIPTION))
+							descriptions.put(affyId, val);
+						else if (label.equals(GENE_ONTOLOGY_MOLECULAR_FUNCTION))
+							moleculorFunctions.put(affyId, val);
+						else if(label.equals(UNIGENE))
+							unigenes.put(affyId, val);
 					}
-					annots.put(affyId, values);
 				}
-				chipTypeToAnnotations.put(chipType, annots);
+
+				chipTypeToMoleculorFunctions.put(chipType, moleculorFunctions);
+				chipTypeToUnigenes.put(chipType, unigenes);
+				chipTypeToDescriptions.put(chipType, descriptions);
+				chipTypeToGeneSymbols.put(chipType, geneSymbols);
+				chipTypeToLocusLinks.put(chipType, locusLinks);
+				chipTypeToSwissProts.put(chipType, swissProts);
+
 				populateGeneNameMap(chipType);
+				
 				return true;
 			} catch (Exception e) {
 				log.error("", e);
@@ -295,7 +314,7 @@ public class AnnotationParser implements Serializable {
 
 	private static void populateGeneNameMap(String chipType) {
 		if (chipType != null) {
-			for (String affyid : chipTypeToAnnotations.get(chipType).keySet()) {
+			for (String affyid : chipTypeToGeneSymbols.get(chipType).keySet()) {
 				if (affyid != null) {
 					String geneName = getGeneName(affyid.trim());
 					if (geneName != null) {
@@ -320,8 +339,8 @@ public class AnnotationParser implements Serializable {
 
 	public static String getGeneName(String id) {
 		try {
-			ListOrderedMap<String, Map<String, String>> annots = getAllAnnotationsForDataSet(currentDataSet);
-			return annots.get(id).get(GENE_SYMBOL);
+			String chipType = datasetToChipTypes.get(currentDataSet);
+			return chipTypeToGeneSymbols.get(chipType).get(id);
 		} catch (Exception e) {
 			// watkin - removed because it crippled components with repeated
 			// logging
@@ -332,25 +351,35 @@ public class AnnotationParser implements Serializable {
 	}
 
 	/**
-	 * This method returns required information in different format. And it can
-	 * look for information both local file.
+	 * This method returns required annotation field for a given affymatrix marker ID .
 	 * 
 	 * @param affyid
 	 *            affyID as string
 	 * @param fieldID
-	 *            //defined at FieldName.java 0 : name(full name) 1 :
-	 *            title(short name) 2 : pathway 3 : Goterms 4: unigene
-	 *            5:LocusLink 6:swissprotids
-	 * @return 0: String[] 1: String[] 2: String[] pathway or null 3: string[]
-	 *         Goterms//tab delimited or null
-	 * @author Xuegong Wang
-	 * @version 1.0
+	 * 
 	 */
+	// this method used to depend on chipTypeToAnnotations, which take unnecessary large memory
+	// the first step is to re-implement this method so it does not use chipTypeToAnnotations
 	static public String[] getInfo(String affyID, String fieldID) {
 		try {
-			Map<String, String> annots = getAllAnnotationsForDataSet(
-					currentDataSet).get(affyID);
-			String field = annots.get(fieldID);
+			String chipType = datasetToChipTypes.get(currentDataSet);
+			String field = "";
+			
+			// individual field to be process separately to eventually get rid of the large map
+			if(fieldID.equals(ABREV)) { // same as GENE_SYMBOL
+				field = chipTypeToGeneSymbols.get(chipType).get(affyID);
+			} else if(fieldID.equals(LOCUSLINK)) {
+				field = chipTypeToLocusLinks.get(chipType).get(affyID);
+			} else if(fieldID.equals(DESCRIPTION)) {
+				field = chipTypeToDescriptions.get(chipType).get(affyID);
+			} else if(fieldID.equals(GENE_ONTOLOGY_MOLECULAR_FUNCTION)) { 
+				field = chipTypeToMoleculorFunctions.get(chipType).get(affyID);
+			} else if(fieldID.equals(UNIGENE)) { 
+				field = chipTypeToUnigenes.get(chipType).get(affyID);
+			} else {
+				log.error("trying to retreive unsupported field from marker annotation. null is returned");
+				return null;
+			}
 			return field.split(MAIN_DELIMITER);
 		} catch (Exception e) {
 			if (affyID != null) {
@@ -381,24 +410,14 @@ public class AnnotationParser implements Serializable {
 	}
 
 	public static Set<String> getSwissProtIDs(String markerID) {
-		ListOrderedMap<String, Map<String, String>> annots = getAllAnnotationsForDataSet(currentDataSet);
-		String annot = annots.get(markerID).get(SWISSPROT);
+		String chipType = datasetToChipTypes.get(currentDataSet);
+
 		HashSet<String> set = new HashSet<String>();
-		if ((annot != null) && (annot.trim().length() > 0)) {
-			String[] ids = annot.split("///");
+			String[] ids = chipTypeToSwissProts.get(chipType).get(markerID).split("///");
 			for (String s : ids) {
 				set.add(s.trim());
 			}
-		}
 		return set;
-	}
-
-	public static ListOrderedMap<String, Map<String, String>> getAllAnnotationsForDataSet(
-			DSDataSet<? extends DSBioObject> dataset) {
-		String chipType = datasetToChipTypes.get(dataset);
-		ListOrderedMap<String, Map<String, String>> annots = chipTypeToAnnotations
-				.get(chipType);
-		return annots;
 	}
 
 	public static String matchChipType(DSDataSet<? extends DSBioObject> dataset, String id,
@@ -539,4 +558,13 @@ public class AnnotationParser implements Serializable {
 			return null;
 		}
 	}
+	
+	// new maps for individual field that is meant to replace chipTypeToAnnotations eventually
+	private static Map<String, Map<String, String>> chipTypeToMoleculorFunctions = new HashMap<String, Map<String, String>>(); 
+	private static Map<String, Map<String, String>> chipTypeToUnigenes = new HashMap<String, Map<String, String>>(); 
+	private static Map<String, Map<String, String>> chipTypeToDescriptions = new HashMap<String, Map<String, String>>();
+	private static Map<String, Map<String, String>> chipTypeToGeneSymbols = new HashMap<String, Map<String, String>>();
+	private static Map<String, Map<String, String>> chipTypeToLocusLinks = new HashMap<String, Map<String, String>>();
+	private static Map<String, Map<String, String>> chipTypeToSwissProts = new HashMap<String, Map<String, String>>();
+
 }

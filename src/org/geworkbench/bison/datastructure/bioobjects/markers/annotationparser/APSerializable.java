@@ -13,37 +13,54 @@ import java.util.Vector;
 
 /**
  * @author John Watkinson
- * @version $Id: APSerializable.java,v 1.2 2009-11-02 22:42:08 jiz Exp $
+ * @version $Id: APSerializable.java,v 1.3 2009-11-25 17:31:53 jiz Exp $
  */
 public class APSerializable implements Serializable {
 	private static final long serialVersionUID = 6455427625940524515L;
 
 	DSDataSet<? extends DSBioObject> currentDataSet = null;
 	Map<DSDataSet<? extends DSBioObject>, String> datasetToChipTypes = new HashMap<DSDataSet<? extends DSBioObject>, String>();
-	Map<String, ListOrderedMap<String, Map<String, String>>> chipTypeToAnnotations = new HashMap<String, ListOrderedMap<String, Map<String, String>>>();
 
 	HashMap<String, String> chiptypeMap = new HashMap<String, String>();
 
 	Map<String, ListOrderedMap<String, Vector<String>>> geneNameMap = new HashMap<String, ListOrderedMap<String, Vector<String>>>();
 	ArrayList<String> chipTypes = new ArrayList<String>();
-	MultiMap<String, String> GOIDToAffy = null;
 	MultiMap<String, String> affyToGOID = null;
+	
+	Map<String, Map<String, String>> chipTypeToMoleculorFunctions = null;
+	Map<String, Map<String, String>> chipTypeToUnigenes = null;
+	Map<String, Map<String, String>> chipTypeToDescriptions = null;
+	Map<String, Map<String, String>> chipTypeToGeneSymbols = null;
+	Map<String, Map<String, String>> chipTypeToLocusLinks = null;
+	Map<String, Map<String, String>> chipTypeToSwissProts = null;
+
 
 	public APSerializable(
 			DSDataSet<? extends DSBioObject> currentDataSet2,
 			Map<DSDataSet<? extends DSBioObject>, String> datasetToChipTypes2,
-			Map<String, ListOrderedMap<String, Map<String, String>>> chipTypeToAnnotations,
 			HashMap<String, String> chiptypeMap,
 			Map<String, ListOrderedMap<String, Vector<String>>> geneNameMap,
-			ArrayList<String> chipTypes, MultiMap<String, String> GOIDToAffy,
-			MultiMap<String, String> affyToGOID) {
+			ArrayList<String> chipTypes,
+			MultiMap<String, String> affyToGOID,
+			Map<String, Map<String, String>> chipTypeToMoleculorFunctions,
+			Map<String, Map<String, String>> chipTypeToUnigenes,
+			Map<String, Map<String, String>> chipTypeToDescriptions,
+			Map<String, Map<String, String>> chipTypeToGeneSymbols,
+			Map<String, Map<String, String>> chipTypeToLocusLinks,
+			Map<String, Map<String, String>> chipTypeToSwissProts) {
 		this.currentDataSet = currentDataSet2;
 		this.datasetToChipTypes = datasetToChipTypes2;
-		this.chipTypeToAnnotations = chipTypeToAnnotations;
 		this.chiptypeMap = chiptypeMap;
 		this.geneNameMap = geneNameMap;
 		this.chipTypes = chipTypes;
-		this.GOIDToAffy = GOIDToAffy;
 		this.affyToGOID = affyToGOID;
+		
+		this.chipTypeToMoleculorFunctions = chipTypeToMoleculorFunctions;
+		this.chipTypeToUnigenes = chipTypeToUnigenes;
+		this.chipTypeToDescriptions = chipTypeToDescriptions;
+		this.chipTypeToGeneSymbols = chipTypeToGeneSymbols;
+		this.chipTypeToLocusLinks = chipTypeToLocusLinks;
+		this.chipTypeToSwissProts = chipTypeToSwissProts;
+
 	}
 }
