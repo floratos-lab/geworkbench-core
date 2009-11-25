@@ -14,7 +14,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -29,7 +28,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -52,7 +50,6 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import org.apache.commons.collections15.map.ListOrderedMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -118,8 +115,6 @@ import org.geworkbench.util.SaveImage;
 import org.geworkbench.util.Util;
 import org.ginkgo.labs.ws.GridEndpointReferenceType;
 
-import com.Ostermiller.util.CSVPrinter;
-
 /**
  * <p>
  * Title: import org.geworkbench.builtin.projects.DataSetNode; import
@@ -143,7 +138,7 @@ import com.Ostermiller.util.CSVPrinter;
  * </p>
  * 
  * @author First Genetic Trust
- * @version 1.0
+ * @version $Id: ProjectPanel.java,v 1.123 2009-11-25 17:29:17 jiz Exp $
  */
 @SuppressWarnings("unchecked")
 public class ProjectPanel implements VisualPlugin, MenuListener {
@@ -372,9 +367,12 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			public void actionPerformed(ActionEvent e) {
 				if (selection.getSelectedNode() instanceof DataSetNode) {
 					DSDataSet ds = selection.getDataSet();
-					ListOrderedMap<String, Map<String, String>> annots = AnnotationParser
-							.getAllAnnotationsForDataSet(ds);
-					if (annots == null) {
+					if(! (ds instanceof CSMicroarraySet) ) {
+						return; 
+					}
+					CSMicroarraySet microarraySet = (CSMicroarraySet)ds;
+					String annotationFileName = microarraySet.getAnnotationFileName();
+					if (annotationFileName == null) {
 						JOptionPane
 								.showMessageDialog(
 										null,
@@ -382,32 +380,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 										"Unable to View",
 										JOptionPane.INFORMATION_MESSAGE);
 						return;
-					}
-					File tempAnnot = new File("annotations-temp.csv");
-					try {
-						CSVPrinter csvout = new CSVPrinter(
-								new BufferedOutputStream(new FileOutputStream(
-										tempAnnot)));
-						// Output labels
-						Map<String, String> firstSet = (Map<String, String>) annots
-								.values().iterator().next();
-						csvout.print(AnnotationParser.PROBE_SET_ID);
-						for (String header : firstSet.keySet()) {
-							csvout.print(header);
-						}
-						csvout.println();
-						for (String id : annots.keySet()) {
-							csvout.print(id);
-							Map<String, String> entries = annots.get(id);
-							for (String annotation : entries.values()) {
-								csvout.print(annotation);
-							}
-							csvout.println();
-						}
-						csvout.flush();
-						csvout.close();
-					} catch (Exception e1) {
-						e1.printStackTrace();
 					}
 
 					GlobalPreferences prefs = GlobalPreferences.getInstance();
@@ -418,7 +390,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 						if (Util.isRunningOnAMac()) {
 							editor = "Open";
 						}
-						String[] args = { editor, tempAnnot.getAbsolutePath() };
+						String[] args = { editor, annotationFileName };
 						try {
 							Runtime.getRuntime().exec(args);
 						} catch (IOException e1) {
@@ -1675,8 +1647,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 						maSets[i].getMarkers());
 			}
 
-			int uniqMarkers = ((DSMicroarraySet<DSMicroarray>) maSet)
-					.getMarkers().size();
 			// if (uniqMarkers != markerNo)
 			// maSet.initialize(arraySize, uniqMarkers);
 			maSet.getMarkerVector().clear();
@@ -2031,31 +2001,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
         }
 	}			
 	
-	private Class classOrInterfaceInKey(Class keyClass, Map map){
-		
-		/* If the Class is in the key of the map return that Class */
-		Object value = map.get(keyClass);
-		if (value != null){
-			return keyClass;
-		}
-
-		/* If the Class has in Interface that is in the Key of the map, return that Interface*/
-		Class keyClassInterfaces[] = keyClass.getInterfaces();
-		Class keyClassInterface = null;
-		for (int i=0; i<keyClassInterfaces.length; i++){
-			keyClassInterface = keyClassInterfaces[i];
-			value = map.get(keyClassInterface);
-			if (value != null  ){
-				return keyClassInterface;
-			}
-		}
-		
-		/* Else return null */
-		return null;
-	}
-	
-	
-	
 	/**
 	 * Action listener handling user requests for removing a dataset.
 	 * 
@@ -2094,6 +2039,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		ProjectTreeNode parentNode = (ProjectTreeNode) node.getParent();
 
 		projectTreeModel.removeNodeFromParent(node);
+		// TODO clear out unused mark annotation from memory
 		if (parentNode.getChildCount() == 0
 				&& parentNode instanceof ProjectNode) {
 			setNodeSelection(parentNode);
