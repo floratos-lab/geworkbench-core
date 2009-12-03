@@ -52,7 +52,7 @@ import com.jgoodies.forms.builder.ButtonBarBuilder;
  * 
  * @author Xuegong Wang
  * @author manjunath at genomecenter dot columbia dot edu
- * @version $Id: AnnotationParser.java,v 1.41 2009-11-25 17:31:53 jiz Exp $
+ * @version $Id: AnnotationParser.java,v 1.42 2009-12-03 21:44:17 jiz Exp $
  */
 
 public class AnnotationParser implements Serializable {
@@ -249,6 +249,8 @@ public class AnnotationParser implements Serializable {
 				LabeledCSVParser parser = new LabeledCSVParser(cvsParser);
 
 				Map<String, String> moleculorFunctions = new HashMap<String, String>();
+				Map<String, String> cellularComponents = new HashMap<String, String>();
+				Map<String, String> biologicalProcesses = new HashMap<String, String>();
 				Map<String, String> unigenes = new HashMap<String, String>();
 				Map<String, String> descriptions = new HashMap<String, String>();
 				Map<String, String> geneSymbols = new HashMap<String, String>();
@@ -280,12 +282,18 @@ public class AnnotationParser implements Serializable {
 							descriptions.put(affyId, val);
 						else if (label.equals(GENE_ONTOLOGY_MOLECULAR_FUNCTION))
 							moleculorFunctions.put(affyId, val);
+						else if (label.equals(GENE_ONTOLOGY_CELLULAR_COMPONENT))
+							cellularComponents.put(affyId, val);
+						else if (label.equals(GENE_ONTOLOGY_BIOLOGICAL_PROCESS))
+							biologicalProcesses.put(affyId, val);
 						else if(label.equals(UNIGENE))
 							unigenes.put(affyId, val);
 					}
 				}
 
 				chipTypeToMoleculorFunctions.put(chipType, moleculorFunctions);
+				chipTypeToCellularComponents.put(chipType, cellularComponents);
+				chipTypeToBiologicalProcesses.put(chipType, biologicalProcesses);
 				chipTypeToUnigenes.put(chipType, unigenes);
 				chipTypeToDescriptions.put(chipType, descriptions);
 				chipTypeToGeneSymbols.put(chipType, geneSymbols);
@@ -374,6 +382,10 @@ public class AnnotationParser implements Serializable {
 				field = chipTypeToDescriptions.get(chipType).get(affyID);
 			} else if(fieldID.equals(GENE_ONTOLOGY_MOLECULAR_FUNCTION)) { 
 				field = chipTypeToMoleculorFunctions.get(chipType).get(affyID);
+			} else if(fieldID.equals(GENE_ONTOLOGY_CELLULAR_COMPONENT)) { 
+				field = chipTypeToCellularComponents.get(chipType).get(affyID);
+			} else if(fieldID.equals(GENE_ONTOLOGY_BIOLOGICAL_PROCESS)) { 
+				field = chipTypeToBiologicalProcesses.get(chipType).get(affyID);
 			} else if(fieldID.equals(UNIGENE)) { 
 				field = chipTypeToUnigenes.get(chipType).get(affyID);
 			} else {
@@ -561,6 +573,8 @@ public class AnnotationParser implements Serializable {
 	
 	// new maps for individual field that is meant to replace chipTypeToAnnotations eventually
 	private static Map<String, Map<String, String>> chipTypeToMoleculorFunctions = new HashMap<String, Map<String, String>>(); 
+	private static Map<String, Map<String, String>> chipTypeToCellularComponents = new HashMap<String, Map<String, String>>(); 
+	private static Map<String, Map<String, String>> chipTypeToBiologicalProcesses = new HashMap<String, Map<String, String>>(); 
 	private static Map<String, Map<String, String>> chipTypeToUnigenes = new HashMap<String, Map<String, String>>(); 
 	private static Map<String, Map<String, String>> chipTypeToDescriptions = new HashMap<String, Map<String, String>>();
 	private static Map<String, Map<String, String>> chipTypeToGeneSymbols = new HashMap<String, Map<String, String>>();
