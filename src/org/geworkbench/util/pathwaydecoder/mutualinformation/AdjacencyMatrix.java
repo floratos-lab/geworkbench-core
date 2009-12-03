@@ -768,7 +768,7 @@ public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMa
     }
 
     public int getMappedId(int geneId) {
-        if (geneId >= 0) {
+        if (geneId >= 0 && geneId < maSet.getMarkers().size()) {
             DSGeneMarker gm = maSet.getMarkers().get(geneId);
 //            bug 2000, replaced getShortName() with getGeneName()
             String sn = gm.getGeneName();
