@@ -380,8 +380,10 @@ public class AnnotationParser implements Serializable {
 				field = fields.getUniGene();
 			} else if(fieldID.equals(REFSEQ)) {
 				field = fields.getRefSeq();
+			} else if(fieldID.equals(SWISSPROT)) {
+				field = fields.getSwissProt();
 			} else {
-				log.error("trying to retreive unsupported field from marker annotation. null is returned");
+				log.error("trying to retreive unsupported field "+fieldID+" from marker annotation. null is returned.");
 				return null;
 			}
 			return field.split(MAIN_DELIMITER);
