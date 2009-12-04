@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -52,15 +53,13 @@ import com.jgoodies.forms.builder.ButtonBarBuilder;
  * 
  * @author Xuegong Wang
  * @author manjunath at genomecenter dot columbia dot edu
- * @version $Id: AnnotationParser.java,v 1.42 2009-12-03 21:44:17 jiz Exp $
+ * @version $Id: AnnotationParser.java,v 1.42 2009/12/03 21:44:17 jiz Exp $
  */
 
 public class AnnotationParser implements Serializable {
 	private static final long serialVersionUID = -117234619759135916L;
 
 	static Log log = LogFactory.getLog(AnnotationParser.class);
-
-	static int counter = 0;
 
 	public static final String GENE_ONTOLOGY_BIOLOGICAL_PROCESS = "Gene Ontology Biological Process";
 
@@ -128,11 +127,10 @@ public class AnnotationParser implements Serializable {
 	// END FIELDS
 
 	public static APSerializable getSerializable() {
+		// FIXME 
 		return new APSerializable(currentDataSet, datasetToChipTypes,
 				chiptypeMap, geneNameMap, chipTypes, affyToGOID,
-				chipTypeToMoleculorFunctions, chipTypeToUnigenes,
-				chipTypeToDescriptions, chipTypeToGeneSymbols,
-				chipTypeToLocusLinks, chipTypeToSwissProts);
+				chipTypeToAnnotation);
 	}
 
 	public static void setFromSerializable(APSerializable aps) {
@@ -142,6 +140,7 @@ public class AnnotationParser implements Serializable {
 		geneNameMap = aps.geneNameMap;
 		chipTypes = aps.chipTypes;
 		affyToGOID = aps.affyToGOID;
+		chipTypeToAnnotation = aps.chipTypeToAnnotation;
 	}
 
 	final static String chiptyemapfilename = "chiptypeMap.txt";
@@ -248,17 +247,11 @@ public class AnnotationParser implements Serializable {
 
 				LabeledCSVParser parser = new LabeledCSVParser(cvsParser);
 
-				Map<String, String> moleculorFunctions = new HashMap<String, String>();
-				Map<String, String> cellularComponents = new HashMap<String, String>();
-				Map<String, String> biologicalProcesses = new HashMap<String, String>();
-				Map<String, String> unigenes = new HashMap<String, String>();
-				Map<String, String> descriptions = new HashMap<String, String>();
-				Map<String, String> geneSymbols = new HashMap<String, String>();
-				Map<String, String> locusLinks = new HashMap<String, String>();
-				Map<String, String> swissProts = new HashMap<String, String>();
+				MarkerAnnotation markerAnnotation = new MarkerAnnotation();
 				
 				while (parser.getLine() != null) {
 					String affyId = parser.getValueByLabel(labels[0]);
+					AnnotationFields fields = new AnnotationFields();
 					for (int i = 1; i < labels.length; i++) {
 						String label = labels[i];
 						String val = parser.getValueByLabel(label);
@@ -273,32 +266,28 @@ public class AnnotationParser implements Serializable {
 							}
 						}
 						if (label.equals(GENE_SYMBOL))
-							geneSymbols.put(affyId, val);
+							fields.setGeneSymbol(val);
 						else if (label.equals(LOCUSLINK))
-							locusLinks.put(affyId, val);
+							fields.setLocusLink(val);
 						else if (label.equals(SWISSPROT))
-							swissProts.put(affyId, val);
+							fields.setSwissProt(val);
 						else if (label.equals(DESCRIPTION))
-							descriptions.put(affyId, val);
+							fields.setDescription(val);
 						else if (label.equals(GENE_ONTOLOGY_MOLECULAR_FUNCTION))
-							moleculorFunctions.put(affyId, val);
+							fields.setMolecularFunction(val);
 						else if (label.equals(GENE_ONTOLOGY_CELLULAR_COMPONENT))
-							cellularComponents.put(affyId, val);
+							fields.setCellularComponent(val);
 						else if (label.equals(GENE_ONTOLOGY_BIOLOGICAL_PROCESS))
-							biologicalProcesses.put(affyId, val);
+							fields.setBiologicalProcess(val);
 						else if(label.equals(UNIGENE))
-							unigenes.put(affyId, val);
+							fields.setUniGene(val);
+						else if(label.equals(REFSEQ))
+							fields.setRefSeq(val);
 					}
+					markerAnnotation.addMarker(affyId, fields);
 				}
 
-				chipTypeToMoleculorFunctions.put(chipType, moleculorFunctions);
-				chipTypeToCellularComponents.put(chipType, cellularComponents);
-				chipTypeToBiologicalProcesses.put(chipType, biologicalProcesses);
-				chipTypeToUnigenes.put(chipType, unigenes);
-				chipTypeToDescriptions.put(chipType, descriptions);
-				chipTypeToGeneSymbols.put(chipType, geneSymbols);
-				chipTypeToLocusLinks.put(chipType, locusLinks);
-				chipTypeToSwissProts.put(chipType, swissProts);
+				chipTypeToAnnotation.put(chipType, markerAnnotation);
 
 				populateGeneNameMap(chipType);
 				
@@ -322,7 +311,7 @@ public class AnnotationParser implements Serializable {
 
 	private static void populateGeneNameMap(String chipType) {
 		if (chipType != null) {
-			for (String affyid : chipTypeToGeneSymbols.get(chipType).keySet()) {
+			for (String affyid : chipTypeToAnnotation.get(chipType).getMarkerSet()) {
 				if (affyid != null) {
 					String geneName = getGeneName(affyid.trim());
 					if (geneName != null) {
@@ -348,7 +337,7 @@ public class AnnotationParser implements Serializable {
 	public static String getGeneName(String id) {
 		try {
 			String chipType = datasetToChipTypes.get(currentDataSet);
-			return chipTypeToGeneSymbols.get(chipType).get(id);
+			return chipTypeToAnnotation.get(chipType).getFields(id).getGeneSymbol();
 		} catch (Exception e) {
 			// watkin - removed because it crippled components with repeated
 			// logging
@@ -373,21 +362,24 @@ public class AnnotationParser implements Serializable {
 			String chipType = datasetToChipTypes.get(currentDataSet);
 			String field = "";
 			
+			AnnotationFields fields = chipTypeToAnnotation.get(chipType).getFields(affyID);
 			// individual field to be process separately to eventually get rid of the large map
 			if(fieldID.equals(ABREV)) { // same as GENE_SYMBOL
-				field = chipTypeToGeneSymbols.get(chipType).get(affyID);
+				field = fields.getGeneSymbol();
 			} else if(fieldID.equals(LOCUSLINK)) {
-				field = chipTypeToLocusLinks.get(chipType).get(affyID);
+				field = fields.getLocusLink();
 			} else if(fieldID.equals(DESCRIPTION)) {
-				field = chipTypeToDescriptions.get(chipType).get(affyID);
+				field = fields.getDescription();
 			} else if(fieldID.equals(GENE_ONTOLOGY_MOLECULAR_FUNCTION)) { 
-				field = chipTypeToMoleculorFunctions.get(chipType).get(affyID);
+				field = fields.getMolecularFunction();
 			} else if(fieldID.equals(GENE_ONTOLOGY_CELLULAR_COMPONENT)) { 
-				field = chipTypeToCellularComponents.get(chipType).get(affyID);
+				field = fields.getCellularComponent();
 			} else if(fieldID.equals(GENE_ONTOLOGY_BIOLOGICAL_PROCESS)) { 
-				field = chipTypeToBiologicalProcesses.get(chipType).get(affyID);
+				field = fields.getBiologicalProcess();
 			} else if(fieldID.equals(UNIGENE)) { 
-				field = chipTypeToUnigenes.get(chipType).get(affyID);
+				field = fields.getUniGene();
+			} else if(fieldID.equals(REFSEQ)) {
+				field = fields.getRefSeq();
 			} else {
 				log.error("trying to retreive unsupported field from marker annotation. null is returned");
 				return null;
@@ -425,7 +417,7 @@ public class AnnotationParser implements Serializable {
 		String chipType = datasetToChipTypes.get(currentDataSet);
 
 		HashSet<String> set = new HashSet<String>();
-			String[] ids = chipTypeToSwissProts.get(chipType).get(markerID).split("///");
+			String[] ids = chipTypeToAnnotation.get(chipType).getFields(markerID).getSwissProt().split("///");
 			for (String s : ids) {
 				set.add(s.trim());
 			}
@@ -571,14 +563,116 @@ public class AnnotationParser implements Serializable {
 		}
 	}
 	
-	// new maps for individual field that is meant to replace chipTypeToAnnotations eventually
-	private static Map<String, Map<String, String>> chipTypeToMoleculorFunctions = new HashMap<String, Map<String, String>>(); 
-	private static Map<String, Map<String, String>> chipTypeToCellularComponents = new HashMap<String, Map<String, String>>(); 
-	private static Map<String, Map<String, String>> chipTypeToBiologicalProcesses = new HashMap<String, Map<String, String>>(); 
-	private static Map<String, Map<String, String>> chipTypeToUnigenes = new HashMap<String, Map<String, String>>(); 
-	private static Map<String, Map<String, String>> chipTypeToDescriptions = new HashMap<String, Map<String, String>>();
-	private static Map<String, Map<String, String>> chipTypeToGeneSymbols = new HashMap<String, Map<String, String>>();
-	private static Map<String, Map<String, String>> chipTypeToLocusLinks = new HashMap<String, Map<String, String>>();
-	private static Map<String, Map<String, String>> chipTypeToSwissProts = new HashMap<String, Map<String, String>>();
+	private static Map<String, MarkerAnnotation> chipTypeToAnnotation = new TreeMap<String, MarkerAnnotation>();
+	
+	static private class AnnotationFields {
+		String getMolecularFunction() {
+			return molecularFunction;
+		}
+
+		void setMolecularFunction(String molecularFunction) {
+			this.molecularFunction = molecularFunction;
+		}
+
+		String getCellularComponent() {
+			return cellularComponent;
+		}
+
+		void setCellularComponent(String cellularComponent) {
+			this.cellularComponent = cellularComponent;
+		}
+
+		String getBiologicalProcess() {
+			return biologicalProcess;
+		}
+
+		void setBiologicalProcess(String biologicalProcess) {
+			this.biologicalProcess = biologicalProcess;
+		}
+
+		String getUniGene() {
+			return uniGene;
+		}
+
+		void setUniGene(String uniGene) {
+			this.uniGene = uniGene;
+		}
+
+		String getDescription() {
+			return description;
+		}
+
+		void setDescription(String description) {
+			this.description = description;
+		}
+
+		String getGeneSymbol() {
+			return geneSymbol;
+		}
+
+		void setGeneSymbol(String geneSymbol) {
+			this.geneSymbol = geneSymbol;
+		}
+
+		String getLocusLink() {
+			return locusLink;
+		}
+
+		void setLocusLink(String locusLink) {
+			this.locusLink = locusLink;
+		}
+
+		String getSwissProt() {
+			return swissProt;
+		}
+
+		void setSwissProt(String swissProt) {
+			this.swissProt = swissProt;
+		}
+
+		public void setRefSeq(String refSeq) {
+			this.refSeq = refSeq;
+		}
+
+		public String getRefSeq() {
+			return refSeq;
+		}
+
+		private String molecularFunction, cellularComponent, biologicalProcess;
+		private String uniGene, description, geneSymbol, locusLink, swissProt;
+		private String refSeq;
+	}
+	
+	static class MarkerAnnotation {
+		private Map<String, AnnotationFields> annotationFields;
+		private int count;
+		
+		MarkerAnnotation() {
+			count = 0;
+			annotationFields = new TreeMap<String, AnnotationFields>();
+		}
+		
+		void addMarker(String marker, AnnotationFields fields) {
+			annotationFields.put(marker, fields);
+		}
+		
+		AnnotationFields getFields(String marker) {
+			return annotationFields.get(marker);
+		}
+		
+		Set<String> getMarkerSet() {
+			return annotationFields.keySet();
+		}
+		
+		// TODO user this to control when to release this annotation
+		void addUsage() {
+			count++;
+		}
+
+		// TODO user this to control when to release this annotation
+		void removeUsage() {
+			count--;
+		}
+	}
 
 }

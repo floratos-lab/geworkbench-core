@@ -4,6 +4,7 @@ import org.apache.commons.collections15.MultiMap;
 import org.apache.commons.collections15.map.ListOrderedMap;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
+import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser.MarkerAnnotation;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -27,12 +28,7 @@ public class APSerializable implements Serializable {
 	ArrayList<String> chipTypes = new ArrayList<String>();
 	MultiMap<String, String> affyToGOID = null;
 	
-	Map<String, Map<String, String>> chipTypeToMoleculorFunctions = null;
-	Map<String, Map<String, String>> chipTypeToUnigenes = null;
-	Map<String, Map<String, String>> chipTypeToDescriptions = null;
-	Map<String, Map<String, String>> chipTypeToGeneSymbols = null;
-	Map<String, Map<String, String>> chipTypeToLocusLinks = null;
-	Map<String, Map<String, String>> chipTypeToSwissProts = null;
+	Map<String, MarkerAnnotation> chipTypeToAnnotation = null;
 
 
 	public APSerializable(
@@ -42,12 +38,7 @@ public class APSerializable implements Serializable {
 			Map<String, ListOrderedMap<String, Vector<String>>> geneNameMap,
 			ArrayList<String> chipTypes,
 			MultiMap<String, String> affyToGOID,
-			Map<String, Map<String, String>> chipTypeToMoleculorFunctions,
-			Map<String, Map<String, String>> chipTypeToUnigenes,
-			Map<String, Map<String, String>> chipTypeToDescriptions,
-			Map<String, Map<String, String>> chipTypeToGeneSymbols,
-			Map<String, Map<String, String>> chipTypeToLocusLinks,
-			Map<String, Map<String, String>> chipTypeToSwissProts) {
+			Map<String, MarkerAnnotation> chipTypeToAnnotation) {
 		this.currentDataSet = currentDataSet2;
 		this.datasetToChipTypes = datasetToChipTypes2;
 		this.chiptypeMap = chiptypeMap;
@@ -55,12 +46,6 @@ public class APSerializable implements Serializable {
 		this.chipTypes = chipTypes;
 		this.affyToGOID = affyToGOID;
 		
-		this.chipTypeToMoleculorFunctions = chipTypeToMoleculorFunctions;
-		this.chipTypeToUnigenes = chipTypeToUnigenes;
-		this.chipTypeToDescriptions = chipTypeToDescriptions;
-		this.chipTypeToGeneSymbols = chipTypeToGeneSymbols;
-		this.chipTypeToLocusLinks = chipTypeToLocusLinks;
-		this.chipTypeToSwissProts = chipTypeToSwissProts;
-
+		this.chipTypeToAnnotation = chipTypeToAnnotation;
 	}
 }
