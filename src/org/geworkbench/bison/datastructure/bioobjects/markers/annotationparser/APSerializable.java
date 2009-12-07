@@ -22,8 +22,6 @@ public class APSerializable implements Serializable {
 	DSDataSet<? extends DSBioObject> currentDataSet = null;
 	Map<DSDataSet<? extends DSBioObject>, String> datasetToChipTypes = new HashMap<DSDataSet<? extends DSBioObject>, String>();
 
-	HashMap<String, String> chiptypeMap = new HashMap<String, String>();
-
 	Map<String, ListOrderedMap<String, Vector<String>>> geneNameMap = new HashMap<String, ListOrderedMap<String, Vector<String>>>();
 	ArrayList<String> chipTypes = new ArrayList<String>();
 	MultiMap<String, String> affyToGOID = null;
@@ -33,15 +31,13 @@ public class APSerializable implements Serializable {
 
 	public APSerializable(
 			DSDataSet<? extends DSBioObject> currentDataSet2,
-			Map<DSDataSet<? extends DSBioObject>, String> datasetToChipTypes2,
-			HashMap<String, String> chiptypeMap,
+			Map<DSDataSet<? extends DSBioObject>, String> datasetToChipTypes,
 			Map<String, ListOrderedMap<String, Vector<String>>> geneNameMap,
 			ArrayList<String> chipTypes,
 			MultiMap<String, String> affyToGOID,
 			Map<String, MarkerAnnotation> chipTypeToAnnotation) {
 		this.currentDataSet = currentDataSet2;
-		this.datasetToChipTypes = datasetToChipTypes2;
-		this.chiptypeMap = chiptypeMap;
+		this.datasetToChipTypes = datasetToChipTypes;
 		this.geneNameMap = geneNameMap;
 		this.chipTypes = chipTypes;
 		this.affyToGOID = affyToGOID;
