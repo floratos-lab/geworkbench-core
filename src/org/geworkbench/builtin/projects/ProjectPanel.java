@@ -2039,7 +2039,10 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		ProjectTreeNode parentNode = (ProjectTreeNode) node.getParent();
 
 		projectTreeModel.removeNodeFromParent(node);
-		// TODO clear out unused mark annotation from memory
+		
+		// clear out unused mark annotation from memory
+		AnnotationParser.cleanUpAnnotatioAfterUnload( ((DataSetNode)node).dataFile );
+		
 		if (parentNode.getChildCount() == 0
 				&& parentNode instanceof ProjectNode) {
 			setNodeSelection(parentNode);
