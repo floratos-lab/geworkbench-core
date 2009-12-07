@@ -7,11 +7,9 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -117,8 +115,6 @@ public class AnnotationParser implements Serializable {
 
 	private static Map<DSDataSet<? extends DSBioObject>, String> datasetToChipTypes = new HashMap<DSDataSet<? extends DSBioObject>, String>();
 
-	public static HashMap<String, String> chiptypeMap = new HashMap<String, String>();
-
 	public static Map<String, ListOrderedMap<String, Vector<String>>> geneNameMap = new HashMap<String, ListOrderedMap<String, Vector<String>>>();
 
 	private static ArrayList<String> chipTypes = new ArrayList<String>();
@@ -129,66 +125,29 @@ public class AnnotationParser implements Serializable {
 	public static APSerializable getSerializable() {
 		// FIXME 
 		return new APSerializable(currentDataSet, datasetToChipTypes,
-				chiptypeMap, geneNameMap, chipTypes, affyToGOID,
+				geneNameMap, chipTypes, affyToGOID,
 				chipTypeToAnnotation);
 	}
 
 	public static void setFromSerializable(APSerializable aps) {
 		currentDataSet = aps.currentDataSet;
 		datasetToChipTypes = aps.datasetToChipTypes;
-		chiptypeMap = aps.chiptypeMap;
 		geneNameMap = aps.geneNameMap;
 		chipTypes = aps.chipTypes;
 		affyToGOID = aps.affyToGOID;
 		chipTypeToAnnotation = aps.chipTypeToAnnotation;
 	}
 
-	final static String chiptyemapfilename = "chiptypeMap.txt";
-
-	private static String systempDir = System
-			.getProperty("temporary.files.directory");
-
-	public final static String tmpDir;
-
-	public static final String DEFAULT_CHIPTYPE = "HG_U95Av2";
-
-	public static final String TRANSCRIPTASSIGN = "Transcript Assignments";
-
-	public static final String PREF_ANNOTATIONS_MESSAGE = "annotationsMessage";
-
 	public static final String ANNOT_DIR = "annotDir";
-
-	static {
-		if (systempDir == null) {
-			systempDir = "temp" + File.separator + "GEAW";
-		}
-		tmpDir = systempDir + File.separator + "annotationParser/";
-		File dir = new File(tmpDir);
-		if (!dir.exists()) {
-			dir.mkdir();
-		}
-		BufferedReader br = new BufferedReader(new InputStreamReader(
-				AnnotationParser.class.getResourceAsStream(chiptyemapfilename)));
-		try {
-			String str = br.readLine();
-			while (str != null) {
-				String[] data = str.split(",");
-				chiptypeMap.put(data[0].trim(), data[1].trim());
-				chiptypeMap.put(data[1].trim(), data[0].trim());
-				chipTypes.add(data[1].trim());
-				str = br.readLine();
-			}
-			br.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	public static DSDataSet<? extends DSBioObject> getCurrentDataSet() {
 		return currentDataSet;
 	}
 
 	public static void setCurrentDataSet(DSDataSet<DSBioObject> currentDataSet) {
+		if(!(currentDataSet instanceof CSMicroarraySet)) {
+			log.warn("Unexpected DSDataSet type "+currentDataSet.getClass().getName()+" in AnnotationParser");
+		}
 		AnnotationParser.currentDataSet = currentDataSet;
 	}
 
@@ -204,14 +163,9 @@ public class AnnotationParser implements Serializable {
 		return datasetToChipTypes.get(dataset);
 	}
 
-	public static boolean setChipType(DSDataSet<? extends DSBioObject> dataset, String chiptype) {
+	public static void setChipType(DSDataSet<? extends DSBioObject> dataset, String chiptype) {
 		datasetToChipTypes.put(dataset, chiptype);
 		currentDataSet = dataset;
-		if (chiptypeMap.containsValue(chiptype)) {
-			loadAnnotationData(chiptype);
-			return true;
-		}
-		return false;
 	}
 
 	private static boolean setChipType(DSDataSet<? extends DSBioObject> dataset, String chiptype,
@@ -223,11 +177,6 @@ public class AnnotationParser implements Serializable {
 			d.setAnnotationFileName(annotationData.getAbsolutePath());
 		}
 		return loadAnnotationData(chiptype, annotationData);
-	}
-
-	private static boolean loadAnnotationData(String chipType) {
-		File datafile = new File(chipType + "_annot.csv");
-		return loadAnnotationData(chipType, datafile);
 	}
 
 	private static boolean loadAnnotationData(String chipType, File datafile) {
@@ -567,7 +516,9 @@ public class AnnotationParser implements Serializable {
 	
 	private static Map<String, MarkerAnnotation> chipTypeToAnnotation = new TreeMap<String, MarkerAnnotation>();
 	
-	static private class AnnotationFields {
+	static private class AnnotationFields implements Serializable {
+		private static final long serialVersionUID = -3571880185587329070L;
+		
 		String getMolecularFunction() {
 			return molecularFunction;
 		}
@@ -645,12 +596,12 @@ public class AnnotationParser implements Serializable {
 		private String refSeq;
 	}
 	
-	static class MarkerAnnotation {
+	static class MarkerAnnotation implements Serializable {
+		private static final long serialVersionUID = 1350873248604803043L;
+		
 		private Map<String, AnnotationFields> annotationFields;
-		private int count;
 		
 		MarkerAnnotation() {
-			count = 0;
 			annotationFields = new TreeMap<String, AnnotationFields>();
 		}
 		
@@ -665,16 +616,18 @@ public class AnnotationParser implements Serializable {
 		Set<String> getMarkerSet() {
 			return annotationFields.keySet();
 		}
-		
-		// TODO user this to control when to release this annotation
-		void addUsage() {
-			count++;
+	}
+	
+	public static void cleanUpAnnotatioAfterUnload(DSDataSet<DSBioObject> dataset) {
+		String annotationName = datasetToChipTypes.get(dataset);
+		datasetToChipTypes.remove(dataset);
+
+		for(DSDataSet<? extends DSBioObject> dset: datasetToChipTypes.keySet() ) {
+			if(datasetToChipTypes.get(dset).equals(annotationName)) return;
 		}
 
-		// TODO user this to control when to release this annotation
-		void removeUsage() {
-			count--;
-		}
+		// if not returned, then it is not used anymore, clean it up
+		chipTypeToAnnotation.put(annotationName, null);
 	}
 
 }
