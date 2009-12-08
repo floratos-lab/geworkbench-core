@@ -27,7 +27,6 @@ import java.io.*;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.Map.Entry;
-import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 
 /**
  * <p>Title: Sequence and Pattern Plugin</p>
@@ -61,20 +60,7 @@ public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMa
     protected int[] histogram = new int[1024];
     protected DSMicroarraySet<DSMicroarray> maSet = null;
 
-    /*
-      private ArrayList geneA = new ArrayList();
-      private ArrayList interactionType = new ArrayList();
-      private ArrayList interactionMIValue = new ArrayList();
-      private ArrayList geneB = new ArrayList();
-      private ArrayList uniqInteractionType = new ArrayList();
-
-      private Object[] filter;
-     */
-    private boolean bMI = false;
-
     private String adjName;
-
-    private String interactionText = "";
 
     private int adjSource = 0;
     static public int fromGeneNetworkPanelNotTakenCareOf = 1;
@@ -511,38 +497,6 @@ public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMa
     }
 
     boolean geneNames = false;
-    public void readGeneNameMappings(File file, DSMicroarraySet<DSMicroarray> maSet) {
-        BufferedReader br = null;
-        try {
-            br = new BufferedReader(new FileReader(file));
-            String line;
-            int ctr = 0;
-            while ((line = br.readLine()) != null) {
-                if (!line.startsWith(">")){
-                    if (ctr++ % 100 == 0) {
-                        System.out.println("reading mapping " + ctr++);
-                    }
-                    String[] arrLine2 = line.split("\t");
-                    String val0 = new String(arrLine2[0]);
-                    String val1 = val0;
-                    if (geneNames) {
-                        int i = 0;
-                        while (maSet.getMarkers().get(val1.trim()) == null){
-                            String chipType = AnnotationParser.getChipType(maSet);
-                            val1 = AnnotationParser.geneNameMap.get(chipType).get(val0.trim()).get(i++);
-                        }
-                    }
-                    Integer num = new Integer(maSet.getMarkers().get(val1.trim()).getSerial());
-                    keyMapping.put(num, val1);
-                }
-                else if (line.startsWith(">GENE_NAMES"))
-                    geneNames = true;
-            }
-            br.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public void readMappings(File file) {
 
@@ -818,67 +772,6 @@ public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMa
             }
         }
         return geneId;
-    }
-
-    public void readGeneNames(String name, DSMicroarraySet<DSMicroarray> microarraySet) {
-        maSet = microarraySet;
-        int markerNo = microarraySet.size();
-        BufferedReader br = null;
-        try {
-            readGeneNameMappings(new File(name), microarraySet);
-            br = new BufferedReader(new FileReader(name));
-            try {
-                String line = "";
-                while ((line = br.readLine()) != null) {
-                    if (line.length() > 0 && line.charAt(0) != '-' && !line.startsWith(">")) {
-                        StringTokenizer tr = new StringTokenizer(line, "\t");
-                        String geneAccess0 = new String(tr.nextToken());
-                        String geneAccess1 = geneAccess0;
-                        if (geneNames) {
-                            int i = 0;
-                            while (maSet.getMarkers().get(geneAccess1.trim()) == null){
-                                String chipType = AnnotationParser.getChipType(microarraySet);
-                                geneAccess1 = AnnotationParser.geneNameMap.get(chipType).get(geneAccess0.trim()).get(i++);
-                            }
-                        }
-                        int geneId1 = maSet.getMarkers().get(geneAccess1.trim()).getSerial();
-                        if (geneId1 > -1) {
-                            geneId1 = getMappedId(geneId1);
-                            if (geneId1 >= 0) {
-                                while (tr.hasMoreTokens()) {
-                                    String gene20 = new String(tr.nextToken());
-                                    String gene21 = gene20;
-                                    if (geneNames) {
-                                        int i = 0;
-                                        while (maSet.getMarkers().get(gene21.trim()) == null){
-                                            String chipType = AnnotationParser.getChipType(microarraySet);
-                                            gene21 = AnnotationParser.geneNameMap.get(chipType).get(gene20.trim()).get(i++);
-                                        }
-                                    }
-                                    int geneId2 = maSet.getMarkers().get(gene21.trim()).getSerial();
-                                    if (geneId2 > -1) {
-                                        float mi = Float.parseFloat(tr.nextToken());
-                                        geneId2 = getMappedId(geneId2);
-                                        if (geneId2 >= 0) {
-                                            if (geneId1 != geneId2) {
-                                                add(geneId1, geneId2, mi);
-                                                add(geneId2, geneId1, mi);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            } catch (NumberFormatException ex) {
-                System.out.println("Exception: " + ex);
-            } catch (IOException ex) {
-                System.out.println("Exception: " + ex);
-            }
-        } catch (FileNotFoundException ex3) {
-        }
-        resolveGeneCollision(maSet);
     }
 
     public void read(String name, DSMicroarraySet<DSMicroarray> microarraySet, JProgressBar bar) {
