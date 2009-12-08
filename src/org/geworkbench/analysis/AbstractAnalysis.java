@@ -27,6 +27,7 @@ import org.geworkbench.engine.config.PluginRegistry;
 import org.geworkbench.engine.management.ComponentClassLoader;
 import org.geworkbench.engine.management.ComponentResource;
 import org.geworkbench.engine.management.Script;
+import org.geworkbench.util.FilePathnameUtils;
 import org.ginkgo.labs.util.FileTools;
 
 /**
@@ -41,15 +42,18 @@ import org.ginkgo.labs.util.FileTools;
  * the saveParametersUnderName method). It also provides a default
  * implementation for the validateParameters method by calling the corresponding
  * method in the <code>AbstractSaveableParameterPanel</code>.
- * 
+ *
  * @author First Genetic Trust Inc.
  * @author keshav
  * @author yc2480
- * @version $Id: AbstractAnalysis.java,v 1.33 2009-09-24 16:22:55 jiz Exp $
+ * @author os2201
+ * @version $Id: AbstractAnalysis.java,v 1.33 2009/09/24 16:22:55 jiz Exp $
  */
 @SuppressWarnings("unchecked")
 public abstract class AbstractAnalysis implements Analysis, Serializable,
 		java.util.Observer {
+
+	private static final String ERR_TXT = FilePathnameUtils.getUserSettingDirectoryPath() + "err.txt";
 
 	private Log log = LogFactory.getLog(this.getClass());
 
@@ -114,7 +118,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	public static final int MRA_TYPE = 28;
 
 	public static final int SKYBASE_TYPE = 29;
-	
+
     public static final int PUDGE_TYPE = 30;
 	/**
 	 * Parameters will be saved as XML files in "savedParams" directory under
@@ -165,7 +169,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	public boolean stopAlgorithm;
 
 	/**
-	 * 
+	 *
 	 */
 	public AbstractAnalysis() {
 		parameterHash = new Hashtable<ParameterKey, Map<Serializable, Serializable>>();
@@ -235,7 +239,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	}
 
 	/**
-	 * 
+	 *
 	 * @return Return the name of last saved parameter set.
 	 */
 	public String getLastSavedParameterSetName() {
@@ -261,7 +265,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 
 	/**
 	 * Deletes a saved setting based on the saved parameter name.
-	 * 
+	 *
 	 * @param name -
 	 *            name of the saved parameter
 	 */
@@ -276,7 +280,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	 * Returns the names of the parameter sets that were saved through a call to
 	 * saveParameters(String filename). Names can be removed using
 	 * <code>removeNamedParameter()</code>
-	 * 
+	 *
 	 * @return Names of parameterSets as an array of Strings.
 	 */
 	public String[] getNamesOfStoredParameterSets() {
@@ -295,7 +299,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	/**
 	 * Similar to getNamedParameterSetPanel, but instead of return the panel, it
 	 * directly set (reuse) the current panel.
-	 * 
+	 *
 	 * @param name
 	 */
 	public void setNamedParameterSetPanel(String name) {
@@ -308,7 +312,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	/**
 	 * Returns the parameter values that were stored (in parameterHash in
 	 * memory) under the designated name.
-	 * 
+	 *
 	 * @param name
 	 * @return Return a Map<Serializable, Serializable>, which use parameter
 	 *         name as the key and parameter value as the value.
@@ -322,7 +326,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	/**
 	 * Returns the parameters panel populated with the parameter values that
 	 * where stored under the designated 'name'.
-	 * 
+	 *
 	 * @param name
 	 * @return
 	 */
@@ -347,7 +351,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	/**
 	 * Returns the parameters panel populated with the parameter values that
 	 * where stored under the designated 'name'.
-	 * 
+	 *
 	 * @param name
 	 * @return
 	 */
@@ -371,7 +375,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 
 	/**
 	 * Check if the inputed parameterSet already exist in memory or not.
-	 * 
+	 *
 	 * @param parameterSet
 	 * @return
 	 */
@@ -400,7 +404,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	 * Convenience method - returns a string which should be unique for each
 	 * subclass of <code>AbstractAnalysis</code>. This string is used as part
 	 * of the hash that is used to store/recover named parameter sets.
-	 * 
+	 *
 	 * @return String Unique "tagging" string for an Analysis type.
 	 */
 	private String getIndex() {
@@ -414,7 +418,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	 * Set the panel for this analysis to the specific component's 'panel'. This
 	 * method also set the tmpDir to the tmpDir under that parameter panel's
 	 * directory, and load all saved parameter files under that directory.
-	 * 
+	 *
 	 * @param panel
 	 */
 	public void setDefaultPanel(AbstractSaveableParameterPanel panel) {
@@ -428,7 +432,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	/**
 	 * Set the path to the parameter's temporary directory for the component. If
 	 * the directory does not exist, create it.
-	 * 
+	 *
 	 * @param aspp
 	 */
 	private void setParameterFilesPath(AbstractSaveableParameterPanel aspp) {
@@ -437,17 +441,10 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 					.getClassLoader();
 			ComponentResource componentResource = ccl.getComponentResource();
 
-			String userSettingDirectory =  System.getProperty("user.setting.directory");
-			if(userSettingDirectory!=null) {
-				userSettingDirectory = System.getProperty("user.home")
-						+ System.getProperty("file.separator")
-						+ userSettingDirectory
-						+ System.getProperty("file.separator")
-						+ componentResource.getName();
-			} else {
-				userSettingDirectory = componentResource.getDir();
-			}
-			
+			String userSettingDirectory = FilePathnameUtils.getUserSettingDirectoryPath();
+			userSettingDirectory = userSettingDirectory
+					+ componentResource.getName();
+
 			File parentDir = new File(userSettingDirectory, paramsDir);
 			tmpDir = parentDir.getPath() + File.separatorChar;
 			File pFile = new File(tmpDir);
@@ -460,7 +457,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.geworkbench.bison.model.analysis.Analysis#getParameterPanel()
 	 */
 	public ParameterPanel getParameterPanel() {
@@ -469,7 +466,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.geworkbench.bison.model.analysis.Analysis#validateParameters()
 	 */
 	public ParamValidationResults validateParameters() {
@@ -482,7 +479,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.geworkbench.bison.datastructure.properties.DSDescribable#addDescription(java.lang.String)
 	 */
 	public void addDescription(String desc) {
@@ -491,7 +488,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.geworkbench.bison.datastructure.properties.DSDescribable#getDescriptions()
 	 */
 	public String[] getDescriptions() {
@@ -500,7 +497,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.geworkbench.bison.datastructure.properties.DSDescribable#removeDescription(java.lang.String)
 	 */
 	public void removeDescription(String desc) {
@@ -509,7 +506,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.geworkbench.bison.datastructure.properties.DSIdentifiable#getID()
 	 */
 	public String getID() {
@@ -518,7 +515,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.geworkbench.bison.datastructure.properties.DSIdentifiable#setID(java.lang.String)
 	 */
 	public void setID(String id) {
@@ -526,7 +523,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public String getLabel() {
@@ -534,7 +531,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	}
 
 	/**
-	 * 
+	 *
 	 * @param name
 	 */
 	public void setLabel(String name) {
@@ -543,7 +540,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	public void update(java.util.Observable ob, Object o) {
@@ -555,7 +552,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 
 	/**
 	 * Return a code identifying the type of the analysis.
-	 * 
+	 *
 	 * @return
 	 */
 	public abstract int getAnalysisType();
@@ -566,7 +563,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	};
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public String createHistory() {
@@ -575,7 +572,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.geworkbench.bison.model.analysis.Analysis#getParameters()
 	 */
 	public Map<Serializable, Serializable> getParameters() {
@@ -584,7 +581,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.geworkbench.bison.model.analysis.Analysis#setParameters(java.util.Map)
 	 */
 	public void setParameters(Map<Serializable, Serializable> parameters) {
@@ -594,9 +591,9 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.geworkbench.bison.model.analysis.Analysis#saveParameters(java.lang.String)
-	 * 
+	 *
 	 * Current parameters will be saved in both memory and files under given
 	 * name.
 	 */
@@ -607,9 +604,9 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 		 * is the ParameterKey, and the value is the parameters.
 		 */
 		ParameterKey key = new ParameterKey(getIndex(), setName);
-		 
+
 	    parameterHash.put(key, aspp.getParameters());
-		 
+
 
 		writeParametersAsXml(setName);
 	}
@@ -631,7 +628,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 			 * Swap the loader to the loader that loads the actual panel, and
 			 * redirect the System.err printed by XMLEncoder when writing the
 			 * xml object.
-			 * 
+			 *
 			 * See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6329581.
 			 */
 			currentClassLoader = Thread.currentThread().getContextClassLoader();
@@ -641,7 +638,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 			orgErrStream = System.err;
 
 			PrintStream fileErrStream = new PrintStream(new FileOutputStream(
-					"err.txt", true));
+					ERR_TXT, true));
 			System.setErr(fileErrStream);
 			ParameterKey key = new ParameterKey(getIndex(), name);
 			Map<Serializable, Serializable> pMap = aspp.getParameters();
@@ -661,9 +658,9 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.geworkbench.bison.model.analysis.Analysis#deleteParameters(java.lang.String)
-	 * 
+	 *
 	 * We generate the filename from the set's name, and delete the file
 	 */
 	public void deleteParameters(String name) {
@@ -674,7 +671,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.geworkbench.bison.model.analysis.Analysis#refreshGUI()
 	 */
 	public void refreshGUI() {
