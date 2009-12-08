@@ -12,13 +12,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -30,7 +28,6 @@ import javax.swing.JOptionPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
-import org.apache.commons.collections15.map.ListOrderedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
@@ -112,23 +109,18 @@ public class AnnotationParser implements Serializable {
 	// FIELDS
 	private static DSDataSet<? extends DSBioObject> currentDataSet = null;
 	private static Map<DSDataSet<? extends DSBioObject>, String> datasetToChipTypes = new HashMap<DSDataSet<? extends DSBioObject>, String>();
-	public static Map<String, ListOrderedMap<String, Vector<String>>> geneNameMap = new HashMap<String, ListOrderedMap<String, Vector<String>>>();
-	private static ArrayList<String> chipTypes = new ArrayList<String>();
 	private static Map<String, MarkerAnnotation> chipTypeToAnnotation = new TreeMap<String, MarkerAnnotation>();
 	// END FIELDS
 
 	/* The reason that we need APSerializable is that the status fields are designed as static. */
 	public static APSerializable getSerializable() {
 		return new APSerializable(currentDataSet, datasetToChipTypes,
-				geneNameMap, chipTypes,
 				chipTypeToAnnotation);
 	}
 
 	public static void setFromSerializable(APSerializable aps) {
 		currentDataSet = aps.currentDataSet;
 		datasetToChipTypes = aps.datasetToChipTypes;
-		geneNameMap = aps.geneNameMap;
-		chipTypes = aps.chipTypes;
 		chipTypeToAnnotation = aps.chipTypeToAnnotation;
 	}
 
@@ -232,8 +224,6 @@ public class AnnotationParser implements Serializable {
 
 				chipTypeToAnnotation.put(chipType, markerAnnotation);
 
-				populateGeneNameMap(chipType);
-				
 				return true;
 			} catch (Exception e) {
 				log.error("", e);
@@ -249,31 +239,6 @@ public class AnnotationParser implements Serializable {
 			}
 		} else {
 			return false;
-		}
-	}
-
-	private static void populateGeneNameMap(String chipType) {
-		if (chipType != null) {
-			for (String affyid : chipTypeToAnnotation.get(chipType).getMarkerSet()) {
-				if (affyid != null) {
-					String geneName = getGeneName(affyid.trim());
-					if (geneName != null) {
-						if (geneNameMap.get(chipType) == null) {
-							geneNameMap
-									.put(
-											chipType,
-											new ListOrderedMap<String, Vector<String>>());
-						}
-						Vector<String> ids = geneNameMap.get(chipType).get(
-								geneName.trim());
-						if (ids == null) {
-							ids = new Vector<String>();
-						}
-						ids.add(affyid.trim());
-						geneNameMap.get(chipType).put(geneName.trim(), ids);
-					}
-				}
-			}
 		}
 	}
 
@@ -391,7 +356,6 @@ public class AnnotationParser implements Serializable {
 		File userFile = selectUserDefinedAnnotation(dataset);
 		if (userFile != null) {
 			chip = userFile.getName();
-			chipTypes.add(chip);
 			setChipType(dataset, chip, userFile);
 		}
 		return chip;
