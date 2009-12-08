@@ -1,16 +1,15 @@
 package org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser;
 
-import org.apache.commons.collections15.MultiMap;
-import org.apache.commons.collections15.map.ListOrderedMap;
-import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
-import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser.MarkerAnnotation;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
+
+import org.apache.commons.collections15.map.ListOrderedMap;
+import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
+import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser.MarkerAnnotation;
 
 /**
  * @author John Watkinson
@@ -24,7 +23,6 @@ public class APSerializable implements Serializable {
 
 	Map<String, ListOrderedMap<String, Vector<String>>> geneNameMap = new HashMap<String, ListOrderedMap<String, Vector<String>>>();
 	ArrayList<String> chipTypes = new ArrayList<String>();
-	MultiMap<String, String> affyToGOID = null;
 	
 	Map<String, MarkerAnnotation> chipTypeToAnnotation = null;
 
@@ -34,13 +32,11 @@ public class APSerializable implements Serializable {
 			Map<DSDataSet<? extends DSBioObject>, String> datasetToChipTypes,
 			Map<String, ListOrderedMap<String, Vector<String>>> geneNameMap,
 			ArrayList<String> chipTypes,
-			MultiMap<String, String> affyToGOID,
 			Map<String, MarkerAnnotation> chipTypeToAnnotation) {
 		this.currentDataSet = currentDataSet2;
 		this.datasetToChipTypes = datasetToChipTypes;
 		this.geneNameMap = geneNameMap;
 		this.chipTypes = chipTypes;
-		this.affyToGOID = affyToGOID;
 		
 		this.chipTypeToAnnotation = chipTypeToAnnotation;
 	}
