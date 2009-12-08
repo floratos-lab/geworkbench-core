@@ -35,7 +35,7 @@ public class FilePathnameUtils {
 	private static final String DEFAULT_TEMP_FILE_DIR = "temp" + File.separator
 			+ "GEAW";
 
-	// file relateted properties
+	// file related properties
 	private static final String USER_SETTING_DIR = System
 					.getProperty("user.setting.directory");
 	private static final String TEMP_FILE_DIR = System.getProperties().getProperty(
