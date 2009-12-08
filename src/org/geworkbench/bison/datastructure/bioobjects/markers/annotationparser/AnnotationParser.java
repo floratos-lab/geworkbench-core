@@ -30,7 +30,6 @@ import javax.swing.JOptionPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
-import org.apache.commons.collections15.MultiMap;
 import org.apache.commons.collections15.map.ListOrderedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -112,20 +111,16 @@ public class AnnotationParser implements Serializable {
 	// TODO all the DSDataSets handled in this class should be DSMicroarraySet
 	// FIELDS
 	private static DSDataSet<? extends DSBioObject> currentDataSet = null;
-
 	private static Map<DSDataSet<? extends DSBioObject>, String> datasetToChipTypes = new HashMap<DSDataSet<? extends DSBioObject>, String>();
-
 	public static Map<String, ListOrderedMap<String, Vector<String>>> geneNameMap = new HashMap<String, ListOrderedMap<String, Vector<String>>>();
-
 	private static ArrayList<String> chipTypes = new ArrayList<String>();
-
-	static MultiMap<String, String> affyToGOID = null;
+	private static Map<String, MarkerAnnotation> chipTypeToAnnotation = new TreeMap<String, MarkerAnnotation>();
 	// END FIELDS
 
+	/* The reason that we need APSerializable is that the status fields are designed as static. */
 	public static APSerializable getSerializable() {
-		// FIXME 
 		return new APSerializable(currentDataSet, datasetToChipTypes,
-				geneNameMap, chipTypes, affyToGOID,
+				geneNameMap, chipTypes,
 				chipTypeToAnnotation);
 	}
 
@@ -134,11 +129,10 @@ public class AnnotationParser implements Serializable {
 		datasetToChipTypes = aps.datasetToChipTypes;
 		geneNameMap = aps.geneNameMap;
 		chipTypes = aps.chipTypes;
-		affyToGOID = aps.affyToGOID;
 		chipTypeToAnnotation = aps.chipTypeToAnnotation;
 	}
 
-	public static final String ANNOT_DIR = "annotDir";
+	private static final String ANNOT_DIR = "annotDir";
 
 	public static DSDataSet<? extends DSBioObject> getCurrentDataSet() {
 		return currentDataSet;
@@ -513,8 +507,6 @@ public class AnnotationParser implements Serializable {
 			return null;
 		}
 	}
-	
-	private static Map<String, MarkerAnnotation> chipTypeToAnnotation = new TreeMap<String, MarkerAnnotation>();
 	
 	static private class AnnotationFields implements Serializable {
 		private static final long serialVersionUID = -3571880185587329070L;
