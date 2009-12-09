@@ -4,6 +4,8 @@ import java.awt.*;
 import java.io.*;
 import java.util.List;
 
+import org.geworkbench.util.FilePathnameUtils;
+
 /**
  * @author John Watkinson
  */
@@ -14,8 +16,6 @@ public class PreferencesManager {
     private static final String GLOBAL_PREFERENCES = "__global";
 
     private static final String PREFERENCES_EXTENSION = ".prefs";
-
-    private static final String TEMP_DIR = "temporary.files.directory";
 
     private static PreferencesManager instance;
 
@@ -31,8 +31,8 @@ public class PreferencesManager {
     private File prefDir;
 
     private PreferencesManager() {
-        String tempDir = System.getProperty(TEMP_DIR);
-        prefDir = new File(tempDir, PREF_DIR);
+        String tempDir = FilePathnameUtils.getTemporaryFilesDirectoryPath() + PREF_DIR;
+        prefDir = new File(tempDir);
         if (!prefDir.exists()) {
             prefDir.mkdirs();
         }
@@ -131,7 +131,9 @@ public class PreferencesManager {
     }
 
     public static void main(String[] args) {
-        System.setProperty(TEMP_DIR, ".");
+    	// setProperty commented out as
+    	//temporary files directory is managed by FilePathnameUtils class now
+        //System.setProperty(TEMP_DIR, ".");
         TextField field1 = new TextField("Field 1");
         field1.setValue("default");
         DoubleField field2 = new DoubleField("Field 2");
