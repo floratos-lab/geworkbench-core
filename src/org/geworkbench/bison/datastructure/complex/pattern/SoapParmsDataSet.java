@@ -3,6 +3,7 @@ package org.geworkbench.bison.datastructure.complex.pattern;
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.util.RandomNumberGenerator;
+import org.geworkbench.util.FilePathnameUtils;
 import org.geworkbench.util.patterns.PatternDB;
 //import polgara.soapPD_wsdl.Parameters;
 
@@ -52,14 +53,8 @@ public class SoapParmsDataSet extends CSAncillaryDataSet {
         setID(idString);
         setLabel(name);
          try {
-                    String tempFolder = System.getProperties().getProperty(
-                            "temporary.files.directory");
-                    if (tempFolder == null) {
-                        tempFolder = ".";
-
-                    }
-                     String outputFile = tempFolder    +
-                                        "/";
+                    String tempFolder = FilePathnameUtils.getTemporaryFilesDirectoryPath();
+                     String outputFile = tempFolder;
                      if(parent.getFile().exists()){
                         outputFile+= parent.getFile().getName() + idString +  ".pat";
                      }
