@@ -241,7 +241,7 @@ public class LoadData extends JDialog {
 		experimentInfoArea.setLineWrap(true);
 		experimentInfoArea.setWrapStyleWord(true);
 		gridLayout2.setColumns(1);
-		this.setResizable(false);
+		this.setResizable(true);
 		jRadioButton7.setText("caARRAY");
 		lowerPanel = new JPanel();
 		lowerPanel.setLayout(new BoxLayout(lowerPanel, BoxLayout.Y_AXIS));
