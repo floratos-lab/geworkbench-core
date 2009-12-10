@@ -46,6 +46,7 @@ import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.events.CaArrayQueryEvent;
 import org.geworkbench.events.CaArrayQueryResultEvent;
 import org.geworkbench.events.CaArrayRequestEvent;
+import org.geworkbench.util.FilePathnameUtils;
 
 /**
  *  Popup to select a file (local or remote) to open.
@@ -733,9 +734,9 @@ public class LoadData extends JDialog {
 	}
 
 	static public String getLastDataDirectory() {
-		String dir = System.getProperty("data.files.dir");
+		String dir = FilePathnameUtils.getDataFilesDirPath();
 		// This is where we store user data information
-		String filename = System.getProperty("userSettings");
+		String filename = FilePathnameUtils.getUserSettingsFilePath();
 		try {
 			File file = new File(filename);
 			if (file.exists()) {
@@ -748,7 +749,7 @@ public class LoadData extends JDialog {
 			ex.printStackTrace();
 		}
 		if (dir.equals(".")) {
-			dir = System.getProperty("user.dir");
+			dir = FilePathnameUtils.getDataFilesDirPath();
 		}
 		return dir;
 	}
@@ -756,7 +757,7 @@ public class LoadData extends JDialog {
 	static public String getLastDataFormat() {
 		String format = "";
 		// This is where we store user data information
-		String filename = System.getProperty("userSettings");
+		String filename = FilePathnameUtils.getUserSettingsFilePath(); 
 		try {
 			File file = new File(filename);
 			if (file.exists()) {
@@ -772,8 +773,8 @@ public class LoadData extends JDialog {
 
 	static public void setLastDataInfo(String dir, String format) {
 		try { // save current settings.
-			BufferedWriter br = new BufferedWriter(new FileWriter(System
-					.getProperty("userSettings")));
+			BufferedWriter br = new BufferedWriter(new FileWriter(
+					FilePathnameUtils.getUserSettingsFilePath()));
 			br.write(format);
 			br.write(dir);
 			br.close();
