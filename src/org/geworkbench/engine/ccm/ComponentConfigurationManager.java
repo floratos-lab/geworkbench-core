@@ -35,6 +35,7 @@ import org.geworkbench.engine.config.rules.PluginRuleCCM;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.engine.management.ComponentResource;
 import org.geworkbench.engine.management.TypeMap;
+import org.geworkbench.util.FilePathnameUtils;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -60,7 +61,7 @@ public class ComponentConfigurationManager {
 	private ArrayList<String> allComponentFolders = new ArrayList<String>();
 	private Map<String, List<String>> foldersToCcmFiles = new HashMap<String, List<String>>();
 
-	private static String propertiesDirectory = null;
+	private static String propertiesDirectory = FilePathnameUtils.getUserSettingDirectoryPath();
 	
 	private String componentsDirectory = UILauncher.getComponentsDirectory();
 	
@@ -88,16 +89,7 @@ public class ComponentConfigurationManager {
 		files = dir.list();
 
 		digester = createComponentDigester();
-		
-		String userSettingDirectory =  System.getProperty("user.setting.directory");
-		if(userSettingDirectory!=null) {
-			propertiesDirectory = userSettingDirectory = System.getProperty("user.home")
-					+ FILE_DEL
-					+ userSettingDirectory;
-		} else {
-			propertiesDirectory = componentsDirectory;
-		}
-
+			
 	}
 
 	/**
