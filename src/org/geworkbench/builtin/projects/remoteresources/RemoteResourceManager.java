@@ -10,6 +10,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import org.geworkbench.util.FilePathnameUtils;
+
 /**
  * Remote resource manager.
  * 
@@ -24,10 +26,7 @@ public class RemoteResourceManager {
 
 	public RemoteResourceManager() {
 		existedResources = new ArrayList<RemoteResource>();
-		String propertyfilename = System.getProperty("remotepropertyfile");
-		propertyfilename = System.getProperty("temporary.files.directory")
-				+ File.separator + DEFAULTRESOURCEFILE;
-		filename = new File(propertyfilename).getAbsolutePath();
+		filename = FilePathnameUtils.getTemporaryFilesDirectoryPath() + DEFAULTRESOURCEFILE;
 		if (filename != null && new File(filename).canRead()) {
 			init(new File(filename));
 
