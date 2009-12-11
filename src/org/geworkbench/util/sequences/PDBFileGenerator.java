@@ -5,6 +5,8 @@ import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.FileWriter;
 
+import org.geworkbench.util.FilePathnameUtils;
+
 /**
  * Created by IntelliJ IDEA.
  * User: xiaoqing
@@ -15,17 +17,11 @@ import java.io.FileWriter;
 public class PDBFileGenerator {
 
     public static final String NEW_LINE = System.getProperty("line.separator");
-    public static String tempFolder = System.getProperties().getProperty(
-                "temporary.files.directory");
     public static File generatePDBFileFromSwissModel(File swissmodelFile) {
 
-        tempFolder = System.getProperties().getProperty(
-                "temporary.files.directory");
-         if (tempFolder == null) {
-                tempFolder = ".";
-            }
+        String tempFolder = FilePathnameUtils.getTemporaryFilesDirectoryPath();
         if (swissmodelFile.exists() && swissmodelFile.length() > 0) {
-            File pdbFile = new File(tempFolder, swissmodelFile.getName() + ".pdb");
+            File pdbFile = new File(tempFolder + swissmodelFile.getName() + ".pdb");
             try {
                 FileReader fr = new FileReader(swissmodelFile);
                 BufferedReader br = new BufferedReader(fr);
