@@ -1,12 +1,62 @@
 package org.geworkbench.engine.skin;
 
+import java.awt.AWTEvent;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
+
+import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
 import net.eleritec.docking.DockableAdapter;
 import net.eleritec.docking.DockingManager;
 import net.eleritec.docking.DockingPort;
 import net.eleritec.docking.defaults.ComponentProviderAdapter;
 import net.eleritec.docking.defaults.DefaultDockingPort;
+
 import org.apache.commons.collections15.map.ReferenceMap;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
@@ -19,16 +69,8 @@ import org.geworkbench.engine.config.events.EventSource;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.events.ComponentDockingEvent;
 import org.geworkbench.events.listeners.ComponentDockingListener;
+import org.geworkbench.util.FilePathnameUtils;
 import org.geworkbench.util.JAutoList;
-
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
-import java.util.*;
-import java.util.Map.Entry;
 
 /**
  * <p>Title: Bioworks</p>
@@ -78,7 +120,6 @@ public class Skin extends GUIFramework {
     private DSDataSet currentDataSet;
     private boolean tabSwappingMode = false;
     public static final String APP_SIZE_FILE = "appCoords.txt";
-    public static final String TEMP_DIR_PROPERTY = "temporary.files.directory";
 
     public String getVisualLastSelected(DSDataSet dataSet) {
         return visualLastSelected.get(dataSet);
@@ -116,7 +157,7 @@ public class Skin extends GUIFramework {
             public void windowClosing(WindowEvent e) {
                 Dimension finalSize = getSize();
                 Point finalLocation = getLocation();
-                File f = new File(System.getProperty(TEMP_DIR_PROPERTY), APP_SIZE_FILE);
+                File f = new File(FilePathnameUtils.getTemporaryFilesDirectoryPath() + APP_SIZE_FILE);
                 try {
                     PrintWriter out = new PrintWriter(new FileWriter(f));
                     out.println("" + finalSize.width);
@@ -146,7 +187,7 @@ public class Skin extends GUIFramework {
         int guiHeight = 0;
         int guiWidth = 0;
         boolean foundSize = false;
-        File sizeFile = new File(System.getProperty(TEMP_DIR_PROPERTY), APP_SIZE_FILE);
+        File sizeFile = new File(FilePathnameUtils.getTemporaryFilesDirectoryPath() + APP_SIZE_FILE);
         if (sizeFile.exists()) {
             try {
                 BufferedReader in = new BufferedReader(new FileReader(sizeFile));
