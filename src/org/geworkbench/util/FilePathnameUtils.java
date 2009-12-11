@@ -37,12 +37,15 @@ public class FilePathnameUtils {
 			.getProperty("file.separator");
 
 	// Defaults if file related properties are not set
-	private static final String DEFAULT_USER_SETTING_DIR = ".geworkbench";
+		// directories
+	private static final String DEFAULT_USER_SETTING_DIR = ".geworkbench" + FILE_SEPARATOR;
 	private static final String DEFAULT_TEMP_FILE_DIR = "temp" + FILE_SEPARATOR
 			+ "GEAW";
+	private static final String DEFAULT_DATA_FILES_DIR = "dataFiles" + FILE_SEPARATOR;
+
+	// files
 	private static final String DEFAULT_HOUSEKEEPINGNORMALIZERSETTINGS_FILE = DEFAULT_TEMP_FILE_DIR
 			+ FILE_SEPARATOR + "housekeepingnormalizerSettings.config";
-	private static final String DEFAULT_DATA_FILES_DIR = "dataFiles";
 	private static final String DEFAULT_USERSETTINGS_FILE = DEFAULT_TEMP_FILE_DIR
 			+ FILE_SEPARATOR + "userSettings.config";
 
@@ -129,7 +132,7 @@ public class FilePathnameUtils {
 
 			// keep temporary files directory under user setting directory
 			temporaryFilesDirectoryPath = getUserSettingDirectoryPath()
-					+ tempFolder + FILE_SEPARATOR;
+					+ tempFolder;
 		}
 
 		return temporaryFilesDirectoryPath;
