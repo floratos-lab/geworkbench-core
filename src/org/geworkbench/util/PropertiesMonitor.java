@@ -23,24 +23,14 @@ public class PropertiesMonitor {
     //the properties
     Properties properties = new Properties();
     public static final String SOAP_CONFIG_FILE = "soap.ini";
-    public static final String SOAP_CONFIG_PATH = System.getProperty("temporary.files.directory");
-    private String path = "";
+    public static final String SOAP_CONFIG_PATH = FilePathnameUtils.getTemporaryFilesDirectoryPath();
 
     private String absolutePath() {
-        if (path != "") {
-            return path;
-        } else {
-            return (SOAP_CONFIG_PATH + File.separator + SOAP_CONFIG_FILE);
-        }
+        return (SOAP_CONFIG_PATH + SOAP_CONFIG_FILE);
     }
 
     // Constructor reads the initialization file
     private PropertiesMonitor() {
-        readProperties();
-    }
-
-    public PropertiesMonitor(String file) {
-        path = file;
         readProperties();
     }
 
