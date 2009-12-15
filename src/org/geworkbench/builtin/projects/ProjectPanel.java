@@ -1478,7 +1478,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				return;
 			}
 		}
-		doExMergeSets(sets);
+		doMergeSets(sets);
 	}
 	/**
 	 * Check for markers in DSMicroarraySets, if markers are all the same,
@@ -1503,113 +1503,13 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 		return false;
 	}
-	
-	//This should be moved to a util package.
-	public CSExprMicroarraySet maSets2ExprSet(DSMicroarraySet[] maSets) {
-		CSExprMicroarraySet maSet = new CSExprMicroarraySet();
-		if (!maSet.initialized) {
-			// FIXME: the size in following line probably need to be
-			// consolidated from multiple microarrays
-			int markerNo = 0;
-			int arraySize = 0;
-			for (int i = 0; i < maSets.length; i++) {
-				int newSet = maSets[0].getMarkers().size();
-				if (newSet > markerNo)
-					markerNo = newSet;
-				arraySize += maSets[i].size();
-				((DSMicroarraySet<DSMicroarray>) maSet).getMarkers().addAll(
-						maSets[i].getMarkers());
-			}
 
-			// if (uniqMarkers != markerNo)
-			// maSet.initialize(arraySize, uniqMarkers);
-			maSet.getMarkerVector().clear();
-			// maSet.setCompatibilityLabel(bioAssayImpl.getIdentifier());
-			for (int i = 0; i < maSets.length; i++) {
-				for (int z = 0; z < maSets[i].getMarkers().size(); z++) {
-					String markerName = ((CSExpressionMarker) maSets[i]
-							.getMarkers().get(z)).getLabel();
-					if (markerName != null) {
-						CSExpressionMarker marker = new CSExpressionMarker(z);
-						marker.setGeneName(markerName);
-						marker.setDisPlayType(DSGeneMarker.AFFY_TYPE);
-						marker.setLabel(markerName);
-						marker.setDescription(markerName);
-						maSet.getMarkerVector().add(marker);
-						// Why annotation information are always null? xz.
-						// maSet.getMarkers().get(z).setDescription(
-						// markersArray[z].getAnnotation().getLsid());
-					} else {
-						log
-								.error("LogicalProbes have some null values. The location is "
-										+ z);
-					}
-				}
-			}
-		}
-		// FIXME: what if chip type is different from maSets[0], maSets[1],
-		// maSets[2]...?
-		String chipType = AnnotationParser.getChipType(maSets[0]);
-		maSet.setCompatibilityLabel(chipType);
-		AnnotationParser.setChipType(maSet, chipType);
-		String desc = "Merged array set ";
-
-		// loop through sets
-		for (int i = 0; i < maSets.length; i++) { 
-			int uniqmarkerNo = maSet.getMarkerVector().size();
-			desc += maSets[i].getLabel() + " ";
-			// loop through arrays
-			for (int i2 = 0; i2 < maSets[i].size(); i2++) { 
-				String name = ((CSMicroarray) maSets[i].get(i2)).getLabel();
-				// TODO: check if the array already exist or not, if exist,
-				// reuse the array instead of creating a new one.
-				DSMicroarray microarray = maSet.get(name);
-				if (microarray == null){
-					microarray = new CSMicroarray(0, uniqmarkerNo, name, null,
-							null, true, DSMicroarraySet.geneExpType);
-				microarray.setLabel(name);
-				for (int j = 0; j < uniqmarkerNo; j++) {
-					microarray.getMarkerValue(j).setMissing(true);
-				}
-				}
-				// loop through markers
-				for (int j = 0; j < maSets[i].getMarkers().size(); j++) { 
-					DSGeneMarker oldmarker = (DSGeneMarker) maSets[i]
-							.getMarkers().get(j);
-					int newIndex = maSet.getMarkerVector().indexOf(oldmarker);
-					if (newIndex >= 0) {
-						((DSMutableMarkerValue) microarray
-								.getMarkerValue(newIndex)).setValue(maSets[i]
-								.getValue(j, i2));
-						((DSMutableMarkerValue) microarray
-								.getMarkerValue(newIndex)).setMissing(false);
-					}
-				}
-				if (maSet != null && microarray != null) {
-					maSet.add(microarray);
-				}
-			}
-		}
-
-		maSet.setLabel(desc);
-		maSet.addDescription(desc);
-		return maSet;
-	}
-
-	protected void doExMergeSets(DSMicroarraySet[] sets) {
-		CSExprMicroarraySet exMaSet = maSets2ExprSet(sets);
-		if (sets != null) {
-			// Add color context
-			addColorContext(exMaSet);
-
-			// Add the new dataset to the project tree.
-			addDataSetNode(exMaSet, true);
-		}
-		
-	}
-
-	
-	protected void doMergeSets(DSMicroarraySet[] sets) {
+	/**
+	 * Merger an array of MSMicroarraySets and create a new dataset node.
+	 *  
+	 * @param sets
+	 */
+	public void doMergeSets(DSMicroarraySet[] sets) {
 		if (!isSameMarkerSets(sets)) {
 			JOptionPane
 					.showMessageDialog(
