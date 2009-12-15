@@ -2,12 +2,8 @@ package org.geworkbench.builtin.projects;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.JFileChooser;
@@ -18,7 +14,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.APSerializable;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
-import org.geworkbench.builtin.projects.ProjectPanel.WorkspaceFileFilter;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.properties.PropertiesManager;
 import org.geworkbench.util.ProgressBar;
@@ -66,10 +61,10 @@ public class WorkspaceHandler {
 
 		JFileChooser fc = new JFileChooser(workspaceDir);
 		String wsFilename = null;
-		FileFilter filter = enclosingProjectPanel.new WorkspaceFileFilter();
+		WorkspaceFileFilter filter = new WorkspaceFileFilter();
 		fc.setFileFilter(filter);
 		fc.setDialogTitle("Save Current Workspace");
-		String extension = ((WorkspaceFileFilter) filter).getExtension();
+		String extension = filter.getExtension();
 		int choice = fc.showSaveDialog(enclosingProjectPanel.jProjectPanel);
 		if (choice == JFileChooser.APPROVE_OPTION) {
 			wsFilename = fc.getSelectedFile().getAbsolutePath();
@@ -139,10 +134,10 @@ public class WorkspaceHandler {
 		// opened.
 		JFileChooser fc = new JFileChooser(workspaceDir);
 		String wsFilename = null;
-		FileFilter filter = enclosingProjectPanel.new WorkspaceFileFilter();
+		WorkspaceFileFilter filter = new WorkspaceFileFilter();
 		fc.setFileFilter(filter);
 		fc.setDialogTitle("Open Workspace");
-		String extension = ((WorkspaceFileFilter) filter).getExtension();
+		String extension = filter.getExtension();
 		int choice = fc.showOpenDialog(enclosingProjectPanel.jProjectPanel);
 		if (choice == JFileChooser.APPROVE_OPTION) {
 			wsFilename = fc.getSelectedFile().getAbsolutePath();
@@ -308,4 +303,27 @@ public class WorkspaceHandler {
 		}
 
 	}
+
+	private static class WorkspaceFileFilter extends FileFilter {
+		private static final String fileExt = ".wsp";
+
+		public String getExtension() {
+			return fileExt;
+		}
+
+		public String getDescription() {
+			return "Workspace Files";
+		}
+
+		public boolean accept(File f) {
+			boolean returnVal = false;
+			if (f.isDirectory() || f.getName().endsWith(fileExt)) {
+				return true;
+			}
+
+			return returnVal;
+		}
+
+	}
+
 }
