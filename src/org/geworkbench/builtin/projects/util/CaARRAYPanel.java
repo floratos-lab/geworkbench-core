@@ -301,9 +301,6 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 		jScrollPane1.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		caArrayDetailPanel.add(jPanel10, BorderLayout.CENTER);
 		caArrayDetailPanel.add(jPanel13, BorderLayout.SOUTH);
-		jPanel6.setMaximumSize(new Dimension(700, 449));
-		jPanel6.setMinimumSize(new Dimension(675, 339));
-		jPanel6.setPreferredSize(new Dimension(700, 449));
 		jPanel6.add(caArrayTreePanel);
 		caArrayTreePanel.add(jScrollPane1, BorderLayout.CENTER);
 
@@ -334,6 +331,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 		jPanel6.setMaximumSize(new Dimension(500, 300));
 		jPanel6.setMinimumSize(new Dimension(500, 285));
 		jPanel6.setPreferredSize(new Dimension(500, 285));
+		this.setLayout(new BorderLayout());
 		this.add(jPanel6, BorderLayout.CENTER);
 	}
 
