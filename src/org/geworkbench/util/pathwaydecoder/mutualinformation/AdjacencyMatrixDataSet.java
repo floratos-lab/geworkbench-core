@@ -64,12 +64,17 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet implements DSAnci
             DSMicroarraySet mset = matrix.getMicroarraySet();
             DSItemList<DSGeneMarker> markers = mset.getMarkers();
             HashMap<Integer, HashMap<Integer, Float>> geneRows = matrix.getGeneRows();
+            // if entry key is less than 0, for CNKB component, it means the gene is in currently selected microarray.
             for (Map.Entry<Integer, HashMap<Integer, Float>> entry : geneRows.entrySet()) {
-                String geneName = markers.get(entry.getKey()).getLabel();
+                String geneName = "unknown";
+                if (entry.getKey() >= 0)
+                	geneName = markers.get(entry.getKey()).getLabel();
                 writer.write(geneName + "\t");
                 HashMap<Integer, Float> destRows = entry.getValue();
                 for (Map.Entry<Integer, Float> entry2 : destRows.entrySet()) {
-                    String geneName2 = markers.get(entry2.getKey()).getLabel();
+                    String geneName2 = "unknown";
+                    if (entry2.getKey() >= 0)
+                    	geneName2 = markers.get(entry2.getKey()).getLabel();
                     writer.write(geneName2 + "\t" + entry2.getValue() + "\t");
                 }
                 writer.write("\n");

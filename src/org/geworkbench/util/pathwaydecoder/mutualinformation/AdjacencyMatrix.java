@@ -373,15 +373,16 @@ public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMa
      * @param edge    float
      */
     public void add(int geneId1, int geneId2, float edge) {
-        geneId1 = getMappedId(geneId1);
-        geneId2 = getMappedId(geneId2);
-        if ((geneId1 >= 0) && (geneId2 >= 0)) {
-            int bin = Math.min(1023, (int) (edge * edgeScale));
-            if (bin >= 0) {
+           geneId1 = getMappedId(geneId1);
+           geneId2 = getMappedId(geneId2);
+           if ((geneId1 >= 0) && (geneId2 >= 0)) {
+              int bin = Math.min(1023, (int) (edge * edgeScale));
+              if (bin >= 0) {
                 histogram[bin]++;
-            }
+              }
             // adding the neighbor and edge for geneId1
             // gene1 -> (gene2, edge)
+            }
             HashMap row = (HashMap) geneRows.get(new Integer(geneId1));
             if (row == null) {
                 row = new HashMap();
@@ -396,7 +397,7 @@ public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMa
                 geneRows.put(new Integer(geneId2), row);
             }
             row.put(new Integer(geneId1), new Float(edge));
-        }
+         
     }
 
     public void addDirectional(int geneId1, int geneId2, float edge) {
@@ -424,9 +425,9 @@ public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMa
      * @param interaction String
      */
     public void addDirectional(int geneId1, int geneId2, String interaction) {
-        geneId1 = getMappedId(geneId1);
-        geneId2 = getMappedId(geneId2);
-        if ((geneId1 >= 0) && (geneId2 >= 0)) {
+           geneId1 = getMappedId(geneId1);
+           geneId2 = getMappedId(geneId2);
+       
             /*
                          int bin = Math.min(1023, (int) (edge * edgeScale));
                          if (bin >= 0) {
@@ -439,7 +440,7 @@ public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMa
                 geneInteractionRows.put(new Integer(geneId1), row);
             }
             row.put(new Integer(geneId2), interaction);
-        }
+        
     }
 
     /**
