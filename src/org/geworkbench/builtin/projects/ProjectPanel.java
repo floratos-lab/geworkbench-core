@@ -56,29 +56,23 @@ import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
-import org.geworkbench.bison.datastructure.biocollections.sequences.CSSequenceSet;
 import org.geworkbench.bison.datastructure.biocollections.views.CSMicroarraySetView;
-import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.APSerializable;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
-import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSTTestResultSet;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
-import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMutableMarkerValue;
-import org.geworkbench.bison.datastructure.bioobjects.structure.CSProteinStructure;
 import org.geworkbench.bison.datastructure.bioobjects.structure.DSProteinStructure;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.datastructure.properties.DSExtendable;
 import org.geworkbench.bison.datastructure.properties.DSNamed;
-import org.geworkbench.bison.parsers.resources.MAGEResource2;
 import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.bison.util.colorcontext.ColorContext;
-import org.geworkbench.components.parsers.CaArrayLoader;
+import org.geworkbench.builtin.projects.SaveFileFilterFactory.CustomFileFilter;
+import org.geworkbench.builtin.projects.SaveFileFilterFactory.ImageFileFilter;
 import org.geworkbench.components.parsers.FileFormat;
 import org.geworkbench.components.parsers.InputFileFormatException;
 import org.geworkbench.components.parsers.microarray.DataSetFileFormat;
@@ -289,7 +283,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		jRenameMenuItem.setText("Rename");
 		jSaveMenuItem.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				jSaveMenuItem_actionPerformed(e);
+				saveNodeAsFile();
 			}
 		});
 
@@ -545,13 +539,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				.getSelectionSelected());
 	}
 
-	/**
-	 * jSaveMenuItem_actionPerformed
-	 */
-	public void jSaveMenuItem_actionPerformed(ActionEvent e) {
-		saveNodeAsFile();
-	}
-
 	public static ImageIcon getIconForType(Class<? extends DSNamed> type) {
 		ImageIcon icon = iconMap.get(type);
 		if (icon == null) {
@@ -566,43 +553,33 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		iconMap.put(type, icon);
 	}
 
-	void saveNodeAsFile() {
+	private void saveNodeAsFile() {
 		ProjectTreeNode ds = selection.getSelectedNode();
 		if (ds != null) {
 			if (ds instanceof ImageNode) {
 				Image currentImage = ((ImageNode) ds).image.getImage();
 				SaveImage si = new SaveImage(currentImage);
 				JFileChooser fc = new JFileChooser(".");
-				String imageFilename = null;
-				String filename = null, ext = null;
-				FileFilter bitmapFilter = new BitmapFileFilter();
-				FileFilter jpegFilter = new JPEGFileFilter();
-				FileFilter pngFilter = new PNGFileFilter();
-				FileFilter tiffFilter = new TIFFFileFilter();
-				fc.setFileFilter(tiffFilter);
-				fc.setFileFilter(pngFilter);
-				fc.setFileFilter(jpegFilter);
-				fc.setFileFilter(bitmapFilter);
+				fc.setFileFilter(SaveFileFilterFactory.createImageFileFilter());
 				int choice = fc.showSaveDialog(jProjectPanel);
 				if (choice == JFileChooser.APPROVE_OPTION) {
-					imageFilename = fc.getSelectedFile().getAbsolutePath();
-					filename = fc.getSelectedFile().getName();
+					String imageFilename = fc.getSelectedFile().getAbsolutePath();
+					String filename = fc.getSelectedFile().getName();
+					String ext = null;
 					int i = filename.lastIndexOf('.');
 					if (i > 0 && i < filename.length() - 1) {
 						ext = filename.substring(i + 1).toLowerCase();
 					} else {
-						ImageFileFilter selectedFilter = null;
 						FileFilter filter = fc.getFileFilter();
 						if (filter instanceof ImageFileFilter) {
-							selectedFilter = (ImageFileFilter) fc
-									.getFileFilter();
+							ImageFileFilter selectedFilter = (ImageFileFilter) filter;
 							ext = selectedFilter.getExtension();
 							log.info("File extension: " + ext);
 						}
 					}
-				}
-				if (imageFilename != null) {
-					si.save(imageFilename, ext);
+					if (imageFilename != null) {
+						si.save(imageFilename, ext);
+					}
 				}
 			} else if (ds instanceof DataSetSubNode) {
 				DataSetSubNode dataSetSubNode = (DataSetSubNode) ds;
@@ -610,14 +587,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 					CSTTestResultSet tTestResultSet = (CSTTestResultSet) dataSetSubNode._aDataSet;
 					tTestResultSet.saveDataToCSVFile();
 				} else
-					saveAsFile(); // TODO: this is an old method, we should
-				// have one which can save to files with
-				// extensions. (as in bug #1206)
+					saveAsFile();
 			} else
-				saveAsFile(); // TODO: this is an old method, we should have
-			// one which can save to files with extensions.
-			// (as in bug #1206)
-
+				saveAsFile();
 		}
 
 	}
@@ -678,7 +650,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 	}
 
-	boolean saveAsFile() {
+	private boolean saveAsFile() {
 		Object mSetSelected = projectTree.getSelectionPath()
 				.getLastPathComponent();
 		if (mSetSelected != null && mSetSelected instanceof DataSetNode) {
@@ -686,16 +658,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			File f = ds.getFile();
 			jFileChooser1 = new JFileChooser(f);
 			jFileChooser1.setSelectedFile(f);
-			CustomFileFilter filter = null;
-			if (ds instanceof CSMicroarraySet) {
-				filter = new ExpFileFilter();
-			} else if (ds instanceof CSProteinStructure) {
-				filter = new PDBFileFilter();
-			} else if (ds instanceof CSSequenceSet) {
-				filter = new SequenceFileFilter();
-			} else {
-				filter = new DefaultFileFilter();
-			}
+			CustomFileFilter filter = SaveFileFilterFactory.createFilter(ds);
 			jFileChooser1.setFileFilter(filter);
 
 			// Use the SAVE version of the dialog, test return for
@@ -1906,11 +1869,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 	}
 
-	protected void export_actionPerformed(ActionEvent e) {
-		// Save an image
-		saveNodeAsFile();
-	}
-
 	/**
 	 * Action listener handling user requests for the creation of new projects
 	 * in the workspace.
@@ -2438,121 +2396,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		return jProjectPanel;
 	}
 
-	class WorkspaceFileFilter extends FileFilter {
-		String fileExt;
-
-		WorkspaceFileFilter() {
-			fileExt = ".wsp";
-		}
-
-		public String getExtension() {
-			return fileExt;
-		}
-
-		public String getDescription() {
-			return "Workspace Files";
-		}
-
-		public boolean accept(File f) {
-			boolean returnVal = false;
-			if (f.isDirectory() || f.getName().endsWith(fileExt)) {
-				return true;
-			}
-
-			return returnVal;
-		}
-
-	}
-
-	public abstract class ImageFileFilter extends FileFilter {
-		public abstract String getExtension();
-	}
-
-	public class BitmapFileFilter extends ImageFileFilter {
-		public String getDescription() {
-			return "Bitmap Files";
-		}
-
-		public boolean accept(File f) {
-			String name = f.getName();
-			boolean imageFile = name.endsWith("bmp") || name.endsWith("BMP");
-			if (f.isDirectory() || imageFile) {
-				return true;
-			}
-
-			return false;
-		}
-
-		public String getExtension() {
-			return "bmp";
-		}
-
-	}
-
-	public class JPEGFileFilter extends ImageFileFilter {
-		public String getDescription() {
-			return "Joint Photographic Experts Group Files";
-		}
-
-		public boolean accept(File f) {
-			String name = f.getName();
-			boolean imageFile = name.endsWith("jpg") || name.endsWith("JPG");
-			if (f.isDirectory() || imageFile) {
-				return true;
-			}
-
-			return false;
-		}
-
-		public String getExtension() {
-			return "jpg";
-		}
-
-	}
-
-	public class PNGFileFilter extends ImageFileFilter {
-		public String getDescription() {
-			return "Portable Network Graphics Files";
-		}
-
-		public boolean accept(File f) {
-			String name = f.getName();
-			boolean imageFile = name.endsWith("png") || name.endsWith("PNG");
-			if (f.isDirectory() || imageFile) {
-				return true;
-			}
-
-			return false;
-		}
-
-		public String getExtension() {
-			return "png";
-		}
-
-	}
-
-	public class TIFFFileFilter extends ImageFileFilter {
-		public String getDescription() {
-			return "Tag(ged) Image File Format";
-		}
-
-		public boolean accept(File f) {
-			String name = f.getName();
-			boolean imageFile = name.endsWith("tif") || name.endsWith("TIF")
-					|| name.endsWith("tiff") || name.endsWith("TIFF");
-			if (f.isDirectory() || imageFile) {
-				return true;
-			}
-
-			return false;
-		}
-
-		public String getExtension() {
-			return "tif";
-		}
-
-	}
-
 	/**
 	 * <code>JComponent</code> types that constitute the
 	 * <code>ProjectPanel</code>
@@ -2764,7 +2607,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		listeners.put("File.Remove.Image", listener);
 		listener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				export_actionPerformed(e);
+				saveNodeAsFile();
 			}
 
 		};
@@ -2924,95 +2767,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	public ProjectNodePostCompletedEvent publishPostProcessingEvent(
 			ProjectNodePostCompletedEvent event) {
 		return event;
-	}
-
-	abstract class CustomFileFilter extends FileFilter {
-		abstract public String getExtension();
-	}
-
-	private class ExpFileFilter extends CustomFileFilter {
-		public String getDescription() {
-			return "Exp Files";
-		}
-
-		public boolean accept(File f) {
-			String name = f.getName();
-			boolean tabFile = name.endsWith("exp") || name.endsWith("EXP");
-			if (f.isDirectory() || tabFile) {
-				return true;
-			}
-
-			return false;
-		}
-
-		public String getExtension() {
-			return "exp";
-		}
-
-	}
-
-	private class PDBFileFilter extends CustomFileFilter {
-		public String getDescription() {
-			return "PDB File Format";
-		}
-
-		public boolean accept(File f) {
-			String name = f.getName();
-			boolean tabFile = name.endsWith("pdb") || name.endsWith("PDB");
-			if (f.isDirectory() || tabFile) {
-				return true;
-			}
-
-			return false;
-		}
-
-		public String getExtension() {
-			return "pdb";
-		}
-
-	}
-
-	private class DefaultFileFilter extends CustomFileFilter {
-		public String getDescription() {
-			return "Text File";
-		}
-
-		public boolean accept(File f) {
-			String name = f.getName();
-			boolean tabFile = name.endsWith("txt") || name.endsWith("TXT");
-			if (f.isDirectory() || tabFile) {
-				return true;
-			}
-
-			return false;
-		}
-
-		public String getExtension() {
-			return "txt";
-		}
-
-	}
-
-	private class SequenceFileFilter extends CustomFileFilter {
-		public String getDescription() {
-			return "Fasta File";
-		}
-
-		public boolean accept(File f) {
-			String name = f.getName();
-			boolean tabFile = name.endsWith("fa") || name.endsWith("FA")
-					|| name.endsWith("fasta") || name.endsWith("FASTA");
-			if (f.isDirectory() || tabFile) {
-				return true;
-			}
-
-			return false;
-		}
-
-		public String getExtension() {
-			return "fa";
-		}
-
 	}
 
 	@Publish
