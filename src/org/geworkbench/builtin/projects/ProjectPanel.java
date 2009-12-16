@@ -1450,21 +1450,19 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * @param sets
 	 * @return
 	 */
-	public boolean isSameMarkerSets(DSMicroarraySet[] sets) {
-		HashSet prevSet = new HashSet();
-		HashSet nextSet = new HashSet();
-		if (sets != null) {			
-			for (int i = 0; i < sets.length; i++) {
-				nextSet.addAll(sets[i].getMarkers());
-				if (prevSet.size()==0)
-					prevSet.addAll(nextSet);
-				else if (!prevSet.equals(nextSet)) {
-					return false;
-				}
-			}
-			return true;
+	private static boolean isSameMarkerSets(DSMicroarraySet[] sets) {
+		if(sets==null || sets.length<=1)return true;
+		
+		HashSet set1 = new HashSet();
+		set1.addAll(sets[0].getMarkers());
+
+		HashSet set2 = new HashSet();
+		for (int i = 1; i < sets.length; i++) {
+			set2.clear();
+			set2.addAll(sets[i].getMarkers());
+			if(!set1.equals(set2))return false;
 		}
-		return false;
+		return true; // all marker sets are identical
 	}
 
 	/**
