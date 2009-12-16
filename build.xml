@@ -87,6 +87,7 @@
 				<exclude name="example" />
 				<exclude name="tprofiler" />
 				<exclude name="associationdiscovery" />
+				<exclude name="pathwaydecoder" />
 			</dirset>
 		</subant>
 		<chmod file="./bin/matrixreduce/FitModelMac" perm="700"/>
