@@ -74,7 +74,6 @@ import org.geworkbench.bison.util.colorcontext.ColorContext;
 import org.geworkbench.builtin.projects.SaveFileFilterFactory.CustomFileFilter;
 import org.geworkbench.builtin.projects.SaveFileFilterFactory.ImageFileFilter;
 import org.geworkbench.components.parsers.FileFormat;
-import org.geworkbench.components.parsers.InputFileFormatException;
 import org.geworkbench.components.parsers.microarray.DataSetFileFormat;
 import org.geworkbench.engine.config.GUIFramework;
 import org.geworkbench.engine.config.MenuListener;
@@ -110,19 +109,8 @@ import org.geworkbench.util.Util;
 import org.ginkgo.labs.ws.GridEndpointReferenceType;
 
 /**
- * <p>
- * Title: import org.geworkbench.builtin.projects.DataSetNode; import
- * org.geworkbench.builtin.projects.DataSetSaveNode; import
- * org.geworkbench.builtin.projects.LoadData; import
- * org.geworkbench.builtin.projects.MicroarraySetNode; import
- * org.geworkbench.builtin.projects.ProjectNode; import
- * org.geworkbench.builtin.projects.ProjectSelection; import
- * org.geworkbench.builtin.projects.ProjectTreeNode; import
- * org.geworkbench.builtin.projects.SaveTree; import
- * org.geworkbench.builtin.projects.TreeNodeRenderer; Plug And Play
- * </p>
- * <p>
- * Description: Dynamic Proxy Implementation of enGenious
+ * 
+ * Description: Project Panel of geWorkbench is a key controlling element.
  * </p>
  * <p>
  * Copyright: Copyright (c) 2002
