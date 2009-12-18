@@ -80,15 +80,52 @@
 		</copy>
 		<!-- Compile components -->
 		<subant target="compile" genericantfile="build-component.xml">
-			<dirset dir="components" includes="*">
-				<exclude name="skylinecontour" />
-				<exclude name="goterms" />
-				<exclude name="gpmodule" />
-				<exclude name="example" />
-				<exclude name="tprofiler" />
-				<exclude name="associationdiscovery" />
-				<exclude name="pathwaydecoder" />
-				<exclude name="simulation" />
+			<dirset dir="components" >
+				<include name="alignment" />
+				<include name="analysis" />
+				<include name="annotations" />
+				<include name="anova" />
+				<include name="aracne-java" />
+				<include name="caarray" />
+				<include name="celprocessing" />
+				<include name="cgems" />
+				<include name="classification" />
+				<include name="colormosaic" />
+				<include name="cutenet" />
+				<include name="discovery" />
+				<include name="evidenceintegration" />
+				<include name="filtering" />
+				<include name="geneontology2" />
+				<include name="genspace" />
+				<include name="geworkbench-core" />
+				<include name="gpmodule_v3_0" />
+				<include name="hierarchicalclustering" />
+				<include name="interactions" />
+				<include name="jmol" />
+				<include name="markus" />
+				<include name="matrixreduce" />
+				<include name="medusa" />
+				<include name="microarrays" />
+				<include name="mindy" />
+				<include name="netboost" />
+				<include name="normalization" />
+				<include name="patterns" />
+				<include name="plots" />
+				<include name="poshistogram" />
+				<include name="promoter" />
+				<include name="pudge" />
+				<include name="selectors" />
+				<include name="sequenceretriever" />
+				<include name="sequences" />
+				<include name="skybase" />
+				<include name="skybaseview" />
+				<include name="skyline" />
+				<!-- include name="skylinecontour" / -->
+				<include name="skylineview" />
+				<include name="somclustering" />
+				<include name="versioninfo" />
+				<include name="viewers" />
+				<include name="welcome" />
 			</dirset>
 		</subant>
 		<chmod file="./bin/matrixreduce/FitModelMac" perm="700"/>
