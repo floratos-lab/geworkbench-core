@@ -18,6 +18,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.font.TextAttribute;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,6 +56,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
 import org.apache.commons.lang.StringUtils;
+import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.events.ComponentConfigurationManagerUpdateEvent;
 import org.geworkbench.util.BrowserLauncher;
@@ -693,6 +695,7 @@ public class ComponentConfigurationManagerWindow {
             	textPane.setCaretPosition(1);        	
             }
 		}
+		GeawConfigObject.recreateHelpSets();
 
 		ComponentRegistry componentRegistry = ComponentRegistry.getRegistry();
 		HashMap<Class, List<Class>> acceptors = componentRegistry
@@ -1030,6 +1033,9 @@ public class ComponentConfigurationManagerWindow {
 
 			this.manager = manager;
 			loadGuiModelFromCmmFiles();
+			loadGuiModelFromFiles(manager.cwbFile);
+			sortRows(new TableNameComparator());
+
 		}
 
 		/*
@@ -1333,7 +1339,11 @@ public class ComponentConfigurationManagerWindow {
 			return true;
 		}
 
+		// what the is this TODO comment?
 		// TODO choose weather to use loadGuiModelFromCmmFiles() or getPluginsFromCcmFile()
+		
+		// this is different from loadGuiModelFromFiles not just in the file name, but different for 
+		// manager.getPluginsFromCcmFile(folderName, ccmFileName );
 		/**
 		 *  Load the GUI Model from.ccm.xml file
 		 */
@@ -1357,15 +1367,10 @@ public class ComponentConfigurationManagerWindow {
 			String loadByDefault = null;
 			String hidden = null;
 			
-			ArrayList<String> allComponentFolders = this.manager.getAllComponentFolders();
-			
-			
-			for (int index = 0; index < allComponentFolders.size(); index++) {
-				String folderName = allComponentFolders.get(index);
-				List<String> ccmFiles = this.manager.getFoldersToCcmFiles(folderName);
-
-				for (int j=0; j<ccmFiles.size(); j++){
-					String ccmFileName = ccmFiles.get(j);
+			for (File file: manager.ccmFile){
+				String folderName = file.getParentFile().getName(), ccmFileName = file.getName();
+				
+//				CcmComponent ccmComponent = manager.getPluginsFromFile(file );
 					
 					CcmComponent ccmComponent = manager.getPluginsFromCcmFile(folderName, ccmFileName );
 					
@@ -1442,10 +1447,111 @@ public class ComponentConfigurationManagerWindow {
 					}
 						
 					rows.add(tableRow);
-				}// j
-			}// index
+
+				}
+
+		}
+		
+		private void loadGuiModelFromFiles(List<File> files) {
+			String name = null;
+			String version = null;
+			String author = null;
+			String authorURL = null;
+			String toolURL = null;
+			String tutorialURL = null;			
+			String clazz = null;
+			String description = null;
+			String license = null;
+			String mustAccept = null;
+			String documentation = null;
+			List<String> requiredComponents = null;
+			List<String> relatedComponents = null;
+			String parser = null;
+			String analysis = null;
+			String visualizer = null;
+			String loadByDefault = null;
+			String hidden = null;
 			
-			sortRows(new TableNameComparator());
+				for (File file: files){
+					String folderName = file.getParentFile().getName(), ccmFileName = file.getName();
+					
+					CcmComponent ccmComponent = manager.getPluginsFromFile(file );
+					
+					if (ccmComponent == null){
+						continue;
+					}
+					
+					List<Plugin> plugins = ccmComponent.getPlugins();
+					if (plugins == null || plugins.size()<=0) {
+						continue;
+					}
+	
+					Plugin plugin = (Plugin) plugins.get(0);
+					name = plugin.getName();
+	
+					version = ccmComponent.getVersion();
+					author = ccmComponent.getAuthor();
+					authorURL = ccmComponent.getAuthorURL();
+					tutorialURL = ccmComponent.getTutorialURL();
+					toolURL = ccmComponent.getToolURL();
+					clazz = ccmComponent.getClazz();
+					description = ccmComponent.getDescription();
+					license = ccmComponent.getLicense();
+					mustAccept = ccmComponent.getMustAccept();
+					documentation = ccmComponent.getDocumentation();
+					requiredComponents = ccmComponent.getRequiredComponents();
+					relatedComponents = ccmComponent.getRelatedComponents();
+					parser = ccmComponent.getParser();
+					analysis = ccmComponent.getAnalysis();
+					visualizer = ccmComponent.getVisualizer();
+					loadByDefault = ccmComponent.getLoadByDefault();
+					hidden = ccmComponent.getHidden();
+
+					boolean bMustAccept = false;
+					boolean bParser = false;
+					boolean bAnalysis = false;
+					boolean bVisualizer = false;
+					boolean bLoadByDefault = false;
+					boolean bHidden = false;
+
+					if (mustAccept!=null && mustAccept.equalsIgnoreCase("true")){
+						bMustAccept = true;
+					}
+					if (parser!=null && parser.equalsIgnoreCase("true")){
+						bParser = true;
+					}
+					if (analysis!=null && analysis.equalsIgnoreCase("true")){
+						bAnalysis = true;
+					}
+					if (visualizer!=null && visualizer.equalsIgnoreCase("true")){
+						bVisualizer = true;
+					}
+					if (loadByDefault!=null && loadByDefault.equalsIgnoreCase("true")){
+						bLoadByDefault = true;
+					}
+					if (hidden!=null && hidden.equalsIgnoreCase("true")){
+						bHidden = true;
+					}
+					
+					TableRow tableRow = new TableRow(false, name, version,
+							author, authorURL, tutorialURL, toolURL, clazz, description,
+							folderName, ccmFileName, license, bMustAccept, documentation, requiredComponents,
+							relatedComponents, bParser, bAnalysis, bVisualizer, bLoadByDefault, bHidden);
+
+					String propFileName = ccmFileName.replace(".ccm.xml", ".ccmproperties");
+	
+					String onOff = ComponentConfigurationManager.readProperty(folderName, propFileName, "on-off");
+
+					if (onOff != null && onOff.equals("true")){
+						tableRow.setSelected(true);
+					}
+					else{
+						tableRow.setSelected(false);
+					}
+						
+					rows.add(tableRow);
+			}// files
+			
 			
 		}
 		

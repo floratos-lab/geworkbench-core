@@ -62,8 +62,8 @@ public class GeawConfigObject {
      * componenents will be appended to the master help in the order in which
      * they are encountered within the configuration file.
      */
-    protected static HelpSet masterHelp = null;
-    protected static TreeMap<String, HelpSet> sortedHelpSets = new TreeMap<String, HelpSet>();
+    private static HelpSet masterHelp = null;
+    private static TreeMap<String, HelpSet> sortedHelpSets = new TreeMap<String, HelpSet>();
     // ---------------------------------------------------------------------------
     // --------------- Properties
     // ---------------------------------------------------------------------------
@@ -153,73 +153,95 @@ public class GeawConfigObject {
             return masterHelp.remove(hs);
     }
 
-    /**
-     * Executed at the end of parsing. Cleans up and makes the main application
-     * window visible.
-     */
-    public static void finish() {
-        // Enable online help.
-        if (masterHelp == null) {
-            String masterHSFileName = System.getProperty(MASTER_HS_PROPERTY_NAME);
-            // If there is no designate master help, just use the argument in the
-            // method call.
-            if (masterHSFileName != null) {
-                try {
-                    ClassLoader cl = GeawConfigObject.class.getClassLoader();
-                    URL url = HelpSet.findHelpSet(cl, masterHSFileName);
-                    masterHelp = new HelpSet(cl, url);
-                } catch (Exception ee) {
-                    log.error("Master Help Set " + masterHSFileName + " not found. Will proceed without it.");
-                }
-            } else {
-                log.error("Master Help Set property not found.");
-            }
+	/**
+	 * Executed at the end of parsing. Cleans up and makes the main application
+	 * window visible.
+	 */
+	public static void finish() {
+		JMenuItem menu_help = new JMenuItem("Help Topics");
+		if (masterHelp != null) {
+			HelpBroker masterHelpBroker = masterHelp.createHelpBroker();
+			menu_help.addActionListener(new CSH.DisplayHelpFromSource(
+					masterHelpBroker));
+		}
+		helpMenu.add(menu_help);
+		JMenuItem about = new JMenuItem("About");
+		about.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SplashBitmap splash = new SplashBitmap(SplashBitmap.class
+						.getResource("splashscreen.png"));
+				splash.hideOnClick();
+				splash.hideOnTimeout(15000);
+				splash.showSplash();
+			}
+		});
+		helpMenu.add(about);
 
+		// exit menu is added here (instead of through configuration) so to be
+		// the last item regardless of individual components' menu items
+		JMenuItem exitMenu = new JMenuItem("Exit");
+		exitMenu.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// emulate a window-closing event to let ProjectPanel do its job
+				guiWindow.dispatchEvent(new WindowEvent(guiWindow,
+						WindowEvent.WINDOW_CLOSING));
+			}
+		});
+		guiWindow.getJMenuBar().getMenu(0).add(exitMenu);
 
-            for (Map.Entry<String, HelpSet> entry : sortedHelpSets.entrySet()) {
-                log.debug("Adding help set: " + entry.getKey() + " | "+entry.getValue().getTitle());
-                if (masterHelp == null) {
-                    log.warn("Using first help set in map as master.");
-                    masterHelp = entry.getValue();
-                } else {
-                    masterHelp.add(entry.getValue());
-                }
-            }
-        }
-        if (masterHelp != null) {
-            JMenuItem menu_help = new JMenuItem("Help Topics");
-            HelpBroker masterHelpBroker = masterHelp.createHelpBroker();
-            //      masterHelpBroker.enableHelpKey(rootpane, "top", masterHelp);
-            menu_help.addActionListener(new CSH.DisplayHelpFromSource(masterHelpBroker));
-            helpMenu.add(menu_help);
-            JMenuItem about = new JMenuItem("About");
-            about.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    SplashBitmap splash = new SplashBitmap(SplashBitmap.class.getResource("splashscreen.png"));
-                    splash.hideOnClick();
-                    splash.hideOnTimeout(15000);
-                    splash.showSplash();
-                }
-            });
-            helpMenu.add(about);
-        }
-        
-        // ZJ 2008-05-01
-        // exit menu is added here (instead of through configuration) so to be the last item regardless of individual components' menu items
-        JMenuItem exitMenu = new JMenuItem("Exit");
-        exitMenu.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		// emulate a window-closing event to let ProjectPanel do its job
-				guiWindow.dispatchEvent(new WindowEvent(guiWindow, WindowEvent.WINDOW_CLOSING));
-            }
-        });
-        guiWindow.getJMenuBar().getMenu(0).add(exitMenu);
+		// Display the main application window.
+		// FIXME this line was commented out to prevent user see the main frame
+		// before loading components
+		// this should be done in a more graceful way.
+		// guiWindow.setVisible(true);
+	}
 
-        // Display the main application window.
-        // FIXME this line was commented out to prevent user see the main frame before loading components
-        // this should be done in a more graceful way.
-        //guiWindow.setVisible(true);
-    }
+	/**
+	 * Recreate the menu after loading all components.
+	 */
+	// this used to be done once before ccm time. now it is called whenever
+	// components-loading happens
+	// help set needs to be recreated to maintain the alphabetical order of the
+	// help sets
+	public static void recreateHelpSets() {
+		// Enable online help.
+		String masterHSFileName = System.getProperty(MASTER_HS_PROPERTY_NAME);
+		// If there is no designate master help, just use the argument in the
+		// method call.
+		if (masterHSFileName != null) {
+			try {
+				ClassLoader cl = GeawConfigObject.class.getClassLoader();
+				URL url = HelpSet.findHelpSet(cl, masterHSFileName);
+				masterHelp = new HelpSet(cl, url);
+			} catch (Exception ee) {
+				log.error("Master Help Set " + masterHSFileName
+						+ " not found. Will proceed without it.");
+			}
+		} else {
+			log.error("Master Help Set property not found.");
+		}
+
+		for (Map.Entry<String, HelpSet> entry : sortedHelpSets.entrySet()) {
+			log.debug("Adding help set: " + entry.getKey() + " | "
+					+ entry.getValue().getTitle());
+			if (masterHelp == null) {
+				log.warn("Using first help set in map as master.");
+				masterHelp = entry.getValue();
+			} else {
+				masterHelp.add(entry.getValue());
+			}
+		}
+
+		if (masterHelp != null) {
+			JMenuItem menu_help = helpMenu.getItem(0);
+			HelpBroker masterHelpBroker = masterHelp.createHelpBroker();
+			ActionListener[] listerner = menu_help.getActionListeners();
+			if (listerner.length > 0)
+				menu_help.removeActionListener(listerner[0]);
+			menu_help.addActionListener(new CSH.DisplayHelpFromSource(
+					masterHelpBroker));
+		}
+	}
 
     /**
      * Initializes the menubar for the application main GUI window.
@@ -242,15 +264,4 @@ public class GeawConfigObject {
         return appMenuBar;
     }
 
-    public static HelpSet getMasterHelp() {
-		return masterHelp;
-	}
-
-    public static void setMasterHelp(HelpSet helpSet) {
-    	masterHelp = helpSet;
-	}
-    
-	public static TreeMap<String, HelpSet> getSortedHelpSets() {
-		return sortedHelpSets;
-	}
 }

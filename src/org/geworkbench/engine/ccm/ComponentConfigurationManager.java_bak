@@ -9,22 +9,33 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.Vector;
 import java.util.Map.Entry;
+
+import javax.help.HelpSet;
+import javax.help.TryMap;
 
 import org.apache.commons.digester.Digester;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.geworkbench.engine.config.ComponentMetadata;
 import org.geworkbench.engine.config.PluginDescriptor;
 import org.geworkbench.engine.config.PluginRegistry;
 import org.geworkbench.engine.config.UILauncher;
+import org.geworkbench.engine.config.VisualPlugin;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
+import org.geworkbench.engine.config.rules.PluginObject;
 import org.geworkbench.engine.config.rules.PluginRule;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.engine.management.ComponentResource;
@@ -52,8 +63,10 @@ public class ComponentConfigurationManager {
 	private Digester digester = null;
 
 	private static final String FILE_DEL = System.getProperty("file.separator");
-	private static final String CCM_EXTENSION = ".ccm.xml";
+	public static final String CCM_EXTENSION = ".ccm.xml";
 	private static final String COMPONENT_DESCRIPTOR_EXTENSION = ".cwb.xml";
+	private ArrayList<String> allComponentFolders = new ArrayList<String>();
+	private Map<String, List<String>> foldersToCcmFiles = new HashMap<String, List<String>>();
 
 	private static String propertiesDirectory = FilePathnameUtils.getUserSettingDirectoryPath();
 	
@@ -125,56 +138,91 @@ public class ComponentConfigurationManager {
 	 * 
 	 * @return {@link ArrayList}
 	 */
-	// TODO the name is out-of-date, should be called something like "find all component descriptor files"
 	public void loadAllComponentFolders() {
+
+		String componentsDir = componentsDirectory;
+
+		File dir = new File(componentsDir);
+		if (!dir.isDirectory()) {
+			log.error("Component resource path is not a directory: "
+					+ componentsDir);
+			return;
+		}
+		File[] folders = dir.listFiles();
+		for (int i = 0; i < folders.length; i++) {
+			File folder = folders[i];
+			if (!folder.isDirectory()) {
+				continue;
+			}
+
+			// TODO clarify the location of the components folder
+			// and see what special cases that need to be handled like the two
+			// below.
+			String folderName = folder.getName();
+			if (folderName.endsWith("geworkbench-core")
+					|| folderName.endsWith(".metadata")) {
+				continue;
+			}
+
+			boolean foundOne = false;
+			File[] filesInaFolder = folder.listFiles();
+			ArrayList<String> ccmFilesInaFolder = new ArrayList<String>();
+			for (int j = 0; j < filesInaFolder.length; j++) {
+				File possibleFile = filesInaFolder[j];
+				if (!possibleFile.isFile()) {
+					continue;
+				}
+
+				String fileName = possibleFile.getName();
+				if (fileName.endsWith(CCM_EXTENSION)) {
+					foundOne = true;
+					ccmFilesInaFolder.add(fileName);
+				}
+			}
+
+			if (foundOne) {
+				this.allComponentFolders.add(folder.getName());
+				this.foldersToCcmFiles.put(folder.getName(), ccmFilesInaFolder);
+			}
+		}
+		
+		//findAllComponents();
+	}
+
+	// FIXME remove me - test
+	List<File> ccmFile = null;
+	List<File> cwbFile = null;
+    private void findAllComponents() {
     	ccmFile = new ArrayList<File>();
     	cwbFile = new ArrayList<File>();
     	Collection<ComponentResource> resources = ComponentRegistry.getRegistry().getAllComponentResources();
 
         for (ComponentResource resource: resources) {
-        	log.info("searching resource "+resource.getDir());
-        	if(resource.getDir().endsWith(".") || resource.getDir().contains("geworkbench"))continue;
-        	File resourceDir = new File(resource.getDir()+"/classes");
-        	try {
-        		searchCwb(resourceDir);
-				searchCcm(new File(resource.getDir()));
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        }
-	}
-	
-    private void searchCwb(File dir) throws IOException {
-        File[] files = dir.listFiles();
-        if(files==null || files.length==0) return;
-        for (File file : files) {
-            if (file.isDirectory()) {
-            	searchCwb(file);
-            } else {
-                if (file.getName().endsWith(COMPONENT_DESCRIPTOR_EXTENSION)) {
-                	cwbFile.add(file);
-                }
+            if (resource.getClassSearcher() == null) {
+                continue;
+            }
+            String[] classNames = resource.getClassSearcher().getAllClassesAssignableTo(VisualPlugin.class, true);
+            for (String className: classNames) {
+//            	System.out.println("class name "+className);
+                	String filename = UILauncher.getComponentsDirectory()+"/"+resource.getName()+"/classes/"+className.replaceAll("\\.", "/")+ COMPONENT_DESCRIPTOR_EXTENSION;
+                    File file = new File(filename);
+                    if(file.exists())cwbFile.add(file);
+//                    else System.out.println(filename+ " not exist");
+
+                    filename = UILauncher.getComponentsDirectory()+"/"+resource.getName()+"/"+className.substring(className.lastIndexOf(".")+1)+ ".ccm.xml";
+                    file = new File(filename);
+                    if(file.exists())ccmFile.add(file);
+//                    else System.out.println(filename+ " not exist");
             }
         }
+        System.out.println(ccmFile.size()+ " "+cwbFile.size());
+//        for(File f: ccmFile)System.out.println(f);
     }
-    
-    private void searchCcm(File dir) throws IOException {
-        File[] files = dir.listFiles();
-        if(files==null || files.length==0) return;
-        for (File file : files) {
-                if (file.getName().endsWith(CCM_EXTENSION)) {
-                	ccmFile.add(file);
-                }
-        }
-    }
-
-	List<File> ccmFile = null;
-	List<File> cwbFile = null;
 
 	public void loadSelectedComponents() {
-		loadSelectedComponentsFromCcm();
-		loadSelectedComponentsFromCwb();
+		loadSelectedComponents_old();
+//		loadSelectedComponentsFromCcm();
+	//	loadSelectedComponentsFromCwb();
 
 		GeawConfigObject.recreateHelpSets();
 	}
@@ -182,7 +230,7 @@ public class ComponentConfigurationManager {
 	private void loadSelectedComponentsFromCcm() {
 
 			for (File file: ccmFile) {
-				// this is not really the right way to use File
+				// this is not the right way to do it... sign...
 				String folder = file.getParentFile().getName();
 				String ccmFileName = file.getName().toLowerCase();
 				
@@ -190,6 +238,7 @@ public class ComponentConfigurationManager {
 				".ccmproperties");
 
 				String onOff = readProperty(folder, propFileName, "on-off");
+				System.out.println(folder+"======================"+ccmFileName );
 				CcmComponent ccmComponent = getPluginsFromCcmFile(folder, ccmFileName );
 				String name = ccmComponent.getName();
 				UILauncher.setProgressBarString(name);
@@ -209,11 +258,11 @@ public class ComponentConfigurationManager {
 	private void loadSelectedComponentsFromCwb() {
 
 		for (File file: cwbFile) {
-			// this is not really the right way to do it. just to support existing code. TODO
+			// this is not the right way to do it... sign...
 			String folder = file.getParentFile().getName();
 			String ccmFileName = file.getName();
 			
-			String propFileName = ccmFileName.replace(COMPONENT_DESCRIPTOR_EXTENSION,
+			String propFileName = ccmFileName.replace(".cwb.xml",
 			".ccmproperties");
 
 			String onOff = readProperty(folder, propFileName, "on-off");
@@ -227,12 +276,48 @@ public class ComponentConfigurationManager {
 				onOff = readProperty(folder, propFileName, "on-off");
 			}
 			if (onOff != null && onOff.equals("true")) {
-				log.info("loading "+file);
+				System.out.println("loading "+file);
 				loadComponent(file);
 			} else {
-				log.info(file + "turned off");
+				System.out.println(file + "turned off");
 			}
 		}
+
+	GeawConfigObject.recreateHelpSets();
+}
+
+	/**
+	 * Load components that have on-off=true in their properties file
+	 * 
+	 */
+	public void loadSelectedComponents_old() {
+
+		for (int i = 0; i < allComponentFolders.size(); i++) {
+			String folder = allComponentFolders.get(i);
+			List<String> ccmFiles = this.foldersToCcmFiles.get(folder);
+
+			for (int j = 0; j < ccmFiles.size(); j++) {
+				String ccmFileName = ccmFiles.get(j);
+				String propFileName = ccmFileName.replace(CCM_EXTENSION,
+						".ccmproperties");
+
+				String onOff = readProperty(folder, propFileName, "on-off");
+				System.out.println(folder+"======================"+ccmFileName );
+				CcmComponent ccmComponent = getPluginsFromCcmFile(folder, ccmFileName );
+				String name = ccmComponent.getName();
+				UILauncher.setProgressBarString(name);
+				String loadByDefault = ccmComponent.getLoadByDefault();
+				
+				if (onOff == null && loadByDefault.equalsIgnoreCase("true")){
+					writeProperty(folder, propFileName, "on-off", "true");
+					onOff = readProperty(folder, propFileName, "on-off");
+				}
+				if (onOff != null && onOff.equals("true")) {
+					loadComponent(folder, ccmFileName);
+				}
+			}
+		}
+		GeawConfigObject.recreateHelpSets();
 	}
 
 	/**
@@ -242,6 +327,7 @@ public class ComponentConfigurationManager {
 	 * @param ccmFileName
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public void loadComponent(String folder, String ccmFileName) {
 
 		/* create component resource */
@@ -304,6 +390,7 @@ public class ComponentConfigurationManager {
 			}
 		}
 	}
+
 
 	/**
 	 * Removes the component with resourceName.
@@ -766,6 +853,10 @@ public class ComponentConfigurationManager {
 		return ccmComponent;
 	}
 
+	public List<String> getFoldersToCcmFiles(String folder) {
+		return foldersToCcmFiles.get(folder);
+	}
+
 	/**
 	 * Save component selections to properties file
 	 * 
@@ -891,5 +982,17 @@ public class ComponentConfigurationManager {
 				"addGUIComponent", 1);
 		cwbDigester.addCallParam("component-descriptor/plugin/gui-area", 0, "name");
 	}
+
+
+	/**
+	 * 
+	 * return the component folders for ComponentCOnfigurationManagerWindow
+	 * 
+	 */
+	public ArrayList<String> getAllComponentFolders() {
+		return allComponentFolders;
+	}	
+
+
     
 }

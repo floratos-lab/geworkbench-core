@@ -14,6 +14,7 @@ import org.geworkbench.engine.ccm.ComponentConfigurationManager;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.config.rules.GeawConfigRule;
 import org.geworkbench.engine.config.rules.PluginRule;
+import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.util.SplashBitmap;
 
 import com.jgoodies.looks.plastic.PlasticLookAndFeel;
@@ -96,7 +97,9 @@ public class UILauncher {
     private static void initProperties() {
         InputStream reader = null;
         try {
-            reader = Class.forName(UILauncher.class.getName()).getResourceAsStream("/application.properties");
+            reader = Class.forName("org.geworkbench.engine.config.UILauncher").getResourceAsStream("/application.properties");
+            // this was mistakenly 'fixed' on 1/14/2009
+            //reader = Class.forName(UILauncher.class.getName()).getResourceAsStream("/application.properties");
             System.getProperties().load(reader);
             if (System.getSecurityManager() == null) {
                 System.setSecurityManager(new SecurityManager());
@@ -176,6 +179,8 @@ public class UILauncher {
 		if (componentsDir == null) {
 			componentsDir = DEFAULT_COMPONENTS_DIR;
 		}
+		ComponentRegistry.getRegistry().initializeComponentResources(componentsDir);
+        //ComponentRegistry.getRegistry().initializeGearResources(DEFAULT_GEAR_DIR);
         
         Digester digester = createDigester();
 
@@ -205,14 +210,14 @@ public class UILauncher {
         /* Load Components */
         ComponentConfigurationManager ccm = ComponentConfigurationManager.getInstance(); 
         ccm.loadAllComponentFolders();
-        ccm.loadSelectedComponents();
+		ccm.loadSelectedComponents();
         
         PluginRegistry.debugPrint();
 
-        splash.hideSplash();
+		splash.hideSplash();
         GUIFramework guiWindow = GeawConfigObject.getGuiWindow();
-        guiWindow.setVisible(true);
-		GeawConfigObject.getGuiWindow().setVisualizationType(null); // force the welcome component to show
+		guiWindow.setVisualizationType(null); // force the welcome component to show
+		guiWindow.setVisible(true);
     }
 
 	public static void setProgressBarString(String name) {
