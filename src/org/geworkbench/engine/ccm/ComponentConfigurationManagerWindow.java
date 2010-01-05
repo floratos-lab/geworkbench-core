@@ -675,21 +675,36 @@ public class ComponentConfigurationManagerWindow {
 			String resource = ((String) ccmTableModel.getModelValueAt(i,
 					CCMTableModel.FOLDER_INDEX));
 
-			String ccmFileName = ((String) ccmTableModel.getModelValueAt(i,
+			File file = ((File) ccmTableModel.getModelValueAt(i,
 					CCMTableModel.CCM_FILE_NAME_INDEX));
+			String filename = file.getName();
 
-			String propFileName = ccmFileName.replace(".ccm.xml", ".ccmproperties");
+			String propFileName = null;
+			if (filename.endsWith(".ccm.xml"))
+				propFileName = filename
+						.replace(".ccm.xml", ".ccmproperties");
+			else if (filename.endsWith(".cwb.xml"))
+				propFileName = filename
+						.replace(".cwb.xml", ".ccmproperties");
 			String sChoice = (new Boolean(choice)).toString();
 			
 			ComponentConfigurationManager.writeProperty(resource, propFileName, "on-off", sChoice);
 			
 			if (choice) {
-				manager.loadComponent(resource, ccmFileName);
+				if (filename.endsWith(".ccm.xml"))
+					manager.loadComponent(resource, filename);
+				else if (filename.endsWith(".cwb.xml"))
+					manager.loadComponent(file);
+
 				continue;
 			}
 
 			/* Remove Component */
-			manager.removeComponent(resource, ccmFileName);
+			if (filename.endsWith(".ccm.xml"))
+				manager.removeComponent(resource, filename);
+			else if (filename.endsWith(".cwb.xml"))
+				manager.removeComponent(resource, file.getAbsolutePath());
+
 			ccmTableModel.fireTableDataChanged();
             if (textPane.getCaretPosition() > 1){
             	textPane.setCaretPosition(1);        	
@@ -1143,7 +1158,7 @@ public class ComponentConfigurationManagerWindow {
 			case FOLDER_INDEX:
 				return (String) record.getFolder();
 			case CCM_FILE_NAME_INDEX:
-				return (String) record.getFileName();
+				return (File) record.getFile();
 			case LICENSE_INDEX:
 				return (String) record.getLicense();
 			case MUST_ACCEPT_INDEX:
@@ -1225,8 +1240,9 @@ public class ComponentConfigurationManagerWindow {
 						modelRow, CCMTableModel.RELATED_COMPONENT_INDEX);
 				String folder = (String) ccmTableModel.getModelValueAt(
 						modelRow, CCMTableModel.FOLDER_INDEX);
-				String ccmFileName = (String) ccmTableModel.getModelValueAt(
-						modelRow, CCMTableModel.CCM_FILE_NAME_INDEX);
+				File file = ((File) ccmTableModel.getModelValueAt(modelRow,
+						CCMTableModel.CCM_FILE_NAME_INDEX));
+				String ccmFileName = file.getAbsolutePath();
 
 				List<String> unselectedRequired = new ArrayList<String>();
 				for (int i=0; i< required.size(); i++){
@@ -1240,7 +1256,13 @@ public class ComponentConfigurationManagerWindow {
 
 				if (currentChoice.booleanValue()) {
 					/* PLUGIN SELECTED */
-					String propFileName = ccmFileName.replace(".ccm.xml", ".ccmproperties");
+					String propFileName = null;
+					if (ccmFileName.endsWith(".ccm.xml"))
+						propFileName = ccmFileName
+								.replace(".ccm.xml", ".ccmproperties");
+					else if (ccmFileName.endsWith(".cwb.xml"))
+						propFileName = ccmFileName
+						.replace(".cwb.xml", ".ccmproperties");
 					String licenseAccepted = ComponentConfigurationManager.readProperty(folder, propFileName, "licenseAccepted");
 					Boolean boolRequired = record.isMustAccept();
 					boolean bRequired = boolRequired.booleanValue();
@@ -1432,10 +1454,17 @@ public class ComponentConfigurationManagerWindow {
 					
 					TableRow tableRow = new TableRow(false, name, version,
 							author, authorURL, tutorialURL, toolURL, clazz, description,
-							folderName, ccmFileName, license, bMustAccept, documentation, requiredComponents,
+							folderName, file, license, bMustAccept, documentation, requiredComponents,
 							relatedComponents, bParser, bAnalysis, bVisualizer, bLoadByDefault, bHidden);
 
-					String propFileName = ccmFileName.replace(".ccm.xml", ".ccmproperties");
+					String propFileName = null;
+					if (ccmFileName.endsWith(".ccm.xml"))
+						propFileName = ccmFileName
+								.replace(".ccm.xml", ".ccmproperties");
+					else if (ccmFileName.endsWith(".cwb.xml"))
+						propFileName = ccmFileName
+								.replace(".cwb.xml", ".ccmproperties");
+					
 	
 					String onOff = ComponentConfigurationManager.readProperty(folderName, propFileName, "on-off");
 
@@ -1535,10 +1564,16 @@ public class ComponentConfigurationManagerWindow {
 					
 					TableRow tableRow = new TableRow(false, name, version,
 							author, authorURL, tutorialURL, toolURL, clazz, description,
-							folderName, ccmFileName, license, bMustAccept, documentation, requiredComponents,
+							folderName, file, license, bMustAccept, documentation, requiredComponents,
 							relatedComponents, bParser, bAnalysis, bVisualizer, bLoadByDefault, bHidden);
 
-					String propFileName = ccmFileName.replace(".ccm.xml", ".ccmproperties");
+					String propFileName = null;
+					if (ccmFileName.endsWith(".ccm.xml"))
+						propFileName = ccmFileName
+								.replace(".ccm.xml", ".ccmproperties");
+					else if (ccmFileName.endsWith(".cwb.xml"))
+						propFileName = ccmFileName
+								.replace(".cwb.xml", ".ccmproperties");
 	
 					String onOff = ComponentConfigurationManager.readProperty(folderName, propFileName, "on-off");
 
@@ -1602,7 +1637,7 @@ public class ComponentConfigurationManagerWindow {
 		private String clazz = "";
 		private String description = "";
 		private String folder = "";
-		private String fileName = "";
+		private File file;
 		private String license = "";
 		private boolean mustAccept = false;
 		private String documentation = "";
@@ -1632,7 +1667,7 @@ public class ComponentConfigurationManagerWindow {
 		 */
 		public TableRow(boolean selected, String name, String version,
 				String author, String authorURL, String tutorialURL, String toolURL, String clazz,
-				String description, String folder, String fileName, String license, boolean mustAccept, String documentation,
+				String description, String folder, File file, String license, boolean mustAccept, String documentation,
 				List<String> requiredComponents, List<String> relatedComponents, boolean parser, boolean analysis, boolean visualizer, boolean loadByDefault, boolean hidden) {
 			super();
 			this.selected = selected;
@@ -1645,7 +1680,7 @@ public class ComponentConfigurationManagerWindow {
 			this.clazz = clazz;
 			this.description = description;
 			this.folder = folder;
-			this.fileName = fileName;
+			this.file = file;
 			this.license = license;
 			this.mustAccept = mustAccept; 
 			this.documentation = documentation;
@@ -1777,12 +1812,8 @@ public class ComponentConfigurationManagerWindow {
 			return description;
 		}
 
-		public String getFileName() {
-			return fileName;
-		}
-
-		public void setFileName(String fileName) {
-			this.fileName = fileName;
+		public File getFile() {
+			return file;
 		}
 
 		public String getLicense() {

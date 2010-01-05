@@ -276,8 +276,20 @@ public class ComponentConfigurationManager {
 		}
 	}
 
-	// this is right way to do it: use file instead fo string, resoruceMap has been inintialized already
-	private void loadComponent(File file) {
+	// this is right way to do it: use file instead of string, resoruceMap has been initialized already
+	void loadComponent(File file) {
+		String folder = file.getParentFile().getName();
+		/* create component resource */
+		ComponentResource componentResource = createComponentResource(folder);
+
+		/* add resource to registry */
+		Map<String, ComponentResource> resourceMap = ComponentRegistry
+				.getRegistry().getComponentResourceMap();
+		ComponentResource existingComponentResource = resourceMap.get(folder);
+		if (existingComponentResource==null){
+			resourceMap.put(folder, componentResource);
+		}
+		
 		InputStream is = null;
 
 		try {
@@ -314,7 +326,7 @@ public class ComponentConfigurationManager {
 	 *         true.
 	 */
 	@SuppressWarnings("unchecked")
-	public boolean removeComponent(String folderName, String ccmFileName) {
+	public boolean removeComponent(String folderName, String filename) {
 
 		/*
 		 * Container Summary:
@@ -342,8 +354,11 @@ public class ComponentConfigurationManager {
 
 		// FIXME parse again? can't we get this info another way?
 		/* parse the ccm.xml file */
-		CcmComponent ccmComponent = getPluginsFromCcmFile(folderName,
-				ccmFileName);
+		CcmComponent ccmComponent = null;
+		if(filename.endsWith(CCM_EXTENSION))ccmComponent = getPluginsFromCcmFile(folderName,
+				filename);
+		else if(filename.endsWith(COMPONENT_DESCRIPTOR_EXTENSION))ccmComponent = getPluginsFromFile(new File(
+				filename));
 
 		if (ccmComponent == null) return false;
 		
