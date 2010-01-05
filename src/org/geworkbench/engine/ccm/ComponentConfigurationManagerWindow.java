@@ -481,7 +481,7 @@ public class ComponentConfigurationManagerWindow {
         
         if (   selectedRow != null && selectedRow.length > 0 && selectedRow[0] >= 0 &&
 	       	   selectedColumn != null && selectedColumn.length > 0 && selectedColumn[0] >= 0 &&  
-	       	  (selectedColumn[0] == CCMTableModel.AUTHOR_URL_INDEX
+	       	  (selectedColumn[0] == CCMTableModel.AUTHOR_INDEX
 			|| selectedColumn[0] == CCMTableModel.TUTORIAL_URL_INDEX
 			|| selectedColumn[0] == CCMTableModel.TOOL_URL_INDEX)) {
 	        	

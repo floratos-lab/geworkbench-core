@@ -33,7 +33,8 @@ class CCMTableModel extends AbstractTableModel {
 	static final int VERSION_INDEX = 3;
 	static final int TUTORIAL_URL_INDEX = 4;
 	static final int TOOL_URL_INDEX = 5;
-	static final int AUTHOR_URL_INDEX = 6;
+
+	// FIXME the following fields should not be indexed into table model
 	static final int CLASS_INDEX = 7;
 	static final int DESCRIPTION_INDEX = 8;
 	static final int FOLDER_INDEX = 9;
@@ -221,8 +222,6 @@ class CCMTableModel extends AbstractTableModel {
 			return (JButton) record.getTutorialURL();
 		case TOOL_URL_INDEX:
 			return (JButton) record.getToolURL();
-		case AUTHOR_URL_INDEX:
-			return (JButton) record.getAuthorURL();
 		case CLASS_INDEX:
 			return (String) record.getClazz();
 		case DESCRIPTION_INDEX:
