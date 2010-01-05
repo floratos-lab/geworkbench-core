@@ -34,33 +34,30 @@ class CCMTableModel extends AbstractTableModel {
 	static final int TUTORIAL_URL_INDEX = 4;
 	static final int TOOL_URL_INDEX = 5;
 
-	// FIXME the following fields should not be indexed into table model
+	// FIXME the following indices are really identifiers instead of index
 	static final int CLASS_INDEX = 7;
 	static final int DESCRIPTION_INDEX = 8;
 	static final int FOLDER_INDEX = 9;
 	static final int CCM_FILE_NAME_INDEX = 10;
 	static final int LICENSE_INDEX = 11;
-	static final int MUST_ACCEPT_INDEX = 12;
 	static final int DOCUMENTATION_INDEX = 13;
-	static final int PARSER_INDEX = 16;
 	static final int ANALYSIS_INDEX = 17;
 	static final int VISUALIZER_INDEX = 18;
-	static final int LOAD_BY_DEFAULT_INDEX = 19;
+
 	static final int HIDDEN_INDEX = 20;
 	static final int LAST_VISIBLE_COLUMN = TOOL_URL_INDEX;
-	static final int LAST_COLUMN = HIDDEN_INDEX;
+
 	static final int FIRST_STRING_COLUMN = NAME_INDEX;
-	static final int LAST_STRING_COLUMN = LICENSE_INDEX;
 
 	private String[] columnNames = { "On/Off", "Name", "Author", "Version",
 			"Tutorial", "Tool URL" };
-	protected Vector<TableRow> rows = new Vector<TableRow>();
+	Vector<TableRow> rows = new Vector<TableRow>();
 	
-	Map<String, List<String>> requiredComponentsMap = new TreeMap<String, List<String>>();
-	Map<String, List<String>> relatedComponentsMap =  new TreeMap<String, List<String>>();
+	private Map<String, List<String>> requiredComponentsMap = new TreeMap<String, List<String>>();
+	private Map<String, List<String>> relatedComponentsMap =  new TreeMap<String, List<String>>();
 
 
-	ComponentConfigurationManager manager = null;
+	private ComponentConfigurationManager manager = null;
 
 	private String loadedFilterValue = null;
 	private String typeFilterValue = null;
@@ -75,7 +72,7 @@ class CCMTableModel extends AbstractTableModel {
 		this.manager = manager;
 		loadGuiModelFromCmmFiles();
 		loadGuiModelFromFiles(manager.cwbFile);
-		sortRows(new TableNameComparator());
+		Collections.sort(rows, new TableNameComparator());
 	}
 
 	/*
@@ -232,18 +229,12 @@ class CCMTableModel extends AbstractTableModel {
 			return (File) record.getFile();
 		case LICENSE_INDEX:
 			return (String) record.getLicense();
-		case MUST_ACCEPT_INDEX:
-			return (Boolean) record.isMustAccept();
 		case DOCUMENTATION_INDEX:
 			return (String) record.getDocumentation();
-		case PARSER_INDEX:
-			return (Boolean) record.isParser();
 		case ANALYSIS_INDEX:
 			return (Boolean) record.isAnalysis();
 		case VISUALIZER_INDEX:
 			return (Boolean) record.isVisualizer();
-		case LOAD_BY_DEFAULT_INDEX:
-			return (Boolean) record.isLoadByDefault();
 		case HIDDEN_INDEX:
 			return (Boolean) record.isHidden();
 
@@ -452,7 +443,6 @@ class CCMTableModel extends AbstractTableModel {
 		String parser = null;
 		String analysis = null;
 		String visualizer = null;
-		String loadByDefault = null;
 		String hidden = null;
 
 		for (File file : manager.ccmFile) {
@@ -491,14 +481,12 @@ class CCMTableModel extends AbstractTableModel {
 			parser = ccmComponent.getParser();
 			analysis = ccmComponent.getAnalysis();
 			visualizer = ccmComponent.getVisualizer();
-			loadByDefault = ccmComponent.getLoadByDefault();
 			hidden = ccmComponent.getHidden();
 
 			boolean bMustAccept = false;
 			boolean bParser = false;
 			boolean bAnalysis = false;
 			boolean bVisualizer = false;
-			boolean bLoadByDefault = false;
 			boolean bHidden = false;
 
 			if (mustAccept != null && mustAccept.equalsIgnoreCase("true")) {
@@ -513,9 +501,6 @@ class CCMTableModel extends AbstractTableModel {
 			if (visualizer != null && visualizer.equalsIgnoreCase("true")) {
 				bVisualizer = true;
 			}
-			if (loadByDefault != null && loadByDefault.equalsIgnoreCase("true")) {
-				bLoadByDefault = true;
-			}
 			if (hidden != null && hidden.equalsIgnoreCase("true")) {
 				bHidden = true;
 			}
@@ -524,7 +509,7 @@ class CCMTableModel extends AbstractTableModel {
 					authorURL, tutorialURL, toolURL, clazz, description,
 					folderName, file, license, bMustAccept, documentation,
 					bParser, bAnalysis,
-					bVisualizer, bLoadByDefault, bHidden);
+					bVisualizer, bHidden);
 			requiredComponentsMap.put(name, requiredComponents);
 			relatedComponentsMap.put(name, relatedComponents);
 
@@ -568,7 +553,6 @@ class CCMTableModel extends AbstractTableModel {
 		String parser = null;
 		String analysis = null;
 		String visualizer = null;
-		String loadByDefault = null;
 		String hidden = null;
 
 		for (File file : files) {
@@ -604,14 +588,12 @@ class CCMTableModel extends AbstractTableModel {
 			parser = ccmComponent.getParser();
 			analysis = ccmComponent.getAnalysis();
 			visualizer = ccmComponent.getVisualizer();
-			loadByDefault = ccmComponent.getLoadByDefault();
 			hidden = ccmComponent.getHidden();
 
 			boolean bMustAccept = false;
 			boolean bParser = false;
 			boolean bAnalysis = false;
 			boolean bVisualizer = false;
-			boolean bLoadByDefault = false;
 			boolean bHidden = false;
 
 			if (mustAccept != null && mustAccept.equalsIgnoreCase("true")) {
@@ -626,9 +608,6 @@ class CCMTableModel extends AbstractTableModel {
 			if (visualizer != null && visualizer.equalsIgnoreCase("true")) {
 				bVisualizer = true;
 			}
-			if (loadByDefault != null && loadByDefault.equalsIgnoreCase("true")) {
-				bLoadByDefault = true;
-			}
 			if (hidden != null && hidden.equalsIgnoreCase("true")) {
 				bHidden = true;
 			}
@@ -637,7 +616,7 @@ class CCMTableModel extends AbstractTableModel {
 					authorURL, tutorialURL, toolURL, clazz, description,
 					folderName, file, license, bMustAccept, documentation,
 					bParser, bAnalysis,
-					bVisualizer, bLoadByDefault, bHidden);
+					bVisualizer, bHidden);
 			requiredComponentsMap.put(name, requiredComponents);
 			relatedComponentsMap.put(name, relatedComponents);
 
@@ -661,10 +640,6 @@ class CCMTableModel extends AbstractTableModel {
 			rows.add(tableRow);
 		}// files
 
-	}
-
-	final private void sortRows(Comparator<TableRow> rowComparator) {
-		Collections.sort(rows, rowComparator);
 	}
 
 	final public String getLoadedFilterValue() {
@@ -716,7 +691,6 @@ class CCMTableModel extends AbstractTableModel {
 		private boolean parser = false;
 		private boolean analysis = false;
 		private boolean visualizer = false;
-		private boolean loadByDefault = false;
 		private boolean hidden = false;
 
 		/**
@@ -740,7 +714,7 @@ class CCMTableModel extends AbstractTableModel {
 				String toolURL, String clazz, String description,
 				String folder, File file, String license, boolean mustAccept,
 				String documentation, boolean parser,
-				boolean analysis, boolean visualizer, boolean loadByDefault,
+				boolean analysis, boolean visualizer,
 				boolean hidden) {
 			super();
 			this.selected = selected;
@@ -760,7 +734,6 @@ class CCMTableModel extends AbstractTableModel {
 			this.parser = parser;
 			this.analysis = analysis;
 			this.visualizer = visualizer;
-			this.loadByDefault = loadByDefault;
 			this.hidden = hidden;
 		}
 
@@ -938,14 +911,6 @@ class CCMTableModel extends AbstractTableModel {
 
 		public void setVisualizer(boolean visualizer) {
 			this.visualizer = visualizer;
-		}
-
-		public boolean isLoadByDefault() {
-			return loadByDefault;
-		}
-
-		public void setLoadByDefault(boolean loadByDefault) {
-			this.loadByDefault = loadByDefault;
 		}
 
 		public boolean isHidden() {
