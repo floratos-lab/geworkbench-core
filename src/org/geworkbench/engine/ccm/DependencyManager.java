@@ -14,7 +14,7 @@ import javax.swing.UIManager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.geworkbench.engine.ccm.ComponentConfigurationManagerWindow.CCMTableModel;
+import org.geworkbench.engine.ccm.CCMTableModel;
 
 /**
  * 
@@ -66,8 +66,7 @@ public class DependencyManager {
 
 		String unselectedPluginName = "Plugin is missing a Name descriptor";
 		if (selectedRow >= 0) {
-			unselectedPluginName = (String) ccmTableModel.getModelValueAt(
-					selectedRow, CCMTableModel.NAME_INDEX);
+			unselectedPluginName = ccmTableModel.getPluginName(selectedRow);
 		}
 
 		String message = "The following is a list of plugins known to be\n";
@@ -77,8 +76,7 @@ public class DependencyManager {
 		for (int i = 0; i < dependentPlugins.size(); i++) {
 			Integer dependentRow = dependentPlugins.get(i);
 			int row = dependentRow.intValue();
-			String dependentName = (String) ccmTableModel.getModelValueAt(row,
-					CCMTableModel.NAME_INDEX);
+			String dependentName = ccmTableModel.getPluginName(row);
 
 			message += "* " + dependentName + "\n";
 		}
@@ -110,8 +108,7 @@ public class DependencyManager {
 
 		String pluginName = "Plugin is missing a Name";
 		if (selectedRow >= 0) {
-			pluginName = (String) ccmTableModel.getModelValueAt(selectedRow,
-					CCMTableModel.NAME_INDEX);
+			pluginName = (String) ccmTableModel.getPluginName(selectedRow);
 		}
 
 		ArrayList<String> requireAndRelated = new ArrayList<String>();
@@ -122,8 +119,8 @@ public class DependencyManager {
 
 			String requiredName = "missing Class description";
 			if (requiredRow >= 0) {
-				requiredName = (String) ccmTableModel.getModelValueAt(
-						requiredRow, CCMTableModel.NAME_INDEX);
+				requiredName = (String) ccmTableModel.getPluginName(
+						requiredRow);
 			}
 
 			String req = "";
@@ -138,8 +135,8 @@ public class DependencyManager {
 
 			String relatedName = "missing Class description";
 			if (relatedRow >= 0) {
-				relatedName = (String) ccmTableModel.getModelValueAt(
-						relatedRow, CCMTableModel.NAME_INDEX);
+				relatedName = (String) ccmTableModel.getPluginName(
+						relatedRow);
 			}
 			requireAndRelated.add(relatedName);
 		}
@@ -168,8 +165,7 @@ public class DependencyManager {
 		for (int i = 0; i < dependentPlugins.size(); i++) {
 			Integer dependentRow = dependentPlugins.get(i);
 			int row = dependentRow.intValue();
-			ccmTableModel.setModelValueAt(new Boolean(false), row,
-					CCMTableModel.SELECTION_INDEX, CCMTableModel.NO_VALIDATION);
+			ccmTableModel.unselectWithoutValiation(row);
 		}
 	}
 
@@ -181,9 +177,7 @@ public class DependencyManager {
 				log.error("Missing Class in Plugin");
 			}
 
-			boolean successful = ccmTableModel.setModelValueAt(
-					new Boolean(true), requiredRow,
-					CCMTableModel.SELECTION_INDEX, CCMTableModel.NO_VALIDATION);
+			boolean successful = ccmTableModel.selectWithoutValiation(requiredRow);
 
 			/*
 			 * If a license is not agreed to for a dependent component, then
@@ -228,12 +222,8 @@ public class DependencyManager {
 	}
 
 	private void rollBack() {
-		if (this.selectedRow >= 0) {
-			Boolean selection = (Boolean) ccmTableModel.getModelValueAt(
-					this.selectedRow, CCMTableModel.SELECTION_INDEX);
-			Boolean reset = new Boolean(!selection.booleanValue());
-			ccmTableModel.setModelValueAt(reset, this.selectedRow,
-					CCMTableModel.SELECTION_INDEX, CCMTableModel.NO_VALIDATION);
+		if (selectedRow >= 0) {
+			ccmTableModel.switchSelected(selectedRow);
 		} else {
 			log.error("Missing Class in Plugin");
 		}

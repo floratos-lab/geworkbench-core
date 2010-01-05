@@ -9,35 +9,25 @@ import java.awt.Frame;
 import java.awt.ItemSelectable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.font.TextAttribute;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import javax.swing.AbstractButton;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -45,22 +35,17 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.ListSelectionModel;
-import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableColumnModel;
-import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
 
 import org.apache.commons.lang.StringUtils;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.events.ComponentConfigurationManagerUpdateEvent;
 import org.geworkbench.util.BrowserLauncher;
-import org.geworkbench.util.Util;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -106,15 +91,13 @@ public class ComponentConfigurationManagerWindow {
 	private static int launchedRow = 999;
 	private static int launchedColumn = 999;
 	
-	public final static String DISPLAY_FILTER_ALL = "All";
-	public final static String DISPLAY_ONLY_LOADED = "Only loaded";
-	public final static String DISPLAY_ONLY_UNLOADED = "Only unloaded";
+	private final static String DISPLAY_FILTER_ALL = "All";
+	private final static String DISPLAY_ONLY_LOADED = "Only loaded";
+	private final static String DISPLAY_ONLY_UNLOADED = "Only unloaded";
 	
-	public final static String SHOW_BY_TYPE_ALL = "All";
-	public final static String SHOW_BY_TYPE_PARSER = "Parsers";
-	public final static String SHOW_BY_TYPE_ANALYSIS = "Analysis plugins";
-	public final static String SHOW_BY_TYPE_VISUALIZER = "Visualizers";
-	
+	private final static String SHOW_BY_TYPE_ALL = "All";
+	private final static String SHOW_BY_TYPE_ANALYSIS = "Analysis plugins";
+	private final static String SHOW_BY_TYPE_VISUALIZER = "Visualizers";
 	
 	private ArrayList<Boolean> originalChoices = null;
 
@@ -477,17 +460,6 @@ public class ComponentConfigurationManagerWindow {
 			frame.setLocationRelativeTo(frame.getOwner());
 		} // ============ frame ============
 
-		 TableColumn tc = table.getColumnModel().getColumn(0);
-		 
-/*		TODO
- *      The checkbox in the header of the CCM window functionality may be 
- * 		desirable at some point in the future, for testing purposes only.
- * 		If it is to be used, then it might be desirable to turn off 
- * 		component validation for this feature.  		 
-		 
-		 tc.setHeaderRenderer(new CheckBoxHeader(new CheckBoxHeaderListener()));  
-*/
-
 		topPanel.setVisible(true);
 		splitPane.setVisible(true);
 		scrollPaneForTable.setVisible(true);
@@ -511,7 +483,7 @@ public class ComponentConfigurationManagerWindow {
 	       	   selectedColumn != null && selectedColumn.length > 0 && selectedColumn[0] >= 0 &&  
 	       	  (selectedColumn[0] == CCMTableModel.AUTHOR_URL_INDEX
 			|| selectedColumn[0] == CCMTableModel.TUTORIAL_URL_INDEX
-			|| selectedColumn[0] == CCMTableModel.AUTHOR_INDEX)) {
+			|| selectedColumn[0] == CCMTableModel.TOOL_URL_INDEX)) {
 	        	
     		int modelRow = ccmTableModel.getModelRow(selectedRow[0]);
     		if (launchedRow == modelRow && launchedColumn == selectedColumn[0]){
@@ -635,22 +607,6 @@ public class ComponentConfigurationManagerWindow {
 		viewExternalSite();
 	}
 	
-	
-	
-//	/**
-//	 * Persist users component selections Add newly selected components Remove
-//	 * newly unselected components Close CCM Window
-//	 * 
-//	 * @param ActionEvent
-//	 * @return void
-//	 */
-//	private void acceptCcmSelections_actionPerformed(ActionEvent e) {
-//		applyCcmSelections_actionPerformed(e);
-//
-//		frame.dispose();
-//		ccmWindow = null;
-//	}
-
 	/**
 	 * Persist users component selections 
 	 * Add newly selected components 
@@ -659,6 +615,7 @@ public class ComponentConfigurationManagerWindow {
 	 * @param ActionEvent
 	 * @return void
 	 */
+	@SuppressWarnings("unchecked")
 	public void applyCcmSelections_actionPerformed(ActionEvent e) {
 
 		for (int i = 0; i < ccmTableModel.getModelRowCount(); i++) {
@@ -724,7 +681,6 @@ public class ComponentConfigurationManagerWindow {
 		setOriginalChoices();
 	}
 	
-	
 	/**
 	 * Reset selections. Leave Window open
 	 * 
@@ -779,7 +735,7 @@ public class ComponentConfigurationManagerWindow {
 	/*
 	 * CCMTableModelFilterView
 	 */
-	class CCMTableModelFilterView extends CCMTableModel {
+	static private class CCMTableModelFilterView extends CCMTableModel {
 		
 		private static final long serialVersionUID = -3149950381135283122L;
 
@@ -849,7 +805,7 @@ public class ComponentConfigurationManagerWindow {
 			List<Object> components = componentRegistry.getComponentsList();
 			for (Object proxiedComponent : components) {
 				// FIXME use a "deproxy" (see cglib or HibernateProxy)
-				Class clazz = proxiedComponent.getClass();
+				Class<?> clazz = proxiedComponent.getClass();
 				String proxiedClazzName = clazz.getName();
 				String[] temp = StringUtils.split(proxiedClazzName, "$$");
 				String clazzName = temp[0];
@@ -995,1040 +951,14 @@ public class ComponentConfigurationManagerWindow {
 		}
 	}
 	
-	/**
-	 * CCMTableModel
-	 * 
-	 */
-	class CCMTableModel extends AbstractTableModel {
-		
-		private static final long serialVersionUID = 1L;
-
-		public static final boolean NO_VALIDATION = false;
-		
-		public static final int SELECTION_INDEX = 0;
-		public static final int NAME_INDEX = 1;
-		public static final int AUTHOR_INDEX = 2;
-		public static final int VERSION_INDEX = 3;
-		public static final int TUTORIAL_URL_INDEX = 4;
-		public static final int TOOL_URL_INDEX = 5;
-		public static final int AUTHOR_URL_INDEX = 6;
-		public static final int CLASS_INDEX = 7;
-		public static final int DESCRIPTION_INDEX = 8;
-		public static final int FOLDER_INDEX = 9;
-		public static final int CCM_FILE_NAME_INDEX = 10;
-		public static final int LICENSE_INDEX = 11;
-		public static final int MUST_ACCEPT_INDEX = 12;
-		public static final int DOCUMENTATION_INDEX = 13;
-		public static final int REQUIRED_COMPONENT_INDEX = 14;
-		public static final int RELATED_COMPONENT_INDEX = 15;
-		public static final int PARSER_INDEX = 16;
-		public static final int ANALYSIS_INDEX = 17;
-		public static final int VISUALIZER_INDEX = 18;
-		public static final int LOAD_BY_DEFAULT_INDEX = 19;
-		public static final int HIDDEN_INDEX = 20;
-		public static final int LAST_VISIBLE_COLUMN = TOOL_URL_INDEX;
-		public static final int LAST_COLUMN = HIDDEN_INDEX;
-		public static final int FIRST_STRING_COLUMN = NAME_INDEX;
-		public static final int LAST_STRING_COLUMN = LICENSE_INDEX;
-		private String[] columnNames = { "On/Off", "Name", "Author", "Version",
-				"Tutorial", "Tool URL" };
-		protected Vector<TableRow> rows = new Vector<TableRow>();
-
-		ComponentConfigurationManager manager = null;
-
-		private String loadedFilterValue = null;
-		private String typeFilterValue = null;
-		private String keywordFilterValue = null;
-		
-		/*
-		 * Constructor
-		 */
-		public CCMTableModel(ComponentConfigurationManager manager) {
-			super();
-
-			this.manager = manager;
-			loadGuiModelFromCmmFiles();
-			loadGuiModelFromFiles(manager.cwbFile);
-			sortRows(new TableNameComparator());
-
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see javax.swing.table.TableModel#getColumnCount()
-		 */
-		public int getColumnCount() {
-			return columnNames.length;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see javax.swing.table.TableModel#getRowCount()
-		 */
-		public int getRowCount() {
-			return getModelRowCount();
-		}
-
-		/**
-		 * 
-		 * @return
-		 */
-		final public int getModelRowCount(){
-			return rows.size();
-		}
-		
-		/*
-		 * (non-Javadoc)
-		 * @see javax.swing.table.AbstractTableModel#getColumnName(int)
-		 */
-		public String getColumnName(int col) {
-			return columnNames[col];
-		}
-
-		/**
-		 * (non-Javadoc)
-		 * 
-		 * @see javax.swing.table.AbstractTableModel#getColumnClass(int) Without
-		 * this method, the check box column would default to a String
-		 */
-		@SuppressWarnings("unchecked")
-		public Class getColumnClass(int column) {
-
-			if (column == SELECTION_INDEX) {
-				return Boolean.class;
-			}
-
-			if(column == AUTHOR_INDEX || column == TUTORIAL_URL_INDEX || column == TOOL_URL_INDEX) {
-				return JButton.class;
-			}
-
-			return String.class;
-		}
-
-		/**
-		 * (non-Javadoc)
-		 * 
-		 * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
-		 */
-		public boolean isCellEditable(int row, int column) {
-			if (column == SELECTION_INDEX) {
-				return true;
-			}
-
-			return false;
-		}
-
-
-		/**
-		 * (non-Javadoc)
-		 * 
-		 * @see javax.swing.table.TableModel#getValueAt(int, int)
-		 */
-		public Object getValueAt(int row, int column) {
-			return getModelValueAt(row, column);
-		}
-
-		
-		/**
-		 * (non-Javadoc)
-		 * 
-		 * @see javax.swing.table.TableModel#getValueAt(int, int)
-		 */
-		final public Object getModelValueAt(int row, int column) {
-			TableRow record = rows.get(row);
-			switch (column) {
-			case SELECTION_INDEX:
-				return (Boolean) record.isSelected();
-			case NAME_INDEX:
-				return (String) record.getName();
-			case VERSION_INDEX:
-				return (String) record.getVersion();
-			case AUTHOR_INDEX:
-				return (JButton) record.getAuthor();
-			case TUTORIAL_URL_INDEX:
-				return (JButton) record.getTutorialURL();
-			case TOOL_URL_INDEX:
-				return (JButton) record.getToolURL();
-			case AUTHOR_URL_INDEX:
-				return (JButton) record.getAuthorURL();
-			case CLASS_INDEX:
-				return (String) record.getClazz();
-			case DESCRIPTION_INDEX:
-				return (String) record.getDescription();
-			case FOLDER_INDEX:
-				return (String) record.getFolder();
-			case CCM_FILE_NAME_INDEX:
-				return (File) record.getFile();
-			case LICENSE_INDEX:
-				return (String) record.getLicense();
-			case MUST_ACCEPT_INDEX:
-				return (Boolean) record.isMustAccept();
-			case DOCUMENTATION_INDEX:
-				return (String) record.getDocumentation();
-			case REQUIRED_COMPONENT_INDEX:
-				return (List<String>) record.getRequiredComponents();
-			case RELATED_COMPONENT_INDEX:
-				return (List<String>) record.getRelatedComponents();
-			case PARSER_INDEX:
-				return (Boolean)  record.isParser();
-			case ANALYSIS_INDEX:
-				return (Boolean) record.isAnalysis();
-			case VISUALIZER_INDEX:
-				return (Boolean)  record.isVisualizer();
-			case LOAD_BY_DEFAULT_INDEX:
-				return (Boolean)  record.isLoadByDefault();
-			case HIDDEN_INDEX:
-				return (Boolean)  record.isHidden();
-				
-			default:
-				return null;
-			}
-		}
-
-		/**
-		 * (non-Javadoc)
-		 * 
-		 * @see javax.swing.table.TableModel#getRowByClazz(String)
-		 */
-		final public int getModelRowByClazz(String clazz) {
-
-			for (int i = 0; i < rows.size(); i++) {
-				TableRow record = (TableRow) rows.get(i);
-				String rowClazz = record.getClazz();
-				if (clazz.equalsIgnoreCase(rowClazz)) {
-					return i;
-				}
-			}
-			return -1;
-		}
-
-		
-		
-		
-		
-		/**
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * javax.swing.table.AbstractTableModel#setValueAt(java.lang.Object,
-		 * int, int)
-		 */
-		public void setValueAt(Object value, int row, int column ) {
-			setModelValueAt(value, row, column, true);	
-		}
-		
-
-		/**
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * javax.swing.table.AbstractTableModel#setValueAt(java.lang.Object,
-		 * int, int, boolean)
-		 */
-		final public boolean setModelValueAt(Object value, int modelRow, int column, boolean validation) {
-			TableRow record = (TableRow) rows.get(modelRow);
-			switch (column) {
-			case SELECTION_INDEX:
-				record.setSelected((Boolean) value);
-
-				Boolean currentChoice = (Boolean) ccmTableModel.getModelValueAt(modelRow,
-						CCMTableModel.SELECTION_INDEX);
-
-				List<String> required = (List<String>) ccmTableModel
-						.getModelValueAt(modelRow, CCMTableModel.REQUIRED_COMPONENT_INDEX);
-				List<String> related = (List<String>) ccmTableModel.getModelValueAt(
-						modelRow, CCMTableModel.RELATED_COMPONENT_INDEX);
-				String folder = (String) ccmTableModel.getModelValueAt(
-						modelRow, CCMTableModel.FOLDER_INDEX);
-				File file = ((File) ccmTableModel.getModelValueAt(modelRow,
-						CCMTableModel.CCM_FILE_NAME_INDEX));
-				String ccmFileName = file.getAbsolutePath();
-
-				List<String> unselectedRequired = new ArrayList<String>();
-				for (int i=0; i< required.size(); i++){
-					String requiredClazz = required.get(i);
-					Integer requiredRow = getModelRowByClazz(requiredClazz); 
-					Boolean requiredSelected = (Boolean)getModelValueAt(requiredRow.intValue(), CCMTableModel.SELECTION_INDEX);
-					if(!requiredSelected){
-						unselectedRequired.add(requiredClazz);
-					}
-				}
-
-				if (currentChoice.booleanValue()) {
-					/* PLUGIN SELECTED */
-					String propFileName = null;
-					if (ccmFileName.endsWith(".ccm.xml"))
-						propFileName = ccmFileName
-								.replace(".ccm.xml", ".ccmproperties");
-					else if (ccmFileName.endsWith(".cwb.xml"))
-						propFileName = ccmFileName
-						.replace(".cwb.xml", ".ccmproperties");
-					String licenseAccepted = ComponentConfigurationManager.readProperty(folder, propFileName, "licenseAccepted");
-					Boolean boolRequired = record.isMustAccept();
-					boolean bRequired = boolRequired.booleanValue();
-					if ( (bRequired && (licenseAccepted == null) ) 
-						|| (bRequired && licenseAccepted != null && !licenseAccepted.equalsIgnoreCase("true")) ) {
-						String componentName = (String) ccmTableModel
-								.getModelValueAt(modelRow,
-										CCMTableModel.NAME_INDEX);
-
-						String title = "Terms Acceptance";
-							String message = "\nBy clicking \"I Accept\", you signify that you \nhave read and accept the terms of the license \nagreement for the \""
-								+ componentName + "\" application.\n\nTo view this license, exit out of this dialog and click \non the View License button below.\n\n";
-						Object[] options = { "I Accept", "No, thanks" };
-						int choice = JOptionPane.showOptionDialog(null,
-								message, title, JOptionPane.YES_NO_OPTION,
-								JOptionPane.PLAIN_MESSAGE, null, options,
-								options[0]);
-
-						if (choice != 0) {
-							ComponentConfigurationManager.writeProperty(folder, propFileName, "licenseAccepted", "false");
-							record.setSelected(new Boolean(false));
-							return false;
-						}
-						ComponentConfigurationManager.writeProperty(folder, propFileName, "licenseAccepted", "true");
-					}
-
-					if (!validation) {
-						ccmTableModel.fireTableDataChanged();
-						return true;
-					}
-
-					if (unselectedRequired.size() > 0 || related.size() > 0) {
-						DependencyManager dmanager = new DependencyManager(this, unselectedRequired, modelRow, related);
-						dmanager.checkDependency();
-					}
-				} else {
-					/* PLUGIN UNSELECTED */
-					List<Integer> dependentPlugins = null;
-
-					String unselectedPluginClazz = "Plugin is missing a Class descriptor";
-					int unselectedRow = modelRow;
-					if (unselectedRow >= 0) {
-						unselectedPluginClazz = (String) ccmTableModel
-								.getModelValueAt(unselectedRow,
-										CCMTableModel.CLASS_INDEX);
-					}
-
-					dependentPlugins = new ArrayList<Integer>();
-					/*
-					 * Find Plugins that are dependent on this unselected
-					 * plugin.
-					 */
-					int rowCount = ccmTableModel.getModelRowCount();
-					for (int i = 0; i < rowCount; i++) {
-
-						/*
-						 * If the potentially dependent plugin is not selected,
-						 * don't bother to see if it is dependent
-						 */
-						Boolean selected = (Boolean) ccmTableModel.getModelValueAt(
-								i, CCMTableModel.SELECTION_INDEX);
-						if (!selected.booleanValue()) {
-							continue;
-						}
-
-						List<String> requiredList = (List<String>) ccmTableModel
-								.getModelValueAt(i, CCMTableModel.REQUIRED_COMPONENT_INDEX);
-						for (int j = 0; j < requiredList.size(); j++) {
-							String requiredClazz = requiredList.get(j);
-							if (unselectedPluginClazz
-									.equalsIgnoreCase(requiredClazz)) {
-								dependentPlugins.add(new Integer(i));
-								break;
-							}
-						}
-					}
-
-					if (!validation) {
-						ccmTableModel.fireTableDataChanged();
-						return true;
-					}
-					
-					/* If dependencies are found, then popup a dialog */
-					if (dependentPlugins.size() > 0) {
-						DependencyManager dmanager = new DependencyManager(this, dependentPlugins, modelRow);
-						dmanager.checkDependency();
-					}
-				}
-
-				break;
-			default:
-
-			}
-			fireTableCellUpdated(modelRow, column);
-			
-			return true;
-		}
-
-		// what the is this TODO comment?
-		// TODO choose weather to use loadGuiModelFromCmmFiles() or getPluginsFromCcmFile()
-		
-		// this is different from loadGuiModelFromFiles not just in the file name, but different for 
-		// manager.getPluginsFromCcmFile(folderName, ccmFileName );
-		/**
-		 *  Load the GUI Model from.ccm.xml file
-		 */
-		private void loadGuiModelFromCmmFiles() {
-			String name = null;
-			String version = null;
-			String author = null;
-			String authorURL = null;
-			String toolURL = null;
-			String tutorialURL = null;			
-			String clazz = null;
-			String description = null;
-			String license = null;
-			String mustAccept = null;
-			String documentation = null;
-			List<String> requiredComponents = null;
-			List<String> relatedComponents = null;
-			String parser = null;
-			String analysis = null;
-			String visualizer = null;
-			String loadByDefault = null;
-			String hidden = null;
-			
-			for (File file: manager.ccmFile){
-				String folderName = file.getParentFile().getName(), ccmFileName = file.getName();
-				
-//				CcmComponent ccmComponent = manager.getPluginsFromFile(file );
-					
-					CcmComponent ccmComponent = manager.getPluginsFromCcmFile(folderName, ccmFileName );
-					
-					if (ccmComponent == null){
-						continue;
-					}
-					
-					List<Plugin> plugins = ccmComponent.getPlugins();
-					if (plugins == null) {
-						continue;
-					}
-	
-					Plugin plugin = (Plugin) plugins.get(0);
-					name = plugin.getName();
-	
-					version = ccmComponent.getVersion();
-					author = ccmComponent.getAuthor();
-					authorURL = ccmComponent.getAuthorURL();
-					tutorialURL = ccmComponent.getTutorialURL();
-					toolURL = ccmComponent.getToolURL();
-					clazz = ccmComponent.getClazz();
-					description = ccmComponent.getDescription();
-					license = ccmComponent.getLicense();
-					mustAccept = ccmComponent.getMustAccept();
-					documentation = ccmComponent.getDocumentation();
-					requiredComponents = ccmComponent.getRequiredComponents();
-					relatedComponents = ccmComponent.getRelatedComponents();
-					parser = ccmComponent.getParser();
-					analysis = ccmComponent.getAnalysis();
-					visualizer = ccmComponent.getVisualizer();
-					loadByDefault = ccmComponent.getLoadByDefault();
-					hidden = ccmComponent.getHidden();
-
-					boolean bMustAccept = false;
-					boolean bParser = false;
-					boolean bAnalysis = false;
-					boolean bVisualizer = false;
-					boolean bLoadByDefault = false;
-					boolean bHidden = false;
-
-					if (mustAccept!=null && mustAccept.equalsIgnoreCase("true")){
-						bMustAccept = true;
-					}
-					if (parser!=null && parser.equalsIgnoreCase("true")){
-						bParser = true;
-					}
-					if (analysis!=null && analysis.equalsIgnoreCase("true")){
-						bAnalysis = true;
-					}
-					if (visualizer!=null && visualizer.equalsIgnoreCase("true")){
-						bVisualizer = true;
-					}
-					if (loadByDefault!=null && loadByDefault.equalsIgnoreCase("true")){
-						bLoadByDefault = true;
-					}
-					if (hidden!=null && hidden.equalsIgnoreCase("true")){
-						bHidden = true;
-					}
-					
-					TableRow tableRow = new TableRow(false, name, version,
-							author, authorURL, tutorialURL, toolURL, clazz, description,
-							folderName, file, license, bMustAccept, documentation, requiredComponents,
-							relatedComponents, bParser, bAnalysis, bVisualizer, bLoadByDefault, bHidden);
-
-					String propFileName = null;
-					if (ccmFileName.endsWith(".ccm.xml"))
-						propFileName = ccmFileName
-								.replace(".ccm.xml", ".ccmproperties");
-					else if (ccmFileName.endsWith(".cwb.xml"))
-						propFileName = ccmFileName
-								.replace(".cwb.xml", ".ccmproperties");
-					
-	
-					String onOff = ComponentConfigurationManager.readProperty(folderName, propFileName, "on-off");
-
-					if (onOff != null && onOff.equals("true")){
-						tableRow.setSelected(true);
-					}
-					else{
-						tableRow.setSelected(false);
-					}
-						
-					rows.add(tableRow);
-
-				}
-
-		}
-		
-		private void loadGuiModelFromFiles(List<File> files) {
-			String name = null;
-			String version = null;
-			String author = null;
-			String authorURL = null;
-			String toolURL = null;
-			String tutorialURL = null;			
-			String clazz = null;
-			String description = null;
-			String license = null;
-			String mustAccept = null;
-			String documentation = null;
-			List<String> requiredComponents = null;
-			List<String> relatedComponents = null;
-			String parser = null;
-			String analysis = null;
-			String visualizer = null;
-			String loadByDefault = null;
-			String hidden = null;
-			
-				for (File file: files){
-					String folderName = file.getParentFile().getName(), ccmFileName = file.getName();
-					
-					CcmComponent ccmComponent = manager.getPluginsFromFile(file );
-					
-					if (ccmComponent == null){
-						continue;
-					}
-					
-					List<Plugin> plugins = ccmComponent.getPlugins();
-					if (plugins == null || plugins.size()<=0) {
-						continue;
-					}
-	
-					Plugin plugin = (Plugin) plugins.get(0);
-					name = plugin.getName();
-	
-					version = ccmComponent.getVersion();
-					author = ccmComponent.getAuthor();
-					authorURL = ccmComponent.getAuthorURL();
-					tutorialURL = ccmComponent.getTutorialURL();
-					toolURL = ccmComponent.getToolURL();
-					clazz = ccmComponent.getClazz();
-					description = ccmComponent.getDescription();
-					license = ccmComponent.getLicense();
-					mustAccept = ccmComponent.getMustAccept();
-					documentation = ccmComponent.getDocumentation();
-					requiredComponents = ccmComponent.getRequiredComponents();
-					relatedComponents = ccmComponent.getRelatedComponents();
-					parser = ccmComponent.getParser();
-					analysis = ccmComponent.getAnalysis();
-					visualizer = ccmComponent.getVisualizer();
-					loadByDefault = ccmComponent.getLoadByDefault();
-					hidden = ccmComponent.getHidden();
-
-					boolean bMustAccept = false;
-					boolean bParser = false;
-					boolean bAnalysis = false;
-					boolean bVisualizer = false;
-					boolean bLoadByDefault = false;
-					boolean bHidden = false;
-
-					if (mustAccept!=null && mustAccept.equalsIgnoreCase("true")){
-						bMustAccept = true;
-					}
-					if (parser!=null && parser.equalsIgnoreCase("true")){
-						bParser = true;
-					}
-					if (analysis!=null && analysis.equalsIgnoreCase("true")){
-						bAnalysis = true;
-					}
-					if (visualizer!=null && visualizer.equalsIgnoreCase("true")){
-						bVisualizer = true;
-					}
-					if (loadByDefault!=null && loadByDefault.equalsIgnoreCase("true")){
-						bLoadByDefault = true;
-					}
-					if (hidden!=null && hidden.equalsIgnoreCase("true")){
-						bHidden = true;
-					}
-					
-					TableRow tableRow = new TableRow(false, name, version,
-							author, authorURL, tutorialURL, toolURL, clazz, description,
-							folderName, file, license, bMustAccept, documentation, requiredComponents,
-							relatedComponents, bParser, bAnalysis, bVisualizer, bLoadByDefault, bHidden);
-
-					String propFileName = null;
-					if (ccmFileName.endsWith(".ccm.xml"))
-						propFileName = ccmFileName
-								.replace(".ccm.xml", ".ccmproperties");
-					else if (ccmFileName.endsWith(".cwb.xml"))
-						propFileName = ccmFileName
-								.replace(".cwb.xml", ".ccmproperties");
-	
-					String onOff = ComponentConfigurationManager.readProperty(folderName, propFileName, "on-off");
-
-					if (onOff != null && onOff.equals("true")){
-						tableRow.setSelected(true);
-					}
-					else{
-						tableRow.setSelected(false);
-					}
-						
-					rows.add(tableRow);
-			}// files
-			
-			
-		}
-		
-		final private void sortRows(Comparator <TableRow> rowComparator){
-			 Collections.sort ( rows, rowComparator) ; 
-		}
-		
-		final public String getLoadedFilterValue() {
-			return loadedFilterValue;
-		}
-
-		final public void setLoadedFilterValue(String loadedFilterValue) {
-			this.loadedFilterValue = loadedFilterValue;
-		}
-
-		final public String getTypeFilterValue() {
-			return typeFilterValue;
-		}
-
-		final public void setTypeFilterValue(String typeFilterValue) {
-			this.typeFilterValue = typeFilterValue;
-		}
-
-		final public String getKeywordFilterValue() {
-			return keywordFilterValue;
-		}
-
-		final public void setKeywordFilterValue(String keywordFilterValue) {
-			this.keywordFilterValue = keywordFilterValue;
-		}
-		
-	}
-
-	/**
-	 * GUI row structure
-	 * 
-	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.17 2009-11-20 14:37:27 jiz Exp $
-	 */
-	private class TableRow {
-		private boolean selected = false;
-		private String name = "";
-		private String version = "";
-		private String author = "";
-		private String authorURL = null;
-		private String tutorialURL = null;
-		private String toolURL = null;
-		private String clazz = "";
-		private String description = "";
-		private String folder = "";
-		private File file;
-		private String license = "";
-		private boolean mustAccept = false;
-		private String documentation = "";
-		private List<String> requiredComponents = null;
-		private List<String> relatedComponents = null;
-		private boolean parser = false;
-		private boolean analysis = false;
-		private boolean visualizer = false;
-		private boolean loadByDefault = false;
-		private boolean hidden = false;
-		
-		/**
-		 * Constructor
-		 * 
-		 * @param selected
-		 * @param name
-		 * @param version
-		 * @param author
-		 * @param authorURL
-		 * @param toolURL
-		 * @param clazz
-		 * @param description
-		 * @param folder
-		 * @param fileName
-		 * @param requiredComponents
-		 * @param relatedComponents
-		 */
-		public TableRow(boolean selected, String name, String version,
-				String author, String authorURL, String tutorialURL, String toolURL, String clazz,
-				String description, String folder, File file, String license, boolean mustAccept, String documentation,
-				List<String> requiredComponents, List<String> relatedComponents, boolean parser, boolean analysis, boolean visualizer, boolean loadByDefault, boolean hidden) {
-			super();
-			this.selected = selected;
-			this.name = name;
-			this.version = version;
-			this.author = author;
-			this.authorURL = authorURL;
-			this.tutorialURL = tutorialURL;			
-			this.toolURL = toolURL;
-			this.clazz = clazz;
-			this.description = description;
-			this.folder = folder;
-			this.file = file;
-			this.license = license;
-			this.mustAccept = mustAccept; 
-			this.documentation = documentation;
-			this.requiredComponents = requiredComponents;
-			this.relatedComponents = relatedComponents;
-			this.parser = parser;
-			this.analysis = analysis;
-			this.visualizer = visualizer;
-			this.loadByDefault = loadByDefault;
-			this.hidden = hidden;
-		}
-
-		public boolean isSelected() {
-			return selected;
-		}
-
-		public void setSelected(boolean selected) {
-			this.selected = selected;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		public String getVersion() {
-			return version;
-		}
-
-		public void setVersion(String version) {
-			this.version = version;
-		}
-
-		public JButton getAuthor() {
-			JButton button = new JButton(this.author);
-			button.setBorderPainted(false);
-			
-			if (this.authorURL != null){
-				button.setToolTipText(this.authorURL);
-				String html = "<html><font><u>" + this.author + "</u><br></font>";
-				button.setText(html);
-			}
-
-			return button;
-		}
-
-		public void setAuthor(String author) {
-			this.author = author;
-		}
-
-		public JButton getAuthorURL() {
-			ImageIcon image = Util.createImageIcon("/org/geworkbench/engine/visualPlugin.png", this.authorURL);
-			
-			JButton button = new JButton(image);
-			button.setToolTipText(this.authorURL);
-			button.setBorderPainted(false);
-			return button;
-		}
-		
-		public void setAuthorURL(String authorURL) {
-			this.authorURL = authorURL;
-		}
-
-		public JButton getTutorialURL() {
-			ImageIcon image = null; 
-			if (this.tutorialURL == null || this.tutorialURL == ""){
-				image = Util.createImageIcon(
-						"/org/geworkbench/engine/visualPluginGrey.png", this.tutorialURL);
-			}else{
-				image = Util.createImageIcon(
-						"/org/geworkbench/engine/visualPlugin.png", this.tutorialURL);
-			}
-			
-			JButton button = new JButton(image);
-			button.setToolTipText(this.tutorialURL);
-			button.setBorderPainted(false);
-			return button;
-		}
-
-		public void setTutorialURL(String tutorialURL) {
-			this.tutorialURL = tutorialURL;
-		}
-		
-		public JButton getToolURL() {
-			ImageIcon image = null; 
-			if (this.toolURL == null || this.toolURL == ""){
-				image = Util.createImageIcon(
-						"/org/geworkbench/engine/visualPluginGrey.png", this.tutorialURL);
-			}else{
-				image = Util.createImageIcon(
-						"/org/geworkbench/engine/visualPlugin.png", this.tutorialURL);
-			}
-
-			
-			JButton button = new JButton(image);
-			button.setToolTipText(this.toolURL);
-			button.setBorderPainted(false);
-			return button;
-		}
-
-		public void setToolURL(String toolURL) {
-			this.toolURL = toolURL;
-		}
-
-		public String getClazz() {
-			return clazz;
-		}
-
-		public void setClazz(String clazz) {
-			this.clazz = clazz;
-		}
-
-		public String getFolder() {
-			return folder;
-		}
-
-		public void setDescription(String description) {
-			this.description = description;
-		}
-
-		public void setFolder(String folder) {
-			this.folder = folder;
-		}
-
-		public String getDescription() {
-			return description;
-		}
-
-		public File getFile() {
-			return file;
-		}
-
-		public String getLicense() {
-			return license;
-		}
-
-		public void setLicense(String license) {
-			this.license = license;
-		}
-
-		public boolean isMustAccept() {
-			return mustAccept;
-		}
-
-		public void setMustAccept(boolean mustAccept) {
-			this.mustAccept = mustAccept;
-		}
-		
-		public String getDocumentation() {
-			return documentation;
-		}
-
-		public void setDocumentation(String documentation) {
-			this.documentation = documentation;
-		}
-		
-		public List<String> getRequiredComponents() {
-			return requiredComponents;
-		}
-
-		public void setRequiredComponents(List<String> requiredComponents) {
-			this.requiredComponents = requiredComponents;
-		}
-
-		public List<String> getRelatedComponents() {
-			return relatedComponents;
-		}
-
-		public void setRelatedComponents(List<String> relatedComponents) {
-			this.relatedComponents = relatedComponents;
-		}
-
-		public boolean isParser() {
-			return parser;
-		}
-
-		public void setParser(boolean parser) {
-			this.parser = parser;
-		}
-
-		public boolean isAnalysis() {
-			return analysis;
-		}
-
-		public void setAnalysis(boolean analysis) {
-			this.analysis = analysis;
-		}
-
-		public boolean isVisualizer() {
-			return visualizer;
-		}
-
-		public void setVisualizer(boolean visualizer) {
-			this.visualizer = visualizer;
-		}
-
-		public boolean isLoadByDefault() {
-			return loadByDefault;
-		}
-
-		public void setLoadByDefault(boolean loadByDefault) {
-			this.loadByDefault = loadByDefault;
-		}
-
-		public boolean isHidden() {
-			return hidden;
-		}
-
-		public void setHidden(boolean hidden) {
-			this.hidden = hidden;
-		}
-		
-		
-	}
-
-	@SuppressWarnings("unchecked")
-	private class TableNameComparator implements Comparator{
-		public int compare(Object row1, Object row2){
-			String name1 = ( (TableRow) row1).getName().toLowerCase();
-			String name2 = ( (TableRow) row2).getName().toLowerCase();
-			return name1.compareTo(name2);
-		}
-	}
-	
-	/**
-	 * CheckBoxHeaderListener
-	 * 
-	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.17 2009-11-20 14:37:27 jiz Exp $
-	 */
-	
-	/*		TODO
-     *		The checkbox in the header of the CCM window functionality may be 
-	 * 		desirable at some point in the future, for testing purposes only.
-	 * 		If it is to be used, then it might be desirable to turn off 
-	 * 		component validation for this feature.  		 
-
-	
-	class CheckBoxHeaderListener implements ItemListener {
-		public void itemStateChanged(ItemEvent e) {
-			Object source = e.getSource();
-			if (source instanceof AbstractButton == false)
-				return;
-			boolean checked = e.getStateChange() == ItemEvent.SELECTED;
-			for (int x = 0, y = ccmTableModel.getRowCount(); x < y; x++) {
-
-				/* Don't unload LOAD_BY_DEFAULT_INDEX components * /
-				if(!checked && ((Boolean)ccmTableModel.getModelValueAt(x, CCMTableModel.LOAD_BY_DEFAULT_INDEX)).booleanValue()){
-					continue;					
-				}
-				
-				ccmTableModel.setValueAt(new Boolean(checked), x, 0, true);
-			}
-		}
-	}
-	
-	*/
-	
-	/**
-	 * CheckBoxHeader
-	 * 
-	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.17 2009-11-20 14:37:27 jiz Exp $
-	 */
-	class CheckBoxHeader extends JCheckBox implements TableCellRenderer,
-			MouseListener {
-		private static final long serialVersionUID = 9098648150367788628L;
-		protected CheckBoxHeader rendererComponent;
-		protected int column;
-		protected boolean mousePressed = false;
-
-		public CheckBoxHeader(ItemListener itemListener) {
-			rendererComponent = this;
-			rendererComponent.addItemListener(itemListener);
-		}
-
-		public Component getTableCellRendererComponent(JTable table,
-				Object value, boolean isSelected, boolean hasFocus, int row,
-				int column) {
-			if (table != null) {
-				JTableHeader header = table.getTableHeader();
-				if (header != null) {
-					rendererComponent.setHorizontalAlignment(CENTER);
-					rendererComponent.setForeground(header.getForeground());
-					rendererComponent.setBackground(header.getBackground());
-					rendererComponent.setFont(header.getFont());
-					header.addMouseListener(rendererComponent);
-				}
-			}
-			setColumn(column);
-			rendererComponent.setText("On/Off");
-			setBorder(UIManager.getBorder("TableHeader.cellBorder"));
-			return rendererComponent;
-		}
-
-		protected void setColumn(int column) {
-			this.column = column;
-		}
-
-		public int getColumn() {
-			return column;
-		}
-
-		protected void handleClickEvent(MouseEvent e) {
-			if (mousePressed) {
-				mousePressed = false;
-				JTableHeader header = (JTableHeader) (e.getSource());
-				JTable tableView = header.getTable();
-				TableColumnModel columnModel = tableView.getColumnModel();
-				int viewColumn = columnModel.getColumnIndexAtX(e.getX());
-				int column = tableView.convertColumnIndexToModel(viewColumn);
-
-				if (viewColumn == this.column && e.getClickCount() == 1
-						&& column != -1) {
-					doClick();
-				}
-			}
-		}
-
-		public void mouseClicked(MouseEvent e) {
-			handleClickEvent(e);
-			((JTableHeader) e.getSource()).repaint();
-		}
-
-		public void mousePressed(MouseEvent e) {
-			mousePressed = true;
-		}
-
-		public void mouseReleased(MouseEvent e) {
-		}
-
-		public void mouseEntered(MouseEvent e) {
-		}
-
-		public void mouseExited(MouseEvent e) {
-		}
-	} 
-	
-	class JTableButtonRenderer implements TableCellRenderer {
+	static private class JTableButtonRenderer implements TableCellRenderer {
 		private TableCellRenderer __defaultRenderer;
 
 		public JTableButtonRenderer(TableCellRenderer renderer) {
 			__defaultRenderer = renderer;
 		}
 
+		@SuppressWarnings("unchecked")
 		public Component getTableCellRendererComponent(JTable table,
 				Object value, boolean isSelected, boolean hasFocus, int row,
 				int column) {
