@@ -67,9 +67,14 @@ public class WorkspaceHandler {
 		String extension = filter.getExtension();
 		int choice = fc.showSaveDialog(enclosingProjectPanel.jProjectPanel);
 		if (choice == JFileChooser.APPROVE_OPTION) {
-			wsFilename = fc.getSelectedFile().getAbsolutePath();
+			File selectedFile = fc.getSelectedFile();
+			wsFilename = selectedFile.getAbsolutePath();
 
-			if (fc.getSelectedFile().exists()) {
+			if (!selectedFile.getName().endsWith(".wsp")) {
+				selectedFile = new File(selectedFile.getAbsolutePath() + ".wsp");
+			}
+			
+			if (selectedFile.exists()) {
 				if (JOptionPane.NO_OPTION == JOptionPane.showConfirmDialog(
 						null,
 						"Are you sure you want to overwrite this workspace?",
