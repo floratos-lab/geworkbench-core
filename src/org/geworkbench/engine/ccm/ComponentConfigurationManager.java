@@ -133,7 +133,7 @@ public class ComponentConfigurationManager {
 
         for (ComponentResource resource: resources) {
         	log.info("searching resource "+resource.getDir());
-        	if(resource.getDir().endsWith(".") || resource.getDir().contains("geworkbench"))continue;
+
         	File resourceDir = new File(resource.getDir()+"/classes");
         	try {
         		searchCwb(resourceDir);
