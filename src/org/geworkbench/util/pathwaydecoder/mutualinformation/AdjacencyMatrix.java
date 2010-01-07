@@ -52,7 +52,7 @@ public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMa
     static final public int LOW = 2;
     static final public int BOTH = 3;
     protected HashMap<Integer, HashMap<Integer, Float>> geneRows = new HashMap<Integer, HashMap<Integer, Float>>();
-    protected HashMap geneInteractionRows = new HashMap();
+    protected HashMap<Integer, HashMap<Integer, String>> geneInteractionRows = new HashMap<Integer, HashMap<Integer, String>>();
     protected HashMap idToGeneMapper = new HashMap();
     protected HashMap<String, Integer> snToGeneMapper = new HashMap();
 
@@ -280,7 +280,7 @@ public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMa
         return maxValue;
     }
 
-    public HashMap getInteractionMap() {
+    public HashMap<Integer, HashMap<Integer, String>> getInteractionMap() {
         return this.geneInteractionRows;
     }
 
