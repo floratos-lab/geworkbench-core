@@ -1109,7 +1109,7 @@ public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMa
         maSet = microarraySet;
     }
 
-    public DSMicroarraySet getMicroarraySet() {
+    public DSMicroarraySet<DSMicroarray> getMicroarraySet() {
         return maSet;
     }
 
