@@ -60,10 +60,6 @@ public abstract class MicroarrayVisualizer {
         return event;
     }
 
-    @Publish public org.geworkbench.events.AdjacencyMatrixEvent publishAdjacencyMatrixEvent(org.geworkbench.events.AdjacencyMatrixEvent event) {
-        return event;
-    }
-
     @Publish public ImageSnapshotEvent publishImageSnapshotEvent(ImageSnapshotEvent event) {
         return event;
     }
