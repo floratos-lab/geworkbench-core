@@ -62,7 +62,6 @@ public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMa
 
     private String adjName;
 
-    private int adjSource = 0;
     static public int fromGeneNetworkPanelNotTakenCareOf = 1;
     static public int fromGeneNetworkPanelTakenGoodCareOf = 2;
     static public int fromBindPanel = 3;
@@ -333,20 +332,6 @@ public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMa
      * @deprecated should use the function in the subclass EvdAdjacencyMatrix
      */
     public void addInteractionType2(int geneId1, int geneId2, double mi) {
-    }
-
-    public int getSource() {
-        return this.adjSource;
-    }
-
-    /**
-     * register where the adjacency matrix comes from:<BR>
-     *
-     * @param src int
-     *            1= GeneNetworkPanel
-     */
-    public void setSource(int src) {
-        this.adjSource = src;
     }
 
     public void addGeneRow(int geneId) {
