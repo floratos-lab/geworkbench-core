@@ -1,5 +1,7 @@
 package org.geworkbench.util;
 
+import java.io.File;
+
 /**
  * Part of the API for accessing file system by geworkbench components.
  *
@@ -23,6 +25,19 @@ package org.geworkbench.util;
  * When creating java.io.File user should use only File(String pathname)
  * constructor and use this API to create pathname string.
  * NOTE: relative path shouldn't be used as a pathname(can we enforce it?)
+ *
+ * Each time this API is used, before the String returned to the user, it will be checked 
+ * if directory structure exist and if it doesn't - directory structure will be created 
+ * with all subdirectories. 
+ * Methods checkDirExist(dir) and checkParentDirExist are made public as in many places in 
+ * geworkbench similar code exist. 
+ * User can call these methods directly if directory structure is created without using this API, 
+ * using this API will guarantee that directory structure exist.
+ * It will allow creating new directory structure by just changing application.properties file, 
+ * BTW application.properties file might need some cleaning.
+ * 
+ * Strings representing directories will have FILE_SEPARATOR at the end but Strings representing files
+ * will not have it.
  *
  * It is also recommended not to hardcode file names but use constants or
  * properties instead.
@@ -89,6 +104,7 @@ public class FilePathnameUtils {
 					+ FILE_SEPARATOR;
 		}
 
+		checkParentDirExist(userSettingsFilePath);
 		return userSettingsFilePath;
 	}
 
@@ -112,6 +128,7 @@ public class FilePathnameUtils {
 					+ FILE_SEPARATOR;
 		}
 
+		checkDirExist(dataFilesDirPath);
 		return dataFilesDirPath;
 	}
 
@@ -135,6 +152,7 @@ public class FilePathnameUtils {
 					+ tempFolder;
 		}
 
+		checkDirExist(temporaryFilesDirectoryPath);
 		return temporaryFilesDirectoryPath;
 	}
 
@@ -157,6 +175,7 @@ public class FilePathnameUtils {
 			userSettingDirectoryPath = prependHomeDirName(userSettingDirectory);
 		}
 
+		checkDirExist(userSettingDirectoryPath);
 		return userSettingDirectoryPath;
 	}
 
@@ -183,6 +202,7 @@ public class FilePathnameUtils {
 			housekeepingnormalizersettingsFilePath = prependHomeDirName(housekeepingnormalizersettingsFile);
 		}
 
+		checkParentDirExist(housekeepingnormalizersettingsFilePath);
 		return housekeepingnormalizersettingsFilePath;
 
 	}
@@ -202,5 +222,31 @@ public class FilePathnameUtils {
 				+ FILE_SEPARATOR;
 
 		return prependName;
+	}
+
+	/**
+	 * if directory structure doesn't exist - create
+	 *
+	 * @param file that parent directory will be checked
+	 */
+	public static void checkParentDirExist(String file){
+		File nf = new File(file);
+		String parentDir = nf.getParent();
+		if (parentDir != null){
+			checkDirExist(parentDir);
+		}
+	}
+	
+	/**
+	 * if directory structure doesn't exist - create
+	 *
+	 * @param dir to check
+	 */
+	public static void checkDirExist(String dir){
+		File nd = new File(dir);
+		if (!nd.exists()) {
+			nd.mkdirs();
+		}
+
 	}
 }
