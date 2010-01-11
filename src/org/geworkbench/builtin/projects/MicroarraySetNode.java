@@ -1,6 +1,7 @@
 package org.geworkbench.builtin.projects;
 
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
+import org.geworkbench.util.FilePathnameUtils;
 
 import java.io.*;
 
@@ -98,7 +99,7 @@ public class MicroarraySetNode extends ProjectTreeNode {
      */
     private void createTempFile() {
         String persistFileName = microarraySet.getID() + microarraySet.getLabel() + System.currentTimeMillis();
-        String tempFileDirectory = System.getProperty("temporary.files.directory");
+        String tempFileDirectory = FilePathnameUtils.getTemporaryFilesDirectoryPath(); 
         // If the designated temp directory does not exist, save the temp files
         // at the same directory where the applcation started from.
         if (tempFileDirectory != null && (new File(tempFileDirectory)).exists())

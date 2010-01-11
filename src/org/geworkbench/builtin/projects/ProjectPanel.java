@@ -104,6 +104,7 @@ import org.geworkbench.events.ProjectNodeRemovedEvent;
 import org.geworkbench.events.ProjectNodeRenamedEvent;
 import org.geworkbench.events.SingleValueEditEvent;
 import org.geworkbench.events.StructureAnalysisEvent;
+import org.geworkbench.util.FilePathnameUtils;
 import org.geworkbench.util.SaveImage;
 import org.geworkbench.util.Util;
 import org.ginkgo.labs.ws.GridEndpointReferenceType;
@@ -2577,16 +2578,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 		};
 		listeners.put("File.Export", listener);
-		// Attempt to create the directory where temp files will be saved.
-		String tempFileDirectory = System
-				.getProperty("temporary.files.directory");
-		if (tempFileDirectory != null) {
-			File td = new File(tempFileDirectory);
-			if (!td.exists()) {
-				td.mkdirs();
-			}
-
-		}
 
 		// Let the main frame listen to window-closing event ZJ 2008-05-01
 		GeawConfigObject.getGuiWindow().addWindowListener(new WindowAdapter() {
