@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 
+import org.geworkbench.engine.config.UILauncher;
 import org.geworkbench.util.Util;
 
 /**
@@ -556,7 +557,12 @@ class CCMTableModel extends AbstractTableModel {
 		String hidden = null;
 
 		for (File file : files) {
-			String folderName = file.getParentFile().getName(), ccmFileName = file
+			String comDir = UILauncher.getComponentsDirectory();
+			String path = file.getAbsolutePath();
+			int index = path.indexOf(comDir)+comDir.length()+1;
+			String folderName = path.substring(index, path.indexOf(System.getProperty("file.separator"), index));
+			
+			String ccmFileName = file
 					.getName();
 
 			CcmComponent ccmComponent = manager.getPluginsFromFile(file);

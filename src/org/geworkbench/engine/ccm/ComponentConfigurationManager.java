@@ -206,11 +206,18 @@ public class ComponentConfigurationManager {
 
 	}
 
+	// this eventually should not be necessary if the cwb/resource is managed properly
+	private String resourceFolder(File file) {
+		String path = file.getAbsolutePath();
+		int index = path.indexOf(componentsDirectory)+componentsDirectory.length()+1;
+		return path.substring(index, path.indexOf(FILE_DEL, index));
+	}
+	
 	private void loadSelectedComponentsFromCwb() {
 
 		for (File file: cwbFile) {
 			// this is not really the right way to do it. just to support existing code. TODO
-			String folder = file.getParentFile().getName();
+			String folder = resourceFolder(file);
 			String ccmFileName = file.getName();
 			
 			String propFileName = ccmFileName.replace(COMPONENT_DESCRIPTOR_EXTENSION,
@@ -278,7 +285,7 @@ public class ComponentConfigurationManager {
 
 	// this is right way to do it: use file instead of string, resoruceMap has been initialized already
 	void loadComponent(File file) {
-		String folder = file.getParentFile().getName();
+		String folder = resourceFolder(file);
 		/* create component resource */
 		ComponentResource componentResource = createComponentResource(folder);
 
