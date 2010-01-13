@@ -67,7 +67,7 @@
 	<!-- COMPILE  -->
 	<!-- ===================================================================== -->
 	<target name="compile" depends="prepare" description="Compiles core and component .java source code.">
-		<javac srcdir="${src}" destdir="${classes}" debug="${debug}" source="1.5" target="1.5" memorymaximumsize="256M" fork="true">
+		<javac srcdir="${src}" destdir="${classes}" debug="${debug}" source="1.6" target="1.6" memorymaximumsize="256M" fork="true">
 			<classpath>
 				<path refid="classpath" />
 			</classpath>
