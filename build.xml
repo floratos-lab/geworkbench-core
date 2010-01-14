@@ -91,7 +91,7 @@
 				<include name="cgems" />
 				<include name="classification" />
 				<include name="colormosaic" />
-				<include name="cutenet" />
+				<include name="cytoscape" />
 				<include name="discovery" />
 				<include name="evidenceintegration" />
 				<include name="filtering" />
@@ -478,7 +478,7 @@
 				
 				<include name="${classes}/**/*" />
 
-				<!-- Include the following components for distribution 1.8.0-->
+				<!-- Include the following components for distribution -->
 				<include name="bin/matrixreduce/*" />
 				<include name="${components}/alignment/**/*" />
 				<include name="${components}/analysis/**/*" />
@@ -495,7 +495,7 @@
 				
 				<include name="${components}/somclustering/**/*" />
 				<include name="${components}/colormosaic/**/*" />
-				<include name="${components}/cutenet/**/*" />
+				<include name="${components}/cytoscape/**/*" />
 				<include name="${components}/discovery/**/*" />
 				<include name="${components}/filtering/**/*" />
 				<include name="${components}/geneontology2/**/*" />
@@ -545,7 +545,6 @@
 				<exclude name="nbproject" />
 				<include name="data/public_data/**" />
 				<include name="data/gene_ontology.1_2.obo"/>
-				<include name="cutenet.properties"/>
 				<include name="loader.properties"/>
 			</fileset>
 		</copy>
