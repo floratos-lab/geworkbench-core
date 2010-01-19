@@ -22,14 +22,15 @@ import javax.swing.JTextField;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.geworkbench.util.FilePathnameUtils;
 
 /**
  * A popup window for user to enter a 4-digit PDB id;
  * the PDB file from RCSB website will be downloaded and displayed
- * 
+ *
  * @author mw2518
  * @version $Id: PDBDialog.java,v 1.6 2009-03-05 22:22:08 wangm Exp $
- * 
+ *
  */
 class PDBDialog extends JFrame implements ActionListener {
 
@@ -45,9 +46,9 @@ class PDBDialog extends JFrame implements ActionListener {
 			+ "For example, 4HHB, 9INS are PDB IDs for hemoglobin and insulin.";
 
 	/*
-	 * save pdb file from rcsb website to local disk, 
+	 * save pdb file from rcsb website to local disk,
 	 * let project panel open the downloaded pdb file
-	 * 
+	 *
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent e) {
@@ -63,7 +64,8 @@ class PDBDialog extends JFrame implements ActionListener {
 		if (contents == null)
 			return;
 
-		String dir = LoadData.getLastDataDirectory() + "/webpdb/";
+		String dir = FilePathnameUtils.getTemporaryFilesDirectoryPath()
+				+ "webpdb" + FilePathnameUtils.FILE_SEPARATOR;
 		File nd = new File(dir);
 		if (!nd.exists()) {
 			nd.mkdir();
@@ -91,7 +93,7 @@ class PDBDialog extends JFrame implements ActionListener {
 
 	/**
 	 * specify parent project panel
-	 * 
+	 *
 	 * @param mainpp
 	 */
 	public PDBDialog(ProjectPanel mainpp) {
@@ -121,7 +123,7 @@ class PDBDialog extends JFrame implements ActionListener {
 
 	/**
 	 * read web content from url fname, return as a string
-	 * 
+	 *
 	 * @param fname
 	 * @return
 	 */
