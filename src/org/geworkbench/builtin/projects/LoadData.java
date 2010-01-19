@@ -748,9 +748,7 @@ public class LoadData extends JDialog {
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
-		if (dir.equals(".")) {
-			dir = System.getProperty("user.dir");
-		}
+
 		return dir;
 	}
 
