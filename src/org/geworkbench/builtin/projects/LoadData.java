@@ -50,7 +50,7 @@ import org.geworkbench.util.FilePathnameUtils;
 
 /**
  *  Popup to select a file (local or remote) to open.
- *  
+ *
  * @author First Genetic Trust Inc.
  * @version $Id: LoadData.java,v 1.42 2009-10-26 21:02:43 jiz Exp $
  */
@@ -62,7 +62,7 @@ public class LoadData extends JDialog {
 	private static final String CAARRAYCOMPONENT_CLASS_NAME = "org.geworkbench.components.caarray.arraydata.CaArray2Component";
 
 	private static final long serialVersionUID = -1983039293757013174L;
-	
+
 	private BorderLayout borderLayout1 = new BorderLayout();
 	private JPanel jPanel1 = new JPanel();
 	private GridLayout gridLayout1 = new GridLayout();
@@ -151,7 +151,7 @@ public class LoadData extends JDialog {
 		}
 		checkCaArraySupportingClasses();
 	}
-	
+
 	void checkCaArraySupportingClasses () {
 		/* display remote button is classes needed are not loaded*/
 		boolean caArrayPanelAvailable = false;
@@ -162,7 +162,7 @@ public class LoadData extends JDialog {
 				caArrayDisplayPanel = (CaARRAYPanel)obj;
 				caArrayPanelAvailable = true;
 			}
-			if(obj.getClass().getName().startsWith(CAARRAYCOMPONENT_CLASS_NAME)) { 
+			if(obj.getClass().getName().startsWith(CAARRAYCOMPONENT_CLASS_NAME)) {
 				caArrayComponentAvailable = true;
 			}
 			if(caArrayPanelAvailable && caArrayComponentAvailable){
@@ -443,12 +443,12 @@ public class LoadData extends JDialog {
 		public int compare(FileFormat o1, FileFormat o2) {
 			return (o1.getFormatName().compareToIgnoreCase(o2.getFormatName()));
 		}
-		
+
 	}
-	
+
 	/**
 	 * displayRemoteResourceDiolog for add a new resouce.
-	 * 
+	 *
 	 * @param option
 	 *            int
 	 */
@@ -461,7 +461,7 @@ public class LoadData extends JDialog {
 
 	/**
 	 * Show filtering options.
-	 * 
+	 *
 	 * @param option
 	 *            int
 	 */
@@ -478,7 +478,7 @@ public class LoadData extends JDialog {
 
 	/**
 	 * displayRemoteResourceDiolog for edit/delete an existed resource.
-	 * 
+	 *
 	 * @param shortname
 	 *            Object
 	 * @param option
@@ -535,7 +535,7 @@ public class LoadData extends JDialog {
 	/**
 	 * deleteButton_actionPerformed, remove the selected resource after
 	 * confirmation.
-	 * 
+	 *
 	 * @param e
 	 *            ActionEvent
 	 */
@@ -559,7 +559,7 @@ public class LoadData extends JDialog {
 
 	/**
 	 * Responds to the selection of an input file by the user
-	 * 
+	 *
 	 * @param e
 	 */
 	private void jFileChooser1_actionPerformed(ActionEvent e) {
@@ -606,7 +606,7 @@ public class LoadData extends JDialog {
 
 	/**
 	 * Responds to the user selection to see the remote files.
-	 * 
+	 *
 	 * @param e
 	 */
 	private void remoteButtonSelection_actionPerformed(ActionEvent e) {
@@ -676,18 +676,18 @@ public class LoadData extends JDialog {
 			caArrayDisplayPanel.setExperimentsLoaded(false);
 			caArrayDisplayPanel.getExperiments(e);
 		} else {
-			 
+
 			int choice = JOptionPane.showConfirmDialog(null, "You just connected to the server. Connect again?");
 			if(JOptionPane.YES_OPTION==choice){
 				caArrayDisplayPanel.initializeExperimentTree();
 				caArrayDisplayPanel.setExperimentsLoaded(false);
-				caArrayDisplayPanel.getExperiments(e);	
-			} 
+				caArrayDisplayPanel.getExperiments(e);
+			}
 		}
 		// Reset resource dirty to false after the connection to the server.
 		remoteResourceDialog.setSourceDirty(false);
 		updateCurrentView();
-	
+
 	}
 
 	public void addRemotePanel() {
@@ -700,7 +700,7 @@ public class LoadData extends JDialog {
 			return;
 		}
 		caArrayDisplayPanel.setParent(this);
-		
+
 		this.getContentPane().add(caArrayDisplayPanel, BorderLayout.CENTER);
 		this.validate();
 		this.repaint();
@@ -725,7 +725,7 @@ public class LoadData extends JDialog {
 	/**
 	 * Returns the experiment information for the most recently selected remote
 	 * file.
-	 * 
+	 *
 	 * @return
 	 */
 	public String getExperimentInformation() {
@@ -749,7 +749,7 @@ public class LoadData extends JDialog {
 			ex.printStackTrace();
 		}
 		if (dir.equals(".")) {
-			dir = FilePathnameUtils.getDataFilesDirPath();
+			dir = System.getProperty("user.dir");
 		}
 		return dir;
 	}
@@ -757,7 +757,7 @@ public class LoadData extends JDialog {
 	static public String getLastDataFormat() {
 		String format = "";
 		// This is where we store user data information
-		String filename = FilePathnameUtils.getUserSettingsFilePath(); 
+		String filename = FilePathnameUtils.getUserSettingsFilePath();
 		try {
 			File file = new File(filename);
 			if (file.exists()) {

@@ -26,16 +26,16 @@ import java.io.File;
  * constructor and use this API to create pathname string.
  * NOTE: relative path shouldn't be used as a pathname(can we enforce it?)
  *
- * Each time this API is used, before the String returned to the user, it will be checked 
- * if directory structure exist and if it doesn't - directory structure will be created 
- * with all subdirectories. 
- * Methods checkDirExist(dir) and checkParentDirExist are made public as in many places in 
- * geworkbench similar code exist. 
- * User can call these methods directly if directory structure is created without using this API, 
+ * Each time this API is used, before the String returned to the user, it will be checked
+ * if directory structure exist and if it doesn't - directory structure will be created
+ * with all subdirectories.
+ * Methods checkDirExist(dir) and checkParentDirExist are made public as in many places in
+ * geworkbench similar code exist.
+ * User can call these methods directly if directory structure is created without using this API,
  * using this API will guarantee that directory structure exist.
- * It will allow creating new directory structure by just changing application.properties file, 
+ * It will allow creating new directory structure by just changing application.properties file,
  * BTW application.properties file might need some cleaning.
- * 
+ *
  * Strings representing directories will have FILE_SEPARATOR at the end but Strings representing files
  * will not have it.
  *
@@ -53,10 +53,10 @@ public class FilePathnameUtils {
 
 	// Defaults if file related properties are not set
 		// directories
-	private static final String DEFAULT_USER_SETTING_DIR = ".geworkbench" + FILE_SEPARATOR;
+	private static final String DEFAULT_USER_SETTING_DIR = ".geworkbench";
 	private static final String DEFAULT_TEMP_FILE_DIR = "temp" + FILE_SEPARATOR
 			+ "GEAW";
-	private static final String DEFAULT_DATA_FILES_DIR = "dataFiles" + FILE_SEPARATOR;
+	private static final String DEFAULT_DATA_FILES_DIR = ".";
 
 	// files
 	private static final String DEFAULT_HOUSEKEEPINGNORMALIZERSETTINGS_FILE = DEFAULT_TEMP_FILE_DIR
@@ -109,8 +109,9 @@ public class FilePathnameUtils {
 	}
 
 	/**
-	 * will create absolute path starting with home directory as a root for data
-	 * files directory if "data.files.dir" property is not set
+	 * will create absolute path starting with the user current working directory
+	 * as it is used to read data files that come with geworkbench distribution.
+	 * If "data.files.dir" property is not set
 	 * will use DEFAULT_DATA_FILES_DIR
 	 *
 	 * @return user settings directory as an absolute path
@@ -123,11 +124,12 @@ public class FilePathnameUtils {
 				tempFolder = DEFAULT_DATA_FILES_DIR;
 			}
 
-			// keep data files directory under user setting directory
-			dataFilesDirPath = getUserSettingDirectoryPath() + tempFolder
+			// keep data files directory under user's current working directory
+			dataFilesDirPath = System.getProperty("user.dir") + tempFolder
 					+ FILE_SEPARATOR;
 		}
 
+		// probably don't need to check
 		checkDirExist(dataFilesDirPath);
 		return dataFilesDirPath;
 	}
@@ -149,7 +151,7 @@ public class FilePathnameUtils {
 
 			// keep temporary files directory under user setting directory
 			temporaryFilesDirectoryPath = getUserSettingDirectoryPath()
-					+ tempFolder;
+					+ tempFolder + FILE_SEPARATOR;
 		}
 
 		checkDirExist(temporaryFilesDirectoryPath);
@@ -172,7 +174,7 @@ public class FilePathnameUtils {
 			}
 
 			// keep user setting directory under user home directory
-			userSettingDirectoryPath = prependHomeDirName(userSettingDirectory);
+			userSettingDirectoryPath = prependHomeDirName(userSettingDirectory) + FILE_SEPARATOR;
 		}
 
 		checkDirExist(userSettingDirectoryPath);
@@ -218,8 +220,7 @@ public class FilePathnameUtils {
 	 * @return absolute path starting with user home directory as a root
 	 */
 	private static String prependHomeDirName(String name) {
-		String prependName = USER_HOME_DIR + FILE_SEPARATOR + name
-				+ FILE_SEPARATOR;
+		String prependName = USER_HOME_DIR + FILE_SEPARATOR + name;
 
 		return prependName;
 	}
@@ -236,7 +237,7 @@ public class FilePathnameUtils {
 			checkDirExist(parentDir);
 		}
 	}
-	
+
 	/**
 	 * if directory structure doesn't exist - create
 	 *
