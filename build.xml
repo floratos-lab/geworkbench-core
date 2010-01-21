@@ -89,7 +89,7 @@
 				<include name="caarray" />
 				<include name="celprocessing" />
 				<include name="cgems" />
-				<include name="classification" />
+				<!-- include name="classification" / -->
 				<include name="colormosaic" />
 				<include name="cytoscape" />
 				<include name="discovery" />
@@ -489,9 +489,9 @@
 				<include name="${components}/caarray/**/*" />
 				<include name="${components}/celprocessing/**/*" />
 				
-				<include name="${components}/classification/**/*" />
+				<!-- include name="${components}/classification/**/*" />
 				<exclude name="${components}/classification/smlr*" />
-				<exclude name="${components}/classification/**/smlr/*" />
+				<exclude name="${components}/classification/**/smlr/*" / -->
 				
 				<include name="${components}/somclustering/**/*" />
 				<include name="${components}/colormosaic/**/*" />
