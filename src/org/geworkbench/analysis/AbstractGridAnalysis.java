@@ -97,4 +97,12 @@ public abstract class AbstractGridAnalysis extends AbstractAnalysis {
 	}
 	
 	public abstract ParamValidationResults validInputData(DSMicroarraySetView<DSGeneMarker, DSMicroarray> maSetView, DSDataSet refMASet);
+	
+	/**
+	 * Authorization is required unless the sub-class overwrite this.
+	 * @return true;
+	 */
+	public boolean isAuthorizationRequired() {
+		return true;
+	}
 }
