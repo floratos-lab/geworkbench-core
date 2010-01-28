@@ -62,6 +62,7 @@ public class WorkspaceHandler {
 		JFileChooser fc = new JFileChooser(workspaceDir);
 		String wsFilename = null;
 		WorkspaceFileFilter filter = new WorkspaceFileFilter();
+		fc.setAcceptAllFileFilterUsed(false);
 		fc.setFileFilter(filter);
 		fc.setDialogTitle("Save Current Workspace");
 		String extension = filter.getExtension();
@@ -75,10 +76,11 @@ public class WorkspaceHandler {
 			}
 			
 			if (selectedFile.exists()) {
-				if (JOptionPane.NO_OPTION == JOptionPane.showConfirmDialog(
+				int n = JOptionPane.showConfirmDialog(
 						null,
 						"Are you sure you want to overwrite this workspace?",
-						"Overwrite?", JOptionPane.YES_NO_OPTION)) {
+						"Overwrite?", JOptionPane.YES_NO_OPTION);
+				if (n == JOptionPane.NO_OPTION || n == JOptionPane.CLOSED_OPTION) {
 					JOptionPane.showMessageDialog(null, "Save cancelled.");
 					return;
 				}
@@ -141,6 +143,7 @@ public class WorkspaceHandler {
 		JFileChooser fc = new JFileChooser(workspaceDir);
 		String wsFilename = null;
 		WorkspaceFileFilter filter = new WorkspaceFileFilter();
+		fc.setAcceptAllFileFilterUsed(false);
 		fc.setFileFilter(filter);
 		fc.setDialogTitle("Open Workspace");
 		String extension = filter.getExtension();
@@ -180,29 +183,25 @@ public class WorkspaceHandler {
 		if (enclosingProjectPanel.projectTree.getRowCount() > 1) {
 			// inform user this will overwrite the current workspace
 			// give user a chance to continue or cancel workspace loading
-			String option = "Continue loading";
 			String info = "Opening this";
 			String title = "Loading";
 			if (wspFname == null)
 			{
-				option = "Create new workspace";
 				info = "Creating new";
-				title = "Creating";
+				title = "Creation";
 			}
 
-			Object[] options = {
-					option + " & overwrite current workspace",
-					"Save current workspace before continuing", "Cancel" };
+			Object[] options = {"Proceed", "Save", "Cancel" };
 
 			int n = JOptionPane
 					.showOptionDialog(
 							null,
-							info + " workspace will overwrite your current workspace and your current data and results will be lost. "
-									+ "Are you sure you want to continue?",
+							info + " workspace will overwrite your current workspace.\nYour current data and results will be lost.\n"
+									+ "Do you want to save your current workspace or \ndo you want to overwrite your current workspace?",
 							"Confirm Workspace "+title,
 							JOptionPane.YES_NO_CANCEL_OPTION,
 							JOptionPane.QUESTION_MESSAGE, null, options,
-							options[0]);
+							options[1]);
 			if (n == JOptionPane.CANCEL_OPTION
 					|| n == JOptionPane.CLOSED_OPTION)
 				return false;
@@ -210,10 +209,11 @@ public class WorkspaceHandler {
 				this.save(wspDir, false);
 				if (wspFname == null)
 					return true;
-				if (JOptionPane.NO_OPTION == JOptionPane.showConfirmDialog(
+				int a = JOptionPane.showConfirmDialog(
 						null, "Are you sure you want to load workspace "
-								+ wspFname + "?", "Confirm Workspace Loading",
-						JOptionPane.YES_NO_OPTION))
+						+ wspFname + "?", "Confirm Workspace Loading",
+						JOptionPane.YES_NO_OPTION);
+				if (a == JOptionPane.NO_OPTION ||a == JOptionPane.CLOSED_OPTION)
 					return false;
 			}
 		}
