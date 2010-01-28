@@ -150,30 +150,8 @@ public class WorkspaceHandler {
 			if (!wsFilename.endsWith(extension)) {
 				wsFilename += extension;
 			}
-			//current workspace is not empty
-			if (enclosingProjectPanel.projectTree.getRowCount() > 1)
-			{
-				//inform user this will overwrite the current workspace
-				//give user a chance to continue or cancel workspace loading
-				Object[] options = {"Continue loading & overwrite current workspace", "Save current workspace before continuing", "Cancel"};
-				int n = JOptionPane
-						.showOptionDialog(
-								null,
-								"Opening this workspace will overwrite your current workspace and your current data and results will be lost. "+
-								"Are you sure you want to continue?",
-								"Confirm Loading", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-				if (n == JOptionPane.CANCEL_OPTION || n == JOptionPane.CLOSED_OPTION)
-					return;
-				if (n == JOptionPane.NO_OPTION) {
-					this.save(wsp_dir, false);
-					if (JOptionPane.NO_OPTION == JOptionPane.showConfirmDialog(
-							null, "Are you sure you want to load workspace "
-									+ fc.getSelectedFile().getName() + "?",
-							"Confirm Loading", JOptionPane.YES_NO_OPTION))
-						return;
-					
-				}
-			}
+			if (!confirmLoading(wsp_dir, fc.getSelectedFile().getName()))
+				return;
 
 			// Store directory that we opened this from
 			try {
@@ -197,6 +175,40 @@ public class WorkspaceHandler {
 
 	}
 		
+	protected boolean confirmLoading(String wspDir, String wspFname) {
+		// current workspace is not empty
+		if (enclosingProjectPanel.projectTree.getRowCount() > 1) {
+			// inform user this will overwrite the current workspace
+			// give user a chance to continue or cancel workspace loading
+			Object[] options = {
+					"Continue loading & overwrite current workspace",
+					"Save current workspace before continuing", "Cancel" };
+			int n = JOptionPane
+					.showOptionDialog(
+							null,
+							"Opening this workspace will overwrite your current workspace and your current data and results will be lost. "
+									+ "Are you sure you want to continue?",
+							"Confirm Workspace Loading",
+							JOptionPane.YES_NO_CANCEL_OPTION,
+							JOptionPane.QUESTION_MESSAGE, null, options,
+							options[0]);
+			if (n == JOptionPane.CANCEL_OPTION
+					|| n == JOptionPane.CLOSED_OPTION)
+				return false;
+			if (n == JOptionPane.NO_OPTION) {
+				this.save(wspDir, false);
+				if (wspFname == null)
+					return true;
+				if (JOptionPane.NO_OPTION == JOptionPane.showConfirmDialog(
+						null, "Are you sure you want to load workspace "
+								+ wspFname + "?", "Confirm Workspace Loading",
+						JOptionPane.YES_NO_OPTION))
+					return false;
+			}
+		}
+		return true;
+	}
+
 	/**
 	 * 
 	 * @return

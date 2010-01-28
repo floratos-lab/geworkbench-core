@@ -2628,6 +2628,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	}
 
 	protected void newWorkspace_actionPerformed(ActionEvent e) {
+		WorkspaceHandler ws = new WorkspaceHandler(this);
+		if (!ws.confirmLoading(WORKSPACE_DIR, null))
+			return;
 		clear();
 		GUIFramework.getFrame().setTitle(System.getProperty("application.title"));
 	}
