@@ -180,15 +180,26 @@ public class WorkspaceHandler {
 		if (enclosingProjectPanel.projectTree.getRowCount() > 1) {
 			// inform user this will overwrite the current workspace
 			// give user a chance to continue or cancel workspace loading
+			String option = "Continue loading";
+			String info = "Opening this";
+			String title = "Loading";
+			if (wspFname == null)
+			{
+				option = "Create new workspace";
+				info = "Creating new";
+				title = "Creating";
+			}
+
 			Object[] options = {
-					"Continue loading & overwrite current workspace",
+					option + " & overwrite current workspace",
 					"Save current workspace before continuing", "Cancel" };
+
 			int n = JOptionPane
 					.showOptionDialog(
 							null,
-							"Opening this workspace will overwrite your current workspace and your current data and results will be lost. "
+							info + " workspace will overwrite your current workspace and your current data and results will be lost. "
 									+ "Are you sure you want to continue?",
-							"Confirm Workspace Loading",
+							"Confirm Workspace "+title,
 							JOptionPane.YES_NO_CANCEL_OPTION,
 							JOptionPane.QUESTION_MESSAGE, null, options,
 							options[0]);
