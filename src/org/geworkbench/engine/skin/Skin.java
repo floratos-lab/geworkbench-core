@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -64,6 +65,7 @@ import org.geworkbench.builtin.projects.Icons;
 import org.geworkbench.engine.config.GUIFramework;
 import org.geworkbench.engine.config.PluginDescriptor;
 import org.geworkbench.engine.config.VisualPlugin;
+import org.geworkbench.engine.config.Closable;
 import org.geworkbench.engine.config.events.AppEventListenerException;
 import org.geworkbench.engine.config.events.EventSource;
 import org.geworkbench.engine.management.ComponentRegistry;
@@ -165,9 +167,21 @@ public class Skin extends GUIFramework {
                     out.println("" + finalLocation.x);
                     out.println("" + finalLocation.y);
                     out.close();
+                    
+                    List<Object> list = ComponentRegistry.getRegistry().getComponentsList();
+            		for(Object obj: list) 
+            		{
+            			if ( obj instanceof Closable)
+            				((Closable)obj).closing();
+            		}
+            		
                 } catch (IOException ioe) {
                     ioe.printStackTrace();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
+                
+              
             }
         });
         try {
