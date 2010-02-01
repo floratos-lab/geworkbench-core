@@ -71,7 +71,6 @@ class CCMTableModel extends AbstractTableModel {
 		super();
 
 		this.manager = manager;
-		loadGuiModelFromCmmFiles();
 		loadGuiModelFromFiles(manager.cwbFile);
 		Collections.sort(rows, new TableNameComparator());
 	}
@@ -415,126 +414,6 @@ class CCMTableModel extends AbstractTableModel {
 		fireTableCellUpdated(modelRow, column);
 
 		return true;
-	}
-
-	// what the is this TODO comment?
-	// TODO choose weather to use loadGuiModelFromCmmFiles() or
-	// getPluginsFromCcmFile()
-
-	// this is different from loadGuiModelFromFiles not just in the file name,
-	// but different for
-	// manager.getPluginsFromCcmFile(folderName, ccmFileName );
-	/**
-	 * Load the GUI Model from.ccm.xml file
-	 */
-	private void loadGuiModelFromCmmFiles() {
-		String name = null;
-		String version = null;
-		String author = null;
-		String authorURL = null;
-		String toolURL = null;
-		String tutorialURL = null;
-		String clazz = null;
-		String description = null;
-		String license = null;
-		String mustAccept = null;
-		String documentation = null;
-		List<String> requiredComponents = null;
-		List<String> relatedComponents = null;
-		String parser = null;
-		String analysis = null;
-		String visualizer = null;
-		String hidden = null;
-
-		for (File file : manager.ccmFile) {
-			String folderName = file.getParentFile().getName(), ccmFileName = file
-					.getName();
-
-			// CcmComponent ccmComponent = manager.getPluginsFromFile(file );
-
-			CcmComponent ccmComponent = manager.getPluginsFromCcmFile(
-					folderName, ccmFileName);
-
-			if (ccmComponent == null) {
-				continue;
-			}
-
-			List<Plugin> plugins = ccmComponent.getPlugins();
-			if (plugins == null) {
-				continue;
-			}
-
-			Plugin plugin = (Plugin) plugins.get(0);
-			name = plugin.getName();
-
-			version = ccmComponent.getVersion();
-			author = ccmComponent.getAuthor();
-			authorURL = ccmComponent.getAuthorURL();
-			tutorialURL = ccmComponent.getTutorialURL();
-			toolURL = ccmComponent.getToolURL();
-			clazz = ccmComponent.getClazz();
-			description = ccmComponent.getDescription();
-			license = ccmComponent.getLicense();
-			mustAccept = ccmComponent.getMustAccept();
-			documentation = ccmComponent.getDocumentation();
-			requiredComponents = ccmComponent.getRequiredComponents();
-			relatedComponents = ccmComponent.getRelatedComponents();
-			parser = ccmComponent.getParser();
-			analysis = ccmComponent.getAnalysis();
-			visualizer = ccmComponent.getVisualizer();
-			hidden = ccmComponent.getHidden();
-
-			boolean bMustAccept = false;
-			boolean bParser = false;
-			boolean bAnalysis = false;
-			boolean bVisualizer = false;
-			boolean bHidden = false;
-
-			if (mustAccept != null && mustAccept.equalsIgnoreCase("true")) {
-				bMustAccept = true;
-			}
-			if (parser != null && parser.equalsIgnoreCase("true")) {
-				bParser = true;
-			}
-			if (analysis != null && analysis.equalsIgnoreCase("true")) {
-				bAnalysis = true;
-			}
-			if (visualizer != null && visualizer.equalsIgnoreCase("true")) {
-				bVisualizer = true;
-			}
-			if (hidden != null && hidden.equalsIgnoreCase("true")) {
-				bHidden = true;
-			}
-
-			TableRow tableRow = new TableRow(false, name, version, author,
-					authorURL, tutorialURL, toolURL, clazz, description,
-					folderName, file, license, bMustAccept, documentation,
-					bParser, bAnalysis,
-					bVisualizer, bHidden);
-			requiredComponentsMap.put(name, requiredComponents);
-			relatedComponentsMap.put(name, relatedComponents);
-
-			String propFileName = null;
-			if (ccmFileName.endsWith(".ccm.xml"))
-				propFileName = ccmFileName
-						.replace(".ccm.xml", ".ccmproperties");
-			else if (ccmFileName.endsWith(".cwb.xml"))
-				propFileName = ccmFileName
-						.replace(".cwb.xml", ".ccmproperties");
-
-			String onOff = ComponentConfigurationManager.readProperty(
-					folderName, propFileName, "on-off");
-
-			if (onOff != null && onOff.equals("true")) {
-				tableRow.setSelected(true);
-			} else {
-				tableRow.setSelected(false);
-			}
-
-			rows.add(tableRow);
-
-		}
-
 	}
 
 	private void loadGuiModelFromFiles(List<File> files) {

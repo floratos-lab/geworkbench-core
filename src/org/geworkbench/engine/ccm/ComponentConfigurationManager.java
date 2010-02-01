@@ -49,10 +49,8 @@ public class ComponentConfigurationManager {
 	private static Log log = LogFactory
 			.getLog(ComponentConfigurationManager.class);
 	private String[] files = null;
-	private Digester digester = null;
 
 	private static final String FILE_DEL = System.getProperty("file.separator");
-	private static final String CCM_EXTENSION = ".ccm.xml";
 	private static final String COMPONENT_DESCRIPTOR_EXTENSION = ".cwb.xml";
 
 	private static String propertiesDirectory = FilePathnameUtils.getUserSettingDirectoryPath();
@@ -81,9 +79,6 @@ public class ComponentConfigurationManager {
 			return;
 		}
 		files = dir.list();
-
-		digester = createComponentDigester();
-			
 	}
 
 	/**
@@ -120,14 +115,13 @@ public class ComponentConfigurationManager {
 	}
 
 	/**
-	 * User.ccm.xml files contained in Component Folders to decide which rows
+	 * .cwb.xml files decides which rows
 	 * should be displayed in the CCM window.
 	 * 
 	 * @return {@link ArrayList}
 	 */
 	// TODO the name is out-of-date, should be called something like "find all component descriptor files"
 	public void loadAllComponentFolders() {
-    	ccmFile = new ArrayList<File>();
     	cwbFile = new ArrayList<File>();
     	Collection<ComponentResource> resources = ComponentRegistry.getRegistry().getAllComponentResources();
 
@@ -137,12 +131,12 @@ public class ComponentConfigurationManager {
         	File resourceDir = new File(resource.getDir()+"/classes");
         	try {
         		searchCwb(resourceDir);
-				searchCcm(new File(resource.getDir()));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
         }
+        log.info(cwbFile.size()+" cwb files found under all resource directories");
 	}
 	
     private void searchCwb(File dir) throws IOException {
@@ -159,62 +153,9 @@ public class ComponentConfigurationManager {
         }
     }
     
-    private void searchCcm(File dir) throws IOException {
-        File[] files = dir.listFiles();
-        if(files==null || files.length==0) return;
-        for (File file : files) {
-                if (file.getName().endsWith(CCM_EXTENSION)) {
-                	ccmFile.add(file);
-                }
-        }
-    }
-
-	List<File> ccmFile = null;
 	List<File> cwbFile = null;
 
 	public void loadSelectedComponents() {
-		loadSelectedComponentsFromCcm();
-		loadSelectedComponentsFromCwb();
-
-		GeawConfigObject.recreateHelpSets();
-	}
-		
-	private void loadSelectedComponentsFromCcm() {
-
-			for (File file: ccmFile) {
-				// this is not really the right way to use File
-				String folder = file.getParentFile().getName();
-				String ccmFileName = file.getName().toLowerCase();
-				
-				String propFileName = ccmFileName.replace(CCM_EXTENSION,
-				".ccmproperties");
-
-				String onOff = readProperty(folder, propFileName, "on-off");
-				CcmComponent ccmComponent = getPluginsFromCcmFile(folder, ccmFileName );
-				String name = ccmComponent.getName();
-				UILauncher.setProgressBarString(name);
-				String loadByDefault = ccmComponent.getLoadByDefault();
-				
-				if (onOff == null && loadByDefault.equalsIgnoreCase("true")){
-					writeProperty(folder, propFileName, "on-off", "true");
-					onOff = readProperty(folder, propFileName, "on-off");
-				}
-				if (onOff != null && onOff.equals("true")) {
-					loadComponent(folder, ccmFileName);
-				}
-			}
-
-	}
-
-	// this eventually should not be necessary if the cwb/resource is managed properly
-	private String resourceFolder(File file) {
-		String path = file.getAbsolutePath();
-		int index = path.indexOf(componentsDirectory)+componentsDirectory.length()+1;
-		return path.substring(index, path.indexOf(FILE_DEL, index));
-	}
-	
-	private void loadSelectedComponentsFromCwb() {
-
 		for (File file: cwbFile) {
 			// this is not really the right way to do it. just to support existing code. TODO
 			String folder = resourceFolder(file);
@@ -240,50 +181,20 @@ public class ComponentConfigurationManager {
 				log.info(file + "turned off");
 			}
 		}
-	}
 
+		GeawConfigObject.recreateHelpSets();
+	}
+		
+	// this eventually should not be necessary if the cwb/resource is managed properly
+	private String resourceFolder(File file) {
+		String path = file.getAbsolutePath();
+		int index = path.indexOf(componentsDirectory)+componentsDirectory.length()+1;
+		return path.substring(index, path.indexOf(FILE_DEL, index));
+	}
+	
 	/**
-	 * Loads a component.
-	 * 
-	 * @param folder
-	 * @param ccmFileName
-	 * @return
+	 * Load a plugin component described in a .cwb.xml file. resoruceMap should have been initialized already.
 	 */
-	public void loadComponent(String folder, String ccmFileName) {
-
-		/* create component resource */
-		ComponentResource componentResource = createComponentResource(folder);
-
-		/* add resource to registry */
-		Map<String, ComponentResource> resourceMap = ComponentRegistry
-				.getRegistry().getComponentResourceMap();
-		ComponentResource existingComponentResource = resourceMap.get(folder);
-		if (existingComponentResource==null){
-			resourceMap.put(folder, componentResource);
-		}
-		/* get input stream for ccm.xml */
-		String ccmFullPath = componentsDirectory + FILE_DEL + folder
-				+ FILE_DEL + ccmFileName;
-
-		/* parse using digester */
-		InputStream is = null;
-		try {
-			is = new FileInputStream(new File(ccmFullPath));
-			digester.parse(is);
-		} catch (Exception e) {
-			log.error(e, e);
-		}
-
-		if (is != null) {
-			try {
-				is.close();
-			} catch (IOException e) {
-				log.error(e, e);
-			}
-		}
-	}
-
-	// this is right way to do it: use file instead of string, resoruceMap has been initialized already
 	void loadComponent(File file) {
 		String folder = resourceFolder(file);
 		/* create component resource */
@@ -302,7 +213,7 @@ public class ComponentConfigurationManager {
 		try {
 			is = new FileInputStream(file);
 			cwbDigester.parse(is);
-			System.out.println(file+" loaded");
+			log.debug(file+" loaded");
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -359,13 +270,15 @@ public class ComponentConfigurationManager {
 			return false;
 		}
 
-		// FIXME parse again? can't we get this info another way?
+		// FIXME why parse again? can't we get this info another way?
 		/* parse the ccm.xml file */
 		CcmComponent ccmComponent = null;
-		if(filename.endsWith(CCM_EXTENSION))ccmComponent = getPluginsFromCcmFile(folderName,
-				filename);
-		else if(filename.endsWith(COMPONENT_DESCRIPTOR_EXTENSION))ccmComponent = getPluginsFromFile(new File(
+		if(filename.endsWith(COMPONENT_DESCRIPTOR_EXTENSION)) {
+			ccmComponent = getPluginsFromFile(new File(
 				filename));
+		} else {
+			return false;
+		}
 
 		if (ccmComponent == null) return false;
 		
@@ -566,121 +479,7 @@ public class ComponentConfigurationManager {
 
 		return true;
 	}
-	/**
-	 * A custom parser for the ccm descriptor.
-	 * 
-	 * @param path
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	public CcmComponent getPluginsFromCcmFile(String folder, String fileName) {
-		CcmComponent ccmComponent = new CcmComponent();
 
-		String ccmPath = componentsDirectory + FILE_DEL + folder
-				+ FILE_DEL + fileName;
-		File ccmFile = new File(ccmPath);
-		if (!ccmFile.exists()) {
-			return null;
-		}
-
-		ArrayList<Plugin> pluginList = new ArrayList<Plugin>();
-		SAXBuilder builder = new SAXBuilder();
-		InputStream inputStream = null;
-		try {
-			inputStream = new FileInputStream(ccmFile);
-
-			if (inputStream != null) {
-				Document doc = null;
-				try {
-					doc = builder.build(inputStream);
-				} catch (JDOMException e) {
-					log.error(e, e);
-				} catch (IOException e) {
-					log.error(e, e);
-				}
-				Element root = doc.getRootElement();
-				if (root.getName().equals("geaw-config")) {
-					java.util.List<Element> elements = root.getChildren();
-					for (int i = 0; i < elements.size(); i++) {
-						Element element = elements.get(i);
-						if (element.getName().equals("component")) {
-							ccmComponent.setClazz(element
-									.getAttributeValue("class"));
-							ccmComponent.setName(element
-									.getAttributeValue("name"));
-							ccmComponent.setVersion(element
-									.getAttributeValue("version"));
-							ccmComponent.setAuthor(element
-									.getAttributeValue("author"));
-							ccmComponent.setAuthorURL(element
-									.getAttributeValue("authorURL"));
-							ccmComponent.setTutorialURL(element
-									.getAttributeValue("tutorialURL"));
-							ccmComponent.setToolURL(element
-									.getAttributeValue("toolURL"));
-							ccmComponent.setDescription(element
-									.getAttributeValue("description"));
-							ccmComponent.setMustAccept(element
-									.getAttributeValue("mustAccept"));
-							ccmComponent.setDocumentation(element
-									.getAttributeValue("documentation"));
-							ccmComponent.setLoadByDefault(element
-									.getAttributeValue("loadByDefault"));
-							ccmComponent.setHidden(element
-									.getAttributeValue("hidden"));
-							
-							List<Element> subElements = element.getChildren();
-							for (int j = 0; j < subElements.size(); j++) {
-								Element subElement = subElements.get(j);
-								String type = subElement.getName();
-								String dependencyClass = subElement
-										.getAttributeValue("class");
-								if (type.equals("required-component")) {
-									ccmComponent.addRequiredComponent(dependencyClass);
-								} else if (type.equals("related-component")) {
-									ccmComponent.addRelatedComponent(dependencyClass);
-								} else if (type.equals("license")) {
-									String cdata = subElement.getTextTrim();
-
-									ccmComponent.setLicense(cdata);
-								}
-							}
-
-							ccmComponent.setParser(element
-									.getAttributeValue("parser"));
-							ccmComponent.setAnalysis(element
-									.getAttributeValue("analysis"));
-							ccmComponent.setVisualizer(element
-									.getAttributeValue("visualizer"));
-						}
-
-						if (element.getName().equals("plugin")) {
-							String id = element.getAttributeValue("id");
-							String name = element.getAttributeValue("name");
-							String clazz = element.getAttributeValue("class");
-							String source = element.getAttributeValue("source");
-
-							pluginList.add(new Plugin(id, name, clazz, source));
-						}
-					}
-					ccmComponent.setPlugins(pluginList);
-				}
-			}
-		} catch (Exception e) {
-			log.error("ERROR LOADING:"+fileName, e);
-			return null;
-		} finally {
-			try {
-				inputStream.close();
-			} catch (IOException e) {
-				log.error("ERROR LOADING:"+fileName, e);
-				return null;
-			}
-		}
-
-		return ccmComponent;
-	}
-	
 	// TODO this is based on the original bad code. rewrite it!
 	CcmComponent getPluginsFromFile(File file) {
 		//String folder, String fileName;
@@ -878,26 +677,6 @@ public class ComponentConfigurationManager {
 		return returnValue;
 	}
 
-	/**
-	 * Configure the rules for translating the application configuration file.
-	 */
-	private Digester createComponentDigester() {
-		Digester digester = new Digester(new org.apache.xerces.parsers.SAXParser());
-
-		digester.setUseContextClassLoader(true);
-
-		// Instantiates a plugin and adds it in the PluginResgistry
-		digester.addRule("geaw-config/plugin", new PluginRule(
-				"org.geworkbench.engine.config.rules.PluginObject"));
-
-		// Registers a visual plugin with the top-level application GUI.
-		digester.addCallMethod("geaw-config/plugin/gui-area",
-				"addGUIComponent", 1);
-		digester.addCallParam("geaw-config/plugin/gui-area", 0, "name");
-		
-		return digester;
-	}
-	
 	private static Digester cwbDigester = null;
 	static {
 		cwbDigester = new Digester(new org.apache.xerces.parsers.SAXParser());

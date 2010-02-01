@@ -42,6 +42,8 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.events.ComponentConfigurationManagerUpdateEvent;
@@ -58,8 +60,8 @@ import com.jgoodies.forms.layout.FormLayout;
  */
 public class ComponentConfigurationManagerWindow {
 
-	private static final long serialVersionUID = 1L;
-
+	private static Log log = LogFactory.getLog(ComponentConfigurationManagerWindow.class);
+	
 	private ComponentConfigurationManagerMenu menu = null;
 	
 /*	private CCMTableModel ccmTableModel;  Use this Model after Java 1.6 conversion */ 
@@ -637,30 +639,23 @@ public class ComponentConfigurationManagerWindow {
 			String filename = file.getName();
 
 			String propFileName = null;
-			if (filename.endsWith(".ccm.xml"))
-				propFileName = filename
-						.replace(".ccm.xml", ".ccmproperties");
-			else if (filename.endsWith(".cwb.xml"))
+			if (filename.endsWith(".cwb.xml")) {
 				propFileName = filename
 						.replace(".cwb.xml", ".ccmproperties");
+			} else {
+				log.error("File name is "+filename+" when .cwb.xml file is expected");
+				continue;
+			}
 			String sChoice = (new Boolean(choice)).toString();
 			
 			ComponentConfigurationManager.writeProperty(resource, propFileName, "on-off", sChoice);
 			
 			if (choice) {
-				if (filename.endsWith(".ccm.xml"))
-					manager.loadComponent(resource, filename);
-				else if (filename.endsWith(".cwb.xml"))
-					manager.loadComponent(file);
-
-				continue;
+				manager.loadComponent(file);
 			}
 
 			/* Remove Component */
-			if (filename.endsWith(".ccm.xml"))
-				manager.removeComponent(resource, filename);
-			else if (filename.endsWith(".cwb.xml"))
-				manager.removeComponent(resource, file.getAbsolutePath());
+			manager.removeComponent(resource, file.getAbsolutePath());
 
 			ccmTableModel.fireTableDataChanged();
             if (textPane.getCaretPosition() > 1){
