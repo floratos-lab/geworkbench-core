@@ -583,7 +583,8 @@ public class AnnotationParser implements Serializable {
 		}
 
 		// if not returned, then it is not used anymore, clean it up
-		chipTypeToAnnotation.put(annotationName, null);
+		if(annotationName!=null)
+			chipTypeToAnnotation.put(annotationName, null);
 	}
 
 }
