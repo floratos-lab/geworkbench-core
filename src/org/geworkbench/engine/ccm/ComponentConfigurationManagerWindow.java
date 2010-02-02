@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -35,11 +34,13 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.RowFilter;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableRowSorter;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -64,8 +65,7 @@ public class ComponentConfigurationManagerWindow {
 	
 	private ComponentConfigurationManagerMenu menu = null;
 	
-/*	private CCMTableModel ccmTableModel;  Use this Model after Java 1.6 conversion */ 
-	private CCMTableModelFilterView ccmTableModel;
+	private CCMTableModel ccmTableModel;
 	protected ComponentConfigurationManager manager = null;	
 	
 	private JFrame frame;
@@ -136,7 +136,7 @@ public class ComponentConfigurationManagerWindow {
 		ccmWindow.frame.setVisible(true);
 	}
 	
-	
+	private TableRowSorter<CCMTableModel> sorter = null;
 	
 	/**
 	 * Set up the GUI
@@ -240,7 +240,7 @@ public class ComponentConfigurationManagerWindow {
 					          Object[] selections = is.getSelectedObjects();
 					          String selection = (String)selections[0];
 					          ccmTableModel.setLoadedFilterValue(selection);
-					          ccmTableModel.updateView();
+					          sorter.setRowFilter(combinedFilter);
 					          ccmTableModel.fireTableDataChanged();
 					        }
 					    };
@@ -261,7 +261,7 @@ public class ComponentConfigurationManagerWindow {
 					          Object[] selections = is.getSelectedObjects();
 					          String selection = (String)selections[0];
 					          ccmTableModel.setTypeFilterValue(selection);
-					          ccmTableModel.updateView();
+					          sorter.setRowFilter(combinedFilter);
 					          ccmTableModel.fireTableDataChanged();
 					        }
 					    };
@@ -284,7 +284,7 @@ public class ComponentConfigurationManagerWindow {
 							public void keyReleased(KeyEvent e) {
 								String text = keywordSearchField.getText();
 								ccmTableModel.setKeywordFilterValue(text);
-								ccmTableModel.updateView();
+								sorter.setRowFilter(combinedFilter);
 								ccmTableModel.fireTableDataChanged();
 							}
 
@@ -307,7 +307,7 @@ public class ComponentConfigurationManagerWindow {
 					//======== scrollPaneForTable ========
 					{
 						//---- table ----
-						ccmTableModel = new CCMTableModelFilterView(manager);
+						ccmTableModel = new CCMTableModel(manager);
 						setOriginalChoices();
 						table = new JTable(ccmTableModel) {
 							private static final long serialVersionUID = 5118325076548663090L;
@@ -315,9 +315,8 @@ public class ComponentConfigurationManagerWindow {
 							public Component prepareRenderer( TableCellRenderer renderer, int viewRow, int col) {
 
 								Component comp = super.prepareRenderer(renderer, viewRow, col);
-								
-								int modelRow =  ccmTableModel.getModelRow(viewRow);
-								boolean isPluginLoaded = ccmTableModel.componentLoaded(modelRow);
+
+								boolean isPluginLoaded = componentLoaded(table.convertRowIndexToModel(viewRow));
 								
 								if( isPluginLoaded ){
 									comp.setBackground( new Color(230,230,255));
@@ -332,7 +331,9 @@ public class ComponentConfigurationManagerWindow {
 								return comp;
 							}
 						};
-						
+						sorter = new TableRowSorter<CCMTableModel>(ccmTableModel);
+						table.setRowSorter(sorter);
+
 						TableCellRenderer defaultRenderer;
 						defaultRenderer = table.getDefaultRenderer(JButton.class);
 					    table.setDefaultRenderer(JButton.class, new JTableButtonRenderer(defaultRenderer));
@@ -351,7 +352,7 @@ public class ComponentConfigurationManagerWindow {
 						        if (lsm.isSelectionEmpty()) {
 									textPane.setText(" ");
 						        } else {
-						            String description = (String)ccmTableModel.getValueAt(selectedRow[0], CCMTableModel.DESCRIPTION_INDEX);
+						            String description = (String)ccmTableModel.getValueAt(table.convertRowIndexToModel(selectedRow[0]), CCMTableModel.DESCRIPTION_INDEX);
 						        	textPane.setText(description);
 						        	
 						            if (textPane.getCaretPosition() > 1){
@@ -469,10 +470,114 @@ public class ComponentConfigurationManagerWindow {
 		scrollPaneForTextPane.setVisible(true);
 		textPane.setVisible(true);
 		bottompanel.setVisible(true);
-		ccmTableModel.updateView();
+		sorter.setRowFilter(combinedFilter);
 		frame.setVisible(true);
 		splitPane.setDividerLocation(.7d);
 	}
+	
+	final private RowFilter<CCMTableModel, Integer> hiddenFilter = new RowFilter<CCMTableModel, Integer>() {
+		public boolean include(
+				Entry<? extends CCMTableModel, ? extends Integer> entry) {
+
+			CCMTableModel model = (CCMTableModel) entry.getModel();
+
+			Boolean hidden = (Boolean) model.getModelValueAt(entry
+					.getIdentifier(), CCMTableModel.HIDDEN_INDEX);
+			if (hidden)
+				return false;
+			else
+				return true;
+		}
+	};
+
+	final private RowFilter<CCMTableModel, Integer> loadFilter = new RowFilter<CCMTableModel, Integer>() {
+		public boolean include(
+				Entry<? extends CCMTableModel, ? extends Integer> entry) {
+
+			CCMTableModel model = (CCMTableModel) entry.getModel();
+
+			String loadedFilterValue = model.getLoadedFilterValue();
+			if(loadedFilterValue==null || loadedFilterValue.equals(ComponentConfigurationManagerWindow.DISPLAY_FILTER_ALL))
+				return true;
+			
+			boolean loaded = componentLoaded(entry.getIdentifier());
+			if (loaded && loadedFilterValue.equals(ComponentConfigurationManagerWindow.DISPLAY_ONLY_LOADED)
+					||
+					!loaded && loadedFilterValue.equals(ComponentConfigurationManagerWindow.DISPLAY_ONLY_UNLOADED))
+				return true;
+
+			return false;
+		}
+	};
+
+	/**
+	 * type filter: analysis or visualization
+	 */
+	final private RowFilter<CCMTableModel, Integer> typeFilter = new RowFilter<CCMTableModel, Integer>() {
+		public boolean include(
+				Entry<? extends CCMTableModel, ? extends Integer> entry) {
+
+			CCMTableModel model = (CCMTableModel) entry.getModel();
+			String typeFilterValue = model.getTypeFilterValue();
+			if (typeFilterValue == null
+					|| typeFilterValue
+							.equals(ComponentConfigurationManagerWindow.SHOW_BY_TYPE_ALL))
+				return true;
+
+			Boolean isAnalysis = (Boolean) model.getModelValueAt(entry
+					.getIdentifier(), CCMTableModel.ANALYSIS_INDEX);
+			if (isAnalysis
+					&& typeFilterValue
+							.equals(ComponentConfigurationManagerWindow.SHOW_BY_TYPE_ANALYSIS))
+				return true;
+
+			Boolean isVisualizer = (Boolean) model.getModelValueAt(entry
+					.getIdentifier(), CCMTableModel.VISUALIZER_INDEX);
+			if (isVisualizer
+					&& typeFilterValue
+							.equals(ComponentConfigurationManagerWindow.SHOW_BY_TYPE_VISUALIZER))
+				return true;
+
+			return false;
+		}
+	};
+
+	/**
+	 * type filter: analysis or visualization
+	 */
+	final private RowFilter<CCMTableModel, Integer> keywordSearchFilter = new RowFilter<CCMTableModel, Integer>() {
+		public boolean include(
+				Entry<? extends CCMTableModel, ? extends Integer> entry) {
+
+			CCMTableModel model = (CCMTableModel) entry.getModel();
+			String keywordFilterValue = model.getKeywordFilterValue();
+			if (keywordFilterValue == null
+					|| keywordFilterValue.equals("") ||
+					keywordFilterValue.equals("text"))
+				return true;
+
+			keywordFilterValue = keywordFilterValue.toLowerCase().trim();
+			
+			for(int j=CCMTableModel.FIRST_STRING_COLUMN; j<CCMTableModel.AUTHOR_INDEX; j++ ) {
+				String fieldValue = ((String) model.getModelValueAt(entry
+						.getIdentifier(), j)).toLowerCase();
+				if(fieldValue.contains(keywordFilterValue))
+					return true;
+			}
+
+			return false;
+		}
+	};
+
+	final private List<RowFilter<CCMTableModel, Integer>> filters = new ArrayList<RowFilter<CCMTableModel, Integer>>();
+	{
+		filters.add(hiddenFilter);
+		filters.add(loadFilter);
+		filters.add(typeFilter);
+		filters.add(keywordSearchFilter);
+	}
+	final private RowFilter<CCMTableModel, Integer> combinedFilter = RowFilter
+			.andFilter(filters);
 
 	/*
 	 * launchBrowser for URLs in CCM GUI 
@@ -486,8 +591,8 @@ public class ComponentConfigurationManagerWindow {
 	       	  (selectedColumn[0] == CCMTableModel.AUTHOR_INDEX
 			|| selectedColumn[0] == CCMTableModel.TUTORIAL_URL_INDEX
 			|| selectedColumn[0] == CCMTableModel.TOOL_URL_INDEX)) {
-	        	
-    		int modelRow = ccmTableModel.getModelRow(selectedRow[0]);
+
+    		int modelRow = table.convertRowIndexToModel( selectedRow[0] );
     		if (launchedRow == modelRow && launchedColumn == selectedColumn[0]){
     			return;
     		}
@@ -520,8 +625,7 @@ public class ComponentConfigurationManagerWindow {
         
         if (   selectedRow != null && selectedRow.length > 0 && selectedRow[0] >= 0 ) {
 
-        	
-    		int modelRow = ccmTableModel.getModelRow(selectedRow[0]);
+    		int modelRow = table.convertRowIndexToModel( selectedRow[0] );
     		JButton jButton = (JButton) ccmTableModel.getModelValueAt(modelRow, CCMTableModel.TOOL_URL_INDEX);
     		String url = jButton.getToolTipText();
     		
@@ -550,7 +654,7 @@ public class ComponentConfigurationManagerWindow {
         String componentName = null;
         if (   selectedRow != null && selectedRow.length > 0 && selectedRow[0] >= 0) {
 
-    		int modelRow = ccmTableModel.getModelRow(selectedRow[0]);
+    		int modelRow = table.convertRowIndexToModel( selectedRow[0] );
     		license = (String) ccmTableModel.getModelValueAt(modelRow, CCMTableModel.LICENSE_INDEX);
     		componentName = (String) ccmTableModel.getModelValueAt(modelRow, CCMTableModel.NAME_INDEX);
         }
@@ -582,7 +686,7 @@ public class ComponentConfigurationManagerWindow {
         String componentName = null;
         if (   selectedRow != null && selectedRow.length > 0 && selectedRow[0] >= 0) {
 
-    		int modelRow = ccmTableModel.getModelRow(selectedRow[0]);
+    		int modelRow = table.convertRowIndexToModel( selectedRow[0] );
     		document = (String) ccmTableModel.getModelValueAt(modelRow, CCMTableModel.DOCUMENTATION_INDEX);
     		componentName = (String) ccmTableModel.getModelValueAt(modelRow, CCMTableModel.NAME_INDEX);
         }
@@ -652,6 +756,7 @@ public class ComponentConfigurationManagerWindow {
 			
 			if (choice) {
 				manager.loadComponent(file);
+				continue;
 			}
 
 			/* Remove Component */
@@ -726,226 +831,29 @@ public class ComponentConfigurationManagerWindow {
 
 		return menu.publishComponentConfigurationManagerUpadateEvent(event);
 	}
-
-	/*
-	 * CCMTableModelFilterView
-	 */
-	static private class CCMTableModelFilterView extends CCMTableModel {
-		
-		private static final long serialVersionUID = -3149950381135283122L;
-
-		/* if true then display this row */
-		private Vector<Boolean> viewRows = new Vector<Boolean>();
-		
-		/*
-		 * Constructor
-		 */
-		public CCMTableModelFilterView(ComponentConfigurationManager manager) {
-			super(manager);
-		
-			for (int i=0; i<rows.size(); i++){
-				viewRows.add(new Boolean(true));
-			}
-		}
-
-		/**
-		 * 
-		 * @param viewRow
-		 * @return 
-		 */
-		private int getModelRow(int viewRow){
-			
-			int modelRow = -1;
-			int viewIndex = -1;
-			for (int i=0; i< viewRows.size(); i++){
-				if (viewRows.get(i).booleanValue()){
-					viewIndex++;
-				}
-				if (viewIndex==viewRow){
-					modelRow=i;
-					break;
-				}
-			}
-			
-			return modelRow;			
-		}
-
-		/**
-		 * @param void
-		 * @return 
-		 */
-		private void updateView() {
-
-			for (int i = 0; i < viewRows.size(); i++) {
-				if (loadedFilter(i) || showByTypeFilter(i)
-						|| keyWordSearchFilter(i) || hiddenFilter(i)) {
-					viewRows.set(i, Boolean.FALSE);
-				} else {
-					viewRows.set(i, Boolean.TRUE);
-				}
-			}
-		}
-		
-		/**
-		 * 
-		 * @param modelRow
-		 * @return
-		 */
-		private boolean componentLoaded(int modelRow){
-			boolean loaded = false;
-			
-			String pluginClazzName = (String)getModelValueAt(modelRow, CCMTableModel.CLASS_INDEX);
-			
-			ComponentRegistry componentRegistry = ComponentRegistry.getRegistry();
-			List<Object> components = componentRegistry.getComponentsList();
-			for (Object proxiedComponent : components) {
-				// FIXME use a "deproxy" (see cglib or HibernateProxy)
-				Class<?> clazz = proxiedComponent.getClass();
-				String proxiedClazzName = clazz.getName();
-				String[] temp = StringUtils.split(proxiedClazzName, "$$");
-				String clazzName = temp[0];
-
-				if (StringUtils.equals(pluginClazzName, clazzName)) {
-					loaded = true;
-				}
-			}
-			return loaded;			
-		}
-		
-		/**
-		 * 
-		 * @param modelRow
-		 * @return
-		 */
-		private boolean loadedFilter(int modelRow){
-			
-			String loadedFilterValue = getLoadedFilterValue();
-			if (loadedFilterValue == null || loadedFilterValue.equals(ComponentConfigurationManagerWindow.DISPLAY_FILTER_ALL)){
-				return false;
-			}
-			
-			boolean loaded = componentLoaded(modelRow);
-			if (	loaded && loadedFilterValue.equals(ComponentConfigurationManagerWindow.DISPLAY_ONLY_LOADED)
-				|| !loaded && loadedFilterValue.equals(ComponentConfigurationManagerWindow.DISPLAY_ONLY_UNLOADED)){
-				return false;
-			}
-			
-			return true;
-		}
-
-		/**
-		 * 
-		 * @param modelRow
-		 * @return
-		 */
-		private boolean hiddenFilter(int modelRow){
-			Boolean isHidden = (Boolean)getModelValueAt(modelRow, CCMTableModel.HIDDEN_INDEX);
-
-			if (isHidden){
-				return true;
-			}
-			
-			return false;
-		}
-		
-		/**
-		 * 
-		 * @param modelRow
-		 * @return
-		 */
-		private boolean showByTypeFilter(int modelRow){
-
-			String typeFilterValue = getTypeFilterValue();
-			if ( typeFilterValue == null || typeFilterValue.equals(ComponentConfigurationManagerWindow.SHOW_BY_TYPE_ALL)){
-				return false;
-			}
-			
-			Boolean isAnalysis = (Boolean)getModelValueAt(modelRow, CCMTableModel.ANALYSIS_INDEX);
-			Boolean isVisualizer = (Boolean)getModelValueAt(modelRow, CCMTableModel.VISUALIZER_INDEX);
-			
-			if (isAnalysis && typeFilterValue.equals(ComponentConfigurationManagerWindow.SHOW_BY_TYPE_ANALYSIS)){
-				return false;
-			}
-			
-			if (isVisualizer && typeFilterValue.equals(ComponentConfigurationManagerWindow.SHOW_BY_TYPE_VISUALIZER)){
-				return false;
-			}
-			
-			
-			return true;
-		}
-
-		/**
-		 * 
-		 * @param modelRow
-		 * @return
-		 */
-		private boolean keyWordSearchFilter(int modelRow){
-			String keywordFilterValue = getKeywordFilterValue();
-			
-			if (keywordFilterValue == null || keywordFilterValue.equals("") || keywordFilterValue.equals("text")){
-				return false;
-			}
-			
-			keywordFilterValue = keywordFilterValue.toLowerCase().trim(); 
-			
-			for (int j=FIRST_STRING_COLUMN; j<AUTHOR_INDEX; j++ ){
-				String fieldValue = ((String)getModelValueAt(modelRow, j)).toLowerCase();
-				
-				if (fieldValue.contains(keywordFilterValue)){
-					return false;
-				}
-			}
-			return true;
-		}
-
-		
-		/**
-		 * 
-		 */
-		public int getRowCount() {
-			
-			int viewCount = 0;
-			for (int i=0; i<viewRows.size();i++){
-				if (viewRows.get(i).booleanValue()){
-					viewCount++;
-				}
-			}
-
-			return viewCount;
-		}
-		
-		/**
-		 * 
-		 */
-		public Object getValueAt(int viewRow, int column) {
-			int modelRow = getModelRow(viewRow);
-			Object value = getModelValueAt(modelRow, column);
-
-			if (column == AUTHOR_INDEX || column == TUTORIAL_URL_INDEX || column == TOOL_URL_INDEX) {
-				return (JButton)value;
-			}
-			
-			return value;
-		}
-		
-		/**
-		 * 
-		 */
-		public void setValueAt(Object value, int viewRow, int column ) {
-			int modelRow = getModelRow(viewRow);
-			setModelValueAt(value, modelRow, column, true);	
-		}
-		
-		/**
-		 * 
-		 */
-		public void setValueAt(Object value, int viewRow, int column, boolean validation ) {
-			int modelRow = getModelRow(viewRow);
-			setModelValueAt(value, modelRow, column, validation);	
-		}
-	}
 	
+	private boolean componentLoaded(int modelRow){
+		boolean loaded = false;
+		
+		String pluginClazzName = (String)ccmTableModel.getModelValueAt(modelRow, CCMTableModel.CLASS_INDEX);
+		
+		ComponentRegistry componentRegistry = ComponentRegistry.getRegistry();
+		List<Object> components = componentRegistry.getComponentsList();
+		for (Object proxiedComponent : components) {
+			// FIXME use a "deproxy" (see cglib or HibernateProxy)
+			Class<?> clazz = proxiedComponent.getClass();
+			String proxiedClazzName = clazz.getName();
+			String[] temp = StringUtils.split(proxiedClazzName, "$$");
+			String clazzName = temp[0];
+
+			if (StringUtils.equals(pluginClazzName, clazzName)) {
+				loaded = true;
+			}
+		}
+		return loaded;			
+	}
+
+
 	static private class JTableButtonRenderer implements TableCellRenderer {
 		private TableCellRenderer __defaultRenderer;
 
