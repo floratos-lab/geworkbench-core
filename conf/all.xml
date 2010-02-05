@@ -63,7 +63,4 @@
 		<gui-area name="CommandArea" />
 	</plugin>
 
-	<plugin id="goTree" name="Gene Ontology Tree"
-		class="org.geworkbench.util.GeneOntologyTreePopulateComponent">
-	</plugin>
 </geaw-config>

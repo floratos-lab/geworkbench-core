@@ -23,12 +23,13 @@ import org.apache.commons.logging.LogFactory;
 public class GeneOntologyTree {
 	
 	private Log log = LogFactory.getLog(this.getClass());
+	private static final String DEFAULT_OBO_FILE = "data/gene_ontology.1_2.obo";
 	
 	private static GeneOntologyTree instance;
 
 	public static GeneOntologyTree getInstance() {
 		if (instance == null) {
-			instance = new GeneOntologyTree();
+			instance = new GeneOntologyTree(DEFAULT_OBO_FILE);
 		}
 		return instance;
 	}
@@ -137,12 +138,19 @@ public class GeneOntologyTree {
 	private ListOrderedMap<String, GOTerm> roots;
 	private HashMap<Integer, GOTerm> terms;
 
-	private GeneOntologyTree() {
+	private GeneOntologyTree(String oboFileName) {
 		roots = new ListOrderedMap<String, GOTerm>();
 		terms = new HashMap<Integer, GOTerm>();
+		
+		try {
+			parseOBOFile(oboFileName);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
-	public void parseOBOFile(String fileName) throws Exception {
+	private void parseOBOFile(String fileName) throws Exception {
 		BufferedReader in = new BufferedReader(new FileReader(fileName));
 		String header = in.readLine();
 		if (!FILE_HEADER1_0.equals(header) && !FILE_HEADER1_2.equals(header)) {
@@ -358,38 +366,5 @@ public class GeneOntologyTree {
 		for (GOTerm child : children) {
 			getChildrenHelper(child, set);
 		}
-	}
-
-	public static void main(String[] args) {
-		String fileName = "data/gene_ontology.obo";
-		GeneOntologyTree tree = new GeneOntologyTree();
-		try {
-			tree.parseOBOFile(fileName);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		int n = tree.getNumberOfRoots();
-		System.out.println("Number of roots: " + n);
-		for (int i = 0; i < n; i++) {
-			GOTerm root = tree.getRoot(i);
-			System.out.println("  " + root);
-		}
-		String id = "GO:0000011";
-		System.out.println("Looking for GO 11:");
-		int idInt = parseID(id);
-		GOTerm term = tree.getTerm(idInt);
-		System.out.println("  " + id);
-		System.out.println("Parents:");
-		GOTerm[] parents = term.getParents();
-		for (GOTerm goTerm : parents) {
-			System.out.println("  " + goTerm);
-		}
-		System.out.println("Children:");
-		GOTerm[] children = term.getParents();
-		for (GOTerm goTerm : children) {
-			System.out.println("  " + goTerm);
-		}
-		System.out.println("Depth of 6928: " + tree.getDepth(6928));
-		System.out.println("Depth of 9987: " + tree.getDepth(9987));
 	}
 }
