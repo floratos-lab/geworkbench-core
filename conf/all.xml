@@ -1,9 +1,4 @@
-
-	<!--
-		author: keshav version: $Id: all.xml,v 1.83.2.5 2009/05/06 20:34:16
-		tgarben Exp $
-	-->
-
+<?xml version="1.0" encoding="UTF-8"?>
 <geaw-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="ConfigurationFile Schema.xsd">
 
@@ -23,7 +18,7 @@
 	<plugin id="caarrayPanel" name="CaArray Panel"
 		class="org.geworkbench.builtin.projects.util.CaARRAYPanel">
 	</plugin>
-	<!--  -->
+
 	<plugin id="configurationMenu" name="configurationMenu"
 		class="org.geworkbench.engine.ccm.ComponentConfigurationManagerMenu" />
 	<plugin id="preferences" name="preferences"
