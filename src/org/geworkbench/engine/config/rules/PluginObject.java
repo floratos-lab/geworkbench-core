@@ -1,6 +1,28 @@
 package org.geworkbench.engine.config.rules;
 
-import org.geworkbench.engine.config.*;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.StringTokenizer;
+import java.util.Vector;
+
+import javax.swing.ImageIcon;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.MenuElement;
+
+import org.geworkbench.engine.config.ComponentMetadata;
+import org.geworkbench.engine.config.MenuListener;
+import org.geworkbench.engine.config.PluginDescriptor;
+import org.geworkbench.engine.config.PluginRegistry;
+import org.geworkbench.engine.config.VisualPlugin;
 import org.geworkbench.engine.config.events.AppEventListener;
 import org.geworkbench.engine.config.events.EventSource;
 import org.geworkbench.engine.management.ComponentRegistry;
@@ -9,20 +31,6 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.StringTokenizer;
-import java.util.Vector;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
@@ -151,91 +159,12 @@ public class PluginObject {
                     return metadata;
                 }
             }
-        } else { // try ccm (before it is obsoleted eventually) // TODO
-        	try {
-        		metadata = processComponentDescriptorFromCcmFile(resourceName, type);
-            	if(metadata!=null) return metadata;
-        	} catch (Exception e) { // skip handling any exception from ccm file
-        		
-        	}
         }
         ComponentMetadata defaultData = new ComponentMetadata(type, resourceName);
         defaultData.setName(type.getSimpleName());
         return defaultData;
     }
     
-    // TODO this solution is to handle ccm file, which has no advantage over the earlier cwb file
-    // and is different in (1) location and (2) schema
-    // this can be got rid of once all ccm.xml files are changed back to cwb.xml files
-    // much duplicated code as the other processComponentDescriptorFromCcmFile
-    private static ComponentMetadata processComponentDescriptorFromCcmFile(String resourceName, Class type) throws JDOMException, IOException {
-        // Look for descriptor file
-        ComponentMetadata metadata = new ComponentMetadata(type, resourceName);
-        String filename = UILauncher.getComponentsDirectory()+"/"+resourceName+"/"+type.getSimpleName() + ".ccm.xml";
-        SAXBuilder builder = new SAXBuilder();
-        InputStream in = new FileInputStream(filename);
-        if (in != null) {
-            Document doc = builder.build(in);
-            Element root = doc.getRootElement();
-            if (root.getName().equals("geaw-config")) { // handle the nonsense schema of ccm.xml
-            	root = root.getChild("component-descriptor");
-            }
-            
-            if (root.getName().equals("component-descriptor")) {
-                root = root.getChild("component");
-                if (root != null) {
-                    // Check for optional attributes
-                    String iconName = root.getAttributeValue("icon");
-                    if (iconName != null) {
-                        URL url = type.getResource(iconName);
-                        if (url != null) {
-                            ImageIcon icon = new ImageIcon(url);
-                            if (icon != null) {
-                                metadata.setIcon(icon);
-                            }
-                        } else {
-                            System.out.println("Icon for component '" + type + "' not found: " + iconName);
-                        }
-                    }
-                    String commonName = root.getAttributeValue("name");
-                    if (commonName != null) {
-                        metadata.setName(commonName);
-                    }
-                    String version = root.getAttributeValue("version");
-                    if (version != null) {
-                        metadata.setVersion(version);
-                    }
-                    String description = root.getText().trim();
-                    if ((description != null) && (description.length() > 0)) {
-                        metadata.setDescription(description);
-                    }
-                    java.util.List<Element> elements = root.getChildren();
-                    for (int i = 0; i < elements.size(); i++) {
-                        Element element = elements.get(i);
-                        if (element.getName().equals("menu-item")) {
-                            metadata.addMenuInfo(
-                                    element.getAttributeValue("path"),
-                                    element.getAttributeValue("mode"),
-                                    element.getAttributeValue("var"),
-                                    element.getAttributeValue("icon"),
-                                    element.getAttributeValue("accelerator")
-                            );
-                        } else if (element.getName().equals("online-help")) {
-                            metadata.setHelpSet(element.getAttributeValue("helpSet"));
-                        }
-                    }
-                    if (metadata.getName() == null) {
-                        metadata.setName(type.getSimpleName());
-                    }
-                    return metadata;
-                }
-            }
-        } else {
-        	System.out.println("unable to parse this ccm file for comopnetn descriptor");
-        }
-        return null;
-    }
-
     /**
      * Creates a new plugin in and adds it to the <code>PluginRegistry</code>.
      * The plugin is instantiated by a call to its default constructor.
