@@ -165,12 +165,16 @@ public class ComponentConfigurationManager {
 			".ccmproperties");
 
 			String onOff = readProperty(folder, propFileName, "on-off");
-			CcmComponent ccmComponent = getPluginsFromFile(file );
+			PluginComponent ccmComponent = getPluginsFromFile(file );
+			if(ccmComponent==null) {
+				log.error(".cwb.xml file "+file+" failed to be loaded");
+				continue;
+			}
 			String name = ccmComponent.getName();
 			UILauncher.setProgressBarString(name);
-			String loadByDefault = ccmComponent.getLoadByDefault();
+			boolean loadByDefault = ccmComponent.getLoadByDefault();
 			
-			if (onOff == null && loadByDefault.equalsIgnoreCase("true")){
+			if (onOff == null && loadByDefault){
 				writeProperty(folder, propFileName, "on-off", "true");
 				onOff = readProperty(folder, propFileName, "on-off");
 			}
@@ -272,7 +276,7 @@ public class ComponentConfigurationManager {
 
 		// FIXME why parse again? can't we get this info another way?
 		/* parse the ccm.xml file */
-		CcmComponent ccmComponent = null;
+		PluginComponent ccmComponent = null;
 		if(filename.endsWith(COMPONENT_DESCRIPTOR_EXTENSION)) {
 			ccmComponent = getPluginsFromFile(new File(
 				filename));
@@ -282,12 +286,6 @@ public class ComponentConfigurationManager {
 
 		if (ccmComponent == null) return false;
 		
-		List<Plugin> pluginList = ccmComponent.getPlugins();
-
-		if (pluginList == null) {
-			return false;
-		}
-
 		/* GET THE VARIOUS MAPS/VECTORS FROM THE PLUGIN REGISTRY */
 
 		/* plugin registry component vector */
@@ -327,27 +325,12 @@ public class ComponentConfigurationManager {
 
 		// FIXME Can't we get the PluginDesriptor we want other than from the
 		// ccm.xml file?
-		for (int i = 0; i < pluginList.size(); i++) {
-			Plugin plugin = pluginList.get(i);
-			final String pluginClazzName = plugin.getClazz();
-			PluginDescriptor pluginDescriptor = PluginRegistry
-					.getPluginDescriptor(plugin.getId());
+		// beginning of processing the plugin
+		final String pluginClazzName = ccmComponent.getClazz();
+		PluginDescriptor pluginDescriptor = PluginRegistry
+					.getPluginDescriptor(ccmComponent.getPluginId());
 
-			if (pluginDescriptor == null) {
-				continue;
-			}
-
-			/* Skin.visualRegistry */
-			/* If we need to support skins that do not refresh themselves, after receiving an event, 
-			 * when component has been added or removed,
-			 * then something like the following code might be necessary. 
-			if (pluginDescriptor.isVisualPlugin()) {
-				VisualPlugin visualPlugin = (VisualPlugin) pluginDescriptor.getPlugin();
-				Component component = visualPlugin.getComponent();
-				JFrame jframeGUI = GUIFramework.getFrame();
-				jframeGUI.remove(component);
-			}
-			*/
+		if (pluginDescriptor != null) {
 			
 			/* START THE REMOVAL PROCESS IN THE PLUGIN REGISTRY */
 			/* PluginRegistry.visualAreaMap */
@@ -367,7 +350,7 @@ public class ComponentConfigurationManager {
 			}
 
 			/* PluginRegistry.visualAreaMap */
-			String id = plugin.getId();
+			String id = ccmComponent.getPluginId();
 			if (PluginDescriptor.idExists(id)) {
 				usedIds.remove(id);
 			}
@@ -435,14 +418,14 @@ public class ComponentConfigurationManager {
 			}
 
 			/* ComponentRegistry.idToDescriptor */
-			String pluginToRemove = plugin.getId();
+			String pluginToRemove = ccmComponent.getPluginId();
 			PluginDescriptor tempPluginDescriptor = idToDescriptor
 					.get(pluginToRemove);
 			if (tempPluginDescriptor != null) {
 				idToDescriptor.remove(pluginToRemove);
 			}
 
-		}// for
+		}// end of processing the plugin
 
 		/* ComponentRegistry.idToDescriptor */
 		/* If other Plugins are using the same Component Resource, don't remove the Resource */
@@ -480,16 +463,13 @@ public class ComponentConfigurationManager {
 		return true;
 	}
 
-	// TODO this is based on the original bad code. rewrite it!
-	CcmComponent getPluginsFromFile(File file) {
-		//String folder, String fileName;
-		CcmComponent ccmComponent = new CcmComponent();
-
+	PluginComponent getPluginsFromFile(File file) {
 		if (!file.exists()) {
 			return null;
 		}
 
-		ArrayList<Plugin> pluginList = new ArrayList<Plugin>();
+		PluginComponent ccmComponent = null;
+		
 		SAXBuilder builder = new SAXBuilder();
 		InputStream inputStream = null;
 		try {
@@ -506,71 +486,98 @@ public class ComponentConfigurationManager {
 				}
 				Element root = doc.getRootElement();
 				if (root.getName().equals("component-descriptor")) {
-					java.util.List<Element> elements = root.getChildren();
-					for (int i = 0; i < elements.size(); i++) {
-						Element element = elements.get(i);
+					String name = null;
+					String clazz = null;
+					String version = null;
+					String author = null;
+					String authorUrl = null;
+					String tutorialUrl = null;
+					String toolUrl = null;
+					String description = null;
+					String license = null;
+					boolean mustAccept = false;
+					String documentation = null;
+					boolean loadByDefault = false;
+					boolean hidden = false;
+					String pluginName = null;
+					String pluginId = null;
+					String resource = null;
+					boolean isAnalysis = false;
+					boolean isVisualizer = false;
+					List<String> required = new ArrayList<String>();
+					List<String> related = new ArrayList<String>();
+
+					for (Object objElement: root.getChildren() ) {
+						Element element = (Element)objElement;
 						if (element.getName().equals("component")) {
-							ccmComponent.setClazz(element
-									.getAttributeValue("class"));
-							ccmComponent.setName(element
-									.getAttributeValue("name"));
-							ccmComponent.setVersion(element
-									.getAttributeValue("version"));
-							ccmComponent.setAuthor(element
-									.getAttributeValue("author"));
-							ccmComponent.setAuthorURL(element
-									.getAttributeValue("authorURL"));
-							ccmComponent.setTutorialURL(element
-									.getAttributeValue("tutorialURL"));
-							ccmComponent.setToolURL(element
-									.getAttributeValue("toolURL"));
-							ccmComponent.setDescription(element
-									.getAttributeValue("description"));
-							ccmComponent.setMustAccept(element
-									.getAttributeValue("mustAccept"));
-							ccmComponent.setDocumentation(element
-									.getAttributeValue("documentation"));
-							ccmComponent.setLoadByDefault(element
-									.getAttributeValue("loadByDefault"));
-							ccmComponent.setHidden(element
-									.getAttributeValue("hidden"));
+							clazz = element
+									.getAttributeValue("class");
+							name = element
+									.getAttributeValue("name");
+							version = element
+									.getAttributeValue("version");
+							author = element
+									.getAttributeValue("author");
+							authorUrl = element
+									.getAttributeValue("authorURL");
+							tutorialUrl = element
+									.getAttributeValue("tutorialURL");
+							toolUrl = element
+									.getAttributeValue("toolURL");
+							description = element
+									.getAttributeValue("description");
+							String str = element.getAttributeValue("mustAccept"); 
+							if(str!=null && str.equalsIgnoreCase("true"))
+								mustAccept = true;
+							documentation = element
+									.getAttributeValue("documentation");
+							str = element.getAttributeValue("loadByDefault");
+							if(str!=null && str.equalsIgnoreCase("true"))
+								loadByDefault = true;
+							str = element.getAttributeValue("hidden");
+							if(str!=null && str.equalsIgnoreCase("true"))
+								hidden = true;
 							
-							List<Element> subElements = element.getChildren();
-							for (int j = 0; j < subElements.size(); j++) {
-								Element subElement = subElements.get(j);
+							for (Object obj: element.getChildren() ) {
+								Element subElement = (Element)obj;
 								String type = subElement.getName();
 								String dependencyClass = subElement
 										.getAttributeValue("class");
 								if (type.equals("required-component")) {
-									ccmComponent.addRequiredComponent(dependencyClass);
+									required.add(dependencyClass);
 								} else if (type.equals("related-component")) {
-									ccmComponent.addRelatedComponent(dependencyClass);
+									related.add(dependencyClass);
 								} else if (type.equals("license")) {
-									String cdata = subElement.getTextTrim();
-
-									ccmComponent.setLicense(cdata);
+									license = subElement.getTextTrim();
 								}
 							}
 
-							ccmComponent.setParser(element
-									.getAttributeValue("parser"));
-							ccmComponent.setAnalysis(element
-									.getAttributeValue("analysis"));
-							ccmComponent.setVisualizer(element
-									.getAttributeValue("visualizer"));
+							str = element.getAttributeValue("analysis");
+							if(str!=null && str.equalsIgnoreCase("true"))
+								isAnalysis = true;
+							str = element.getAttributeValue("visualizer");
+							if(str!=null && str.equalsIgnoreCase("true"))
+								isVisualizer = true;
 						}
 
 						if (element.getName().equals("plugin")) {
-							String id = element.getAttributeValue("id");
-							String name = element.getAttributeValue("name");
-							String clazz = element.getAttributeValue("class");
-							String source = element.getAttributeValue("source");
-
-							pluginList.add(new Plugin(id, name, clazz, source));
+							pluginId = element.getAttributeValue("id");
+							pluginName = element.getAttributeValue("name");
+							String pluginClazz = element.getAttributeValue("class");
+							if(!pluginClazz.equals(clazz)) {
+								log.error("plugin element and component have different class names in "+file.getName());
+							}
+							resource = element.getAttributeValue("source");
 						}
 					}
-					ccmComponent.setPlugins(pluginList);
-				}
+
+					ccmComponent = new PluginComponent(name, clazz, version,
+							author, authorUrl, tutorialUrl, toolUrl,
+							description, license, mustAccept,
+							documentation, loadByDefault, hidden,
+							pluginName, pluginId,
+							resource, isAnalysis, isVisualizer, required, related);
+				} // end of if open element is correct
 			}
 		} catch (Exception e) {
 			log.error("ERROR LOADING:"+file, e);

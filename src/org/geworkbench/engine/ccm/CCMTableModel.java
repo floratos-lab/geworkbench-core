@@ -4,9 +4,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -14,6 +14,8 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.geworkbench.engine.config.UILauncher;
 import org.geworkbench.util.Util;
 
@@ -23,6 +25,7 @@ import org.geworkbench.util.Util;
  */
 class CCMTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 3986726808587129205L;
+	private static Log log = LogFactory.getLog(CCMTableModel.class);
 
 	public static final boolean NO_VALIDATION = false;
 
@@ -38,8 +41,6 @@ class CCMTableModel extends AbstractTableModel {
 	// FIXME the following indices are really identifiers instead of index
 	static final int CLASS_INDEX = 7;
 	static final int DESCRIPTION_INDEX = 8;
-	static final int FOLDER_INDEX = 9;
-	static final int CCM_FILE_NAME_INDEX = 10;
 	static final int LICENSE_INDEX = 11;
 	static final int DOCUMENTATION_INDEX = 13;
 	static final int ANALYSIS_INDEX = 17;
@@ -52,12 +53,12 @@ class CCMTableModel extends AbstractTableModel {
 
 	private String[] columnNames = { "On/Off", "Name", "Author", "Version",
 			"Tutorial", "Tool URL" };
-	Vector<TableRow> rows = new Vector<TableRow>();
+	Vector<PluginComponent> rows = new Vector<PluginComponent>();
+	Map<PluginComponent, Boolean> selected = new HashMap<PluginComponent, Boolean>();
 	
-	private Map<String, List<String>> requiredComponentsMap = new TreeMap<String, List<String>>();
-	private Map<String, List<String>> relatedComponentsMap =  new TreeMap<String, List<String>>();
-
-
+	private Map<PluginComponent, String> resourceFolders = new HashMap<PluginComponent, String>();
+	private Map<PluginComponent, File> files = new HashMap<PluginComponent, File>();
+	
 	private ComponentConfigurationManager manager = null;
 
 	private String loadedFilterValue = null;
@@ -71,7 +72,8 @@ class CCMTableModel extends AbstractTableModel {
 		super();
 
 		this.manager = manager;
-		loadGuiModelFromFiles(manager.cwbFile);
+		for(File file: manager.cwbFile)
+			loadGuiModelFromFiles(file);
 		Collections.sort(rows, new TableNameComparator());
 	}
 
@@ -205,28 +207,24 @@ class CCMTableModel extends AbstractTableModel {
 	 * @see javax.swing.table.TableModel#getValueAt(int, int)
 	 */
 	final public Object getModelValueAt(int row, int column) {
-		TableRow record = rows.get(row);
+		PluginComponent record = rows.get(row);
 		switch (column) {
 		case SELECTION_INDEX:
-			return (Boolean) record.isSelected();
+			return (Boolean) selected.get(record);
 		case NAME_INDEX:
 			return (String) record.getName();
 		case VERSION_INDEX:
 			return (String) record.getVersion();
 		case AUTHOR_INDEX:
-			return (JButton) record.getAuthor();
+			return createAuthorButton(record);
 		case TUTORIAL_URL_INDEX:
-			return (JButton) record.getTutorialURL();
+			return createButtionField( record.getTutorialUrl() );
 		case TOOL_URL_INDEX:
-			return (JButton) record.getToolURL();
+			return createButtionField( record.getToolUrl() );
 		case CLASS_INDEX:
 			return (String) record.getClazz();
 		case DESCRIPTION_INDEX:
 			return (String) record.getDescription();
-		case FOLDER_INDEX:
-			return (String) record.getFolder();
-		case CCM_FILE_NAME_INDEX:
-			return (File) record.getFile();
 		case LICENSE_INDEX:
 			return (String) record.getLicense();
 		case DOCUMENTATION_INDEX:
@@ -251,7 +249,7 @@ class CCMTableModel extends AbstractTableModel {
 	final public int getModelRowByClazz(String clazz) {
 
 		for (int i = 0; i < rows.size(); i++) {
-			TableRow record = (TableRow) rows.get(i);
+			PluginComponent record = rows.get(i);
 			String rowClazz = record.getClazz();
 			if (clazz.equalsIgnoreCase(rowClazz)) {
 				return i;
@@ -270,6 +268,14 @@ class CCMTableModel extends AbstractTableModel {
 		setModelValueAt(value, row, column, true);
 	}
 
+	String getResourceFolder(int rowNumber) {
+		return resourceFolders.get(rows.get(rowNumber));
+	}
+
+	File getFile(int rowNumber) {
+		return files.get(rows.get(rowNumber));
+	}
+	
 	/**
 	 * (non-Javadoc)
 	 * 
@@ -278,20 +284,18 @@ class CCMTableModel extends AbstractTableModel {
 	 */
 	final public boolean setModelValueAt(Object value, int modelRow,
 			int column, boolean validation) {
-		TableRow record = (TableRow) rows.get(modelRow);
+		PluginComponent record = rows.get(modelRow);
 		switch (column) {
 		case SELECTION_INDEX:
-			record.setSelected((Boolean) value);
+			selected.put( record, (Boolean)value );
 
 			Boolean currentChoice = (Boolean) getModelValueAt(modelRow,
 					CCMTableModel.SELECTION_INDEX);
 
-			List<String> required = requiredComponentsMap.get(record.name);
-			List<String> related = relatedComponentsMap.get(record.name);
-			String folder = (String) getModelValueAt(modelRow,
-					CCMTableModel.FOLDER_INDEX);
-			File file = ((File) getModelValueAt(modelRow,
-					CCMTableModel.CCM_FILE_NAME_INDEX));
+			List<String> required = record.getRequired();
+			List<String> related = record.getRelated();
+			String folder = resourceFolders.get(record);
+			File file = files.get(record);
 
 			List<String> unselectedRequired = new ArrayList<String>();
 			for (int i = 0; i < required.size(); i++) {
@@ -307,13 +311,13 @@ class CCMTableModel extends AbstractTableModel {
 			if (currentChoice.booleanValue()) {
 				/* PLUGIN SELECTED */
 				String propFileName = null;
-				String ccmFileName = file.getName();
-				if (ccmFileName.endsWith(".ccm.xml"))
-					propFileName = ccmFileName.replace(".ccm.xml",
+				String cwbFileName = file.getName();
+				if (cwbFileName.endsWith(".cwb.xml")) {
+					propFileName = cwbFileName.replace(".cwb.xml",
 							".ccmproperties");
-				else if (ccmFileName.endsWith(".cwb.xml"))
-					propFileName = ccmFileName.replace(".cwb.xml",
-							".ccmproperties");
+				} else {
+					log.error(".cwb.xml file is expected. Actual file name "+cwbFileName);
+				}
 				String licenseAccepted = ComponentConfigurationManager
 						.readProperty(folder, propFileName, "licenseAccepted");
 				Boolean boolRequired = record.isMustAccept();
@@ -337,7 +341,7 @@ class CCMTableModel extends AbstractTableModel {
 					if (choice != 0) {
 						ComponentConfigurationManager.writeProperty(folder,
 								propFileName, "licenseAccepted", "false");
-						record.setSelected(new Boolean(false));
+						selected.put( record, new Boolean(false) );
 						return false;
 					}
 					ComponentConfigurationManager.writeProperty(folder,
@@ -382,7 +386,7 @@ class CCMTableModel extends AbstractTableModel {
 						continue;
 					}
 
-					List<String> requiredList = requiredComponentsMap.get(rows.get(i).name);
+					List<String> requiredList = rows.get(i).getRequired();
 
 					for (int j = 0; j < requiredList.size(); j++) {
 						String requiredClazz = requiredList.get(j);
@@ -416,115 +420,46 @@ class CCMTableModel extends AbstractTableModel {
 		return true;
 	}
 
-	private void loadGuiModelFromFiles(List<File> files) {
-		String name = null;
-		String version = null;
-		String author = null;
-		String authorURL = null;
-		String toolURL = null;
-		String tutorialURL = null;
-		String clazz = null;
-		String description = null;
-		String license = null;
-		String mustAccept = null;
-		String documentation = null;
-		List<String> requiredComponents = null;
-		List<String> relatedComponents = null;
-		String parser = null;
-		String analysis = null;
-		String visualizer = null;
-		String hidden = null;
+	private void loadGuiModelFromFiles(File file) {
 
-		for (File file : files) {
 			String comDir = UILauncher.getComponentsDirectory();
 			String path = file.getAbsolutePath();
 			int index = path.indexOf(comDir)+comDir.length()+1;
 			String folderName = path.substring(index, path.indexOf(System.getProperty("file.separator"), index));
-			
-			String ccmFileName = file
-					.getName();
 
-			CcmComponent ccmComponent = manager.getPluginsFromFile(file);
+			PluginComponent ccmComponent = manager.getPluginsFromFile(file);
 
 			if (ccmComponent == null) {
-				continue;
+				return;
 			}
 
-			List<Plugin> plugins = ccmComponent.getPlugins();
-			if (plugins == null || plugins.size() <= 0) {
-				continue;
+			String name = ccmComponent.getPluginName();
+			if (name == null) {
+				return;
 			}
-
-			Plugin plugin = (Plugin) plugins.get(0);
-			name = plugin.getName();
-
-			version = ccmComponent.getVersion();
-			author = ccmComponent.getAuthor();
-			authorURL = ccmComponent.getAuthorURL();
-			tutorialURL = ccmComponent.getTutorialURL();
-			toolURL = ccmComponent.getToolURL();
-			clazz = ccmComponent.getClazz();
-			description = ccmComponent.getDescription();
-			license = ccmComponent.getLicense();
-			mustAccept = ccmComponent.getMustAccept();
-			documentation = ccmComponent.getDocumentation();
-			requiredComponents = ccmComponent.getRequiredComponents();
-			relatedComponents = ccmComponent.getRelatedComponents();
-			parser = ccmComponent.getParser();
-			analysis = ccmComponent.getAnalysis();
-			visualizer = ccmComponent.getVisualizer();
-			hidden = ccmComponent.getHidden();
-
-			boolean bMustAccept = false;
-			boolean bParser = false;
-			boolean bAnalysis = false;
-			boolean bVisualizer = false;
-			boolean bHidden = false;
-
-			if (mustAccept != null && mustAccept.equalsIgnoreCase("true")) {
-				bMustAccept = true;
-			}
-			if (parser != null && parser.equalsIgnoreCase("true")) {
-				bParser = true;
-			}
-			if (analysis != null && analysis.equalsIgnoreCase("true")) {
-				bAnalysis = true;
-			}
-			if (visualizer != null && visualizer.equalsIgnoreCase("true")) {
-				bVisualizer = true;
-			}
-			if (hidden != null && hidden.equalsIgnoreCase("true")) {
-				bHidden = true;
-			}
-
-			TableRow tableRow = new TableRow(false, name, version, author,
-					authorURL, tutorialURL, toolURL, clazz, description,
-					folderName, file, license, bMustAccept, documentation,
-					bParser, bAnalysis,
-					bVisualizer, bHidden);
-			requiredComponentsMap.put(name, requiredComponents);
-			relatedComponentsMap.put(name, relatedComponents);
 
 			String propFileName = null;
-			if (ccmFileName.endsWith(".ccm.xml"))
-				propFileName = ccmFileName
-						.replace(".ccm.xml", ".ccmproperties");
-			else if (ccmFileName.endsWith(".cwb.xml"))
-				propFileName = ccmFileName
+			String cwbFileName = file.getName();
+			if (cwbFileName.endsWith(".cwb.xml")) {
+				propFileName = cwbFileName
 						.replace(".cwb.xml", ".ccmproperties");
+			} else {
+				log.error(".cwb.xml file is expected. File name "+cwbFileName);
+				return;
+			}
 
 			String onOff = ComponentConfigurationManager.readProperty(
 					folderName, propFileName, "on-off");
 
-			if (onOff != null && onOff.equals("true")) {
-				tableRow.setSelected(true);
+			if (onOff != null && onOff.equalsIgnoreCase("true")) {
+				selected.put(ccmComponent, new Boolean(true) );
 			} else {
-				tableRow.setSelected(false);
+				selected.put(ccmComponent, new Boolean(false) );
 			}
 
-			rows.add(tableRow);
-		}// files
-
+			rows.add(ccmComponent);
+			resourceFolders.put(ccmComponent, folderName);
+			files.put(ccmComponent, file);
 	}
 
 	final public String getLoadedFilterValue() {
@@ -550,266 +485,43 @@ class CCMTableModel extends AbstractTableModel {
 	final public void setKeywordFilterValue(String keywordFilterValue) {
 		this.keywordFilterValue = keywordFilterValue;
 	}
+	
+	public static JButton createAuthorButton(PluginComponent component) {
+		String author = component.getAuthor();
+		String authorUrl = component.getAuthorUrl();
+		JButton button = new JButton(author);
+		button.setBorderPainted(false);
 
-	/**
-	 * GUI row structure
-	 * 
-	 * @author tg2321
-	 * @version $Id: ComponentConfigurationManagerWindow.java,v 1.17 2009-11-20
-	 *          14:37:27 jiz Exp $
-	 */
-	static private class TableRow {
-		private boolean selected = false;
-		private String name = "";
-		private String version = "";
-		private String author = "";
-		private String authorURL = null;
-		private String tutorialURL = null;
-		private String toolURL = null;
-		private String clazz = "";
-		private String description = "";
-		private String folder = "";
-		private File file;
-		private String license = "";
-		private boolean mustAccept = false;
-		private String documentation = "";
-		private boolean parser = false;
-		private boolean analysis = false;
-		private boolean visualizer = false;
-		private boolean hidden = false;
-
-		/**
-		 * Constructor
-		 * 
-		 * @param selected
-		 * @param name
-		 * @param version
-		 * @param author
-		 * @param authorURL
-		 * @param toolURL
-		 * @param clazz
-		 * @param description
-		 * @param folder
-		 * @param fileName
-		 * @param requiredComponents
-		 * @param relatedComponents
-		 */
-		public TableRow(boolean selected, String name, String version,
-				String author, String authorURL, String tutorialURL,
-				String toolURL, String clazz, String description,
-				String folder, File file, String license, boolean mustAccept,
-				String documentation, boolean parser,
-				boolean analysis, boolean visualizer,
-				boolean hidden) {
-			super();
-			this.selected = selected;
-			this.name = name;
-			this.version = version;
-			this.author = author;
-			this.authorURL = authorURL;
-			this.tutorialURL = tutorialURL;
-			this.toolURL = toolURL;
-			this.clazz = clazz;
-			this.description = description;
-			this.folder = folder;
-			this.file = file;
-			this.license = license;
-			this.mustAccept = mustAccept;
-			this.documentation = documentation;
-			this.parser = parser;
-			this.analysis = analysis;
-			this.visualizer = visualizer;
-			this.hidden = hidden;
+		if (authorUrl != null) {
+			button.setToolTipText(authorUrl);
+			String html = "<html><font><u>" + author
+					+ "</u><br></font>";
+			button.setText(html);
 		}
 
-		public boolean isSelected() {
-			return selected;
+		return button;
+	}
+	
+	private static JButton createButtionField(String strUrl) {
+		ImageIcon image = null;
+		if (strUrl == null || strUrl == "") {
+			image = Util.createImageIcon(
+					"/org/geworkbench/engine/visualPluginGrey.png",
+					strUrl);
+		} else {
+			image = Util.createImageIcon(
+					"/org/geworkbench/engine/visualPlugin.png",
+					strUrl);
 		}
 
-		public void setSelected(boolean selected) {
-			this.selected = selected;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		public String getVersion() {
-			return version;
-		}
-
-		public void setVersion(String version) {
-			this.version = version;
-		}
-
-		public JButton getAuthor() {
-			JButton button = new JButton(this.author);
-			button.setBorderPainted(false);
-
-			if (this.authorURL != null) {
-				button.setToolTipText(this.authorURL);
-				String html = "<html><font><u>" + this.author
-						+ "</u><br></font>";
-				button.setText(html);
-			}
-
-			return button;
-		}
-
-		public void setAuthor(String author) {
-			this.author = author;
-		}
-
-		public JButton getAuthorURL() {
-			ImageIcon image = Util.createImageIcon(
-					"/org/geworkbench/engine/visualPlugin.png", this.authorURL);
-
-			JButton button = new JButton(image);
-			button.setToolTipText(this.authorURL);
-			button.setBorderPainted(false);
-			return button;
-		}
-
-		public void setAuthorURL(String authorURL) {
-			this.authorURL = authorURL;
-		}
-
-		public JButton getTutorialURL() {
-			ImageIcon image = null;
-			if (this.tutorialURL == null || this.tutorialURL == "") {
-				image = Util.createImageIcon(
-						"/org/geworkbench/engine/visualPluginGrey.png",
-						this.tutorialURL);
-			} else {
-				image = Util.createImageIcon(
-						"/org/geworkbench/engine/visualPlugin.png",
-						this.tutorialURL);
-			}
-
-			JButton button = new JButton(image);
-			button.setToolTipText(this.tutorialURL);
-			button.setBorderPainted(false);
-			return button;
-		}
-
-		public void setTutorialURL(String tutorialURL) {
-			this.tutorialURL = tutorialURL;
-		}
-
-		public JButton getToolURL() {
-			ImageIcon image = null;
-			if (this.toolURL == null || this.toolURL == "") {
-				image = Util.createImageIcon(
-						"/org/geworkbench/engine/visualPluginGrey.png",
-						this.tutorialURL);
-			} else {
-				image = Util.createImageIcon(
-						"/org/geworkbench/engine/visualPlugin.png",
-						this.tutorialURL);
-			}
-
-			JButton button = new JButton(image);
-			button.setToolTipText(this.toolURL);
-			button.setBorderPainted(false);
-			return button;
-		}
-
-		public void setToolURL(String toolURL) {
-			this.toolURL = toolURL;
-		}
-
-		public String getClazz() {
-			return clazz;
-		}
-
-		public void setClazz(String clazz) {
-			this.clazz = clazz;
-		}
-
-		public String getFolder() {
-			return folder;
-		}
-
-		public void setDescription(String description) {
-			this.description = description;
-		}
-
-		public void setFolder(String folder) {
-			this.folder = folder;
-		}
-
-		public String getDescription() {
-			return description;
-		}
-
-		public File getFile() {
-			return file;
-		}
-
-		public String getLicense() {
-			return license;
-		}
-
-		public void setLicense(String license) {
-			this.license = license;
-		}
-
-		public boolean isMustAccept() {
-			return mustAccept;
-		}
-
-		public void setMustAccept(boolean mustAccept) {
-			this.mustAccept = mustAccept;
-		}
-
-		public String getDocumentation() {
-			return documentation;
-		}
-
-		public void setDocumentation(String documentation) {
-			this.documentation = documentation;
-		}
-
-		public boolean isParser() {
-			return parser;
-		}
-
-		public void setParser(boolean parser) {
-			this.parser = parser;
-		}
-
-		public boolean isAnalysis() {
-			return analysis;
-		}
-
-		public void setAnalysis(boolean analysis) {
-			this.analysis = analysis;
-		}
-
-		public boolean isVisualizer() {
-			return visualizer;
-		}
-
-		public void setVisualizer(boolean visualizer) {
-			this.visualizer = visualizer;
-		}
-
-		public boolean isHidden() {
-			return hidden;
-		}
-
-		public void setHidden(boolean hidden) {
-			this.hidden = hidden;
-		}
-
+		JButton button = new JButton(image);
+		button.setToolTipText(strUrl);
+		button.setBorderPainted(false);
+		return button;
 	}
 
-	static private class TableNameComparator implements Comparator<TableRow> {
-		public int compare(TableRow row1, TableRow row2) {
+	static private class TableNameComparator implements Comparator<PluginComponent> {
+		public int compare(PluginComponent row1, PluginComponent row2) {
 			String name1 = row1.getName().toLowerCase();
 			String name2 = row2.getName().toLowerCase();
 			return name1.compareTo(name2);

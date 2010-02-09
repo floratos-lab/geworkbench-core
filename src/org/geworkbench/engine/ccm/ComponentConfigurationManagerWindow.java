@@ -725,11 +725,8 @@ public class ComponentConfigurationManagerWindow {
 				continue;
 			}
 
-			String resource = ((String) ccmTableModel.getModelValueAt(i,
-					CCMTableModel.FOLDER_INDEX));
-
-			File file = ((File) ccmTableModel.getModelValueAt(i,
-					CCMTableModel.CCM_FILE_NAME_INDEX));
+			String resource = ccmTableModel.getResourceFolder(i);
+			File file = ccmTableModel.getFile(i);
 			String filename = file.getName();
 
 			String propFileName = null;
