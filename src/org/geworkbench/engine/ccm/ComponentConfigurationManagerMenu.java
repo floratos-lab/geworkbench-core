@@ -31,17 +31,4 @@ public class ComponentConfigurationManagerMenu implements MenuListener {
 		}
 		return null;
 	}
-
-	/**
-	 * Publish the {@link ComponentConfigurationManagerUpdateEvent}.
-	 * 
-	 * @param event
-	 * @return event
-	 */
-	@Publish
-	public ComponentConfigurationManagerUpdateEvent publishComponentConfigurationManagerUpadateEvent(
-			ComponentConfigurationManagerUpdateEvent event) {
-
-		return event;
-	}
 }

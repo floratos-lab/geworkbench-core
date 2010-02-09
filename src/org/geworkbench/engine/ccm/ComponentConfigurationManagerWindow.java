@@ -45,8 +45,10 @@ import javax.swing.table.TableRowSorter;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.geworkbench.builtin.projects.ProjectPanel;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.management.ComponentRegistry;
+import org.geworkbench.engine.management.Publish;
 import org.geworkbench.events.ComponentConfigurationManagerUpdateEvent;
 import org.geworkbench.util.BrowserLauncher;
 
@@ -62,8 +64,6 @@ import com.jgoodies.forms.layout.FormLayout;
 public class ComponentConfigurationManagerWindow {
 
 	private static Log log = LogFactory.getLog(ComponentConfigurationManagerWindow.class);
-	
-	private ComponentConfigurationManagerMenu menu = null;
 	
 	private CCMTableModel ccmTableModel;
 	protected ComponentConfigurationManager manager = null;	
@@ -110,27 +110,18 @@ public class ComponentConfigurationManagerWindow {
 	 * 
 	 * @param ComponentConfigurationManagerMenu
 	 */
-	private ComponentConfigurationManagerWindow(
-			ComponentConfigurationManagerMenu menu) {
+	private ComponentConfigurationManagerWindow() {
 
-		this.menu = menu;
 		manager = ComponentConfigurationManager.getInstance();
 		initComponents();
 	}
 
 	/**
-	 * Default Constructor
-	 */
-	private ComponentConfigurationManagerWindow() {
-	}
-	
-	
-	/**
 	 * Load method
 	 */
 	public static void load(ComponentConfigurationManagerMenu menu){
 		if(ccmWindow == null){
-			ccmWindow = new ComponentConfigurationManagerWindow(menu);
+			ccmWindow = new ComponentConfigurationManagerWindow();
 		}
 		ccmWindow.frame.setExtendedState(Frame.NORMAL);
 		ccmWindow.frame.setVisible(true);
@@ -776,7 +767,8 @@ public class ComponentConfigurationManagerWindow {
 		ComponentConfigurationManagerUpdateEvent ccmEvent = new ComponentConfigurationManagerUpdateEvent(
 				acceptors);
 		
-		publishComponentConfigurationManagerUpadateEvent(ccmEvent);
+		// TODO this has no need to use publish/receive mechanism and should be refactored.
+		ProjectPanel.getInstance().receive(ccmEvent, null);
 
 		setOriginalChoices();
 	}
@@ -819,19 +811,6 @@ public class ComponentConfigurationManagerWindow {
 		}
 	}
 
-	/**
-	 * A call-back to the
-	 * {@link ComponentConfigurationManagerMenu#publishComponentConfigurationManagerUpadateEvent(ComponentConfigurationManagerUpdateEvent)}
-	 * 
-	 * @param ComponentConfigurationManagerUpdateEvent
-	 * @return ComponentConfigurationManagerUpdateEvent
-	 */
-	public ComponentConfigurationManagerUpdateEvent publishComponentConfigurationManagerUpadateEvent(
-			ComponentConfigurationManagerUpdateEvent event) {
-
-		return menu.publishComponentConfigurationManagerUpadateEvent(event);
-	}
-	
 	private boolean componentLoaded(int modelRow){
 		boolean loaded = false;
 		
