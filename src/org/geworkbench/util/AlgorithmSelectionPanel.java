@@ -53,7 +53,7 @@ public class AlgorithmSelectionPanel extends JPanel {
         discovery.setActionCommand(DISCOVER);
         hierarc.setText("Hierarch.");
         hierarc.setActionCommand(HIERARCHICAL);
-        exhaustive.setText("Exhhaust.");
+        exhaustive.setText("Exhaust.");
         exhaustive.setActionCommand(EXHAUSTIVE);
         discovery.setSelected(true);
 
