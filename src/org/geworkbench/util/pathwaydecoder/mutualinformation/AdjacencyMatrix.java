@@ -53,8 +53,11 @@ public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMa
     static final public int BOTH = 3;
     protected HashMap<Integer, HashMap<Integer, Float>> geneRows = new HashMap<Integer, HashMap<Integer, Float>>();
     protected HashMap<Integer, HashMap<Integer, String>> geneInteractionRows = new HashMap<Integer, HashMap<Integer, String>>();
+    protected HashMap<String, HashMap<String, Float>>  geneRowsNotInMicroarray = new HashMap<String, HashMap<String, Float>>();
+    protected HashMap<String, HashMap<String, String>> geneInteractionRowsNotInMicroarray = new HashMap<String, HashMap<String, String>>();
+    
     protected HashMap idToGeneMapper = new HashMap();
-    protected HashMap<String, Integer> snToGeneMapper = new HashMap();
+    protected HashMap<String, Integer> snToGeneMapper = new HashMap<String, Integer>();
 
     protected Parameter parms = null;
     protected int[] histogram = new int[1024];
@@ -75,7 +78,7 @@ public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMa
         super();
     }
 
-    public AdjacencyMatrix(HashMap geneRows) {
+    public AdjacencyMatrix(HashMap<Integer, HashMap<Integer, Float>> geneRows) {
         super();
         this.geneRows = (HashMap) geneRows.clone();
     }
@@ -249,6 +252,10 @@ public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMa
     public HashMap<Integer, HashMap<Integer, Float>> getGeneRows() {
         return this.geneRows;
     }
+    
+    public HashMap<String, HashMap<String, Float>> getGeneRowsNotInMicroarray() {
+        return this.geneRowsNotInMicroarray;
+    }
 
     public HashMap getKeyMapping() {
         return keyMapping;
@@ -282,7 +289,11 @@ public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMa
     public HashMap<Integer, HashMap<Integer, String>> getInteractionMap() {
         return this.geneInteractionRows;
     }
-
+     
+    public HashMap<String, HashMap<String, String>> getInteractionNotInMicroarrayMap() {
+        return this.geneInteractionRowsNotInMicroarray;
+    }
+ 
     public HashMap getInteraction(int geneId) {
 
         // System.out.println("maSet= "+ maSet);
@@ -385,6 +396,35 @@ public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMa
          
     }
 
+    /**
+     * Adds and edge between geneId1 and geneId2
+     *
+     * @param geneId1 String
+     * @param geneId2 String
+     * @param edge    float
+     */
+    public void add(String geneId1, String geneId2, float edge) {
+          
+         
+            HashMap<String, Float>  row = (HashMap<String, Float>) geneRowsNotInMicroarray.get(geneId1);
+            if (row == null) {
+                row = new HashMap<String, Float>();
+                geneRowsNotInMicroarray.put(geneId1, row);
+            }
+            row.put(new String(geneId2), new Float(edge));
+
+            // doing it both ways; [gene2 -> (gene1, edge)]
+            row = (HashMap<String, Float>) geneRowsNotInMicroarray.get(geneId2);
+            if (row == null) {
+                row = new HashMap<String, Float>();
+                geneRowsNotInMicroarray.put(geneId2, row);
+            }
+            row.put(geneId1, new Float(edge));
+         
+    }
+    
+    
+    
     public void addDirectional(int geneId1, int geneId2, float edge) {
         geneId1 = getMappedId(geneId1);
         geneId2 = getMappedId(geneId2);
@@ -393,9 +433,9 @@ public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMa
             if (bin >= 0) {
                 histogram[bin]++;
             }
-            HashMap row = (HashMap) geneRows.get(new Integer(geneId1));
+            HashMap<Integer, Float> row = (HashMap<Integer, Float>) geneRows.get(new Integer(geneId1));
             if (row == null) {
-                row = new HashMap();
+                row = new HashMap<Integer, Float>();
                 geneRows.put(new Integer(geneId1), row);
             }
             row.put(new Integer(geneId2), new Float(edge));
@@ -419,14 +459,34 @@ public class AdjacencyMatrix extends BWAbstractAlgorithm implements IAdjacencyMa
                 histogram[bin]++;
                          }
              */
-            HashMap row = (HashMap) geneInteractionRows.get(new Integer(geneId1));
+            HashMap<Integer, String> row = (HashMap<Integer, String>) geneInteractionRows.get(new Integer(geneId1));
             if (row == null) {
-                row = new HashMap();
+                row = new HashMap<Integer, String>();
                 geneInteractionRows.put(new Integer(geneId1), row);
             }
             row.put(new Integer(geneId2), interaction);
         
     }
+    
+    /**
+     * exp method, not tested!!!
+     *
+     * @param geneId1     String
+     * @param geneId2     String
+     * @param interaction String
+     */
+    public void addDirectional(String geneId1, String geneId2, String interaction) {
+           
+            HashMap<String, String> row = (HashMap<String, String>) geneInteractionRowsNotInMicroarray.get(new String(geneId1));
+            if (row == null) {
+                row = new HashMap<String, String>();
+                geneInteractionRowsNotInMicroarray.put(new String(geneId1), row);
+            } 
+            row.put(new String(geneId2), interaction);
+        
+    }
+    
+    
 
     /**
      * Implements abstract <code>run</code> method from
