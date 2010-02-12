@@ -120,6 +120,8 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	public static final int SKYBASE_TYPE = 29;
 
     public static final int PUDGE_TYPE = 30;
+    
+    public static final int MEDUSA_TYPE = 31;
 	/**
 	 * Parameters will be saved as XML files in "savedParams" directory under
 	 * each component directory.
