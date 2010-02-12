@@ -120,15 +120,17 @@ public class ComponentConfigurationManager {
 	 * 
 	 * @return {@link ArrayList}
 	 */
-	// TODO the name is out-of-date, should be called something like "find all component descriptor files"
-	public void loadAllComponentFolders() {
+	public void loadAllComponentFolders(File componentDirectory) {
     	cwbFile = new ArrayList<File>();
-    	Collection<ComponentResource> resources = ComponentRegistry.getRegistry().getAllComponentResources();
+//    	Collection<ComponentResource> resources = ComponentRegistry.getRegistry().getAllComponentResources();
+    	if(!componentDirectory.isDirectory()) {
+    		log.error("component directory is not a directory");
+    	}
 
-        for (ComponentResource resource: resources) {
-        	log.info("searching resource "+resource.getDir());
+        for (File componentDir: componentDirectory.listFiles()) {
+        	log.info("searching resource "+componentDir);
 
-        	File resourceDir = new File(resource.getDir()+"/classes");
+        	File resourceDir = new File(componentDir+"/classes");
         	try {
         		searchCwb(resourceDir);
 			} catch (IOException e) {

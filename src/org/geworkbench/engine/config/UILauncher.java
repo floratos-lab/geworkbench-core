@@ -1,5 +1,6 @@
 package org.geworkbench.engine.config;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -97,9 +98,7 @@ public class UILauncher {
     private static void initProperties() {
         InputStream reader = null;
         try {
-            reader = Class.forName("org.geworkbench.engine.config.UILauncher").getResourceAsStream("/application.properties");
-            // this was mistakenly 'fixed' on 1/14/2009
-            //reader = Class.forName(UILauncher.class.getName()).getResourceAsStream("/application.properties");
+            reader = Class.forName(UILauncher.class.getName()).getResourceAsStream("/application.properties");
             System.getProperties().load(reader);
             if (System.getSecurityManager() == null) {
                 System.setSecurityManager(new SecurityManager());
@@ -179,7 +178,7 @@ public class UILauncher {
 		if (componentsDir == null) {
 			componentsDir = DEFAULT_COMPONENTS_DIR;
 		}
-		ComponentRegistry.getRegistry().initializeComponentResources(componentsDir);
+		//ComponentRegistry.getRegistry().initializeComponentResources(componentsDir);
         //ComponentRegistry.getRegistry().initializeGearResources(DEFAULT_GEAR_DIR);
         
         Digester digester = createDigester();
@@ -209,7 +208,7 @@ public class UILauncher {
 
         /* Load Components */
         ComponentConfigurationManager ccm = ComponentConfigurationManager.getInstance(); 
-        ccm.loadAllComponentFolders();
+        ccm.loadAllComponentFolders(new File(componentsDir));
 		ccm.loadSelectedComponents();
         
         PluginRegistry.debugPrint();
@@ -225,4 +224,3 @@ public class UILauncher {
 	}
 
 }
-
