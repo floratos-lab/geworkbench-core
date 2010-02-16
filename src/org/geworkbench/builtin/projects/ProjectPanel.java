@@ -104,7 +104,6 @@ import org.geworkbench.events.ProjectNodeRemovedEvent;
 import org.geworkbench.events.ProjectNodeRenamedEvent;
 import org.geworkbench.events.SingleValueEditEvent;
 import org.geworkbench.events.StructureAnalysisEvent;
-import org.geworkbench.util.FilePathnameUtils;
 import org.geworkbench.util.SaveImage;
 import org.geworkbench.util.Util;
 import org.ginkgo.labs.ws.GridEndpointReferenceType;
@@ -1560,31 +1559,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 					inputFormat, mergeFiles, this);
 			handler.openFiles();
 		} else {
-			// The call to getMArraySet() may result in an
-			// InputFileFormatException
-			// which is expected to be handled by the calling function.
-			if (dataSetFiles.length == 1) {
-				DSMicroarraySet microarrays = (DSMicroarraySet) inputFormat
-						.getMArraySet(dataSetFiles[0]);
-				// If everything went OK, register the newly created microarray
-				// set.
-				addMicroarrays(microarrays,
-						projectRenderer.projectNodeSelection);
-			} else {
-				String arrayName = JOptionPane
-						.showInputDialog("Please enter the name of the Microarry Set");
-				DSMicroarraySet mic = (DSMicroarraySet) inputFormat
-						.getMArraySet(dataSetFiles[0]);
-				for (int i = 1; i < dataSetFiles.length; i++) {
-					DSMicroarraySet microarrays = (DSMicroarraySet) inputFormat
-							.getMArraySet(dataSetFiles[i]);
-					try {
-						mic.mergeMicroarraySet(microarrays);
-					} catch (Exception e) {
-					}
-				}
-				mic.setLabel(arrayName);
-			}
+			log.error("unreachable branch: all FileFormat's are DataSetFileFormat");
 		}
 	}
 
