@@ -1,11 +1,29 @@
 package org.geworkbench.util.pathwaydecoder.mutualinformation;
 
-import edu.ksu.cis.bnj.bbn.BBNGraph;
-import edu.ksu.cis.bnj.bbn.BBNNode;
-import edu.ksu.cis.bnj.bbn.learning.ScoreBasedLearner;
-import edu.ksu.cis.kdd.data.Table;
-import edu.ksu.cis.kdd.util.graph.Edge;
-import org.geworkbench.algorithms.BWAbstractAlgorithm;
+import java.awt.Color;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Serializable;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
+import java.util.Vector;
+import java.util.Map.Entry;
+
+import javax.swing.JProgressBar;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.views.CSMicroarraySetView;
 import org.geworkbench.bison.datastructure.biocollections.views.DSMicroarraySetView;
@@ -18,36 +36,23 @@ import org.geworkbench.util.pathwaydecoder.bayes.BDEScoreDirPrior;
 import org.geworkbench.util.pathwaydecoder.bayes.BayesSLFactory;
 import org.geworkbench.util.pathwaydecoder.bayes.BayesUtil;
 import org.geworkbench.util.pathwaydecoder.bayes.discretizers.LogDiscretizer;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.logging.Log;
 
-import javax.swing.*;
-import java.awt.*;
-import java.io.*;
-import java.text.NumberFormat;
-import java.util.*;
-import java.util.Map.Entry;
+import edu.ksu.cis.bnj.bbn.BBNGraph;
+import edu.ksu.cis.bnj.bbn.BBNNode;
+import edu.ksu.cis.bnj.bbn.learning.ScoreBasedLearner;
+import edu.ksu.cis.kdd.data.Table;
+import edu.ksu.cis.kdd.util.graph.Edge;
 
 /**
- * <p>
- * Title: Sequence and Pattern Plugin
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company:
- * </p>
+ * AdjacencyMatrix <p>
+ * 
+ * This class needs deep cleaning-up.
  * 
  * @author not attributable
- * @version 1.0
+ * @version $Id$
  */
 
-public class AdjacencyMatrix extends BWAbstractAlgorithm implements
-		IAdjacencyMatrix, Serializable {
+public class AdjacencyMatrix implements Serializable {
 
 	/**
 	 * 
@@ -569,10 +574,6 @@ public class AdjacencyMatrix extends BWAbstractAlgorithm implements
 				}
 			}
 		}
-	}
-
-	public double getPercentComplete(int step) {
-		return getCompletion();
 	}
 
 	public String getMarkerNameGW(int index) {
