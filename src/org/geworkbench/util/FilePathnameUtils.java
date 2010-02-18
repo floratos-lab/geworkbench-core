@@ -78,6 +78,8 @@ public class FilePathnameUtils {
 
 	private static final String USER_HOME_DIR = System.getProperty("user.home");
 
+    private static final String CONF_DIRECTORY = "conf";
+
 	// absolute path
 	private static String userSettingDirectoryPath = null;
 	private static String temporaryFilesDirectoryPath = null;
@@ -156,6 +158,41 @@ public class FilePathnameUtils {
 
 		checkDirExist(temporaryFilesDirectoryPath);
 		return temporaryFilesDirectoryPath;
+	}
+
+	/**
+	 * will create absolute path starting with home directory as a root for
+	 * configuration settings directory
+	 *
+	 * @return configuration settings directory as an absolute path
+	 *
+	 */
+	public static String getGlobalConfigurationSettingsDir() {
+		// keep configuration settings directory under user setting directory
+		String confSettingsDirPath = getUserSettingDirectoryPath()
+				+ CONF_DIRECTORY + FILE_SEPARATOR;
+
+		checkDirExist(confSettingsDirPath);
+
+		return confSettingsDirPath;
+	}
+
+	/**
+	 * will create absolute path starting with home directory as a root for
+	 * configuration settings directory
+	 *
+	 * @param name component name
+	 * @return configuration settings directory as an absolute path
+	 *
+	 */
+	public static String getComponentConfigurationSettingsDir(String name) {
+		// keep configuration settings directory under user setting directory
+		String confSettingsDirPath = getUserSettingDirectoryPath() + name
+				+ FILE_SEPARATOR + CONF_DIRECTORY + FILE_SEPARATOR;
+
+		checkDirExist(confSettingsDirPath);
+
+		return confSettingsDirPath;
 	}
 
 	/**
