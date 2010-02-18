@@ -1,25 +1,24 @@
 package org.geworkbench.engine.properties;
 
-import org.geworkbench.engine.config.UILauncher;
-import org.geworkbench.engine.management.ComponentClassLoader;
-import org.geworkbench.engine.management.ComponentResource;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.geworkbench.engine.management.ComponentClassLoader;
+import org.geworkbench.engine.management.ComponentResource;
+import org.geworkbench.util.FilePathnameUtils;
+
 /**
  * @author John Watkinson
+ * @author os2201
  */
 public class PropertiesManager {
 
-    public static final String CONF_DIRECTORY = "conf";
     public static final String GLOBAL_PROPERTIES = "configuration.xml";
 
     private static PropertiesManager instance = null;
-    private String componentsDir;
 
     public static PropertiesManager getInstance() {
         if (instance != null) {
@@ -29,32 +28,25 @@ public class PropertiesManager {
         }
     }
 
-    private PropertiesManager() {
-        componentsDir = UILauncher.getComponentsDirectory();
-    }
-
     private File getPropertiesPath(Class component) {
         if (component == null) {
-            return new File(CONF_DIRECTORY, GLOBAL_PROPERTIES);
+            return new File(FilePathnameUtils.getGlobalConfigurationSettingsDir() + GLOBAL_PROPERTIES);
         } else {
             ClassLoader classLoader = component.getClassLoader();
             if (classLoader instanceof ComponentClassLoader) {
                 ComponentClassLoader ccl = (ComponentClassLoader) classLoader;
                 ComponentResource componentResource = ccl.getComponentResource();
-                File parentDir = new File(componentResource.getDir(), CONF_DIRECTORY);
-                return new File(parentDir, componentResource.getName() + ".xml");
+                String name = componentResource.getName();
+                return new File(FilePathnameUtils.getComponentConfigurationSettingsDir(name) + name + ".xml");
             } else {
-                return new File(CONF_DIRECTORY, GLOBAL_PROPERTIES);
+                return new File(FilePathnameUtils.getGlobalConfigurationSettingsDir() + GLOBAL_PROPERTIES);
             }
         }
     }
 
     private Properties getProperties(Class component) throws IOException {
         File confFile = getPropertiesPath(component);
-        File dir = confFile.getParentFile();
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
+
         if (confFile.exists()) {
             Properties props = new Properties();
             FileInputStream in = new FileInputStream(confFile);
