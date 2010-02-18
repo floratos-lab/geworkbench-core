@@ -442,7 +442,7 @@ public class AnnotationParser implements Serializable {
 
 	public static File selectUserDefinedAnnotation(DSDataSet<? extends DSBioObject> dataset) {
 		PropertiesManager properties = PropertiesManager.getInstance();
-		String annotationDir = ".";
+		String annotationDir = System.getProperty("user.dir"); ;
 		try {
 			annotationDir = properties.getProperty(AnnotationParser.class,
 					ANNOT_DIR, annotationDir);
