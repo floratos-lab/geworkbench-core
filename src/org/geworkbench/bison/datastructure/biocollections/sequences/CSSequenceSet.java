@@ -14,6 +14,8 @@ import org.geworkbench.bison.util.SequenceUtils;
 import java.io.*;
 import java.util.HashMap;
 
+import javax.swing.JOptionPane;
+
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -330,7 +332,10 @@ public DSSequenceSet getActiveSequenceSet(DSPanel<? extends DSGeneMarker> marker
             }
             out.close();
         } catch (IOException ex) {
-            System.out.println("Error opening file: " + fileName);
+            JOptionPane.showMessageDialog(null,
+				    "File "+fileName+" is not saved due to IOException "+ex.getMessage(),
+				    "File Saving Failed",
+				    JOptionPane.ERROR_MESSAGE);
         }
 
     }
