@@ -520,45 +520,6 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
         return true;
     }
 
-    public boolean save(File file, int numArrays) {
-        // Make sure that the file exists and we can write to it
-        try {
-            file.createNewFile();
-            if (!file.canWrite()) {
-                return false;
-            }
-            this.absPath = file.getAbsolutePath();
-            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-            // start processing the data.
-            // Start with the header line, comprising the array names.
-            String outLine = "AffyID" + "\t" + "Annotation";
-            for (int i = 0; i < numArrays; ++i) {
-                //                outLine = outLine.concat("\t" + getMicroarray(i).getLabel());
-                outLine = outLine.concat("\t" + i);
-            }
-            writer.write(outLine);
-            writer.newLine();
-            // Proceed to write one marker at a time
-            for (int i = 0; i < markerVector.size(); ++i) {
-                outLine = getMarkers().get(i).getLabel();
-                outLine = outLine.concat("\t" + getMarkers().get(i).getLabel());
-
-                for (int j = 0; j < numArrays; ++j) {
-                    DSMarkerValue mv = get(j).getMarkerValue(i);
-                    outLine = outLine.concat("\t" + mv.getValue() + "\t") + mv.getConfidence();
-                }
-                writer.write(outLine);
-                writer.newLine();
-            }
-            writer.flush();
-            writer.close();
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
-            return false;
-        }
-        return true;
-    }
-
     public void writeToFile(String fileName) {
         final String f = fileName;
         //         JOptionPane.sho
@@ -571,11 +532,6 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
         };
         t.setPriority(Thread.MIN_PRIORITY);
         t.start();
-    }
-
-    public void writeToFile(String fileName, int numArrays) {
-        File file = new File(fileName);
-        save(file, numArrays);
     }
 
     public int getPlatformType() {
