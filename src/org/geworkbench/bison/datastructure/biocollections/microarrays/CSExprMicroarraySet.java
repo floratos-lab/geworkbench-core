@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
+import javax.swing.JOptionPane;
 import javax.swing.ProgressMonitor;
 import javax.swing.ProgressMonitorInputStream;
 
@@ -459,13 +460,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
         }
     }
 
-    public boolean save(File file) {
-        // Make sure that the file exists and we can write to it
-        try {
-            file.createNewFile();
-            if (!file.canWrite()) {
-                return false;
-            }
+    private void save(File file) throws IOException {
             this.absPath = file.getAbsolutePath();
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
             // start processing the data.
@@ -513,21 +508,23 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
             pm.close();
             writer.flush();
             writer.close();
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
-            return false;
-        }
-        return true;
     }
 
     public void writeToFile(String fileName) {
         final String f = fileName;
-        //         JOptionPane.sho
 
         Thread t = new Thread() {
             public void run() {
                 File file = new File(f);
-                save(file);
+                try {
+					save(file);
+				} catch (IOException e) {
+					JOptionPane.showMessageDialog(null,
+						    "File "+f+" is not saved due to IOException "+e.getMessage(),
+						    "File Saving Failed",
+						    JOptionPane.ERROR_MESSAGE);
+
+				}
             }
         };
         t.setPriority(Thread.MIN_PRIORITY);
