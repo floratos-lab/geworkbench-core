@@ -257,7 +257,13 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
                     for (int j = 2; j < st.length; j++) {
                         String valueLabel = new String(st[j]);
                         if ((valueLabel != null) && (!valueLabel.equalsIgnoreCase(""))) {
-                            context.labelItem(mArraySet.get(j - 2), valueLabel);
+                            if (valueLabel.indexOf("|") > -1)
+                            {
+                            	for (String tok: valueLabel.split("\\|"))
+                            		context.labelItem(mArraySet.get(j - 2), tok);
+                            }
+                            else
+                            	context.labelItem(mArraySet.get(j - 2), valueLabel);
                         }
                     }
                 } else if (line.charAt(0) != '\t') {
@@ -484,6 +490,9 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
                     // watkin - Unfortunately, the file format only supports one label per context.
                     if (labels.length > 0) {
                         label = labels[0];
+                        if (labels.length > 1)
+                        	for (int j = 1; j < labels.length; j++)
+                        		label += "|"+labels[j];
                     }
                     line.append('\t' + label);
                 }
