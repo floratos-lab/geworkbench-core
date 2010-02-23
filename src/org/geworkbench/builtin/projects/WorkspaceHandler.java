@@ -8,6 +8,7 @@ import java.util.concurrent.ExecutionException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileFilter;
 
 import org.apache.commons.logging.Log;
@@ -17,7 +18,6 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.A
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.properties.PropertiesManager;
 import org.geworkbench.util.ProgressBar;
-import org.geworkbench.util.threading.SwingWorker;
 
 /**
  * This class handles workspace's saving and opening: showing progress bar

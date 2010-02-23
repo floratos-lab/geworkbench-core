@@ -19,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 
 import org.apache.commons.logging.Log;
@@ -30,7 +31,6 @@ import org.geworkbench.components.parsers.FileFormat;
 import org.geworkbench.components.parsers.InputFileFormatException;
 import org.geworkbench.components.parsers.microarray.DataSetFileFormat;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
-import org.geworkbench.util.threading.SwingWorker;
 
 /**
  * This class is refactored out of ProjectPanel to handle the file open action,
