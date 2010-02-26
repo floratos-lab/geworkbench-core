@@ -1,8 +1,7 @@
-package org.geworkbench.engine.comparators;
+package org.geworkbench.analysis;
 
 import java.util.Comparator;
 
-import org.geworkbench.analysis.AbstractAnalysis;
 
 /**
  * Comparator for AbstraactAnalyses.
