@@ -4,20 +4,17 @@ import java.util.Comparator;
 
 import org.geworkbench.analysis.AbstractAnalysis;
 
-
 /**
+ * Comparator for AbstraactAnalyses.
  * 
  * @author tg2321
- * @version
+ * @version $Id$
  */
-public class AbstractAnalysisLabelComparator implements Comparator<Object>{
-	/**
-	 * Comparator for AbstraactAnalyses.
-	 */
+public class AbstractAnalysisLabelComparator implements Comparator<AbstractAnalysis>{
 
-	public int compare(Object abstractAnalysis1, Object abstractAnalysis2){
-		String label1 = ( (AbstractAnalysis) abstractAnalysis1).getLabel().toLowerCase();
-		String label2 = ( (AbstractAnalysis) abstractAnalysis2).getLabel().toLowerCase();
-		return label1.compareTo(label2);
+	public int compare(AbstractAnalysis abstractAnalysis1, AbstractAnalysis abstractAnalysis2){
+		String label1 = abstractAnalysis1.getLabel();
+		String label2 = abstractAnalysis2.getLabel();
+		return label1.compareToIgnoreCase(label2);
 	}
 }
