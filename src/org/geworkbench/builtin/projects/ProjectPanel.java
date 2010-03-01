@@ -1719,7 +1719,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		projectTreeModel.removeNodeFromParent(node);
 		
 		// clear out unused mark annotation from memory
-		AnnotationParser.cleanUpAnnotatioAfterUnload( ((DataSetNode)node).dataFile );
+		if (node instanceof DataSetNode){
+			AnnotationParser.cleanUpAnnotatioAfterUnload( ((DataSetNode)node).dataFile );
+		}
 		
 		if (parentNode.getChildCount() == 0
 				&& parentNode instanceof ProjectNode) {
