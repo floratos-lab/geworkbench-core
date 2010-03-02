@@ -132,7 +132,7 @@ public class AnnotationParser implements Serializable {
 
 	public static void setCurrentDataSet(DSDataSet<DSBioObject> currentDataSet) {
 		if(!(currentDataSet instanceof CSMicroarraySet)) {
-			log.warn("Unexpected DSDataSet type "+currentDataSet.getClass().getName()+" in AnnotationParser");
+			AnnotationParser.currentDataSet = null;
 		}
 		AnnotationParser.currentDataSet = currentDataSet;
 	}
