@@ -54,7 +54,7 @@ public class FileOpenHandler {
 			+ "geWorkbench, please refer to\n"
 			+ "geWorkbench documentation.\n\n" 
 			+ "Exit geWorkbench?";
-	private static final String OUT_OF_MEMORY_MESSAGE_TITLE = "Java total heap memory warning";
+	private static final String OUT_OF_MEMORY_MESSAGE_TITLE = "Java total heap memory exception";
 
 	ProgressBarDialog pb = null;
 	OpenMultipleFileTask task = null;
