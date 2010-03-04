@@ -190,17 +190,11 @@ public class AffyFileFormat extends DataSetFileFormat {
 
     public void getMArraySet(File file, CSExprMicroarraySet maSet) throws InputFileFormatException, InterruptedIOException {
         // Check that the file is OK before starting allocating space for it.
-    	try {
-			if (!checkFormat(file))
+		if (!checkFormat(file))
 				throw new InputFileFormatException(
 						"Attempting to open a file that does not comply with the "
 								+ "Affy format.");
 	        log.info(file.getAbsoluteFile() + " passed file format check");
-		} catch (OutOfMemoryError er) {
-			log.error(er, er);
-			throw new InputFileFormatException(
-					"Out of memory error.\n\nAttempting to open a file that larger then memory size left in JVM.\nThe geWorkbench might become unstable, please close geWorkbench.");
-		}
         BufferedReader reader = null;
         ProgressMonitorInputStream progressIn = null;
         try {
@@ -275,10 +269,6 @@ public class AffyFileFormat extends DataSetFileFormat {
         
         } catch (Exception ec) {
             log.error(ec,ec);
-        } catch (OutOfMemoryError er) {
-			log.error(er, er);
-			throw new InputFileFormatException(
-					"Out of memory error.\n\nAttempting to open a file that larger then memory size left in JVM.\nThe geWorkbench might become unstable, please close geWorkbench.");        	
         } finally {
         	try {
 				reader.close();

@@ -47,6 +47,14 @@ public class FileOpenHandler {
 	private final FileFormat inputFormat;
 	private final boolean mergeFiles;
 	private final ProjectPanel enclosingProjectPanel;
+	private static final String OUT_OF_MEMORY_MESSAGE = "In order to prevent data corruption,\n"
+			+ "it is strongly suggested that you\n"
+			+ "restart geWorkbench now.\n"
+			+ "To increase memory available to\n"
+			+ "geWorkbench, please refer to\n"
+			+ "geWorkbench documentation.\n\n" 
+			+ "Exit geWorkbench?";
+	private static final String OUT_OF_MEMORY_MESSAGE_TITLE = "Java total heap memory warning";
 
 	ProgressBarDialog pb = null;
 	OpenMultipleFileTask task = null;
@@ -217,9 +225,17 @@ public class FileOpenHandler {
 			if (dataSetFiles.length == 1) {
 				try {
 					DataSetFileFormat dataSetFileFormat = (DataSetFileFormat) inputFormat;
-					dataSets[0] = dataSetFileFormat
-							.getDataFile(dataSetFiles[0]);
+					dataSets[0] = dataSetFileFormat.getDataFile(dataSetFiles[0]);
 					dataSets[0].setAbsPath(dataSetFiles[0].getAbsolutePath());
+				} catch (OutOfMemoryError er) {
+					log.warn("Loading a single file memory error: " + er);
+					int response = JOptionPane.showConfirmDialog(null,
+							OUT_OF_MEMORY_MESSAGE, OUT_OF_MEMORY_MESSAGE_TITLE,
+							JOptionPane.YES_NO_OPTION,
+							JOptionPane.ERROR_MESSAGE);
+					if (response == JOptionPane.YES_OPTION) {
+						System.exit(1);
+					}
 				} catch (InputFileFormatException iffe) {
 					// Let the user know that there was a problem
 					// parsing the file.
@@ -262,17 +278,23 @@ public class FileOpenHandler {
 					try {
 						DataSetFileFormat dataSetFileFormat = (DataSetFileFormat) inputFormat;
 						try {
-							dataSets[i] = dataSetFileFormat.getDataFile(
-									dataSetFile, chipType);
+							dataSets[i] = dataSetFileFormat.getDataFile(dataSetFile, chipType);
 							AnnotationParser.setChipType(dataSets[i], chipType);
+							dataSets[i].setAbsPath(dataSetFiles[i].getAbsolutePath());
+						} catch (OutOfMemoryError er) {
+							log.warn("Loading multiple files memory error: " + er);
+							int response = JOptionPane.showConfirmDialog(null,
+									OUT_OF_MEMORY_MESSAGE, OUT_OF_MEMORY_MESSAGE_TITLE,
+									JOptionPane.YES_NO_OPTION,
+									JOptionPane.ERROR_MESSAGE);
+							if (response == JOptionPane.YES_OPTION) {
+								System.exit(1);
+							}
 						} catch (UnsupportedOperationException e) {
-							log
-									.warn("This data type doesn't support chip type overrides, will have to ask user again.");
+							log.warn("This data type doesn't support chip type overrides, will have to ask user again.");
 							dataSets[i] = ((DataSetFileFormat) inputFormat)
 									.getDataFile(dataSetFile);
 						}
-						dataSets[i].setAbsPath(dataSetFiles[i]
-								.getAbsolutePath());
 					} catch (InputFileFormatException iffe) {
 						// Let the user know that there was a problem
 						// parsing the file.

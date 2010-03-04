@@ -571,6 +571,42 @@ public class LoadData extends JDialog {
 				return; // Just to cover the case where no plugins are defined.
 			}
 			File[] files = jFileChooser1.getSelectedFiles();
+			long totalFileLength = 0;
+			for (int j = 0; j < files.length; j++) {
+				totalFileLength += files[j].length();
+			}
+
+			System.gc();
+			Runtime runtime = Runtime.getRuntime();
+			long maxMemory = runtime.maxMemory();
+			long allocatedMemory = runtime.totalMemory();
+			long freeMemory = runtime.freeMemory();
+			long actualUsedMemory = allocatedMemory - freeMemory; 
+			// From observation, the amount of Java Heap memory used when loading
+			// some files is about 4 times the lenght of the file.
+			// TODO see how much mem each data type uses vs its file size.
+			long proposedMemUsed = actualUsedMemory + 4*totalFileLength ;
+			long proposedPercentUsed = (100*proposedMemUsed)/maxMemory;
+			if (proposedPercentUsed > 90) {
+				String warningMessage = "Loading this file";
+				if (files.length > 1){
+					warningMessage = "Loading these files";
+				}
+				int response = JOptionPane.showConfirmDialog(null,
+						warningMessage + 
+						", may attempt to use\n" + 
+						proposedPercentUsed +
+						"% of your total Java heap memory.\n" +
+						"This may lead to an out of memory exception.\n\n" +
+						"Would you like to continue?", 
+						"Java total heap memory warning",
+						JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
+				if (response != JOptionPane.YES_OPTION) {
+					dispose();
+					return;
+				}
+			}
+			
 			for (i = 0; i < supportedInputFormats.length; ++i) {
 				if (selectedFilter == supportedInputFormats[i].getFileFilter()) {
 					try {

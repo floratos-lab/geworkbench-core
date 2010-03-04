@@ -189,13 +189,14 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 			else
 			   ie.printStackTrace();
 		} catch (Exception e) {
-			 
+			log.error("RMAExpress check file format exception: " + e);
 			e.printStackTrace();
 			 
 		} finally {
     		try {
 				reader.close();
 			} catch (IOException e) {
+				log.error("RMAExpress file reader close exception: " + e);
 				e.printStackTrace();
 			}
 		}
@@ -291,29 +292,23 @@ public class RMAExpressFileFormat extends DataSetFileFormat {
 				headerTokenizer.nextToken();
 				int duplicateLabels = 0;
 
-				try {
-					for (int i = 0; i < n; i++) {
-						String arrayName = headerTokenizer.nextToken();
-						CSMicroarray array = new CSMicroarray(i,
-								possibleMarkers, arrayName, null, null, false,
-								DSMicroarraySet.affyTxtType);
+				for (int i = 0; i < n; i++) {
+					String arrayName = headerTokenizer.nextToken();
+					CSMicroarray array = new CSMicroarray(i, possibleMarkers,
+							arrayName, null, null, false,
+							DSMicroarraySet.affyTxtType);
+					maSet.add(array);
+					/*
+					 * FIXME: this will only fix one duplicate per unique label.
+					 * should handle unlimited duplicate.
+					 */
+					if (maSet.size() != (i + 1)) {
+						log.info("We got a duplicate label of array");
+						array.setLabel(array.getLabel()
+								+ duplicateLabelModificator);
 						maSet.add(array);
-						/*
-						 * FIXME: this will only fix one duplicate per unique
-						 * label. should handle unlimited duplicate.
-						 */
-						if (maSet.size() != (i + 1)) {
-							log.info("We got a duplicate label of array");
-							array.setLabel(array.getLabel()
-									+ duplicateLabelModificator);
-							maSet.add(array);
-							duplicateLabels++;
-						}
+						duplicateLabels++;
 					}
-				} catch (OutOfMemoryError e) {
-					log.error(e);
-					throw new InputFileFormatException(
-							"Attempting to open a file that is larger than allocated memory can handle.");
 				}
 				while ((line != null) // modified for mantis issue: 1349
 						&& (!StringUtils.isEmpty(line))
