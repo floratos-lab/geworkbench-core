@@ -143,7 +143,6 @@
 				<exclude name="${components}/**/src/*" />
 				<include name="annotation/**/*" />
 				<include name="${lib}/**/*" />
-				<include name="plugins/**/*" />
 				<include name="caWorkbenchLicense.txt" />
 				<include name="java.policy" />
 				<include name="*annot.csv" />
@@ -241,7 +240,6 @@
 				<exclude name="${components}/pathwaydecoder/**/*" />
 				<include name="annotation/**/*" />
 				<include name="${lib}/**/*" />
-				<include name="plugins/**/*" />
 				<include name="caWorkbenchLicense.txt" />
 				<include name="java.policy" />
 				<!-- <include name="*annot.csv"/> -->
@@ -523,7 +521,6 @@
 				<include name="${components}/markus/**/*" />
 				<include name="${components}/welcome/**/*" />
 				
-				<include name="plugins_v2_4/**/*" />
 				<!-- Leave out the following components for distribution 1.8.0-->
 				<exclude name="**/synteny/*" />
 				<exclude name="**/src/**" />
