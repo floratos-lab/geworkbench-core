@@ -314,10 +314,11 @@ public class WorkspaceHandler {
 			FileInputStream in = new FileInputStream(filename);
 			ObjectInputStream s = new ObjectInputStream(in);
 			SaveTree saveTree = (SaveTree) s.readObject();
-			enclosingProjectPanel.clear();
-			enclosingProjectPanel.populateFromSaveTree(saveTree);
 			APSerializable aps = (APSerializable) s.readObject();
 			AnnotationParser.setFromSerializable(aps);
+			enclosingProjectPanel.clear();
+			enclosingProjectPanel.populateFromSaveTree(saveTree);
+			
 			// ProjectTreeNode tempNode = (ProjectTreeNode) s.readObject();
 			// // Clean up local structures and notify interested components
 			// to clean
