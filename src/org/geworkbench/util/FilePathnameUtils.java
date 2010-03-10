@@ -127,7 +127,7 @@ public class FilePathnameUtils {
 			}
 
 			// keep data files directory under user's current working directory
-			dataFilesDirPath = System.getProperty("user.dir") + tempFolder
+			dataFilesDirPath = System.getProperty("user.dir") + FILE_SEPARATOR + tempFolder
 					+ FILE_SEPARATOR;
 		}
 
