@@ -5,11 +5,12 @@
         <xs:annotation>
             <xs:documentation>Top-level definition of the component descriptor.</xs:documentation>
         </xs:annotation>
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="component" type="componentRule" minOccurs="0" maxOccurs="unbounded"/>
-            </xs:sequence>
-        </xs:complexType>
+        <xs:complexType>          
+            	<xs:sequence>
+                	<xs:element name="component" type="componentRule" minOccurs="0" maxOccurs="unbounded"/>
+                	<xs:element name="plugin" type="pluginRule" minOccurs="0" maxOccurs="unbounded"/>
+            	</xs:sequence>
+        </xs:complexType>        
     </xs:element>
 
     <xs:complexType name="componentRule">
@@ -17,8 +18,11 @@
             <xs:documentation>Describes the component.</xs:documentation>
         </xs:annotation>
         <xs:sequence>
+        	<xs:element name="required-component" type="requiredComponentRule" minOccurs="0" maxOccurs="unbounded"/>
+        	<xs:element name="related-component" type="relatedComponentRule" minOccurs="0" maxOccurs="unbounded"/>
+        	<xs:element name="license" type="xs:string" />
             <xs:element name="menu-item" type="menuItemRule" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element name="online-help" type="helpRule" minOccurs="0"/>
+            <xs:element name="online-help" type="helpRule" minOccurs="0"/>            
         </xs:sequence>
         <xs:attribute name="class" type="xs:anyURI" use="required">
             <xs:annotation>
@@ -40,6 +44,84 @@
                 <xs:documentation>The version number of this component.</xs:documentation>
             </xs:annotation>
         </xs:attribute>
+        
+        <xs:attribute name="author" type="xs:string" use="optional">            
+        </xs:attribute>
+        <xs:attribute name="authorURL" type="xs:anyURI" use="optional">            
+        </xs:attribute>
+        <xs:attribute name="toolURL" type="xs:anyURI" use="optional">            
+        </xs:attribute>
+        <xs:attribute name="tutorialURL" type="xs:anyURI" use="optional">            
+        </xs:attribute>
+        <xs:attribute name="description" type="xs:string" use="optional">            
+        </xs:attribute>
+        <xs:attribute name="analysis" type="xs:string" use="optional">            
+        </xs:attribute>
+        <xs:attribute name="loadByDefault" type="xs:string" use="optional">            
+        </xs:attribute>
+        <xs:attribute name="mustAccept" type="xs:string" use="optional">            
+        </xs:attribute>
+        <xs:attribute name="documentation" type="xs:anyURI" use="optional">            
+        </xs:attribute>
+        <xs:attribute name="visualizer" type="xs:string" use="optional">            
+        </xs:attribute>
+        <xs:attribute name="hidden" type="xs:string" use="optional">            
+        </xs:attribute>
+        
+    </xs:complexType>
+    
+    <xs:complexType name="pluginRule">
+        <xs:annotation>
+            <xs:documentation>Describes the plug in.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+        	<xs:element name="gui-area"  type="gui-areaRule" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>id of the plug in.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>Common name of the plug in.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="class" type="xs:anyURI" use="required">
+            <xs:annotation>
+                <xs:documentation>Pointer to the .class file for the visual component.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>        
+        <xs:attribute name="source" type="xs:string" use="optional">
+            <xs:annotation>
+                <xs:documentation>Pointer to the root folder of the plug in.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        
+    </xs:complexType>
+    
+    <xs:complexType name="requiredComponentRule">
+    	<xs:annotation>
+            <xs:documentation>Indicates required components</xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="class" type="xs:anyURI" use="required">
+    	</xs:attribute>    
+    </xs:complexType>
+    
+    <xs:complexType name="relatedComponentRule">
+    	<xs:annotation>
+            <xs:documentation>Indicates related components</xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="class" type="xs:anyURI" use="required">
+    	</xs:attribute>    
+    </xs:complexType>
+    
+    <xs:complexType name="gui-areaRule">
+    	<xs:annotation>
+            <xs:documentation>Indicates visual area</xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="VisualArea" type="xs:string" use="optional">
+    	</xs:attribute>    
     </xs:complexType>
 
     <xs:complexType name="menuItemRule">
