@@ -469,12 +469,11 @@ public class SOFTFileFormat extends DataSetFileFormat {
 
 	/**
 	 * Defines a <code>FileFilter</code> to be used when the user is prompted
-	 * to select Affymetrix input files. The filter will only display files
-	 * whose extension belongs to the list of file extension defined in {@link
-	 * #affyExtensions}.
+	 * to select SOFT input files. The filter will only display files
+	 * whose extension belongs to the list of file extensions defined.
 	 * 
 	 * @author yc2480
-	 * 
+	 * @author nrp2119
 	 */
 	class SOFTFilter extends FileFilter {
 
