@@ -31,12 +31,12 @@ import org.geworkbench.bison.parsers.resources.Resource;
 import org.geworkbench.components.parsers.microarray.DataSetFileFormat;
 
 /**  
- * @author nrp2119
+ * @author Nikhil
  */
 public class SOFTFileFormat extends DataSetFileFormat {
 
-	static Log log = LogFactory.getLog(RMAExpressFileFormat.class);
-
+	static Log log = LogFactory.getLog(SOFTFileFormat.class);
+	
 	private static final String commentSign1 = "#";
 	private static final String commentSign2 = "!";
 	private static final String commentSign3 = "^";
@@ -46,9 +46,11 @@ public class SOFTFileFormat extends DataSetFileFormat {
 	private static final String duplicateLabelModificator = "_2";
 
 	ExpressionResource resource = new ExpressionResource();
+	CSExprMicroarraySet maSet = new CSExprMicroarraySet();
+	
 	SOFTFilter maFilter = null;
-	private int possibleMarkers = 0;
-
+	private int possibleMarkers = 0; 
+    
 	public SOFTFileFormat() {
 		formatName = "GEO Soft Files";
 		maFilter = new SOFTFilter();
@@ -92,7 +94,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 		try {
 			FileInputStream fileIn = new FileInputStream(file);
 		    progressIn = new ProgressMonitorInputStream(
-					null, "Checking File Format", fileIn);
+					null, "Loading data from File", fileIn);
 			reader = new BufferedReader(new InputStreamReader(
 					progressIn));
 			 
@@ -104,6 +106,15 @@ public class SOFTFileFormat extends DataSetFileFormat {
 			int headerLineIndex = 0; 
 			
 			while ((line = reader.readLine()) != null) { // for each line
+				
+				//Adding comments in the GEO SOFT file to the Experiment Information tab
+				//Adding comment lines that start with '!' and '#'
+				if (line.startsWith(commentSign1) || line.startsWith(commentSign2)) {
+					//Ignoring the lines that has '!dataset_table_begin' and '!dataset_table_end'
+					if(!line.equalsIgnoreCase("!dataset_table_begin") && !line.equalsIgnoreCase("!dataset_table_end")) {
+						maSet.addDescription(line.substring(1));
+					}
+				}			
 				if ((line.indexOf(commentSign1) < 0)
 						&& (line.indexOf(commentSign2) != 0)
 						&& (line.indexOf(commentSign3) != 0)
@@ -227,7 +238,8 @@ public class SOFTFileFormat extends DataSetFileFormat {
 		} catch (InterruptedIOException ie) {
 			throw ie;
 		}
-		CSExprMicroarraySet maSet = new CSExprMicroarraySet();
+		//CSExprMicroarraySet maSet = new CSExprMicroarraySet();
+		//Adding Data Description to the Experiment Information
 		String fileName = file.getName();
 		int dotIndex = fileName.lastIndexOf(extSeperater);
 		if (dotIndex != -1) {
@@ -249,6 +261,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 						|| StringUtils.isEmpty(header)) {
 					header = in.readLine();
 				}
+				
 				if (header == null) {
 					throw new InputFileFormatException(
 							"File is empty or consists of only comments.\n"
@@ -282,10 +295,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 							arrayName, null, null, false,
 							DSMicroarraySet.affyTxtType);
 					maSet.add(array);
-					/*
-					 * FIXME: this will only fix one duplicate per unique label.
-					 * should handle unlimited duplicate.
-					 */
+					
 					if (maSet.size() != (i + 1)) {
 						log.info("We got a duplicate label of array");
 						array.setLabel(array.getLabel()
@@ -294,7 +304,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 						duplicateLabels++;
 					}
 				}
-				while ((line != null) // modified for mantis issue: 1349
+				while ((line != null) 
 						&& (!StringUtils.isEmpty(line))
 						&& (!line.trim().startsWith(commentSign2))) {
 					String[] tokens = line.split(columnSeperator);
@@ -329,8 +339,8 @@ public class SOFTFileFormat extends DataSetFileFormat {
 					String markerName = new String(tokens[0].trim());
 					CSExpressionMarker marker = new CSExpressionMarker(m);
 					marker.setLabel(markerName);
-					maSet.getMarkerVector().add(m, marker);
-					
+					maSet.getMarkerVector().add(m, marker);		
+					 
 					for (int i = 1; i < n; i++) {
 							String valString = "";
 							if ((i + 1) < tokens.length) {
@@ -428,6 +438,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 				in.close();
 			} catch (IOException e) {
 				e.printStackTrace();
+				
 			}
 		}
 		maSet.remove(0); // removing the first Column from the array since it is the 'IDENTIFIER' column data of GEO SOFT GDS file 
@@ -466,6 +477,8 @@ public class SOFTFileFormat extends DataSetFileFormat {
 		throw new UnsupportedOperationException(
 				"Method getDataFile(File[] files) not yet implemented.");
 	}
+	
+	
 
 	/**
 	 * Defines a <code>FileFilter</code> to be used when the user is prompted
