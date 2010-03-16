@@ -19,6 +19,9 @@ import javax.swing.filechooser.FileFilter;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.geworkbench.bison.annotation.CSAnnotationContext;
+import org.geworkbench.bison.annotation.CSAnnotationContextManager;
+import org.geworkbench.bison.annotation.DSAnnotationContext;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
@@ -27,6 +30,7 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSExpressionMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.parsers.resources.Resource;
 import org.geworkbench.components.parsers.microarray.DataSetFileFormat;
 
@@ -94,7 +98,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 		try {
 			FileInputStream fileIn = new FileInputStream(file);
 		    progressIn = new ProgressMonitorInputStream(
-					null, "Loading data from File", fileIn);
+					null, "Loading data from " + file.getName(), fileIn);
 			reader = new BufferedReader(new InputStreamReader(
 					progressIn));
 			 
@@ -107,14 +111,25 @@ public class SOFTFileFormat extends DataSetFileFormat {
 			
 			while ((line = reader.readLine()) != null) { // for each line
 				
-				//Adding comments in the GEO SOFT file to the Experiment Information tab
-				//Adding comment lines that start with '!' and '#'
+				/*
+				 * Adding comments that start with '!' and '#' from the GEO SOFT file to the Experiment Information tab 
+				 */
 				if (line.startsWith(commentSign1) || line.startsWith(commentSign2)) {
 					//Ignoring the lines that has '!dataset_table_begin' and '!dataset_table_end'
 					if(!line.equalsIgnoreCase("!dataset_table_begin") && !line.equalsIgnoreCase("!dataset_table_end")) {
 						maSet.addDescription(line.substring(1));
 					}
-				}			
+				}
+				//Adding context to the dropdown
+				if(line.substring(0, 12).equalsIgnoreCase("!subset_type") ) {
+					String[] st = line.split("=");
+					String phLabel = new String(st[1]);
+					CSAnnotationContextManager manager = CSAnnotationContextManager.getInstance();
+					DSAnnotationContext<DSMicroarray> context = manager.getContext(maSet, phLabel);
+					CSAnnotationContext.initializePhenotypeContext(context);
+				}
+
+				
 				if ((line.indexOf(commentSign1) < 0)
 						&& (line.indexOf(commentSign2) != 0)
 						&& (line.indexOf(commentSign3) != 0)
@@ -441,7 +456,8 @@ public class SOFTFileFormat extends DataSetFileFormat {
 				
 			}
 		}
-		maSet.remove(0); // removing the first Column from the array since it is the 'IDENTIFIER' column data of GEO SOFT GDS file 
+		maSet.remove(0); // removing the first Column from the array since it is the 'IDENTIFIER' column data of GEO SOFT GDS file
+		
 		return maSet;
 	}
 
