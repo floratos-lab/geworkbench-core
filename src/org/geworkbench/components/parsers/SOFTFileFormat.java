@@ -4,6 +4,7 @@ package org.geworkbench.components.parsers;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InterruptedIOException;
@@ -25,6 +26,7 @@ import org.geworkbench.bison.annotation.DSAnnotationContext;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
+import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
@@ -120,15 +122,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 						maSet.addDescription(line.substring(1));
 					}
 				}
-				//Adding context to the dropdown
-				if(line.substring(0, 12).equalsIgnoreCase("!subset_type") ) {
-					String[] st = line.split("=");
-					String phLabel = new String(st[1]);
-					CSAnnotationContextManager manager = CSAnnotationContextManager.getInstance();
-					DSAnnotationContext<DSMicroarray> context = manager.getContext(maSet, phLabel);
-					CSAnnotationContext.initializePhenotypeContext(context);
-				}
-
+				
 				
 				if ((line.indexOf(commentSign1) < 0)
 						&& (line.indexOf(commentSign2) != 0)
@@ -458,7 +452,49 @@ public class SOFTFileFormat extends DataSetFileFormat {
 		}
 		maSet.remove(0); // removing the first Column from the array since it is the 'IDENTIFIER' column data of GEO SOFT GDS file
 		
+		
+		
+	
+		labelDisp(file, maSet);
 		return maSet;
+	}
+	public void labelDisp(File dataFile, CSExprMicroarraySet mArraySet)
+	{
+		BufferedReader read = null;
+		String line1 = null;
+		try {
+			read = new BufferedReader(new FileReader(dataFile));
+			try {
+				
+				line1 = read.readLine();
+				while (line1 != null){	
+					
+					String[] lineSp1 = line1.split("=");
+					String lineSp = lineSp1[0].trim();
+					String lineDt = lineSp1[1].trim();
+					if(lineSp.contentEquals("!subset_type")){
+						CSAnnotationContextManager manager = CSAnnotationContextManager.getInstance();
+						DSAnnotationContext<DSMicroarray> context = manager.getContext(mArraySet, lineDt);
+	                    CSAnnotationContext.initializePhenotypeContext(context);   
+					}
+					line1 = read.readLine();
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		} catch (FileNotFoundException e) {
+		} catch (IndexOutOfBoundsException e) {	
+		} finally {
+			try {
+				read.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+			
 	}
 
 	/**
