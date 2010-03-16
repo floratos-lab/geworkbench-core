@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -234,6 +236,7 @@ public class GoAnalysisResult extends CSAncillaryDataSet<CSMicroarray> {
 			e.printStackTrace();
 			log.error("Ontology tree is not successfullly created due to IOException: "+e.getMessage());
 		}
+		staticOboFilename = goTermsOBOFile;
 	}
 
 	private static final Set<String> parentRelationshipTypes;
@@ -303,6 +306,7 @@ public class GoAnalysisResult extends CSAncillaryDataSet<CSMicroarray> {
 			e.printStackTrace();
 			log.error("Annotation map is not successfullly created due to IOException: "+e.getMessage());
 		}
+		staticAnnotationFileName = annotationFileName;
 	}
 
 	private final static int ANNOTATION_INDEX_ENTREZ_ID = 18;
@@ -454,4 +458,24 @@ public class GoAnalysisResult extends CSAncillaryDataSet<CSMicroarray> {
 		}
 	}
 
+	// implement saving workspace
+	private String oboFilename = null;
+	private String annotationFileName = null;
+	private static String staticOboFilename = null;
+	private static String staticAnnotationFileName = null;
+	
+	private void writeObject(ObjectOutputStream out) throws IOException {
+		oboFilename = staticOboFilename;
+		annotationFileName = staticAnnotationFileName;
+		
+		out.defaultWriteObject();
+	}
+     
+	private void readObject(ObjectInputStream in) throws IOException,
+			ClassNotFoundException {
+		in.defaultReadObject();
+		parseOboFile(oboFilename);
+		parseAnnotation(annotationFileName);
+	}
+	
 }
