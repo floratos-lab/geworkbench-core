@@ -451,36 +451,49 @@ public class SOFTFileFormat extends DataSetFileFormat {
 			}
 		}
 		maSet.remove(0); // removing the first Column from the array since it is the 'IDENTIFIER' column data of GEO SOFT GDS file
-		
-		
-		
-	
 		labelDisp(file, maSet);
 		return maSet;
 	}
+	/*
+	 * Method adds data to Array/Phenotype Sets drop down in the selection panel 
+	 */
 	public void labelDisp(File dataFile, CSExprMicroarraySet mArraySet)
 	{
+		String[] samples = tokens(dataFile); 
 		BufferedReader read = null;
 		String line1 = null;
 		try {
 			read = new BufferedReader(new FileReader(dataFile));
 			try {
-				
+				String phLabel = null;
+				String[] token = null;
 				line1 = read.readLine();
-				while (line1 != null){	
-					
+				while (line1 != null){		
 					String[] lineSp1 = line1.split("=");
 					String lineSp = lineSp1[0].trim();
 					String lineDt = lineSp1[1].trim();
-					if(lineSp.contentEquals("!subset_type")){
+					
+					if(lineSp.contentEquals("!subset_description")){
+						phLabel = lineDt.trim();
+					}
+					if(lineSp.contentEquals("!subset_sample_id")){
+						token = lineDt.split(",");
+					}
+					if(lineSp.contentEquals("!subset_type")){	
 						CSAnnotationContextManager manager = CSAnnotationContextManager.getInstance();
 						DSAnnotationContext<DSMicroarray> context = manager.getContext(mArraySet, lineDt);
-	                    CSAnnotationContext.initializePhenotypeContext(context);   
-					}
+	                    CSAnnotationContext.initializePhenotypeContext(context);
+	                    for(int m=0; m<token.length; m++){
+	                    	for(int n=2; n<samples.length; n++){
+	                    		if(token[m].contentEquals(samples[n])){
+	                    			context.labelItem(mArraySet.get(n-2), phLabel);
+	                    		}
+	                    	}
+	                    }
+	                }
 					line1 = read.readLine();
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -490,13 +503,36 @@ public class SOFTFileFormat extends DataSetFileFormat {
 			try {
 				read.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 			
 	}
 
+	/*
+	 * This method returns array of 'Array' names
+	 */
+	public String[] tokens(File dFile){
+		BufferedReader read1 = null;
+		String line2 = null;
+		String[] samps = null;
+		try {
+			read1 = new BufferedReader(new FileReader(dFile));
+			line2 = read1.readLine();
+			while(line2 != null){
+				String[] samp = null;
+				samp = line2.split("\t");
+				if(samp[0].contentEquals("ID_REF")){
+					samps = samp;
+				}
+				line2 = read1.readLine();
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return samps;
+	}
 	/**
 	 * 
 	 * @return
