@@ -191,13 +191,15 @@ public class GoAnalysisResult extends CSAncillaryDataSet<CSMicroarray> {
 
 					if(namespace.contains(name)) {
 						namespaceIds.add(id);
-						ontologyChild.put(id, new ArrayList<Integer>());
 						if(!thisNameSpace.equals(name)) {
 							log.error("namespace not match namespce node");
 						}
-						List<Integer> children = new ArrayList<Integer>();
+						List<Integer> children = ontologyChild.get(0);
+						if(children==null) {
+							children = new ArrayList<Integer>();
+							ontologyChild.put(0, children);
+						}
 						children.add(id);
-						ontologyChild.put(0, children);
 					}
 				} else if (line.startsWith("is_a: GO:")) {
 					Integer parent = Integer.valueOf( line.substring("is_a: GO:".length(), line.indexOf("!")).trim() );
