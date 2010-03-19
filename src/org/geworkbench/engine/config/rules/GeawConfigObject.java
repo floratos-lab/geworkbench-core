@@ -165,6 +165,10 @@ public class GeawConfigObject {
 					masterHelpBroker));
 		}
 		helpMenu.add(menu_help);
+
+		addToHelpMenu("geworkbench.org", "www.geworkbench.org");
+		addToHelpMenu("Knowledge Center", "https://cabig-kc.nci.nih.gov/Molecular/KC/index.php/GeWorkbench#Tool_Overview");
+
 		JMenuItem about = new JMenuItem("About");
 		about.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -194,6 +198,34 @@ public class GeawConfigObject {
 		// before loading components
 		// this should be done in a more graceful way.
 		// guiWindow.setVisible(true);
+	}
+
+	private static void addToHelpMenu(String name, final String value) {
+		JMenuItem aMenuItem = new JMenuItem(name);
+		aMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+		        if( !java.awt.Desktop.isDesktopSupported() ) {
+		        	log.error("Desktop doesn't support the browse action");
+                    javax.swing.JOptionPane.showMessageDialog(guiWindow, "Desktop doesn't support the browse action");
+		        }
+
+		        java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
+		        if( !desktop.isSupported( java.awt.Desktop.Action.BROWSE ) ) {
+		        	log.error("Desktop doesn't support the browse action");
+                    javax.swing.JOptionPane.showMessageDialog(guiWindow, "Desktop doesn't support the browse action");
+		        }
+
+	            try {
+	                java.net.URI uri = new java.net.URI( value );
+	                desktop.browse( uri );
+	            }
+	            catch ( Exception ex ) {
+		        	log.error(ex.getStackTrace());
+                    javax.swing.JOptionPane.showMessageDialog(guiWindow, ex.getMessage());
+	            }
+			}
+		});
+		helpMenu.add(aMenuItem);
 	}
 
 	/**
