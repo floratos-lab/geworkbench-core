@@ -166,7 +166,7 @@ public class GeawConfigObject {
 		}
 		helpMenu.add(menu_help);
 
-		addToHelpMenu("geworkbench.org", "www.geworkbench.org");
+		addToHelpMenu("geworkbench.org", "http://www.geworkbench.org");
 		addToHelpMenu("Knowledge Center", "https://cabig-kc.nci.nih.gov/Molecular/KC/index.php/GeWorkbench#Tool_Overview");
 
 		JMenuItem about = new JMenuItem("About");
