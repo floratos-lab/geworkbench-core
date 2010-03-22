@@ -33,8 +33,7 @@ import org.geworkbench.components.parsers.microarray.DataSetFileFormat;
  * Sequence and Pattern Plugin
  * 
  * @author yc2480
- * @version $Id: RMAExpressFileFormat.java,v 1.16 2008/10/08 16:26:57 chiangy
- *          Exp $
+ * @version $Id$
  * 
  */
 public class TabDelimitedDataMatrixFileFormat extends DataSetFileFormat {

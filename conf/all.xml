@@ -39,8 +39,8 @@
 	<plugin id="genepixFilter" name="Genepix File Format"
 		class="org.geworkbench.components.parsers.GenePixFileFormat" />
 	
-	<plugin id="rmaExpressFileFilter" name="RMA Express Format"
-		class="org.geworkbench.components.parsers.RMAExpressFileFormat" />
+	<plugin id="tabDelimitedDataMatrixFileFilter" name="Tab-Delimited Data Matrix File Format"
+		class="org.geworkbench.components.parsers.TabDelimitedDataMatrixFileFormat" />
 		
 	<!-- 
 	<plugin id="edgeListFilter" name="Edge List File Format"
