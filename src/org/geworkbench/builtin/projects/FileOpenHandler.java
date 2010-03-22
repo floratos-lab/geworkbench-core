@@ -196,13 +196,48 @@ public class FileOpenHandler {
 
 	private class OpenMultipleFileTask extends SwingWorker<Void, Void> {
 		
-		
 		/*
 		 * (non-Javadoc)
 		 * @see org.geworkbench.util.threading.SwingWorker#done()
 		 */
+		@SuppressWarnings("unchecked")
 		@Override
 		protected void done() {
+
+			if (mergeFiles && dataSets[0] instanceof DSMicroarraySet) {
+				DSMicroarraySet[] maSets = new DSMicroarraySet[dataSets.length];
+
+				for (int i = 0; i < dataSets.length; i++) {
+					maSets[i] = (DSMicroarraySet) dataSets[i];
+				}
+				enclosingProjectPanel.doMergeSets(maSets);
+			} else {
+				boolean selected = false;
+				for (int i = 0; i < dataSets.length; i++) {
+					DSDataSet set = dataSets[i];
+
+					if (set != null) {
+						// Do intial color context update if it is a
+						// microarray
+						if (set instanceof DSMicroarraySet) {
+							DSMicroarraySet maSet = (DSMicroarraySet) set;
+							// Add color context
+							enclosingProjectPanel.addColorContext(maSet);
+						}
+						// String directory = dataSetFile.getPath();
+						// System.setProperty("data.files.dir", directory);
+						if (!selected) {
+							enclosingProjectPanel.addDataSetNode(set, true);
+							selected = true;
+						} else {
+							enclosingProjectPanel.addDataSetNode(set, false);
+						}
+					} else {
+						log.info("Datafile not loaded");
+					}
+				}
+			}
+			
 			pb.dispose();
 			enclosingProjectPanel.progressBar.setString("");
 			enclosingProjectPanel.progressBar.setIndeterminate(false);
@@ -210,6 +245,8 @@ public class FileOpenHandler {
 					.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
 
+		@SuppressWarnings("unchecked")
+		private DSDataSet[] dataSets = null;
 		/*
 		 * (non-Javadoc)
 		 * @see org.geworkbench.util.threading.SwingWorker#doInBackground()
@@ -217,11 +254,9 @@ public class FileOpenHandler {
 		@SuppressWarnings("unchecked")
 		@Override
 		protected Void doInBackground() throws Exception {
-			boolean didMerge = false;
 			int n = dataSetFiles.length;
-			DSDataSet[] dataSets = new DSDataSet[n];
-			DSMicroarraySet mergedSet = null;
-			String mergedName = null;
+			dataSets = new DSDataSet[n];
+
 			if (dataSetFiles.length == 1) {
 				try {
 					DataSetFileFormat dataSetFileFormat = (DataSetFileFormat) inputFormat;
@@ -253,9 +288,6 @@ public class FileOpenHandler {
 				    	   ie.printStackTrace();
 					  
 				 }  
-					
-				
-
 			} else {
 				// watkin - none of the file filters implement the
 				// multiple getDataFile method.
@@ -324,65 +356,8 @@ public class FileOpenHandler {
 					
 					setProgress(i + 1);
 				}
-				if (mergeFiles) {
-					if (dataSets[0] instanceof DSMicroarraySet) {
-						DSMicroarraySet[] maSets = new DSMicroarraySet[dataSets.length];
-						
-						for (int i = 0; i < dataSets.length; i++) {
-							maSets[i] = (DSMicroarraySet) dataSets[i];
-						}
-						enclosingProjectPanel.doMergeSets(maSets);
-						didMerge = true;
-					}
-				}
-			}
-			enclosingProjectPanel.progressBar.setString("");
-			enclosingProjectPanel.progressBar.setIndeterminate(false);
-			enclosingProjectPanel.jDataSetPanel.setCursor(Cursor
-					.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-			if (didMerge) {
-				// We're done
-				return null;
 			}
 
-			if (mergedSet != null) {
-				mergedSet.setLabel(mergedName);
-				dataSets = new DSDataSet[] { mergedSet };
-			}
-
-			// the last chance to cancel
-			if (isCancelled()) {
-				return null;
-			}
-
-			// If everything went OK, register the newly created
-			// microarray set.
-			// String directory = dataSetFile.getPath();
-			// System.setProperty("data.files.dir", directory);
-			boolean selected = false;
-			for (int i = 0; i < dataSets.length; i++) {
-				DSDataSet set = dataSets[i];
-
-				if (set != null) {
-					// Do intial color context update if it is a
-					// microarray
-					if (set instanceof DSMicroarraySet) {
-						DSMicroarraySet maSet = (DSMicroarraySet) set;
-						// Add color context
-						enclosingProjectPanel.addColorContext(maSet);
-					}
-					// String directory = dataSetFile.getPath();
-					// System.setProperty("data.files.dir", directory);
-					if (!selected) {
-						enclosingProjectPanel.addDataSetNode(set, true);
-						selected = true;
-					} else {
-						enclosingProjectPanel.addDataSetNode(set, false);
-					}
-				} else {
-					log.info("Datafile not loaded");
-				}
-			}
 			return null;
 		}
 	}
