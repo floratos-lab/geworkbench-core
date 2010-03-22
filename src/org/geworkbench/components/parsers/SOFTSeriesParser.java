@@ -72,7 +72,7 @@ public class SOFTSeriesParser {
 				 * Adding comments that start with '!' and '#' from the GEO SOFT file to the Experiment Information tab 
 				 */
 				if (line.startsWith(commentSign1) || line.startsWith(commentSign2)) {
-					//Ignoring the lines that has '!dataset_table_begin' and '!dataset_table_end'
+					//Ignoring the lines that has '!series_matrix_table_begin' and '!series_matrix_table_end'
 					if(!line.equalsIgnoreCase("!series_matrix_table_begin") && !line.equalsIgnoreCase("!series_matrix_table_end")) {
 						maSet.addDescription(line.substring(1));
 					}
@@ -191,8 +191,6 @@ public class SOFTSeriesParser {
 		} catch (InterruptedIOException ie) {
 			throw ie;
 		}
-		//CSExprMicroarraySet maSet = new CSExprMicroarraySet();
-		//Adding Data Description to the Experiment Information
 		String fileName = file.getName();
 		int dotIndex = fileName.lastIndexOf(extSeperater);
 		if (dotIndex != -1) {
