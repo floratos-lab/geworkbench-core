@@ -58,7 +58,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 	private int possibleMarkers = 0; 
     
 	public SOFTFileFormat() {
-		formatName = "GEO Soft Files";
+		formatName = "GEO Soft Files (GDS & GSE)";
 		maFilter = new SOFTFilter();
 		Arrays.sort(maExtensions);
 	}
@@ -155,7 +155,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 							}
 						} else if (headerLineIndex == lineIndex) {
 							/*
-							 * this is header line for RMA file
+							 * this is header line for SOFT file
 							 */
 							if (arrays.contains(token)) {// duplicate arrays
 								noDuplicateArrays = false;
@@ -227,12 +227,12 @@ public class SOFTFileFormat extends DataSetFileFormat {
 				if(lineCh.subSequence(0, 9).equals("^DATABASE")){
 					maSet1 = getMArraySet(file);
 				}
-				if(lineCh.subSequence(0, 7).equals("^SAMPLE")){
-					System.out.print("This is a SAMPLE text file");
-				}
 				if(lineCh.subSequence(0, 7).equals("!Series")){
 					SOFTSeriesParser parser = new SOFTSeriesParser();
 					maSet1 = parser.getMArraySet(file);
+				}
+				if(!lineCh.subSequence(0, 7).equals("!Series") && !lineCh.subSequence(0, 9).equals("^DATABASE")){
+					System.out.print("This is a not a valid GEO SOFT file");
 				}
 				
 			} catch (IOException e) {
