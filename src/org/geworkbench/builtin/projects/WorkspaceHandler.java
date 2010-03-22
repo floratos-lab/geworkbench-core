@@ -293,6 +293,9 @@ public class WorkspaceHandler {
 
 		@Override
 		protected void done() {
+			enclosingProjectPanel.clear();
+			enclosingProjectPanel.populateFromSaveTree(saveTree);
+			
 			try {
 				get();
 			} catch (ExecutionException e) {
@@ -309,24 +312,15 @@ public class WorkspaceHandler {
 			pb.dispose();
 		}
 
+		private SaveTree saveTree = null;
+		
 		@Override
 		protected Void doInBackground() throws Exception {
 			FileInputStream in = new FileInputStream(filename);
 			ObjectInputStream s = new ObjectInputStream(in);
-			SaveTree saveTree = (SaveTree) s.readObject();
+			saveTree = (SaveTree) s.readObject();
 			APSerializable aps = (APSerializable) s.readObject();
 			AnnotationParser.setFromSerializable(aps);
-			enclosingProjectPanel.clear();
-			enclosingProjectPanel.populateFromSaveTree(saveTree);
-			
-			// ProjectTreeNode tempNode = (ProjectTreeNode) s.readObject();
-			// // Clean up local structures and notify interested components
-			// to clean
-			// // themselves up.
-			// root = tempNode;
-			// projectRenderer.clearNodeSelections();
-			// projectTreeModel = new DefaultTreeModel(root);
-			// projectTree.setModel(projectTreeModel);
 
 			return null;
 		}
