@@ -26,7 +26,6 @@ import org.geworkbench.bison.annotation.DSAnnotationContext;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
-import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
@@ -35,6 +34,7 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.parsers.resources.Resource;
 import org.geworkbench.components.parsers.microarray.DataSetFileFormat;
+import org.geworkbench.components.parsers.SOFTSeriesParser;
 
 /**  
  * @author Nikhil
@@ -48,7 +48,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 	private static final String commentSign3 = "^";
 	private static final String columnSeperator = "\t";
 	private static final String lineSeperator = "\n";
-	private static final String[] maExtensions = { "soft"};
+	private static final String[] maExtensions = { "soft", "txt", "TXT"};
 	private static final String duplicateLabelModificator = "_2";
 
 	ExpressionResource resource = new ExpressionResource();
@@ -216,10 +216,34 @@ public class SOFTFileFormat extends DataSetFileFormat {
 	 * @see org.geworkbench.components.parsers.microarray.DataSetFileFormat#getDataFile(java.io.File)
 	 */
 	@SuppressWarnings("unchecked")
-	public DSDataSet getDataFile(File file) throws InputFileFormatException, InterruptedIOException{
-		  
-		  return (DSDataSet) getMArraySet(file);
-	    
+	public DSDataSet getDataFile(File file) throws InputFileFormatException, InterruptedIOException{  
+		BufferedReader readIn = null;
+		String lineCh = null; 
+		DSMicroarraySet maSet1 = new CSExprMicroarraySet();
+		try {
+			readIn = new BufferedReader(new FileReader(file));
+			try {
+				lineCh = readIn.readLine();
+				if(lineCh.subSequence(0, 9).equals("^DATABASE")){
+					maSet1 = getMArraySet(file);
+				}
+				if(lineCh.subSequence(0, 7).equals("^SAMPLE")){
+					System.out.print("This is a SAMPLE text file");
+				}
+				if(lineCh.subSequence(0, 7).equals("!Series")){
+					SOFTSeriesParser parser = new SOFTSeriesParser();
+					maSet1 = parser.getMArraySet(file);
+				}
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return maSet1;
 	}
 	 
 	/*
