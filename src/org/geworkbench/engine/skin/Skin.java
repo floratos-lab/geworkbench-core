@@ -274,7 +274,7 @@ public class Skin extends GUIFramework {
         public boolean cancelled = false;
     }
 
-    private void chooseComponent() {
+    void chooseComponent() {
         if (acceptors == null) {
             // Get all appropriate acceptors
             acceptors = new HashSet<Class>();

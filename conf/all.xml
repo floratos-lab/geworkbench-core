@@ -27,6 +27,9 @@
 	<plugin id="preferences" name="preferences"
 		class="org.geworkbench.engine.config.PreferencesMenu" />
 
+	<plugin id="shortcuts" name="shortcuts"
+		class="org.geworkbench.engine.skin.ShortCutMenu" />
+
 	<plugin id="CELLoader" name="CEL File Loader"
 		class="org.geworkbench.components.parsers.CELFileFormat" />
 
