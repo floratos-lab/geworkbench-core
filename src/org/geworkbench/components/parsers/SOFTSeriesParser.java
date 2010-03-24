@@ -39,6 +39,7 @@ public class SOFTSeriesParser {
 	private static final String duplicateLabelModificator = "_2";
 
 	CSExprMicroarraySet maSet = new CSExprMicroarraySet();
+	List<String> markArrays = new ArrayList<String>();
 	
 	private int possibleMarkers = 0; 
     
@@ -77,8 +78,13 @@ public class SOFTSeriesParser {
 						maSet.addDescription(line.substring(1));
 					}
 				}
-				
-				
+				String[] mark = null;
+				mark = line.split("\t");
+			    if(mark[0].equals("!Sample_title")){
+			    	for (int i=1;i<mark.length;i++){
+			    		markArrays.add(mark[i]);
+			    	}	
+			    }
 				if ((line.indexOf(commentSign1) < 0)
 						&& (line.indexOf(commentSign2) != 0)
 						&& (line.indexOf(commentSign3) != 0)
@@ -218,6 +224,8 @@ public class SOFTSeriesParser {
 							"File is empty or consists of only comments.\n"
 									+ "SOFT File Format expected");
 				}
+				
+				
 
 				
 				header = StringUtils.replace(header, "\"", "");
@@ -241,11 +249,19 @@ public class SOFTSeriesParser {
 				int duplicateLabels = 0;
 
 				for (int i = 0; i < n; i++) {
+					
 					String arrayName = headerTokenizer.nextToken();
+					String markAnn = markArrays.get(i);
+					String markAnn1 = markAnn.replace("\"", "");
+					String arrayName1 = markAnn1 
+										+ "("
+										+arrayName
+										+")";
 					CSMicroarray array = new CSMicroarray(i, possibleMarkers,
-							arrayName, null, null, false,
+							arrayName1, null, null, false,
 							DSMicroarraySet.affyTxtType);
 					maSet.add(array);
+					System.out.print("\n");
 					
 					if (maSet.size() != (i + 1)) {
 						log.info("We got a duplicate label of array");
