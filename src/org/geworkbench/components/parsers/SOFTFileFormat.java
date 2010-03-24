@@ -34,7 +34,7 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.parsers.resources.Resource;
 import org.geworkbench.components.parsers.microarray.DataSetFileFormat;
-import org.geworkbench.components.parsers.SOFTSeriesParser;
+import org.geworkbench.components.parsers.GeoSeriesMatrixParser;
 
 /**  
  * @author Nikhil
@@ -224,21 +224,30 @@ public class SOFTFileFormat extends DataSetFileFormat {
 			readIn = new BufferedReader(new FileReader(file));
 			try {
 				lineCh = readIn.readLine();
-				if(lineCh.subSequence(0, 9).equals("^DATABASE")){
-					maSet1 = getMArraySet(file);
-				}
 				if(lineCh.subSequence(0, 7).equals("!Series")){
-					SOFTSeriesParser parser = new SOFTSeriesParser();
+					GeoSeriesMatrixParser parser = new GeoSeriesMatrixParser();
 					maSet1 = parser.getMArraySet(file);
 				}
 				if(lineCh.subSequence(0, 7).equals("^SAMPLE")){
 					
-				}		
-				if(!lineCh.subSequence(0, 7).equals("!Series") && !lineCh.subSequence(0, 9).equals("^DATABASE")){
-					System.out.print("This is a not a valid GEO SOFT file");
-					
 				}
-				
+				if(lineCh.subSequence(0, 9).equals("^DATABASE")){
+					
+					lineCh = readIn.readLine();
+					lineCh = readIn.readLine();
+					lineCh = readIn.readLine();
+					lineCh = readIn.readLine();
+					lineCh = readIn.readLine();
+					if(lineCh.subSequence(0, 7).equals("^SERIES")){
+						System.out.print("Step 1");
+						System.out.print("\n");
+						SOFTSeriesParser parser = new SOFTSeriesParser();
+						maSet1 = parser.getMArraySet(file);
+					}
+					if(!lineCh.subSequence(0, 7).equals("^SERIES")){
+						maSet1 = getMArraySet(file);
+					}
+				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -424,6 +433,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 					line = in.readLine();
 					line = StringUtils.replace(line, "\"", "");
 				}
+				
 				// Set chip-type
 				String result = null;
 				for (int i = 0; i < m; i++) {
