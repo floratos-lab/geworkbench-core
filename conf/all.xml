@@ -4,8 +4,8 @@
 
 	<gui-window name="Main GUI" class="org.geworkbench.engine.skin.Skin" />
       
-<!--    <plugin id="SoftFileFilter" name="soft. Format"-->
-<!--		class="org.geworkbench.components.parsers.SOFTFileFormat" /> -->
+    <plugin id="SoftFileFilter" name="soft. Format"
+		class="org.geworkbench.components.parsers.SOFTFileFormat" /> 
 
 	<plugin id="expressionFileFilter" name="Exp. Format"
 		class="org.geworkbench.components.parsers.ExpressionFileFormat" />
