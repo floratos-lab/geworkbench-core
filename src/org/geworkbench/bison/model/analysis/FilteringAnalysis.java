@@ -34,8 +34,6 @@ public abstract class FilteringAnalysis extends AbstractAnalysis {
 
 	protected FilterOption filterOption = null;
 	protected CriterionOption criterionOption = null;
-	protected double percentThreshold;
-	protected int numberThreshold;
 
 	private static Log log = LogFactory.getLog(FilteringAnalysis.class);
 
@@ -70,7 +68,7 @@ public abstract class FilteringAnalysis extends AbstractAnalysis {
 	}
 
 	protected abstract void getParametersFromPanel();
-	
+
 	// for those derived class who want to check type, they need to override
 	// this
 	protected boolean expectedType() {
@@ -98,15 +96,13 @@ public abstract class FilteringAnalysis extends AbstractAnalysis {
 	// in other words, CSMicroarray should make sure that when you do
 	// markers.remove, resizing will happen automatically
 	private void remove() {
-		int arrayCount = maSet.size();
+
 		int markerCount = maSet.getMarkers().size();
 
 		// Identify the markers that do not meet the cutoff value.
 		List<Integer> removeList = new ArrayList<Integer>();
 		for (int i = 0; i < markerCount; i++) {
-			if ((criterionOption == CriterionOption.COUNT && countMissing(i) > numberThreshold)
-					|| (criterionOption == CriterionOption.PERCENT && 100.
-							* countMissing(i) / arrayCount > percentThreshold)) {
+			if (isMissing(0, i)) { // for remove, arrayIndex is in fact ignored
 				removeList.add(i);
 			}
 		}
@@ -139,15 +135,4 @@ public abstract class FilteringAnalysis extends AbstractAnalysis {
 
 	// for MARKING, both indices matter; for REMOVAL, arrayIndex should be ignored
 	abstract protected boolean isMissing(int arrayIndex, int markerIndex);
-	
-	protected int countMissing(int markerIndex) {
-		int arrayCount = maSet.size();
-		int numMissing = 0;
-		for (int i = 0; i < arrayCount; i++) {
-			if (isMissing(i, markerIndex))
-				++numMissing;
-		}
-		return numMissing;
-	}
-
 }
