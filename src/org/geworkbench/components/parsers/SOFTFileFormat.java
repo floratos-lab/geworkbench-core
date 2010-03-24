@@ -232,8 +232,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 					maSet1 = parser.getMArraySet(file);
 				}
 				if(lineCh.subSequence(0, 7).equals("^SAMPLE")){
-					SOFTSampleParser parser = new SOFTSampleParser();
-					maSet1 = parser.getMArraySet(file);
+					
 				}		
 				if(!lineCh.subSequence(0, 7).equals("!Series") && !lineCh.subSequence(0, 9).equals("^DATABASE")){
 					System.out.print("This is a not a valid GEO SOFT file");
