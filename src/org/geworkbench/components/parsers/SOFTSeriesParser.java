@@ -50,6 +50,7 @@ public class SOFTSeriesParser {
 	public DSMicroarraySet getMArraySet(File file)
 			throws InputFileFormatException, InterruptedIOException {
 		
+		BufferedReader in = null;
 		final int extSeperater = '.';
 		String fileName = file.getName();
 		int dotIndex = fileName.lastIndexOf(extSeperater);
@@ -60,7 +61,7 @@ public class SOFTSeriesParser {
 		List<String> arrayNames = new ArrayList<String>();
 		List<String> markers = new ArrayList<String>();
 		
-		BufferedReader in = null;
+		
 		try {
 			in = new BufferedReader(new FileReader(file));
 			if(in != null){
@@ -117,14 +118,13 @@ public class SOFTSeriesParser {
 						header = in.readLine();
 					}
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		//Getting the markers size to include in a loop
 		possibleMarkers = markers.size();
 		for (int i = 0; i < arrayNames.size(); i++) {
 			String arrayName = arrayNames.get(i);
@@ -133,6 +133,7 @@ public class SOFTSeriesParser {
 					DSMicroarraySet.affyTxtType);
 			maSet.add(array);	
 		}
+		//This buffered reader is used to put insert marker values for one sample at a time from the Series file
 		BufferedReader out = null;
 		int count = 0;
 		int j = 0;
@@ -141,6 +142,7 @@ public class SOFTSeriesParser {
 			try {
 				String line = out.readLine();
 				while (line != null) {
+					
 					if(!line.startsWith(commentSign1) && !line.startsWith(commentSign2) && !line.startsWith(commentSign3)){
 						if(line.subSequence(0, 6).equals("ID_REF")){
 							count++;
@@ -184,6 +186,43 @@ public class SOFTSeriesParser {
 						}
 					}
 					line = out.readLine();
+				}
+				String result = null;
+				for (int i = 0; i < possibleMarkers; i++) {
+					result = AnnotationParser.matchChipType(maSet, maSet
+							.getMarkerVector().get(i).getLabel(), false);
+					if (result != null) {
+						break;
+					}
+				}
+				if (result == null) {
+					AnnotationParser.matchChipType(maSet, "Unknown", true);
+				} else {
+					maSet.setCompatibilityLabel(result);
+				}
+				for (DSGeneMarker marker : maSet.getMarkerVector()) {
+					String token = marker.getLabel();
+					String[] locusResult = AnnotationParser.getInfo(token,
+							AnnotationParser.LOCUSLINK);
+					String locus = "";
+					if ((locusResult != null)
+							&& (!locusResult[0].trim().equals(""))) {
+						locus = locusResult[0].trim();
+					}
+					if (locus.compareTo("") != 0) {
+						try {
+							marker.setGeneId(Integer.parseInt(locus));
+						} catch (NumberFormatException e) {
+							log.info("Couldn't parse locus id: " + locus);
+						}
+					}
+					String[] geneNames = AnnotationParser.getInfo(token,
+							AnnotationParser.ABREV);
+					if (geneNames != null) {
+						marker.setGeneName(geneNames[0]);
+					}
+
+					marker.getUnigene().set(token);
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
