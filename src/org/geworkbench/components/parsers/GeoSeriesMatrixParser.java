@@ -253,9 +253,9 @@ public class GeoSeriesMatrixParser {
 					String arrayName = headerTokenizer.nextToken();
 					String markAnn = markArrays.get(i);
 					String markAnn1 = markAnn.replace("\"", "");
-					String arrayName1 = markAnn1 
+					String arrayName1 = arrayName 
 										+ " ("
-										+arrayName
+										+markAnn1
 										+")";
 					CSMicroarray array = new CSMicroarray(i, possibleMarkers,
 							arrayName1, null, null, false,
