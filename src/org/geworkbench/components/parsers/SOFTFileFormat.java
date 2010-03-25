@@ -113,7 +113,8 @@ public class SOFTFileFormat extends DataSetFileFormat {
 					maSet1 = parser.getMArraySet(file);
 				}
 				if(lineCh.subSequence(0, 7).equals("^SAMPLE")){
-					
+					SOFTSampleParser parser = new SOFTSampleParser();
+					maSet1 = parser.getMArraySet(file);
 				}
 				if(lineCh.subSequence(0, 9).equals("^DATABASE")){
 					
@@ -169,8 +170,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 					while (header != null) {
 						/*
 					 	* Adding comments to Experiment Information tab.
-					 	*We will ignore the line which start with '!platform_table_end', '!platform_table_begin', '!sample_table_begin'
-					 	*and '!sample_table_end'
+					 	*We will ignore the line which start with '!dataset_table_begin' and '!dataset_table_end'
 					 	*/
 						if (header.startsWith(commentSign1) || header.startsWith(commentSign2)) {
 							if(!header.equalsIgnoreCase("!dataset_table_begin") && !header.equalsIgnoreCase("!dataset_table_end")) {
