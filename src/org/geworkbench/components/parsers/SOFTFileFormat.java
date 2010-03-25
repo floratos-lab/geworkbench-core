@@ -58,7 +58,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 	private int possibleMarkers = 0; 
     
 	public SOFTFileFormat() {
-		formatName = "GEO Soft Files (GDS) & GEO Series File Matrix";
+		formatName = "GEO Soft Files (GDS, GSE) & GEO Series Matrix Files";
 		maFilter = new SOFTFilter();
 		Arrays.sort(maExtensions);
 	}
@@ -239,8 +239,6 @@ public class SOFTFileFormat extends DataSetFileFormat {
 					lineCh = readIn.readLine();
 					lineCh = readIn.readLine();
 					if(lineCh.subSequence(0, 7).equals("^SERIES")){
-						System.out.print("Step 1");
-						System.out.print("\n");
 						SOFTSeriesParser parser = new SOFTSeriesParser();
 						maSet1 = parser.getMArraySet(file);
 					}
