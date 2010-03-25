@@ -2,18 +2,15 @@ package org.geworkbench.components.parsers;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InterruptedIOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ProgressMonitorInputStream;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
@@ -33,12 +30,8 @@ public class SOFTSeriesParser {
 	private static final String commentSign1 = "#";
 	private static final String commentSign2 = "!";
 	private static final String commentSign3 = "^";
-	private static final String columnSeperator = "\t";
-	private static final String lineSeperator = "\n";
-	private static final String duplicateLabelModificator = "_2";
 
 	CSExprMicroarraySet maSet = new CSExprMicroarraySet();
-	
 	private int possibleMarkers = 0; 
  	 
 	/*
