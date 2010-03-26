@@ -195,8 +195,8 @@ public class SOFTFileFormat extends DataSetFileFormat {
 							+ "Attempting to open a file that does not comply with the "
 							+ "GEO SOFT file format.");
 			throw new InputFileFormatException(
-				"Attempting to open a file that does not comply with the "
-				+ "SOFT file format.");
+				"Number of Arrays and number of marker values are not equal for the marker: "
+					+ checkLine[0]);
 		}
 					
 		CSExprMicroarraySet maSet = new CSExprMicroarraySet();
