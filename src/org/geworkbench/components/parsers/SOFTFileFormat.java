@@ -50,13 +50,9 @@ public class SOFTFileFormat extends DataSetFileFormat {
 	private static final String duplicateLabelModificator = "_2";
 
 	ExpressionResource resource = new ExpressionResource();
-	CSExprMicroarraySet maSet = new CSExprMicroarraySet();
-	List<String> arrayNames = new ArrayList<String>();
-	
+		
 	SOFTFilter maFilter = null;
-	private int possibleMarkers = 0; 
-    
-	public SOFTFileFormat() {
+	 public SOFTFileFormat() {
 		formatName = "GEO Soft Files (GDS, GSE) & GEO Series Matrix Files";
 		maFilter = new SOFTFilter();
 		Arrays.sort(maExtensions);
@@ -150,7 +146,10 @@ public class SOFTFileFormat extends DataSetFileFormat {
 	@SuppressWarnings("unchecked")
 	public DSMicroarraySet getMArraySet(File file)
 			throws InputFileFormatException, InterruptedIOException {
-
+		
+		CSExprMicroarraySet maSet = new CSExprMicroarraySet();
+		List<String> arrayNames = new ArrayList<String>();
+		int possibleMarkers = 0;
 		BufferedReader in = null;
 		final int extSeperater = '.';
 		String fileName = file.getName();
@@ -197,6 +196,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 						}
 						header = in.readLine();
 					}
+					in.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -261,6 +261,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 					}
 					line = out.readLine();
 				}
+				out.close();
 				String result = null;
 				for (int i = 0; i < possibleMarkers; i++) {
 					result = AnnotationParser.matchChipType(maSet, maSet
@@ -304,14 +305,15 @@ public class SOFTFileFormat extends DataSetFileFormat {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		labelDisp(file, maSet);
+		labelDisp(file, maSet, arrayNames);
 		return maSet;
 	}
 	/*
 	 * Method adds data to Array/Phenotype Sets drop down in the selection panel 
 	 */
-	public void labelDisp(File dataFile, CSExprMicroarraySet mArraySet)
+	public void labelDisp(File dataFile, CSExprMicroarraySet mArraySet, List<String> arrays)
 	{ 
+		List<String> arrayNames = arrays;
 		BufferedReader read = null;
 		String line1 = null;
 		try {
