@@ -573,7 +573,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 							log.info("File extension: " + ext);
 						}
 					}
-					if (imageFilename!=null && ext!=null) {
+					if(ext==null)ext= "jpg";
+					if (imageFilename!=null) {
 						si.save(imageFilename, ext);
 					}
 				}
