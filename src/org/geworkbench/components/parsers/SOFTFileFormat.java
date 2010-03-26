@@ -47,7 +47,6 @@ public class SOFTFileFormat extends DataSetFileFormat {
 	private static final String commentSign2 = "!";
 	private static final String commentSign3 = "^";
 	private static final String[] maExtensions = { "soft", "txt", "TXT"};
-	private static final String duplicateLabelModificator = "_2";
 
 	ExpressionResource resource = new ExpressionResource();
 		
@@ -86,8 +85,48 @@ public class SOFTFileFormat extends DataSetFileFormat {
 	 * (non-Javadoc) 
 	 * @see org.geworkbench.components.parsers.FileFormat#checkFormat(java.io.File)
 	 */
+	String[] checkLine = null;
+	int carry = 0;
 	public boolean checkFormat(File file) throws InterruptedIOException {
-			return true;
+		BufferedReader check = null;
+		String Checker = null;
+		int arrays = 0;
+		try {
+			check = new BufferedReader(new FileReader(file));
+			try {
+				Checker = check.readLine();
+				if(Checker == null)
+				{
+					carry = 1;
+					return false;
+				}
+				while(Checker != null){
+					int markNum = 0;
+					if(!Checker.startsWith(commentSign1)&& !Checker.startsWith(commentSign2) && !Checker.startsWith(commentSign3)){
+						checkLine = null;
+						checkLine = Checker.split("\t");
+						if(checkLine[0].equals("ID_REF")){
+							arrays = checkLine.length;
+						}
+						if(!checkLine[0].equals("ID_REF")){
+							markNum = checkLine.length;
+							if(markNum != arrays){
+								carry = 2;
+								return false;
+							}
+						}
+					}
+					Checker = check.readLine();
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+		return true;
 	}
 
 	/*
@@ -97,6 +136,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 	 */
 	@SuppressWarnings("unchecked")
 	public DSDataSet getDataFile(File file) throws InputFileFormatException, InterruptedIOException{  
+		
 		BufferedReader readIn = null;
 		String lineCh = null; 
 		DSMicroarraySet maSet1 = new CSExprMicroarraySet();
@@ -129,10 +169,12 @@ public class SOFTFileFormat extends DataSetFileFormat {
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
+			System.out.print("Nikhil");
 			e.printStackTrace();
 		}
 		return maSet1;
@@ -147,6 +189,16 @@ public class SOFTFileFormat extends DataSetFileFormat {
 	public DSMicroarraySet getMArraySet(File file)
 			throws InputFileFormatException, InterruptedIOException {
 		
+		if (!checkFormat(file)) {
+			log
+					.info("SOFTFileFormat::getMArraySet - "
+							+ "Attempting to open a file that does not comply with the "
+							+ "GEO SOFT file format.");
+			throw new InputFileFormatException(
+				"Attempting to open a file that does not comply with the "
+				+ "SOFT file format.");
+		}
+					
 		CSExprMicroarraySet maSet = new CSExprMicroarraySet();
 		List<String> arrayNames = new ArrayList<String>();
 		int possibleMarkers = 0;
