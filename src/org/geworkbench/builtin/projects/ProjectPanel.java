@@ -72,7 +72,6 @@ import org.geworkbench.bison.datastructure.properties.DSNamed;
 import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.bison.util.colorcontext.ColorContext;
 import org.geworkbench.builtin.projects.SaveFileFilterFactory.CustomFileFilter;
-import org.geworkbench.builtin.projects.SaveFileFilterFactory.ImageFileFilter;
 import org.geworkbench.components.parsers.FileFormat;
 import org.geworkbench.components.parsers.microarray.DataSetFileFormat;
 import org.geworkbench.engine.config.GUIFramework;
@@ -548,7 +547,16 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				Image currentImage = ((ImageNode) ds).image.getImage();
 				SaveImage si = new SaveImage(currentImage);
 				JFileChooser fc = new JFileChooser(".");
-				fc.setFileFilter(SaveFileFilterFactory.createImageFileFilter());
+
+				FileFilter bitmapFilter = new BitmapFileFilter();
+				FileFilter jpegFilter = new JPEGFileFilter();
+				FileFilter pngFilter = new PNGFileFilter();
+				FileFilter tiffFilter = new TIFFFileFilter();
+				fc.setFileFilter(tiffFilter);
+				fc.setFileFilter(pngFilter);
+				fc.setFileFilter(jpegFilter);
+				fc.setFileFilter(bitmapFilter);
+
 				int choice = fc.showSaveDialog(jProjectPanel);
 				if (choice == JFileChooser.APPROVE_OPTION) {
 					String imageFilename = fc.getSelectedFile().getAbsolutePath();
@@ -565,7 +573,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 							log.info("File extension: " + ext);
 						}
 					}
-					if (imageFilename != null) {
+					if (imageFilename!=null && ext!=null) {
 						si.save(imageFilename, ext);
 					}
 				}
@@ -2715,6 +2723,95 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	public ProjectNodeRenamedEvent publishNodeRenamedEvent(
 			ProjectNodeRenamedEvent event) {
 		return event;
+	}
+
+	private static abstract class ImageFileFilter extends FileFilter {
+		public abstract String getExtension();
+	}
+
+	private static class BitmapFileFilter extends ImageFileFilter {
+		public String getDescription() {
+			return "Bitmap Files";
+		}
+
+		public boolean accept(File f) {
+			String name = f.getName();
+			boolean imageFile = name.endsWith("bmp") || name.endsWith("BMP");
+			if (f.isDirectory() || imageFile) {
+				return true;
+			}
+
+			return false;
+		}
+
+		public String getExtension() {
+			return "bmp";
+		}
+
+	}
+
+	private static class JPEGFileFilter extends ImageFileFilter {
+		public String getDescription() {
+			return "Joint Photographic Experts Group Files";
+		}
+
+		public boolean accept(File f) {
+			String name = f.getName();
+			boolean imageFile = name.endsWith("jpg") || name.endsWith("JPG");
+			if (f.isDirectory() || imageFile) {
+				return true;
+			}
+
+			return false;
+		}
+
+		public String getExtension() {
+			return "jpg";
+		}
+
+	}
+
+	private static class PNGFileFilter extends ImageFileFilter {
+		public String getDescription() {
+			return "Portable Network Graphics Files";
+		}
+
+		public boolean accept(File f) {
+			String name = f.getName();
+			boolean imageFile = name.endsWith("png") || name.endsWith("PNG");
+			if (f.isDirectory() || imageFile) {
+				return true;
+			}
+
+			return false;
+		}
+
+		public String getExtension() {
+			return "png";
+		}
+
+	}
+
+	private static class TIFFFileFilter extends ImageFileFilter {
+		public String getDescription() {
+			return "Tag(ged) Image File Format";
+		}
+
+		public boolean accept(File f) {
+			String name = f.getName();
+			boolean imageFile = name.endsWith("tif") || name.endsWith("TIF")
+					|| name.endsWith("tiff") || name.endsWith("TIFF");
+			if (f.isDirectory() || imageFile) {
+				return true;
+			}
+
+			return false;
+		}
+
+		public String getExtension() {
+			return "tif";
+		}
+
 	}
 
 }
