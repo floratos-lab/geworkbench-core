@@ -21,7 +21,6 @@ import org.geworkbench.bison.datastructure.biocollections.CSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.skin.Skin;
-import org.geworkbench.engine.skin.Workbench;
 
 /**
  * Test cases for ProjectPanel. Tests the functionality of saving and loading
