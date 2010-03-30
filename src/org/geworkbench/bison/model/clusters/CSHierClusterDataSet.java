@@ -12,11 +12,15 @@ public class CSHierClusterDataSet extends CSAncillaryDataSet implements DSHierCl
 
     private HierCluster[] clusters;
     private DSDataSetView parentSet;
+    private HierCluster[] selectedClusters;
+	private boolean selectionEnabled;
 
-    public CSHierClusterDataSet(HierCluster[] clusters, String name, DSDataSetView dataSetView) {
+    public CSHierClusterDataSet(HierCluster[] clusters, HierCluster[] sc, boolean selected, String name, DSDataSetView dataSetView) {
         super(dataSetView.getDataSet(), name);
         this.clusters = clusters;
         this.parentSet = dataSetView;
+        this.selectedClusters = sc;
+        this.selectionEnabled = selected;
     }
 
     public void writeToFile(String fileName) {
@@ -30,6 +34,23 @@ public class CSHierClusterDataSet extends CSAncillaryDataSet implements DSHierCl
     public HierCluster getCluster(int index) {
         return clusters[index];
     }
+   
+    public HierCluster getSelectedCluster(int index) {
+    	if (selectedClusters == null || index >= selectedClusters.length)
+    		return null;
+        return selectedClusters[index];
+    }
+
+    public void setSelectedClusters(HierCluster[] sc) {
+        selectedClusters = sc;
+    }
+    
+    public boolean getSelectionEnabled() {
+        return selectionEnabled;
+    }    
+    public void setSelectionEnabled(boolean selected) {
+        selectionEnabled = selected;
+    } 
 
     public int getNumberOfClusters() {
         return clusters.length;

@@ -1,6 +1,7 @@
 package org.geworkbench.events;
 
 import org.geworkbench.bison.datastructure.biocollections.views.DSMicroarraySetView;
+import org.geworkbench.bison.model.clusters.DSHierClusterDataSet;
 import org.geworkbench.bison.model.clusters.MarkerHierCluster;
 import org.geworkbench.bison.model.clusters.MicroarrayHierCluster;
 
@@ -33,6 +34,11 @@ public class HierClusterModelEvent extends EventObject {
      */
     private MicroarrayHierCluster arrayCluster;
 
+    private MarkerHierCluster selectedMarkerCluster;
+    private MicroarrayHierCluster selectedArrayCluster;
+    private boolean selectionEnabled;
+    private DSHierClusterDataSet hierclusterSet;
+
     /**
      * Constructor
      *
@@ -55,11 +61,15 @@ public class HierClusterModelEvent extends EventObject {
      * @param mrahc  <code>MicroarrayHierCluster</code> node resulting from
      *               Hierarchical Clustering Analysis representing Microarray clusters
      */
-    public HierClusterModelEvent(Object source, DSMicroarraySetView mas, MarkerHierCluster mrkhc, MicroarrayHierCluster mrahc) {
+    public HierClusterModelEvent(Object source, DSHierClusterDataSet clusterSet) {
         super(source);
-        mASet = mas;
-        markerCluster = mrkhc;
-        arrayCluster = mrahc;
+    	mASet = (DSMicroarraySetView)clusterSet.getDataSetView();
+    	markerCluster = (MarkerHierCluster)clusterSet.getCluster(0);
+    	arrayCluster = (MicroarrayHierCluster)clusterSet.getCluster(1);
+    	selectedMarkerCluster = (MarkerHierCluster)clusterSet.getSelectedCluster(0);
+    	selectedArrayCluster = (MicroarrayHierCluster)clusterSet.getSelectedCluster(1);
+    	selectionEnabled = clusterSet.getSelectionEnabled();
+    	hierclusterSet = clusterSet;
     }
 
     /**
@@ -93,4 +103,18 @@ public class HierClusterModelEvent extends EventObject {
         return arrayCluster;
     }
 
+    public MarkerHierCluster getSelectedMarkerCluster() {
+        return selectedMarkerCluster;
+    }
+
+    public MicroarrayHierCluster getSelectedMicroarrayCluster() {
+        return selectedArrayCluster;
+    }
+    public boolean getSelectionEnabled() {
+    	return selectionEnabled;
+    }
+    public DSHierClusterDataSet getClusterSet()
+    {
+    	return hierclusterSet;
+    }
 }
