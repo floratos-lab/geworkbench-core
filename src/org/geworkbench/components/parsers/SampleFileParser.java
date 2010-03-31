@@ -2,217 +2,311 @@ package org.geworkbench.components.parsers;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.InterruptedIOException;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-import java.util.StringTokenizer;
-import java.util.Vector;
 
 import javax.swing.ProgressMonitorInputStream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.geworkbench.bison.datastructure.biocollections.CSMarkerVector;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
+import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.CSExpressionMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
-import org.geworkbench.bison.parsers.SOFTParser;
 
+/**  
+ * @author Nikhil
+ */
 public class SampleFileParser {
-	
-	private Log log = LogFactory.getLog(this.getClass());
-    DSMicroarraySet microarraySet = null;
+
+	static Log log = LogFactory.getLog(SOFTFileFormat.class);
+	private static final String commentSign1 = "#";
+	private static final String commentSign2 = "!";
+	private static final String commentSign3 = "^";
+
+	static final char ABSENT    = 'A';
+    static final char PRESENT   = 'P';
+    static final char MARGINAL  = 'M';
+    static final char UNDEFINED = '\0';  
+    char detectionStatus = UNDEFINED;
     
-    /**
-     * In this method, we check that:
-     * There is a header line exist (keyword "Probe Set Name" exist)
-     * number of columns in header line is same as number of columns in data.
-     * There are no duplicate markers (ie., no 2 markers have the same name).
-     */
-    // FIXME
-    // In here we should also check (among other things) that:
-    // * The values of the data points respect their expected type.
-    public boolean checkFormat(File f) {
-    	
-//    	return true;
+	CSExprMicroarraySet maSet = new CSExprMicroarraySet();
+	private int possibleMarkers = 0; 
+ 	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.geworkbench.components.parsers.FileFormat#getMArraySet(java.io.File)
+	 */
+	@SuppressWarnings("unchecked")
+	public DSMicroarraySet getMArraySet(File file)
+			throws InputFileFormatException, InterruptedIOException {
+		
+		BufferedReader in = null;
+		final int extSeperater = '.';
+		String fileName = file.getName();
+		int dotIndex = fileName.lastIndexOf(extSeperater);
+		if (dotIndex != -1) {
+			fileName = fileName.substring(0, dotIndex);
+		}
+		maSet.setLabel(fileName);
+		String arrayName = null;
+		int m = 0;
+		int valueLabel = 0; 
+	 	int call = 0;
+	 	int detection = 0;
+		List<String> markers = new ArrayList<String>();
+		try {
+			in = new BufferedReader(new FileReader(file));
+			if(in != null){
+				try {
+					String tempName = null;
+					String header = null;
+					
+					while ((header = in.readLine()) != null) {
+						/*
+					 	* Adding comments to Experiment Information tab.
+					 	*We will ignore the line which start with '!platform_table_end', '!platform_table_begin', '!sample_table_begin'
+					 	*and '!sample_table_end'
+					 	*/
+						if (header.startsWith(commentSign1) || header.startsWith(commentSign2)) {
+							if(!header.equalsIgnoreCase("!sample_table_end") && !header.equalsIgnoreCase("!sample_table_begin")){
+								maSet.addDescription(header.substring(1));
+							}
+						}	
+						String[] temp = null;
+						if(header.startsWith(commentSign3)){
+							temp = header.split("=");
+							String temP = temp[0].trim();
+							if(temP.equals("^SAMPLE")){
+								tempName = temp[1].trim();
+							}
+						}
+						if(header.startsWith(commentSign2)){
+							temp = header.split("=");
+							String temP1 = temp[0].trim();
+							if(temP1.equals("!Sample_title")){
+								String temp1 = tempName
+												+ " ("
+												+temp[1].trim()
+												+")";
+								arrayName = temp1;
+							}
+						}
+						if(!header.startsWith(commentSign1) && !header.startsWith(commentSign2) && !header.startsWith(commentSign3)){
+							if(header.subSequence(0, 6).equals("ID_REF")){
+								String[] valueLabels = null;
+								valueLabels = header.split("\t");
+								for(int p=0; p < valueLabels.length; p++){
+									if(valueLabels[p].equals("VALUE")){
+										valueLabel = p;
+									}
+									if(valueLabels[p].equals("DETECTION_CALL")){
+										call = p;
+									}
+									if(valueLabels[p].equals("DETECTION_P") || valueLabels[p].equals("ABS_CALL")){
+										detection = p;
+									}
+									if(valueLabels[p].equals("DETECTION P-VALUE") || valueLabels[p].equals("DETECTION_P")){
+										detection = p;
+									}
+								}
+							}
+							if(!header.subSequence(0, 6).equals("ID_REF")){
+								String[] mark = header.split("\t");
+								markers.add(mark[0]);
+								String markerName = new String(mark[0].trim());
+								CSExpressionMarker marker = new CSExpressionMarker(m);
+								marker.setLabel(markerName);
+								maSet.getMarkerVector().add(m, marker);
+								m++;	
+							}
+						}
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		//Getting the markers size to include in a loop
+		possibleMarkers = markers.size();
+		
+		int i = 0;
+		CSMicroarray array = new CSMicroarray(i, possibleMarkers,
+				arrayName, null, null, false,
+				DSMicroarraySet.affyTxtType);
+		maSet.add(array);
+		//This buffered reader is used to put insert marker values for one sample at a time from the Series file
+		Boolean absCallFound = false;
+		Boolean pValueFound = false;
+		BufferedReader out = null;
+		try {
+			int j = 0;
+			out = new BufferedReader(new FileReader(file));
+			try {
+				String line = out.readLine();
+				while (line != null) {
+					
+					if(!line.startsWith(commentSign1) && !line.startsWith(commentSign2) && !line.startsWith(commentSign3)){
+						if(!line.subSequence(0, 6).equals("ID_REF")){
+							String[] values = line.split("\t");
+							char C;
+							String ca = null;
+							String valString = null;
+							valString = values[valueLabel].trim();
+							if(valString == null){
+								Float v = Float.NaN;
+								CSExpressionMarkerValue markerValue = new CSExpressionMarkerValue(v);
+								maSet.get(0).setMarkerValue(j, markerValue);
+								if (v.isNaN()) {
+									markerValue.setMissing(true);
+								} else {
+									markerValue.setPresent();
+								}
+								if(detection != 0){
+									System.out.print("NIkhil");
+									String token = null;
+									token = values[detection].trim();
+									Object value = null;
+									value = Double.valueOf(token);
+									markerValue.setConfidence(( (Double) value).doubleValue());
+					    			pValueFound = true;
+								}
+								if(call != 0){
+									ca = values[call].trim();
+									C = ca.charAt(0);
+									char Call = Character.toUpperCase(C);
+									if (Call == PRESENT || Call == ABSENT || Call == MARGINAL){
+						    			  this.detectionStatus = Call;
+						    			  absCallFound = true;
+						    			  if (!pValueFound)
+						    				  switch (Call){
+						    				  case PRESENT: 
+						    					  	markerValue.setPresent();
+						    					  break;
+						    				  case ABSENT:
+						    					  	markerValue.setAbsent();
+						    					  break;
+						    				  case MARGINAL:
+						    					  	markerValue.setMarginal();
+						    					  break;
+						    				  }
+										}
+									if (!absCallFound && !pValueFound){
+							    		  markerValue.setPresent();
+							    	  }
+								}
+							}else { 
+								float value = Float.NaN;
+								try {
+									value = Float.parseFloat(valString);
+								} catch (NumberFormatException nfe) {
+								}
+								// put values directly into CSMicroarray inside of
+								// maSet
+								Float v = value;
+								CSExpressionMarkerValue markerValue = new CSExpressionMarkerValue(
+										v);
+								maSet.get(0).setMarkerValue(j, markerValue);
+								if (v.isNaN()) {
+									markerValue.setMissing(true);
+								} else {
+									markerValue.setPresent();
+								}
+								if(detection != 0){
+									String token = null;
+									token = values[detection].trim();
+									Object value1 = null;
+									value1 = Double.valueOf(token);
+									markerValue.setConfidence(( (Double) value1).doubleValue());
+					    			pValueFound = true;
+								}
+								if(call != 0){
+									ca = values[call].trim();
+									C = ca.charAt(0);
+									char Call = Character.toUpperCase(C);
+									if (Call == PRESENT || Call == ABSENT || Call == MARGINAL){
+						    			  this.detectionStatus = Call;
+						    			  absCallFound = true;
+						    			  if (!pValueFound)
+						    				  switch (Call){
+						    				  case PRESENT: 
+						    					  	markerValue.setPresent();
+						    					  break;
+						    				  case ABSENT:
+						    					  	markerValue.setAbsent();
+						    					  break;
+						    				  case MARGINAL:
+						    					  	markerValue.setMarginal();
+						    					  break;
+						    				  }
+										}
+								}
+								if (!absCallFound && !pValueFound){
+						    		  markerValue.setPresent();
+						    	  }
+							}
+							j++;
+						}
+					}
+					line = out.readLine();
+				}
+				String result = null;
+				for (int n = 0; n < possibleMarkers; n++) {
+					result = AnnotationParser.matchChipType(maSet, maSet
+							.getMarkerVector().get(i).getLabel(), false);
+					if (result != null) {
+						break;
+					}
+				}
+				if (result == null) {
+					AnnotationParser.matchChipType(maSet, "Unknown", true);
+				} else {
+					maSet.setCompatibilityLabel(result);
+				}
+				for (DSGeneMarker marker : maSet.getMarkerVector()) {
+					String token = marker.getLabel();
+					String[] locusResult = AnnotationParser.getInfo(token,
+							AnnotationParser.LOCUSLINK);
+					String locus = "";
+					if ((locusResult != null)
+							&& (!locusResult[0].trim().equals(""))) {
+						locus = locusResult[0].trim();
+					}
+					if (locus.compareTo("") != 0) {
+						try {
+							marker.setGeneId(Integer.parseInt(locus));
+						} catch (NumberFormatException e) {
+							log.info("Couldn't parse locus id: " + locus);
+						}
+					}
+					String[] geneNames = AnnotationParser.getInfo(token,
+							AnnotationParser.ABREV);
+					if (geneNames != null) {
+						marker.setGeneName(geneNames[0]);
+					}
 
-        boolean headerExist = false;
-        boolean columnsMatch = true;
-        boolean noDuplicateMarkers = true;
-        boolean valuesAreExpectedType = true;
-        BufferedReader reader = null;
-    	try{
-	        FileInputStream fileIn = new FileInputStream(f);
-	        reader = new BufferedReader(new InputStreamReader(fileIn));
-	
-	        String line = null;
-	        int totalColumns = 0;
-	        int accessionIndex= -1;
-	        Set<String> markers = new HashSet<String>();
-	        int lineIndex = 0;
-	        while ((line = reader.readLine()) != null) { //for each line
-	        	if (line.indexOf("ID_REF") >= 0) {
-	        		if(!line.startsWith("#")){
-	        			headerExist = true;
-	        		}
-	        	}
-	        	if(!line.startsWith("!")){
-	        		if (headerExist){//we'll skip anything before header
-	        			String token=null;
-	        			int columnIndex = 0;
-	        			StringTokenizer st = new StringTokenizer(line, "\t\n");	            
-	        			while (st.hasMoreTokens()) {	//for each column
-	        				token = st.nextToken().trim();
-	        				if (token.equals("ID_REF")) {
-	        					accessionIndex = columnIndex;
-	        				}else if (headerExist && (columnIndex==accessionIndex)){ // if this line is after header, then first column should be our marker name
-	        					if (markers.contains(token)){//duplicate markers
-	        						noDuplicateMarkers=false;
-	        						log.info("duplicate markers: "+token);
-	        					}else{
-	        						markers.add(token);
-	        					}
-	        				}
-	        				columnIndex++;
-	        			}
-	        			//check if column match or not
-	        			if (headerExist){ //if this line is real data, we assume lines after header are real data. (we might have bug here)
-	        				if (totalColumns==0)//not been set yet
-	        					totalColumns=columnIndex;
-	        				else if (columnIndex!=totalColumns){//if not equal 
-	        					columnsMatch=false;
-	        					log.debug("In the file"+f.getName()+", header contains "+totalColumns+" columns, but line "+lineIndex+" only contains "+columnIndex+" columns.");
-	        				}
-	        			}
-	        		}
-	        	}
-	        	lineIndex++;
-	        }
-	        fileIn.close();
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    } finally {
-	    	try {
-				reader.close();
+					marker.getUnigene().set(token);
+				}
 			} catch (IOException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-	    }
-	  //if (headerExist && columnsMatch && noDuplicateMarkers)
-	    if (headerExist && noDuplicateMarkers){
-	    	return true;
-	    }else{
-	    	return false;
-	    }
-    }
-
-    /**
-     * @param file Input data file, expected to be in the Affy format.
-     * @return A <code>MicroarraySet</code> containing the data in the
-     *         input file.
-     * @throws InputFileFormatException When the input file deviates from the
-     *                                  Affy format.
-     */
-
-    public void getMArraySet(File file, CSExprMicroarraySet maSet) throws InputFileFormatException, InterruptedIOException {
-        // Check that the file is OK before starting allocating space for it.
-		if (!checkFormat(file))
-				throw new InputFileFormatException(
-						"Attempting to open a file that does not comply with the "
-								+ "SOFT format.");
-	        log.info(file.getAbsoluteFile() + " passed file format check");
-        BufferedReader reader = null;
-        ProgressMonitorInputStream progressIn = null;
-        try {
-            // microarraySet = new CSExprMicroarraySet((AffyResource) getResource(file));
-            microarraySet = maSet;
-            List ctu = new ArrayList();
-            ctu.add("ID_REF");
-            ctu.add("VALUE");
-            ctu.add("ABS_CALL");
-            ctu.add("DETECTION_P");
-            SOFTParser parser = new SOFTParser(ctu);
-            FileInputStream fileIn = new FileInputStream(file);
-            progressIn = new ProgressMonitorInputStream(null, "Scanning File", fileIn);
-            reader = new BufferedReader(new InputStreamReader(progressIn));
-
-            String line = null;
-            while ((line = reader.readLine()) != null) {
-                if (!line.trim().equals("")) {
-                    parser.process(line);
-                }
-            }
-
-            Vector v = parser.getAccessions();
-            microarraySet.setLabel(file.getName());
-            if (microarraySet.getCompatibilityLabel() == null || microarraySet.getCompatibilityLabel().equals("")) {
-                microarraySet.setCompatibilityLabel(AnnotationParser.matchChipType(maSet, "", false));
-            }
-//            microarraySet.setCompatibilityLabel("MAS");
-            microarraySet.initialize(1, v.size());
-//            String chiptype = AnnotationParser.matchChipType(microarraySet, "dummymarker", false);
-            CSMarkerVector markerVector = (CSMarkerVector) microarraySet.getMarkers();
-            int count = 0;
-            for (Iterator it = v.iterator(); it.hasNext();) {
-                String acc = ((String) it.next()).toString();
-                markerVector.setLabel(count, acc);
-                String[] geneNames = AnnotationParser.getInfo(acc, AnnotationParser.ABREV);
-                if (geneNames != null) {
-                    markerVector.get(count).setGeneName(geneNames[0]);
-                }                
-                markerVector.get(count).setDisPlayType(DSGeneMarker.AFFY_TYPE);
-                markerVector.get(count++).setDescription(acc);
-            }
-            reader.close();
-            // Read again, this time loading data
-            fileIn = new FileInputStream(file);
-            progressIn = new ProgressMonitorInputStream(null, "Loading Data", fileIn);
-            reader = new BufferedReader(new InputStreamReader(progressIn));
-            CSMicroarray microarray = new CSMicroarray(0, v.size(), file.getName(), null, null, true, DSMicroarraySet.affyTxtType);
-            microarray.setLabel(file.getName());
-            parser.reset();
-            parser.setMicroarray(microarray);
-            while ((line = reader.readLine()) != null) {
-                if (!line.trim().equals("")) {
-                    parser.parseLine(line);
-                }
-            }
-            reader.close();
-            parser.getMicroarray().setLabel(file.getName());
-            microarraySet.add(0, parser.getMicroarray());
-            microarraySet.setFile(file);
-        }
-        catch (java.io.InterruptedIOException ie) {
-    			if ( progressIn.getProgressMonitor().isCanceled())
-    			{	
-    				throw ie;    				 			 
-    			}			 
-    			else
-    			   ie.printStackTrace();
-        
-        } catch (Exception ec) {
-            log.error(ec,ec);
-        } finally {
-        	try {
-				reader.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-        }
-    }
-    public DSMicroarraySet getMArraySet(File file) throws InputFileFormatException, InterruptedIOException{
-        CSExprMicroarraySet maSet = new CSExprMicroarraySet();
-        getMArraySet(file, maSet);
-        if (maSet.loadingCancelled)
-            return null;
-        return maSet;
-    }    
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return maSet;
+	}
 }
+
