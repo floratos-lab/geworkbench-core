@@ -149,7 +149,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 					maSet1 = parser.getMArraySet(file);
 				}
 				if(lineCh.subSequence(0, 7).equals("^SAMPLE")){
-					SOFTSampleParser parser = new SOFTSampleParser();
+					SampleFileParser parser = new SampleFileParser();
 					maSet1 = parser.getMArraySet(file);
 				}
 				if(lineCh.subSequence(0, 9).equals("^DATABASE")){
