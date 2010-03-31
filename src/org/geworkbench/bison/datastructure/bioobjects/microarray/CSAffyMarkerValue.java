@@ -1,7 +1,6 @@
 package org.geworkbench.bison.datastructure.bioobjects.microarray;
 
 import org.geworkbench.bison.parsers.AffyParseContext;
-import org.geworkbench.bison.parsers.SOFTParseContext;
 import org.geworkbench.bison.parsers.NCIParseContext;
 
 import java.io.ObjectStreamField;
@@ -90,11 +89,7 @@ public class CSAffyMarkerValue extends CSExpressionMarkerValue implements
     	  if (val != null)
     		  init(val.getColumnsToUse());
       }
-      public void initS(SOFTParseContext val) {
-    	  if (val != null)
-    		  initS(val.getColumnsToUse());
-      }
-      
+  
       protected void init(Map columns) {
     	  Object value = null;
     	  boolean pValueFound = false;  // indicates if the "Detection p-value" column is used
@@ -191,58 +186,6 @@ public class CSAffyMarkerValue extends CSExpressionMarkerValue implements
     		  }
     	  }
     	  
-    	  if (!absCallFound && !pValueFound){
-    		  super.setPresent();
-    	  }
-    	  
-      }
-      
-      protected void initS(Map columns) {
-    	  Object value = null;
-    	  boolean pValueFound = false;  // indicates if the "Detection p-value" column is used
-    	  boolean absCallFound = false;  // indicates if either of the "Detection" or "Abs Call" columns are used    	  
-    	  
-    	  if (columns.containsKey("ID_REF")){
-    		  value = columns.get("ID_REF");
-    	  }
-    	  if (columns.containsKey("VALUE")) {
-    		  value = columns.get("VALUE");
-    		  if (value instanceof Double){
-    			  setValue(( (Double) value).doubleValue());
-    		  }
-    		  
-    	  }
-    	  if (columns.containsKey("DETECTION_P")) {
-    		  value = columns.get("DETECTION_P");
-    		  if (value instanceof Double){
-    			  setConfidence(( (Double) value).doubleValue());
-    			  pValueFound = true;
-    		  }
-    	  }
-    	  if (columns.containsKey("ABS_CALL")) {
-    		  value = columns.get("ABS_CALL");
-    		  if (value instanceof Character){
-    			  Character ch = Character.toUpperCase(((Character) value).charValue());
-    			  if (ch == PRESENT || ch == ABSENT || ch == MARGINAL){
-    				  this.detectionStatus = ch;
-    				  absCallFound = true;
-    				  // If there is no p-value column explicitly used, then apply 
-    				  // the p-value conventions of the superclass.
-    				  if (!pValueFound)
-    					  switch (ch){
-    					  case PRESENT: 
-    						  super.setPresent();
-    						  break;
-    					  case ABSENT:
-    						  super.setAbsent();
-    						  break;
-    					  case MARGINAL:
-    						  super.setMarginal();
-    						  break;
-    					  }
-    			  }
-    		  }
-    	  }
     	  if (!absCallFound && !pValueFound){
     		  super.setPresent();
     	  }
