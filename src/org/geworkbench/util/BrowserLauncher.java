@@ -37,8 +37,7 @@ public class BrowserLauncher {
 			uri = new java.net.URI(url);
 			desktop.browse(uri);
 		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		}
 	}
 
