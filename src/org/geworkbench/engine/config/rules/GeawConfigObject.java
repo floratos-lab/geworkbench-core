@@ -3,6 +3,7 @@ package org.geworkbench.engine.config.rules;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
 import java.util.TreeMap;
@@ -17,6 +18,7 @@ import javax.swing.JMenuItem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.engine.config.GUIFramework;
+import org.geworkbench.util.BrowserLauncher;
 import org.geworkbench.util.SplashBitmap;
 
 /**
@@ -204,25 +206,11 @@ public class GeawConfigObject {
 		JMenuItem aMenuItem = new JMenuItem(name);
 		aMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-		        if( !java.awt.Desktop.isDesktopSupported() ) {
-		        	log.error("Desktop doesn't support the browse action");
-                    javax.swing.JOptionPane.showMessageDialog(guiWindow, "Desktop doesn't support the browse action");
-		        }
-
-		        java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
-		        if( !desktop.isSupported( java.awt.Desktop.Action.BROWSE ) ) {
-		        	log.error("Desktop doesn't support the browse action");
-                    javax.swing.JOptionPane.showMessageDialog(guiWindow, "Desktop doesn't support the browse action");
-		        }
-
-	            try {
-	                java.net.URI uri = new java.net.URI( value );
-	                desktop.browse( uri );
-	            }
-	            catch ( Exception ex ) {
-		        	log.error(ex.getStackTrace());
-                    javax.swing.JOptionPane.showMessageDialog(guiWindow, ex.getMessage());
-	            }
+				try {
+					BrowserLauncher.openURL(value);
+				} catch (IOException e) {
+					log.error(e);
+				}
 			}
 		});
 		helpMenu.add(aMenuItem);
