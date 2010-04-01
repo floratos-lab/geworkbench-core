@@ -1,11 +1,10 @@
 package org.geworkbench.bison.datastructure.bioobjects.sequence;
 
-import org.geworkbench.algorithms.BWAbstractAlgorithm;
+import java.io.File;
+
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-
-import java.io.File;
 
 public class CSAlignmentResultSet extends CSAncillaryDataSet implements DSAlignmentResultSet {
 
@@ -42,15 +41,6 @@ public class CSAlignmentResultSet extends CSAncillaryDataSet implements DSAlignm
     }
 
     private DSDataSet blastedParentDataSet;
-//    //Just add the new algorithm varible to get the job status show at the project panel.
-//    private BWAbstractAlgorithm algorithm = null;
-//    public BWAbstractAlgorithm getAlgorithm() {
-//        return algorithm;
-//    };
-//
-//    public void setAlgorithm(BWAbstractAlgorithm _algorithm) {
-//        algorithm = _algorithm;
-//    }
 
     public void setResultFile(String outputFilename) {
         resultFile = new File(outputFilename);
@@ -100,7 +90,6 @@ public class CSAlignmentResultSet extends CSAncillaryDataSet implements DSAlignm
 
     public void setDataSetFile(File _file) {
         fastaFile = _file;
-        //System.out.println("in setDataSetFile " + fastaFile.getAbsolutePath());
     }
 
     /**
@@ -116,8 +105,6 @@ public class CSAlignmentResultSet extends CSAncillaryDataSet implements DSAlignm
             return false;
         }
     }
-
-    ;
 
     /**
      * getFile
