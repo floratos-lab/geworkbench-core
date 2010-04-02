@@ -311,6 +311,9 @@ public class Skin extends GUIFramework {
         final JAutoList autoList = new JAutoList(model) {
             protected void keyPressed(KeyEvent event) {
                 if (event.getKeyChar() == '\n') {
+                	if (getHighlightedIndex() == -1 ){
+                		return;
+                	}
                     dialogResult.cancelled = false;
                     dialog.dispose();
                 } else if (event.getKeyChar() == 0x1b) {
