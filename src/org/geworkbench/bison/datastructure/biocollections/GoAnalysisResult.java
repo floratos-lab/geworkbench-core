@@ -268,6 +268,8 @@ public class GoAnalysisResult extends CSAncillaryDataSet<CSMicroarray> {
 		}
 	}
 	
+	private static int countUnexpectedEntrezId = 0;
+
 	public static void parseAnnotation(String annotationFileName) {
 		term2Gene.clear();
 		geneDetails.clear();
@@ -276,6 +278,7 @@ public class GoAnalysisResult extends CSAncillaryDataSet<CSMicroarray> {
 			BufferedReader br = new BufferedReader(new FileReader(annotationFileName));
 			String line = br.readLine();
 			int count = 0;
+			countUnexpectedEntrezId = 0;
 			while(line!=null) {
 				while(line.startsWith("#"))
 					line = br.readLine();
@@ -301,6 +304,9 @@ public class GoAnalysisResult extends CSAncillaryDataSet<CSMicroarray> {
 			}
 			br.close();
 			log.debug("total records in annotation file is "+count);
+			if(countUnexpectedEntrezId>0)
+				log.warn("total count of unexpected entrezId "+countUnexpectedEntrezId);
+
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			log.error("Annotation map is not successfullly created due to FileNotException: "+e.getMessage());
@@ -335,12 +341,13 @@ public class GoAnalysisResult extends CSAncillaryDataSet<CSMicroarray> {
 					try {
 						entrezId = Integer.parseInt(entrezIds[i].trim());
 					} catch (NumberFormatException e) {
-						log.warn("unexpected entrezId field "+entrezIds[i]);
-						return;
+						log.debug("unexpected entrezId field "+entrezIds[i]);
+						countUnexpectedEntrezId++;
+						continue;
 					}
 				}
 				genes.add(geneSymbol);
-				if(!geneDetails.containsKey(geneSymbol)) {
+				if(!geneDetails.containsKey(geneSymbol) && entrezId!=0) {
 					GeneDetails details = new GeneDetails(geneTitle, entrezId);
 					geneDetails.put(geneSymbol, details);
 				}
