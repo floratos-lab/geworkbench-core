@@ -33,6 +33,11 @@ public class SOFTSeriesParser {
 
 	CSExprMicroarraySet maSet = new CSExprMicroarraySet();
 	private int possibleMarkers = 0; 
+	static final char ABSENT    = 'A';
+    static final char PRESENT   = 'P';
+    static final char MARGINAL  = 'M';
+    static final char UNDEFINED = '\0'; 
+    char detectionStatus = UNDEFINED;
  	 
 	/*
 	 * (non-Javadoc)
@@ -53,7 +58,10 @@ public class SOFTSeriesParser {
 		maSet.setLabel(fileName);
 		List<String> arrayNames = new ArrayList<String>();
 		List<String> markers = new ArrayList<String>();
-		
+		int m = 0;
+		int valueLabel = 0; 
+		int call = 0;
+		int detection = 0;
 		
 		try {
 			in = new BufferedReader(new FileReader(file));
@@ -61,7 +69,6 @@ public class SOFTSeriesParser {
 				try {
 					String tempName = null;
 					int counter = 0;
-					int m = 0;
 					String header = in.readLine();
 					while (header != null) {
 						/*
@@ -96,6 +103,19 @@ public class SOFTSeriesParser {
 						}
 						if(!header.startsWith(commentSign1) && !header.startsWith(commentSign2) && !header.startsWith(commentSign3)){
 							if(header.subSequence(0, 6).equals("ID_REF")){
+								String[] valueLabels = null;
+								valueLabels = header.split("\t");
+								for(int p=0; p < valueLabels.length; p++){
+									if(valueLabels[p].equals("VALUE")){
+										valueLabel = p;
+									}
+									if(valueLabels[p].equals("DETECTION_CALL") || valueLabels[p].equals("ABS_CALL")){
+										call = p;
+									}
+									if(valueLabels[p].equals("DETECTION P-VALUE") || valueLabels[p].equals("DETECTION_P")){
+										detection = p;
+									}
+								}
 								counter++;
 							}
 							if(!header.subSequence(0, 6).equals("ID_REF") && counter == 1 ){
@@ -128,6 +148,8 @@ public class SOFTSeriesParser {
 		}
 		//This buffered reader is used to put insert marker values for one sample at a time from the Series file
 		BufferedReader out = null;
+		Boolean absCallFound = false;
+		Boolean pValueFound = false;
 		int count = 0;
 		int j = 0;
 		try {
@@ -141,34 +163,60 @@ public class SOFTSeriesParser {
 							count++;
 						}
 						int k = count - 1;
+						char C;
+						String ca = null;
 						if(!line.subSequence(0, 6).equals("ID_REF") && count != 0){
 							String[] values = line.split("\t");
 							String valString = null; 
-							valString = values[1].trim();
-							if(valString == null){
-								Float v = Float.NaN;
-								CSExpressionMarkerValue markerValue = new CSExpressionMarkerValue(v);
-								maSet.get(k).setMarkerValue(j, markerValue);
-								if (v.isNaN()) {
-									markerValue.setMissing(true);
-								} else {
-									markerValue.setPresent();
+							valString = values[valueLabel].trim();
+							float value = Float.NaN;
+							try {
+								value = Float.parseFloat(valString);
+							} catch (NumberFormatException nfe) {
+							}
+							// put values directly into CSMicroarray inside of
+							// maSet
+							Float v = value;
+							CSExpressionMarkerValue markerValue = new CSExpressionMarkerValue(
+									v);
+							maSet.get(k).setMarkerValue(j, markerValue);
+							if (v.isNaN()) {
+								markerValue.setMissing(true);
+							} else {
+								markerValue.setPresent();
+							}
+							if(detection != 0 || call != 0){
+								if(detection != 0){
+									String token = null;
+									token = values[detection].trim();
+									Object value1 = null;
+									value1 = Double.valueOf(token);
+									markerValue.setConfidence(( (Double) value1).doubleValue());
+									pValueFound = true;
 								}
-							}else { 
-								float value = Float.NaN;
-								try {
-									value = Float.parseFloat(valString);
-								} catch (NumberFormatException nfe) {
+								if(call != 0){
+									ca = values[call].trim();
+									C = ca.charAt(0);
+									char Call = Character.toUpperCase(C);
+									if (Call == PRESENT || Call == ABSENT || Call == MARGINAL){
+										this.detectionStatus = Call;
+										absCallFound = true;
+										if (!pValueFound){
+											switch (Call){
+												case PRESENT: 
+													markerValue.setPresent();
+													break;
+												case ABSENT:
+													markerValue.setAbsent();
+													break;
+												case MARGINAL:
+													markerValue.setMarginal();
+													break;
+											}
+										}
+									}
 								}
-								// put values directly into CSMicroarray inside of
-								// maSet
-								Float v = value;
-								CSExpressionMarkerValue markerValue = new CSExpressionMarkerValue(
-										v);
-								maSet.get(k).setMarkerValue(j, markerValue);
-								if (v.isNaN()) {
-									markerValue.setMissing(true);
-								} else {
+								if (!absCallFound && !pValueFound){
 									markerValue.setPresent();
 								}
 							}

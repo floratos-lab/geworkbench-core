@@ -108,11 +108,8 @@ public class SampleFileParser {
 									if(valueLabels[p].equals("VALUE")){
 										valueLabel = p;
 									}
-									if(valueLabels[p].equals("DETECTION_CALL")){
+									if(valueLabels[p].equals("DETECTION_CALL") || valueLabels[p].equals("ABS_CALL")){
 										call = p;
-									}
-									if(valueLabels[p].equals("DETECTION_P") || valueLabels[p].equals("ABS_CALL")){
-										detection = p;
 									}
 									if(valueLabels[p].equals("DETECTION P-VALUE") || valueLabels[p].equals("DETECTION_P")){
 										detection = p;
@@ -172,38 +169,40 @@ public class SampleFileParser {
 								} else {
 									markerValue.setPresent();
 								}
-								if(detection != 0){
-									System.out.print("NIkhil");
-									String token = null;
-									token = values[detection].trim();
-									Object value = null;
-									value = Double.valueOf(token);
-									markerValue.setConfidence(( (Double) value).doubleValue());
-					    			pValueFound = true;
-								}
-								if(call != 0){
-									ca = values[call].trim();
-									C = ca.charAt(0);
-									char Call = Character.toUpperCase(C);
-									if (Call == PRESENT || Call == ABSENT || Call == MARGINAL){
-						    			  this.detectionStatus = Call;
-						    			  absCallFound = true;
-						    			  if (!pValueFound)
-						    				  switch (Call){
-						    				  case PRESENT: 
-						    					  	markerValue.setPresent();
-						    					  break;
-						    				  case ABSENT:
-						    					  	markerValue.setAbsent();
-						    					  break;
-						    				  case MARGINAL:
-						    					  	markerValue.setMarginal();
-						    					  break;
-						    				  }
+								if(detection !=0 || call != 0) {
+									if(detection != 0){
+										String token = null;
+										token = values[detection].trim();
+										Object value = null;
+										value = Double.valueOf(token);
+										markerValue.setConfidence(( (Double) value).doubleValue());
+										pValueFound = true;
+									}
+									if(call != 0){
+										ca = values[call].trim();
+										C = ca.charAt(0);
+										char Call = Character.toUpperCase(C);
+										if (Call == PRESENT || Call == ABSENT || Call == MARGINAL){
+											this.detectionStatus = Call;
+											absCallFound = true;
+											if (!pValueFound){
+												switch (Call){
+													case PRESENT: 
+														markerValue.setPresent();
+														break;
+													case ABSENT:
+														markerValue.setAbsent();
+														break;
+													case MARGINAL:
+														markerValue.setMarginal();
+														break;
+												}
+											}
 										}
+									}
 									if (!absCallFound && !pValueFound){
 							    		  markerValue.setPresent();
-							    	  }
+							    	}
 								}
 							}else { 
 								float value = Float.NaN;
@@ -222,38 +221,41 @@ public class SampleFileParser {
 								} else {
 									markerValue.setPresent();
 								}
-								if(detection != 0){
-									String token = null;
-									token = values[detection].trim();
-									Object value1 = null;
-									value1 = Double.valueOf(token);
-									markerValue.setConfidence(( (Double) value1).doubleValue());
-					    			pValueFound = true;
-								}
-								if(call != 0){
-									ca = values[call].trim();
-									C = ca.charAt(0);
-									char Call = Character.toUpperCase(C);
-									if (Call == PRESENT || Call == ABSENT || Call == MARGINAL){
-						    			  this.detectionStatus = Call;
-						    			  absCallFound = true;
-						    			  if (!pValueFound)
-						    				  switch (Call){
-						    				  case PRESENT: 
-						    					  	markerValue.setPresent();
-						    					  break;
-						    				  case ABSENT:
+								if(detection !=0 || call != 0){
+									if(detection != 0){
+										String token = null;
+										token = values[detection].trim();
+										Object value1 = null;
+										value1 = Double.valueOf(token);
+										markerValue.setConfidence(( (Double) value1).doubleValue());
+										pValueFound = true;
+									}
+									if(call != 0){
+										ca = values[call].trim();
+										C = ca.charAt(0);
+										char Call = Character.toUpperCase(C);
+										if (Call == PRESENT || Call == ABSENT || Call == MARGINAL){
+											this.detectionStatus = Call;
+											absCallFound = true;
+											if (!pValueFound){
+												switch (Call){
+												case PRESENT: 
+													markerValue.setPresent();
+													break;
+												case ABSENT:
 						    					  	markerValue.setAbsent();
-						    					  break;
-						    				  case MARGINAL:
+						    					  	break;
+												case MARGINAL:
 						    					  	markerValue.setMarginal();
-						    					  break;
-						    				  }
+						    					  	break;
+												}
+											}
 										}
+									}
+									if (!absCallFound && !pValueFound){
+										markerValue.setPresent();
+									}
 								}
-								if (!absCallFound && !pValueFound){
-						    		  markerValue.setPresent();
-						    	  }
 							}
 							j++;
 						}
