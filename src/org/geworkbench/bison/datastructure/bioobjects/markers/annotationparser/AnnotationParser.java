@@ -28,11 +28,17 @@ import javax.swing.JOptionPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
+import org.apache.commons.collections15.MultiMap;
+import org.apache.commons.collections15.multimap.MultiHashMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
+import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
+import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.engine.preferences.PreferencesManager;
 import org.geworkbench.engine.properties.PropertiesManager;
 
@@ -333,6 +339,51 @@ public class AnnotationParser implements Serializable {
 			}
 		return set;
 	}
+	
+	public static Set<String> getGeneIDs(String markerID) {
+		String chipType = datasetToChipTypes.get(currentDataSet);
+
+		HashSet<String> set = new HashSet<String>();
+			String[] ids = chipTypeToAnnotation.get(chipType).getFields(markerID).getLocusLink().split("///");
+			for (String s : ids) {
+				set.add(s.trim());
+			}
+		return set;
+	}
+	
+	public static MultiMap<String, Integer> getGeneIdToMarkerIDMapping(
+			DSMicroarraySet<? extends DSMicroarray> microarraySet) {
+		MultiHashMap<String, Integer> map = new MultiHashMap<String, Integer>();
+		DSItemList<DSGeneMarker> markers = microarraySet.getMarkers();
+		int index = 0;
+		for (DSGeneMarker marker : markers) {
+			if (marker != null && marker.getLabel() != null) {			 
+				try {
+					
+					Set<String> geneIDs = getGeneIDs(marker.getLabel());							
+					for (String s : geneIDs) {
+						map.put(s, new Integer(index));
+					}
+					index++;
+				} catch (Exception e) {					 
+					continue;
+				}
+			}
+		}
+		return map;
+	}	
+	
+	public static Set<String> getGeneNames(String markerID) {
+		String chipType = datasetToChipTypes.get(currentDataSet);
+
+		HashSet<String> set = new HashSet<String>();
+			String[] ids = chipTypeToAnnotation.get(chipType).getFields(markerID).getGeneSymbol().split("///");
+			for (String s : ids) {
+				set.add(s.trim());
+			}
+		return set;
+	}
+	
 
 	public static String matchChipType(DSDataSet<? extends DSBioObject> dataset, String id,
 			boolean askIfNotFound) {
