@@ -14,7 +14,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import javax.swing.JOptionPane;
 import javax.swing.ProgressMonitorInputStream;
+import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 
 import org.apache.commons.lang.StringUtils;
@@ -167,6 +169,21 @@ public class SOFTFileFormat extends DataSetFileFormat {
 						maSet1 = getMArraySet(file);
 					}
 				}
+				if(!lineCh.subSequence(0, 7).equals("!Series") && !lineCh.subSequence(0, 7).equals("^SAMPLE") && !lineCh.subSequence(0, 9).equals("^DATABASE")){
+					SwingUtilities.invokeLater(new Runnable() {
+						public void run() {	
+						}
+					});
+					JOptionPane.showMessageDialog(null,
+							"This is not a valid GEO SOFT File Format. geWorkbench GEO Parer accepts following GEO formats:"+"\n" 
+							+ "1. GEO Soft Dataset Files" + "\n"
+							+ "2. GEO Soft Series Files" + "\n"
+							+ "3. GEO Series Matrix Files" + "\n"
+							+ "4. GEO Sample Files",
+							"Error",
+							JOptionPane.INFORMATION_MESSAGE);
+					return null;	
+				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				
@@ -174,7 +191,6 @@ public class SOFTFileFormat extends DataSetFileFormat {
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
-			System.out.print("Nikhil");
 			e.printStackTrace();
 		}
 		return maSet1;
