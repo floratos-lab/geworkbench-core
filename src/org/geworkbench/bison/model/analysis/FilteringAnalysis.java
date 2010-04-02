@@ -17,6 +17,7 @@ import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
  * filtering.
  * 
  * @author zji
+ * @version $Id$
  */
 public abstract class FilteringAnalysis extends AbstractAnalysis {
 
@@ -24,16 +25,13 @@ public abstract class FilteringAnalysis extends AbstractAnalysis {
 
 	protected DSMicroarraySet<DSMicroarray> maSet = null;
 
-	protected enum FilterOption {
-		MARKING, REMOVAL
-	};
-
 	protected enum CriterionOption {
 		COUNT, PERCENT
 	};
 
-	protected FilterOption filterOption = null;
 	protected CriterionOption criterionOption = null;
+	protected double percentThreshold;
+	protected int numberThreshold;
 
 	private static Log log = LogFactory.getLog(FilteringAnalysis.class);
 
@@ -56,13 +54,8 @@ public abstract class FilteringAnalysis extends AbstractAnalysis {
 		}
 
 		getParametersFromPanel();
-		if (filterOption == FilterOption.MARKING)
-			setMissing();
-		else if (filterOption == FilterOption.REMOVAL)
-			remove();
-		else {
-			log.error("Invalid filter option");
-		}
+		remove(getMarkersToBeRemoved(maSet));
+		log.debug("finished with fitering");
 
 		return new AlgorithmExecutionResults(true, "No errors", input);
 	}
@@ -77,53 +70,30 @@ public abstract class FilteringAnalysis extends AbstractAnalysis {
 
 	protected String expectedTypeName = null;
 
-	protected void setMissing() {
-		int arrayCount = maSet.size();
-		int markerCount = maSet.getMarkers().size();
-
-		for (int arrayIndex = 0; arrayIndex < arrayCount; arrayIndex++) {
-			DSMicroarray microarray = maSet.get(arrayIndex);
-			for (int markerIndex = 0; markerIndex < markerCount; markerIndex++) {
-				if (isMissing(arrayIndex, markerIndex))
-					microarray.getMarkerValue(markerIndex).setMissing(true);
-			}
-		}
-	}
-
 	// This may not be the best implementation
 	// especially the resizing operation seems unnecessary is CSMicroarray is
 	// implemented cleaned
 	// in other words, CSMicroarray should make sure that when you do
 	// markers.remove, resizing will happen automatically
-	private void remove() {
-
+	private void remove(List<DSGeneMarker> tobeRemoved) {
 		int markerCount = maSet.getMarkers().size();
 
-		// Identify the markers that do not meet the cutoff value.
-		List<Integer> removeList = new ArrayList<Integer>();
-		for (int i = 0; i < markerCount; i++) {
-			if (isMissing(0, i)) { // for remove, arrayIndex is in fact ignored
-				removeList.add(i);
-			}
-		}
-		int removeCount = removeList.size();
+		int removeCount = tobeRemoved.size();
 		int finalCount = markerCount - removeCount;
 		DSItemList<DSGeneMarker> markers = maSet.getMarkers();
-		for (int i = 0; i < removeCount; i++) {
-			// Account for already-removed markers
-			int index = removeList.get(i) - i;
+		for (DSGeneMarker marker: tobeRemoved) {
 			// Remove the marker
-			markers.remove(markers.get(index));
+			markers.remove(marker);
 		}
+		System.out.println(markers.size());
 		// Resize each microarray
 		for (DSMicroarray microarray : maSet) {
 			DSMarkerValue[] newValues = new DSMarkerValue[finalCount];
 			int index = 0;
-			for (int i = 0; i < markerCount; i++) {
-				if (!removeList.contains(i)) {
-					newValues[index] = microarray.getMarkerValue(i);
-					index++;
-				}
+			for (DSGeneMarker marker: markers) {
+				System.out.println(index+" "+marker.getDescription()+" "+microarray.getMarkerValue(marker));
+				newValues[index] = microarray.getMarkerValue(marker);
+				index++;
 			}
 			microarray.resize(finalCount);
 			for (int i = 0; i < finalCount; i++) {
@@ -133,6 +103,48 @@ public abstract class FilteringAnalysis extends AbstractAnalysis {
 
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<DSGeneMarker> getMarkersToBeRemoved(DSMicroarraySet<?> input) {
+
+		maSet = (DSMicroarraySet<DSMicroarray>) input;
+
+		getParametersFromPanel();
+
+		int arrayCount = maSet.size();
+		int markerCount = maSet.getMarkers().size();
+
+		// Identify the markers that do not meet the cutoff value.
+		List<Integer> removeList = new ArrayList<Integer>();
+		for (int i = 0; i < markerCount; i++) {
+			if ((criterionOption == CriterionOption.COUNT && countMissing(i) > numberThreshold)
+					|| (criterionOption == CriterionOption.PERCENT && 
+							(double) countMissing(i) / arrayCount > percentThreshold)) {
+				removeList.add(i);
+			}
+		}
+		int removeCount = removeList.size();
+		DSItemList<DSGeneMarker> markers = maSet.getMarkers();
+		List<DSGeneMarker> toBeRemoved = new ArrayList<DSGeneMarker>(); 
+		for (int i = 0; i < removeCount; i++) {
+			// Account for already-removed markers
+			int index = removeList.get(i) ;
+			// Remove the marker
+			toBeRemoved.add(markers.get(index));
+		}
+		return toBeRemoved;
+	}
+	
 	// for MARKING, both indices matter; for REMOVAL, arrayIndex should be ignored
 	abstract protected boolean isMissing(int arrayIndex, int markerIndex);
+	
+	protected int countMissing(int markerIndex) {
+		int arrayCount = maSet.size();
+		int numMissing = 0;
+		for (int i = 0; i < arrayCount; i++) {
+			if (isMissing(i, markerIndex))
+				++numMissing;
+		}
+		return numMissing;
+	}
+
 }
