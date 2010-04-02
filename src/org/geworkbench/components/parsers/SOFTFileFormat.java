@@ -52,7 +52,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 		
 	SOFTFilter maFilter = null;
 	 public SOFTFileFormat() {
-		formatName = "GEO Soft Files (GDS, GSE) & GEO Series Matrix Files";
+		formatName = "GEO Soft Files & GEO Series Matrix Files";
 		maFilter = new SOFTFilter();
 		Arrays.sort(maExtensions);
 	}
