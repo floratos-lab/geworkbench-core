@@ -47,7 +47,7 @@ public class SampleFileParser {
 	 */
 	@SuppressWarnings("unchecked")
 	public DSMicroarraySet getMArraySet(File file)
-			throws InputFileFormatException, InterruptedIOException {
+			throws InputFileFormatException, InterruptedIOException {   
 		
 		BufferedReader in = null;
 		final int extSeperater = '.';
@@ -87,6 +87,10 @@ public class SampleFileParser {
 							String temP = temp[0].trim();
 							if(temP.equals("^SAMPLE")){
 								tempName = temp[1].trim();
+								header = in.readLine();
+								if(!header.startsWith(commentSign2)){
+									arrayName = tempName;
+								}
 							}
 						}
 						if(header.startsWith(commentSign2)){
