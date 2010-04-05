@@ -149,10 +149,12 @@ public class SOFTFileFormat extends DataSetFileFormat {
 				if(lineCh.subSequence(0, 7).equals("!Series")){
 					GeoSeriesMatrixParser parser = new GeoSeriesMatrixParser();
 					maSet1 = parser.getMArraySet(file);
+					return maSet1;
 				}
 				if(lineCh.subSequence(0, 7).equals("^SAMPLE")){
 					SampleFileParser parser = new SampleFileParser();
 					maSet1 = parser.getMArraySet(file);
+					return maSet1;
 				}
 				if(lineCh.subSequence(0, 9).equals("^DATABASE")){
 					
@@ -164,9 +166,11 @@ public class SOFTFileFormat extends DataSetFileFormat {
 					if(lineCh.subSequence(0, 7).equals("^SERIES")){
 						SOFTSeriesParser parser = new SOFTSeriesParser();
 						maSet1 = parser.getMArraySet(file);
+						return maSet1;
 					}
 					if(!lineCh.subSequence(0, 7).equals("^SERIES")){
 						maSet1 = getMArraySet(file);
+						return  maSet1;
 					}
 				}
 				if(!lineCh.subSequence(0, 7).equals("!Series") && !lineCh.subSequence(0, 7).equals("^SAMPLE") && !lineCh.subSequence(0, 9).equals("^DATABASE")){
@@ -193,7 +197,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return maSet1;
+		return null;
 	}
 	 
 	/*
