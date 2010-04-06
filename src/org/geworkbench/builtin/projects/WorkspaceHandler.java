@@ -2,8 +2,12 @@ package org.geworkbench.builtin.projects;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.JFileChooser;
@@ -251,7 +255,6 @@ public class WorkspaceHandler {
 			pb.dispose();
 			
 			try{
-				// TODO Put check loop here with status bar
 				this.get();
 	
 				JOptionPane.getRootFrame().setAlwaysOnTop(true);
@@ -261,18 +264,41 @@ public class WorkspaceHandler {
 					GeawConfigObject.getGuiWindow().dispose();
 					System.exit(0);
 				}
-			}catch(Exception e){
+			} catch (ExecutionException e){
 				JOptionPane.showMessageDialog(null,
-						"Could not create workspace file. \nSave cancelled.", 
+						"Could not create workspace file for "+e.getMessage()+". \nSave cancelled.", 
 						"Error", JOptionPane.ERROR_MESSAGE);
-				log.error("Error: " + e);
+				log.error("Error: " + e.getCause());
+				File file = new File(filename);
+				file.delete(); 
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 
 		@Override
-		protected Void doInBackground() throws Exception {
+		protected Void doInBackground() throws FileNotFoundException, IOException {
 			GeawConfigObject.getGuiWindow().addWindowFocusListener(wfl);
-			enclosingProjectPanel.serialize(filename);
+			ObjectOutput s = null;
+			FileOutputStream f = null;
+			try {
+				f = new FileOutputStream(filename);
+				s = new ObjectOutputStream(f);
+				SaveTree saveTree = new SaveTree(enclosingProjectPanel,
+						enclosingProjectPanel.getDataSet());
+				s.writeObject(saveTree);
+				APSerializable aps = AnnotationParser.getSerializable();
+				s.writeObject(aps);
+				s.flush();
+			} finally {
+				try {
+					f.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
 			return null;
 		}
 
