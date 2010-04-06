@@ -16,13 +16,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -119,7 +116,7 @@ import org.ginkgo.labs.ws.GridEndpointReferenceType;
  * </p>
  * 
  * @author First Genetic Trust
- * @version $Id: ProjectPanel.java,v 1.123 2009-11-25 17:29:17 jiz Exp $
+ * @version $Id$
  */
 @SuppressWarnings("unchecked")
 public class ProjectPanel implements VisualPlugin, MenuListener {
@@ -2303,22 +2300,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	@Publish
 	public ImageSnapshotEvent publishImageSnapshot(ImageSnapshotEvent event) {
 		return event;
-	}
-
-	/**
-	 * Store the currently loaded workspace to a file withe the designated name.
-	 * 
-	 * @param filename
-	 * @throws FileNotFoundException 
-	 */
-	protected void serialize(String filename) throws FileNotFoundException, IOException {
-			FileOutputStream f = new FileOutputStream(filename);
-			ObjectOutput s = new ObjectOutputStream(f);
-			SaveTree saveTree = new SaveTree(this, getDataSet());
-			s.writeObject(saveTree);
-			APSerializable aps = AnnotationParser.getSerializable();
-			s.writeObject(aps);
-			s.flush();
 	}
 
 	/**
