@@ -320,10 +320,10 @@ public class WorkspaceHandler {
 		@Override
 		protected void done() {
 			enclosingProjectPanel.clear();
-			enclosingProjectPanel.populateFromSaveTree(saveTree);
-			
+
 			try {
 				get();
+				enclosingProjectPanel.populateFromSaveTree(saveTree);
 			} catch (ExecutionException e) {
 				// printStackTrace what is from doInBackground
 				e.getCause().printStackTrace();
@@ -334,6 +334,11 @@ public class WorkspaceHandler {
 				// This should not happen. get() is called only to handle the
 				// exception from doInBackGound
 				e.printStackTrace();
+			} catch (Exception e) { // null pinter, no serializable
+				pb.dispose();
+				JOptionPane.showMessageDialog(null,
+						"Check that the file contains a valid workspace.",
+						"Open Workspace Error", JOptionPane.ERROR_MESSAGE);
 			}
 			pb.dispose();
 		}
@@ -342,11 +347,18 @@ public class WorkspaceHandler {
 		
 		@Override
 		protected Void doInBackground() throws Exception {
-			FileInputStream in = new FileInputStream(filename);
-			ObjectInputStream s = new ObjectInputStream(in);
-			saveTree = (SaveTree) s.readObject();
-			APSerializable aps = (APSerializable) s.readObject();
-			AnnotationParser.setFromSerializable(aps);
+			FileInputStream in = null;
+			try {
+				in = new FileInputStream(filename);
+				ObjectInputStream s = new ObjectInputStream(in);
+				saveTree = (SaveTree) s.readObject();
+				APSerializable aps = (APSerializable) s.readObject();
+				AnnotationParser.setFromSerializable(aps);
+			} catch (Exception e) {
+				// no-op here. user will see error from done();
+			} finally {
+				in.close();
+			}
 
 			return null;
 		}
