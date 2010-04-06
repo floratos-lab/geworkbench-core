@@ -7,8 +7,13 @@ import org.geworkbench.engine.config.rules.GeawConfigRule;
 import org.geworkbench.engine.config.rules.PluginRule;
 import org.geworkbench.util.Debug;
 import org.geworkbench.util.SplashBitmap;
+import org.xml.sax.SAXException;
 
 import javax.swing.*;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -39,8 +44,20 @@ public class CaScriptEmulator {
     public static Digester uiLauncher;
 
     static {
+		SAXParserFactory factory = SAXParserFactory.newInstance();
+		SAXParser saxParser = null;
+		try {
+			saxParser = factory.newSAXParser();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
         try {
-            uiLauncher = new Digester(new org.apache.xerces.parsers.SAXParser());
+            uiLauncher = new Digester(saxParser);
         } catch (Exception e) {
             e.printStackTrace();
         }
