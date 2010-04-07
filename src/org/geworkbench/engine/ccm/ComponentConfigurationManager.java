@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
@@ -16,6 +15,10 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
 import java.util.Map.Entry;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.digester.Digester;
 import org.apache.commons.lang.StringUtils;
@@ -688,18 +691,28 @@ public class ComponentConfigurationManager {
 
 	private static Digester cwbDigester = null;
 	static {
-		cwbDigester = new Digester(new org.apache.xerces.parsers.SAXParser());
+		SAXParserFactory factory = SAXParserFactory.newInstance();
+		try {
+			SAXParser saxParser = factory.newSAXParser();
+			cwbDigester = new Digester(saxParser);
 
-		cwbDigester.setUseContextClassLoader(true);
+			cwbDigester.setUseContextClassLoader(true);
 
-		// Instantiates a plugin and adds it in the PluginResgistry
-		cwbDigester.addRule("component-descriptor/plugin", new PluginRule(
-				"org.geworkbench.engine.config.rules.PluginObject"));
+			// Instantiates a plugin and adds it in the PluginResgistry
+			cwbDigester.addRule("component-descriptor/plugin", new PluginRule(
+					"org.geworkbench.engine.config.rules.PluginObject"));
 
-		// Registers a visual plugin with the top-level application GUI.
-		cwbDigester.addCallMethod("component-descriptor/plugin/gui-area",
-				"addGUIComponent", 1);
-		cwbDigester.addCallParam("component-descriptor/plugin/gui-area", 0, "name");
+			// Registers a visual plugin with the top-level application GUI.
+			cwbDigester.addCallMethod("component-descriptor/plugin/gui-area",
+					"addGUIComponent", 1);
+			cwbDigester.addCallParam("component-descriptor/plugin/gui-area", 0, "name");
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
     
 }

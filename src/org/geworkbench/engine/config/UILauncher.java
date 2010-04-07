@@ -7,6 +7,9 @@ import java.io.InputStream;
 import javax.swing.JOptionPane;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.digester.Digester;
 import org.apache.commons.logging.Log;
@@ -15,8 +18,8 @@ import org.geworkbench.engine.ccm.ComponentConfigurationManager;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.config.rules.GeawConfigRule;
 import org.geworkbench.engine.config.rules.PluginRule;
-import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.util.SplashBitmap;
+import org.xml.sax.SAXException;
 
 import com.jgoodies.looks.plastic.PlasticLookAndFeel;
 import com.jgoodies.looks.plastic.theme.SkyBlue;
@@ -58,7 +61,21 @@ public class UILauncher {
      * Configure the rules for translating the application configuration file.
      */
     private static Digester createDigester() {
-        Digester digester = new Digester(new org.apache.xerces.parsers.SAXParser());
+		SAXParserFactory factory = SAXParserFactory.newInstance();
+		SAXParser saxParser;
+		try {
+			saxParser = factory.newSAXParser();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+
+        Digester digester = new Digester(saxParser);
 
         digester.setUseContextClassLoader(true);
         // Opening tag <geaw-config>
