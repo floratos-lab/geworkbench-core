@@ -357,7 +357,8 @@ public class WorkspaceHandler {
 			} catch (Exception e) {
 				// no-op here. user will see error from done();
 			} finally {
-				in.close();
+				if(in!=null)
+					in.close();
 			}
 
 			return null;
