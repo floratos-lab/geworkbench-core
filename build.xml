@@ -538,6 +538,7 @@
 				<exclude name="data" />
 				<exclude name="nbproject" />
 				<include name="data/public_data/**" />
+				<include name="data/jaspar_CORE/**" />
 				<include name="data/gene_ontology.1_2.obo"/>
 				<include name="loader.properties"/>
 			</fileset>
