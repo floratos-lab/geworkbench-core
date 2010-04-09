@@ -679,7 +679,7 @@ public class SequenceViewWidgetPanel extends JPanel {
             }
             double x0 = xStart;
             double dx = length;
-            int xa = xOff + (int) (x0 * scale) + 1;
+            int xa = xOff + (int) (x0 * scale);
             int xb = xa + (int) (dx * scale) - 1;
             g.setColor(color);
             int heightForRect = (int) (0.66 * yStep);
@@ -1577,9 +1577,9 @@ public class SequenceViewWidgetPanel extends JPanel {
                         patternsPerSequence.size() > 0) {
                     for (PatternLocations pl : patternsPerSequence) {
                         CSSeqRegistration reg = pl.getRegistration();
-                        if (reg != null && reg.x1 <= off && reg.x2 >= off) {
+                        if (reg != null && reg.x1 +1 <= off && reg.x2 >= off) {
                             int x1 = reg.x1 + 1;
-                            int x2 = reg.x2 + 1;
+                            int x2 = reg.x2;
                             if (pl.getPatternType().equals(
                                     PatternLocations.DEFAULTTYPE)) {
                                 tip = tip + " " + pl.getAscii() + "<" + x1 + "," + x2 + "> ";
