@@ -83,8 +83,6 @@ public class ComponentConfigurationManagerWindow {
 	private JPanel bottompanel;
 	
 	private JButton viewLicenseButton = new JButton("View License");
-	private JButton viewDocumentationButton = new JButton("View Documentation");
-	private JButton viewExternalSiteButton = new JButton("View External Site");
 	private JButton applyButton = new JButton("Apply");
 	private JButton resetButton = new JButton("Reset");
 	private JButton closeButton = new JButton("Close");
@@ -164,17 +162,6 @@ public class ComponentConfigurationManagerWindow {
 	    	}
 	     } );
 
-	     viewDocumentationButton.addActionListener(new ActionListener(){
-		    	public void actionPerformed(ActionEvent e) {
-					viewDocumentation_actionPerformed(e);
-		    	}
-		     } );
-
-	     viewExternalSiteButton.addActionListener(new ActionListener(){
-		    	public void actionPerformed(ActionEvent e) {
-					viewExternalSite_actionPerformed(e);
-		    	}
-		     } );
 	     
 		applyButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -411,12 +398,9 @@ public class ComponentConfigurationManagerWindow {
 
 				//======== bottompanel ========
 				{
-					bottompanel.setLayout(new FormLayout(   "4dlu,"            + 
+					bottompanel.setLayout(new FormLayout(   "20dlu,"            + 
 															"default,  4dlu, " + // view License
-															"default,  4dlu, " + // View documentation
-															"default, 75dlu, " + // View external site
-															"default,  4dlu, " + // Accept
-															"default,  4dlu, " + // Apply
+															"default,200dlu, " + // Apply
 															"default,  4dlu, " + // Reset
 															"default,  4dlu, " + // Cancel
 															"default "           // Close
@@ -425,26 +409,18 @@ public class ComponentConfigurationManagerWindow {
 					
 					viewLicenseButton.setText("View License");
 					bottompanel.add(viewLicenseButton, cc.xy(2, 1));
-					viewDocumentationButton.setText("View Documentation");
-					bottompanel.add(viewDocumentationButton, cc.xy(4, 1));
-					viewExternalSiteButton.setText("View External Site");
-					bottompanel.add(viewExternalSiteButton, cc.xy(6, 1));
-					
-//					//---- acceptButton ----
-//					acceptButton.setText("Accept");
-//					bottompanel.add(acceptButton, cc.xy(10, 1));
 
 					//---- applyButton ----
 					applyButton.setText("Apply");
-					bottompanel.add(applyButton, cc.xy(10, 1));
+					bottompanel.add(applyButton, cc.xy(6, 1));
 
 					//---- resetButton ----
 					resetButton.setText("Reset");
-					bottompanel.add(resetButton, cc.xy(12, 1));
+					bottompanel.add(resetButton, cc.xy(8, 1));
 
 					//---- closeButton ----
 					closeButton.setText("Close");
-					bottompanel.add(closeButton, cc.xy(14, 1));
+					bottompanel.add(closeButton, cc.xy(10, 1));
 					
 				} //======== bottompanel ========.
 				frameContentPane.add(bottompanel, BorderLayout.SOUTH);
