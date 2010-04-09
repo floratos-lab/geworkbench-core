@@ -85,13 +85,11 @@ public abstract class FilteringAnalysis extends AbstractAnalysis {
 			// Remove the marker
 			markers.remove(marker);
 		}
-		System.out.println(markers.size());
 		// Resize each microarray
 		for (DSMicroarray microarray : maSet) {
 			DSMarkerValue[] newValues = new DSMarkerValue[finalCount];
 			int index = 0;
 			for (DSGeneMarker marker: markers) {
-				System.out.println(index+" "+marker.getDescription()+" "+microarray.getMarkerValue(marker));
 				newValues[index] = microarray.getMarkerValue(marker);
 				index++;
 			}
