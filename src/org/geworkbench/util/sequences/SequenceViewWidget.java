@@ -655,7 +655,7 @@ public class SequenceViewWidget extends JPanel {
 											(int) x1,
 											(int) (GAP / 2 + 2 * yscale));
 									g.drawString(new Integer(dx
-											+ seqReg.length() + 1).toString(),
+											+ seqReg.length()).toString(),
 											(int) (x1 + x2 - scale),
 											(int) (GAP / 2 + 2 * yscale));
 									if (pl.getPatternType().equals(
