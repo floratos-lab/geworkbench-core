@@ -539,22 +539,20 @@ public class LoadData extends JDialog {
 	 * @param e
 	 *            ActionEvent
 	 */
-	public void deleteButton_actionPerformed(ActionEvent e) {
+	private void deleteButton_actionPerformed(ActionEvent e) {
 		String deleteResourceStr = (String) jComboBox1.getSelectedItem();
 		if (deleteResourceStr != null) {
 			int choice = JOptionPane.showConfirmDialog(null,
 					"Do you really want to remove the profile: "
 							+ deleteResourceStr + "?", "Warning",
 					JOptionPane.OK_CANCEL_OPTION);
-			if (choice != 2) {
+			if (choice == JOptionPane.OK_OPTION) {
 				resourceModel.removeElement(deleteResourceStr);
 				remoteResourceDialog.removeResourceByName(deleteResourceStr);
 				repaint();
+				updateExistedResourcesGUI();
 			}
-
 		}
-		updateExistedResourcesGUI();
-
 	}
 
 	/**
