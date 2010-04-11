@@ -61,7 +61,9 @@ public class UILauncher {
      * Configure the rules for translating the application configuration file.
      */
     private static Digester createDigester() {
-		SAXParserFactory factory = SAXParserFactory.newInstance();
+    	System.out.println(System.getProperty("javax.xml.parsers.SAXParserFactory"));
+    	System.out.println("DOM"+System.getProperty("javax.xml.parsers.DocumentBuilderFactory"));
+    	SAXParserFactory factory = SAXParserFactory.newInstance();
 		SAXParser saxParser;
 		try {
 			saxParser = factory.newSAXParser();
@@ -113,6 +115,12 @@ public class UILauncher {
      * <bold>application.properties</bold>
      */
     private static void initProperties() {
+    	try {
+			Class.forName("com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         InputStream reader = null;
         try {
             reader = Class.forName(UILauncher.class.getName()).getResourceAsStream("/application.properties");
@@ -142,6 +150,7 @@ public class UILauncher {
      * @param args
      */
     public static void main(String[] args) {
+    	System.out.println(System.getProperty("javax.xml.parsers.SAXParserFactory"));
         String configFileArg = null;
         String lookAndFeelArg = null;
 

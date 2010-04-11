@@ -74,7 +74,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/caArrayMageom/commons-dbcp.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/caArrayMageom/commons-pool.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/caArrayMageom/db-ojb-1.0.rc7.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/caArrayMageom/j2ee.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/caArrayMageom/jaxen-full.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/Simulation_libs/jahmm-0.2.6.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/Simulation_libs/JClass.jar"/>
