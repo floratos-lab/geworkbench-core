@@ -36,7 +36,7 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 	private String goInfoStr;
 	private String geneType;
 	private InteractionDetail[] interactionDetails;
-	private static double threshold;
+	private double threshold;
 	private static double smallestIncrement;
 	private static Double defaultSmallestIncrement = 0.01;
 	private static int binNumber;
@@ -103,6 +103,23 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 		return arrayList;
 	}
 
+	public ArrayList<InteractionDetail> getSelectedInteractions(String interactionType) {
+		ArrayList<InteractionDetail> arrayList = new ArrayList<InteractionDetail>();
+		if (interactionDetails != null && interactionDetails.length > 0) {
+			for (int i = 0; i < interactionDetails.length; i++) {
+				InteractionDetail interactionDetail = interactionDetails[i];
+				if (interactionDetail != null
+						&& interactionDetail.getConfidence() >= threshold) {
+					if (interactionType.equals(interactionDetail.getInteractionType())) {
+						arrayList.add(interactionDetail);
+					}
+
+				}
+			}
+		}
+		return arrayList;
+	}
+	
 	public static double getSmallestIncrement() {
 		if (smallestIncrement <= 0 )
 			smallestIncrement = defaultSmallestIncrement;
@@ -176,7 +193,7 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 		return this.interactionNumMap;
 	}
 
-	public static double getThreshold() {
+	public double getThreshold() {
 		return threshold;
 	}
 

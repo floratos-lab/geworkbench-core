@@ -23,9 +23,9 @@ public class InteractionDetail implements Serializable{
     boolean isGene1EntrezId = true;
     boolean isGene2EntrezId = true;
     private double confidence;
-    private String InteraactionType;
+    private String interactionType;
    
-    public InteractionDetail(String dSGeneMarker1, String dSGeneMarker2, String dSGeneName1, String dSGeneName2, boolean isGene1EntrezId, boolean isGene2EntrezId, double confidence, String interaactionType) {
+    public InteractionDetail(String dSGeneMarker1, String dSGeneMarker2, String dSGeneName1, String dSGeneName2, boolean isGene1EntrezId, boolean isGene2EntrezId, double confidence, String interactionType) {
         this.dSGeneMarker1 = dSGeneMarker1;
         this.dSGeneMarker2 = dSGeneMarker2;
         this.dSGeneName1 = dSGeneName1;
@@ -33,7 +33,7 @@ public class InteractionDetail implements Serializable{
         this.isGene1EntrezId = isGene1EntrezId;
         this.isGene2EntrezId = isGene2EntrezId;
         this.confidence = confidence;
-        InteraactionType = interaactionType;
+        this.interactionType = interactionType;
     }
 
     
@@ -49,6 +49,17 @@ public class InteractionDetail implements Serializable{
         return dSGeneMarker2;
     }
 
+    public Integer getInteractionGeneId(Integer geneId)
+    {
+    	Integer interactionGeneId = null;
+        if (dSGeneMarker1 != null && isGene1EntrezId() && !dSGeneMarker1.equals(geneId.toString()) )    	
+        	interactionGeneId = new Integer(dSGeneMarker1);
+        else if (dSGeneMarker2 != null && isGene2EntrezId() && !dSGeneMarker2.equals(geneId.toString()) )    	
+        	interactionGeneId = new Integer(dSGeneMarker2);
+       
+        return interactionGeneId;
+    }
+    
     public void setdSGeneMarker2(String dSGeneMarker2) {
         this.dSGeneMarker2 = dSGeneMarker2;
     }
@@ -67,7 +78,7 @@ public class InteractionDetail implements Serializable{
 
     public void setdSGeneName2(String dSGeneName2) {
         this.dSGeneName2 = dSGeneName2;
-    }
+    }   
     
     public boolean isGene1EntrezId() {
         return isGene1EntrezId;
@@ -87,11 +98,11 @@ public class InteractionDetail implements Serializable{
     }
 
     public String getInteractionType() {
-        return InteraactionType;
+        return this.interactionType;
     }
 
-    public void setInteraactionType(String interaactionType) {
-        InteraactionType = interaactionType;
+    public void setInteraactionType(String interactionType) {
+    	this.interactionType = interactionType;
     }
 
     public boolean equals(Object obj) {
