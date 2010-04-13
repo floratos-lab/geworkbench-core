@@ -147,8 +147,8 @@ public class SampleFileParser {
 				DSMicroarraySet.affyTxtType);
 		maSet.add(array);
 		//This buffered reader is used to put insert marker values for one sample at a time from the Series file
-		Boolean absCallFound = false;
-		Boolean pValueFound = false;
+		boolean absCallFound = false;
+		boolean pValueFound = false;
 		BufferedReader out = null;
 		try {
 			int j = 0;
