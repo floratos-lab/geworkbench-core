@@ -6,6 +6,9 @@
       
     <plugin id="SoftFileFilter" name="soft. Format"
 		class="org.geworkbench.components.parsers.SOFTFileFormat" /> 
+		
+	<plugin id="MageTabFileFilter" name="MAGE-TAB. Format"
+		class="org.geworkbench.components.parsers.MageTabFileFormat" /> 
 
 	<plugin id="expressionFileFilter" name="Exp. Format"
 		class="org.geworkbench.components.parsers.ExpressionFileFormat" />
