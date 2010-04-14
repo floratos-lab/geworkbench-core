@@ -122,7 +122,7 @@ public class LoadData extends JDialog {
 	private FileFormat[] supportedInputFormats = null;
 	BorderLayout borderLayout7 = new BorderLayout();
 	JPanel jPanel7 = new JPanel();
-	JRadioButton jRadioButton7 = new JRadioButton();
+
 	JRadioButton remoteRadioButton = new JRadioButton();
 	JPanel jPanel10 = new JPanel();
 
@@ -243,7 +243,7 @@ public class LoadData extends JDialog {
 		experimentInfoArea.setWrapStyleWord(true);
 		gridLayout2.setColumns(1);
 		this.setResizable(true);
-		jRadioButton7.setText("caARRAY");
+
 		lowerPanel = new JPanel();
 		lowerPanel.setLayout(new BoxLayout(lowerPanel, BoxLayout.Y_AXIS));
 		remoteResourceDialog = new RemoteResourceDialog();
@@ -356,7 +356,6 @@ public class LoadData extends JDialog {
 		jPanel11.add(jRadioButton3, null);
 		buttonGroup1.add(localFileRadioButton);
 		buttonGroup1.add(jRadioButton2);
-		buttonGroup1.add(jRadioButton7);
 		buttonGroup1.add(remoteRadioButton);
 		buttonGroup2.add(jRadioButton5);
 		buttonGroup2.add(jRadioButton6);
@@ -374,11 +373,7 @@ public class LoadData extends JDialog {
 				remoteButtonSelection_actionPerformed(e);
 			}
 		});
-		jRadioButton7.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				mageButtonSelection_actionPerformed(e);
-			}
-		});
+
 		remoteRadioButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				addRemotePanel_actionPerformed(e);
@@ -687,7 +682,7 @@ public class LoadData extends JDialog {
 
 	}
 
-	private void mageButtonSelection_actionPerformed(ActionEvent e) {
+	private void openRemoteResourceButton_actionPerformed(ActionEvent e) {
 		String currentResourceName = resourceModel.getSelectedItem().toString()
 				.trim();
 		currentDetailedResourceName = currentResourceName;
@@ -813,10 +808,6 @@ public class LoadData extends JDialog {
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
-	}
-
-	public void openRemoteResourceButton_actionPerformed(ActionEvent e) {
-		mageButtonSelection_actionPerformed(e);
 	}
 
 	public boolean isMerge() {
