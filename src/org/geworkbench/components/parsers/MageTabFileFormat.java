@@ -7,12 +7,13 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InterruptedIOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -36,7 +37,8 @@ public class MageTabFileFormat extends DataSetFileFormat {
 	static final char ABSENT    = 'A';
     static final char PRESENT   = 'P';
     static final char MARGINAL  = 'M';
-    static final char UNDEFINED = '\0';  
+    static final char UNDEFINED = '\0';
+    static int valueNumber = 0;
     char detectionStatus = UNDEFINED;
 
 	ExpressionResource resource = new ExpressionResource();
@@ -113,9 +115,9 @@ public class MageTabFileFormat extends DataSetFileFormat {
 		List<String> markers = new ArrayList<String>();
 		List<String> arrayNames = new ArrayList<String>();
 		int n = 0;
-		int valueNumber = 0;
 		int detection = 0;
 		int call = 0;
+		final List<String> valueTokens = new ArrayList<String>();
 		boolean pValueFound = false;
 		boolean absCallFound = false;
 		try {
@@ -157,21 +159,11 @@ public class MageTabFileFormat extends DataSetFileFormat {
 							if(n != 0){
 								for(int p=0; p<n+1; p++){
 									String[] valueLabels = null;
-									valueLabels = tokens[p+1].split(":");
+									valueLabels = tokens[p+1].split(":"); 
+									valueTokens.add(valueLabels[1]);
+								    
 									/*
-									 * This checks for the expression value column in the data file
-									 * To my knowledge MAGE-TAB has four types of column headers for expression value
-									 * i.e., 'VALUE', 'CHPSignal', 'AFFYMETRIX_VALUE', 'Quantification'
-									 * In future if anyone finds new column header for expression value add it to the loop.
-									 * 
-									 * NOTE: In future geWorkbench should allow users to select the expression value and do lazy loading. 
-									 * 
-									 */
-									if(valueLabels[1].contentEquals("VALUE") || valueLabels[1].contentEquals("CHPSignal") || valueLabels[1].contentEquals("AFFYMETRIX_VALUE")
-											|| valueLabels[1].contentEquals("Quantification")){
-										valueNumber = p+1;
-									}
-									/*
+									 * These are active only for Affymetrix MAGE-TAB files since they are only used for Affy Detection Filter
 									 * This checks for the P value column in the data file
 									 * To my knowledge MAGE-TAB has three types of column headers for detection P value 
 									 * i.e., 'CHPDetectinoPvalue', 'AFFYMETRIX_Detection P-value', 'DETECTION P-VALUE'
@@ -193,9 +185,9 @@ public class MageTabFileFormat extends DataSetFileFormat {
 									 */
 									if(valueLabels[1].contentEquals("ABS_CALL") || valueLabels[1].contentEquals("CHPDetection")){
 										call = p+1;
-										System.out.println(call);
 										absCallFound = true;
 									}
+									
 								}
 							}
 						}
@@ -209,6 +201,31 @@ public class MageTabFileFormat extends DataSetFileFormat {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}	
+		
+		
+		
+		if(n != 0){
+			try {
+				SwingUtilities.invokeAndWait(new Runnable() {
+					public void run() {	
+						String initialSelection = "";
+						Object selection = JOptionPane.showInputDialog(null, "There are Multiple Columns in the data file." + "\n" + "Please select the expression value column from the list",
+								"Select signal column", JOptionPane.QUESTION_MESSAGE, null, valueTokens.toArray(), initialSelection);
+						for(int t=0; t<valueTokens.size(); t++){
+							if(valueTokens.get(t).contentEquals((String)selection)){
+								valueNumber = t+1;
+							}
+						}
+					}
+				});
+			} catch (InterruptedException e1) {
+				System.out.println("Cancelled Loading datafile");
+			} catch (InvocationTargetException e1) {
+				System.out.println("Closed Select Signal dialog box");
+			}
+		}
+
+		
 		//Getting the markers size to include in a loop
 		possibleMarkers = markers.size();
 		for (int i = 0; i < arrayNames.size(); i++) {
@@ -274,11 +291,20 @@ public class MageTabFileFormat extends DataSetFileFormat {
 												v);
 										maSet.get(counter).setMarkerValue(j, markerValue);
 										if (v.isNaN()) {
-											markerValue.setMissing(true);
+											SwingUtilities.invokeLater(new Runnable() {
+												public void run() {	
+												}
+											});
+											JOptionPane.showMessageDialog(null,
+													"The selected column has Strings rather than numbers" ,
+													"Error",
+													JOptionPane.INFORMATION_MESSAGE);
+											return null;	
 										} else {
 											markerValue.setPresent();
 										}
 										/*
+										 * Only used for Affymetrix MAGE-TAB files
 										 * This loop if only activated if the data file with multiple coloumns for each array either has
 										 * detection value or abs call
 										 * else no Affy detection value is set
