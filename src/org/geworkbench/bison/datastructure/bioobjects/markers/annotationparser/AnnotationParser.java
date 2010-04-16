@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -25,6 +26,7 @@ import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
@@ -53,7 +55,7 @@ import com.jgoodies.forms.builder.ButtonBarBuilder;
  * 
  * @author Xuegong Wang
  * @author manjunath at genomecenter dot columbia dot edu
- * @version $Id: AnnotationParser.java,v 1.42 2009/12/03 21:44:17 jiz Exp $
+ * @version $Id$
  */
 
 public class AnnotationParser implements Serializable {
@@ -385,32 +387,62 @@ public class AnnotationParser implements Serializable {
 	}
 	
 
-	public static String matchChipType(DSDataSet<? extends DSBioObject> dataset, String id,
+	public static String matchChipType(final DSDataSet<? extends DSBioObject> dataset, String id,
 			boolean askIfNotFound) {
 		PreferencesManager preferencesManager = PreferencesManager
 				.getPreferencesManager();
 		File prefDir = preferencesManager.getPrefDir();
-		File annotFile = new File(prefDir, "annotations.prefs");
+		final File annotFile = new File(prefDir, "annotations.prefs");
 		if (!annotFile.exists()) {
-			boolean dontShowAgain = showAnnotationsMessage();
-			if (dontShowAgain) {
-				try {
-					annotFile.createNewFile();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+			try {
+				SwingUtilities.invokeAndWait(new Runnable() {
+
+					public void run() {
+						boolean dontShowAgain = showAnnotationsMessage();
+						if (dontShowAgain) {
+							try {
+								annotFile.createNewFile();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+					
+				});
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (InvocationTargetException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
 		}
+
 		String chip = "Other";
 		currentDataSet = dataset;
 
-		File userFile = selectUserDefinedAnnotation(dataset);
+		try {
+			SwingUtilities.invokeAndWait(new Runnable() {
+				public void run() {
+					userFile = selectUserDefinedAnnotation(dataset);
+				}
+			});
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		if (userFile != null) {
 			chip = userFile.getName();
 			setChipType(dataset, chip, userFile);
 		}
 		return chip;
 	}
+	
+	private volatile static File userFile = null;
 
 	public static boolean showAnnotationsMessage() {
 		String message = "To process Affymetrix files many geWorkbench components require information from the associated chip annotation files. Annotation files can be downloaded from the Affymetrix web site, <a href='http://www.affymetrix.com/support/technical/byproduct.affx?cat=arrays' target='_blank'>http://www.affymetrix.com/support/technical/byproduct.affx?cat=arrays</a> (due to the Affymetrix license we are precluded from shipping these files with geWorkbench). Place downloaded files to a directory of your choice; when prompted by geWorkbench point to the appropriate annotation file to be associated with the microarray data you are about to load into the application. Your data will load even if you do not associate them with an annotation file; in that case, some geWorkbench components will not be fully functional.<br>\n"
@@ -491,7 +523,7 @@ public class AnnotationParser implements Serializable {
 		}
 	}
 
-	public static File selectUserDefinedAnnotation(DSDataSet<? extends DSBioObject> dataset) {
+	private static File selectUserDefinedAnnotation(DSDataSet<? extends DSBioObject> dataset) {
 		PropertiesManager properties = PropertiesManager.getInstance();
 		String annotationDir = System.getProperty("user.dir"); ;
 		try {
