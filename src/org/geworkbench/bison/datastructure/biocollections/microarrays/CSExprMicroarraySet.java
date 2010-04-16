@@ -134,7 +134,6 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
 					}
 				}
             }
-            rm.reader.close();
         } catch (InterruptedIOException iioe) {
             iioe.printStackTrace();
             loadingCancelled = true;
@@ -143,6 +142,12 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
             ioe.printStackTrace();
             return;
         } finally {
+            try {
+				rm.reader.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         }
         try {
             rm = createProgressReader("Loading Data from " + file.getName(), file);
