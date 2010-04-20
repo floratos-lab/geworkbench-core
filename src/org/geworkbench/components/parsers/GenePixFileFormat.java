@@ -26,7 +26,7 @@ import java.util.Vector;
  * 
  * @author manjunath
  * @author zji
- * @version $Id: GenePixFileFormat.java,v 1.5 2009-10-07 15:38:48 my2248 Exp $
+ * @version $Id$
  */
 public class GenePixFileFormat extends DataSetFileFormat {
 	/**
@@ -234,7 +234,7 @@ public class GenePixFileFormat extends DataSetFileFormat {
 			boolean returnVal = false;
 			for (int i = 0; i < genepixExtensions.length; ++i)
 				if (f.isDirectory()
-						|| f.getName().endsWith(genepixExtensions[i])) {
+						|| f.getName().toLowerCase().endsWith(genepixExtensions[i])) {
 					return true;
 				}
 			return returnVal;

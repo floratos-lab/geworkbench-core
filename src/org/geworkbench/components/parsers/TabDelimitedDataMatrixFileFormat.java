@@ -44,7 +44,7 @@ public class TabDelimitedDataMatrixFileFormat extends DataSetFileFormat {
 	private static final String commentSign2 = "!";
 	private static final String columnSeperator = "\t";
 	private static final String lineSeperator = "\n";
-	private static final String[] maExtensions = { "txt", "tsv", "TSV" };
+	private static final String[] maExtensions = { "txt", "tsv" };
 	private static final String duplicateLabelModificator = "_2";
 
 	ExpressionResource resource = new ExpressionResource();
@@ -485,7 +485,7 @@ public class TabDelimitedDataMatrixFileFormat extends DataSetFileFormat {
 		public boolean accept(File f) {
 			boolean returnVal = false;
 			for (int i = 0; i < maExtensions.length; ++i)
-				if (f.isDirectory() || f.getName().endsWith(maExtensions[i])) {
+				if (f.isDirectory() || f.getName().toLowerCase().endsWith(maExtensions[i])) {
 					return true;
 				}
 			return returnVal;

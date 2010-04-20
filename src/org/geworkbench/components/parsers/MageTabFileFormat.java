@@ -32,7 +32,7 @@ import org.geworkbench.components.parsers.microarray.DataSetFileFormat;
 public class MageTabFileFormat extends DataSetFileFormat {
 
 	static Log log = LogFactory.getLog(MageTabFileFormat.class);
-	private static final String[] maExtensions = { "txt", "TXT"};
+	private static final String[] maExtensions = { "txt" };
 	
 	static final char ABSENT    = 'A';
     static final char PRESENT   = 'P';
@@ -465,7 +465,7 @@ public class MageTabFileFormat extends DataSetFileFormat {
 		public boolean accept(File f) {
 			boolean returnVal = false;
 			for (int i = 0; i < maExtensions.length; ++i)
-				if (f.isDirectory() || f.getName().endsWith(maExtensions[i])) {
+				if (f.isDirectory() || f.getName().toLowerCase().endsWith(maExtensions[i])) {
 					return true;
 				}
 			return returnVal;

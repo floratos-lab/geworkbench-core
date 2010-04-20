@@ -48,7 +48,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 	private static final String commentSign1 = "#";
 	private static final String commentSign2 = "!";
 	private static final String commentSign3 = "^";
-	private static final String[] maExtensions = { "soft", "txt", "TXT"};
+	private static final String[] maExtensions = { "soft", "txt" };
 
 	ExpressionResource resource = new ExpressionResource();
 		
@@ -486,7 +486,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 		public boolean accept(File f) {
 			boolean returnVal = false;
 			for (int i = 0; i < maExtensions.length; ++i)
-				if (f.isDirectory() || f.getName().endsWith(maExtensions[i])) {
+				if (f.isDirectory() || f.getName().toLowerCase().endsWith(maExtensions[i])) {
 					return true;
 				}
 			return returnVal;

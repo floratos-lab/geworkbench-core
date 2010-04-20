@@ -97,7 +97,7 @@ public class PDBFileFormat extends DataSetFileFormat {
         public boolean accept(File f) {
             boolean returnVal = false;
             for (int i = 0; i < maExtensions.length; ++i)
-                if (f.isDirectory() || f.getName().endsWith(maExtensions[i])) {
+                if (f.isDirectory() || f.getName().toLowerCase().endsWith(maExtensions[i])) {
                     return true;
                 }
             return returnVal;

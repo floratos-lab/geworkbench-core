@@ -19,7 +19,7 @@ import java.io.IOException;
  */
 public class CELFileFormat extends DataSetFileFormat {
 
-    String[] maExtensions = {"cel", "CEL"};
+    String[] maExtensions = {"cel"};
     ExpressionResource resource = new ExpressionResource();
     CELFileFormat.CELFilter maFilter = null;
 
@@ -98,7 +98,7 @@ public class CELFileFormat extends DataSetFileFormat {
         public boolean accept(File f) {
             boolean returnVal = false;
             for (int i = 0; i < maExtensions.length; ++i)
-                if (f.isDirectory() || f.getName().endsWith(maExtensions[i])) {
+                if (f.isDirectory() || f.getName().toLowerCase().endsWith(maExtensions[i])) {
                     return true;
                 }
             return returnVal;

@@ -28,7 +28,7 @@ import java.util.List;
 
 public class SequenceFileFormat extends DataSetFileFormat {
 
-  String[]         fastaExtensions = {"FA", "fasta", "fa", "txt"};
+  String[]         fastaExtensions = {"fasta", "fa", "txt"};
   SequenceResource resource        = new SequenceResource();
   FASTAFilter      fastaFilter     = null;
 
@@ -155,7 +155,7 @@ public class SequenceFileFormat extends DataSetFileFormat {
     public boolean accept(File f) {
       boolean returnVal = false;
       for (int i = 0; i < fastaExtensions.length; ++i)
-        if (f.isDirectory() || f.getName().endsWith(fastaExtensions[i])) {
+        if (f.isDirectory() || f.getName().toLowerCase().endsWith(fastaExtensions[i])) {
           return true;
         }
       return returnVal;

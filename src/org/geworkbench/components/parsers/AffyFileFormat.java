@@ -55,7 +55,7 @@ public class AffyFileFormat extends DataSetFileFormat {
     /**
      * The file extensions expected for Affy files.
      */	
-    String[] affyExtensions = {"affy", "txt", "TXT"};
+    String[] affyExtensions = {"affy", "txt"};
     private Log log = LogFactory.getLog(this.getClass());
     AffyResource resource = new AffyResource();
     DSMicroarraySet microarraySet = null;
@@ -329,7 +329,7 @@ public class AffyFileFormat extends DataSetFileFormat {
         public boolean accept(File f) {
             boolean returnVal = false;
             for (int i = 0; i < affyExtensions.length; ++i)
-                if (f.isDirectory() || f.getName().endsWith(affyExtensions[i])) {
+                if (f.isDirectory() || f.getName().toLowerCase().endsWith(affyExtensions[i])) {
                     return true;
                 }
             return returnVal;
