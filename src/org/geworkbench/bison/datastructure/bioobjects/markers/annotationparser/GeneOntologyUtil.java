@@ -106,11 +106,11 @@ public class GeneOntologyUtil {
         return null;
 	}
 	
-    public TreeMap<String, List<GOTerm>> getAllGoTerms(DSGeneMarker dsGeneMarker, String catagory) {
+    public TreeMap<String, Set<GOTerm>> getAllGoTerms(DSGeneMarker dsGeneMarker, String catagory) {
         String geneId = dsGeneMarker.getLabel();
         String[] goTerms = AnnotationParser.getInfo(geneId, catagory);
 
-        TreeMap<String, List<GOTerm>> treeMap = new TreeMap<String, List<GOTerm>>();
+        TreeMap<String, Set<GOTerm>> treeMap = new TreeMap<String, Set<GOTerm>>();
         if (goTerms != null) {
 
             for (String goTerm : goTerms) {
@@ -119,7 +119,7 @@ public class GeneOntologyUtil {
                     if (!goIdStr.equalsIgnoreCase("---")) {
                         Integer goId = new Integer(goIdStr);
                         if (goId != null) {
-                            treeMap.put(goTerm, tree.getAncestorsTreeNodes(goId));
+                            treeMap.put(goTerm, tree.getAncestors(goId));
                         }
                     }
                 } catch (NumberFormatException ne) {

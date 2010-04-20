@@ -317,27 +317,6 @@ public class GeneOntologyTree {
 		return set;
 	}
 
-	/**
-	 * Gets all the ancestor terms for the term with the given ID. By
-	 * definition, a term is an ancestor of itself.
-	 */
-	public List<GOTerm> getAncestorsTreeNodes(int id) {
-		List<GOTerm> set = new ArrayList<GOTerm>();
-		getAncestorsTreeNodesHelp(getTerm(id), set);
-		return set;
-	}
-
-	private void getAncestorsTreeNodesHelp(GOTerm term, List<GOTerm> set) {
-
-		if (term != null) {
-			set.add(term);
-			GOTerm[] parents = term.getParents();
-			for (GOTerm parent : parents) {
-				getAncestorsTreeNodesHelp(parent, set);
-			}
-		}
-	}
-
 	private void getAncestorsHelper(GOTerm term, Set<GOTerm> set) {
 		if (term != null) {
 			set.add(term);
