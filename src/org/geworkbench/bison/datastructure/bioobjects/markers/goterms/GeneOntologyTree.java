@@ -18,19 +18,16 @@ import org.apache.commons.logging.LogFactory;
  * 
  * @author John Watkinson
  * @author Xiaoqing Zhang
- * @version $Id: GeneOntologyTree.java,v 1.9 2009-06-15 16:37:43 keshav Exp $
+ * @version $Id$
  */
 public class GeneOntologyTree {
 	
 	private Log log = LogFactory.getLog(this.getClass());
 	private static final String DEFAULT_OBO_FILE = "data/gene_ontology.1_2.obo";
 	
-	private static GeneOntologyTree instance;
+	private static final GeneOntologyTree instance = new GeneOntologyTree(DEFAULT_OBO_FILE);
 
 	public static GeneOntologyTree getInstance() {
-		if (instance == null) {
-			instance = new GeneOntologyTree(DEFAULT_OBO_FILE);
-		}
 		return instance;
 	}
 
@@ -133,8 +130,6 @@ public class GeneOntologyTree {
 	private static final String KEY_RELATIONSHIP = "relationship";
 	private static final String KEY_NAMESPACE = "namespace";
 
-	private static final String RELATIONSHIP_PART_OF = "part_of";
-
 	private ListOrderedMap<String, GOTerm> roots;
 	private HashMap<Integer, GOTerm> terms;
 
@@ -192,7 +187,6 @@ public class GeneOntologyTree {
 						int id = parseID(value);
 						parents.add(id);
 					} else if (KEY_RELATIONSHIP.equals(key)) {
-						int startID = -1; // TODO
 						int cutoff = value.indexOf('!');
 						if (cutoff != -1) {
 							value = value.substring(0, cutoff).trim();
