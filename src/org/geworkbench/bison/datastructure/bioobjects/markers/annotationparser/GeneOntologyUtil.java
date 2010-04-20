@@ -16,24 +16,8 @@ public class GeneOntologyUtil {
 	private final static int TF_GOTERM_ID = 3700;
 	private final static int PHOSPATASE_GOTERM_ID = 4721;
 	
-	private static GeneOntologyUtil geneOntologyUtil = new GeneOntologyUtil();
-	private static GeneOntologyTree tree;
-	
-	static {
-		try {
-			tree = GeneOntologyTree.getInstance();
-
-		} catch (Exception x) {
-			x.printStackTrace();
-
-		}
-	}
-
-	private GeneOntologyUtil() {
-
-	}
-
-	public String checkMarkerFunctions(DSGeneMarker dsGeneMarker) {
+	public static String checkMarkerFunctions(DSGeneMarker dsGeneMarker) {
+		GeneOntologyTree tree = GeneOntologyTree.getInstance();
 		String geneId = dsGeneMarker.getLabel();
 		String[] goTerms = AnnotationParser.getInfo(geneId,
 				AnnotationParser.GENE_ONTOLOGY_MOLECULAR_FUNCTION);
@@ -68,13 +52,4 @@ public class GeneOntologyUtil {
 		// all other cases
 		return "";
 	}
-
-	public static GeneOntologyUtil getOntologyUtil() {
-		if (geneOntologyUtil == null) {
-			geneOntologyUtil = new GeneOntologyUtil();
-		}
-		return geneOntologyUtil;
-
-	}
-
 }

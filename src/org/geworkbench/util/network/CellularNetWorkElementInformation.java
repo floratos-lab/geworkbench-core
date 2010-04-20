@@ -65,7 +65,7 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 				goInfoStr += goTerm.getName() + "; ";
 			}
 		}
-		geneType = GeneOntologyUtil.getOntologyUtil().checkMarkerFunctions(
+		geneType = GeneOntologyUtil.checkMarkerFunctions(
 				dSGeneMarker);
 
 		reset();
