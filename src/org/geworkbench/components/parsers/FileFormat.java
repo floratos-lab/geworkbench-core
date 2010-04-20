@@ -42,7 +42,12 @@ public abstract class FileFormat {
      * @return The format name.
      */
     public String getFormatName() {
-        return formatName;
+    	StringBuffer sb = new StringBuffer(formatName).append(" (");
+    	for(String ext: getFileExtensions()) {
+    		sb.append("*.").append(ext).append(", ");
+    	}
+    	int last = sb.length()-1;
+        return sb.replace(last-1, last, ")").toString();
     }
 
     /**

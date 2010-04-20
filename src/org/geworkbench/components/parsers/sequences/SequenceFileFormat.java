@@ -149,7 +149,7 @@ public class SequenceFileFormat extends DataSetFileFormat {
   public class FASTAFilter extends FileFilter {
 
     public String getDescription() {
-      return "FASTA Files";
+      return getFormatName();
     }
 
     public boolean accept(File f) {

@@ -91,7 +91,7 @@ public class PDBFileFormat extends DataSetFileFormat {
     class AffyFilter extends FileFilter {
 
         public String getDescription() {
-            return "PDB File Format";
+            return getFormatName();
         }
 
         public boolean accept(File f) {
