@@ -1,16 +1,17 @@
 package org.geworkbench.util.network;
 
-import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
-import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
-import org.geworkbench.bison.datastructure.bioobjects.markers.goterms.GOTerm;
-import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.GeneOntologyUtil;
-
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.List;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeMap;
+
+import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
+import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
+import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.GeneOntologyUtil;
+import org.geworkbench.bison.datastructure.bioobjects.markers.goterms.GOTerm;
+import org.geworkbench.bison.datastructure.bioobjects.markers.goterms.GeneOntologyTree;
 
 /**
  * Created by IntelliJ IDEA.
@@ -57,8 +58,7 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 		smallestIncrement = defaultSmallestIncrement;
 		isDirty = true;
 		goInfoStr = "";
-		Set<GOTerm> set = GeneOntologyUtil.getOntologyUtil().getAllGOTerms(
-				dSGeneMarker);
+		Set<GOTerm> set = getAllGOTerms(dSGeneMarker);
 
 		if (set != null && set.size() > 0) {
 			for (GOTerm goTerm : set) {
@@ -71,6 +71,52 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 		reset();
 
 	}
+	
+	private static Set<GOTerm> getAllGOTerms(DSGeneMarker dsGeneMarker) {
+		GeneOntologyTree tree = GeneOntologyTree.getInstance();
+        String geneId = dsGeneMarker.getLabel();
+        String[] goTerms = AnnotationParser.getInfo(geneId, AnnotationParser.GOTERM);
+        if (goTerms != null) {
+            Set<GOTerm> set = new HashSet<GOTerm>();
+            for (String goTerm : goTerms) {
+                String goIdStr = goTerm.split("/")[0].trim();
+                if (!goIdStr.equalsIgnoreCase("---")) {
+                    int goId = new Integer(goIdStr);
+                    if(tree.getTerm(goId)!=null)
+                    set.add(tree.getTerm(goId));
+                }
+            }
+            return set;
+        }
+
+        return null;
+	}
+	
+    public TreeMap<String, Set<GOTerm>> getAllAncestorGoTerms(String catagory) {
+		GeneOntologyTree tree = GeneOntologyTree.getInstance();
+        String geneId = dSGeneMarker.getLabel();
+        String[] goTerms = AnnotationParser.getInfo(geneId, catagory);
+
+        TreeMap<String, Set<GOTerm>> treeMap = new TreeMap<String, Set<GOTerm>>();
+        if (goTerms != null) {
+
+            for (String goTerm : goTerms) {
+                String goIdStr = goTerm.split("/")[0].trim();
+                try {
+                    if (!goIdStr.equalsIgnoreCase("---")) {
+                        Integer goId = new Integer(goIdStr);
+                        if (goId != null) {
+                            treeMap.put(goTerm, tree.getAncestors(goId));
+                        }
+                    }
+                } catch (NumberFormatException ne) {
+                    ne.printStackTrace();
+                }
+
+            }
+        }
+        return treeMap;
+    }
 
 	/**
 	 * Remove all previous retrieved information.
