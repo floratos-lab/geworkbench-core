@@ -400,6 +400,8 @@ public class GoAnalysisResult extends CSAncillaryDataSet<CSMicroarray> {
 
 	// used by GoAnalysis to build up the result object
 	public void addResultRow(int termId, String termName, String namespace, double p, double adjustedP, int popCount, int studyCount) {
+		if(termId==0)return;
+		
 		ResultRow row = new ResultRow(termName, namespace, p, adjustedP, popCount, studyCount);
 		result.put(termId, row);
 	}
