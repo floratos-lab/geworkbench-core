@@ -23,6 +23,8 @@ import java.util.TreeSet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.geworkbench.bison.datastructure.bioobjects.markers.goterms.GOTerm;
+import org.geworkbench.bison.datastructure.bioobjects.markers.goterms.GeneOntologyTree;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
 
 /**
@@ -131,7 +133,20 @@ public class GoAnalysisResult extends CSAncillaryDataSet<CSMicroarray> {
 	 * @return
 	 */
 	static public List<Integer> getOntologyChildren(int goTermId) {
-		return ontologyChild.get(goTermId);
+		List<Integer> list = new ArrayList<Integer>();
+		
+		if(goTermId==0) {
+			for(Integer id: namespaceIds) {
+				list.add(id);
+			}
+			return list;
+		}
+
+		GeneOntologyTree geneOntologyTree = GeneOntologyTree.getInstance();
+		for(GOTerm g: geneOntologyTree.getTerm(goTermId).getChildren()) {
+			list.add(g.getId());
+		}
+		return list;
 	}
 	
 	/**
@@ -139,9 +154,8 @@ public class GoAnalysisResult extends CSAncillaryDataSet<CSMicroarray> {
 	 * 
 	 */
 	static public String getGoTermName(int goTermId) {
-		GoTermDetail detail = termDetail.get(goTermId);
-		if(detail!=null) return detail.name;
-		else return "";
+		GeneOntologyTree geneOntologyTree = GeneOntologyTree.getInstance();
+		return geneOntologyTree.getTerm(goTermId).getName();
 	}
 
 	/**
@@ -158,96 +172,11 @@ public class GoAnalysisResult extends CSAncillaryDataSet<CSMicroarray> {
 	}
 
 	private static HashMap<Integer, Set<String>> term2Gene = new HashMap<Integer, Set<String> >();
-	private static Map<Integer, GoTermDetail> termDetail = new HashMap<Integer, GoTermDetail>();
-	private static Map<Integer, List<Integer> > ontologyChild = new HashMap<Integer, List<Integer> >();
 	private static Set<Integer> namespaceIds = new TreeSet<Integer>();
-	
-	private static final String PARSING_MARKER_GO = " GO:";
-	private static final String PARSING_MARKER_RELATIONSHIP = "relationship: ";
-	private static final String NAMESPACE_LABEL = "namespace: ";
-
-	public static void parseOboFile(String goTermsOBOFile) {
-		termDetail.clear();
-		ontologyChild.clear();
-		namespaceIds.clear();
-		
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(goTermsOBOFile));
-			String line = br.readLine();
-			Integer id = null;
-			while(line!=null) {
-				if(line.startsWith("id: GO:")) {
-					id = Integer.valueOf( line.substring(7) );
-					String name = br.readLine().substring("name: ".length());
-					String thisNameSpace = br.readLine().substring(NAMESPACE_LABEL.length());
-					String def = br.readLine().trim();
-					while(!def.startsWith("def:") && def.length()>0)
-						def = br.readLine();
-						
-					if(def.length()>0) {
-						def = def.substring("def:\"".length(), def.indexOf("\" ["));
-					}
-					GoAnalysisResult.termDetail.put( id, new GoTermDetail(name, def) );
-
-					if(namespace.contains(name)) {
-						namespaceIds.add(id);
-						if(!thisNameSpace.equals(name)) {
-							log.error("namespace not match namespce node");
-						}
-						List<Integer> children = ontologyChild.get(0);
-						if(children==null) {
-							children = new ArrayList<Integer>();
-							ontologyChild.put(0, children);
-						}
-						children.add(id);
-					}
-				} else if (line.startsWith("is_a: GO:")) {
-					Integer parent = Integer.valueOf( line.substring("is_a: GO:".length(), line.indexOf("!")).trim() );
-					List<Integer> children = ontologyChild.get(parent);
-					if(children==null) {
-						children = new ArrayList<Integer>();
-						ontologyChild.put(parent, children);
-					}
-					children.add(id);
-				} else if (line.startsWith(PARSING_MARKER_RELATIONSHIP)) {
-					String relationship = line.substring(
-							PARSING_MARKER_RELATIONSHIP.length(), line
-									.indexOf(PARSING_MARKER_GO));
-					if (parentRelationshipTypes.contains(relationship)) {
-						int markerLength = PARSING_MARKER_RELATIONSHIP.length()
-								+ relationship.length()
-								+ PARSING_MARKER_GO.length();
-						Integer parent = Integer.valueOf(line.substring(
-								markerLength, line.indexOf("!")).trim());
-						List<Integer> children = ontologyChild.get(parent);
-						if (children == null) {
-							children = new ArrayList<Integer>();
-							ontologyChild.put(parent, children);
-						}
-						children.add(id);
-					}
-				} 
-				line = br.readLine();
-			}
-			br.close();
-			log.debug("term count "+GoAnalysisResult.termDetail.size());
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			log.error("Ontology tree is not successfullly created due to FileNotException: "+e.getMessage());
-		} catch (IOException e) {
-			e.printStackTrace();
-			log.error("Ontology tree is not successfullly created due to IOException: "+e.getMessage());
-		}
-		staticOboFilename = goTermsOBOFile;
-	}
-
-	private static final Set<String> parentRelationshipTypes;
 	static {
-		parentRelationshipTypes = new TreeSet<String>();
-		parentRelationshipTypes.add("part_of");
-		parentRelationshipTypes.add("regulates");
-		parentRelationshipTypes.add("negatively_regulates");
-		parentRelationshipTypes.add("positively_regulates");
+		GeneOntologyTree geneOntologyTree = GeneOntologyTree.getInstance();
+		for(int i=0; i<geneOntologyTree.getNumberOfRoots(); i++)
+			namespaceIds.add(geneOntologyTree.getRoot(i).getId());
 	}
 	
 	private static final Set<String> namespace;
@@ -257,16 +186,6 @@ public class GoAnalysisResult extends CSAncillaryDataSet<CSMicroarray> {
 		namespace.add("biological_process");
 		namespace.add("cellular_component");
 	};
-	
-	static class GoTermDetail {
-		String name;
-		String def;
-		
-		GoTermDetail(String name, String def) {
-			this.name = name;
-			this.def = def;
-		}
-	}
 	
 	private static int countUnexpectedEntrezId = 0;
 
@@ -470,13 +389,10 @@ public class GoAnalysisResult extends CSAncillaryDataSet<CSMicroarray> {
 	}
 
 	// implement saving workspace
-	private String oboFilename = null;
 	private String annotationFileName = null;
-	private static String staticOboFilename = null;
 	private static String staticAnnotationFileName = null;
 	
 	private void writeObject(ObjectOutputStream out) throws IOException {
-		oboFilename = staticOboFilename;
 		annotationFileName = staticAnnotationFileName;
 		
 		out.defaultWriteObject();
@@ -485,8 +401,11 @@ public class GoAnalysisResult extends CSAncillaryDataSet<CSMicroarray> {
 	private void readObject(ObjectInputStream in) throws IOException,
 			ClassNotFoundException {
 		in.defaultReadObject();
-		parseOboFile(oboFilename);
 		parseAnnotation(annotationFileName);
+	}
+
+	public static void parseOboFile(String oboFilename2) {
+		// TODO place holder for future feature of multiple gene ontology trees
 	}
 	
 }
