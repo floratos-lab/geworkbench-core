@@ -55,7 +55,7 @@ public class AffyFileFormat extends DataSetFileFormat {
     /**
      * The file extensions expected for Affy files.
      */	
-    String[] affyExtensions = {"affy", "txt"};
+    String[] affyExtensions = {"txt"};
     private Log log = LogFactory.getLog(this.getClass());
     AffyResource resource = new AffyResource();
     DSMicroarraySet microarraySet = null;
