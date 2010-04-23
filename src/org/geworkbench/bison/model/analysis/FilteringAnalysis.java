@@ -87,16 +87,19 @@ public abstract class FilteringAnalysis extends AbstractAnalysis {
 			// Remove the marker
 			markers.remove(markers.get(index));
 		}
+		
+		List<Integer> remains = new ArrayList<Integer>();
+		for(int i=0; i<markerCount; i++) {
+			if (!tobeRemoved.contains(i)) remains.add(i);
+		}
 
 		// Resize each microarray
 		for (DSMicroarray microarray : maSet) {
 			DSMarkerValue[] newValues = new DSMarkerValue[finalCount];
 			int index = 0;
-			for (int i = 0; i < markerCount; i++) {
-				if (!tobeRemoved.contains(i)) {
-					newValues[index] = microarray.getMarkerValue(i);
-					index++;
-				}
+			for (int i: remains) {
+				newValues[index] = microarray.getMarkerValue(i);
+				index++;
 			}
 			microarray.resize(finalCount);
 			for (int i = 0; i < finalCount; i++) {
