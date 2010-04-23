@@ -75,23 +75,28 @@ public abstract class FilteringAnalysis extends AbstractAnalysis {
 	// implemented cleaned
 	// in other words, CSMicroarray should make sure that when you do
 	// markers.remove, resizing will happen automatically
-	private void remove(List<DSGeneMarker> tobeRemoved) {
+	private void remove(List<Integer> tobeRemoved) {
 		int markerCount = maSet.getMarkers().size();
 
 		int removeCount = tobeRemoved.size();
 		int finalCount = markerCount - removeCount;
 		DSItemList<DSGeneMarker> markers = maSet.getMarkers();
-		for (DSGeneMarker marker: tobeRemoved) {
+		for (int i = 0; i < removeCount; i++) {
+			// Account for already-removed markers
+			int index = tobeRemoved.get(i) - i ;
 			// Remove the marker
-			markers.remove(marker);
+			markers.remove(markers.get(index));
 		}
+
 		// Resize each microarray
 		for (DSMicroarray microarray : maSet) {
 			DSMarkerValue[] newValues = new DSMarkerValue[finalCount];
 			int index = 0;
-			for (DSGeneMarker marker: markers) {
-				newValues[index] = microarray.getMarkerValue(marker);
-				index++;
+			for (int i = 0; i < markerCount; i++) {
+				if (!tobeRemoved.contains(i)) {
+					newValues[index] = microarray.getMarkerValue(i);
+					index++;
+				}
 			}
 			microarray.resize(finalCount);
 			for (int i = 0; i < finalCount; i++) {
@@ -102,7 +107,7 @@ public abstract class FilteringAnalysis extends AbstractAnalysis {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<DSGeneMarker> getMarkersToBeRemoved(DSMicroarraySet<?> input) {
+	public List<Integer> getMarkersToBeRemoved(DSMicroarraySet<?> input) {
 
 		maSet = (DSMicroarraySet<DSMicroarray>) input;
 
@@ -120,16 +125,7 @@ public abstract class FilteringAnalysis extends AbstractAnalysis {
 				removeList.add(i);
 			}
 		}
-		int removeCount = removeList.size();
-		DSItemList<DSGeneMarker> markers = maSet.getMarkers();
-		List<DSGeneMarker> toBeRemoved = new ArrayList<DSGeneMarker>(); 
-		for (int i = 0; i < removeCount; i++) {
-			// Account for already-removed markers
-			int index = removeList.get(i) ;
-			// Remove the marker
-			toBeRemoved.add(markers.get(index));
-		}
-		return toBeRemoved;
+		return removeList;
 	}
 	
 	// for MARKING, both indices matter; for REMOVAL, arrayIndex should be ignored
