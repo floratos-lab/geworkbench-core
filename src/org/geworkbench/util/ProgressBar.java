@@ -171,7 +171,7 @@ public class ProgressBar
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(
             (dim.width - this.getWidth()) / 2,
-            (dim.height - this.getHeight()) / 2);
+            (dim.height - this.getHeight()) / 2);        
         this.setVisible(true);
         updateTo(jProgressBar.getMinimum());
     }
@@ -279,7 +279,7 @@ public class ProgressBar
         cancelButton.setMinimumSize(new Dimension(30, 22));
         cancelButton.setPreferredSize(new Dimension(30, 22));
         cancelButton.setRequestFocusEnabled(true);
-        jPanel1.setPreferredSize(new Dimension(320,50));
+        jPanel1.setPreferredSize(new Dimension(320,150));
         jPanel1.setLayout(gridLayout1);
         jLabel1.setToolTipText("");
         jLabel1.setHorizontalAlignment(SwingConstants.CENTER);
@@ -309,7 +309,7 @@ public class ProgressBar
         this.getContentPane().add(spaceSouthPane, BorderLayout.SOUTH);
         this.getContentPane().add(spaceEastPane, BorderLayout.EAST);
         this.getContentPane().add(spaceWestPane, BorderLayout.WEST);
-        this.setSize(new Dimension(320, 110));
+        this.setSize(new Dimension(320, 150));
         this.setTitle("Progress Bar");
         winDisposed = new BarObservable();
 
