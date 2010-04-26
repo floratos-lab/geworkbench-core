@@ -145,6 +145,11 @@ public class CaARRAYQueryPanel extends JDialog {
 		cancelButton
 				.addActionListener(new CaARRAYQueryPanel_cancelButton_actionAdapter(
 						this));
+		refreshButton.setToolTipText("Clear Selections");
+		refreshButton.setText("Refresh");
+		refreshButton
+				.addActionListener(new CaARRAYQueryPanel_refreshButton_actionAdapter(
+						this));
 
 		this.setLayout(borderLayout1);
 		jScrollPane1
@@ -179,6 +184,7 @@ public class CaARRAYQueryPanel extends JDialog {
 		jToolBar1.add(progressBar);
 		jToolBar1.add(Box.createHorizontalStrut(60));
 		jToolBar1.add(searchButton);
+		jToolBar1.add(refreshButton);
 		jToolBar1.add(cancelButton);
 		this.add(jToolBar1, java.awt.BorderLayout.SOUTH);
 		jSplitPane1.add(jSplitPane2, JSplitPane.RIGHT);
@@ -198,6 +204,7 @@ public class CaARRAYQueryPanel extends JDialog {
 	public static final String TISSUETYPE = "Tissue Type";
 	public static final String CHIPPLATFORM = "Chip Platform";
 	public static final String CHIPPROVIDER = "Array Provider";
+	public static final String CLEARALL = "Clear All";
 
 	public static final boolean INISTATE = false; // The initial state for a
 	// value.
@@ -231,6 +238,7 @@ public class CaARRAYQueryPanel extends JDialog {
 
 	JButton searchButton = new JButton();
 	JButton cancelButton = new JButton();
+	JButton refreshButton = new JButton();
 	JCheckBox jCheckBox1 = new JCheckBox();
 	BorderLayout borderLayout1 = new BorderLayout();
 	JComboBox jcatagoryComboBox = new JComboBox(new String[] {
@@ -432,7 +440,7 @@ public class CaARRAYQueryPanel extends JDialog {
 
 	/**
 	 * Respond to the change of selected search criteria content.
-	 * 
+	 *
 	 * @param selectedCritiria
 	 */
 	public void updateSelectionValues(String selectedCritiria) {
@@ -479,7 +487,7 @@ public class CaARRAYQueryPanel extends JDialog {
 	/**
 	 * Clear all contents. To reinstore the content, connect with server is
 	 * required.
-	 * 
+	 *
 	 * @param e
 	 */
 	public void clearAllButton_actionPerformed(ActionEvent e) {
@@ -495,7 +503,7 @@ public class CaARRAYQueryPanel extends JDialog {
 
 	/**
 	 * Start the search based on the selection of search criteria.
-	 * 
+	 *
 	 * @param e
 	 */
 	public void searchButton_actionPerformed(ActionEvent e) {
@@ -582,6 +590,11 @@ public class CaARRAYQueryPanel extends JDialog {
 		dispose();
 	}
 
+	public void refreshButton_actionPerformed(ActionEvent e) {
+		jcatagoryComboBox.setSelectedIndex(0);
+		updateSelectionValues(CLEARALL);
+	}
+
 	private class CaARRAYQueryPanel_cancelButton_actionAdapter implements
 			ActionListener {
 		private CaARRAYQueryPanel adaptee;
@@ -592,6 +605,19 @@ public class CaARRAYQueryPanel extends JDialog {
 
 		public void actionPerformed(ActionEvent e) {
 			adaptee.cancelButton_actionPerformed(e);
+		}
+	}
+
+	private class CaARRAYQueryPanel_refreshButton_actionAdapter implements
+			ActionListener {
+		private CaARRAYQueryPanel adaptee;
+
+		CaARRAYQueryPanel_refreshButton_actionAdapter(CaARRAYQueryPanel adaptee) {
+			this.adaptee = adaptee;
+		}
+
+		public void actionPerformed(ActionEvent e) {
+			adaptee.refreshButton_actionPerformed(e);
 		}
 	}
 
