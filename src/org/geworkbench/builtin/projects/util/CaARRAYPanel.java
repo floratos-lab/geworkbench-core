@@ -120,7 +120,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 	private static final int INTERNALTIMEOUTLIMIT = 600;
 	private static final int INCREASE_EACHTIME = 300;
 	private int internalTimeoutLimit = INTERNALTIMEOUTLIMIT;
-	
+
 	public CaARRAYPanel() {
 		try {
 			jbInit();
@@ -132,7 +132,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 	public void setParent(LoadData p) {
 		parent = p;
 	}
-	
+
 	public boolean isStillWaitForConnecting() {
 		return stillWaitForConnecting;
 	}
@@ -157,10 +157,10 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 			if (!ce.isSucceed()) {
 				JOptionPane.showMessageDialog(null, "The error: "
 						+ errorMessage);
+				return;
 			} else {
 				JOptionPane.showMessageDialog(null, errorMessage);
 			}
-
 		}
 
 		if (ce.getInfoType().equalsIgnoreCase(CaArrayEvent.EXPERIMENT)) {
@@ -335,7 +335,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 
 	/**
 	 * Update the progressBar to reflect the current time.
-	 * 
+	 *
 	 * @param text
 	 */
 	public void updateProgressBar(final String text) {
@@ -355,7 +355,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 								String htmltext = "<html>" + text + i / 4 + " seconds." + "<br>" + currentState +"</html>";
 								progressBar.setMessage(htmltext);
 							}
-							//FIXME: Bug #1797, temporarily disabled for code freeze. 
+							//FIXME: Bug #1797, temporarily disabled for code freeze.
 //							if (i > internalTimeoutLimit * 4) {
 //								stillWaitForConnecting = false;
 //								JOptionPane.showMessageDialog(null,
@@ -377,7 +377,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param seconds
 	 */
 	public void increaseInternalTimeoutLimitBy(int seconds){
@@ -386,7 +386,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param ce
 	 * @param source
 	 */
@@ -396,14 +396,14 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 		this.numTotalArrays = ce.getTotalArrays();
 		increaseInternalTimeoutLimitBy(INCREASE_EACHTIME);
 	}
-	
+
 	private int numTotalArrays = 0;
 	private int numCurrentArray = 0;
 	/**
 	 * Action listener invoked when the user presses the "Open" button after
 	 * having selected a remote microarray. The listener will attempt to get the
 	 * microarray data from the remote server and load them in the application.
-	 * 
+	 *
 	 * @param e
 	 */
 	private void openRemoteFile_action(ActionEvent e) {
@@ -462,7 +462,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 	 * after having selected a remote microarray. If no node is selected, all
 	 * experiments will be extended with their associated bioassays. Otherwise,
 	 * only current selection will be extended.
-	 * 
+	 *
 	 * @param e
 	 */
 	private void extendBioassays_action(ActionEvent e) {
@@ -474,7 +474,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 				.getLastSelectedPathComponent();
 		if (node != null && node != root) {
 			if (treeMap.containsKey(node.getUserObject())) { // this is always true. why check?
-				if (node.getChildCount() == 0) { 
+				if (node.getChildCount() == 0) {
 					CaArray2Experiment caArray2Experiment = treeMap.get(node
 							.getUserObject());
 					if (caArray2Experiment.getHybridizations() == null)
@@ -486,12 +486,12 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 		}
 
 	}
-	
+
 	@Publish
 	public CaArrayRequestHybridizationListEvent publishCaArrayRequestHybridizationListEvent(CaArrayRequestHybridizationListEvent event) {
 		return event;
 	}
-	
+
 	@Subscribe
 	public void receive(CaArrayReturnHybridizationListEvent event, Object source) {
 		CaArray2Experiment caArray2Experiment = event.getCaArray2Experiment();
@@ -580,7 +580,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 
 	/**
 	 * This method is called if the cancel button is pressed.
-	 * 
+	 *
 	 * @param e -
 	 *            Event information.
 	 */
@@ -609,7 +609,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 	/**
 	 * Menu action listener that brings up the popup menu that allows populating
 	 * the tree node for a remote file.
-	 * 
+	 *
 	 * @param e
 	 */
 	private void jRemoteFileTree_mouseReleased(MouseEvent e) {
@@ -633,7 +633,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 	/**
 	 * Action listener invoked when a remote file is selected in the remote file
 	 * tree. Updates the experiment information text area.
-	 * 
+	 *
 	 * @param
 	 */
 	private void remoteFileSelection_action(TreeSelectionEvent tse) {
@@ -738,7 +738,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 
 	private class PubilshThread extends Thread {
 		CaArrayRequestEvent event;
-		
+
 		PubilshThread(CaArrayRequestEvent event) {
 			this.event = event;
 		}
@@ -746,7 +746,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 			publishCaArrayRequestEvent(event);
 		}
 	}
-	
+
 	private void dispose() {
 		parent.dispose();
 	}
