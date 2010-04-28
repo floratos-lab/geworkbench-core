@@ -100,5 +100,6 @@
 	<classpathentry kind="lib" path="lib/mageom-client.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-math-1.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/caArrayMageom/caCOREClasses.jar"/>
+	<classpathentry kind="lib" path="lib/commons-httpclient-3.1.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
