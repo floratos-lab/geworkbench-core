@@ -62,6 +62,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.builtin.projects.Icons;
+import org.geworkbench.engine.ccm.ComponentConfigurationManagerWindow;
+import org.geworkbench.engine.ccm.ComponentConfigurationManagerWindow2;
 import org.geworkbench.engine.config.GUIFramework;
 import org.geworkbench.engine.config.PluginDescriptor;
 import org.geworkbench.engine.config.VisualPlugin;
@@ -268,12 +270,23 @@ public class Skin extends GUIFramework {
                 chooseComponent();
             }
         });//        contentPane.addKeyListener(new KeyAdapter() {
+        
+        contentPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0), CANCEL_DIALOG);
+        contentPane.getActionMap().put(CANCEL_DIALOG, new AbstractAction() {
+            public void actionPerformed(ActionEvent event) {
+                loadRCM();
+            }
+        });
     }
 
     private static class DialogResult {
         public boolean cancelled = false;
     }
 
+    void loadRCM(){
+    	ComponentConfigurationManagerWindow2.load();
+    }
+    
     void chooseComponent() {
         if (acceptors == null) {
             // Get all appropriate acceptors

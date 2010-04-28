@@ -15,6 +15,7 @@ import org.apache.commons.digester.Digester;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.engine.ccm.ComponentConfigurationManager;
+import org.geworkbench.engine.ccm.ComponentConfigurationManager2;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.config.rules.GeawConfigRule;
 import org.geworkbench.engine.config.rules.PluginRule;
@@ -226,6 +227,7 @@ public class UILauncher {
         /* Load Components */
         ComponentConfigurationManager ccm = ComponentConfigurationManager.getInstance(); 
         ccm.loadAllComponentFolders(new File(componentsDir));
+        ccm.removeOutVersionedFoldersFromCwbFileList();
 		ccm.loadSelectedComponents();
         
         PluginRegistry.debugPrint();

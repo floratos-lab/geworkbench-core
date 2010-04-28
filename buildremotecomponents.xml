@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<project name="deploy components" basedir="." default="gear">
+	<property environment="env" />
+	<!--
+	Usage:
+	ant -f buildremotecomponents.xml -Dcomponentfoldername=alignment -Dgearfolder=C:/java/eclipse_componentRepository_workspace/componentRepository/WebRoot
+	
+	<property name="component" value="alignment" />
+	<property name="tomcat.dir" value="${env.CATALINA_HOME}" />
+	-->
+
+	<echo message="-----Input Arguments----" />
+	<echo message="componentfoldername=: ${componentfoldername}" />
+	<echo message="gearfolder=: ${gearfolder}" />
+	<echo message="------------------------" />
+	
+	<property name="component.dir" value="${componentfoldername}" />
+	<property name="outputfolder.dir" value="${gearfolder}" />	
+	<property name="components.dir" value="components" />
+	<property name="destfile.file" value="${outputfolder.dir}/${component.dir}.gear" />
+	<property name="jarbasedir.dir" value="${basedir}/${components.dir}/${component.dir}" />
+<!--
+	<property name="include.files" value="classes/**,lib/**,*.cwb.xml" />
+-->	
+	<property name="include.files" value="**" />	
+	<property name="exclude.files" value="src/**,**/*.classpath,**/*.project" />
+	
+	<target name="gear">
+		<echo message="destfile.file=: ${destfile.file}" />
+		<echo message="jarbasedir.dir=: ${jarbasedir.dir}" />
+		<echo message="include.files=: ${include.files}" />
+		<echo message="exclude.files=: ${exclude.files}" />
+		
+		<jar destfile="${destfile.file}" basedir="${jarbasedir.dir}" includes="${include.files}" excludes="${exclude.files}" update="false"  >
+			<manifest>
+				<attribute name="core-version" value="${version}" />
+			</manifest>
+		</jar>
+		<copy  file="${basedir}/deploycomponents.txt" todir="${gearfolder}" overwrite="true" />
+	</target>
+</project>
