@@ -4,67 +4,42 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Algorithm selection panel
- * <p>Title: Bioworks</p>
- * <p>Description: Modular Application Framework for Gene Expession, Sequence and Genotype Analysis</p>
- * <p>Copyright: Copyright (c) 2003 -2004</p>
+ * Algorithm selection panel.
+ * 
+ * <p>Copyright (c) 2003 -2004</p>
  * <p>Company: Columbia University</p>
  *
+ * @version $Id$
  */
 public class AlgorithmSelectionPanel extends JPanel {
-    //algorithm names
+	private static final long serialVersionUID = -1469488867599091231L;
+	
+	//algorithm names
     public static final String DISCOVER = "discovery";
     public static final String EXHAUSTIVE = "exhaustive";
-    public static final String HIERARCHICAL = "hierarchical";
-    ButtonGroup algorithmGroup = new ButtonGroup();
-    JRadioButton discovery = new JRadioButton();
-    JRadioButton hierarc = new JRadioButton();
-    JRadioButton exhaustive = new JRadioButton();
-    FlowLayout flowLayout1 = new FlowLayout();
 
-    public AlgorithmSelectionPanel() throws Exception {
-        try {
-            jbInit();
-        } catch (Exception ex) {
-        }
-    }
+    private ButtonGroup algorithmGroup = new ButtonGroup();
+    private JRadioButton discovery = new JRadioButton("Norm.");
+    private JRadioButton exhaustive = new JRadioButton("Exhaust.");
 
-    public void jbInit() {
-        initAlgorithmType();
-        this.setBorder(null);
-        setMaximumSize(new Dimension(270, 20));
-        setMinimumSize(new Dimension(270, 20));
-        setPreferredSize(new Dimension(270, 20));
-        this.setLayout(flowLayout1);
-        exhaustive.setBorder(null);
-        hierarc.setBorder(null);
-        discovery.setBorder(null);
-        this.add(discovery, null);
-        // remove the hierarchical clustering option for geWorkbencg 1.6 release 
-        //this.add(hierarc, null);
-        this.add(exhaustive, null);
-    }
-
-    /**
-     * Initialize algorithm Radio button
-     */
-    private void initAlgorithmType() {
-        discovery.setText("Norm.");
+    public AlgorithmSelectionPanel() {
         discovery.setActionCommand(DISCOVER);
-        hierarc.setText("Hierarch.");
-        hierarc.setActionCommand(HIERARCHICAL);
-        exhaustive.setText("Exhaust.");
         exhaustive.setActionCommand(EXHAUSTIVE);
         discovery.setSelected(true);
 
         algorithmGroup.add(discovery);
         algorithmGroup.add(exhaustive);
-        algorithmGroup.add(hierarc);
 
         add(discovery);
-        // remove the hierarchical clustering option for geWorkbencg 1.6 release 
-        //add(hierarc);
         add(exhaustive);
+        
+        this.setBorder(null);
+        setMaximumSize(new Dimension(270, 20));
+        setMinimumSize(new Dimension(270, 20));
+        setPreferredSize(new Dimension(270, 20));
+        this.setLayout(new FlowLayout());
+        exhaustive.setBorder(null);
+        discovery.setBorder(null);
     }
 
     public String getSelectedAlgorithmName() {
@@ -76,8 +51,6 @@ public class AlgorithmSelectionPanel extends JPanel {
             discovery.setSelected(true);
         } else if (algorithmDescription.equalsIgnoreCase(EXHAUSTIVE)) {
             exhaustive.setSelected(true);
-        } else if (algorithmDescription.equalsIgnoreCase(HIERARCHICAL)) {
-            hierarc.setSelected(true);
         }
     }
 }
