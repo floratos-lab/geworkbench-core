@@ -1,5 +1,7 @@
 package org.geworkbench.engine.ccm;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -17,12 +19,21 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.Vector;
 import java.util.Map.Entry;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
+import javax.swing.JOptionPane;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.digester.Digester;
+import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -34,6 +45,7 @@ import org.geworkbench.engine.config.rules.PluginRule;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.engine.management.ComponentResource;
 import org.geworkbench.engine.management.TypeMap;
+import org.geworkbench.engine.preferences.GlobalPreferences;
 import org.geworkbench.util.FilePathnameUtils;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -44,15 +56,13 @@ import org.xml.sax.SAXException;
 /**
  * Manages the dynamic loading and removal of components.
  * 
- * @author keshav
  * @author tg2321
  * @version $Id: ComponentConfigurationManager.java,v 1.1 2009/02/09 19:54:43
  *          keshav Exp $
  */
-public class ComponentConfigurationManager {
+public class ComponentConfigurationManager2 {
 
-	private static Log log = LogFactory
-			.getLog(ComponentConfigurationManager.class);
+	private static Log log = LogFactory.getLog(ComponentConfigurationManager2.class);
 	String[] files = null;
 
 	private static final String FILE_DEL = System.getProperty("file.separator");
@@ -62,11 +72,11 @@ public class ComponentConfigurationManager {
 	
 	private String componentsDirectory = UILauncher.getComponentsDirectory();
 	
-	private static ComponentConfigurationManager instance = null;
+	private static ComponentConfigurationManager2 instance = null;
 	
-	public static ComponentConfigurationManager getInstance() {
+	public static ComponentConfigurationManager2 getInstance() {
 		if(instance==null) {
-			instance = new ComponentConfigurationManager();
+			instance = new ComponentConfigurationManager2();
 		}
 		return instance;
 	}
@@ -76,7 +86,7 @@ public class ComponentConfigurationManager {
 	 * 
 	 * @param
 	 */
-	private ComponentConfigurationManager() {
+	private ComponentConfigurationManager2() {
 		File dir = new File(componentsDirectory);
 		if (!dir.isDirectory()) {
 			log.warn("Supplied components directory is not a directory: "
@@ -104,13 +114,11 @@ public class ComponentConfigurationManager {
 			int index = list.indexOf(resource);
 			File file = new File(list.get(index));
 			try {
-				String path = componentsDirectory + FILE_DEL
-						+ file.getPath();
+				String path = componentsDirectory + FILE_DEL + file.getPath();
 				componentResource = new ComponentResource(path, false);
 				log.debug("Created component resource " + file.getName());
 			} catch (IOException e) {
-				log.error("Could not initialize component resource '"
-						+ file.getName() + "'.", e);
+				log.error("Could not initialize component resource '"  + file.getName() + "'.", e);
 			}
 			return componentResource;
 		}
@@ -126,7 +134,8 @@ public class ComponentConfigurationManager {
 	 * @return {@link ArrayList}
 	 */
 	public void loadAllComponentFolders(File componentDirectory) {
-    	cwbFile = new ArrayList<File>();
+    	cwbFiles = new ArrayList<File>();
+//    	Collection<ComponentResource> resources = ComponentRegistry.getRegistry().getAllComponentResources();
     	if(!componentDirectory.isDirectory()) {
     		log.error("component directory is not a directory");
     	}
@@ -142,21 +151,22 @@ public class ComponentConfigurationManager {
 				e.printStackTrace();
 			}
         }
-        log.info(cwbFile.size()+" cwb files found under all resource directories");
+        log.info(cwbFiles.size()+" cwb files found under all resource directories");
 	}
+	
 	
 	public void removeOutVersionedFoldersFromCwbFileList() {
 		List<File> tmpCwbFiles = new ArrayList<File>();
 		boolean foundNewerVersion = false;
-		for (int i = 0; i<cwbFile.size(); i++) {
+		for (int i = 0; i<cwbFiles.size(); i++) {
 			foundNewerVersion = false;
-			File file1 = cwbFile.get(i);
+			File file1 = cwbFiles.get(i);
 			String cwbFileName1 = file1.getName();
-			for (int j = 0; j<cwbFile.size(); j++) {
+			for (int j = 0; j<cwbFiles.size(); j++) {
 				if (i==j){
 					continue;
 				}
-				File file2 = cwbFile.get(j);
+				File file2 = cwbFiles.get(j);
 				String cwbFileName2 = file2.getName();
 				if (cwbFileName1.equals(cwbFileName2)){
 					String folder1 = resourceFolder(file1);
@@ -196,10 +206,49 @@ public class ComponentConfigurationManager {
 			}
 			tmpCwbFiles.add(file1);
 		}		
-		cwbFile = tmpCwbFiles;
+		cwbFiles = tmpCwbFiles;
 	}
+
+
 	
-	
+    private void updateCwbFileList(File newDir) throws IOException {
+       File[] newFiles = newDir.listFiles();
+        if(newFiles==null || newFiles.length==0) return;
+        for (File newFile : newFiles) {
+            if (newFile.isDirectory()) {
+            	updateCwbFileList(newFile);
+            } else {
+                if (newFile.getName().endsWith(COMPONENT_DESCRIPTOR_EXTENSION)) {
+                	
+                	/* look for old components */
+                	String newFileName = newFile.getName();
+            		for (int i = 0; i<cwbFiles.size(); i++) {
+            			File oldFile = cwbFiles.get(i);
+            			String oldFileName = oldFile.getName();
+            			if (newFileName.equals(oldFileName)){
+            				cwbFiles.set(i, newFile);
+            				break;
+            			}
+            		}
+                }
+            }
+        }
+    }
+
+    File getCwbFile(String inFileName){
+		for (int i = 0; i<cwbFiles.size(); i++) {
+			File file = cwbFiles.get(i);
+			String fileName = file.getName();
+			if (inFileName.equals(fileName)){
+				return file;
+			}
+		}
+    	
+    	return null; 
+    }
+    
+    
+    
     private void searchCwb(File dir) throws IOException {
         File[] files = dir.listFiles();
         if(files==null || files.length==0) return;
@@ -208,16 +257,16 @@ public class ComponentConfigurationManager {
             	searchCwb(file);
             } else {
                 if (file.getName().endsWith(COMPONENT_DESCRIPTOR_EXTENSION)) {
-                	cwbFile.add(file);
+                	cwbFiles.add(file);
                 }
             }
         }
     }
     
-	List<File> cwbFile = null;
+	List<File> cwbFiles = null;
 
 	public void loadSelectedComponents() {
-		for (File file: cwbFile) {
+		for (File file: cwbFiles) {
 			// this is not really the right way to do it. just to support existing code. TODO
 			String folder = resourceFolder(file);
 			String ccmFileName = file.getName();
@@ -226,7 +275,7 @@ public class ComponentConfigurationManager {
 			".ccmproperties");
 
 			String onOff = readProperty(folder, propFileName, "on-off");
-			PluginComponent ccmComponent = getPluginsFromFile(file );
+			PluginComponent2 ccmComponent = getPluginsFromFile(file );
 			if(ccmComponent==null) {
 				log.error(".cwb.xml file "+file+" failed to be loaded");
 				continue;
@@ -300,6 +349,7 @@ public class ComponentConfigurationManager {
 		}
 	}
 
+
 	/**
 	 * Removes the component with resourceName.
 	 * 
@@ -310,7 +360,7 @@ public class ComponentConfigurationManager {
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean removeComponent(String folderName, String filename) {
-
+	
 		/*
 		 * Container Summary:
 		 * 
@@ -321,76 +371,75 @@ public class ComponentConfigurationManager {
 		 * idToDescriptor = new HashMap<String, PluginDescriptor>(); 
 		 * nameToComponentResource = new HashMap<String, ComponentResource>();
 		 */
-
+	
 		ComponentRegistry componentRegistry = ComponentRegistry.getRegistry();
-
+	
 		/* validation */
 		if (StringUtils.isEmpty(folderName)) {
 			log.error("Input resource is null.  Returning ...");
 			return false;
 		}
-
+	
 		List<String> list = Arrays.asList(files);
 		if (!list.contains(folderName)) {
 			return false;
 		}
-
+	
 		// FIXME why parse again? can't we get this info another way?
-		/* parse the ccm.xml file */
-		PluginComponent ccmComponent = null;
+		/* parse the cwb.xml file */
+		PluginComponent2 ccmComponent = null;
 		if(filename.endsWith(COMPONENT_DESCRIPTOR_EXTENSION)) {
-			ccmComponent = getPluginsFromFile(new File(
-				filename));
+			ccmComponent = getPluginsFromFile(new File(filename));
 		} else {
 			return false;
 		}
-
+	
 		if (ccmComponent == null) return false;
 		
 		/* GET THE VARIOUS MAPS/VECTORS FROM THE PLUGIN REGISTRY */
-
+	
 		/* plugin registry component vector */
 		Vector<PluginDescriptor> componentVector = PluginRegistry
 				.getComponentVector();
-
+	
 		/* plugin registry visual area map */
 		HashMap<PluginDescriptor, String> visualAreaMap = PluginRegistry
 				.getVisualAreaMap();
-
+	
 		/* plugin registry used ids */
 		Vector<String> usedIds = PluginRegistry.getUsedIds();
-
+	
 		/* GET THE VARIOUS MAPS/VECTORS FROM THE COMPONENT REGISTRY */
-
+	
 		/* component registry listeners */
 		TypeMap<List> listeners = componentRegistry.getListenersTypeMap();
-
+	
 		/* component registry resource map */
 		Map<String, ComponentResource> resourceMap = componentRegistry
 				.getComponentResourceMap();
-
+	
 		/* component registry acceptors */
 		HashMap<Class, List<Class>> acceptors = componentRegistry
 				.getAcceptorsHashMap();
-
+	
 		/* component registry id to descriptor */
 		Map<String, PluginDescriptor> idToDescriptor = componentRegistry
 				.getIdToDescriptorMap();
-
+	
 		/* component registry components list */
 		List<Object> components = componentRegistry.getComponentsList();
 		List<Object> updatedComponentList = new ArrayList<Object>();
 		for (Object cmp : components) {
 			updatedComponentList.add(cmp);
 		}
-
+	
 		// FIXME Can't we get the PluginDesriptor we want other than from the
 		// ccm.xml file?
 		// beginning of processing the plugin
 		final String pluginClazzName = ccmComponent.getClazz();
 		PluginDescriptor pluginDescriptor = PluginRegistry
 					.getPluginDescriptor(ccmComponent.getPluginId());
-
+	
 		if (pluginDescriptor != null) {
 			
 			/* START THE REMOVAL PROCESS IN THE PLUGIN REGISTRY */
@@ -403,68 +452,68 @@ public class ComponentConfigurationManager {
 				// TODO Replace $$ parse methods with clazzName = clazz.getSuperclass() 
 				String[] temp = StringUtils.split(proxiedClazzName, "$$");
 				String clazzName = temp[0];
-
+	
 				if (StringUtils.equals(pluginClazzName, clazzName)) {
 					visualAreaMap.remove(entry.getKey());
 					break;
 				}
 			}
-
+	
 			/* PluginRegistry.visualAreaMap */
 			String id = ccmComponent.getPluginId();
 			if (PluginDescriptor.idExists(id)) {
 				usedIds.remove(id);
 			}
-
+	
 			/* PluginRegistry.compontentVector */
 			if (componentVector.contains(pluginDescriptor)) {
 				componentVector.remove(pluginDescriptor);
 			}
-
+	
 			/* START THE REMOVAL PROCESS IN THE COMPONENT REGISTRY */
-
+	
 			/* ComponentRegistry.listeners */
 			// componentRegistry.removeFromListeners(pluginClazzName);
 			for (Map.Entry<Class, List> entry : listeners.entrySet()) {
 				List listenersForOneEvent = entry.getValue();
-
+	
 				for (Object proxiedListener : listenersForOneEvent) {
 					Class clazz = proxiedListener.getClass();
 					String proxiedClazzName = clazz.getName();
 					String[] temp = StringUtils.split(proxiedClazzName, "$$");
 					String clazzName = temp[0];
-
+	
 					if (StringUtils.equals(pluginClazzName, clazzName)) {
 						listenersForOneEvent.remove(proxiedListener);
 						break;
 					}
 				}
 			}
-
+	
 			/* ComponentRegistry.acceptors */
 			HashMap<Class, List<Class>> acceptorsNew = new HashMap<Class, List<Class>>();
-
+	
 			for (Map.Entry<Class, List<Class>> entry : acceptors.entrySet()) {
 				Class acceptorKey = entry.getKey();
 				List<Class> componentList = entry.getValue();
 				List<Class> componentsNew = new ArrayList<Class>();
-
+	
 				ListIterator<Class> componentListIter = componentList
 						.listIterator();
 				while (componentListIter.hasNext()) {
 					Class componentClass = componentListIter.next();
 					String componentClassName = componentClass.getName();
-
+	
 					if (!pluginClazzName.equals(componentClassName)) {
 						componentsNew.add(componentClass);
 					}
 				}
-
+	
 				acceptorsNew.put(acceptorKey, componentsNew);
 			}
-
+	
 			componentRegistry.setAcceptorsHashMap(acceptorsNew);
-
+	
 			/* ComponentRegistry.components */
 			for (Object proxiedComponent : components) {
 				// FIXME use a "deproxy" (see cglib or HibernateProxy)
@@ -472,12 +521,12 @@ public class ComponentConfigurationManager {
 				String proxiedClazzName = clazz.getName();
 				String[] temp = StringUtils.split(proxiedClazzName, "$$");
 				String clazzName = temp[0];
-
+	
 				if (StringUtils.equals(pluginClazzName, clazzName)) {
 					updatedComponentList.remove(proxiedComponent);
 				}
 			}
-
+	
 			/* ComponentRegistry.idToDescriptor */
 			String pluginToRemove = ccmComponent.getPluginId();
 			PluginDescriptor tempPluginDescriptor = idToDescriptor
@@ -485,9 +534,9 @@ public class ComponentConfigurationManager {
 			if (tempPluginDescriptor != null) {
 				idToDescriptor.remove(pluginToRemove);
 			}
-
+	
 		}// end of processing the plugin
-
+	
 		/* ComponentRegistry.idToDescriptor */
 		/* If other Plugins are using the same Component Resource, don't remove the Resource */
 		int foldersInUse = 0;
@@ -511,7 +560,7 @@ public class ComponentConfigurationManager {
 				foldersInUse++;
 			}
 		}
-
+	
 		if (foldersInUse < 1 ){
 			ComponentResource resourceToRemove = resourceMap.get(folderName);
 			if (resourceToRemove != null) {
@@ -520,16 +569,16 @@ public class ComponentConfigurationManager {
 		}
 		
 		componentRegistry.setComponentsList(updatedComponentList);
-
+	
 		return true;
 	}
 
-	PluginComponent getPluginsFromFile(File file) {
+	PluginComponent2 getPluginsFromFile(File file) {
 		if (!file.exists()) {
 			return null;
 		}
 
-		PluginComponent ccmComponent = null;
+		PluginComponent2 ccmComponent = null;
 		
 		SAXBuilder builder = new SAXBuilder();
 		InputStream inputStream = null;
@@ -550,6 +599,7 @@ public class ComponentConfigurationManager {
 					String name = null;
 					String clazz = null;
 					String version = null;
+					String availableUpdate = null;
 					String author = null;
 					String authorUrl = null;
 					String tutorialUrl = null;
@@ -632,7 +682,7 @@ public class ComponentConfigurationManager {
 						}
 					}
 
-					ccmComponent = new PluginComponent(name, clazz, version,
+					ccmComponent = new PluginComponent2(name, clazz, version, availableUpdate,
 							author, authorUrl, tutorialUrl, toolUrl,
 							description, license, mustAccept,
 							documentation, loadByDefault, hidden,
@@ -770,5 +820,375 @@ public class ComponentConfigurationManager {
 			e.printStackTrace();
 		}
 	}
-    
+   
+
+	
+	
+	
+	
+	/*
+	 * Download GEAR files from Tomcat server using apache's HttpClient
+	 * 
+	 * @param componentFolderName
+	 * 
+	 * @return boolean
+	 */
+	protected boolean downloadGEARFromServer(String componentFolderName) {
+
+//remote_components_config_url=http://califano11.cgc.cpmc.columbia.edu:8080/componentRepository/deploycomponents.txt
+//remote_components_url=http://califano11.cgc.cpmc.columbia.edu:8080/componentRepository/
+
+		
+//		String url = System.getProperty("remote_components_url");
+		GlobalPreferences prefs = GlobalPreferences.getInstance();
+		String url = prefs.getRCM_URL().trim();
+		if (url == null || url == "") {
+			log.info("No Remote Component Manager URL configured.");
+			return false;
+		}
+
+		url += componentFolderName + ".gear";
+
+		int beginIndex = url.lastIndexOf("/");
+		String fileName = url.substring(beginIndex + 1);
+		String tempFilePath = FilePathnameUtils
+				.getTemporaryFilesDirectoryPath();
+
+		String fullPathAndGEARName = tempFilePath + "\\components\\" + fileName;
+		String fullComponentFolderName = tempFilePath + "\\components";
+		File fullComponentFolder = new File(fullComponentFolderName);
+		if (!fullComponentFolder.exists()) {
+			fullComponentFolder.mkdirs();
+		}
+
+		HttpClient client = new HttpClient();
+		GetMethod method = new GetMethod(url);
+		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
+				new DefaultHttpMethodRetryHandler(10, false));
+		method.setFollowRedirects(true);
+
+		try {
+			int statusCode = client.executeMethod(method);
+			if (statusCode != HttpStatus.SC_OK) {
+				System.err.println("Method failed: " + method.getStatusLine());
+				return false;
+			}
+
+			InputStream inputStream = method.getResponseBodyAsStream();
+			BufferedInputStream bufferedInputStream = new BufferedInputStream(
+					inputStream);
+			FileOutputStream fileOutputStream = new FileOutputStream(
+					fullPathAndGEARName);
+
+			byte[] bytes = new byte[8192];
+			int count = bufferedInputStream.read(bytes);
+			while (count != -1 && count <= 8192) {
+				fileOutputStream.write(bytes, 0, count);
+				count = bufferedInputStream.read(bytes);
+			}
+			if (count != -1) {
+				fileOutputStream.write(bytes, 0, count);
+			}
+			fileOutputStream.close();
+			bufferedInputStream.close();
+			method.releaseConnection();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		File fullPathAndNameFile = new File(fullPathAndGEARName);
+		if (!fullPathAndNameFile.exists()) {
+			return false;
+		}
+
+		return true;
+	}
+
+	
+
+	/*
+	 * unzip GEAR file from the users temp
+	 * 
+	 * @param componentFolderName
+	 * 
+	 * @return void
+	 */
+	void installGEAR(String componentFolderName, String version) {
+		File componentFolder = null;
+		
+		try {
+			String tempFilePath = FilePathnameUtils.getTemporaryFilesDirectoryPath();
+			tempFilePath += "\\components";
+			File gearFile = new File(tempFilePath + "\\" + componentFolderName + ".gear");
+			FileInputStream fileInputStream = new FileInputStream(gearFile);
+			ZipInputStream zipInputStream = new ZipInputStream(
+					new BufferedInputStream(fileInputStream));
+			String outFilePath = UILauncher.getComponentsDirectory();
+			String fullComponentPath = outFilePath
+					+ FilePathnameUtils.FILE_SEPARATOR + componentFolderName
+					+ "." + version;
+			try {
+				componentFolder = new File(fullComponentPath);
+				if (componentFolder.exists()) {
+					JOptionPane.showMessageDialog(null,
+							"Could not install component "
+									+ fullComponentPath
+									+ ", please delete directory try again.",
+							"Remote Component Update",
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				componentFolder.mkdir();
+					
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(null,
+						"Could not install component " + componentFolderName
+								+ ", please restart geWorkbench",
+						"Remote Component Update", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+
+			FileOutputStream fileOutputStream = null;
+			BufferedOutputStream bufferedOutputStream = null;
+			final int BUFFER = 2048;
+			ZipEntry zipEntry;
+			while ((zipEntry = zipInputStream.getNextEntry()) != null) {
+				System.out.println("Extracting: " + zipEntry);
+				int count;
+				byte data[] = new byte[BUFFER];
+				String zipEntryName = zipEntry.getName();
+				zipEntryName.replaceFirst(zipEntryName, zipEntryName + "." + version);
+				
+				String fullPathAndName = fullComponentPath + FilePathnameUtils.FILE_SEPARATOR + zipEntryName;
+				
+				if (zipEntry.isDirectory()) {
+					(new File(fullPathAndName)).mkdir();
+					continue;
+				}
+
+				File outFile = new File(fullPathAndName);
+				new File(outFile.getParent()).mkdirs();
+				
+				fileOutputStream = new FileOutputStream(outFile);
+				bufferedOutputStream = new BufferedOutputStream(fileOutputStream, BUFFER);
+				while ((count = zipInputStream.read(data, 0, BUFFER)) != -1) {
+					bufferedOutputStream.write(data, 0, count);
+				}
+				fileOutputStream.flush();
+				bufferedOutputStream.flush();
+				fileOutputStream.close();
+				bufferedOutputStream.close();
+			}
+			zipInputStream.close();
+			fileInputStream.close();
+
+			//TODO Uncoment this line to delete gear files from temp folder 
+			//gearFile.delete();
+
+			updateCwbFileList(componentFolder);
+			
+			
+		} catch (HttpException e) {
+			System.err.println("Fatal protocol violation: " + e.getMessage());
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Http Exception "
+					+ componentFolderName + ", please restart geWorkbench",
+					"Remote Component Update", JOptionPane.ERROR_MESSAGE);
+		} catch (IOException e) {
+			System.err.println("Fatal transport error: " + e.getMessage());
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "IO Exception "
+					+ componentFolderName + ", please restart geWorkbench",
+					"Remote Component Update", JOptionPane.ERROR_MESSAGE);
+		} finally {
+			// Release the connection.
+		}
+	}
+
+	
+	
+	/*
+	 * Look for GEAR files to install If found, install them.
+	 * 
+	 * @param void
+	 * 
+	 * @return void
+	 */
+	public void installComponents() {
+
+		String componentsDirName = componentsDirectory;
+		File componentsDir = new File(componentsDirName);
+		if (!componentsDir.isDirectory()) {
+			log.error("Component resource path is not a directory: "
+					+ componentsDirName);
+			return;
+		}
+
+		String tempFilePath = FilePathnameUtils.getTemporaryFilesDirectoryPath();
+		String gearPathName = tempFilePath + "\\components";
+		File gearFolder = new File(gearPathName);
+		File[] gearFiles = gearFolder.listFiles();
+		for (int i = 0; i < gearFiles.length; i++) {
+			File gearFile = gearFiles[i];
+			if (gearFile.isDirectory()) {
+				continue;
+			}
+			
+			String gearFileName = gearFile.getName();
+			if (!gearFileName.endsWith(".gear")) {
+				continue;
+			}
+
+			String componentFolderName = gearFileName.replace(".gear", "");
+			String fullComponentFolderName = componentsDir + "\\"
+					+ componentFolderName;
+			File oldComponentFolder = new File(fullComponentFolderName);
+			if (oldComponentFolder.exists()) {
+				try {
+					recursiveDelete(oldComponentFolder);
+					oldComponentFolder.delete();
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(null,
+							" There was a problem removing the old component "
+									+ componentFolderName
+									+ ". Please restart again.",
+							"Remote Component Update",
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+			}
+
+			if (oldComponentFolder.exists()) {
+				JOptionPane
+						.showMessageDialog(
+								null,
+								"The old component "
+										+ componentFolderName
+										+ " has not been completely removed. Please restart again.",
+								"Remote Component Update",
+								JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+
+			installComponent(componentFolderName);
+			gearFile.delete();
+		}
+	}
+
+	/*
+	 * Delete old component folder and unzip GEAR file from the users temp
+	 * directory into the components folder
+	 * 
+	 * @param componentFolderName
+	 * 
+	 * @return void
+	 */
+	private void installComponent(String componentFolderName) {
+
+		try {
+
+			String tempFilePath = FilePathnameUtils
+					.getTemporaryFilesDirectoryPath();
+			tempFilePath += "\\components";
+			File gearFile = new File(tempFilePath + "\\" + componentFolderName + ".gear");
+			FileInputStream fileInputStream = new FileInputStream(gearFile);
+			ZipInputStream zipInputStream = new ZipInputStream(
+					new BufferedInputStream(fileInputStream));
+			String outFilePath = UILauncher.getComponentsDirectory();
+			String fullComponentPath = outFilePath + FilePathnameUtils.FILE_SEPARATOR + componentFolderName;
+			try {
+				File componentFolder = new File(fullComponentPath);
+				if (componentFolder.exists()) {
+					JOptionPane.showMessageDialog(null,
+							"Could not install component "
+									+ componentFolderName
+									+ ", please restart geWorkbench",
+							"Remote Component Update",
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				componentFolder.mkdir();
+
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(null,
+						"Could not install component " + componentFolderName
+								+ ", please restart geWorkbench",
+						"Remote Component Update", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+
+			FileOutputStream fileOutputStream = null;
+			BufferedOutputStream bufferedOutputStream = null;
+			final int BUFFER = 2048;
+			ZipEntry zipEntry;
+			while ((zipEntry = zipInputStream.getNextEntry()) != null) {
+				System.out.println("Extracting: " + zipEntry);
+				int count;
+				byte data[] = new byte[BUFFER];
+				String zipEntryName = zipEntry.getName();
+				String fullPathAndName = fullComponentPath
+						+ FilePathnameUtils.FILE_SEPARATOR + zipEntryName;
+
+				if (zipEntry.isDirectory()) {
+					// Assume directories are stored parents first then
+					// children.
+					(new File(fullPathAndName)).mkdir();
+					continue;
+				}
+
+				fileOutputStream = new FileOutputStream(fullPathAndName);
+				bufferedOutputStream = new BufferedOutputStream(
+						fileOutputStream, BUFFER);
+				while ((count = zipInputStream.read(data, 0, BUFFER)) != -1) {
+					bufferedOutputStream.write(data, 0, count);
+				}
+				fileOutputStream.flush();
+				bufferedOutputStream.flush();
+				fileOutputStream.close();
+				bufferedOutputStream.close();
+			}
+			zipInputStream.close();
+			fileInputStream.close();
+
+			gearFile.delete();
+
+		} catch (HttpException e) {
+			System.err.println("Fatal protocol violation: " + e.getMessage());
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Http Exception "
+					+ componentFolderName + ", please restart geWorkbench",
+					"Remote Component Update", JOptionPane.ERROR_MESSAGE);
+		} catch (IOException e) {
+			System.err.println("Fatal transport error: " + e.getMessage());
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "IO Exception "
+					+ componentFolderName + ", please restart geWorkbench",
+					"Remote Component Update", JOptionPane.ERROR_MESSAGE);
+		} finally {
+			// Release the connection.
+		}
+	}
+
+	/*
+	 * Recursively delete folders and files under the dirPath
+	 * 
+	 * TODO move this to a utility class
+	 * 
+	 * @param dirPath
+	 * 
+	 * @return void
+	 */
+	private void recursiveDelete(File dirPath) {
+		String[] ls = dirPath.list();
+
+		for (int idx = 0; idx < ls.length; idx++) {
+			File file = new File(dirPath, ls[idx]);
+			if (file.isDirectory()) {
+				recursiveDelete(file);
+			}
+
+			file.delete();
+		}
+	}
 }
