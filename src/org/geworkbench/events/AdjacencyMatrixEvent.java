@@ -26,7 +26,8 @@ public class AdjacencyMatrixEvent extends Event {
         FINISH,
         DRAW_NETWORK_ON_MICROARRAY,
         DRAW_GENEWAYS_NETWORK,
-        DRAW_GENEWAYS_COMPLETE_NETWORK
+        DRAW_GENEWAYS_COMPLETE_NETWORK,
+        CANCEL
     };
 
     private Action action;
