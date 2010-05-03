@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Observer;
 import java.util.SortedMap;
@@ -28,6 +29,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTree;
+import javax.swing.SwingWorker;
 import javax.swing.border.Border;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -111,7 +113,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 			.create(ProgressBar.INDETERMINATE_TYPE);
 	private LoadData parentPanel;
 	private boolean merge;
-	private boolean stillWaitForConnecting = true;
+	private volatile boolean stillWaitForConnecting = true;
 	private TreeMap<String, CaArray2Experiment> treeMap;
 	private String currentSelectedExperimentName;
 	private Map<String, String> currentSelectedBioAssay;
@@ -339,41 +341,35 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 	 * @param text
 	 */
 	public void updateProgressBar(final String text) {
-		Runnable r = new Runnable() {
-			public void run() {
-				try {
-					if (text.startsWith("Loading")) {
-						int i = 0;
-						internalTimeoutLimit = INTERNALTIMEOUTLIMIT;
-						do {
-							Thread.sleep(250);
-							i++;
-							String currentState = "";
-							if (numTotalArrays>1)
-								currentState = "Downloaded " + numCurrentArray + " of "+numTotalArrays + " arrays.";
-							if (i > 4) {
-								String htmltext = "<html>" + text + i / 4 + " seconds." + "<br>" + currentState +"</html>";
-								progressBar.setMessage(htmltext);
-							}
-							//FIXME: Bug #1797, temporarily disabled for code freeze.
-//							if (i > internalTimeoutLimit * 4) {
-//								stillWaitForConnecting = false;
-//								JOptionPane.showMessageDialog(null,
-//										"Cannot connect with the server in "
-//												+ internalTimeoutLimit
-//												+ " seconds.", "Timeout",
-//										JOptionPane.ERROR_MESSAGE);
-//								update(null, null);
-//							}
-						} while (stillWaitForConnecting);
-					}
-				} catch (InterruptedException e) {
-					log.info("caArray Data Download Thread Interrupted: ",e);
+		SwingWorker<Void, String> worker = new SwingWorker<Void, String>() {
+
+			@Override
+			protected Void doInBackground() throws Exception {
+				if (text.startsWith("Loading")) {
+					int i = 0;
+					internalTimeoutLimit = INTERNALTIMEOUTLIMIT;
+					do {
+						Thread.sleep(250);
+						i++;
+						String currentState = "";
+						if (numTotalArrays>1)
+							currentState = "Downloaded " + numCurrentArray + " of "+numTotalArrays + " arrays.";
+						if (i > 4) {
+							String htmltext = "<html>" + text + i / 4 + " seconds." + "<br>" + currentState +"</html>";
+							publish(htmltext);
+							
+						}
+					} while (stillWaitForConnecting);
 				}
+				return null;
+			}
+			
+			@Override
+			protected void process(List<String> list) {
+				  progressBar.setMessage(list.get(list.size() - 1));
 			}
 		};
-		new Thread(r).start();
-		// SwingUtilities.invokeLater(r);
+		worker.execute();
 	}
 
 	/**
