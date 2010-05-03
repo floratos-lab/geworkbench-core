@@ -1,9 +1,22 @@
 package org.geworkbench.util;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Toolkit;
 import java.util.Observable;
 import java.util.Observer;
+
+import javax.swing.BorderFactory;
+import javax.swing.BoundedRangeModel;
+import javax.swing.DefaultBoundedRangeModel;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JProgressBar;
+import javax.swing.SwingConstants;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
@@ -34,19 +47,11 @@ public class ProgressBar
     /**
      * Visual widget
      */
-    private BorderLayout borderLayout1 = new BorderLayout();
-    /**
-     * Visual widget
-     */
     private JProgressBar jProgressBar = new JProgressBar();
     /**
      * Visual widget
      */
     private JButton cancelButton = new JButton("Cancel");
-    /**
-     * Visual widget
-     */
-    private JPanel jPanel1 = new JPanel();
     /**
      * Singleton representing a <code>ProgressBar</code> with a specified range
      * This needs to set before using the instance
@@ -90,8 +95,8 @@ public class ProgressBar
      */
     private static ProgressBar indeterminateProgressBar =
         new ProgressBar(INDETERMINATE_TYPE);
-    JLabel jLabel1 = new JLabel();
-    GridLayout gridLayout1 = new GridLayout(3, 1);
+    
+    private JLabel jLabel1 = new JLabel();
     /**
      * Factory method to create one of the two above defined ProgressBar types
      * @param type type of the <code>ProgressBar</code>
@@ -270,46 +275,33 @@ public class ProgressBar
      * @throws Exception exception encountered while GUI construction
      */
     private void jbInit() throws Exception {
-        this.getContentPane().setLayout(borderLayout1);
+    	Container container = this.getContentPane();
         jProgressBar.setBorder(BorderFactory.createLoweredBevelBorder());
         jProgressBar.setMinimumSize(new Dimension(300, 22));
         jProgressBar.setPreferredSize(new Dimension(300, 22));
         jProgressBar.setRequestFocusEnabled(true);
         jProgressBar.setBorderPainted(true);
-        cancelButton.setMinimumSize(new Dimension(30, 22));
-        cancelButton.setPreferredSize(new Dimension(30, 22));
+
         cancelButton.setRequestFocusEnabled(true);
-        jPanel1.setPreferredSize(new Dimension(320,50));
-        jPanel1.setLayout(gridLayout1);
+
+        container.setLayout(new GridBagLayout());
         jLabel1.setToolTipText("");
         jLabel1.setHorizontalAlignment(SwingConstants.CENTER);
         jLabel1.setText("Message");
         jLabel1.setVerticalTextPosition(SwingConstants.CENTER);
-        jPanel1.add(jProgressBar);
-        jPanel1.add(jLabel1);
-        JPanel buttonPanel = new JPanel(new GridLayout(1, 3));
-        buttonPanel.add(new JLabel(""));
-        buttonPanel.add(cancelButton);
-        buttonPanel.add(new JLabel(""));
-        jPanel1.add(buttonPanel);
-        JPanel spaceNorthPane = new JPanel();
-        spaceNorthPane.setMinimumSize(new Dimension(300, 5));
-        spaceNorthPane.setPreferredSize(new Dimension(300, 5));
-        JPanel spaceSouthPane = new JPanel();
-        spaceSouthPane.setMinimumSize(new Dimension(300, 5));
-        spaceSouthPane.setPreferredSize(new Dimension(300, 5));
-        JPanel spaceEastPane = new JPanel();
-        spaceEastPane.setMinimumSize(new Dimension(10, 100));
-        spaceEastPane.setPreferredSize(new Dimension(10, 100));
-        JPanel spaceWestPane = new JPanel();
-        spaceWestPane.setMinimumSize(new Dimension(10, 100));
-        spaceWestPane.setPreferredSize(new Dimension(10, 100));
-        this.getContentPane().add(jPanel1, BorderLayout.CENTER);
-        this.getContentPane().add(spaceNorthPane, BorderLayout.NORTH);
-        this.getContentPane().add(spaceSouthPane, BorderLayout.SOUTH);
-        this.getContentPane().add(spaceEastPane, BorderLayout.EAST);
-        this.getContentPane().add(spaceWestPane, BorderLayout.WEST);
-        this.setSize(new Dimension(320, 110));
+        
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
+        c.insets = new Insets(5, 5, 5, 5);
+        container.add(jProgressBar, c);
+        c.gridy = 1;
+        container.add(jLabel1, c);
+        c.gridy = 2;
+        container.add(cancelButton, c);
+
+        container.setMinimumSize(new Dimension(300, 100));
+        
         this.setTitle("Progress Bar");
         winDisposed = new BarObservable();
 
