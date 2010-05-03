@@ -185,6 +185,19 @@ public abstract class AbstractTrainingPanel extends AbstractSaveableParameterPan
 
                                 java.util.List<float[]> trainingCaseData = crossData.getTrainingCaseData();
                                 java.util.List<float[]> trainingControlData = crossData.getTrainingControlData();
+
+                                if(trainingCaseData == null || trainingCaseData.size() == 0)
+                                {
+                                    throw new ClassifierException("Case data must be provided");
+
+                                }
+
+                                if(trainingControlData == null || trainingControlData.size() == 0)
+                                {
+                                    throw new ClassifierException("Control data must be provided");
+
+                                }
+                                
                                 CSClassifier classifier = trainForValidation(trainingCaseData, trainingControlData);
                                 log.debug("Classifier training complete.");
 
