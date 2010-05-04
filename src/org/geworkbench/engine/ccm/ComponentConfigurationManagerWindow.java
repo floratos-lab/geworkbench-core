@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.ItemSelectable;
@@ -625,8 +626,10 @@ public class ComponentConfigurationManagerWindow {
 	 * @return void
 	 */
 	@SuppressWarnings("unchecked")
-	public void applyCcmSelections_actionPerformed(ActionEvent e) {
-
+	private void applyCcmSelections_actionPerformed(ActionEvent e) {
+		Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
+		frame.setCursor(hourglassCursor);
+		
 		for (int i = 0; i < ccmTableModel.getModelRowCount(); i++) {
 
 			boolean choice = ((Boolean) ccmTableModel.getModelValueAt(i,
@@ -680,6 +683,9 @@ public class ComponentConfigurationManagerWindow {
 		ProjectPanel.getInstance().receive(ccmEvent, null);
 
 		setOriginalChoices();
+
+		Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+		frame.setCursor(normalCursor);
 	}
 	
 	/**
