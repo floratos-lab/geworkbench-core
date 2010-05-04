@@ -308,6 +308,8 @@ public class ProgressBar
         BarWindowAdapter bwa = new BarWindowAdapter();
         this.addWindowListener(bwa);
         cancelButton.addActionListener(bwa);
+        
+        pack();
     }
 
     public boolean hasChanged() {
