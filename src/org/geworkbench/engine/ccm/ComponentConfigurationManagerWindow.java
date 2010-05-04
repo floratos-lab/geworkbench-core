@@ -582,30 +582,6 @@ public class ComponentConfigurationManagerWindow {
 		}
 	}
 
-	
-	/*
-	 * launchBrowser for URLs in CCM GUI 
-	 */
-	private void viewExternalSite(){
-        int[] selectedRow = table.getSelectedRows();
-        
-        if (   selectedRow != null && selectedRow.length > 0 && selectedRow[0] >= 0 ) {
-
-    		int modelRow = table.convertRowIndexToModel( selectedRow[0] );
-    		JButton jButton = (JButton) ccmTableModel.getModelValueAt(modelRow, CCMTableModel.TOOL_URL_INDEX);
-    		String url = jButton.getToolTipText();
-    		
-			try {
-				BrowserLauncher.openURL(url);
-			} catch (IOException e1) {
-				// TODO Auto-generated catch
-				// block
-				e1.printStackTrace();
-			}
-		}
-	}
-	
-	
 	/**
 	 * Display a dialog box with a components license in it.
 	 * 
@@ -638,45 +614,6 @@ public class ComponentConfigurationManagerWindow {
 		licenseDialog.setSize(400,300);
 		licenseDialog.setLocationRelativeTo(frame);
 		licenseDialog.setVisible(true);
-	}
-	
-	/**
-	 * 
-	 * @param e
-	 */
-	private void viewDocumentation_actionPerformed(ActionEvent e) {
-
-        int[] selectedRow = table.getSelectedRows();
-
-        String document = "Select a component in order to view its documents.";
-        String componentName = null;
-        if (   selectedRow != null && selectedRow.length > 0 && selectedRow[0] >= 0) {
-
-    		int modelRow = table.convertRowIndexToModel( selectedRow[0] );
-    		document = (String) ccmTableModel.getModelValueAt(modelRow, CCMTableModel.DOCUMENTATION_INDEX);
-    		componentName = (String) ccmTableModel.getModelValueAt(modelRow, CCMTableModel.NAME_INDEX);
-        }
-        
-        JDialog documentDialog = new JDialog();
-		JTextPane documentTextPane = new JTextPane();
-		documentTextPane.setEditable(false);
-		documentTextPane.setText(document);
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setViewportView(documentTextPane);
-		documentDialog.setTitle(componentName + " Documents");
-		documentDialog.setContentPane(scrollPane);
-		documentDialog.setSize(400,400);
-		documentDialog.setLocationRelativeTo(frame);
-		documentDialog.setVisible(true);
-	}
-
-	
-	/**
-	 * 
-	 * @param e
-	 */
-	private void viewExternalSite_actionPerformed(ActionEvent e){
-		viewExternalSite();
 	}
 	
 	/**
