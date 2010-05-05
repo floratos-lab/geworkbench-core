@@ -151,7 +151,8 @@ public class DependencyManager {
 		message += "plugins marked as \"required\" will be automatically\n";
 		message += "selected in your Component Configuration Manager\n";
 		message += "window and will be uploaded in the application along\n";
-		message += "with the plugin you selected.\n";
+		message += "with the plugin you selected. If \"Cancel\" is pushed,\n" +
+				"the plugin you chose will not be selected.";
 		textPane.setText(message);
 		scrollPane.setViewportView(textPane);
 	}
