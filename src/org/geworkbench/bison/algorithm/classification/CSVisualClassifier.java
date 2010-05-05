@@ -12,15 +12,15 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 
 /**
- * This class capture the state that represent a SVMClassifier object, 
- * or just enough to reproduce a SVMClassifier object.
+ * This class capture the state that represent a VisualGPClassifier object,
+ * or just enough to reproduce a VisualGPClassifier object.
  * The later option may be a smaller footprint and cost.
  * 
  * @author zji
  *
  */
-public class CSSvmClassifier extends CSClassifier {
-	static Log log = LogFactory.getLog(CSSvmClassifier.class);
+public class CSVisualClassifier extends CSClassifier {
+	static Log log = LogFactory.getLog(CSVisualClassifier.class);
 			
 	private byte[] modelFileContent;
 
@@ -29,14 +29,14 @@ public class CSSvmClassifier extends CSClassifier {
 	private DSPanel<DSMicroarray> casePanel = null;
 	private DSPanel<DSMicroarray> controlPanel = null;
 
-	public byte[] getModelFileContent() {
+    public byte[] getModelFileContent() {
 		return modelFileContent;
 	}
 	public List<String> getFeatureNames() {
 		return featureNames;
 	}
 
-	public CSSvmClassifier(DSDataSet<?> parent, String label,
+	public CSVisualClassifier(DSDataSet<?> parent, String label,
 			String[] classifications, byte[] modelFileContent, List<String> featureNames, DSPanel<DSMicroarray> casePanel, DSPanel<DSMicroarray> controlPanel) {
 		super(parent, label, classifications);
 		log.debug("modelFileContent size is "+modelFileContent.length);
