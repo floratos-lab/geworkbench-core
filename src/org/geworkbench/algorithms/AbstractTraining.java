@@ -61,12 +61,11 @@ public abstract class AbstractTraining extends AbstractAnalysis implements Clust
         addMicroarrayData(testPanel, testData, markers);
         CSClassifier classifier = trainClassifier(caseData, controlData);
 
-        String history = generateHistoryString(classifier, controlPanel, casePanel, testPanel, markers);
-
-        ProjectPanel.addToHistory(classifier, history);
-
         if (classifier != null)
         {
+            String history = generateHistoryString(classifier, controlPanel, casePanel, testPanel, markers);
+
+            ProjectPanel.addToHistory(classifier, history);
             runClassifier(casePanel, controlPanel, testPanel, classifier);
         }
 
