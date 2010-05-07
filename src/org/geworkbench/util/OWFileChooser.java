@@ -6,9 +6,9 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 /*
  * Extended file chooser with overwrite-warning if a selected file exists
- * Last changed: $LastChangedDate$
- * @author $Author$
- * @version $Revision$
+ * $LastChangedDate$
+ * $Author$
+ * $Revision$
  */
 public class OWFileChooser extends JFileChooser {
 	private static final long serialVersionUID = -8841673089062156967L;
