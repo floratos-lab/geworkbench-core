@@ -7,6 +7,8 @@ import java.io.InputStream;
 import javax.swing.JOptionPane;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.UIManager.LookAndFeelInfo;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -15,7 +17,6 @@ import org.apache.commons.digester.Digester;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.engine.ccm.ComponentConfigurationManager;
-import org.geworkbench.engine.ccm.ComponentConfigurationManager2;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.config.rules.GeawConfigRule;
 import org.geworkbench.engine.config.rules.PluginRule;
@@ -30,7 +31,7 @@ import com.jgoodies.looks.plastic.theme.SkyBlue;
  * <p>Company: First Genetic Trust, Inc.</p>
  *
  * @author First Genetic Trust, Inc.
- * @version 1.0
+ * @version $Id$
  */
 
 /**
@@ -159,29 +160,31 @@ public class UILauncher {
             }
         }
         try {
-            if (System.getProperty("os.name").toUpperCase().indexOf("WINDOWS") == -1) {
-                // If we're not on windows, then use native look and feel no matter what
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } else {
-
-                if (lookAndFeelArg != null) {
-                    if ("native".equals(lookAndFeelArg)) {
-                        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                    } else if ("plastic".equals(lookAndFeelArg)) {
-                        PlasticLookAndFeel.setMyCurrentTheme(new SkyBlue());
-                        UIManager.setLookAndFeel("com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
-                    } else {
-                        UIManager.setLookAndFeel(lookAndFeelArg);
-                    }
-                } else {
-                    // Default to plastic.
+            if (lookAndFeelArg != null) {
+                if ("native".equals(lookAndFeelArg)) {
+                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                } else if ("plastic".equals(lookAndFeelArg)) {
                     PlasticLookAndFeel.setMyCurrentTheme(new SkyBlue());
                     UIManager.setLookAndFeel("com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
+                } else {
+                    UIManager.setLookAndFeel(lookAndFeelArg);
                 }
+            } else {
+	            for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+	                if ("Nimbus".equals(info.getName())) {
+	                    UIManager.setLookAndFeel(info.getClassName());
+	                    break;
+	                }
+	            }
             }
-        } 
-        catch (Exception e) {
-            log.error(e,e);
+        } catch (UnsupportedLookAndFeelException e) {
+            // handle exception
+        } catch (ClassNotFoundException e) {
+            // handle exception
+        } catch (InstantiationException e) {
+            // handle exception
+        } catch (IllegalAccessException e) {
+            // handle exception
         }
 
         splash.hideOnClick();
