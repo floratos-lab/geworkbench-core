@@ -14,14 +14,12 @@ import org.geworkbench.bison.datastructure.bioobjects.sequence.CSSequence;
  * <p>Company: </p>
  *
  * @author not attributable
- * @version 1.0
+ * @version $Id$
  */
 public class PatternSequenceDisplayUtil{
-       private org.geworkbench.bison.datastructure.bioobjects.sequence.CSSequence sequence;
        private TreeSet<PatternLocations> treeSet;
 
-       public PatternSequenceDisplayUtil(CSSequence _sequence){
-           sequence = _sequence;
+       public PatternSequenceDisplayUtil(CSSequence _sequence){ // FIXME argument is ignored
            treeSet = new TreeSet<PatternLocations>();
        }
 
@@ -44,11 +42,11 @@ public class PatternSequenceDisplayUtil{
            return !treeSet.isEmpty();
        }
 
-    public TreeSet getTreeSet() {
+    public TreeSet<PatternLocations> getTreeSet() {
         return treeSet;
     }
 
-    public void setTreeSet(TreeSet treeSet) {
+    public void setTreeSet(TreeSet<PatternLocations> treeSet) {
         this.treeSet = treeSet;
     }
 

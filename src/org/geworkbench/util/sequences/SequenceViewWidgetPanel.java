@@ -31,7 +31,9 @@ import org.geworkbench.util.promoter.pattern.Display;
  */
 public class SequenceViewWidgetPanel extends JPanel {
 
-    //final int xOff = 60;
+	private static final long serialVersionUID = 7202257250696337753L;
+	
+	//final int xOff = 60;
     final int xOff = 80;
     final int yOff = 20;
     final int xStep = 5;
@@ -43,7 +45,7 @@ public class SequenceViewWidgetPanel extends JPanel {
     private String displayInfo = "";
     //ArrayList  selectedPatterns   = null;
     DSCollection<DSMatchedPattern<DSSequence, CSSeqRegistration>> selectedPatterns = null;
-    DSSequenceSet sequenceDB = null;
+    DSSequenceSet<? extends DSSequence> sequenceDB = null;
     HashMap<CSSequence,
             PatternSequenceDisplayUtil> sequencePatternmatches;
     boolean showAll = false;
@@ -113,7 +115,7 @@ public class SequenceViewWidgetPanel extends JPanel {
      */
     public void initialize(HashMap<CSSequence,
             PatternSequenceDisplayUtil> patternSeqMatches,
-                           DSSequenceSet seqDB,
+                           DSSequenceSet<? extends DSSequence> seqDB,
                            boolean isLineView) {
         sequencePatternmatches = patternSeqMatches;
         sequenceDB = seqDB;
@@ -122,28 +124,6 @@ public class SequenceViewWidgetPanel extends JPanel {
 
     }
 
-    //public void initialize(ArrayList patterns, CSSequenceSet seqDB) {
-//    public void initialize(DSCollection<DSMatchedPattern<DSSequence,
-//                           CSSeqRegistration>> matches, DSSequenceSet seqDB) {
-//
-//        initialize(matches, seqDB, true);
-//    }
-
-    /**
-     * THe inistialization of the panel.
-     *
-     * @param matches    DSCollection
-     * @param seqDB      DSSequenceSet
-     * @param isLineView boolean
-     */
-//    public void initialize(DSCollection<DSMatchedPattern<DSSequence,
-//                           CSSeqRegistration>> matches, DSSequenceSet seqDB,
-//                           boolean isLineView) {
-//        selectedPatterns = matches;
-//        sequenceDB = seqDB;
-//        lineView = isLineView;
-//        repaint();
-//    }
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (lineView) {
@@ -166,9 +146,6 @@ public class SequenceViewWidgetPanel extends JPanel {
     private void paintFullView(Graphics g) {
         singleSequenceView = false; //make sure when the view shifts, the singlesequenceview is not selected.
         if (sequenceDB != null) {
-            // DSSequence theone = sequenceDB.getSequence(selected);
-            JViewport scroller = (JViewport) this.getParent();
-            Rectangle r = scroller.getViewRect();
             int rowId = 0;
             double y = yOff + 3;
             double xscale = 0.1;
@@ -313,8 +290,7 @@ public class SequenceViewWidgetPanel extends JPanel {
                 xBasescale = xscale;
                 xBaseCols = cols;
                 g.setFont(f);
-                JViewport scroller = (JViewport) this.getParent();
-                Rectangle r = scroller.getViewRect();
+
                 String lab = theone.getLabel();
                 y += (int) (rowId * yscale);
                 g.setColor(SEQUENCEBACKGROUDCOLOR);
@@ -393,202 +369,6 @@ public class SequenceViewWidgetPanel extends JPanel {
             }
         }
     }
-
-//    private void paintSingleSequence(Graphics g) {
-//        if (sequenceDB != null) {
-//            selected = Math.min(selected, sequenceDB.size() - 1);
-//            DSSequence theone = sequenceDB.getSequence(selected);
-//            int rowId = 0;
-//            int y = yOff;
-//            if (theone != null) {
-//                Font f = new Font("Courier New", Font.PLAIN, 11);
-//                ((Graphics2D) g).setRenderingHint(RenderingHints.
-//                                                  KEY_ANTIALIASING,
-//                                                  RenderingHints.
-//                                                  VALUE_ANTIALIAS_ON);
-//                FontMetrics fm = g.getFontMetrics(f);
-//                String asc = theone.getSequence();
-//                Rectangle2D r2d = fm.getStringBounds(asc, g);
-//                double xscale = (r2d.getWidth() + 3) / (double) (asc.length());
-//                double yscale = 1.3 * r2d.getHeight();
-//                int width = this.getWidth();
-//                int cols = (int) (width / xscale) - 8;
-//
-//                g.setFont(f);
-//                JViewport scroller = (JViewport)this.getParent();
-//                Rectangle r = scroller.getViewRect();
-//                String lab = theone.getLabel();
-//                y += (int) (rowId * yscale);
-//                g.setColor(SEQUENCEBACKGROUDCOLOR);
-//                //            if (lab.length() > 10) {
-//                //                g.drawString(lab.substring(0, 10), 2, y + 3);
-//                //            }
-//                //            else {
-//                g.drawString(lab, 2, y + 3);
-//                //            }
-//
-//                int begin = 0 - cols;
-//                int end = 0;
-//
-//                //rowId++; //uncom by xq
-//                while (end < asc.length()) {
-//                    rowId++;
-//                    y = yOff + (int) (rowId * yscale);
-//
-//                    begin = end;
-//                    end += cols;
-//                    String onepiece = "";
-//                    if (end > asc.length()) {
-//                        onepiece = asc.substring(begin, asc.length());
-//                    } else {
-//                        onepiece = asc.substring(begin, end);
-//
-//                    }
-//                    g.drawString(onepiece, (int) (6 * xscale), y + 3);
-//                }
-//
-//                if (selectedPatterns != null) {
-//                    for (int row = 0; row < selectedPatterns.size(); row++) {
-//                        DSMatchedSeqPattern pattern = (DSMatchedSeqPattern)
-//                                selectedPatterns.get(row);
-//                        PatternOperations.setPatternColor(new Integer(pattern.
-//                                hashCode()),
-//                                PatternOperations.
-//                                getPatternColor(row));
-//                        int seqId = 0;
-//                        if (pattern != null) {
-//
-//                            for (int locusId = 0;
-//                                               locusId < pattern.getSupport();
-//                                               locusId++) {
-//                                seqId = ((CSMatchedSeqPattern) pattern).getId(
-//                                        locusId);
-//                                DSPatternMatch<DSSequence,
-//                                        CSSeqRegistration>
-//                                        sp = pattern.get(locusId);
-//
-//                                if (showAll) {
-//                                    int newIndex[] = sequenceDB.
-//                                            getMatchIndex();
-//                                    if (newIndex != null &&
-//                                        newIndex[seqId] != -1) {
-//                                        DSSequence hitSeq = sp.getObject();
-//                                        if (hitSeq != null &&
-//                                            theone.equals(
-//                                                hitSeq)) {
-//                                            Color c = PatternOperations.
-//                                                    getPatternColor(
-//                                                    row);
-//
-//                                            g.setColor(c);
-//
-//                                            drawPattern(g, sp, xscale,
-//                                                    yscale,
-//                                                    0,
-//                                                    cols,
-//                                                    c, pattern.getASCII());
-//                                            break;
-//
-//                                        }
-//
-//                                    }
-//
-//                                } else {
-//
-//                                    for (int i = 0; i < sequenceDB.size(); i++) {
-//
-//                                        DSSequence hitSeq = sp.getObject();
-//                                        if (hitSeq != null &&
-//                                            theone.equals(
-//                                                hitSeq)) {
-//                                            Color c = PatternOperations.
-//                                                    getPatternColor(
-//                                                    row);
-//
-//                                            g.setColor(c);
-//
-//                                            drawPattern(g, sp, xscale,
-//                                                    yscale,
-//                                                    0,
-//                                                    cols,
-//                                                    c, pattern.getASCII());
-//
-//                                            break;
-//
-//                                        }
-//                                    }
-//
-//                                }
-//                            }
-//
-//                        }
-//                    }
-//                }
-//
-//                int maxY = y + yOff;
-//                setPreferredSize(new Dimension(this.getWidth() - yOff, maxY));
-//                revalidate();
-//
-//            }
-//        }
-//    }
-//    private void paintGraphic(Graphics g) {
-//        Font f = new Font("Courier New", Font.PLAIN, 10);
-//        if (sequenceDB != null) {
-//            int rowId = -1;
-//
-//            int seqNo = sequenceDB.getSequenceNo();
-//
-//            scale = Math.min(5.0,
-//                             (double) (this.getWidth() - 20 - xOff) /
-//                             (double) maxSeqLen);
-//            g.clearRect(0, 0, getWidth(), getHeight());
-//            // draw the patterns
-//            g.setFont(f);
-//            JViewport scroller = (JViewport)this.getParent();
-//            Rectangle r = new Rectangle();
-//            r = scroller.getViewRect();
-//
-//            for (int seqId = 0; seqId < seqNo; seqId++) {
-//                rowId++;
-//                drawSequence(g, seqId, seqId, maxSeqLen);
-//            }
-//
-//            //  for (DSPattern pattern : patternMatches.keySet()) {
-//            // List<DSPatternMatch<DSSequence, CSSeqRegistration>> matches = selectedPatterns;
-//
-//            if ((selectedPatterns != null) && (selectedPatterns.size() > 0)) {
-//                for (Object pattern : selectedPatterns) {
-//                    CSMatchedSeqPattern pat = (CSMatchedSeqPattern) pattern;
-//                    int lastSeqId = -1;
-//                    for (int locusId = 0; locusId < pat.getSupport(); locusId++) {
-//                        int seqId = pat.getId(locusId);
-//                        if (seqId > lastSeqId) {
-//                            rowId++;
-//                            //   drawSequence(g, rowId, seqId, maxSeqLen);
-//                            lastSeqId = seqId;
-//                        }
-//                        drawPattern(g, rowId, locusId, pat, r,
-//                                    PatternOperations.getPatternColor(pat.
-//                                hashCode()));
-//                    }
-//
-//                }
-//                // drawPattern(g, selectedPatterns, r, (Display) patternDisplay.get(pattern));
-//            }
-//
-//            //   }
-//            int maxY = (seqNo + 1) * yStep + yOff;
-//            setPreferredSize(new Dimension(this.getWidth() - yOff, maxY));
-//            revalidate();
-//
-//        } else {
-//
-//        }
-//
-//    }
-
-//For Line view.
 
     private void paintText(Graphics g) {
         Font f = new Font("Courier New", Font.PLAIN, 10);

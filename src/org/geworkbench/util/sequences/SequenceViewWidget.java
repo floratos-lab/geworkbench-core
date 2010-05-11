@@ -27,7 +27,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
 import org.geworkbench.bison.datastructure.biocollections.Collection;
@@ -62,7 +61,7 @@ import org.geworkbench.util.patterns.PatternSequenceDisplayUtil;
  * </p>
  * 
  * @author
- * @version $Id: SequenceViewWidget.java,v 1.32 2009-05-28 22:04:53 jiz Exp $
+ * @version $Id$
  */
 
 @SuppressWarnings("unchecked")
