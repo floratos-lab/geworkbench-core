@@ -173,6 +173,12 @@ public class UILauncher {
 	            for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 	                if ("Nimbus".equals(info.getName())) {
 	                    UIManager.setLookAndFeel(info.getClassName());
+	                    UIManager.getLookAndFeel().getDefaults().put(
+	                    		"ToolBar:Button[Disabled].textForeground",
+	                    		UIManager.getColor("nimbusDisabledText"));
+	                    UIManager.getLookAndFeel().getDefaults().put(
+	                    		"ToolBar:ToggleButton[Disabled].textForeground",
+	                    		UIManager.getColor("nimbusDisabledText"));
 	                    break;
 	                }
 	            }
