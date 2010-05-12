@@ -35,4 +35,5 @@ public interface DSMasterRagulatorResultSet <T extends DSGeneMarker> extends DSA
 	public DSItemList<DSGeneMarker> getTFs();
 	public void setSignificanceResultSet(DSSignificanceResultSet<DSGeneMarker> sigSet);
 	public DSSignificanceResultSet<DSGeneMarker> getSignificanceResultSet();
+	public int getMarkerCount();
 }

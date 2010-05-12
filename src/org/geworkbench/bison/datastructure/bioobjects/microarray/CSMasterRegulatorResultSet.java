@@ -19,17 +19,18 @@ public class CSMasterRegulatorResultSet <T extends DSGeneMarker> extends CSAncil
 	HashMap<String,Double> TFGeneAndTargetGene2TTestValue = new HashMap();
 	DSSignificanceResultSet<DSGeneMarker> sigSet = null;
 	DSMicroarraySet maSet = null;
+	private int markerCount = 0;
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public CSMasterRegulatorResultSet(DSMicroarraySet parent, String label) {
+	public CSMasterRegulatorResultSet(DSMicroarraySet parent, String label, int markerCount) {
 		super(parent, label);
 		this.maSet = parent;
-		// TODO Auto-generated constructor stub
+		this.markerCount = markerCount;
 	}
-
+	
 	public DSMicroarraySet getMicroarraySet(){
 		return maSet;
 	}
@@ -103,6 +104,10 @@ public class CSMasterRegulatorResultSet <T extends DSGeneMarker> extends CSAncil
 	}
 	public DSSignificanceResultSet<DSGeneMarker> getSignificanceResultSet(){
 		return this.sigSet;
+	}
+
+	public int getMarkerCount() {
+		return markerCount;
 	}
 	
 }
