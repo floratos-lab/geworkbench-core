@@ -1,25 +1,29 @@
 package org.geworkbench.builtin.projects;
 
+import java.awt.Component;
+
+import javax.swing.ImageIcon;
+import javax.swing.JTree;
+import javax.swing.tree.DefaultTreeCellRenderer;
+
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
-
-import javax.swing.*;
-import javax.swing.tree.DefaultTreeCellRenderer;
-import java.awt.*;
+import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: First Genetic Trust Inc.</p>
  * <p/>
  * <code>JTree</code> renderer to be used to render the Project Tree
- * @todo Phase out.
  *
  * @author First Genetic Trust
- * @version 1.0
+ * @version $Id$
  */
 public class TreeNodeRenderer extends DefaultTreeCellRenderer {
-    /**
+	private static final long serialVersionUID = -1879887785935786137L;
+	/**
      * Current <code>MicroarraySetNode</code> selection
      */
     public MicroarraySetNode microarraySetNodeSelection = null;
@@ -31,26 +35,6 @@ public class TreeNodeRenderer extends DefaultTreeCellRenderer {
      * Current <code>ImageNode</code> selection
      */
     public ImageNode imageNodeSelection = null;
-    /**
-     * <code>ImageIcon</code> for display on Workspace Nodes
-     */
-    ImageIcon workspaceIcon = null;
-    /**
-     * <code>ImageIcon</code> for display on Project Nodes
-     */
-    ImageIcon projectIcon = null;
-    /**
-     * <code>ImageIcon</code> for display on Microarray Nodes
-     */
-    ImageIcon microarrayIcon = null;
-    /**
-     * <code>ImageIcon</code> for display on Phenotype Nodes
-     */
-    ImageIcon phenotypeIcon = null;
-    /**
-     * <code>ImageIcon</code> for display on Image Nodes
-     */
-    ImageIcon imageIcon = null;
 
     /**
      * Default Constructor
@@ -59,22 +43,6 @@ public class TreeNodeRenderer extends DefaultTreeCellRenderer {
 
     public TreeNodeRenderer(ProjectSelection selection) {
         this.selection = selection;
-        workspaceIcon = new ImageIcon(Icons.class.getResource("workspace16x16.gif"));
-        projectIcon = new ImageIcon(Icons.class.getResource("project16x16.gif"));
-        microarrayIcon = new ImageIcon(Icons.class.getResource("chip16x16.gif"));
-        phenotypeIcon = new ImageIcon(Icons.class.getResource("Phenotype16x16.gif"));
-        imageIcon = new ImageIcon(Icons.class.getResource("image16x16.gif"));
-    }
-
-    /**
-     * Tests if all Node selections are null
-     *
-     * @return
-     */
-    public boolean areNodeSelectionsCleared() {
-        if ((microarraySetNodeSelection == null) && (projectNodeSelection == null) && (imageNodeSelection == null))
-            return true;
-        return false;
     }
 
     /**
@@ -99,9 +67,11 @@ public class TreeNodeRenderer extends DefaultTreeCellRenderer {
      * @param hasFocus if the node has focus
      * @return the <code>Component</code> to be used for rendering
      */
+    @SuppressWarnings("unchecked")
+	@Override
     public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
         super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
-        setForeground(Color.black);
+
         if (value == tree.getModel().getRoot()) {
             setIcon(Icons.WORKSPACE_ICON);
             setToolTipText("This is the workspace.");
@@ -112,7 +82,7 @@ public class TreeNodeRenderer extends DefaultTreeCellRenderer {
         	setIcon(Icons.BUSY_STATIC_ICON);
         } else {
             if (value.getClass() == DataSetNode.class) {
-                DSDataSet df = ((DataSetNode) value).dataFile;
+                DSDataSet<? extends DSBioObject> df = ((DataSetNode) value).dataFile;
                 ImageIcon icon = ProjectPanel.getIconForType(df.getClass());
                 if (icon != null) {
                     setIcon(icon);
@@ -121,10 +91,11 @@ public class TreeNodeRenderer extends DefaultTreeCellRenderer {
                 }
                 String[] descriptions = df.getDescriptions();
                 if (df != null && (df instanceof DSMicroarraySet)){
+                	DSMicroarraySet<? extends DSMicroarray> microarraySet = (DSMicroarraySet<? extends DSMicroarray>)df;
                     setToolTipText("# of microarrays: " +
-                            ((DSMicroarraySet) df).size() + ",   " +
+                            microarraySet.size() + ",   " +
                             "# of markers: " +
-                            ((DSMicroarraySet) df).getMarkers().size() + "\n");
+                            microarraySet.getMarkers().size() + "\n");
                 }
                 else if (descriptions.length > 0) {
                     setToolTipText(descriptions[0]);
@@ -132,7 +103,7 @@ public class TreeNodeRenderer extends DefaultTreeCellRenderer {
                     setToolTipText("This is an undefined Data set");
                 }
             } else if (value.getClass() == DataSetSubNode.class) {
-                DSAncillaryDataSet adf = ((DataSetSubNode) value)._aDataSet;
+                DSAncillaryDataSet<? extends DSBioObject> adf = ((DataSetSubNode) value)._aDataSet;
                 ImageIcon icon = ProjectPanel.getIconForType(adf.getClass());
                 if (icon != null) {
                     setIcon(icon);
@@ -149,10 +120,7 @@ public class TreeNodeRenderer extends DefaultTreeCellRenderer {
                 setIcon(Icons.IMAGE_ICON);
             }
         }
-        // watkin - Using a light gray is confusing and hard to read, using black for all nodes.
-//        if (value == selection.getSelectedNode()) {
-//            setForeground(Color.black);
-//        }
+
         return this;
     }
 
