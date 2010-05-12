@@ -70,5 +70,12 @@ public class ParameterPanel extends JPanel {
     public String getName() {
         return name;
     }
+    
+    /*
+     * This is needed by T-test and multi T-test.
+     */
+    public boolean isLogNormalized() {  
+    	return false;
+    }
 
 }
