@@ -122,6 +122,7 @@
 				<!-- include name="skylinecontour" / -->
 				<include name="skylineview" />
 				<include name="somclustering" />
+				<include name="ttest" />
 				<include name="versioninfo" />
 				<include name="viewers" />
 				<include name="welcome" />
