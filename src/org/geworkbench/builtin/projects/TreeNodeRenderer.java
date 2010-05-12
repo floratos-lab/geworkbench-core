@@ -55,7 +55,7 @@ public class TreeNodeRenderer extends DefaultTreeCellRenderer {
     }
 
     /**
-     * <code>Component</code> used for remdering on the <code>ProjectTree</code>
+     * <code>Component</code> used for rendering on the <code>ProjectTree</code>
      * based on type and selection
      *
      * @param tree     the <code>ProjectTree</code>
