@@ -40,7 +40,7 @@ public class PluginComponent {
 	
 	static Map<String, Category> categoryMap = new TreeMap<String, Category>();
 	static {
-		categoryMap.put("anaysis", Category.ANALYSIS);
+		categoryMap.put("analysis", Category.ANALYSIS);
 		categoryMap.put("visualizer", Category.VISUALIZER);
 		categoryMap.put("filter", Category.FILTER);
 		categoryMap.put("normalizer", Category.NORMALIZER);
