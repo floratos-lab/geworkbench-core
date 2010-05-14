@@ -563,8 +563,7 @@ public class ComponentConfigurationManager {
 					String pluginName = null;
 					String pluginId = null;
 					String resource = null;
-					boolean isAnalysis = false;
-					boolean isVisualizer = false;
+					PluginComponent.Category category = null;
 					List<String> required = new ArrayList<String>();
 					List<String> related = new ArrayList<String>();
 
@@ -613,12 +612,17 @@ public class ComponentConfigurationManager {
 								}
 							}
 
+							str = element.getAttributeValue("category");
+							if(str!=null)
+								category = PluginComponent.categoryMap.get(str);
+							
+							// TODO include the old attributes for now
 							str = element.getAttributeValue("analysis");
 							if(str!=null && str.equalsIgnoreCase("true"))
-								isAnalysis = true;
+								category = PluginComponent.Category.ANALYSIS;
 							str = element.getAttributeValue("visualizer");
 							if(str!=null && str.equalsIgnoreCase("true"))
-								isVisualizer = true;
+								category = PluginComponent.Category.VISUALIZER;					
 						}
 
 						if (element.getName().equals("plugin")) {
@@ -637,7 +641,7 @@ public class ComponentConfigurationManager {
 							description, license, mustAccept,
 							documentation, loadByDefault, hidden,
 							pluginName, pluginId,
-							resource, isAnalysis, isVisualizer, required, related);
+							resource, category, required, related);
 				} // end of if open element is correct
 			}
 		} catch (Exception e) {

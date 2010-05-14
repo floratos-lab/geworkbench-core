@@ -96,8 +96,6 @@ public class ComponentConfigurationManagerWindow {
 	private final static String DISPLAY_ONLY_UNLOADED = "Only unloaded";
 	
 	private final static String SHOW_BY_TYPE_ALL = "All";
-	private final static String SHOW_BY_TYPE_ANALYSIS = "Analysis plugins";
-	private final static String SHOW_BY_TYPE_VISUALIZER = "Visualizers";
 	
 	private ArrayList<Boolean> originalChoices = null;
 
@@ -141,7 +139,13 @@ public class ComponentConfigurationManagerWindow {
 		String[] displayChoices = { DISPLAY_FILTER_ALL, DISPLAY_ONLY_LOADED, DISPLAY_ONLY_UNLOADED };
 		displayComboBox = new JComboBox(displayChoices);
 		showByTypeLabel = new JLabel();
-		String[] showByTypeChoices = { SHOW_BY_TYPE_ALL, SHOW_BY_TYPE_ANALYSIS, SHOW_BY_TYPE_VISUALIZER };
+		String[] showByTypeChoices = new String[PluginComponent.categoryMap.size()+1];
+		showByTypeChoices[0] = SHOW_BY_TYPE_ALL;
+		int index = 1;
+		for(String s: PluginComponent.categoryMap.keySet()){
+			showByTypeChoices[index] =  s.substring(0, 1).toUpperCase()+s.substring(1);
+			index++;
+		};
 		showByTypeComboBox = new JComboBox(showByTypeChoices);
 		keywordSearchLabel = new JLabel("Keyword search:");
 		keywordSearchField = new JTextField("Enter Text");
@@ -491,18 +495,9 @@ public class ComponentConfigurationManagerWindow {
 							.equals(ComponentConfigurationManagerWindow.SHOW_BY_TYPE_ALL))
 				return true;
 
-			Boolean isAnalysis = (Boolean) model.getModelValueAt(entry
-					.getIdentifier(), CCMTableModel.ANALYSIS_INDEX);
-			if (isAnalysis
-					&& typeFilterValue
-							.equals(ComponentConfigurationManagerWindow.SHOW_BY_TYPE_ANALYSIS))
-				return true;
-
-			Boolean isVisualizer = (Boolean) model.getModelValueAt(entry
-					.getIdentifier(), CCMTableModel.VISUALIZER_INDEX);
-			if (isVisualizer
-					&& typeFilterValue
-							.equals(ComponentConfigurationManagerWindow.SHOW_BY_TYPE_VISUALIZER))
+			PluginComponent.Category category = (PluginComponent.Category) model.getModelValueAt(entry
+					.getIdentifier(), CCMTableModel.CATEGORY_INDEX);
+			if (category == PluginComponent.categoryMap.get(typeFilterValue.toLowerCase()))
 				return true;
 
 			return false;

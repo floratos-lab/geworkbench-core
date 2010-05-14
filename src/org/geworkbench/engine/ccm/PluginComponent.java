@@ -1,6 +1,8 @@
 package org.geworkbench.engine.ccm;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A java bean to hold the contents of a .cwb.xml file. This is only used for
@@ -32,15 +34,24 @@ public class PluginComponent {
 	private List<String> required = null;
 	private List<String> related = null;
 
-	private boolean isAnalysis = false;
-	private boolean isVisualizer = false;
+	private Category category = null;
+	
+	static enum Category {ANALYSIS, VISUALIZER, NORMALIZER, FILTER};
+	
+	static Map<String, Category> categoryMap = new HashMap<String, Category>();
+	static {
+		categoryMap.put("anaysis", Category.ANALYSIS);
+		categoryMap.put("visualizer", Category.VISUALIZER);
+		categoryMap.put("normalizer", Category.NORMALIZER);
+		categoryMap.put("filter", Category.FILTER);
+	}
 
 	public PluginComponent(String name, String clazz, String version,
 			String author, String authorUrl, String tutorialUrl,
 			String toolUrl, String description, String license,
 			boolean mustAccept, String documentation, boolean loadByDefault,
 			boolean isHidden, String pluginName, String pluginId,
-			String resource, boolean isAnalysis, boolean isVisualizer,
+			String resource, Category category,
 			List<String> required, List<String> related) {
 		this.name = name;
 		this.clazz = clazz;
@@ -58,8 +69,7 @@ public class PluginComponent {
 		this.pluginName = pluginName;
 		this.pluginId = pluginId;
 		this.resource = resource;
-		this.isAnalysis = isAnalysis;
-		this.isVisualizer = isVisualizer;
+		this.category = category;
 		
 		this.required = required;
 		this.related = related;
@@ -133,12 +143,8 @@ public class PluginComponent {
 		return resource;
 	}
 
-	boolean isAnalysis() {
-		return isAnalysis;
-	}
-
-	boolean isVisualizer() {
-		return isVisualizer;
+	Category getCategory() {
+		return category;
 	}
 
 	boolean isHidden() {

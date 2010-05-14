@@ -43,8 +43,7 @@ class CCMTableModel extends AbstractTableModel {
 	static final int DESCRIPTION_INDEX = 8;
 	static final int LICENSE_INDEX = 11;
 	static final int DOCUMENTATION_INDEX = 13;
-	static final int ANALYSIS_INDEX = 17;
-	static final int VISUALIZER_INDEX = 18;
+	static final int CATEGORY_INDEX = 17;
 
 	static final int HIDDEN_INDEX = 20;
 	static final int LAST_VISIBLE_COLUMN = TOOL_URL_INDEX;
@@ -229,10 +228,8 @@ class CCMTableModel extends AbstractTableModel {
 			return (String) record.getLicense();
 		case DOCUMENTATION_INDEX:
 			return (String) record.getDocumentation();
-		case ANALYSIS_INDEX:
-			return (Boolean) record.isAnalysis();
-		case VISUALIZER_INDEX:
-			return (Boolean) record.isVisualizer();
+		case CATEGORY_INDEX:
+			return (PluginComponent.Category) record.getCategory();
 		case HIDDEN_INDEX:
 			return (Boolean) record.isHidden();
 
