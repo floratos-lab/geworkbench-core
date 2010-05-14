@@ -1,15 +1,15 @@
 package org.geworkbench.engine.ccm;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * A java bean to hold the contents of a .cwb.xml file. This is only used for
  * those that have plugin element.
  * 
  * @author tg2321
- * @version $Id: CcmComponent.java,v 1.4 2009-11-17 15:32:31 tgarben Exp $
+ * @version $Id$
  * 
  */
 public class PluginComponent {
@@ -38,12 +38,12 @@ public class PluginComponent {
 	
 	static enum Category {ANALYSIS, VISUALIZER, NORMALIZER, FILTER};
 	
-	static Map<String, Category> categoryMap = new HashMap<String, Category>();
+	static Map<String, Category> categoryMap = new TreeMap<String, Category>();
 	static {
 		categoryMap.put("anaysis", Category.ANALYSIS);
 		categoryMap.put("visualizer", Category.VISUALIZER);
-		categoryMap.put("normalizer", Category.NORMALIZER);
 		categoryMap.put("filter", Category.FILTER);
+		categoryMap.put("normalizer", Category.NORMALIZER);
 	}
 
 	public PluginComponent(String name, String clazz, String version,

@@ -59,7 +59,7 @@ import com.jgoodies.forms.layout.FormLayout;
  * This is the main menu for the Component Configuration Manager.
  * 
  * @author tg2321
- * @version $Id: ComponentConfigurationManagerWindow.java,v 1.17 2009-11-20 14:37:27 jiz Exp $
+ * @version $Id$
  */
 public class ComponentConfigurationManagerWindow {
 
@@ -96,6 +96,7 @@ public class ComponentConfigurationManagerWindow {
 	private final static String DISPLAY_ONLY_UNLOADED = "Only unloaded";
 	
 	private final static String SHOW_BY_TYPE_ALL = "All";
+	private final static String SHOW_BY_TYPE_OTHERS = "Others";
 	
 	private ArrayList<Boolean> originalChoices = null;
 
@@ -139,13 +140,14 @@ public class ComponentConfigurationManagerWindow {
 		String[] displayChoices = { DISPLAY_FILTER_ALL, DISPLAY_ONLY_LOADED, DISPLAY_ONLY_UNLOADED };
 		displayComboBox = new JComboBox(displayChoices);
 		showByTypeLabel = new JLabel();
-		String[] showByTypeChoices = new String[PluginComponent.categoryMap.size()+1];
+		String[] showByTypeChoices = new String[PluginComponent.categoryMap.size()+2];
 		showByTypeChoices[0] = SHOW_BY_TYPE_ALL;
 		int index = 1;
 		for(String s: PluginComponent.categoryMap.keySet()){
 			showByTypeChoices[index] =  s.substring(0, 1).toUpperCase()+s.substring(1);
 			index++;
 		};
+		showByTypeChoices[index] = SHOW_BY_TYPE_OTHERS; 
 		showByTypeComboBox = new JComboBox(showByTypeChoices);
 		keywordSearchLabel = new JLabel("Keyword search:");
 		keywordSearchField = new JTextField("Enter Text");
@@ -498,6 +500,11 @@ public class ComponentConfigurationManagerWindow {
 			PluginComponent.Category category = (PluginComponent.Category) model.getModelValueAt(entry
 					.getIdentifier(), CCMTableModel.CATEGORY_INDEX);
 			if (category == PluginComponent.categoryMap.get(typeFilterValue.toLowerCase()))
+				return true;
+			
+			if (category == null
+					&& typeFilterValue
+							.equals(ComponentConfigurationManagerWindow.SHOW_BY_TYPE_OTHERS))
 				return true;
 
 			return false;
