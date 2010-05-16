@@ -9,15 +9,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.engine.config.UILauncher;
-import org.geworkbench.util.Util;
 
 /**
  * CCMTableModel
@@ -107,6 +104,7 @@ class CCMTableModel extends AbstractTableModel {
 	 * 
 	 * @see javax.swing.table.AbstractTableModel#getColumnName(int)
 	 */
+	@Override
 	public String getColumnName(int col) {
 		return columnNames[col];
 	}
@@ -117,32 +115,56 @@ class CCMTableModel extends AbstractTableModel {
 	 * @see javax.swing.table.AbstractTableModel#getColumnClass(int) Without
 	 *      this method, the check box column would default to a String
 	 */
-	@SuppressWarnings("unchecked")
-	public Class getColumnClass(int column) {
-
+	@Override
+	public Class<?> getColumnClass(int column) {
 		if (column == SELECTION_INDEX) {
 			return Boolean.class;
-		}
-
-		if (column == AUTHOR_INDEX || column == TUTORIAL_URL_INDEX
-				|| column == TOOL_URL_INDEX) {
-			return JButton.class;
-		}
-
+		} else if (column == AUTHOR_INDEX) {
+			return HyperLink.class;
+		} else if (column == TUTORIAL_URL_INDEX || column == TOOL_URL_INDEX) {
+			return ImageLink.class;
+		} else {
 		return String.class;
+		}
 	}
+	
+	static class HyperLink {
+		public HyperLink(String author, String authorUrl) {
+			text = author;
+			url = authorUrl;
+		}
+		String text;
+		String url;
+	}
+
+	// FIXME make tooltip is supported
+	static class ImageLink {
+		ImageLink(String strUrl) {
+			if (strUrl == null || strUrl == "") {
+				image = LinkIcon.GRAYED;
+			} else {
+				image = LinkIcon.COLORED;
+			}
+			url = strUrl;
+		}
+		LinkIcon image;
+		String url;
+	}
+	
+	enum LinkIcon {COLORED, GRAYED};
 
 	/**
 	 * (non-Javadoc)
 	 * 
 	 * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
 	 */
+	@Override
 	public boolean isCellEditable(int row, int column) {
 		if (column == SELECTION_INDEX) {
 			return true;
+		} else {
+			return false;
 		}
-
-		return false;
 	}
 
 	/**
@@ -154,58 +176,7 @@ class CCMTableModel extends AbstractTableModel {
 		return getModelValueAt(row, column);
 	}
 
-	/**
-	 * return the plugin name for a given row
-	 * 
-	 * @param row
-	 * @return
-	 */
-	String getPluginName(int row) {
-		return (String) getModelValueAt(row, CCMTableModel.NAME_INDEX);
-	}
-
-	/**
-	 * set selected status to opposite for a given row
-	 * 
-	 * @param row
-	 * @return
-	 */
-	void switchSelected(int row) {
-		Boolean selected = (Boolean) getModelValueAt(row,
-				CCMTableModel.SELECTION_INDEX);
-		Boolean reset = new Boolean(!selected.booleanValue());
-		setModelValueAt(reset, row, CCMTableModel.SELECTION_INDEX,
-				CCMTableModel.NO_VALIDATION);
-	}
-
-	/**
-	 * un-select a given row without checking validation
-	 * 
-	 * @param row
-	 * @return
-	 */
-	void unselectWithoutValiation(int row) {
-		setModelValueAt(new Boolean(false), row, CCMTableModel.SELECTION_INDEX,
-				CCMTableModel.NO_VALIDATION);
-	}
-
-	/**
-	 * select a given row without checking validation
-	 * 
-	 * @param row
-	 * @return
-	 */
-	boolean selectWithoutValiation(int row) {
-		return setModelValueAt(new Boolean(true), row,
-				CCMTableModel.SELECTION_INDEX, CCMTableModel.NO_VALIDATION);
-	}
-
-	/**
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.swing.table.TableModel#getValueAt(int, int)
-	 */
-	final public Object getModelValueAt(int row, int column) {
+	final Object getModelValueAt(int row, int column) {
 		PluginComponent record = rows.get(row);
 		switch (column) {
 		case SELECTION_INDEX:
@@ -215,11 +186,11 @@ class CCMTableModel extends AbstractTableModel {
 		case VERSION_INDEX:
 			return (String) record.getVersion();
 		case AUTHOR_INDEX:
-			return createAuthorButton(record);
+			return new HyperLink(record.getAuthor(), record.getAuthorUrl());
 		case TUTORIAL_URL_INDEX:
-			return createButtionField( record.getTutorialUrl() );
+			return new ImageLink( record.getTutorialUrl() );
 		case TOOL_URL_INDEX:
-			return createButtionField( record.getToolUrl() );
+			return new ImageLink( record.getToolUrl() );
 		case CLASS_INDEX:
 			return (String) record.getClazz();
 		case DESCRIPTION_INDEX:
@@ -232,10 +203,35 @@ class CCMTableModel extends AbstractTableModel {
 			return (PluginComponent.Category) record.getCategory();
 		case HIDDEN_INDEX:
 			return (Boolean) record.isHidden();
-
 		default:
+			log.error("Invalid column index");
 			return null;
 		}
+	}
+
+	/**
+	 * set selected status to opposite for a given row
+	 * 
+	 * @param row
+	 * @return
+	 */
+	void switchSelected(int row) {
+		Boolean selected = (Boolean) getModelValueAt(row,
+				CCMTableModel.SELECTION_INDEX);
+		Boolean reset = new Boolean(!selected.booleanValue());
+		selectRow(reset, row,
+				CCMTableModel.NO_VALIDATION);
+	}
+
+	/**
+	 * select a given row without checking validation
+	 * 
+	 * @param row
+	 * @return
+	 */
+	boolean selectWithoutValiation(int row, boolean selected) {
+		return selectRow(new Boolean(selected), row,
+				CCMTableModel.NO_VALIDATION);
 	}
 
 	/**
@@ -261,8 +257,10 @@ class CCMTableModel extends AbstractTableModel {
 	 * @see javax.swing.table.AbstractTableModel#setValueAt(java.lang.Object,
 	 *      int, int)
 	 */
+	@Override
 	public void setValueAt(Object value, int row, int column) {
-		setModelValueAt(value, row, column, true);
+		if(column==0)
+		selectRow(value, row, true);
 	}
 
 	String getResourceFolder(int rowNumber) {
@@ -279,11 +277,10 @@ class CCMTableModel extends AbstractTableModel {
 	 * @see javax.swing.table.AbstractTableModel#setValueAt(java.lang.Object,
 	 *      int, int, boolean)
 	 */
-	final public boolean setModelValueAt(Object value, int modelRow,
-			int column, boolean validation) {
+	final boolean selectRow(Object value, int modelRow,
+			boolean validation) {
 		PluginComponent record = rows.get(modelRow);
-		switch (column) {
-		case SELECTION_INDEX:
+
 			selected.put( record, (Boolean)value );
 
 			Boolean currentChoice = (Boolean) getModelValueAt(modelRow,
@@ -408,11 +405,7 @@ class CCMTableModel extends AbstractTableModel {
 				}
 			}
 
-			break;
-		default:
-
-		}
-		fireTableCellUpdated(modelRow, column);
+//		fireTableCellUpdated(modelRow, column);//FIXME no use
 
 		return true;
 	}
@@ -483,40 +476,6 @@ class CCMTableModel extends AbstractTableModel {
 		this.keywordFilterValue = keywordFilterValue;
 	}
 	
-	public static JButton createAuthorButton(PluginComponent component) {
-		String author = component.getAuthor();
-		String authorUrl = component.getAuthorUrl();
-		JButton button = new JButton(author);
-		button.setBorderPainted(false);
-
-		if (authorUrl != null) {
-			button.setToolTipText(authorUrl);
-			String html = "<html><font><u>" + author
-					+ "</u><br></font>";
-			button.setText(html);
-		}
-
-		return button;
-	}
-	
-	private static JButton createButtionField(String strUrl) {
-		ImageIcon image = null;
-		if (strUrl == null || strUrl == "") {
-			image = Util.createImageIcon(
-					"/org/geworkbench/engine/visualPluginGrey.png",
-					strUrl);
-		} else {
-			image = Util.createImageIcon(
-					"/org/geworkbench/engine/visualPlugin.png",
-					strUrl);
-		}
-
-		JButton button = new JButton(image);
-		button.setToolTipText(strUrl);
-		button.setBorderPainted(false);
-		return button;
-	}
-
 	static private class TableNameComparator implements Comparator<PluginComponent> {
 		public int compare(PluginComponent row1, PluginComponent row2) {
 			String name1 = row1.getName().toLowerCase();

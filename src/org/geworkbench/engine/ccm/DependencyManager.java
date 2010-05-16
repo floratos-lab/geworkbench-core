@@ -66,7 +66,7 @@ public class DependencyManager {
 
 		String unselectedPluginName = "Plugin is missing a Name descriptor";
 		if (selectedRow >= 0) {
-			unselectedPluginName = ccmTableModel.getPluginName(selectedRow);
+			unselectedPluginName = (String)ccmTableModel.getValueAt(selectedRow, CCMTableModel.NAME_INDEX);
 		}
 
 		String message = "The following is a list of plugins known to be\n";
@@ -76,7 +76,7 @@ public class DependencyManager {
 		for (int i = 0; i < dependentPlugins.size(); i++) {
 			Integer dependentRow = dependentPlugins.get(i);
 			int row = dependentRow.intValue();
-			String dependentName = ccmTableModel.getPluginName(row);
+			String dependentName = (String)ccmTableModel.getValueAt(row, CCMTableModel.NAME_INDEX);
 
 			message += "* " + dependentName + "\n";
 		}
@@ -108,7 +108,7 @@ public class DependencyManager {
 
 		String pluginName = "Plugin is missing a Name";
 		if (selectedRow >= 0) {
-			pluginName = (String) ccmTableModel.getPluginName(selectedRow);
+			pluginName = (String) ccmTableModel.getValueAt(selectedRow, CCMTableModel.NAME_INDEX);
 		}
 
 		ArrayList<String> requireAndRelated = new ArrayList<String>();
@@ -119,8 +119,8 @@ public class DependencyManager {
 
 			String requiredName = "missing Class description";
 			if (requiredRow >= 0) {
-				requiredName = (String) ccmTableModel.getPluginName(
-						requiredRow);
+				requiredName = (String) ccmTableModel.getValueAt(
+						requiredRow, CCMTableModel.NAME_INDEX);
 			}
 
 			String req = "";
@@ -135,8 +135,8 @@ public class DependencyManager {
 
 			String relatedName = "missing Class description";
 			if (relatedRow >= 0) {
-				relatedName = (String) ccmTableModel.getPluginName(
-						relatedRow);
+				relatedName = (String) ccmTableModel.getValueAt(
+						relatedRow, CCMTableModel.NAME_INDEX);
 			}
 			requireAndRelated.add(relatedName);
 		}
@@ -166,7 +166,7 @@ public class DependencyManager {
 		for (int i = 0; i < dependentPlugins.size(); i++) {
 			Integer dependentRow = dependentPlugins.get(i);
 			int row = dependentRow.intValue();
-			ccmTableModel.unselectWithoutValiation(row);
+			ccmTableModel.selectWithoutValiation(row, false);
 		}
 	}
 
@@ -178,7 +178,7 @@ public class DependencyManager {
 				log.error("Missing Class in Plugin");
 			}
 
-			boolean successful = ccmTableModel.selectWithoutValiation(requiredRow);
+			boolean successful = ccmTableModel.selectWithoutValiation(requiredRow, true);
 
 			/*
 			 * If a license is not agreed to for a dependent component, then

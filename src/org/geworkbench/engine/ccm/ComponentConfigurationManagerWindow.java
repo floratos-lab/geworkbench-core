@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +39,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableColumnModel;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
@@ -51,6 +52,7 @@ import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.events.ComponentConfigurationManagerUpdateEvent;
 import org.geworkbench.util.BrowserLauncher;
+import org.geworkbench.util.Util;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -88,8 +90,8 @@ public class ComponentConfigurationManagerWindow {
 	private JButton resetButton = new JButton("Reset");
 	private JButton closeButton = new JButton("Close");
 
-	private static int launchedRow = 999;
-	private static int launchedColumn = 999;
+	private static int launchedRow = -1;
+	private static int launchedColumn = -1;
 	
 	private final static String DISPLAY_FILTER_ALL = "All";
 	private final static String DISPLAY_ONLY_LOADED = "Only loaded";
@@ -158,6 +160,7 @@ public class ComponentConfigurationManagerWindow {
 		CellConstraints cc = new CellConstraints();
 		
 	     frame.addWindowListener(new WindowAdapter() {
+			@Override
 			public void windowClosing(WindowEvent e) {
 				ccmWindow = null;
 			}
@@ -293,34 +296,13 @@ public class ComponentConfigurationManagerWindow {
 						//---- table ----
 						ccmTableModel = new CCMTableModel(manager);
 						setOriginalChoices();
-						table = new JTable(ccmTableModel) {
-							private static final long serialVersionUID = 5118325076548663090L;
-
-							public Component prepareRenderer( TableCellRenderer renderer, int viewRow, int col) {
-
-								Component comp = super.prepareRenderer(renderer, viewRow, col);
-
-								boolean isPluginLoaded = componentLoaded(table.convertRowIndexToModel(viewRow));
-								
-								if( isPluginLoaded ){
-									comp.setBackground( new Color(230,230,255));
-								}else{
-									comp.setBackground(Color.white);
-								}
-								
-								if (isCellSelected(viewRow, col)){
-									comp.setBackground( new Color(200,200,255));
-								}
-								
-								return comp;
-							}
-						};
+						table = new JTable(ccmTableModel);
 						sorter = new TableRowSorter<CCMTableModel>(ccmTableModel);
 						table.setRowSorter(sorter);
 
-						TableCellRenderer defaultRenderer;
-						defaultRenderer = table.getDefaultRenderer(JButton.class);
-					    table.setDefaultRenderer(JButton.class, new JTableButtonRenderer(defaultRenderer));
+					    table.setDefaultRenderer(Object.class, new CellRenderer());
+					    table.setDefaultRenderer(CCMTableModel.ImageLink.class, new ImageLinkRenderer());
+					    table.setDefaultRenderer(CCMTableModel.HyperLink.class, new HyperLinkRenderer());
 					    table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
 						ListSelectionModel cellSM = table.getSelectionModel();
@@ -331,12 +313,12 @@ public class ComponentConfigurationManagerWindow {
 						    	if (adjusting){
 							    	return;
 						    	}
-						        int[] selectedRow = table.getSelectedRows();
+						        int selectedRow = table.getSelectedRow();
 						        ListSelectionModel lsm = (ListSelectionModel)e.getSource();
 						        if (lsm.isSelectionEmpty()) {
 									textPane.setText(" ");
 						        } else {
-						            String description = (String)ccmTableModel.getValueAt(table.convertRowIndexToModel(selectedRow[0]), CCMTableModel.DESCRIPTION_INDEX);
+						            String description = (String)ccmTableModel.getValueAt(table.convertRowIndexToModel(selectedRow), CCMTableModel.DESCRIPTION_INDEX);
 						        	textPane.setText(description);
 						        	
 						            if (textPane.getCaretPosition() > 1){
@@ -346,19 +328,6 @@ public class ComponentConfigurationManagerWindow {
 
 						        launchBrowser();
 							}
-						});
-						
-						ListSelectionModel columnSM = table.getColumnModel().getSelectionModel();
-						columnSM.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-						columnSM.addListSelectionListener(new ListSelectionListener() {
-						    public void valueChanged(ListSelectionEvent e) {
-						    	boolean adjusting = e.getValueIsAdjusting();
-						    	if (adjusting){
-						    		return;
-						    	}
-
-						    	launchBrowser();
-						    }
 						});
 						
 						TableColumn column = null;
@@ -449,6 +418,7 @@ public class ComponentConfigurationManagerWindow {
 	}
 	
 	final private RowFilter<CCMTableModel, Integer> hiddenFilter = new RowFilter<CCMTableModel, Integer>() {
+		@Override
 		public boolean include(
 				Entry<? extends CCMTableModel, ? extends Integer> entry) {
 
@@ -464,6 +434,7 @@ public class ComponentConfigurationManagerWindow {
 	};
 
 	final private RowFilter<CCMTableModel, Integer> loadFilter = new RowFilter<CCMTableModel, Integer>() {
+		@Override
 		public boolean include(
 				Entry<? extends CCMTableModel, ? extends Integer> entry) {
 
@@ -487,6 +458,7 @@ public class ComponentConfigurationManagerWindow {
 	 * type filter: analysis or visualization
 	 */
 	final private RowFilter<CCMTableModel, Integer> typeFilter = new RowFilter<CCMTableModel, Integer>() {
+		@Override
 		public boolean include(
 				Entry<? extends CCMTableModel, ? extends Integer> entry) {
 
@@ -515,6 +487,7 @@ public class ComponentConfigurationManagerWindow {
 	 * type filter: analysis or visualization
 	 */
 	final private RowFilter<CCMTableModel, Integer> keywordSearchFilter = new RowFilter<CCMTableModel, Integer>() {
+		@Override
 		public boolean include(
 				Entry<? extends CCMTableModel, ? extends Integer> entry) {
 
@@ -552,36 +525,31 @@ public class ComponentConfigurationManagerWindow {
 	 * launchBrowser for URLs in CCM GUI 
 	 */
 	private void launchBrowser(){
-        int[] selectedRow = table.getSelectedRows();
-        int[] selectedColumn = table.getSelectedColumns();
+        int modelRow = table.convertRowIndexToModel(table.getSelectedRow());
+        int modeColumn = table.convertColumnIndexToModel(table.getSelectedColumn());
         
-        if (   selectedRow != null && selectedRow.length > 0 && selectedRow[0] >= 0 &&
-	       	   selectedColumn != null && selectedColumn.length > 0 && selectedColumn[0] >= 0 &&  
-	       	  (selectedColumn[0] == CCMTableModel.AUTHOR_INDEX
-			|| selectedColumn[0] == CCMTableModel.TUTORIAL_URL_INDEX
-			|| selectedColumn[0] == CCMTableModel.TOOL_URL_INDEX)) {
-
-    		int modelRow = table.convertRowIndexToModel( selectedRow[0] );
-    		if (launchedRow == modelRow && launchedColumn == selectedColumn[0]){
+   		if (launchedRow == modelRow && launchedColumn == modeColumn){
     			return;
-    		}
-    		launchedRow = modelRow;
-    		launchedColumn = selectedColumn[0];
+   		}
+   		
+   		launchedRow = modelRow;
+   		launchedColumn = modeColumn;
     		
-   			JButton button = (JButton) ccmTableModel.getModelValueAt(modelRow, selectedColumn[0]);
-   			String url = button.getToolTipText();
-    		
-   			if (url == null){
-				return;
-			}
+   		String url = null;
+   		Object obj = ccmTableModel.getModelValueAt(modelRow, modeColumn);
+   		if(obj==null) return;
    			
-			try {
-				BrowserLauncher.openURL(url);
-			} catch (IOException e1) {
-				// TODO Auto-generated catch
-				// block
-				e1.printStackTrace();
-			}
+   		if(obj instanceof CCMTableModel.HyperLink)
+   			url = ((CCMTableModel.HyperLink)obj).url;
+   		else if(obj instanceof CCMTableModel.ImageLink)
+   			url = ((CCMTableModel.ImageLink)obj).url;
+   		else
+			return;
+
+		try {
+			BrowserLauncher.openURL(url);
+		} catch (IOException e1) {
+			e1.printStackTrace();
 		}
 	}
 
@@ -699,12 +667,12 @@ public class ComponentConfigurationManagerWindow {
 	private void resetCcmSelections_actionPerformed(ActionEvent e) {
 		for (int i = 0; i < ccmTableModel.getModelRowCount(); i++) {
 			Boolean originalChoice = this.originalChoices.get(i);
-			ccmTableModel.setModelValueAt(originalChoice, i, CCMTableModel.SELECTION_INDEX, CCMTableModel.NO_VALIDATION);
+			ccmTableModel.selectRow(originalChoice, i, CCMTableModel.NO_VALIDATION);
 		}
 
 	}
 
-	/*
+	/**
 	 * Reset selections Close CCM Window
 	 * 
 	 * @param ActionEvent
@@ -749,51 +717,90 @@ public class ComponentConfigurationManagerWindow {
 		return loaded;			
 	}
 
+	/**
+	 * This render makes the cmm-selected row darker.
+	 * @author zji
+	 *
+	 */
+	static private class CellRenderer extends DefaultTableCellRenderer {
+		private static final long serialVersionUID = 4878020589478015309L;
 
-	static private class JTableButtonRenderer implements TableCellRenderer {
-		private TableCellRenderer __defaultRenderer;
-
-		public JTableButtonRenderer(TableCellRenderer renderer) {
-			__defaultRenderer = renderer;
-		}
-
-		@SuppressWarnings("unchecked")
+		@Override
 		public Component getTableCellRendererComponent(JTable table,
 				Object value, boolean isSelected, boolean hasFocus, int row,
 				int column) {
-			if (value instanceof Component) {
+			
+			int modelRow = table.convertRowIndexToModel(row);
+			Boolean selected = (Boolean) (table.getModel().getValueAt(modelRow, CCMTableModel.SELECTION_INDEX));
 
-				if (   column == CCMTableModel.AUTHOR_INDEX ){
-					DefaultTableColumnModel colModel = (DefaultTableColumnModel) table
-					.getColumnModel();
-					TableColumn col = colModel.getColumn(column);
-					col.setPreferredWidth(300);
-					col.setResizable(true);
-
-					JButton button = (JButton)value;
-					
-					Font font = button.getFont();
-					Map attributes = font.getAttributes();
-			        attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
-			        button.setFont(font.deriveFont(attributes));
-				}
-				
-				if (   column == CCMTableModel.TUTORIAL_URL_INDEX
-					|| column == CCMTableModel.TOOL_URL_INDEX) {
-					DefaultTableColumnModel colModel = (DefaultTableColumnModel) table
-							.getColumnModel();
-					TableColumn col = colModel.getColumn(column);
-					col.setMinWidth(75);
-					col.setMaxWidth(75);
-				}
-				
-				return (Component) value;
-			}
-
-			Component component = __defaultRenderer
+			Component defaultComponent = defaultRenderer
 					.getTableCellRendererComponent(table, value, isSelected,
 							hasFocus, row, column);
-			return component;
+			Component c = super.getTableCellRendererComponent(table, value,
+					isSelected, hasFocus, row, column);
+			if (selected) {
+				c.setBackground(defaultComponent.getBackground().darker());
+			} else {
+				c.setBackground(defaultComponent.getBackground());
+			}
+			return c;
+		}
+	    private static TableCellRenderer defaultRenderer = new DefaultTableCellRenderer();
+	}
+
+	static private class ImageLinkRenderer extends CellRenderer {
+		private static final long serialVersionUID = 8730940505472251871L;
+
+		private static JPanel colored = new JPanel(); 
+		private static JPanel grayed = new JPanel(); 
+		static {
+			colored.add(new JLabel(Util.createImageIcon(
+					"/org/geworkbench/engine/visualPlugin.png")));
+			grayed.add(new JLabel(Util.createImageIcon(
+			"/org/geworkbench/engine/visualPluginGrey.png")));
+		}
+
+		@Override
+		public Component getTableCellRendererComponent(JTable table,
+				Object value, boolean isSelected, boolean hasFocus, int row,
+				int column) {
+			Component c = super.getTableCellRendererComponent(table, value,
+					isSelected, hasFocus, row, column);
+			CCMTableModel.LinkIcon linkIcon = ((CCMTableModel.ImageLink) value).image;
+			JPanel p = null;
+			if(linkIcon==CCMTableModel.LinkIcon.COLORED)
+				p = colored;
+			else if (linkIcon==CCMTableModel.LinkIcon.GRAYED)
+				p = grayed;
+			
+			p.setBackground(c.getBackground());
+			p.setToolTipText(((CCMTableModel.ImageLink) value).url);
+			return p;
+		}
+	}
+
+	static private class HyperLinkRenderer extends CellRenderer {
+		private static final long serialVersionUID = -1378393715835011075L;
+
+		@Override
+		public Component getTableCellRendererComponent(JTable table,
+				Object value, boolean isSelected, boolean hasFocus, int row,
+				int column) {
+
+			Component c = super.getTableCellRendererComponent(table,
+					((CCMTableModel.HyperLink) value).text, isSelected,
+					hasFocus, row, column);
+
+			if (!isSelected)
+				c.setForeground(Color.blue);
+
+			Font font = c.getFont();
+			Map<TextAttribute, Object> attributes = new Hashtable<TextAttribute, Object>();
+			attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+			c.setFont(font.deriveFont(attributes));
+			
+			setToolTipText(((CCMTableModel.HyperLink) value).url);
+			return c;
 		}
 	}
 
