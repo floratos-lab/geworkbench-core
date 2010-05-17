@@ -545,6 +545,8 @@ public class ComponentConfigurationManagerWindow {
    			url = ((CCMTableModel.ImageLink)obj).url;
    		else
 			return;
+   		
+   		if(url==null)return;
 
 		try {
 			BrowserLauncher.openURL(url);
