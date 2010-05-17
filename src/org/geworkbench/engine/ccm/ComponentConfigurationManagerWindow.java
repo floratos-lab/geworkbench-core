@@ -722,11 +722,11 @@ public class ComponentConfigurationManagerWindow {
 							hasFocus, row, column);
 			Component c = super.getTableCellRendererComponent(table, value,
 					isSelected, hasFocus, row, column);
-			if (selected) {
-				c.setBackground(defaultComponent.getBackground().darker());
-			} else {
-				c.setBackground(defaultComponent.getBackground());
-			}
+//			if (selected) {
+//				c.setBackground(defaultComponent.getBackground().darker());
+//			} else {
+//				c.setBackground(defaultComponent.getBackground());
+//			}
 			return c;
 		}
 	    private static TableCellRenderer defaultRenderer = new DefaultTableCellRenderer();
