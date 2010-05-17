@@ -23,6 +23,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -753,14 +754,10 @@ public class ComponentConfigurationManagerWindow {
 	static private class ImageLinkRenderer extends CellRenderer {
 		private static final long serialVersionUID = 8730940505472251871L;
 
-		private static JPanel colored = new JPanel(); 
-		private static JPanel grayed = new JPanel(); 
-		static {
-			colored.add(new JLabel(Util.createImageIcon(
-					"/org/geworkbench/engine/visualPlugin.png")));
-			grayed.add(new JLabel(Util.createImageIcon(
-			"/org/geworkbench/engine/visualPluginGrey.png")));
-		}
+		private static ImageIcon colored = Util
+				.createImageIcon("/org/geworkbench/engine/visualPlugin.png");
+		private static ImageIcon grayed = Util
+				.createImageIcon("/org/geworkbench/engine/visualPluginGrey.png");
 
 		@Override
 		public Component getTableCellRendererComponent(JTable table,
@@ -768,16 +765,20 @@ public class ComponentConfigurationManagerWindow {
 				int column) {
 			Component c = super.getTableCellRendererComponent(table, value,
 					isSelected, hasFocus, row, column);
-			CCMTableModel.LinkIcon linkIcon = ((CCMTableModel.ImageLink) value).image;
-			JPanel p = null;
-			if(linkIcon==CCMTableModel.LinkIcon.COLORED)
-				p = colored;
-			else if (linkIcon==CCMTableModel.LinkIcon.GRAYED)
-				p = grayed;
+			if(!(c instanceof JLabel)) { // this is for safe guard. should not happen
+				return c;
+			}
+			JLabel label = (JLabel)c;
+			label.setText(null);
+			label.setToolTipText(((CCMTableModel.ImageLink) value).url);
 			
-			p.setBackground(c.getBackground());
-			p.setToolTipText(((CCMTableModel.ImageLink) value).url);
-			return p;
+			CCMTableModel.LinkIcon linkIcon = ((CCMTableModel.ImageLink) value).image;
+			if(linkIcon==CCMTableModel.LinkIcon.COLORED)
+				label.setIcon(colored);
+			else if (linkIcon==CCMTableModel.LinkIcon.GRAYED)
+				label.setIcon(grayed);
+			
+			return label;
 		}
 	}
 
