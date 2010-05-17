@@ -331,33 +331,14 @@ public class ComponentConfigurationManagerWindow {
 							}
 						});
 						
-						TableColumn column = null;
-						for (int i = 0; i < CCMTableModel.LAST_VISIBLE_COLUMN; i++) {
-							column = table.getColumnModel().getColumn(i);
-							column.setResizable(false);
-
-							switch (i) {
-							case CCMTableModel.SELECTION_INDEX:
-								column.setMaxWidth(100);
-								column.setMinWidth(100);
-								break;
-							case CCMTableModel.NAME_INDEX:
-								column.setPreferredWidth(300);
-								column.setResizable(true);
-								break;
-							case CCMTableModel.AUTHOR_INDEX:
-								break;
-							case CCMTableModel.VERSION_INDEX:
-								column.setMaxWidth(50);
-								column.setMinWidth(50);
-								break;
-							case CCMTableModel.TUTORIAL_URL_INDEX:
-								break;
-							case CCMTableModel.TOOL_URL_INDEX:
-								break;
-							default:
-							}
-						}
+						TableColumn column = table.getColumnModel().getColumn(CCMTableModel.SELECTION_INDEX);
+						column.setMaxWidth(50);
+						column = table.getColumnModel().getColumn(CCMTableModel.VERSION_INDEX);
+						column.setMaxWidth(60);
+						column = table.getColumnModel().getColumn(CCMTableModel.TUTORIAL_URL_INDEX);
+						column.setMaxWidth(70);
+						column = table.getColumnModel().getColumn(CCMTableModel.TOOL_URL_INDEX);
+						column.setMaxWidth(70);
 						
 						scrollPaneForTable = new JScrollPane(table);
 					}
