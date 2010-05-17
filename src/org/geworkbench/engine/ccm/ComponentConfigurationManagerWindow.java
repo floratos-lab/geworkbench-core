@@ -327,7 +327,8 @@ public class ComponentConfigurationManagerWindow {
 						            }
 						        }
 
-						        launchBrowser();
+						        if(table.getSelectedRow()>=0)
+						        	launchBrowser();
 							}
 						});
 						
