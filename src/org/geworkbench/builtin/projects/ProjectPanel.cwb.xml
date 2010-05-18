@@ -11,10 +11,8 @@
         <menu-item path="File.New.Workspace" mode="always" var="File.New.Workspace"/>
         <menu-item path="File.New.Project" mode="always" var="File.New.Project"/>
         <menu-item path="File.Export" mode="always" var="File.Export"/>
-        <menu-item path="File.Merge Datasets" mode="always" var="File.Merge Datasets"/>
-        <menu-item path="File.Remove.Project" mode="always" var="File.Remove.Project"/>
-        <menu-item path="File.Remove.File" mode="always" var="File.Remove.File"/>
-        <menu-item path="File.Remove.Image" mode="always" var="File.Remove.Image"/>
+        <menu-item path="File.Merge Datasets" mode="always" var="File.Merge Datasets"/>        
+        <menu-item path="File.Remove" mode="always" var="File.Remove"/>
         <menu-item path="Edit.Rename.Project" mode="always" var="Edit.Rename.Project"/>
         <menu-item path="Edit.Rename.File" mode="always" var="Edit.Rename.File"/>
         The Project Panel is responsible for organizing and displaying data sets.

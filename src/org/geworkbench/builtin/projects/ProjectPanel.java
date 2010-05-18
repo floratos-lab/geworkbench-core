@@ -285,14 +285,14 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		jRemoveDatasetItem.setText("Remove");
 		jRemoveDatasetItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				fileRemove_actionPerformed(e);
+				remove_actionPerformed();
 			}
 		});
 
 		jRemovePendingItem.setText("Remove");
 		jRemovePendingItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				fileRemove_actionPerformed(e);
+				remove_actionPerformed();
 			}
 		});
 
@@ -306,7 +306,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		jRemoveSubItem.setText("Remove");
 		jRemoveSubItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				fileRemove_actionPerformed(e);
+				remove_actionPerformed();
 			}
 		});
 		jEditItem.setText("View in Editor");
@@ -401,7 +401,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		jRemoveProjectItem.setText("Remove Project");
 		jRemoveProjectItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				projectRemove_actionPerformed(e);
+				remove_actionPerformed();
 			}
 		});
 
@@ -1185,6 +1185,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 */
 	protected void jProjectTree_mouseReleased(MouseEvent e) {
 		TreePath path = projectTree.getPathForLocation(e.getX(), e.getY());
+		TreePath[] paths = projectTree.getSelectionPaths();
 		if (path != null) {
 			ProjectTreeNode mNode = (ProjectTreeNode) path
 					.getLastPathComponent();
@@ -1200,6 +1201,32 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				}
 				// Make the jPopupMenu visible relative to the current mouse
 				// position in the container.
+				if (paths != null && paths.length > 1) {
+					this.jNewProjectItem.setEnabled(false);
+					this.jSaveMenuItem.setEnabled(false);
+					this.jOpenRemotePDBItem.setEnabled(false);
+					this.jLoadMArrayItem.setEnabled(false);
+					this.jRenameDataset.setEnabled(false);
+					this.jRenameMenuItem.setEnabled(false);
+					this.jRenameProjectItem.setEnabled(false);
+					this.jRenameSubItem.setEnabled(false);
+					this.jSaveMenuItem.setEnabled(false);
+					this.jEditItem.setEnabled(false);					 
+					this.jViewAnnotations.setEnabled(false);
+				} else {
+					this.jNewProjectItem.setEnabled(true);
+					this.jSaveMenuItem.setEnabled(true);
+					this.jOpenRemotePDBItem.setEnabled(true);
+					this.jLoadMArrayItem.setEnabled(true);
+					this.jRenameDataset.setEnabled(true);
+					this.jRenameMenuItem.setEnabled(true);
+					this.jRenameProjectItem.setEnabled(true);
+					this.jRenameSubItem.setEnabled(true);
+					this.jSaveMenuItem.setEnabled(true);
+					this.jEditItem.setEnabled(true);
+					this.jViewAnnotations.setEnabled(true);
+				}
+
 				if ((mNode == null) || (mNode == root)) {
 					jRootMenu.show(projectTree, e.getX(), e.getY());
 				} else if (mNode instanceof ProjectNode) {
@@ -1242,6 +1269,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	protected void jProjectTree_keyReleased() {
 
 		TreePath path = projectTree.getSelectionPath();
+
 		if (path != null) {
 			path.getLastPathComponent();
 			selectedNode = selection.getSelectedNode();
@@ -1723,52 +1751,68 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 	}
 
-	/**
-	 * Action listener handling user requests for removing a dataset.
-	 * 
-	 * @param e
-	 */
-	protected void fileRemove_actionPerformed(ActionEvent e) {
-		if (projectTree == null
-				|| selection == null
-				|| !((selection.getSelectedNode() instanceof DataSetNode)
-						|| (selection.getSelectedNode() instanceof DataSetSubNode) || (selection
-						.getSelectedNode() instanceof PendingTreeNode))) {
-			JOptionPane.showMessageDialog(null, "Select a microarray set.",
+	protected void remove_actionPerformed() {
+		if (projectTree == null || selection == null ) {
+			JOptionPane.showMessageDialog(null, "Please make a selection.",
+					"Delete Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		else if (selection.getSelectedNode().isRoot())
+		{
+			JOptionPane.showMessageDialog(null, "Please don't select a ROOT node.",
 					"Delete Error", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
-		if (selection.getSelectedNode() instanceof PendingTreeNode) { // if
-			// it's
-			// a
-			// pending
-			// node,
-			// we
-			// fire
-			// a
-			// PendingNodeCancelledEvent.
-			publishPendingNodeCancelledEvent(new PendingNodeCancelledEvent(
-					((PendingTreeNode) selection.getSelectedNode())
-							.getGridEpr()));
+		TreePath[] paths = projectTree.getSelectionPaths();
+
+		if (paths.length <= 0)
+			return;
+
+		ProjectTreeNode node = new ProjectTreeNode();
+		ProjectTreeNode parentNode = null;
+
+		for (TreePath path : paths) {
+			node = (ProjectTreeNode) path.getLastPathComponent();
+
+			if (paths == null || node.isRoot())
+				continue;
+
+			boolean isExist = false;
+			for (int i = 0; i < paths.length; i++) {
+				if (paths[i].equals(path)) {
+					isExist = true;
+					break;
+				}
+
+			}
+			if (!isExist)
+				continue;
+
+			parentNode = (ProjectTreeNode) node.getParent();
+            
+			if (node instanceof ProjectNode)
+				projectRemove_actionPerformed((ProjectNode) node);
+			else if (node instanceof ImageNode)
+				imageRemove_actionPerformed(node);
+			else
+				fileRemove_actionPerformed(node);
+			paths = projectTree.getSelectionPaths();
 		}
+		// If there are any remaining projects, select the first of them to
+		// be the next one to get the focus.
 
-		if (selection.getSelectedNode() instanceof DataSetSubNode)
-			publishNodeRemovedEvent(new ProjectNodeRemovedEvent("remove", null,
-					((DataSetSubNode) (selection.getSelectedNode()))._aDataSet));
-
-		ProjectTreeNode node = selection.getSelectedNode();
-		ProjectTreeNode parentNode = (ProjectTreeNode) node.getParent();
-
-		projectTreeModel.removeNodeFromParent(node);
-
-		// clear out unused mark annotation from memory
-		if (node instanceof DataSetNode) {
-			AnnotationParser
-					.cleanUpAnnotatioAfterUnload(((DataSetNode) node).dataFile);
-		}
-
-		if (parentNode.getChildCount() == 0
+		if (parentNode == null)
+			return;
+		else if (parentNode.isRoot() && parentNode.getChildCount() <= 0) {
+			clear();
+			setNodeSelection(parentNode);
+		} else if (parentNode.isRoot() && parentNode.getChildCount() > 0) {
+			ProjectTreeNode pNode = (ProjectTreeNode) parentNode.getChildAt(0);
+			if (pNode.getChildCount() > 0) {
+				setNodeSelection((DataSetNode) pNode.getChildAt(0));
+			}
+		} else if (parentNode.getChildCount() == 0
 				&& parentNode instanceof ProjectNode) {
 			setNodeSelection(parentNode);
 			publishProjectEvent(new ProjectEvent(ProjectEvent.CLEARED, null,
@@ -1783,6 +1827,57 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		} else {
 			setNodeSelection(parentNode);
 		}
+
+	}
+
+	/**
+	 * Action listener handling user requests for removing a dataset.
+	 * 
+	 * @param e
+	 */
+	protected void fileRemove_actionPerformed(ProjectTreeNode node) {
+		// clear out unused mark annotation from memory
+		if (node instanceof DataSetNode) {
+			AnnotationParser
+					.cleanUpAnnotatioAfterUnload(((DataSetNode) node).dataFile);
+
+			if (node.getChildCount() > 0) {
+				for (Enumeration en = node.children(); en.hasMoreElements();) {
+					ProjectTreeNode childNode = (ProjectTreeNode) en
+							.nextElement();
+					if (childNode instanceof DataSetSubNode)
+						publishNodeRemovedEvent(new ProjectNodeRemovedEvent(
+								"remove", null,
+								((DataSetSubNode) (childNode))._aDataSet));
+					if (childNode instanceof PendingTreeNode) {
+
+						publishPendingNodeCancelledEvent(new PendingNodeCancelledEvent(
+								((PendingTreeNode) childNode).getGridEpr()));
+					}
+
+				}
+			}
+		}
+
+		if (node instanceof PendingTreeNode) { // if
+			// it's
+			// a
+			// pending
+			// node,
+			// we
+			// fire
+			// a
+			// PendingNodeCancelledEvent.
+			publishPendingNodeCancelledEvent(new PendingNodeCancelledEvent(
+					((PendingTreeNode) node).getGridEpr()));
+		}
+
+		if (node instanceof DataSetSubNode)
+			publishNodeRemovedEvent(new ProjectNodeRemovedEvent("remove", null,
+					((DataSetSubNode) (node))._aDataSet));
+
+		projectTreeModel.removeNodeFromParent(node);
+
 	}
 
 	@Publish
@@ -1796,27 +1891,18 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * 
 	 * @param e
 	 */
-	protected void projectRemove_actionPerformed(ActionEvent e) {
-		if (projectTree == null || selection == null
-				|| !(selection.getSelectedNode() instanceof ProjectNode)) {
-			JOptionPane.showMessageDialog(null, "Select a project node.",
-					"Delete Error", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
+	protected void projectRemove_actionPerformed(ProjectNode node) {
 
-		ProjectNode project = selection.getSelectedProjectNode();
-
-		projectTreeModel.removeNodeFromParent(project);
-		// If there are any remaining projects, select the first of them to
-		// be the next one to get the focus.
-		if (root.getChildCount() > 0) {
-			ProjectTreeNode pNode = (ProjectTreeNode) root.getChildAt(0);
-			if (pNode.getChildCount() > 0) {
-				setNodeSelection((DataSetNode) pNode.getChildAt(0));
+		if (node.getChildCount() > 0) {
+			for (Enumeration en = node.children(); en.hasMoreElements();) {
+				ProjectTreeNode childNode = (ProjectTreeNode) en
+						.nextElement();
+				if (childNode instanceof DataSetNode)
+					fileRemove_actionPerformed(childNode);
 			}
-		} else {
-			clear();
 		}
+		projectTreeModel.removeNodeFromParent(node);
+        
 	}
 
 	/**
@@ -2556,25 +2642,12 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		listeners.put("File.New.Workspace", listener);
 		listener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				projectRemove_actionPerformed(e);
+				remove_actionPerformed();
 			}
 
 		};
-		listeners.put("File.Remove.Project", listener);
-		listener = new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				fileRemove_actionPerformed(e);
-			}
-
-		};
-		listeners.put("File.Remove.File", listener);
-		listener = new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				imageRemove_actionPerformed(e);
-			}
-
-		};
-		listeners.put("File.Remove.Image", listener);
+		listeners.put("File.Remove", listener);
+		 
 		listener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveNodeAsFile();
@@ -2644,23 +2717,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				System.getProperty("application.title"));
 	}
 
-	protected void imageRemove_actionPerformed(ActionEvent e) {
-		if (projectTree == null
-				|| projectTree.getSelectionPath() == null
-				|| !(projectTree.getSelectionPath().getLastPathComponent() instanceof ImageNode)) {
-			JOptionPane.showMessageDialog(null, "Select an image node.",
-					"Delete Error", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-
-		ImageNode image = (ImageNode) projectTree.getSelectionPath()
-				.getLastPathComponent();
-		ProjectTreeNode parent = (ProjectTreeNode) image.getParent();
-		projectTreeModel.removeNodeFromParent(image);
-		// Set the selected node to be the image's parent (a microarrayset
-		// node).
-		setNodeSelection(parent);
-		// fireNodeSelectionEvent((ProjectTreeNode) root.getChildAt(0));
+	protected void imageRemove_actionPerformed(ProjectTreeNode node) {		 
+ 
+		projectTreeModel.removeNodeFromParent(node);	 
 		publishImageSnapshot(new ImageSnapshotEvent("ImageSnapshot", null,
 				ImageSnapshotEvent.Action.SHOW));
 	}
