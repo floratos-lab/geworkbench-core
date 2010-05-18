@@ -80,11 +80,8 @@ public class DependencyManager {
 
 			message += "* " + dependentName + "\n";
 		}
-		message += "\nIf you choose the \"Continue\" button below, \n";
-		message += "the listed plugins will be automatically be unselected\n";
-		message += "in your Component Configuration Manager window\n";
-		message += "and will be unloaded in the application along\n";
-		message += "with the plugin you unselected.\n";
+		message += "\nContinue: unselect the listed plugins with the one\n" + "you unchecked.\n";
+		message += "Cancel: cancel the unselect action.\n";
 		textPane.setText(message);
 		scrollPane.setViewportView(textPane);
 	}
@@ -147,12 +144,9 @@ public class DependencyManager {
 		for (int i = 0; i < requireAndRelated.size(); i++) {
 			message += "* " + requireAndRelated.get(i) + "\n";
 		}
-		message += "\nIf you choose the \"Continue\" button below, those\n";
-		message += "plugins marked as \"required\" will be automatically\n";
-		message += "selected in your Component Configuration Manager\n";
-		message += "window and will be uploaded in the application along\n";
-		message += "with the plugin you selected. If \"Cancel\" is pushed,\n" +
-				"the plugin you chose will not be selected.";
+		message += "\nContinue: select the additional required components\n";		  
+		message += "Cancel: cancel the selection of requested component\n" ;
+				 
 		textPane.setText(message);
 		scrollPane.setViewportView(textPane);
 	}
