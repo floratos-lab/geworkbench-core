@@ -148,6 +148,7 @@ public class ComponentConfigurationManagerWindow {
 		int index = 1;
 		for(String s: PluginComponent.categoryMap.keySet()){
 			showByTypeChoices[index] =  s.substring(0, 1).toUpperCase()+s.substring(1);
+			if(!s.endsWith("s"))showByTypeChoices[index] += "s";
 			index++;
 		};
 		showByTypeChoices[index] = SHOW_BY_TYPE_OTHERS; 
