@@ -8,10 +8,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Vector;
 
@@ -145,7 +146,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	 * <code>AbstractAnaysis</code>
 	 * </UL>
 	 */
-	protected Hashtable<ParameterKey, Map<Serializable, Serializable>> parameterHash = null;
+	protected Map<ParameterKey, Map<Serializable, Serializable>> parameterHash = null;
 
 	/*
 	 * Temporary directory name that is obtained from each Component. This is
@@ -174,7 +175,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	 *
 	 */
 	public AbstractAnalysis() {
-		parameterHash = new Hashtable<ParameterKey, Map<Serializable, Serializable>>();
+		parameterHash = Collections.synchronizedMap(new LinkedHashMap<ParameterKey, Map<Serializable, Serializable>>());
 		className = this.getClass().getSuperclass().getName();
 		String pluginName = PluginRegistry.getNameMap(className);
 		setLabel(pluginName);
