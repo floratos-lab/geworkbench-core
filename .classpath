@@ -11,7 +11,6 @@
 	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="lib/BNJ_libs/jxl.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/caArrayMageom/aspectjrt.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/Simulation_libs/colt.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/activation.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/AffxFusion.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ant.jar"/>
@@ -75,15 +74,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/caArrayMageom/commons-pool.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/caArrayMageom/db-ojb-1.0.rc7.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/caArrayMageom/jaxen-full.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/Simulation_libs/jahmm-0.2.6.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/Simulation_libs/JClass.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/Simulation_libs/jcommon.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/Simulation_libs/jfreechart.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/Simulation_libs/mpiJava.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/Simulation_libs/netx.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/Simulation_libs/odeToJava.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/Simulation_libs/SBMLReader.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/Simulation_libs/SBWCore.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jdo-1.0.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/kodo-jdo.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/kodo-jdo-runtime.jar"/>
