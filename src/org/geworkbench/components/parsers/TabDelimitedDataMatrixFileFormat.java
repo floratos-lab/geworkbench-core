@@ -362,7 +362,7 @@ public class TabDelimitedDataMatrixFileFormat extends DataSetFileFormat {
 							try {
 								value = Float.parseFloat(valString);
 							} catch (NumberFormatException nfe) {
-								log.error("We expect a number, but we got: "
+								log.info("We expect a number, but we got: "
 										+ valString);
 							}
 							// put values directly into CSMicroarray inside of
