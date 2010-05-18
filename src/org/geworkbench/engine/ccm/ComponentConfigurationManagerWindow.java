@@ -49,6 +49,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.builtin.projects.ProjectPanel;
+import org.geworkbench.engine.ccm.PluginComponent.Category;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.events.ComponentConfigurationManagerUpdateEvent;
@@ -149,6 +150,7 @@ public class ComponentConfigurationManagerWindow {
 		for(String s: PluginComponent.categoryMap.keySet()){
 			showByTypeChoices[index] =  s.substring(0, 1).toUpperCase()+s.substring(1);
 			if(!s.endsWith("s"))showByTypeChoices[index] += "s";
+			typeMap.put(showByTypeChoices[index], PluginComponent.categoryMap.get(s));
 			index++;
 		};
 		showByTypeChoices[index] = SHOW_BY_TYPE_OTHERS; 
@@ -438,6 +440,7 @@ public class ComponentConfigurationManagerWindow {
 		}
 	};
 
+	private Map<String, Category> typeMap = new HashMap<String, Category>();
 	/**
 	 * type filter: analysis or visualization
 	 */
@@ -455,7 +458,7 @@ public class ComponentConfigurationManagerWindow {
 
 			PluginComponent.Category category = (PluginComponent.Category) model.getModelValueAt(entry
 					.getIdentifier(), CCMTableModel.CATEGORY_INDEX);
-			if (category == PluginComponent.categoryMap.get(typeFilterValue.toLowerCase()))
+			if (category == typeMap.get(typeFilterValue))
 				return true;
 			
 			if (category == null
