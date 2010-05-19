@@ -211,7 +211,7 @@ public class SequenceViewWidget extends JPanel {
 		// jToolBar1.add(jSequenceSummaryTextField);
 		jViewComboBox.addItem(LINEVIEW);
 		jViewComboBox.addItem(FULLVIEW);
-		jViewComboBox.setSize(jViewComboBox.getPreferredSize());
+
 		if (sequenceDB != null) {
 			seqViewWPanel.setMaxSeqLen(sequenceDB.getMaxLength());
 		}
