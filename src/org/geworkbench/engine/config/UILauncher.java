@@ -179,6 +179,10 @@ public class UILauncher {
 	                    UIManager.getLookAndFeel().getDefaults().put(
 	                    		"ToolBar:ToggleButton[Disabled].textForeground",
 	                    		UIManager.getColor("nimbusDisabledText"));
+	                    UIManager.getLookAndFeel().getDefaults().put("ToolBar:Button[Enabled].backgroundPainter", 
+	                    		UIManager.get("Button[Enabled].backgroundPainter"));
+	                    UIManager.getLookAndFeel().getDefaults().put("ToolBar:Button.contentMargins", 
+	                    		UIManager.get("Button.contentMargins"));
 	                    break;
 	                }
 	            }
