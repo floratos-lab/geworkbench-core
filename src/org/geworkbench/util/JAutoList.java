@@ -16,12 +16,12 @@ public class JAutoList extends JPanel {
     public static final String NEXT_BUTTON_TEXT = "Find Next";
     public static final String SEARCH_LABEL_TEXT = "Search:";
 
-    private JList list;
+    protected JList list;
     private JButton nextButton;
     private JTextField searchField;
     private ListModel model;
-    private JScrollPane scrollPane;
-    JPanel topPanel;
+    protected JScrollPane scrollPane;
+    protected JPanel topPanel;
 
     private boolean lastSearchFailed = false;
     private boolean lastSearchWasAscending = true;
@@ -82,7 +82,7 @@ public class JAutoList extends JPanel {
         });
     }
 
-    private void handleMouseEvent(MouseEvent event) {
+    protected void handleMouseEvent(MouseEvent event) {
         int index = list.locationToIndex(event.getPoint());
         if (index != -1) {
             if (event.isMetaDown()) {
