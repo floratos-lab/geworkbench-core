@@ -1076,6 +1076,34 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		} else {
 			node = new DataSetSubNode(_ancDataSet);
 		}
+
+		String originalLabel = _ancDataSet.getLabel();
+		String newLabel = originalLabel;
+		String existingLabel = "";
+		boolean foundOne = false;
+		int count = 1;
+		while (true) {
+			foundOne = false;
+			children = dNode.children();
+			while (children.hasMoreElements()) {
+				Object obj = children.nextElement();
+				if (obj instanceof DataSetSubNode) {
+					existingLabel = ((DataSetSubNode) obj)._aDataSet.getLabel();
+					if (newLabel.equals(existingLabel)) {
+						foundOne = true;
+						break;
+					}
+				}
+			}
+
+			if (foundOne) {
+				newLabel = originalLabel + " (" + count++ + ")";
+			} else {
+				_ancDataSet.setLabel(newLabel);
+				break;
+			}
+		}
+		
 		// Inserts the new node and sets the menuNode and other variables to
 		// point to it
 		node.setDescription(_ancDataSet.getExperimentInformation());
