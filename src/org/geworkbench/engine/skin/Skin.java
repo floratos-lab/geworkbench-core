@@ -271,8 +271,9 @@ public class Skin extends GUIFramework {
             }
         });//        contentPane.addKeyListener(new KeyAdapter() {
         
-        contentPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0), CANCEL_DIALOG);
-        contentPane.getActionMap().put(CANCEL_DIALOG, new AbstractAction() {
+        final String RCM_DIALOG = "rcm-dialog";
+        contentPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0), RCM_DIALOG);
+        contentPane.getActionMap().put(RCM_DIALOG, new AbstractAction() {
             public void actionPerformed(ActionEvent event) {
                 loadRCM();
             }
