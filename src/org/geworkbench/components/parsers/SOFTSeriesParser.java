@@ -95,9 +95,8 @@ public class SOFTSeriesParser {
 							String temP1 = temp[0].trim();
 							if(temP1.equals("!Sample_title")){
 								String temp1 = tempName
-												+ " ("
-												+temp[1].trim()
-												+")";
+												+ ": "
+												+temp[1].trim();
 								arrayNames.add(temp1);
 							}
 						}
