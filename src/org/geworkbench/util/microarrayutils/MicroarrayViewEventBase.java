@@ -213,7 +213,7 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 	/**
 	 * @throws Exception
 	 */
-	protected void jbInit() throws Exception {
+	private void jbInit() throws Exception {
 		mainPanel = new JPanel();
 
 		jToolBar3 = new JToolBar();
