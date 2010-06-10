@@ -258,7 +258,6 @@ public class RemoteResourceDialog extends JDialog {
     }
 
     public RemoteResource collectResourceInfo() {
-        RemoteResource rr = new RemoteResource();
 
         String shortname = shortnameTextField.getText().trim();
         String url = jTextField2.getText().trim();
@@ -282,10 +281,13 @@ public class RemoteResourceDialog extends JDialog {
 //            return null;
         }
        
-        rr.setConnectProtocal(jComboBox1.getSelectedItem().toString().trim());
-        rr.setPassword(new String(jPasswordField1.getPassword()).trim());
-        rr.setUsername(jTextField1.getText().trim());
-        rr.setUri(url);
+       RemoteResource rr = new RemoteResource(
+    		   url,
+    		   jComboBox1.getSelectedItem().toString().trim(),
+    		   jTextField1.getText().trim(),
+    		   new String(jPasswordField1.getPassword()).trim()
+    		   );
+
         if(jTextField2.getToolTipText()!=null && jTextField2.getToolTipText().length()>10){
 
 

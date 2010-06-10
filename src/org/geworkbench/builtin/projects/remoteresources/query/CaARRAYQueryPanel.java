@@ -44,7 +44,7 @@ import org.geworkbench.events.CaArrayRequestEvent;
 
 /**
  * @author xiaoqing
- * @version $Id: CaARRAYQueryPanel.java,v 1.16 2009-08-13 20:53:57 jiz Exp $
+ * @version $Id$
  */
 public class CaARRAYQueryPanel extends JDialog {
 	private static final long serialVersionUID = -5214948658970068347L;
@@ -100,6 +100,11 @@ public class CaARRAYQueryPanel extends JDialog {
 		repaint();
 	}
 
+	private final static String CAARRAY_USERNAME = "username";
+	private final static String PASSWORD = "password";
+	private final static String SERVERURL = "serverlocation";
+	private final static String SERVERPORT = "serverport";
+
 	public void display(LoadData frameComp, String remoteSourceName) {
 		RemoteResource resourceDialog = RemoteResourceDialog
 				.getRemoteResourceManager().getSelectedResouceByName(
@@ -113,17 +118,17 @@ public class CaARRAYQueryPanel extends JDialog {
 				portnumber = resourceDialog.getPortnumber();
 				url = resourceDialog.getUri();
 				PropertiesManager properties = PropertiesManager.getInstance();
-				properties.setProperty(GeWorkbenchCaARRAYAdaptor.class,
-						GeWorkbenchCaARRAYAdaptor.CAARRAY_USERNAME,
+				properties.setProperty(CaARRAYQueryPanel.class,
+						CAARRAY_USERNAME,
 						resourceDialog.getUsername());
-				properties.setProperty(GeWorkbenchCaARRAYAdaptor.class,
-						GeWorkbenchCaARRAYAdaptor.PASSWORD, resourceDialog
+				properties.setProperty(CaARRAYQueryPanel.class,
+						PASSWORD, resourceDialog
 								.getPassword());
-				properties.setProperty(GeWorkbenchCaARRAYAdaptor.class,
-						GeWorkbenchCaARRAYAdaptor.SERVERURL, resourceDialog
+				properties.setProperty(CaARRAYQueryPanel.class,
+						SERVERURL, resourceDialog
 								.getUri());
-				properties.setProperty(GeWorkbenchCaARRAYAdaptor.class,
-						GeWorkbenchCaARRAYAdaptor.SERVERPORT, new Integer(
+				properties.setProperty(CaARRAYQueryPanel.class,
+						SERVERPORT, new Integer(
 								resourceDialog.getPortnumber()).toString());
 
 			}
@@ -580,7 +585,7 @@ public class CaARRAYQueryPanel extends JDialog {
 			t.start();
 		} catch (Exception er) {
 			er.printStackTrace();
-			GeWorkbenchCaARRAYAdaptor.fail("Cannot process the query.");
+			JOptionPane.showMessageDialog(null, "Cannot process the query.");
 		}
 
 	}

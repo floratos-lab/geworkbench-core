@@ -1,7 +1,5 @@
 package org.geworkbench.builtin.projects.remoteresources;
 
-import org.geworkbench.builtin.projects.remoteresources.carraydata.CaArray2Experiment;
-
 /**
  * <p>Title: </p>
  *
@@ -12,7 +10,7 @@ import org.geworkbench.builtin.projects.remoteresources.carraydata.CaArray2Exper
  * <p>Company: </p>
  *
  * @author not attributable
- * @version 1.0
+ * @version $Id$
  */
 
 /**
@@ -23,19 +21,10 @@ public class RemoteResource {
     private String username;
     private String password;
     private String connectProtocol;
-    private String DEFAULTPROTOCAL = "http";
     private String shortname;
     private String uri;
     private int portnumber = 80;
     private boolean editable = true;
-
-    public RemoteResource() {
-        try {
-            jbInit();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
 
     public RemoteResource(String url, String protocal, String user,
                           String passwd) {
@@ -200,6 +189,5 @@ public class RemoteResource {
     	 }
     	 
     }
-    private void jbInit() throws Exception {
-    }
+
 }
