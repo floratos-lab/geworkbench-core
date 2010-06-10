@@ -161,12 +161,20 @@ public class AnnotationParser implements Serializable {
 		datasetToChipTypes.put(dataset, chiptype);
 		currentDataSet = dataset;
 	}
+	
+	/* this is used to handle annotation file when the real dataset is chosen after annotation. */
+	private static CSMicroarraySet<? extends DSBioObject> dummyMicroarraySet = new CSMicroarraySet<DSMicroarray>();
+	public static String getLastAnnotationFileName () {
+		return dummyMicroarraySet.getAnnotationFileName();
+	}
 
 	private static boolean setChipType(DSDataSet<? extends DSBioObject> dataset, String chiptype,
 			File annotationData) {
 		datasetToChipTypes.put(dataset, chiptype);
 		currentDataSet = dataset;
-		if(dataset instanceof CSMicroarraySet) {
+		if(dataset==null) {
+			dummyMicroarraySet.setAnnotationFileName(annotationData.getAbsolutePath());
+		} if(dataset instanceof CSMicroarraySet) {
 			CSMicroarraySet<?> d = (CSMicroarraySet<?>)dataset;
 			d.setAnnotationFileName(annotationData.getAbsolutePath());
 		}

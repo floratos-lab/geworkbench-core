@@ -228,7 +228,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
             // - Manju
             // watkin - I changed it back to a StringTokenizer, as it will ignore redundant delimiters (tabs)
             // while String.split will not.
-            StringTokenizer tokenizer = new StringTokenizer(line, "\t", false);
+            StringTokenizer tokenizer = new StringTokenizer(line, "\t", false);            
             int n = tokenizer.countTokens();
             String[] st = new String[n];
             for (int i = 0; i < n; i++) {
@@ -514,7 +514,10 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
                 outLine = outLine.concat('\t' + getMarkers().get(i).getLabel());
                 for (int j = 0; j < size(); ++j) {
                     DSMarkerValue mv = get(j).getMarkerValue(i);
-                    outLine = outLine.concat("\t" + (float) mv.getValue() + '\t') + (float) mv.getConfidence();
+                    if (!mv.isMissing())                    		
+                        outLine = outLine.concat("\t" + (float) mv.getValue() + '\t') + (float) mv.getConfidence();
+                    else
+                    	outLine = outLine.concat("\t" + "n/a" + '\t') + (float) mv.getConfidence();
                 }
                 writer.write(outLine);
                 writer.newLine();

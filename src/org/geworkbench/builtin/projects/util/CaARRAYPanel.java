@@ -54,7 +54,7 @@ import org.geworkbench.util.ProgressBar;
 
 /**
  * @author xiaoqing
- * @version $Id: CaARRAYPanel.java,v 1.48 2009-10-12 18:13:29 jiz Exp $
+ * @version $Id$
  */
 @SuppressWarnings("unchecked")
 public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
@@ -222,8 +222,6 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 
 		jPanel13.setLayout(new BoxLayout(jPanel13, BoxLayout.X_AXIS));
 		jPanel13.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
-		derivedField.setMinimumSize(new Dimension(8, 20));
-		derivedField.setPreferredSize(new Dimension(8, 20));
 		caArrayTreePanel.setPreferredSize(new Dimension(197, 280));// change
 		// from 137
 		// to 167.

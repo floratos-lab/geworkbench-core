@@ -295,7 +295,7 @@
 	<!-- ====================================================================== -->
 	<target name="run" depends="compile" description="Runs geWorkbench.">
 		<java fork="true" classname="org.geworkbench.engine.config.UILauncher">
-			<jvmarg value="-Xmx640M" />
+			<jvmarg value="-Xmx1024M" />
 			<jvmarg value="-Djava.library.path=lib" />
 			<jvmarg value="-Xbootclasspath/p:${bootclasspath}" />
 			<classpath refid="run.classpath" />
@@ -457,7 +457,7 @@
 	<!-- ====================================================================== -->
 	<target name="createDist" depends="compile" description="Creating a new folder for depositing...">
 		<java classname="org.geworkbench.components.versioninfo.VersionInfoDialog" failonerror="true" >
-			<arg value="1.8.0"/>
+			<arg value="2.0.0"/>
 			<arg value="./components/versioninfo/classes/org/geworkbench/components/versioninfo/" />
 			<classpath>
 				<path refid="classpath" />
@@ -518,10 +518,12 @@
 				<include name="${components}/markus/**/*" />
 				<include name="${components}/welcome/**/*" />
 				
-				<include name="${components}/skyline**/*" />
-				<include name="${components}/skylineview**/*" />
-				<include name="${components}/skybase**/*" />
-				<include name="${components}/skybaseview**/*" />
+				<include name="${components}/skyline/**/*" />
+				<include name="${components}/skylineview/**/*" />
+				<include name="${components}/skybase/**/*" />
+				<include name="${components}/skybaseview/**/*" />
+				
+				<include name="${components}/ttest/**/*" />
 				
 				<!-- Leave out the following components for distribution 2.0.0-->
 				<exclude name="**/synteny/*" />
@@ -531,14 +533,19 @@
 				<include name="annotation/**/*" />
 				<include name="${lib}/**/*" />
 				<include name="geWorkbenchLicense.txt" />
-				<include name="ReleaseNotes1.8.0.txt" />
+				<include name="ReleaseNotes_2.0.0.txt" />
 				<include name="java.policy" />
 				 
+				<include name="Bcell-100.exp_ARACNe_AP_threshold.txt" />
+				<include name="Bcell-100.exp_ARACNe_FBW_kernel.txt" />
+				<include name="Bcell-100.exp_ARACNe_FBW_threshold.txt" />
+				
 				<include name="launch_geworkbench.bat" />
 				<include name="launch_geworkbench.sh" />
 				<exclude name="**/*.cvsignore" />
 				<exclude name="data" />
 				<exclude name="nbproject" />
+				<include name="data/cardiogenomics.med.harvard.edu/**" />
 				<include name="data/public_data/**" />
 				<include name="data/jaspar_CORE/**" />
 				<include name="data/gene_ontology.1_2.obo"/>
@@ -555,6 +562,7 @@
 				<include name="xml-mapping.xml" />
 				<include name="unmarshaller-xml-mapping.xml" />
 				<include name="application-config-client.xml" />
+				<include name="jdic.properties" />
 			</fileset>
 		</copy>
 		<copy file="build_runDirect.xml" tofile="${cleanFolder}/build.xml" />

@@ -25,6 +25,7 @@ import javax.swing.UIManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.components.parsers.FileFormat;
@@ -313,6 +314,9 @@ public class FileOpenHandler {
 							dataSets[i] = dataSetFileFormat.getDataFile(dataSetFile, chipType);
 							AnnotationParser.setChipType(dataSets[i], chipType);
 							dataSets[i].setAbsPath(dataSetFiles[i].getAbsolutePath());
+							if(dataSets[i] instanceof CSMicroarraySet) {
+								((CSMicroarraySet)dataSets[i]).setAnnotationFileName(AnnotationParser.getLastAnnotationFileName());
+							}
 						} catch (OutOfMemoryError er) {
 							log.warn("Loading multiple files memory error: " + er);
 							int response = JOptionPane.showConfirmDialog(null,

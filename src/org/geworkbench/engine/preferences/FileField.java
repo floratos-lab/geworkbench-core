@@ -40,6 +40,10 @@ public class FileField extends Field {
     }
 
     public void fromString(String s) throws ValidationException{
+    	if(s.equals("")) {
+    		value = null;
+    		return;
+    	}
          
     	value = new File(s);
         if (! value.exists() )
@@ -47,7 +51,10 @@ public class FileField extends Field {
     }
 
     public String toString() {
-        return value.getPath();
+    	if(value!=null)
+    		return value.getPath();
+    	else
+    		return null;
     }
 
     public FileField clone() {

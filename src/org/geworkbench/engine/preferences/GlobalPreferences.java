@@ -28,9 +28,9 @@ public class GlobalPreferences {
                     "Option 4: (Median F532 - Median B532) / (Median F635 - Median B635)"
             };
     public static final String DEFAULT_TEXT_EDITOR = "c:/windows/system32/notepad.exe";
-    public static final String DEFAULT_TEXT_EDITOR_MAC = "Open";
+    public static final String DEFAULT_TEXT_EDITOR_MAC = "";
 
-    public static final String DEFAULT_RCM_URL = "http://califano11.cgc.cpmc.columbia.edu:8080/componentRepository";
+    public static final String DEFAULT_RCM_URL = "http://cagridnode.c2b2.columbia.edu:8080/v2.0.0/componentRepository";
 
     private static GlobalPreferences instance;
 

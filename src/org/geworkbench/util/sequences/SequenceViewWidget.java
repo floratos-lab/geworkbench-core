@@ -397,6 +397,7 @@ public class SequenceViewWidget extends JPanel {
 		// selectedPatterns = new ArrayList();
 		if (sequenceDB != null) {
 			seqViewWPanel.setMaxSeqLen(sequenceDB.getMaxLength());
+			seqViewWPanel.setSelectedSequence(null);
 			// seqViewWPanel.initialize(null, db);
 			selectedPatterns.clear();
 			repaint();

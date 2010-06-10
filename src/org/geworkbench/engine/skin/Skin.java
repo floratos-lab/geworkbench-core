@@ -723,4 +723,8 @@ public class Skin extends GUIFramework {
         }
     }
 
+	public void resetSelectorTabOrder() {
+		selectLastComponent(GUIFramework.SELECTION_AREA, "Markers");
+	}
+
 }

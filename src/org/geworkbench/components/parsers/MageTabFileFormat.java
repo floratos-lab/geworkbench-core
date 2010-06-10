@@ -21,6 +21,7 @@ import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
+import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSExpressionMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
 import org.geworkbench.bison.parsers.resources.Resource;
@@ -119,7 +120,6 @@ public class MageTabFileFormat extends DataSetFileFormat {
 		int call = 0;
 		final List<String> valueTokens = new ArrayList<String>();
 		boolean pValueFound = false;
-		boolean absCallFound = false;
 		try {
 			int m = 0;
 			in = new BufferedReader(new FileReader(file));
@@ -146,6 +146,14 @@ public class MageTabFileFormat extends DataSetFileFormat {
 							}
 						}
 						if(!tokens[0].contentEquals("Scan REF") && !tokens[0].contentEquals("Reporter REF") && !tokens[0].contentEquals("Composite Element REF")){
+							// trigger annotation request
+							if (maSet.getCompatibilityLabel() == null) {
+                                String chiptype = AnnotationParser.matchChipType(maSet, tokens[0], false);
+                                if (chiptype != null) {
+                                	maSet.setCompatibilityLabel(chiptype);
+                                }
+                            }
+							
 							String[] markerNames = tokens[0].split(":");
 							int markLength = markerNames.length-1;
 							markers.add(markerNames[markLength]);
@@ -185,7 +193,6 @@ public class MageTabFileFormat extends DataSetFileFormat {
 									 */
 									if(valueLabels[1].contentEquals("ABS_CALL") || valueLabels[1].contentEquals("CHPDetection")){
 										call = p+1;
-										absCallFound = true;
 									}
 									
 								}
@@ -342,7 +349,6 @@ public class MageTabFileFormat extends DataSetFileFormat {
 												char Call = Character.toUpperCase(C);
 												if (Call == PRESENT || Call == ABSENT || Call == MARGINAL){
 													this.detectionStatus = Call;
-													absCallFound = true;
 													if (!pValueFound){
 														switch (Call){
 															case PRESENT: 

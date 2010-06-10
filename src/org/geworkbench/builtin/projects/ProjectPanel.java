@@ -88,6 +88,7 @@ import org.geworkbench.events.CleanDataEvent;
 import org.geworkbench.events.CommentsEvent;
 import org.geworkbench.events.ComponentConfigurationManagerUpdateEvent;
 import org.geworkbench.events.DirtyDataEvent;
+import org.geworkbench.events.HistoryEvent;
 import org.geworkbench.events.ImageSnapshotEvent;
 import org.geworkbench.events.MicroarrayNameChangeEvent;
 import org.geworkbench.events.NormalizationEvent;
@@ -100,12 +101,13 @@ import org.geworkbench.events.ProjectNodeRemovedEvent;
 import org.geworkbench.events.ProjectNodeRenamedEvent;
 import org.geworkbench.events.SingleValueEditEvent;
 import org.geworkbench.events.StructureAnalysisEvent;
+import org.geworkbench.util.FilePathnameUtils;
 import org.geworkbench.util.SaveImage;
 import org.geworkbench.util.Util;
 import org.ginkgo.labs.ws.GridEndpointReferenceType;
 
 /**
- * 
+ *
  * Description: Project Panel of geWorkbench is a key controlling element.
  * </p>
  * <p>
@@ -114,7 +116,7 @@ import org.ginkgo.labs.ws.GridEndpointReferenceType;
  * <p>
  * Company: First Genetic Trust Inc.
  * </p>
- * 
+ *
  * @author First Genetic Trust
  * @version $Id$
  */
@@ -209,7 +211,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/**
 	 * Constructor. Initialize GUI and selection variables
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	public ProjectPanel() throws Exception {
@@ -249,7 +251,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/**
 	 * Standard Initialization routing needed by JBuilder
-	 * 
+	 *
 	 * @throws java.lang.Exception
 	 */
 	protected void jbInit1() throws Exception {
@@ -319,6 +321,12 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 					String editor = prefs.getTextEditor();
 					if (editor == null) {
 						log.info("No editor configured.");
+						JOptionPane
+						.showMessageDialog(
+								null,
+								"No editor configured.",
+								"Unable to Edit",
+								JOptionPane.INFORMATION_MESSAGE);
 					} else {
 						if (ds.getFile() == null) {
 							JOptionPane
@@ -338,7 +346,27 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 								Runtime.getRuntime().exec(args);
 							} catch (IOException e1) {
 								log.info("Error opening editor:");
+								JOptionPane
+								.showMessageDialog(
+										null,
+										"IOException in opening editor: "+e1.getMessage(),
+										"Unable to Edit",
+										JOptionPane.INFORMATION_MESSAGE);
 								e1.printStackTrace();
+							} catch (SecurityException se) {
+								JOptionPane
+								.showMessageDialog(
+										null,
+										"SecurityException in opening editor: "+se.getMessage(),
+										"Unable to Edit",
+										JOptionPane.INFORMATION_MESSAGE);
+							} catch (Exception ee) {
+								JOptionPane
+								.showMessageDialog(
+										null,
+										"Other Exception in opening editor: "+ee.getMessage(),
+										"Unable to Edit",
+										JOptionPane.INFORMATION_MESSAGE);
 							}
 						}
 					}
@@ -601,10 +629,10 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/**
 	 * Provide a general File copy function. Xiaoqing
-	 * 
+	 *
 	 * @param fromFileName
 	 * @param toFileName
-	 * 
+	 *
 	 */
 	public static void copy(String fromFileName, String toFileName) {
 		File fromFile = new File(fromFileName);
@@ -730,8 +758,13 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 						return false;
 					}
 				}
-				ds.writeToFile(newFileName);
-
+				try {
+					ds.writeToFile(newFileName);
+				} catch (RuntimeException e) {
+					JOptionPane.showMessageDialog(null,
+							e.getMessage()+" "+ds.getClass().getName(), "Save Error",
+							JOptionPane.ERROR_MESSAGE);
+				}
 			} else {
 				// this.repaint();
 				return false;
@@ -774,7 +807,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/**
 	 * Change the comment text
-	 * 
+	 *
 	 * @param ce
 	 */
 	@Subscribe
@@ -785,7 +818,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/**
 	 * Retrieve the associated descriptions
-	 * 
+	 *
 	 * @return public String getUserComments() { ProjectTreeNode selectedNode =
 	 *         selection.getSelectedNode(); String text = ""; String[]
 	 *         descriptions = null; if (selectedNode instanceof DataSetNode) {
@@ -798,7 +831,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	/**
 	 * Inserts a new data set as a new node in the project tree. The node is a
 	 * child of the curently selected project
-	 * 
+	 *
 	 * @param _dataSet
 	 */
 	public void addDataSetNode(DSDataSet _dataSet, boolean select) {
@@ -812,6 +845,35 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			DataSetNode node = new DataSetNode(_dataSet);
 			node.setDescription(_dataSet.getExperimentInformation());
 			projectTreeModel.insertNodeInto(node, pNode, pNode.getChildCount());
+			HistoryEvent event = new HistoryEvent(_dataSet);
+
+			// add to history
+			if (_dataSet instanceof CSMicroarraySet) {
+				CSMicroarraySet microarraySet = (CSMicroarraySet) _dataSet;
+				String annotationFileName = microarraySet
+						.getAnnotationFileName();
+
+				String annotationFileNameString = "";
+				if (annotationFileName != null) {
+					int i = annotationFileName
+							.lastIndexOf(FilePathnameUtils.FILE_SEPARATOR);
+					if (i >= 0) {
+						annotationFileName = annotationFileName
+								.substring(i + 1);
+					}
+					annotationFileNameString = "Loaded annotation file:  " + annotationFileName + "\n";
+				} else{
+					annotationFileNameString = "Loaded annotation file:  None" + "\n";
+				}
+
+				String setName = _dataSet.getDataSetName();
+				String dataSetString = "Data file:  " + setName + "\n" ;
+
+				String datasetHistory = dataSetString + annotationFileNameString + "_____________________" + "\n";
+				ProjectPanel.addToHistory(_dataSet, datasetHistory);
+			}
+			publishHistoryEvent(event);
+
 			if (select) {
 				// Make sure the user can see the lovely new node.
 				projectTree.scrollPathToVisible(new TreePath(node));
@@ -820,12 +882,25 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				selection.setNodeSelection(node);
 			}
 		}
+		Skin skin = (Skin) GeawConfigObject.getGuiWindow();
+		skin.resetSelectorTabOrder();
+	}
+
+	/**
+	 * This method is used to trigger HistoryPanel to refresh.
+	 *
+	 * @param event
+	 * @return
+	 */
+	@Publish
+	public HistoryEvent publishHistoryEvent(HistoryEvent event) {
+		return event;
 	}
 
 	/**
 	 * Inserts a new pending node a new node in the project tree. The node is a
 	 * child of the curently selected project
-	 * 
+	 *
 	 * @param _dataSet
 	 */
 	public PendingTreeNode addPendingNode(GridEndpointReferenceType gridEpr,
@@ -965,7 +1040,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	// }
 	// }
 	/**
-	 * 
+	 *
 	 * @param pnode
 	 * @param parentData
 	 * @return
@@ -1025,7 +1100,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	/**
 	 * Inserts a new ancillary data set as a new node in the project tree. The
 	 * node is a child of the curently selected data set
-	 * 
+	 *
 	 * @param _ancDataSet
 	 */
 	private void addDataSetSubNode(DSAncillaryDataSet _ancDataSet) {
@@ -1103,7 +1178,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				break;
 			}
 		}
-		
+
 		// Inserts the new node and sets the menuNode and other variables to
 		// point to it
 		node.setDescription(_ancDataSet.getExperimentInformation());
@@ -1117,7 +1192,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/**
 	 * Stores to a datafile
-	 * 
+	 *
 	 * @param filename
 	 *            void serialize(String filename) { try { for(int i = 0; i <
 	 *            projectTree.getRowCount(); i++) { TreePath path =
@@ -1135,7 +1210,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/**
 	 * Reads from a datafile
-	 * 
+	 *
 	 * @param filename
 	 */
 	void deserialize(String filename) {
@@ -1159,7 +1234,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/**
 	 * Action listener responding to the selection of a project tree node.
-	 * 
+	 *
 	 * @param e
 	 */
 	protected void jProjectTree_mouseClicked(MouseEvent e) {
@@ -1208,7 +1283,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/**
 	 * Mouse release event. Used to popup menus
-	 * 
+	 *
 	 * @param e
 	 */
 	protected void jProjectTree_mouseReleased(MouseEvent e) {
@@ -1239,7 +1314,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 					this.jRenameProjectItem.setEnabled(false);
 					this.jRenameSubItem.setEnabled(false);
 					this.jSaveMenuItem.setEnabled(false);
-					this.jEditItem.setEnabled(false);					 
+					this.jEditItem.setEnabled(false);
 					this.jViewAnnotations.setEnabled(false);
 				} else {
 					this.jNewProjectItem.setEnabled(true);
@@ -1268,12 +1343,15 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				}
 			} else
 				jProjectTree_mouseClicked(e);
+			
+			Skin skin = (Skin) GeawConfigObject.getGuiWindow();
+			skin.resetSelectorTabOrder();
 		}
 	}
 
 	/**
 	 * key release event.
-	 * 
+	 *
 	 * @param e
 	 */
 	protected void jProjectTree_keyReleased(KeyEvent e) {
@@ -1291,7 +1369,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/**
 	 * Key listener responding to the selection of a project tree node.
-	 * 
+	 *
 	 * @param e
 	 */
 	protected void jProjectTree_keyReleased() {
@@ -1366,7 +1444,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * <code>ImageSnapshotEvent</code> from Visual Plugins. These events
 	 * contain <code>ImageIcon</code> representing visual state of the plugins
 	 * throwing this event.
-	 * 
+	 *
 	 * @param event
 	 *            <code>ImageSnapshotEvent</code>
 	 */
@@ -1381,7 +1459,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	/**
 	 * Action listener handling user requests for opening a file containing
 	 * microarray set data.
-	 * 
+	 *
 	 * @param e
 	 */
 	protected void jLoadMArrayItem_actionPerformed(ActionEvent e) {
@@ -1411,7 +1489,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	/**
 	 * Action listener handling user requests for opening a pdb file from RCSB
 	 * Protein Data Bank.
-	 * 
+	 *
 	 * @param e
 	 */
 	protected void jOpenRemotePDBItem_actionPerformed(ActionEvent e) {
@@ -1431,7 +1509,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	/**
 	 * Action listener handling user requests to merge 2 or more microarray sets
 	 * into 1.
-	 * 
+	 *
 	 * @param e
 	 *            <code>ActionEvent</code>
 	 */
@@ -1508,7 +1586,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * Check for markers in DSMicroarraySets, if markers are all the same,
 	 * return true. This method assume there's no duplicate markers within each
 	 * set.
-	 * 
+	 *
 	 * @param sets
 	 * @return
 	 */
@@ -1531,7 +1609,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/**
 	 * Merger an array of MSMicroarraySets and create a new dataset node.
-	 * 
+	 *
 	 * @param sets
 	 */
 	public void doMergeSets(DSMicroarraySet[] sets) {
@@ -1605,6 +1683,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				mergedSet.setLabel("Merged array set");
 				mergedSet.setLabel(desc);
 				mergedSet.addDescription(desc);
+				((CSMicroarraySet)mergedSet).setAnnotationFileName(
+						((CSMicroarraySet)sets[0]).getAnnotationFileName());
 			}
 			// Add color context
 			addColorContext(mergedSet);
@@ -1617,13 +1697,13 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	/**
 	 * Invoked from the "Open File" dialog box to handle opening a local
 	 * dataset.
-	 * 
+	 *
 	 * @param dataSetFiles
 	 *            The file containing the data to be parsed.
 	 * @param inputFormat
 	 *            The format that the file is expected to conform to.
 	 * @throws org.geworkbench.components.parsers.InputFileFormatException
-	 * 
+	 *
 	 */
 	public void fileOpenAction(final File[] dataSetFiles,
 			final org.geworkbench.components.parsers.FileFormat inputFormat,
@@ -1658,7 +1738,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/**
 	 * Action listener handling user requests for renaming a project.
-	 * 
+	 *
 	 * @param e
 	 */
 	protected void jRenameProjectItem_actionPerformed(ActionEvent e) {
@@ -1681,7 +1761,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/**
 	 * Action listener handling user request to prune tree
-	 * 
+	 *
 	 * @param event
 	 */
 	@Subscribe
@@ -1704,7 +1784,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	// ComponentRegistry componentRegistry = ComponentRegistry.getRegistry();
 	// HashMap<Class, List<Class>> acceptors = componentRegistry
 	// .getAcceptorsHashMap();
-	//		
+	//
 	// removeDeletedAcceptorComponents(acceptors);
 	// }
 
@@ -1720,17 +1800,17 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		 * localDataSetSubNode = null; Enumeration enumeration =
 		 * root.depthFirstEnumeration(); while (enumeration.hasMoreElements()) {
 		 * ProjectTreeNode node = (ProjectTreeNode) enumeration.nextElement();
-		 * 
+		 *
 		 * if (node instanceof DataSetSubNode) { localDataSetSubNode =
 		 * (DataSetSubNode) node;
-		 * 
+		 *
 		 * Class keyClass = localDataSetSubNode._aDataSet.getClass();
-		 * 
+		 *
 		 * Class keyClassOrInterface = classOrInterfaceInKey(keyClass,
 		 * acceptors); if (keyClassOrInterface == null) {
 		 * projectTreeModel.removeNodeFromParent(node); enumeration =
 		 * root.depthFirstEnumeration(); continue; }
-		 * 
+		 *
 		 * List visualComponents = acceptors.get(keyClassOrInterface); if
 		 * (visualComponents == null || visualComponents.size() == 0) {
 		 * projectTreeModel.removeNodeFromParent(node); enumeration =
@@ -1756,7 +1836,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	/*
 	 * This method will remove an added subnode. If the current selected node is
 	 * not the added subNode, then do nothing.
-	 * 
+	 *
 	 */
 	public void removeAddedSubNode(DSAncillaryDataSet aDataSet) {
 
@@ -1818,7 +1898,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				continue;
 
 			parentNode = (ProjectTreeNode) node.getParent();
-            
+
 			if (node instanceof ProjectNode)
 				projectRemove_actionPerformed((ProjectNode) node);
 			else if (node instanceof ImageNode)
@@ -1860,7 +1940,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/**
 	 * Action listener handling user requests for removing a dataset.
-	 * 
+	 *
 	 * @param e
 	 */
 	protected void fileRemove_actionPerformed(ProjectTreeNode node) {
@@ -1916,7 +1996,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/**
 	 * Action listener handling user requests for removing a project.
-	 * 
+	 *
 	 * @param e
 	 */
 	protected void projectRemove_actionPerformed(ProjectNode node) {
@@ -1930,12 +2010,12 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			}
 		}
 		projectTreeModel.removeNodeFromParent(node);
-        
+
 	}
 
 	/**
 	 * Action listener handling user requests for renaming a dataset.
-	 * 
+	 *
 	 * @param e
 	 */
 	protected void jRenameDataset_actionPerformed(ActionEvent e) {
@@ -1974,7 +2054,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	/**
 	 * Action listener handling user requests for the creation of new projects
 	 * in the workspace.
-	 * 
+	 *
 	 * @param e
 	 */
 	protected void jNewProjectItem_actionPerformed(ActionEvent e) {
@@ -1986,7 +2066,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/**
 	 * Used to add a new node to a project tree
-	 * 
+	 *
 	 * @param child
 	 *            The node to be added
 	 * @param shouldBeVisible
@@ -2008,7 +2088,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/**
 	 * Sets the currently selected node within the project tree.
-	 * 
+	 *
 	 * @param node
 	 *            The project tree node to show up as selected.
 	 */
@@ -2065,7 +2145,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	/**
 	 * Throws an application event that designates the selection of a project or
 	 * microarray node in the project window.
-	 * 
+	 *
 	 * @param node
 	 */
 	protected void fireNodeSelectionEvent(ProjectTreeNode node) {
@@ -2095,7 +2175,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * Adds the desiganted microarray set <code>maSet</code> as a child node
 	 * to the tree node <code>parent</code>. Makes the newly added node the
 	 * one currently selected.
-	 * 
+	 *
 	 * @param maSet
 	 *            The microarray set to add.
 	 * @param parent
@@ -2125,7 +2205,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * <code>ImageSnapshotEvent</code> from Visual Plugins. These events
 	 * contain <code>ImageIcon</code> representing visual state of the plugins
 	 * throwing this event.
-	 * 
+	 *
 	 * @param event
 	 *            <code>ImageSnapshotEvent</code>
 	 */
@@ -2189,7 +2269,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	/**
 	 * Method for receiving Dataset annotations from the
 	 * <code>CommentsPane</code>
-	 * 
+	 *
 	 * @param ce
 	 *            <code>CommentsEventOld</code> thrown by
 	 *            <code>CommentsPane</code>
@@ -2218,7 +2298,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * Method for receiving <code>TableChangeEvent</code> from the
 	 * <code>TabularView</code> widget. This event contains dataset as altered
 	 * by the user
-	 * 
+	 *
 	 * @param tce
 	 *            <code>TableChangeEvent</code> from the
 	 *            <code>TabularView</code> widget
@@ -2246,7 +2326,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/**
 	 * For receiving micorarray name change events.
-	 * 
+	 *
 	 * @param mnce
 	 *            <code>MicroarrayNameChangeEvent</code> containing the
 	 *            micorarray that was renamed.
@@ -2280,7 +2360,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/**
 	 * For receiving the results of applying a normalizer to a microarray set.
-	 * 
+	 *
 	 * @param ne
 	 */
 	@Subscribe
@@ -2307,7 +2387,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 		sourceMA.addNameValuePair(HISTORY, (prevHistory == null ? ""
 				: (String) prevHistory[0])
-				+ "Normalized with " + ne.getInformation() + "\n" + detail);
+				+ "Normalized with " + ne.getInformation() + "\n" + detail + "\n");
 
 		// Notify interested components that the selected dataset has changed
 		// The event is thrown only if the normalized dataset is the one
@@ -2324,7 +2404,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	/**
 	 * For receiving the submission / results of comparative modeling analysis
 	 * to PDB protein structure
-	 * 
+	 *
 	 * @param sae
 	 */
 	@Subscribe
@@ -2384,7 +2464,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/**
 	 * For receiving the results of applying a filter to a microarray set.
-	 * 
+	 *
 	 * @param fe
 	 */
 	@Subscribe
@@ -2458,7 +2538,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * <code>ActionListener</code> to handle <code>MenuEvent</code>
 	 * generated by <code>MenuItem</code> referenced by <code>menuKey</code>
 	 * attribute
-	 * 
+	 *
 	 * @param menuKey
 	 *            refers to <code>MenuItem</code>
 	 * @return <ActionListener> to handle <code>MenuEvent</code> generated by
@@ -2472,7 +2552,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * Interface <code>VisualPlugin</code> method that returns a
 	 * <code>Component</code> which is the visual representation of the this
 	 * plugin.
-	 * 
+	 *
 	 * @return <code>Component</code> visual representation of
 	 *         <code>ProjectPane</code>
 	 */
@@ -2675,7 +2755,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 		};
 		listeners.put("File.Remove", listener);
-		 
+
 		listener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveNodeAsFile();
@@ -2726,7 +2806,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param pendingEvent
 	 * @return
 	 */
@@ -2745,9 +2825,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				System.getProperty("application.title"));
 	}
 
-	protected void imageRemove_actionPerformed(ProjectTreeNode node) {		 
- 
-		projectTreeModel.removeNodeFromParent(node);	 
+	protected void imageRemove_actionPerformed(ProjectTreeNode node) {
+
+		projectTreeModel.removeNodeFromParent(node);
 		publishImageSnapshot(new ImageSnapshotEvent("ImageSnapshot", null,
 				ImageSnapshotEvent.Action.SHOW));
 	}

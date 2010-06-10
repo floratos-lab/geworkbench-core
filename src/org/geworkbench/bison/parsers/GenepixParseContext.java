@@ -26,7 +26,7 @@ public class GenepixParseContext implements Serializable {
 			"F532 SD", "B532 Median", "B532 Mean", "B532 SD", "% > B532+1SD",
 			"% > B532+2SD", "F532 % Sat.", "Ratio of Medians",
 			"Ratio of Means", "Median of Ratios", "Mean of Ratios",
-			"Ratios SD", "Rgn Ratio", "Rgn R²", "F Pixels", "B Pixels",
+			"Ratios SD", "Rgn Ratio", "Rgn R", "F Pixels", "B Pixels",
 			"Sum of Medians", "Sum of Means", "Log Ratio", "Flags" };
 
 	public static final String TYPE_INTEGER = "Integer";

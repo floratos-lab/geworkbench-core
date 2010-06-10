@@ -33,10 +33,11 @@ import javax.swing.border.EtchedBorder;
  * <p>Company: </p>
  *
  * @author unknown
- * @version $Id: RemoteResourceDialog.java,v 1.25 2009-10-26 21:02:57 jiz Exp $
+ * @version $Id$
  */
 public class RemoteResourceDialog extends JDialog {
-    private static RemoteResourceManager remoteResourceManager = new
+	private static final long serialVersionUID = -4311812466234532113L;
+	private static RemoteResourceManager remoteResourceManager = new
             RemoteResourceManager();
     private static RemoteResourceDialog dialog;
     public static final int ADD = 0;
@@ -107,21 +108,15 @@ public class RemoteResourceDialog extends JDialog {
 
         jPanel2.setLayout(boxLayout21);
 
-        jTextField1.setPreferredSize(new Dimension(60, 20));
         jTextField1.setToolTipText("");
-        jTextField1.setText("Manju");
         jLabel4.setPreferredSize(new Dimension(100, 20));
         jLabel4.setText("Hostname:");
         jLabel4.setHorizontalAlignment(JLabel.RIGHT);
-        jPasswordField1.setPreferredSize(new Dimension(60, 22));
-        jPasswordField1.setText("jPasswordField1");
         this.getContentPane().setLayout(xYLayout1);
         jPanel1.setLayout(borderLayout1);
 
         jLabel5.setText("Password: ");
-        jTextField2.setPreferredSize(new Dimension(120, 20));
         jTextField2.setText("www.columbia.edu");
-        jTextField3.setPreferredSize(new Dimension(120, 20));
         jTextField3.setText("80");
         jButton1.setText("OK");
         jButton1.addActionListener(new
@@ -136,7 +131,6 @@ public class RemoteResourceDialog extends JDialog {
         jComboBox1.addActionListener(new
                                      RemoteResourceDialog_jComboBox1_actionAdapter(this));
         shortnameLabel.setText("Profile name:");
-        shortnameTextField.setPreferredSize(new Dimension(90, 20));
         shortnameTextField.setText("NCI_CaArray");
         jPanel7.setBorder(BorderFactory.createLineBorder(Color.black));
         boxLayout22 = new BoxLayout(jPanel7, BoxLayout.Y_AXIS);
@@ -147,11 +141,11 @@ public class RemoteResourceDialog extends JDialog {
         JTextArea informative = new JTextArea("In case you wish to access non-public data, you need to supply your caArray Username and Password");
         informative.setLineWrap(true);
         informative.setWrapStyleWord(true);
-        informative.setPreferredSize(new Dimension(200, 50));
         informative.setEditable(false);
         jPanel2.add(informative);
         jPanel2.add(jPanel3);
         jPanel2.add(jPanel4);
+        jPanel2.setPreferredSize(new Dimension(120, 150));
         jPanel4.add(jLabel5);
         jPanel4.add(jPasswordField1);
         jPanel1.add(jLabel1, java.awt.BorderLayout.NORTH);
@@ -188,15 +182,15 @@ public class RemoteResourceDialog extends JDialog {
     JPanel jPanel3 = new JPanel();
     JPanel jPanel4 = new JPanel();
     BoxLayout boxLayout21;
-    JTextField jTextField1 = new JTextField();
+    JTextField jTextField1 = new JTextField(10);
     JLabel jLabel4 = new JLabel();
-    JPasswordField jPasswordField1 = new JPasswordField();
+    JPasswordField jPasswordField1 = new JPasswordField(10);
     BorderLayout xYLayout1 = new BorderLayout();
     JPanel jPanel6 = new JPanel();
 
     JLabel jLabel5 = new JLabel();
-    JTextField jTextField2 = new JTextField();
-    JTextField jTextField3 = new JTextField();
+    JTextField jTextField2 = new JTextField(10);
+    JTextField jTextField3 = new JTextField(10);
     JButton jButton1 = new JButton();
     JButton jButton6 = new JButton();
     Border border1 = BorderFactory.createEtchedBorder(EtchedBorder.RAISED,
@@ -205,7 +199,7 @@ public class RemoteResourceDialog extends JDialog {
     JComboBox jComboBox1 = new JComboBox(new String[] {"HTTP", "HTTPS", "RMI"});
     JPanel jPanel7 = new JPanel();
     JLabel shortnameLabel = new JLabel();
-    JTextField shortnameTextField = new JTextField();
+    JTextField shortnameTextField = new JTextField(10);
     JPanel jPanel5 = new JPanel();
     JPanel jPanel8 = new JPanel();
     JPanel jPanel9 = new JPanel();
@@ -239,7 +233,7 @@ public class RemoteResourceDialog extends JDialog {
     }
 
     public void setDirty(boolean dirty) {
-        this.dirty = dirty;
+    	RemoteResourceDialog.dirty = dirty;
     }
 
     public void setUser(String user) {

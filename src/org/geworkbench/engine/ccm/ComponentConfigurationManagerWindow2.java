@@ -773,6 +773,7 @@ public class ComponentConfigurationManagerWindow2 {
 		url += "/deploycomponents.txt";
 		
 		HttpClient client = new HttpClient();
+		client.getHttpConnectionManager().getParams().setConnectionTimeout(3000); 
 		GetMethod method = new GetMethod(url);
 		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
 				new DefaultHttpMethodRetryHandler(3, false));
@@ -821,17 +822,24 @@ public class ComponentConfigurationManagerWindow2 {
 							"No updates are available at this time.\nPlease try again later.",
 							"Remote Component Update",
 							JOptionPane.PLAIN_MESSAGE);
-			e.printStackTrace();
+			//e.printStackTrace();
 			return;
 		} catch (IOException e) {
 			JOptionPane
 					.showMessageDialog(
 							null,
-							"No updates are available at this time.\nPlease try again later.",
-							"Remote Component Update",
+							e.getMessage()+".\n("+e.getClass().getName()+")\nPlease try again later.",
+							"No Update Available",
 							JOptionPane.PLAIN_MESSAGE);
-			e.printStackTrace();
+			//e.printStackTrace();
 			return;
+		} catch (Exception e) { // IllegalArgumentException
+			JOptionPane
+			.showMessageDialog(
+					null,
+					e.getMessage()+".",
+					"No Update Available",
+					JOptionPane.PLAIN_MESSAGE);
 		}
 	}
 
