@@ -49,7 +49,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/jsr173_api.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/junit.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/log4j-1.2.8.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/looks-1.3.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/mageom.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/mail.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/NetComponents.jar"/>

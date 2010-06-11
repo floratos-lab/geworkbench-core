@@ -37,9 +37,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.jgoodies.looks.plastic.PlasticLookAndFeel;
-import com.jgoodies.looks.plastic.theme.SkyBlue;
-
 /**
  * A test analysis to test saving and loading parameters.
  * 
@@ -128,7 +125,6 @@ class TestAnalysis extends AbstractAnalysis {
 							"Parameter Error", JOptionPane.ERROR_MESSAGE);
 		}
 
-		PlasticLookAndFeel.setMyCurrentTheme(new SkyBlue());
 		try {
 			UIManager
 					.setLookAndFeel("com.jgoodies.looks.plastic.Plastic3DLookAndFeel");

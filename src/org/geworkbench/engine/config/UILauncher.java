@@ -23,9 +23,6 @@ import org.geworkbench.engine.config.rules.PluginRule;
 import org.geworkbench.util.SplashBitmap;
 import org.xml.sax.SAXException;
 
-import com.jgoodies.looks.plastic.PlasticLookAndFeel;
-import com.jgoodies.looks.plastic.theme.SkyBlue;
-
 /**
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: First Genetic Trust, Inc.</p>
@@ -163,9 +160,6 @@ public class UILauncher {
             if (lookAndFeelArg != null) {
                 if ("native".equals(lookAndFeelArg)) {
                     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                } else if ("plastic".equals(lookAndFeelArg)) {
-                    PlasticLookAndFeel.setMyCurrentTheme(new SkyBlue());
-                    UIManager.setLookAndFeel("com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
                 } else {
                     UIManager.setLookAndFeel(lookAndFeelArg);
                 }
