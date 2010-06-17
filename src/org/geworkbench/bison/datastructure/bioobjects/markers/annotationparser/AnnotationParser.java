@@ -13,8 +13,10 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -30,8 +32,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
-import org.apache.commons.collections15.MultiMap;
-import org.apache.commons.collections15.multimap.MultiHashMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
@@ -361,9 +361,9 @@ public class AnnotationParser implements Serializable {
 		return set;
 	}
 	
-	public static MultiMap<String, Integer> getGeneIdToMarkerIDMapping(
+	public static Map<String, List<Integer>> getGeneIdToMarkerIDMapping(
 			DSMicroarraySet<? extends DSMicroarray> microarraySet) {
-		MultiHashMap<String, Integer> map = new MultiHashMap<String, Integer>();
+		Map<String, List<Integer>> map = new HashMap<String, List<Integer>>();
 		DSItemList<DSGeneMarker> markers = microarraySet.getMarkers();
 		int index = 0;
 		for (DSGeneMarker marker : markers) {
@@ -372,7 +372,14 @@ public class AnnotationParser implements Serializable {
 					
 					Set<String> geneIDs = getGeneIDs(marker.getLabel());							
 					for (String s : geneIDs) {
-						map.put(s, new Integer(index));
+						List<Integer> list = map.get(s);
+						if(list==null) {
+							list = new ArrayList<Integer>();
+							list.add(index);
+							map.put(s, list);
+						} else {
+							list.add(index);
+						}
 					}
 					index++;
 				} catch (Exception e) {					 
