@@ -150,7 +150,9 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 		}
 		stillWaitForConnecting = false;
 		progressBar.stop();
-
+		// ready for the next request
+		setOpenButtonEnabled(true);
+		
 		if (!ce.isPopulated()) {
 			String errorMessage = ce.getErrorMessage();
 			if (errorMessage == null) {
@@ -393,6 +395,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 
 	private int numTotalArrays = 0;
 	private int numCurrentArray = 0;
+
 	/**
 	 * Action listener invoked when the user presses the "Open" button after
 	 * having selected a remote microarray. The listener will attempt to get the
@@ -423,7 +426,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 		if (qType != null) {
 			numCurrentArray = 0;
 			numTotalArrays = 0;
-			stillWaitForConnecting = true;
+			stillWaitForConnecting = true;						
 			progressBar
 					.setMessage(LOADING_SELECTED_BIOASSAYS_ELAPSED_TIME);
 			updateProgressBar(LOADING_SELECTED_BIOASSAYS_ELAPSED_TIME);
@@ -439,8 +442,14 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 			Thread t = new Thread(dataLoader);
 			t.setPriority(Thread.MAX_PRIORITY);
 			t.start();
+			// only one request at a time
+			setOpenButtonEnabled(false);
 		}
 
+	}
+	
+	public void setOpenButtonEnabled(boolean b){
+		openButton.setEnabled(b);
 	}
 
 	public void startProgressBar() {
@@ -750,17 +759,12 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 		log.error("Get Cancelled");
 
 		progressBar.dispose();
-		CaArrayRequestEvent event = new CaArrayRequestEvent(url, portnumber);
-		if (user == null || user.trim().length() == 0) {
-			event.setUsername(null);
-		} else {
-			event.setUsername(user);
-			event.setPassword(passwd);
-
-		}
-		event.setRequestItem(CaArrayRequestEvent.CANCEL);
-		publishCaArrayRequestEvent(event);
-
+		
+		CaARRAYPanel.cancelledConnectionInfo = CaARRAYPanel.createConnectonInfo( url, portnumber, user, passwd);
+		CaARRAYPanel.isCancelled = true;
+		// user can get next array now
+		setOpenButtonEnabled(true);
+		
 	}
 
 	public boolean isConnectionSuccess() {
@@ -843,5 +847,20 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 
 	public Component getComponent() {
 		return this;
+	}
+
+	// refactored, static vars for now, as only one event could be canceled,
+	// eventually will be in some utility class
+	public static volatile String cancelledConnectionInfo = null;
+	public static volatile boolean isCancelled = false;
+	
+	// refactored, not sure if needed at all
+	public static String createConnectonInfo(String url, int port, String username,
+			String password) {
+		String currentConnectionInfo = url + port;
+		if (username != null && username.length() > 0) {
+			currentConnectionInfo = currentConnectionInfo + username + password;
+		}
+		return currentConnectionInfo;
 	}
 }
