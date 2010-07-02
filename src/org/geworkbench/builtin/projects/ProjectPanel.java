@@ -24,7 +24,6 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -1776,46 +1775,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			projectTreeModel.reload(root);
 		}
 
-		removeDeletedAcceptorComponents(event.getAcceptors());
-		selection.setNodeSelection(null);
-	}
-
-	// protected void removeDeletedAcceptorComponents() {
-	// ComponentRegistry componentRegistry = ComponentRegistry.getRegistry();
-	// HashMap<Class, List<Class>> acceptors = componentRegistry
-	// .getAcceptorsHashMap();
-	//
-	// removeDeletedAcceptorComponents(acceptors);
-	// }
-
-	protected void removeDeletedAcceptorComponents(
-			HashMap<Class, List<Class>> acceptors) {
-
 		if (projectTree == null) {
 			return;
 		}
-
-		/*
-		 * User this to Prune the Project Panel Tree DataSetSubNode
-		 * localDataSetSubNode = null; Enumeration enumeration =
-		 * root.depthFirstEnumeration(); while (enumeration.hasMoreElements()) {
-		 * ProjectTreeNode node = (ProjectTreeNode) enumeration.nextElement();
-		 *
-		 * if (node instanceof DataSetSubNode) { localDataSetSubNode =
-		 * (DataSetSubNode) node;
-		 *
-		 * Class keyClass = localDataSetSubNode._aDataSet.getClass();
-		 *
-		 * Class keyClassOrInterface = classOrInterfaceInKey(keyClass,
-		 * acceptors); if (keyClassOrInterface == null) {
-		 * projectTreeModel.removeNodeFromParent(node); enumeration =
-		 * root.depthFirstEnumeration(); continue; }
-		 *
-		 * List visualComponents = acceptors.get(keyClassOrInterface); if
-		 * (visualComponents == null || visualComponents.size() == 0) {
-		 * projectTreeModel.removeNodeFromParent(node); enumeration =
-		 * root.depthFirstEnumeration(); continue; } } }
-		 */
 
 		DataSetNode selectedDataSetNode = selection.getSelectedDataSetNode();
 		String message = "CCM update";
@@ -1831,6 +1793,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			}
 			sendCommentsEvent(selectedDataSetNode);
 		}
+		
+		selection.setNodeSelection(null);
 	}
 
 	/*
