@@ -20,6 +20,7 @@ import org.geworkbench.engine.ccm.ComponentConfigurationManager;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.config.rules.GeawConfigRule;
 import org.geworkbench.engine.config.rules.PluginRule;
+import org.geworkbench.engine.skin.Skin;
 import org.geworkbench.util.SplashBitmap;
 import org.xml.sax.SAXException;
 
@@ -241,7 +242,8 @@ public class UILauncher {
 
 		splash.hideSplash();
         GUIFramework guiWindow = GeawConfigObject.getGuiWindow();
-		guiWindow.setVisualizationType(null); // force the welcome component to show
+		Skin skin = (Skin)guiWindow;
+		skin.initWelcomeScreen();
 		guiWindow.setVisible(true);
     }
 

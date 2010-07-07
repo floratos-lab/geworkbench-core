@@ -21,6 +21,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -68,7 +69,9 @@ import org.geworkbench.engine.config.PluginDescriptor;
 import org.geworkbench.engine.config.VisualPlugin;
 import org.geworkbench.engine.config.events.AppEventListenerException;
 import org.geworkbench.engine.config.events.EventSource;
+import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.management.ComponentRegistry;
+import org.geworkbench.engine.properties.PropertiesManager;
 import org.geworkbench.events.ComponentDockingEvent;
 import org.geworkbench.events.listeners.ComponentDockingListener;
 import org.geworkbench.util.FilePathnameUtils;
@@ -84,6 +87,9 @@ import org.geworkbench.util.JAutoList;
  * @version $Id$
  */
 public class Skin extends GUIFramework {
+	private static final String YES = "yes";
+	private static final String NO = "no";
+
 	private static final long serialVersionUID = 3617137568252369693L;
 
 	static Log log = LogFactory.getLog(Skin.class);
@@ -188,6 +194,13 @@ public class Skin extends GUIFramework {
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     }
 
+
+    private void setApplicationTitle() {
+    	MessageFormat format = new MessageFormat(System.getProperty("application.title"));
+    	Object[] version = { VERSION };
+    	setTitle(format.format(version));
+    }
+    
     private void jbInit() throws Exception {
         contentPane = (JPanel) this.getContentPane();
         this.setIconImage(Icons.MICROARRAYS_ICON.getImage());
@@ -216,7 +229,7 @@ public class Skin extends GUIFramework {
             this.setLocation((dim.width - guiWidth) / 2, (dim.height - guiHeight) / 2);
         }
         setSize(new Dimension(guiWidth, guiHeight));
-        this.setTitle(System.getProperty("application.title"));
+        setApplicationTitle();
         statusBar.setText(" ");
         jSplitPane1.setBorder(BorderFactory.createLineBorder(Color.black));
         jSplitPane1.setDoubleBuffered(true);
@@ -727,4 +740,91 @@ public class Skin extends GUIFramework {
 		selectLastComponent(GUIFramework.SELECTION_AREA, "Markers");
 	}
 
+	public void initWelcomeScreen() {
+		PropertiesManager pm = PropertiesManager.getInstance();
+		try {
+			String showWelcomeScreen = pm.getProperty(this.getClass(), WELCOME_SCREEN_KEY+VERSION, YES);
+			if(showWelcomeScreen.equalsIgnoreCase(YES)) {
+				showWelcomeScreen();
+			} else {
+				hideWelcomeScreen();
+			}
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public void showWelcomeScreen() {
+    	// TODO Does register needs a public method for add a acceptor? 
+		HashMap<Class, List<Class>> acceptorsNew = ComponentRegistry.getRegistry()
+		.getAcceptorsHashMap();
+		List<Class> list = acceptorsNew.get(null);
+		Class welcomeScreenClass;
+		try {
+			welcomeScreenClass = Class.forName("org.geworkbench.engine.WelcomeScreen");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+			return;
+		}
+		list.add(welcomeScreenClass);
+		acceptorsNew.put(null, list);
+		ComponentRegistry.getRegistry().setAcceptorsHashMap(acceptorsNew);
+
+    	if(acceptors==null)
+    		acceptors = ComponentRegistry.getRegistry().getAcceptors(null);
+		acceptors.add(welcomeScreenClass);
+        addAppropriateComponents(acceptors, GUIFramework.VISUAL_AREA, visualDockables);
+        contentPane.revalidate();
+
+		PropertiesManager pm = PropertiesManager.getInstance();
+		try {
+			pm.setProperty(this.getClass(), WELCOME_SCREEN_KEY+VERSION,
+						YES);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		GeawConfigObject.enableWelcomeScreenMenu(false);
+	}
+
+    @SuppressWarnings("unchecked")
+	public void hideWelcomeScreen() {
+    	if(acceptors==null)
+    		acceptors = ComponentRegistry.getRegistry().getAcceptors(null);
+
+    	// TODO register needs a public method for remove a acceptor
+		HashMap<Class, List<Class>> acceptorsNew = ComponentRegistry
+				.getRegistry().getAcceptorsHashMap();
+		List<Class> componentList = acceptorsNew.get(null);
+
+		for (Class<?> componentClass : componentList) {
+			String componentClassName = componentClass.getName();
+
+			if ( componentClassName
+					.equals("org.geworkbench.engine.WelcomeScreen") ) {
+				componentList.remove(componentClass);
+				acceptors.remove(componentClass);
+				break;
+			}
+		}
+
+		acceptorsNew.put(null, componentList);
+		ComponentRegistry.getRegistry().setAcceptorsHashMap(acceptorsNew);
+
+        addAppropriateComponents(acceptors, GUIFramework.VISUAL_AREA, visualDockables);
+        contentPane.revalidate();
+        contentPane.repaint();
+
+		PropertiesManager pm = PropertiesManager.getInstance();
+		try {
+			pm.setProperty(this.getClass(), WELCOME_SCREEN_KEY+VERSION,
+						NO);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		GeawConfigObject.enableWelcomeScreenMenu(true);
+    }
+
+	private static final String WELCOME_SCREEN_KEY = "Welcome Screen ";
+	private static final String VERSION = System.getProperty("application.version");
 }

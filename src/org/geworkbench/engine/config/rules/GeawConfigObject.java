@@ -18,6 +18,7 @@ import javax.swing.JMenuItem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.engine.config.GUIFramework;
+import org.geworkbench.engine.skin.Skin;
 import org.geworkbench.util.BrowserLauncher;
 import org.geworkbench.util.SplashBitmap;
 
@@ -155,6 +156,11 @@ public class GeawConfigObject {
             return masterHelp.remove(hs);
     }
 
+    private static JMenuItem showWelcomeScreen = new JMenuItem("Show Welcome Screen");
+    public static void enableWelcomeScreenMenu(boolean enabled) {
+    	showWelcomeScreen.setEnabled(enabled);
+    }
+    
 	/**
 	 * Executed at the end of parsing. Cleans up and makes the main application
 	 * window visible.
@@ -182,6 +188,13 @@ public class GeawConfigObject {
 			}
 		});
 		helpMenu.add(about);
+		showWelcomeScreen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Skin skin = (Skin)GUIFramework.getFrame();
+				skin.showWelcomeScreen();
+			}
+		});
+		helpMenu.add(showWelcomeScreen);
 
 		// exit menu is added here (instead of through configuration) so to be
 		// the last item regardless of individual components' menu items
