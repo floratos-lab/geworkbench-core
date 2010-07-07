@@ -25,6 +25,11 @@
 		class="org.geworkbench.builtin.projects.util.CaARRAYPanel">
 	</plugin>
 
+	<plugin id="WelcomeScreen" name="Welcome Screen"
+		class="org.geworkbench.engine.WelcomeScreen">
+		<gui-area name="VisualArea" />
+	</plugin>
+	
 	<plugin id="configurationMenu" name="configurationMenu"
 		class="org.geworkbench.engine.ccm.ComponentConfigurationManagerMenu" />
 	<plugin id="preferences" name="preferences"
