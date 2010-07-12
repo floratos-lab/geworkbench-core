@@ -767,7 +767,8 @@ public class Skin extends GUIFramework {
 			e1.printStackTrace();
 			return;
 		}
-		list.add(welcomeScreenClass);
+		if(!list.contains(welcomeScreenClass))
+			list.add(welcomeScreenClass);
 		acceptorsNew.put(null, list);
 		ComponentRegistry.getRegistry().setAcceptorsHashMap(acceptorsNew);
 
