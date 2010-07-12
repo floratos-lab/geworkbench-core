@@ -796,20 +796,21 @@ public class Skin extends GUIFramework {
 		HashMap<Class, List<Class>> acceptorsNew = ComponentRegistry
 				.getRegistry().getAcceptorsHashMap();
 		List<Class> componentList = acceptorsNew.get(null);
+		List<Class> newComponentList = new ArrayList<Class>();
 
 		for (Class<?> componentClass : componentList) {
 			String componentClassName = componentClass.getName();
 
 			if ( componentClassName
 					.equals("org.geworkbench.engine.WelcomeScreen") ) {
-				componentList.remove(componentClass);
 				acceptors.remove(componentClass);
 				break;
+			} else {
+				newComponentList.add(componentClass);
 			}
 		}
 
-		acceptorsNew.put(null, componentList);
-		ComponentRegistry.getRegistry().setAcceptorsHashMap(acceptorsNew);
+		acceptorsNew.put(null, newComponentList);
 
         addAppropriateComponents(acceptors, GUIFramework.VISUAL_AREA, visualDockables);
         contentPane.revalidate();
