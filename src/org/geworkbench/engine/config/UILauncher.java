@@ -100,10 +100,6 @@ public class UILauncher {
         digester.addCallMethod("geaw-config/plugin/subscription", "handleSubscription", 2);
         digester.addCallParam("geaw-config/plugin/subscription", 0, "type");
         digester.addCallParam("geaw-config/plugin/subscription", 1, "enabled");
-        // Sets up a coupled listener relationship involving 2 plugins.
-        digester.addCallMethod("geaw-config/plugin/coupled-event", "registerCoupledListener", 2);
-        digester.addCallParam("geaw-config/plugin/coupled-event", 0, "event");
-        digester.addCallParam("geaw-config/plugin/coupled-event", 1, "source");
         
         return digester;
     }

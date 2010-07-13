@@ -243,33 +243,6 @@ public class PluginObject {
     }
 
     /**
-     * Invoked by the Digester. Registers the plugin as a broadcast listener for
-     * the event type described by <code>className</code>.
-     *
-     * @param className The listener type. It is expected to be a subinterface of
-     *                  <code>AppEventListener</code>.
-     */
-    public void registerBroadcastListener(String listnerClassName) {
-        System.out.println("Warning: Broadcast-Event tags are now ignored! Use @Publish methods instead.");
-    }
-
-    /**
-     * Invoked by the Digester. Registers the plugin as a coupled listener for
-     * the event type described by <code>className</code> and for events of that
-     * type originating from the <code>EventSource</code> with the desiganted
-     * <code>sourceID</code>.
-     *
-     * @param listenerClassName The listener type. It is expected to be a subinterface of
-     *                          <code>AppEventListener</code>.
-     * @param sourceID          The ID of the <code>EventSource</code> where the events
-     *                          originate from.
-     */
-    public void registerCoupledListener(String listenerClassName, String sourceID) {
-        // @todo - watkin - Add support for <Use-Module> tags.
-        System.out.println("Warning: Coupled-Event tags are now ignored! Use @Module-annotated interfaces instead.");
-    }
-
-    /**
      * Invoked by the Digester. Registers an <code>ActionListener</code> with
      * a menu item.
      *
