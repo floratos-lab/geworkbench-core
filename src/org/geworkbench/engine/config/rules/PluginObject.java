@@ -36,7 +36,7 @@ import org.jdom.input.SAXBuilder;
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: First Genetic Trust, Inc.</p>
  * @author First Genetic Trust, Inc.
- * @version 1.0
+ * @version $Id$
  */
 
 /**
@@ -70,12 +70,12 @@ public class PluginObject {
     /**
      * Used to count up as we load plugins because of the digester.
      */
-    protected static int loadOrderTracker = 0;
+    private static int loadOrderTracker = 0;
 
     /**
      * The <code>PluginDescriptor</code> created for this plugin.
      */
-    protected PluginDescriptor compDes = null;
+    private PluginDescriptor compDes = null;
     /**
      * Maintains the list of event sources that will throw coupled events to
      * this plugin. The actual registration of the coupled event relationships
@@ -88,7 +88,7 @@ public class PluginObject {
      * source components that this plugin requests receiving coupled events on the
      * event listener prescribed by the key.
      */
-    private HashMap coupledEventSources = new HashMap();
+    private HashMap<Class<?>, Vector<String>> coupledEventSources = new HashMap<Class<?>, Vector<String>>();
 
     // ---------------------------------------------------------------------------
     // --------------- Constructors
@@ -101,7 +101,8 @@ public class PluginObject {
     // --------------- Methods
     // ---------------------------------------------------------------------------
 
-    public static ComponentMetadata processComponentDescriptor(String resourceName, Class type) throws IOException, JDOMException, NotMenuListenerException, MalformedMenuItemException, NotVisualPluginException {
+    @SuppressWarnings("unchecked")
+	public static ComponentMetadata processComponentDescriptor(String resourceName, Class<?> type) throws IOException, JDOMException, NotMenuListenerException, MalformedMenuItemException, NotVisualPluginException {
         // Look for descriptor file
         ComponentMetadata metadata = new ComponentMetadata(type, resourceName);
         String filename = type.getSimpleName() + COMPONENT_DESCRIPTOR_EXTENSION;
@@ -231,7 +232,7 @@ public class PluginObject {
 
     public void handleSubscription(String typeName, String enabled) {
         try {
-            Class type = Class.forName(typeName);
+            Class<?> type = Class.forName(typeName);
             // Todo- ensure that there is a @subscribe method corresponding to this type or complain if there is not.
             if ("No".equalsIgnoreCase(enabled)) {
                 compDes.addTypeToSubscriptionIgnoreSet(type);
@@ -250,14 +251,6 @@ public class PluginObject {
      */
     public void registerBroadcastListener(String listnerClassName) {
         System.out.println("Warning: Broadcast-Event tags are now ignored! Use @Publish methods instead.");
-        /*
-        try {
-            BroadcastEventRegistry.addEventListener(Class.forName(listnerClassName),
-            (AppEventListener) compDes.getPlugin());
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
-        }
-        */
     }
 
     /**
@@ -274,24 +267,6 @@ public class PluginObject {
     public void registerCoupledListener(String listenerClassName, String sourceID) {
         // @todo - watkin - Add support for <Use-Module> tags.
         System.out.println("Warning: Coupled-Event tags are now ignored! Use @Module-annotated interfaces instead.");
-        /*
-        Vector eventSourceIDs;
-        Class listenerClass;
-        try {
-            listenerClass = Class.forName(listenerClassName);
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
-            return;
-        }
-
-        if (!coupledEventSources.containsKey(listenerClass))
-            coupledEventSources.put(listenerClass, new Vector());
-        // Register that the plugin should be listening to events thrown by the event
-        // source having the designated ID.
-        eventSourceIDs = (Vector) coupledEventSources.get(listenerClass);
-        if (!eventSourceIDs.contains(sourceID))
-            eventSourceIDs.add(sourceID);
-        */
     }
 
     /**
@@ -361,23 +336,23 @@ public class PluginObject {
     public void finish() {
         ComponentRegistry registry = ComponentRegistry.getRegistry();
         registry.registerSubscriptions(compDes.getPlugin(), compDes);
-        Vector eventSourceIDs;
-        Iterator iter;
-        Class listenerClass;
+        Vector<String> eventSourceIDs;
+        Iterator<Class<?>> iter;
+        Class<?> listenerClass;
         EventSource eventSource;
         int size;
         // Set things up
         iter = coupledEventSources.keySet().iterator();
         // Go over all listeners that the plugin wants to register.
         while (iter.hasNext()) {
-            listenerClass = (Class) iter.next();
-            eventSourceIDs = (Vector) coupledEventSources.get(listenerClass);
+            listenerClass = iter.next();
+            eventSourceIDs = coupledEventSources.get(listenerClass);
             size = eventSourceIDs.size();
             // Attempt to set up a coupled listener relationship with the proper
             // event sources.
             for (int i = 0; i < size; ++i) {
                 try {
-                    eventSource = getEventSourceWithID((String) eventSourceIDs.get(i));
+                    eventSource = getEventSourceWithID(eventSourceIDs.get(i));
                     eventSource.addEventListener(listenerClass, (AppEventListener) compDes.getPlugin());
                 } catch (Exception e) {
                     System.err.println("PluginObject::finish() - Listener = " + listenerClass.getName());
