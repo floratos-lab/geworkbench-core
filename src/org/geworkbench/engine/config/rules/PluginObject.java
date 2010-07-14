@@ -524,6 +524,16 @@ public class PluginObject {
      */
     private void attachFocusListener(Component m) {
         m.addMouseListener(focusHandler);
+        /*
+         * This exceptional case is to handle the problem that cytospace's tabbed pane not responsive inside geWorkbench. 
+         */
+        Container parent = m.getParent(); 
+        if (parent!=null && parent.getClass().getName().equals(
+				"cytoscape.view.cytopanels.CytoPanelImp")
+				&& m.getClass().getName().equals("javax.swing.JTabbedPane")) {
+			return;
+		}
+        
         if (m instanceof Container) {
             Component[] compList = ((Container) m).getComponents();
             for (int i = 0; i < compList.length; ++i)
