@@ -9,11 +9,13 @@ import java.awt.*;
 
 /**
  * An extension of the SwingWorker class that knows how to indicate on a panel that it's busy.
- * User: mhall
- * Date: Nov 17, 2005
- * Time: 12:20:09 PM
+ * @author mhall
+ * @version $Id$
+ * 
+ * @param <T>
+ * @param <V>
  */
-public abstract class BusySwingWorker extends SwingWorker {
+public abstract class BusySwingWorker<T, V> extends javax.swing.SwingWorker<T, V> {
 
     static Log log = LogFactory.getLog(BusySwingWorker.class);
 
