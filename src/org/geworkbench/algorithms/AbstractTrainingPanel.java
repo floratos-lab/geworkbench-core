@@ -1,35 +1,37 @@
 package org.geworkbench.algorithms;
 
-import org.geworkbench.analysis.AbstractSaveableParameterPanel;
-import org.geworkbench.util.TrainingProgressListener;
-import org.geworkbench.util.ClassifierException;
-import org.geworkbench.util.ProgressGraph;
-import org.geworkbench.util.TrainingTask;
-import org.geworkbench.util.threading.SwingWorker;
-import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
-import org.geworkbench.bison.datastructure.biocollections.views.DSMicroarraySetView;
-import org.geworkbench.bison.datastructure.biocollections.views.CSMicroarraySetView;
-import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
-import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
-import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
-import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
-import org.geworkbench.bison.annotation.DSAnnotationContext;
-import org.geworkbench.bison.annotation.CSAnnotationContextManager;
-import org.geworkbench.bison.annotation.CSAnnotationContext;
-import org.geworkbench.bison.algorithm.classification.CSClassifier;
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+
+import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.SwingWorker;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.geworkbench.analysis.AbstractSaveableParameterPanel;
+import org.geworkbench.bison.algorithm.classification.CSClassifier;
+import org.geworkbench.bison.annotation.CSAnnotationContext;
+import org.geworkbench.bison.annotation.CSAnnotationContextManager;
+import org.geworkbench.bison.annotation.DSAnnotationContext;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
+import org.geworkbench.bison.datastructure.biocollections.views.CSMicroarraySetView;
+import org.geworkbench.bison.datastructure.biocollections.views.DSMicroarraySetView;
+import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
+import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
+import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
+import org.geworkbench.util.ClassifierException;
+import org.geworkbench.util.ProgressGraph;
+import org.geworkbench.util.TrainingProgressListener;
+import org.geworkbench.util.TrainingTask;
 
-import javax.swing.*;
-import java.io.Serializable;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Map;
-
-import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * A partial implementation of the interface for a machine learning algorithm.
@@ -38,7 +40,9 @@ import com.jgoodies.forms.builder.DefaultFormBuilder;
  * @author John Watkinson
  */
 public abstract class AbstractTrainingPanel extends AbstractSaveableParameterPanel implements TrainingProgressListener {
-    static Log log = LogFactory.getLog(AbstractTrainingPanel.class);
+	private static final long serialVersionUID = -4019622173548233192L;
+
+	static Log log = LogFactory.getLog(AbstractTrainingPanel.class);
 
     public static final String DEFAULT_TRAINING_MESSAGE = "Training Progress";
     protected JFormattedTextField numberFolds = new JFormattedTextField();
@@ -48,11 +52,11 @@ public abstract class AbstractTrainingPanel extends AbstractSaveableParameterPan
     protected JLabel falseNegatives = new JLabel();
     protected JLabel truePositives = new JLabel();
     protected JLabel trueNegatives = new JLabel();
-    protected DSMicroarraySet maSet = null;
+    protected DSMicroarraySet<DSMicroarray> maSet = null;
     private DSPanel<DSGeneMarker> selectionPanel;
     protected JButton crossTest = new JButton("Test via Cross Validation");
     protected JButton cancelTest = new JButton("Cancel Test");
-    private SwingWorker worker;
+    private SwingWorker<Void, Void> worker;
     private TrainingTask trainingTask = null;
 
     protected void setTrainingStatus(String message) {
@@ -71,11 +75,11 @@ public abstract class AbstractTrainingPanel extends AbstractSaveableParameterPan
         return ((Number) numberFolds.getValue()).intValue();
     }
 
-    public void setMaSet(DSMicroarraySet maSet) {
+    public void setMaSet(DSMicroarraySet<DSMicroarray> maSet) {
         this.maSet = maSet;
     }
 
-    public DSMicroarraySet getMaSet() {
+    public DSMicroarraySet<DSMicroarray> getMaSet() {
         return maSet;
     }
 
@@ -85,7 +89,7 @@ public abstract class AbstractTrainingPanel extends AbstractSaveableParameterPan
 
     public DSItemList<DSGeneMarker> getActiveMarkers() {
         if (selectionPanel != null) {
-            DSMicroarraySetView<DSGeneMarker, DSMicroarray> maView = new CSMicroarraySetView<DSGeneMarker, DSMicroarray>(maSet);
+            DSMicroarraySetView<DSGeneMarker, DSMicroarray> maView = new CSMicroarraySetView<DSGeneMarker, DSMicroarray>((DSMicroarraySet<DSMicroarray>) maSet);
             maView.setMarkerPanel(selectionPanel);
             DSPanel<DSGeneMarker> activeMarkers = maView.getMarkerPanel().activeSubset();
             if (activeMarkers.size() > 0) {
@@ -148,11 +152,11 @@ public abstract class AbstractTrainingPanel extends AbstractSaveableParameterPan
         crossTest.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
-                worker = new SwingWorker() {
+                worker = new SwingWorker<Void, Void>() {
                     int numTruePositives = 0, numFalseNegatives = 0, numFalsePositives = 0, numTrueNegatives = 0;
                     String errorString = null;
 
-                    protected Object doInBackground() throws Exception {
+                    protected Void doInBackground() throws Exception {
                         truePositives.setText("Working...");
                         truePositives.repaint();
                         falsePositives.setText("Working...");
@@ -240,18 +244,6 @@ public abstract class AbstractTrainingPanel extends AbstractSaveableParameterPan
                         return null;
                     }
 
-                    public boolean cancel(boolean mayInterruptIfRunning) {
-                        if (trainingTask != null) {
-                            trainingTask.setCancelled(true);
-                            trainingTask.setTrainingProgressListener(null);
-                        }
-                        setTrainingStatus("");
-                        progressGraph.clearPoints();
-                        progressGraph.setDescription("");
-                        progressGraph.repaint();
-                        return super.cancel(mayInterruptIfRunning);
-                    }
-
                     public void done() {
                         if (errorString != null) {
                             JOptionPane.showMessageDialog(AbstractTrainingPanel.this, errorString);
@@ -279,8 +271,16 @@ public abstract class AbstractTrainingPanel extends AbstractSaveableParameterPan
         cancelTest.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (!worker.isDone()) {
-                    worker.cancel(true);
-                }
+					if (trainingTask != null) {
+						trainingTask.setCancelled(true);
+						trainingTask.setTrainingProgressListener(null);
+					}
+					setTrainingStatus("");
+					progressGraph.clearPoints();
+					progressGraph.setDescription("");
+					progressGraph.repaint();
+					worker.cancel(true);
+				}
             }
         });
 
