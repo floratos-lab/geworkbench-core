@@ -2,6 +2,7 @@ package org.geworkbench.util.patterns;
 
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeqPattern;
 
+import javax.swing.SwingWorker;
 import javax.swing.table.AbstractTableModel;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import java.util.Iterator;
  * <p>Company: </p>
  *
  * @author not attributable
- * @version 1.0
+ * @version $Id$
  */
 
 public class PatternTableModel extends AbstractTableModel {
@@ -240,11 +241,11 @@ public class PatternTableModel extends AbstractTableModel {
         }
 
         if (pat == null) {
-            if ((worker == null) || worker.done()) {
+            if ((worker == null) || worker.isDone()) {
                 //if the initial condition where no patterns are available
                 //create a subclass of SwingWorker and let it retrieve the pattern.
-                worker = new PatternTableModelWorker(this, row);
-                worker.start();
+                worker = new PatternTableModelWorker(row);
+                worker.execute();
             }
         }
         return pat;
@@ -263,42 +264,34 @@ public class PatternTableModel extends AbstractTableModel {
     private void computeMaxLength(DSMatchedSeqPattern pattern) {
         maxLen = Math.max(maxLen, pattern.getMaxLength());
     }
+
+    private class PatternTableModelWorker extends SwingWorker<Void, Void> {
+        int row;
+
+        public PatternTableModelWorker(int row) {
+            this.row = row;
+        }
+
+        /**
+         * Main work of the SwingWorker is in this method
+         * SwingWorker retrieves a new Pattern from the server.
+         * new Pattern is also set with the ASCII value of the pattern
+         */
+    	@Override
+    	protected Void doInBackground() throws Exception {
+    		getPattern(row);
+    		return null;
+        }
+
+        /**
+         * PatternTableModelWorker will fireTableDataChanged when everything finished
+         */
+    	@Override
+        public void done() {
+            fireTableDataChanged();
+        }
+
+    }
+
 }
 
-class PatternTableModelWorker extends org.geworkbench.util.SwingWorker {
-    private boolean done = false;
-    PatternTableModel model = null;
-    int row;
-
-    public PatternTableModelWorker(PatternTableModel tModel, int row) {
-        super();
-        model = tModel;
-        this.row = row;
-    }
-
-    /**
-     * Main work of the SwingWorker is in this method
-     * SwingWorker retrieves a new Pattern from the server.
-     * new Pattern is also set with the ASCII value of the pattern
-     */
-    public Object construct() {
-        model.getPattern(row);
-        done(true);
-        return "done";
-    }
-
-    /**
-     * PatternTableModelWorker will fireTableDataChanged when everything finished
-     */
-    public void finished() {
-        model.fireTableDataChanged();
-    }
-
-    public synchronized void done(boolean d) {
-        done = d;
-    }
-
-    public synchronized boolean done() {
-        return done;
-    }
-}
