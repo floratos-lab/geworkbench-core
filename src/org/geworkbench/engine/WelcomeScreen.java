@@ -72,6 +72,7 @@ public class WelcomeScreen extends JPanel implements VisualPlugin {
 			textField.read(new BufferedReader(new FileReader(filename)),
 					filename);
 			textFieldPanel.add(textField, BorderLayout.CENTER);
+			textField.setEditable(false);
 		} catch (IOException e1) {
 			/*
 			 * If we can not load the welcome file, disable welcome component
