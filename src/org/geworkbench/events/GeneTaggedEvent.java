@@ -34,14 +34,44 @@ import org.geworkbench.engine.config.events.Event;
 public class GeneTaggedEvent extends Event {
 
     private DSPanel<DSGeneMarker> panel;
-
+ 
+    public static final int HIGHLIGHT = 1;
+    public static final int USE_VISUAL_PROPERTY = 2;
+    
+    private int type;
+    private int panelIndex;
+    
     public GeneTaggedEvent(DSPanel<DSGeneMarker> p) {
         super(null);
         panel = p;
+        type = HIGHLIGHT;
 
+    }
+    
+    public GeneTaggedEvent(DSPanel<DSGeneMarker> p, int tagType) {
+        super(null);
+        panel = p;
+        this.type = tagType;
+
+    }
+
+    public GeneTaggedEvent(DSPanel<DSGeneMarker> p, int tagType, int panelIndex) {
+        super(null);
+        panel = p;
+        this.type = tagType;
+        this.panelIndex = panelIndex;
     }
 
     public DSPanel<DSGeneMarker> getPanel() {
         return panel;
     }
+    
+    public int getType() {
+        return type;
+    }
+    
+    public int getPanelIndex() {
+        return panelIndex;
+    }
+    
 }
