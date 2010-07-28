@@ -107,6 +107,7 @@ public class ProgressBar
             if (boundedProgressBar.isShowing()) {
                 boundedProgressBar = new ProgressBar(BOUNDED_TYPE);
             }
+            boundedProgressBar.setModal(false);
             return boundedProgressBar;
         }
 
@@ -114,6 +115,7 @@ public class ProgressBar
             if (indeterminateProgressBar.isShowing()) {
                 indeterminateProgressBar = new ProgressBar(INDETERMINATE_TYPE);
             }
+            indeterminateProgressBar.setModal(false);
             return indeterminateProgressBar;
         }
 
