@@ -125,7 +125,6 @@
 				<include name="ttest" />
 				<include name="versioninfo" />
 				<include name="viewers" />
-				<include name="welcome" />
 			</dirset>
 		</subant>
 		<chmod file="./bin/matrixreduce/FitModelMac" perm="700"/>
@@ -516,7 +515,6 @@
 				<include name="${components}/versioninfo/**/*" />
 				<include name="${components}/viewers/**/*" />
 				<include name="${components}/markus/**/*" />
-				<include name="${components}/welcome/**/*" />
 				
 				<include name="${components}/skyline/**/*" />
 				<include name="${components}/skylineview/**/*" />
