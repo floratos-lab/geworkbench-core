@@ -1,6 +1,5 @@
-package org.geworkbench.util.promoter;
+package org.geworkbench.util.sequences;
 
-import java.awt.Graphics;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
@@ -17,13 +16,12 @@ import org.geworkbench.bison.datastructure.complex.pattern.sequence.CSSeqRegistr
 import org.geworkbench.util.patterns.PatternOperations;
 import org.geworkbench.util.patterns.PatternSequenceDisplayUtil;
 import org.geworkbench.util.promoter.pattern.Display;
-import org.geworkbench.util.sequences.SequenceViewWidget;
 
 // this class is only used by PromoterViewPanel in components promoter
 /**
  *
  * @author
- * @version $Id: SequencePatternDisplayPanel.java,v 1.20 2009-01-15 19:26:36 jiz Exp $
+ * @version $Id$
  */
 @SuppressWarnings("unchecked")
 public class SequencePatternDisplayPanel extends SequenceViewWidget {
@@ -31,8 +29,9 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget {
 	
     private boolean displayTF = true;
     private boolean displaySeqPattern = true;
-	private DSSequenceSet sequenceDB = null;
-    private HashMap patternDisplay = new HashMap();
+	private DSSequenceSet<DSSequence> sequenceDB = null;
+    @SuppressWarnings("rawtypes")
+	private HashMap patternDisplay = new HashMap();
     private Hashtable<DSPattern<DSSequence, CSSeqRegistration>, List<DSPatternMatch<DSSequence, CSSeqRegistration>>> patternMatches = new Hashtable<DSPattern<
                                                   DSSequence, CSSeqRegistration>,
                                                   List<DSPatternMatch<
@@ -47,12 +46,8 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget {
                                 PatternSequenceDisplayUtil>();
 
     public SequencePatternDisplayPanel() {
-        try {
-        	// TODO it is strange to do this before add anything, but that is the behavior before cleaning-up
-            super.removeButtons(SequenceViewWidget.NONBASIC);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+		showAllBtn.setVisible(false);
+		jAllSequenceCheckBox.setVisible(false);
     }
 
     public void addToolBarButton(AbstractButton jbutton) {
@@ -61,7 +56,6 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget {
     }
 
     public void addMenuItem(JMenuItem saveItem) {
-        //outsource the save functionto PromoterViewPanel.
         seqViewWPanel.addMenuItem(saveItem);
         repaint();
     }
@@ -91,7 +85,7 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget {
         }
     }
 
-    public void initialize(DSSequenceSet seqDB) {
+    public void initialize(DSSequenceSet<DSSequence> seqDB) {
         super.setSequenceDB(seqDB);
 
         patternMatches.clear();
@@ -99,10 +93,6 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget {
         sequenceDB = seqDB;
         updateBottomPanel();
         repaint();
-    }
-
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
     }
 
     public void addAPattern(DSPattern<DSSequence, CSSeqRegistration> pt,
@@ -129,15 +119,17 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget {
         return patternMatches;
     }
 
-    public HashMap getPatternTFMatches() {
+    public HashMap<CSSequence, PatternSequenceDisplayUtil> getPatternTFMatches() {
         return patternTFMatches;
     }
 
+    @SuppressWarnings("rawtypes")
     public void setPatternDisplay(HashMap patternDisplay) {
         this.patternDisplay = patternDisplay;
     }
 
-    public void setPatternMatches(Hashtable patternMatches) {
+    @SuppressWarnings("rawtypes")
+	public void setPatternMatches(Hashtable patternMatches) {
         this.patternMatches = patternMatches;
         repaint();
     }
@@ -150,7 +142,9 @@ public class SequencePatternDisplayPanel extends SequenceViewWidget {
         this.displayTF = displayTF;
     }
 
-    public void setPatternTFMatches(HashMap patternTFMatches) {
-        this.patternTFMatches = patternTFMatches;
+    // TODO this needs further investigation on whether patternTFMatches has any effect or not
+    /* this is always set null */
+    public void setPatternTFMatches(Object patternTFMatches) {
+        this.patternTFMatches = null;
     }
 }

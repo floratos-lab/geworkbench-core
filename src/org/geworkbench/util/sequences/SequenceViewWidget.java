@@ -1,6 +1,7 @@
 package org.geworkbench.util.sequences;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -26,12 +27,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 import javax.swing.JToolBar;
 
 import org.geworkbench.bison.datastructure.biocollections.Collection;
 import org.geworkbench.bison.datastructure.biocollections.DSCollection;
-import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.sequences.CSSequenceSet;
 import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
@@ -41,9 +40,7 @@ import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.datastructure.complex.pattern.DSMatchedPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.CSSeqRegistration;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeqPattern;
-import org.geworkbench.engine.management.Subscribe;
 import org.geworkbench.events.GeneSelectorEvent;
-import org.geworkbench.events.MicroarraySetViewEvent;
 import org.geworkbench.events.SequenceDiscoveryTableEvent;
 import org.geworkbench.util.Util;
 import org.geworkbench.util.patterns.CSMatchedSeqPattern;
@@ -57,8 +54,7 @@ import org.geworkbench.util.patterns.PatternSequenceDisplayUtil;
  * Widget is controlled by its associated component, SequenceViewAppComponent
  * Copyright: Copyright (c) 2003
  * 
- * Company: Califano Lab
- * </p>
+ * Company: Califano Lab </p>
  * 
  * @author
  * @version $Id$
@@ -68,23 +64,24 @@ import org.geworkbench.util.patterns.PatternSequenceDisplayUtil;
 public class SequenceViewWidget extends JPanel {
 	private static final long serialVersionUID = -6141589995966150788L;
 
-	public HashMap<CSSequence, PatternSequenceDisplayUtil> patternLocationsMatches;
-	public DSCollection<DSMatchedPattern<DSSequence, CSSeqRegistration>> selectedPatterns = new Collection<DSMatchedPattern<DSSequence, CSSeqRegistration>>();
+	protected HashMap<CSSequence, PatternSequenceDisplayUtil> patternLocationsMatches;
+	protected DSCollection<DSMatchedPattern<DSSequence, CSSeqRegistration>> selectedPatterns = new Collection<DSMatchedPattern<DSSequence, CSSeqRegistration>>();
+
 	public JToolBar jToolBar1 = new JToolBar();
-	public static final String NONBASIC = "NONBASIC";
+	protected static final String NONBASIC = "NONBASIC"; // FIXME this can be
+															// removed (modify
+															// SequencePatternDisplayPanel)
 
 	protected SequenceViewWidgetPanel seqViewWPanel = new SequenceViewWidgetPanel();
-	protected CSSequenceSet activeSequenceDB = null;
+	protected CSSequenceSet<DSSequence> activeSequenceDB = null;
 	protected boolean subsetMarkerOn = true;
 	protected DSPanel<? extends DSGeneMarker> activatedMarkers = null;
 
 	private int prevSeqId = -1;
 	private int prevSeqDx = 0;
-	private DSSequenceSet sequenceDB = new CSSequenceSet();
-	private DSSequenceSet orgSequenceDB = new CSSequenceSet();
-	private DSSequenceSet displaySequenceDB = new CSSequenceSet();
-
-	private BorderLayout borderLayout2 = new BorderLayout();
+	private DSSequenceSet<DSSequence> sequenceDB = new CSSequenceSet<DSSequence>();
+	private DSSequenceSet<?> orgSequenceDB = new CSSequenceSet<CSSequence>();
+	private DSSequenceSet<DSSequence> displaySequenceDB = new CSSequenceSet<DSSequence>();
 
 	// Panels and Panes
 	private JDetailPanel sequencedetailPanel = new JDetailPanel();
@@ -93,13 +90,15 @@ public class SequenceViewWidget extends JPanel {
 	private JButton rightShiftButton = new JButton();
 	private JScrollPane seqScrollPane = new JScrollPane();
 
-	private JCheckBox showAllBtn = new JCheckBox();
-	private JCheckBox jAllSequenceCheckBox = new JCheckBox();
+	// these two can be hidden in derived class
+	protected JCheckBox showAllBtn = new JCheckBox();
+	protected  JCheckBox jAllSequenceCheckBox = new JCheckBox();
+	
 	private JLabel jViewLabel = new JLabel();
 	private JComboBox jViewComboBox = new JComboBox();
 	private static final String LINEVIEW = "Line";
 	private static final String FULLVIEW = "Full Sequence";
-	private JTextField jSequenceSummaryTextField = new JTextField();
+
 	private boolean isLineView = true; // true is for LineView.
 	private boolean onlyShowPattern = false;
 	private static final String LEFT = "left";
@@ -108,18 +107,18 @@ public class SequenceViewWidget extends JPanel {
 	private int xStartPoint = -1;
 	private static final int GAP = 40;
 
+	/* The only constructor. */
 	public SequenceViewWidget() {
 		try {
 			jbInit();
-
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
 
-	void jbInit() throws Exception {
+	private void jbInit() throws Exception {
 
-		this.setLayout(borderLayout2);
+		this.setLayout(new BorderLayout());
 		sequencedetailPanel.setBorder(BorderFactory.createEtchedBorder());
 		sequencedetailPanel.setMinimumSize(new Dimension(50, 40));
 		sequencedetailPanel.setPreferredSize(new Dimension(50, 40));
@@ -134,12 +133,12 @@ public class SequenceViewWidget extends JPanel {
 			}
 
 			public void caretPositionChanged(InputMethodEvent e) {
-				this_caretPositionChanged(e);
+				showPatterns();
 			}
 		});
 		this.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent e) {
-				this_propertyChange(e);
+				showPatterns();
 			}
 		});
 		showAllBtn
@@ -155,21 +154,19 @@ public class SequenceViewWidget extends JPanel {
 		jAllSequenceCheckBox.setText("All Sequences");
 		jAllSequenceCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				jAllSequenceCheckBox_actionPerformed(e);
+				refreshMaSetView();
 			}
 		});
 		jViewLabel.setText("View: ");
-		jSequenceSummaryTextField
-				.setText("Move the mouse over to see details.");
 
 		seqViewWPanel.addMouseMotionListener(new MouseMotionAdapter() {
 			public void mouseMoved(MouseEvent e) {
-				seqViewWPanel_mouseMoved(e);
+				seqViewWPanel.this_mouseMoved(e);
 			}
 		});
 		jViewComboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				jViewComboBox_actionPerformed(e);
+				initPanelView();
 			}
 		});
 		jViewComboBox.setToolTipText("Select a view to display results.");
@@ -217,7 +214,6 @@ public class SequenceViewWidget extends JPanel {
 		}
 
 		seqScrollPane.getViewport().add(seqViewWPanel, null);
-		seqViewWPanel.setShowAll(showAllBtn.isSelected());
 	}
 
 	/**
@@ -226,13 +222,11 @@ public class SequenceViewWidget extends JPanel {
 	 * @param aString
 	 *            String
 	 */
-	public void removeButtons(String aString) {
-		if (aString.equals(NONBASIC)) {
-			jToolBar1.remove(showAllBtn);
-			jToolBar1.remove(jAllSequenceCheckBox); // fix bug 924
-			jToolBar1.remove(jSequenceSummaryTextField);
-			repaint();
-		}
+	protected void removeButtons(String aString) {
+		// ignore aString
+		jToolBar1.remove(showAllBtn);
+		jToolBar1.remove(jAllSequenceCheckBox);
+		repaint();
 	}
 
 	private void setMoveDirection(String directionStr) {
@@ -241,31 +235,6 @@ public class SequenceViewWidget extends JPanel {
 		} else {
 			goLeft = false;
 		}
-	}
-
-	/**
-	 * receiveProjectSelection
-	 * 
-	 * @param e
-	 *            ProjectEvent
-	 */
-	@Subscribe
-	public void receive(org.geworkbench.events.ProjectEvent e, Object source) {
-		if (e.getMessage().equals(org.geworkbench.events.ProjectEvent.CLEARED)) {
-			// refMASet = null;
-			fireModelChangedEvent(null);
-		} else {
-			DSDataSet dataSet = e.getDataSet();
-			if (dataSet instanceof DSSequenceSet) {
-				if (orgSequenceDB != dataSet) {
-					this.orgSequenceDB = (DSSequenceSet) dataSet;
-					selectedPatterns = null;
-					// activatedMarkers = null;
-				}
-			}
-			// refreshMaSetView();
-		}
-		refreshMaSetView();
 	}
 
 	/**
@@ -286,31 +255,22 @@ public class SequenceViewWidget extends JPanel {
 		refreshMaSetView();
 	}
 
-	protected void refreshMaSetView() {
-		getDataSetView();
-	}
-
-	protected void fireModelChangedEvent(MicroarraySetViewEvent event) {
-		this.repaint();
-	}
-
-	public void getDataSetView() {
+	private void refreshMaSetView() {
 		subsetMarkerOn = !jAllSequenceCheckBox.isSelected();
 		if (subsetMarkerOn) {
 			if (activatedMarkers != null && activatedMarkers.size() > 0) {
 
 				if (subsetMarkerOn && (orgSequenceDB != null)) {
-					// createActivatedSequenceSet();
-					activeSequenceDB = (CSSequenceSet) ((CSSequenceSet) orgSequenceDB)
+					activeSequenceDB = (CSSequenceSet<DSSequence>) ((CSSequenceSet<DSSequence>) orgSequenceDB)
 							.getActiveSequenceSet(activatedMarkers);
 				}
 
 			} else if (orgSequenceDB != null) {
-				activeSequenceDB = (CSSequenceSet) orgSequenceDB;
+				activeSequenceDB = (CSSequenceSet<DSSequence>) orgSequenceDB;
 			}
 
 		} else if (orgSequenceDB != null) {
-			activeSequenceDB = (CSSequenceSet) orgSequenceDB;
+			activeSequenceDB = (CSSequenceSet<DSSequence>) orgSequenceDB;
 		}
 		if (activeSequenceDB != null) {
 			sequenceDB = activeSequenceDB;
@@ -321,10 +281,9 @@ public class SequenceViewWidget extends JPanel {
 	public void patternSelectionHasChanged(SequenceDiscoveryTableEvent e) {
 		setPatterns(e.getPatternMatchCollection());
 		refreshMaSetView();
-
 	}
 
-	public void updateBottomPanel() {
+	protected void updateBottomPanel() {
 
 		DSSequence selectedSequence = seqViewWPanel.getSelectedSequence();
 		if (selectedSequence == null) {
@@ -364,35 +323,19 @@ public class SequenceViewWidget extends JPanel {
 	}
 
 	private void showPatterns() {
-		if (selectedPatterns.size() > 0) {
-			for (int i = 0; i < selectedPatterns.size(); i++) {
-				DSMatchedSeqPattern pattern = (DSMatchedSeqPattern) selectedPatterns
-						.get(i);
-				if (pattern instanceof CSMatchedSeqPattern) {
-					if (pattern.getASCII() == null) {
-						PatternOperations.fill((CSMatchedSeqPattern) pattern,
-								displaySequenceDB);
-					}
-					// ( (DefaultListModel)
-					// patternList.getModel()).addElement(pattern);
-					this.repaint();
-				}
+		for (DSMatchedPattern<DSSequence, CSSeqRegistration> pattern : selectedPatterns) {
+			if (((DSMatchedSeqPattern) pattern).getASCII() == null) {
+				PatternOperations.fill((CSMatchedSeqPattern) pattern,
+						displaySequenceDB);
 			}
 		}
+		repaint();
 	}
 
-	private void this_caretPositionChanged(InputMethodEvent e) {
-		showPatterns();
-	}
-
-	private void this_propertyChange(PropertyChangeEvent e) {
-		showPatterns();
-	}
-
-	public void setSequenceDB(DSSequenceSet db) {
+	public void setSequenceDB(DSSequenceSet<?> db) {
 		orgSequenceDB = db;
-		sequenceDB = db;
-		displaySequenceDB = db;
+		sequenceDB = (DSSequenceSet<DSSequence>) db;
+		displaySequenceDB = (DSSequenceSet<DSSequence>) db;
 		refreshMaSetView();
 		// selectedPatterns = new ArrayList();
 		if (sequenceDB != null) {
@@ -404,20 +347,8 @@ public class SequenceViewWidget extends JPanel {
 		}
 	}
 
-	public void setDirection(boolean direction) {
-		this.goLeft = direction;
-	}
-
-	public DSSequenceSet getSequenceDB() {
-		return sequenceDB;
-	}
-
 	public SequenceViewWidgetPanel getSeqViewWPanel() {
 		return seqViewWPanel;
-	}
-
-	public boolean isDirection() {
-		return goLeft;
 	}
 
 	public void setPatterns(
@@ -444,7 +375,6 @@ public class SequenceViewWidget extends JPanel {
 								"No Pattern", JOptionPane.ERROR_MESSAGE);
 				seqViewWPanel.setMaxSeqLen(sequenceDB.getMaxLength());
 				displaySequenceDB = sequenceDB;
-				seqViewWPanel.setShowAll(false);
 			}
 
 			showAllBtn.setSelected(false);
@@ -454,22 +384,11 @@ public class SequenceViewWidget extends JPanel {
 
 	}
 
-	public void jViewComboBox_actionPerformed(ActionEvent e) {
-		initPanelView();
-	}
-
-	public void seqViewWPanel_mouseMoved(MouseEvent e) {
-
-		seqViewWPanel.this_mouseMoved(e);
-		jSequenceSummaryTextField.setText(seqViewWPanel.getDisplayInfo());
-
-	}
-
 	/**
 	 * Transform the patterns to patternsUtil class. Child class should override
 	 * this method.
 	 */
-	public void updatePatternSeqMatches() {
+	protected void updatePatternSeqMatches() {
 		patternLocationsMatches = PatternOperations.processPatterns(
 				selectedPatterns, sequenceDB);
 
@@ -486,7 +405,7 @@ public class SequenceViewWidget extends JPanel {
 		onlyShowPattern = showAllBtn.isSelected();
 
 		if (onlyShowPattern) {
-			displaySequenceDB = new CSSequenceSet();
+			displaySequenceDB = new CSSequenceSet<DSSequence>();
 		}
 
 		// if (patternLocationsMatches != null && sequenceDB != null) {
@@ -514,9 +433,7 @@ public class SequenceViewWidget extends JPanel {
 			if (sequenceDB != null) {
 				seqViewWPanel.setMaxSeqLen(sequenceDB.getMaxLength());
 				displaySequenceDB = sequenceDB;
-				seqViewWPanel.setShowAll(false);
-				// seqViewWPanel.initialize(selectedPatterns, sequenceDB,
-				// isLineView);
+
 				showAllBtn.setSelected(false);
 				seqViewWPanel.initialize(patternLocationsMatches,
 						displaySequenceDB, isLineView);
@@ -529,19 +446,19 @@ public class SequenceViewWidget extends JPanel {
 		return true;
 	}
 
-	public void jAllSequenceCheckBox_actionPerformed(ActionEvent e) {
-		refreshMaSetView();
-	}
-
+	/*
+	 * This class is to implement the paint behavior. All the fields are from
+	 * the enclosing class instance.
+	 */
 	private class JDetailPanel extends JPanel {
 		private static final long serialVersionUID = -1720620118289765818L;
 
+		@Override
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			DSSequence selectedSequence = seqViewWPanel.getSelectedSequence();
 			if (selectedSequence == null) {
-				g.clearRect(0, 0, sequencedetailPanel.getWidth(),
-						sequencedetailPanel.getHeight());
+				g.clearRect(0, 0, getWidth(), getHeight());
 				rightShiftButton.setEnabled(false);
 				leftShiftButton.setEnabled(false);
 				return;
@@ -578,129 +495,110 @@ public class SequenceViewWidget extends JPanel {
 
 			DSSequence sequence = selectedSequence;
 			// Check if we are clicking on a new sequence
-			if ((seqId >= 0) && (seqId != prevSeqId) || (seqDx != prevSeqDx)) {
-				g.clearRect(0, 0, sequencedetailPanel.getWidth(),
-						sequencedetailPanel.getHeight());
-				g.setFont(font);
-				if (sequence != null && (seqDx >= 0)
-						&& (seqDx < sequence.length())) {
-					// turn anti alising on
-					((Graphics2D) g).setRenderingHint(
-							RenderingHints.KEY_ANTIALIASING,
-							RenderingHints.VALUE_ANTIALIAS_ON);
-					// shift the selected pattern/sequence into middle of the
-					// panel.
-					int startPoint = 0;
-					if (seqDx > GAP) {
-						startPoint = seqDx / 10 * 10 - GAP;
-					}
-					FontMetrics fm = g.getFontMetrics(font);
+			if ((seqId < 0 || seqId == prevSeqId) && seqDx == prevSeqDx)
+				return;
 
-					String seqAscii = sequence.getSequence().substring(
-							startPoint);
-					Rectangle2D r2d = fm.getStringBounds(seqAscii, g);
-					int seqLength = seqAscii.length();
-					double xscale = (r2d.getWidth() + 3) / (double) (seqLength);
-					double yscale = 0.6 * r2d.getHeight();
-					g.drawString(seqAscii, 10, 20);
-					int paintPoint = 0;
-					while (paintPoint < seqLength) {
-						g.drawString("|", 10 + (int) (paintPoint * xscale),
-								(int) (GAP / 2 + yscale));
-						g.drawString(new Integer(paintPoint + 1 + startPoint)
-								.toString(), 10 + (int) (paintPoint * xscale),
-								(int) (GAP / 2 + 2 * yscale));
-						paintPoint += GAP;
-					}
+			g.clearRect(0, 0, getWidth(), getHeight());
+			g.setFont(font);
 
-					if (patternLocationsMatches != null) {
-						PatternSequenceDisplayUtil psd = patternLocationsMatches
-								.get(sequence);
-						if (psd == null) {
-							return;
-						}
-						TreeSet<PatternLocations> patternsPerSequence = psd
-								.getTreeSet();
-						if (patternsPerSequence != null
-								&& patternsPerSequence.size() > 0) {
-							for (PatternLocations pl : patternsPerSequence) {
-								CSSeqRegistration registration = pl
-										.getRegistration();
-								if (registration != null) {
-									Rectangle2D r = fm.getStringBounds(
-											seqAscii, g);
-									double scale = (r.getWidth() + 3)
-											/ (double) (seqAscii.length());
-									CSSeqRegistration seqReg = (CSSeqRegistration) registration;
-									int patLength = pl.getAscii().length();
-									int dx = seqReg.x1;
-									double x1 = (dx - startPoint) * scale + 10;
-									double x2 = ((double) patLength) * scale;
-									if (pl.getPatternType().equals(
-											PatternLocations.TFTYPE)) {
-										x2 = Math.abs(registration.x2
-												- registration.x1)
-												* scale;
-									}
-									g.setColor(PatternOperations
-											.getPatternColor(new Integer(pl
-													.getIdForDisplay())));
-									g.drawRect((int) x1, 2, (int) x2, 23);
-									g.drawString("|", (int) x1,
-											(int) (GAP / 2 + yscale));
-									g.drawString("|", (int) (x1 + x2 - scale),
-											(int) (GAP / 2 + yscale));
-									g.drawString(
-											new Integer(dx + 1).toString(),
-											(int) x1,
-											(int) (GAP / 2 + 2 * yscale));
-									g.drawString(new Integer(dx
-											+ seqReg.length()).toString(),
-											(int) (x1 + x2 - scale),
-											(int) (GAP / 2 + 2 * yscale));
-									if (pl.getPatternType().equals(
-											PatternLocations.TFTYPE)) {
+			if (sequence == null || seqDx < 0 || seqDx >= sequence.length())
+				return;
 
-										g
-												.setColor(SequenceViewWidgetPanel.DRECTIONCOLOR);
+			// turn anti alising on
+			((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+					RenderingHints.VALUE_ANTIALIAS_ON);
+			// shift the selected pattern/sequence into middle of the
+			// panel.
+			int startPoint = 0;
+			if (seqDx > GAP) {
+				startPoint = seqDx / 10 * 10 - GAP;
+			}
+			FontMetrics fm = g.getFontMetrics(font);
 
-										int shape = 3;
-										int[] xi = new int[shape];
-										int[] yi = new int[shape];
-										int triangleSize = 8;
-										if (registration.strand == 0) {
-											xi[0] = xi[1] = (int) x1;
-											yi[0] = 2;
-											yi[1] = 2 + triangleSize;
-											xi[2] = xi[0] + triangleSize / 2;
-											yi[2] = 2 + triangleSize / 2;
-											// g.drawPolyline(xi, yi,
-											// addtionalPoint);
-										} else {
-											xi[0] = xi[1] = (int) (x1 + x2);
-											yi[0] = 2;
-											yi[1] = 2 + triangleSize;
-											xi[2] = xi[0] - triangleSize / 2;
-											yi[2] = 2 + triangleSize / 2;
-
-										}
-
-										g.drawPolygon(xi, yi, shape);
-										g.fillPolygon(xi, yi, shape);
-
-									}
-
-								}
-
-							}
-						}
-					}
-
-				}
-
+			String seqAscii = sequence.getSequence().substring(startPoint);
+			Rectangle2D r2d = fm.getStringBounds(seqAscii, g);
+			int seqLength = seqAscii.length();
+			double xscale = (r2d.getWidth() + 3) / (double) (seqLength);
+			double yscale = 0.6 * r2d.getHeight();
+			g.drawString(seqAscii, 10, 20);
+			int paintPoint = 0;
+			while (paintPoint < seqLength) {
+				g.drawString("|", 10 + (int) (paintPoint * xscale),
+						(int) (GAP / 2 + yscale));
+				g.drawString(
+						new Integer(paintPoint + 1 + startPoint).toString(),
+						10 + (int) (paintPoint * xscale),
+						(int) (GAP / 2 + 2 * yscale));
+				paintPoint += GAP;
 			}
 
-		}
-	}
+			if (patternLocationsMatches == null)
+				return;
+
+			PatternSequenceDisplayUtil psd = patternLocationsMatches
+					.get(sequence);
+			if (psd == null)
+				return;
+
+			TreeSet<PatternLocations> patternsPerSequence = psd.getTreeSet();
+			if (patternsPerSequence == null || patternsPerSequence.size() <= 0)
+				return;
+
+			for (PatternLocations pl : patternsPerSequence) {
+				CSSeqRegistration registration = pl.getRegistration();
+				if (registration == null)
+					continue;
+
+				Rectangle2D r = fm.getStringBounds(seqAscii, g);
+				double scale = (r.getWidth() + 3)
+						/ (double) (seqAscii.length());
+				CSSeqRegistration seqReg = (CSSeqRegistration) registration;
+				int patLength = pl.getAscii().length();
+				int dx = seqReg.x1;
+				double x1 = (dx - startPoint) * scale + 10;
+				double x2 = ((double) patLength) * scale;
+				if (pl.getPatternType().equals(PatternLocations.TFTYPE)) {
+					x2 = Math.abs(registration.x2 - registration.x1) * scale;
+				}
+				g.setColor(PatternOperations.getPatternColor(new Integer(pl
+						.getIdForDisplay())));
+				g.drawRect((int) x1, 2, (int) x2, 23);
+				g.drawString("|", (int) x1, (int) (GAP / 2 + yscale));
+				g.drawString("|", (int) (x1 + x2 - scale),
+						(int) (GAP / 2 + yscale));
+				g.drawString(new Integer(dx + 1).toString(), (int) x1,
+						(int) (GAP / 2 + 2 * yscale));
+				g.drawString(new Integer(dx + seqReg.length()).toString(),
+						(int) (x1 + x2 - scale), (int) (GAP / 2 + 2 * yscale));
+				if (pl.getPatternType().equals(PatternLocations.TFTYPE)) {
+
+					g.setColor(Color.RED);
+
+					int shape = 3;
+					int[] xi = new int[shape];
+					int[] yi = new int[shape];
+					int triangleSize = 8;
+					if (registration.strand == 0) {
+						xi[0] = xi[1] = (int) x1;
+						yi[0] = 2;
+						yi[1] = 2 + triangleSize;
+						xi[2] = xi[0] + triangleSize / 2;
+						yi[2] = 2 + triangleSize / 2;
+					} else {
+						xi[0] = xi[1] = (int) (x1 + x2);
+						yi[0] = 2;
+						yi[1] = 2 + triangleSize;
+						xi[2] = xi[0] - triangleSize / 2;
+						yi[2] = 2 + triangleSize / 2;
+					}
+
+					g.drawPolygon(xi, yi, shape);
+					g.fillPolygon(xi, yi, shape);
+				}
+
+			} // end of loop through patternsPerSequence
+
+		} // end of paintComponent
+	} // end of class JDetailPanel
 
 }
