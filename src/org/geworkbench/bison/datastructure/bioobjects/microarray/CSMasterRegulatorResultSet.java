@@ -4,34 +4,30 @@ import java.io.File;
 import java.util.HashMap;
 
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
-import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.complex.panels.CSItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 
-public class CSMasterRegulatorResultSet <T extends DSGeneMarker> extends CSAncillaryDataSet implements DSMasterRagulatorResultSet<T> {
-
-	HashMap<DSGeneMarker,DSItemList<DSGeneMarker>> TF2GenesInRegulon = new HashMap();
-	HashMap<DSGeneMarker,DSItemList<DSGeneMarker>> TF2GenesInTargetList = new HashMap();
-	HashMap<DSGeneMarker,Double> TF2PValue = new HashMap();
-	HashMap<String,Double> TFGeneAndTargetGene2PValue = new HashMap();
-	HashMap<String,Double> TFGeneAndTargetGene2TTestValue = new HashMap();
+public class CSMasterRegulatorResultSet <T extends DSGeneMarker> extends CSAncillaryDataSet<DSMicroarray> implements DSMasterRagulatorResultSet<T> {
+	private static final long serialVersionUID = -416598071322541982L;
+	
+	HashMap<DSGeneMarker,DSItemList<DSGeneMarker>> TF2GenesInRegulon = new HashMap<DSGeneMarker,DSItemList<DSGeneMarker>>();
+	HashMap<DSGeneMarker,DSItemList<DSGeneMarker>> TF2GenesInTargetList = new HashMap<DSGeneMarker,DSItemList<DSGeneMarker>>();
+	HashMap<DSGeneMarker,Double> TF2PValue = new HashMap<DSGeneMarker,Double>();
+	HashMap<String,Double> TFGeneAndTargetGene2PValue = new HashMap<String,Double>();
+	HashMap<String,Double> TFGeneAndTargetGene2TTestValue = new HashMap<String,Double>();
 	DSSignificanceResultSet<DSGeneMarker> sigSet = null;
-	DSMicroarraySet maSet = null;
+	DSMicroarraySet<DSMicroarray> maSet = null;
 	private int markerCount = 0;
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
-	public CSMasterRegulatorResultSet(DSMicroarraySet parent, String label, int markerCount) {
+	public CSMasterRegulatorResultSet(DSMicroarraySet<DSMicroarray> parent, String label, int markerCount) {
 		super(parent, label);
 		this.maSet = parent;
 		this.markerCount = markerCount;
 	}
 	
-	public DSMicroarraySet getMicroarraySet(){
+	public DSMicroarraySet<DSMicroarray> getMicroarraySet(){
 		return maSet;
 	}
 	

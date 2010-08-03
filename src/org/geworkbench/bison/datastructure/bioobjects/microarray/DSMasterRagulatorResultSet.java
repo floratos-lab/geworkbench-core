@@ -4,22 +4,15 @@ import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
-import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 
-public interface DSMasterRagulatorResultSet <T extends DSGeneMarker> extends DSAncillaryDataSet {
+public interface DSMasterRagulatorResultSet <T extends DSGeneMarker> extends DSAncillaryDataSet<DSMicroarray> {
 
 /**
  * @author Yih-Shien Chiang
- * @version $Id: DSMasterRagulatorResultSet.java,v 1.2 2008-07-21 23:15:44 chiangy Exp $
+ * @version $Id$
  */
 
-    public static final int CASE = 0;
-    public static final int CONTROL = 1;
-
-    /**
-     * Gets information for the marker.
-     */
-	public DSMicroarraySet getMicroarraySet();
+	public DSMicroarraySet<DSMicroarray> getMicroarraySet();
     public void setGenesInRegulon(DSGeneMarker TF, DSItemList<DSGeneMarker> markers);
     public void setGenesInTargetList(DSGeneMarker TF, DSItemList<DSGeneMarker> markers);
     public DSItemList<DSGeneMarker> getGenesInRegulon(DSGeneMarker TF);
