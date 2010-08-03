@@ -47,6 +47,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
+import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -230,6 +231,7 @@ public class Skin extends GUIFramework {
         }
         setSize(new Dimension(guiWidth, guiHeight));
         setApplicationTitle();
+        statusBar.setBorder(BorderFactory.createEmptyBorder(3, 10, 3, 10));
         statusBar.setText(" ");
         jSplitPane1.setBorder(BorderFactory.createLineBorder(Color.black));
         jSplitPane1.setDoubleBuffered(true);
@@ -253,7 +255,10 @@ public class Skin extends GUIFramework {
         jSplitPane3.setOneTouchExpandable(true);
         jSplitPane3.setResizeWeight(0.1);
         jSplitPane3.setMinimumSize(new Dimension(0, 0));
-        contentPane.add(statusBar, BorderLayout.SOUTH);
+        JPanel statusBarPanel = new JPanel();
+        statusBarPanel.setLayout(new BorderLayout() );
+        statusBarPanel.add(statusBar, BorderLayout.EAST);
+        contentPane.add(statusBarPanel, BorderLayout.SOUTH);
         contentPane.add(jSplitPane1, BorderLayout.CENTER);
         jSplitPane1.add(jSplitPane2, JSplitPane.RIGHT);
         jSplitPane2.add(commandPanel, JSplitPane.BOTTOM);
@@ -288,8 +293,19 @@ public class Skin extends GUIFramework {
                 loadRCM();
             }
         });
+        
+        ActionListener timerAction = new ActionListener() {
+        	final private static long MEGABYTE = 1024*1024;
+            public void actionPerformed(ActionEvent evt) {
+            	setStatusBarText("Free memory "+Runtime.getRuntime().freeMemory()/MEGABYTE+"M out of total "+
+        				Runtime.getRuntime().totalMemory()/MEGABYTE +"M");            }
+        };
+        if(showMemoryUsage)
+        	new Timer(10000, timerAction).start();
     }
 
+    private boolean showMemoryUsage = true;
+    
     private static class DialogResult {
         public boolean cancelled = false;
     }
@@ -687,6 +703,10 @@ public class Skin extends GUIFramework {
         tabSwappingMode = false;
         contentPane.revalidate();
         contentPane.repaint();
+    }
+    
+    public void setStatusBarText(String text) {
+        statusBar.setText(text);
     }
 
     @SuppressWarnings("unchecked")
