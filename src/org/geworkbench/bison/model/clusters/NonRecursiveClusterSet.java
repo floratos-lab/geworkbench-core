@@ -6,10 +6,8 @@ package org.geworkbench.bison.model.clusters;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
@@ -91,13 +89,15 @@ public class NonRecursiveClusterSet implements Serializable {
 			return;
 
 		list = new ArrayList<ClusterNode>();
-		Map<DefaultHierCluster, ClusterNode> map = new HashMap<DefaultHierCluster, ClusterNode>();
 
 		Set<DefaultHierCluster> visited = new HashSet<DefaultHierCluster>();
 		Stack<DefaultHierCluster> stack = new Stack<DefaultHierCluster>();
+		Stack<Integer> parentIndexStack = new Stack<Integer>();
 
 		DefaultHierCluster end = new DefaultHierCluster();
 		stack.push(end);
+		int parentIndex = -1;
+		parentIndexStack.push(parentIndex);
 
 		DefaultHierCluster thisnode = (DefaultHierCluster) hierCluster;
 
@@ -107,9 +107,8 @@ public class NonRecursiveClusterSet implements Serializable {
 
 			if (children.size() == 0) {
 				ClusterNode clusterNode = new ClusterNode(getValue(thisnode,
-						clusterClass), thisnode.getDepth(), -1);
+						clusterClass), thisnode.getDepth(), parentIndex);
 				list.add(clusterNode);
-				map.put(thisnode, clusterNode);
 			}
 
 			// decide what node to work on now
@@ -122,10 +121,11 @@ public class NonRecursiveClusterSet implements Serializable {
 						visited.add(thisnode);
 						ClusterNode clusterNode = new ClusterNode(getValue(
 								thisnode, clusterClass), thisnode.getDepth(),
-								-1);
+								parentIndexStack.peek());
 						list.add(clusterNode);
-						map.put(thisnode, clusterNode);
+						parentIndex = list.size() - 1;
 					}
+					parentIndexStack.push(parentIndex);
 
 					thisnode = child;
 					found = true;
@@ -135,18 +135,9 @@ public class NonRecursiveClusterSet implements Serializable {
 			if (!found) {
 				visited.add(thisnode);
 				thisnode = stack.pop();
+				parentIndex = parentIndexStack.pop();
 			}
 		}
-
-		// traverse again to get the parent info
-		for (DefaultHierCluster parent : map.keySet()) {
-			for (Cluster cluster : parent.children) {
-				DefaultHierCluster child = (DefaultHierCluster) cluster;
-				ClusterNode clusterNode = map.get(child);
-				clusterNode.parent = list.indexOf(map.get(parent));
-			}
-		}
-
 	}
 
 	/**
