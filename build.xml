@@ -89,7 +89,6 @@
 				<include name="caarray" />
 				<include name="celprocessing" />
 				<include name="cgems" />
-				<!-- include name="classification" / -->
 				<include name="colormosaic" />
 				<include name="cytoscape" />
 				<include name="discovery" />
@@ -480,7 +479,6 @@
 				<include name="${components}/alignment/**/*" />
 				<include name="${components}/analysis/**/*" />
 				<include name="${components}/annotations/**/*" />
-				<include name="${components}/alignment/**/*" />
 				<include name="${components}/anova/**/*" />
 				<include name="${components}/aracne-java/**/*" />
 				<include name="${components}/caarray/**/*" />
@@ -509,7 +507,6 @@
 				<include name="${components}/pudge/**/*" />
 				<include name="${components}/selectors/**/*" />
 				<include name="${components}/sequenceretriever/**/*" />
-				<include name="${components}/alignment/**/*" />
 				<include name="${components}/sequences/**/*" />
 	 
 				<include name="${components}/versioninfo/**/*" />
