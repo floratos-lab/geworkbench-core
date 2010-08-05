@@ -104,8 +104,9 @@ public class SequenceViewWidgetPanel extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
-		if (sequenceDB == null)
-			return;
+		if (sequenceDB == null) {
+			g.clearRect(0, 0, getWidth(), getHeight());
+		}
 
 		if (lineView) {
 			if (!singleSequenceView || selected >= sequenceDB.size()) {
@@ -255,11 +256,9 @@ public class SequenceViewWidgetPanel extends JPanel {
 		String lab = theone.getLabel();
 		y += (int) (rowId * yscale);
 		g.setColor(SEQUENCEBACKGROUDCOLOR);
-		if (lab.length() > maxDisplayChars) {
-			g.drawString(lab, 2, y + 3);
-		} else {
-			g.drawString(lab, 2, y + 3);
-		}
+
+		g.drawString(lab, 2, y + 3);
+
 		int x0 = (int) (lab.length() * xscale);
 		int x = x0 + (int) (theone.length() * scale);
 
@@ -463,6 +462,17 @@ public class SequenceViewWidgetPanel extends JPanel {
 
 	public void setSelectedSequence(DSSequence selectedSequence) {
 		this.selectedSequence = selectedSequence;
+		// update selected index.
+		if (sequenceDB != null && selectedSequence != null) {
+			int location = 0;
+			for (Object seq : sequenceDB) {
+				if (seq.equals(selectedSequence)) {
+					selected = location;
+					return;
+				}
+				location++;
+			}
+		}
 	}
 
 	private void drawSequence(Graphics g, int rowId, int seqId, double len) {
