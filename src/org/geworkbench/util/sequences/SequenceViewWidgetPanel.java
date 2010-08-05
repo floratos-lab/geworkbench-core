@@ -50,18 +50,18 @@ public class SequenceViewWidgetPanel extends JPanel {
 	private int maxSeqLen = 1;
 	private String displayInfo = "";
 
-	private DSSequenceSet<? extends DSSequence> sequenceDB = null;
+	protected DSSequenceSet<? extends DSSequence> sequenceDB = null;
 	private HashMap<CSSequence, PatternSequenceDisplayUtil> sequencePatternmatches;
 
-	private boolean lineView;
-	private boolean singleSequenceView;
+	protected boolean lineView;
+	protected boolean singleSequenceView;
 	private final static Color SEQUENCEBACKGROUDCOLOR = Color.BLACK;
 	private final static Color DRECTIONCOLOR = Color.RED;
 	private double yBasescale;
 	private int xBaseCols;
 	private int[] eachSeqStartRowNum;
 	private double xBasescale;
-	private int seqXclickPoint = 0;
+	protected int seqXclickPoint = 0;
 	private DSSequence selectedSequence;
 	private JPopupMenu itemListPopup = new JPopupMenu();
 
@@ -106,6 +106,7 @@ public class SequenceViewWidgetPanel extends JPanel {
 
 		if (sequenceDB == null) {
 			g.clearRect(0, 0, getWidth(), getHeight());
+			return;
 		}
 
 		if (lineView) {
