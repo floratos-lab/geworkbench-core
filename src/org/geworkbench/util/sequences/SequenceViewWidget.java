@@ -67,10 +67,8 @@ public class SequenceViewWidget extends JPanel {
 	protected HashMap<CSSequence, PatternSequenceDisplayUtil> patternLocationsMatches;
 	protected DSCollection<DSMatchedPattern<DSSequence, CSSeqRegistration>> selectedPatterns = new Collection<DSMatchedPattern<DSSequence, CSSeqRegistration>>();
 
-	public JToolBar jToolBar1 = new JToolBar();
-	protected static final String NONBASIC = "NONBASIC"; // FIXME this can be
-															// removed (modify
-															// SequencePatternDisplayPanel)
+	public JToolBar jToolBar1 = new JToolBar(); 
+	// TODO create the public/protected method to add button instead of exposing jToolBar1 as public
 
 	protected SequenceViewWidgetPanel seqViewWPanel = new SequenceViewWidgetPanel();
 	protected CSSequenceSet<DSSequence> activeSequenceDB = null;
@@ -121,7 +119,7 @@ public class SequenceViewWidget extends JPanel {
 		this.setLayout(new BorderLayout());
 		sequencedetailPanel.setBorder(BorderFactory.createEtchedBorder());
 		sequencedetailPanel.setMinimumSize(new Dimension(50, 40));
-		sequencedetailPanel.setPreferredSize(new Dimension(50, 40));
+		sequencedetailPanel.setPreferredSize(new Dimension(60, 50));
 		seqScrollPane.setBorder(BorderFactory.createEtchedBorder());
 		seqViewWPanel.addMouseListener(new java.awt.event.MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
@@ -170,13 +168,11 @@ public class SequenceViewWidget extends JPanel {
 			}
 		});
 		jViewComboBox.setToolTipText("Select a view to display results.");
-		bottomPanel = new JPanel();
-		leftShiftButton = new JButton();
 
+		bottomPanel = new JPanel();
 		ImageIcon leftButtonIcon = Util.createImageIcon("/images/back.gif");
 		leftShiftButton.setIcon(leftButtonIcon);
 		ImageIcon rightButtonIcon = Util.createImageIcon("/images/forward.gif");
-		rightShiftButton = new JButton();
 		rightShiftButton.setIcon(rightButtonIcon);
 		bottomPanel.setLayout(new BorderLayout());
 		bottomPanel.add(leftShiftButton, BorderLayout.WEST);
@@ -214,19 +210,6 @@ public class SequenceViewWidget extends JPanel {
 		}
 
 		seqScrollPane.getViewport().add(seqViewWPanel, null);
-	}
-
-	/**
-	 * cleanButtons
-	 * 
-	 * @param aString
-	 *            String
-	 */
-	protected void removeButtons(String aString) {
-		// ignore aString
-		jToolBar1.remove(showAllBtn);
-		jToolBar1.remove(jAllSequenceCheckBox);
-		repaint();
 	}
 
 	private void setMoveDirection(String directionStr) {
@@ -399,7 +382,7 @@ public class SequenceViewWidget extends JPanel {
 	 * 
 	 * @return boolean
 	 */
-	public boolean initPanelView() {
+	public void initPanelView() {
 		updatePatternSeqMatches();
 		isLineView = jViewComboBox.getSelectedItem().equals(LINEVIEW);
 		onlyShowPattern = showAllBtn.isSelected();
@@ -442,8 +425,6 @@ public class SequenceViewWidget extends JPanel {
 				seqViewWPanel.removeAll();
 			}
 		}
-
-		return true;
 	}
 
 	/*
