@@ -59,8 +59,6 @@ import org.geworkbench.util.patterns.PatternSequenceDisplayUtil;
  * @author
  * @version $Id$
  */
-
-@SuppressWarnings("unchecked")
 public class SequenceViewWidget extends JPanel {
 	private static final long serialVersionUID = -6141589995966150788L;
 
@@ -238,6 +236,7 @@ public class SequenceViewWidget extends JPanel {
 		refreshMaSetView();
 	}
 
+	@SuppressWarnings("unchecked")
 	private void refreshMaSetView() {
 		subsetMarkerOn = !jAllSequenceCheckBox.isSelected();
 		if (subsetMarkerOn) {
@@ -315,6 +314,7 @@ public class SequenceViewWidget extends JPanel {
 		repaint();
 	}
 
+	@SuppressWarnings("unchecked")
 	public void setSequenceDB(DSSequenceSet<?> db) {
 		orgSequenceDB = db;
 		sequenceDB = (DSSequenceSet<DSSequence>) db;
