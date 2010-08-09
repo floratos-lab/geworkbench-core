@@ -248,8 +248,13 @@ Changes included in geWorkbench 2.0.0
         added additional databases to match those listed at NCBI
         improved handling of results from searches containing long query sequences. 
 
-Versions of external files/components included in this release
-
+    Online Help chapters updated
+	* CCM
+	* Filtering
+	* Normalization
+	
+	
+    Versions of external files/components included in this release
     * gene_ontology.1_2.obo downloaded 5/24/2010 from geneontology.org.
     * Ontologizer.jar version 2.0, file released 3/10/2010.
     * Jaspar_CORE (http://jaspar.genereg.net/) SQL files last updated on server 10/2009.
@@ -341,8 +346,10 @@ Versions of external files/components included in this release
 
     6.  Component Configuration Manager - allows individual components to
         be loaded into or unloaded from geWorkbench.
+
     7.  genSpace collaborative framework - discovery and visualization
         of workflows. Implemented user registration and preferences.
+
     8. SVM 3.0 (GenePattern) - Support Vector machines for classification.
 
     Other changes in release 1.7.0:
