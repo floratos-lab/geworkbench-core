@@ -75,32 +75,32 @@ public class SequenceViewWidget extends JPanel {
 
 	private int prevSeqId = -1;
 	private int prevSeqDx = 0;
-	private DSSequenceSet<DSSequence> sequenceDB = new CSSequenceSet<DSSequence>();
-	private DSSequenceSet<?> orgSequenceDB = new CSSequenceSet<CSSequence>();
-	private DSSequenceSet<DSSequence> displaySequenceDB = new CSSequenceSet<DSSequence>();
+	protected DSSequenceSet<DSSequence> sequenceDB = new CSSequenceSet<DSSequence>();
+	protected DSSequenceSet<?> orgSequenceDB = new CSSequenceSet<CSSequence>();
+	protected DSSequenceSet<DSSequence> displaySequenceDB = new CSSequenceSet<DSSequence>();
 
 	// Panels and Panes
-	private JDetailPanel sequencedetailPanel = new JDetailPanel();
+	protected JDetailPanel sequencedetailPanel = new JDetailPanel();
 	private JPanel bottomPanel = new JPanel();
 	private JButton leftShiftButton = new JButton();
 	private JButton rightShiftButton = new JButton();
-	private JScrollPane seqScrollPane = new JScrollPane();
+	protected JScrollPane seqScrollPane = new JScrollPane();
 
 	// these two can be hidden in derived class
 	protected JCheckBox showAllBtn = new JCheckBox();
 	protected  JCheckBox jAllSequenceCheckBox = new JCheckBox();
 	
 	private JLabel jViewLabel = new JLabel();
-	private JComboBox jViewComboBox = new JComboBox();
-	private static final String LINEVIEW = "Line";
+	protected JComboBox jViewComboBox = new JComboBox();
+	protected static final String LINEVIEW = "Line";
 	private static final String FULLVIEW = "Full Sequence";
 
-	private boolean isLineView = true; // true is for LineView.
+	protected boolean isLineView = true; // true is for LineView.
 	private boolean onlyShowPattern = false;
 	private static final String LEFT = "left";
 	private static final String RIGHT = "right";
 	private boolean goLeft = false;
-	private int xStartPoint = -1;
+	protected int xStartPoint = -1;
 	private static final int GAP = 40;
 
 	/* The only constructor. */
@@ -160,6 +160,8 @@ public class SequenceViewWidget extends JPanel {
 				seqViewWPanel.this_mouseMoved(e);
 			}
 		});
+		jViewComboBox.addItem(LINEVIEW);
+		jViewComboBox.addItem(FULLVIEW);
 		jViewComboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				initPanelView();
@@ -199,9 +201,6 @@ public class SequenceViewWidget extends JPanel {
 		jToolBar1.add(showAllBtn);
 		jToolBar1.add(jAllSequenceCheckBox);
 		jToolBar1.addSeparator();
-		// jToolBar1.add(jSequenceSummaryTextField);
-		jViewComboBox.addItem(LINEVIEW);
-		jViewComboBox.addItem(FULLVIEW);
 
 		if (sequenceDB != null) {
 			seqViewWPanel.setMaxSeqLen(sequenceDB.getMaxLength());
@@ -267,7 +266,7 @@ public class SequenceViewWidget extends JPanel {
 
 	protected void updateBottomPanel() {
 
-		DSSequence selectedSequence = seqViewWPanel.getSelectedSequence();
+		DSSequence selectedSequence = getSelectedSequence();
 		if (selectedSequence == null) {
 			return;
 		}
@@ -427,17 +426,21 @@ public class SequenceViewWidget extends JPanel {
 		}
 	}
 
+	protected DSSequence getSelectedSequence() {
+		return seqViewWPanel.getSelectedSequence();
+	}
+
 	/*
 	 * This class is to implement the paint behavior. All the fields are from
 	 * the enclosing class instance.
 	 */
-	private class JDetailPanel extends JPanel {
+	protected class JDetailPanel extends JPanel {
 		private static final long serialVersionUID = -1720620118289765818L;
 
 		@Override
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
-			DSSequence selectedSequence = seqViewWPanel.getSelectedSequence();
+			DSSequence selectedSequence = getSelectedSequence();
 			if (selectedSequence == null) {
 				g.clearRect(0, 0, getWidth(), getHeight());
 				rightShiftButton.setEnabled(false);

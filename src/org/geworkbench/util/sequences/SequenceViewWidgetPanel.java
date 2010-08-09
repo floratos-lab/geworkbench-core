@@ -1066,4 +1066,21 @@ public class SequenceViewWidgetPanel extends JPanel {
 		return tip;
 	}
 
+	public void setSingleSequenceView(boolean singleSequenceView) {
+		this.singleSequenceView = singleSequenceView;
+	}
+
+	public void setSequenceDB(DSSequenceSet<DSSequence> sequenceDB) {
+		this.sequenceDB = sequenceDB;
+	}
+
+	public void setLineView(boolean lineView) {
+		this.lineView = lineView;
+		revalidate();
+	}
+
+	public void setSeqXclickPoint(int seqXclickPoint) {
+		this.seqXclickPoint = seqXclickPoint;
+	}
+
 }
