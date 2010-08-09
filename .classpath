@@ -9,11 +9,9 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="geworkbench-core/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="lib/activation.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/AffxFusion.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ant.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ant-launcher.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/antlr-2.7.5.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/bcel-5.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/bnj-kdd.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/cglib-nodep-2.1.jar"/>
@@ -45,9 +43,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/jhall.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/JRclient-RF503.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jsr173_api.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/junit.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/log4j-1.2.8.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/mageom.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/mail.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/NetComponents.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ostermillerutils_1_04_03_for_kaffe.jar"/>
