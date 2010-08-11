@@ -14,6 +14,7 @@ import javax.help.HelpSet;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -195,6 +196,22 @@ public class GeawConfigObject {
 			}
 		});
 		helpMenu.add(showWelcomeScreen);
+		JMenuItem systemInfo = new JMenuItem("System Info");
+		systemInfo.addActionListener(new ActionListener() {
+        	final private static long MEGABYTE = 1024*1024;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				StringBuffer sb = new StringBuffer("\n========== ==========\n");
+				sb.append("Java memory usage:\n")
+					.append(Runtime.getRuntime().totalMemory()/MEGABYTE).append(" MB total\n")
+					.append(Runtime.getRuntime().freeMemory()/MEGABYTE).append(" MB free\n")
+					.append(Runtime.getRuntime().maxMemory()/MEGABYTE).append(" MB maximum");
+				JOptionPane.showMessageDialog(null, sysInfo+sb, "System Information", JOptionPane.INFORMATION_MESSAGE);
+			}
+			
+		});
+		helpMenu.add(systemInfo );
 
 		// exit menu is added here (instead of through configuration) so to be
 		// the last item regardless of individual components' menu items
@@ -296,5 +313,49 @@ public class GeawConfigObject {
 
         return appMenuBar;
     }
+
+	// according to http://download.oracle.com/javase/1.5.0/docs/api/java/lang/System.html
+	// This set of system properties always includes values for the following keys:
+	/*
+Key  	Description of Associated Value
+java.version 	Java Runtime Environment version
+java.vendor 	Java Runtime Environment vendor
+java.vendor.url 	Java vendor URL
+java.home 	Java installation directory
+java.vm.specification.version 	Java Virtual Machine specification version
+java.vm.specification.vendor 	Java Virtual Machine specification vendor
+java.vm.specification.name 	Java Virtual Machine specification name
+java.vm.version 	Java Virtual Machine implementation version
+java.vm.vendor 	Java Virtual Machine implementation vendor
+java.vm.name 	Java Virtual Machine implementation name
+java.specification.version 	Java Runtime Environment specification version
+java.specification.vendor 	Java Runtime Environment specification vendor
+java.specification.name 	Java Runtime Environment specification name
+java.class.version 	Java class format version number
+java.class.path 	Java class path
+java.library.path 	List of paths to search when loading libraries
+java.io.tmpdir 	Default temp file path
+java.compiler 	Name of JIT compiler to use
+java.ext.dirs 	Path of extension directory or directories
+os.name 	Operating system name
+os.arch 	Operating system architecture
+os.version 	Operating system version
+file.separator 	File separator ("/" on UNIX)
+path.separator 	Path separator (":" on UNIX)
+line.separator 	Line separator ("\n" on UNIX)
+user.name 	User's account name
+user.home 	User's home directory
+user.dir 	User's current working directory			 */
+
+	private static String sysInfo = null;
+	static {
+		StringBuffer sb = new StringBuffer();
+		sb.append("Operating system: ").append(System.getProperty("os.name")).append("\n")
+		.append("Operating system version: ").append(System.getProperty("os.version")).append("\n")
+		.append("JRE version: ").append(System.getProperty("java.version")).append("\n")
+		.append("JRE vendor: ").append(System.getProperty("java.vendor")).append("\n")
+		.append("Java installation directory: ").append(System.getProperty("java.home"));
+		sysInfo = sb.toString();
+	}
 
 }
