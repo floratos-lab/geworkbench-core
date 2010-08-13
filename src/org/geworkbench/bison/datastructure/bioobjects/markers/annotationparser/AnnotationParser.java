@@ -49,10 +49,10 @@ import com.Ostermiller.util.LabeledCSVParser;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 
 /**
- * 
+ *
  * Description:This Class is for retrieving probe annotation information from
  * default annotation files provided by Affymetrix.
- * 
+ *
  * @author Xuegong Wang
  * @author manjunath at genomecenter dot columbia dot edu
  * @version $Id$
@@ -161,7 +161,7 @@ public class AnnotationParser implements Serializable {
 		datasetToChipTypes.put(dataset, chiptype);
 		currentDataSet = dataset;
 	}
-	
+
 	/* this is used to handle annotation file when the real dataset is chosen after annotation. */
 	private static CSMicroarraySet<? extends DSBioObject> dummyMicroarraySet = new CSMicroarraySet<DSMicroarray>();
 	public static String getLastAnnotationFileName () {
@@ -183,13 +183,13 @@ public class AnnotationParser implements Serializable {
 
 	private static boolean loadAnnotationData(String chipType, File datafile) {
 		if (datafile.exists()) { // data file is found
-			
+
 			FileInputStream fis = null;
 			BufferedInputStream bis = null;
 			try {
 				fis = new FileInputStream(datafile);
 				bis = new BufferedInputStream(fis);
-				
+
 				CSVParser cvsParser = new CSVParser(bis);
 
 				cvsParser.setCommentStart("#;!");// Skip all comments line.
@@ -199,9 +199,12 @@ public class AnnotationParser implements Serializable {
 				LabeledCSVParser parser = new LabeledCSVParser(cvsParser);
 
 				MarkerAnnotation markerAnnotation = new MarkerAnnotation();
-				
-				while (parser.getLine() != null) {
+
+				boolean ignoreAll = false;
+				boolean cancelAnnotationFileProcessing = false;
+				while ((parser.getLine() != null) && !cancelAnnotationFileProcessing) {
 					String affyId = parser.getValueByLabel(labels[0]);
+					affyId = affyId.trim();
 					AnnotationFields fields = new AnnotationFields();
 					for (int i = 1; i < labels.length; i++) {
 						String label = labels[i];
@@ -235,10 +238,33 @@ public class AnnotationParser implements Serializable {
 						else if(label.equals(REFSEQ))
 							fields.setRefSeq(val);
 					}
-					markerAnnotation.addMarker(affyId, fields);
+
+					if (markerAnnotation.containsMarker(affyId)) {
+						if (!ignoreAll){
+						      String[] options = {"Proceed", "Ignore All", "Cancel",};
+						      int code = JOptionPane.showOptionDialog(null,
+						    		  "Duplicate entry. Probe Set ID=" + affyId + "." + "\n" +
+						    		  "How do you want to proceed?" + "\n" +
+						    		  "Proceed - will ignore this entry" + "\n" +
+						    		  "Ignore All - will ignore all duplicate entries." + "\n" +
+						    		  "Cancel - will cancel the annotation file processing.",
+						         "Duplicate entry in annotation file", 0, JOptionPane.QUESTION_MESSAGE,
+						         null, options, "Proceed");
+						      if (code == 1) {
+						    	  ignoreAll = true;
+						      }
+						      if (code == 2) {
+						    	  cancelAnnotationFileProcessing = true;
+						      }
+						}
+					} else {
+						markerAnnotation.addMarker(affyId, fields);
+					}
 				}
 
-				chipTypeToAnnotation.put(chipType, markerAnnotation);
+				if (!cancelAnnotationFileProcessing) {
+					chipTypeToAnnotation.put(chipType, markerAnnotation);
+				}
 
 				return true;
 			} catch (Exception e) {
@@ -251,7 +277,7 @@ public class AnnotationParser implements Serializable {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				
+
 			}
 		} else {
 			return false;
@@ -273,11 +299,11 @@ public class AnnotationParser implements Serializable {
 
 	/**
 	 * This method returns required annotation field for a given affymatrix marker ID .
-	 * 
+	 *
 	 * @param affyid
 	 *            affyID as string
 	 * @param fieldID
-	 * 
+	 *
 	 */
 	// this method used to depend on chipTypeToAnnotations, which take unnecessary large memory
 	// the first step is to re-implement this method so it does not use chipTypeToAnnotations
@@ -285,7 +311,7 @@ public class AnnotationParser implements Serializable {
 		try {
 			String chipType = datasetToChipTypes.get(currentDataSet);
 			String field = "";
-			
+
 			AnnotationFields fields = chipTypeToAnnotation.get(chipType).getFields(affyID);
 			// individual field to be process separately to eventually get rid of the large map
 			if(fieldID.equals(ABREV)) { // same as GENE_SYMBOL
@@ -294,13 +320,13 @@ public class AnnotationParser implements Serializable {
 				field = fields.getLocusLink();
 			} else if(fieldID.equals(DESCRIPTION)) {
 				field = fields.getDescription();
-			} else if(fieldID.equals(GENE_ONTOLOGY_MOLECULAR_FUNCTION)) { 
+			} else if(fieldID.equals(GENE_ONTOLOGY_MOLECULAR_FUNCTION)) {
 				field = fields.getMolecularFunction();
-			} else if(fieldID.equals(GENE_ONTOLOGY_CELLULAR_COMPONENT)) { 
+			} else if(fieldID.equals(GENE_ONTOLOGY_CELLULAR_COMPONENT)) {
 				field = fields.getCellularComponent();
-			} else if(fieldID.equals(GENE_ONTOLOGY_BIOLOGICAL_PROCESS)) { 
+			} else if(fieldID.equals(GENE_ONTOLOGY_BIOLOGICAL_PROCESS)) {
 				field = fields.getBiologicalProcess();
-			} else if(fieldID.equals(UNIGENE)) { 
+			} else if(fieldID.equals(UNIGENE)) {
 				field = fields.getUniGene();
 			} else if(fieldID.equals(REFSEQ)) {
 				field = fields.getRefSeq();
@@ -349,7 +375,7 @@ public class AnnotationParser implements Serializable {
 			}
 		return set;
 	}
-	
+
 	public static Set<String> getGeneIDs(String markerID) {
 		String chipType = datasetToChipTypes.get(currentDataSet);
 
@@ -360,17 +386,17 @@ public class AnnotationParser implements Serializable {
 			}
 		return set;
 	}
-	
+
 	public static Map<String, List<Integer>> getGeneIdToMarkerIDMapping(
 			DSMicroarraySet<? extends DSMicroarray> microarraySet) {
 		Map<String, List<Integer>> map = new HashMap<String, List<Integer>>();
 		DSItemList<DSGeneMarker> markers = microarraySet.getMarkers();
 		int index = 0;
 		for (DSGeneMarker marker : markers) {
-			if (marker != null && marker.getLabel() != null) {			 
+			if (marker != null && marker.getLabel() != null) {
 				try {
-					
-					Set<String> geneIDs = getGeneIDs(marker.getLabel());							
+
+					Set<String> geneIDs = getGeneIDs(marker.getLabel());
 					for (String s : geneIDs) {
 						List<Integer> list = map.get(s);
 						if(list==null) {
@@ -382,14 +408,14 @@ public class AnnotationParser implements Serializable {
 						}
 					}
 					index++;
-				} catch (Exception e) {					 
+				} catch (Exception e) {
 					continue;
 				}
 			}
 		}
 		return map;
-	}	
-	
+	}
+
 	public static Set<String> getGeneNames(String markerID) {
 		String chipType = datasetToChipTypes.get(currentDataSet);
 
@@ -400,7 +426,7 @@ public class AnnotationParser implements Serializable {
 			}
 		return set;
 	}
-	
+
 
 	public static String matchChipType(final DSDataSet<? extends DSBioObject> dataset, String id,
 			boolean askIfNotFound) {
@@ -422,7 +448,7 @@ public class AnnotationParser implements Serializable {
 							}
 						}
 					}
-					
+
 				});
 			} catch (InterruptedException e1) {
 				// TODO Auto-generated catch block
@@ -456,7 +482,7 @@ public class AnnotationParser implements Serializable {
 		}
 		return chip;
 	}
-	
+
 	private volatile static File userFile = null;
 
 	public static boolean showAnnotationsMessage() {
@@ -569,10 +595,10 @@ public class AnnotationParser implements Serializable {
 			return null;
 		}
 	}
-	
+
 	static private class AnnotationFields implements Serializable {
 		private static final long serialVersionUID = -3571880185587329070L;
-		
+
 		String getMolecularFunction() {
 			return molecularFunction;
 		}
@@ -649,29 +675,33 @@ public class AnnotationParser implements Serializable {
 		private String uniGene, description, geneSymbol, locusLink, swissProt;
 		private String refSeq;
 	}
-	
+
 	static class MarkerAnnotation implements Serializable {
 		private static final long serialVersionUID = 1350873248604803043L;
-		
+
 		private Map<String, AnnotationFields> annotationFields;
-		
+
 		MarkerAnnotation() {
 			annotationFields = new TreeMap<String, AnnotationFields>();
 		}
-		
+
 		void addMarker(String marker, AnnotationFields fields) {
 			annotationFields.put(marker, fields);
 		}
-		
+
+		boolean containsMarker(String marker) {
+			return annotationFields.containsKey(marker);
+		}
+
 		AnnotationFields getFields(String marker) {
 			return annotationFields.get(marker);
 		}
-		
+
 		Set<String> getMarkerSet() {
 			return annotationFields.keySet();
 		}
 	}
-	
+
 	public static void cleanUpAnnotatioAfterUnload(DSDataSet<DSBioObject> dataset) {
 		String annotationName = datasetToChipTypes.get(dataset);
 		datasetToChipTypes.remove(dataset);
