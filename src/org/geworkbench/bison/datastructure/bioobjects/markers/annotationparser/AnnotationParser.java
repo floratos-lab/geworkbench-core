@@ -241,12 +241,11 @@ public class AnnotationParser implements Serializable {
 
 					if (markerAnnotation.containsMarker(affyId)) {
 						if (!ignoreAll){
-						      String[] options = {"Proceed", "Ignore All", "Cancel",};
+						      String[] options = {"Skip duplicate", "Skip all duplicates", "Cancel",};
 						      int code = JOptionPane.showOptionDialog(null,
 						    		  "Duplicate entry. Probe Set ID=" + affyId + "." + "\n" +
-						    		  "How do you want to proceed?" + "\n" +
-						    		  "Proceed - will ignore this entry" + "\n" +
-						    		  "Ignore All - will ignore all duplicate entries." + "\n" +
+						    		  "Skip duplicate - will ignore this entry" + "\n" +
+						    		  "Skip all duplicates - will ignore all duplicate entries." + "\n" +
 						    		  "Cancel - will cancel the annotation file processing.",
 						         "Duplicate entry in annotation file", 0, JOptionPane.QUESTION_MESSAGE,
 						         null, options, "Proceed");
