@@ -16,22 +16,24 @@ import java.io.Serializable;
 public class InteractionDetail implements Serializable{
     
 	private static final long serialVersionUID = -4163326138016520667L;
+	private static final String ENTREZ_GENE = "Entrez Gene";
 	private String dSGeneMarker1;    //One node name
     private String dSGeneMarker2;
     private String dSGeneName1;    //One node name
     private String dSGeneName2;
-    boolean isGene1EntrezId = true;
-    boolean isGene2EntrezId = true;
+    private String dbSource1;
+    private String dbSource2;   
     private double confidence;
     private String interactionType;
+    private String interactionId;
    
-    public InteractionDetail(String dSGeneMarker1, String dSGeneMarker2, String dSGeneName1, String dSGeneName2, boolean isGene1EntrezId, boolean isGene2EntrezId, double confidence, String interactionType) {
+    public InteractionDetail(String dSGeneMarker1, String dSGeneMarker2, String dSGeneName1, String dSGeneName2, String dbSource1, String dbSource2, double confidence, String interactionType, String interactionId) {
         this.dSGeneMarker1 = dSGeneMarker1;
         this.dSGeneMarker2 = dSGeneMarker2;
         this.dSGeneName1 = dSGeneName1;
         this.dSGeneName2 = dSGeneName2;
-        this.isGene1EntrezId = isGene1EntrezId;
-        this.isGene2EntrezId = isGene2EntrezId;
+        this.dbSource1 = dbSource1;
+        this.dbSource2 = dbSource2;
         this.confidence = confidence;
         this.interactionType = interactionType;
     }
@@ -80,12 +82,29 @@ public class InteractionDetail implements Serializable{
         this.dSGeneName2 = dSGeneName2;
     }   
     
+    public String getDbSource1() {
+        return this.dbSource1;
+    }
+
+    public void setDbSource1(String dbSource1) {
+        this.dbSource1 = dbSource1;
+    }
+
+    public String getDbSource2() {
+        return this.dbSource2;
+    }
+
+    public void setDbSource2(String dbSource2) {
+        this.dbSource2 = dbSource2;
+    }
+    
+    
     public boolean isGene1EntrezId() {
-        return isGene1EntrezId;
+        return this.dbSource1.equalsIgnoreCase(ENTREZ_GENE);
     }
 
     public boolean isGene2EntrezId() {
-        return isGene2EntrezId;
+        return this.dbSource2.equalsIgnoreCase(ENTREZ_GENE);
     }
     
     
@@ -103,6 +122,14 @@ public class InteractionDetail implements Serializable{
 
     public void setInteraactionType(String interactionType) {
     	this.interactionType = interactionType;
+    }
+    
+    public String getInteractionId() {
+        return this.interactionId;
+    }
+
+    public void setInteractionId(String interactionId) {
+        this.interactionId = interactionId;
     }
 
     public boolean equals(Object obj) {
