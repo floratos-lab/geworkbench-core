@@ -455,7 +455,7 @@
 	<!-- ====================================================================== -->
 	<target name="createDist" depends="compile" description="Creating a new folder for depositing...">
 		<java classname="org.geworkbench.components.versioninfo.VersionInfoDialog" failonerror="true" >
-			<arg value="2.0.0"/>
+			<arg value="2.1.0"/>
 			<arg value="./components/versioninfo/classes/org/geworkbench/components/versioninfo/" />
 			<classpath>
 				<path refid="classpath" />
@@ -520,7 +520,7 @@
 				
 				<include name="${components}/ttest/**/*" />
 				
-				<!-- Leave out the following components for distribution 2.0.0-->
+				<!-- Leave out the following components for release -->
 				<exclude name="**/synteny/*" />
 				<exclude name="**/src/**" />
 				<exclude name="**/test/**" />
@@ -528,7 +528,8 @@
 				<include name="annotation/**/*" />
 				<include name="${lib}/**/*" />
 				<include name="geWorkbenchLicense.txt" />
-				<include name="ReleaseNotes_2.0.0.txt" />
+				<include name="ReleaseNotes_2.1.0.txt" />
+				<include name="welcometext.html" />
 				<include name="java.policy" />
 				 
 				<include name="Bcell-100.exp_ARACNe_AP_threshold.txt" />

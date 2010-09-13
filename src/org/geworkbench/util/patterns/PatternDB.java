@@ -24,7 +24,7 @@ import java.util.Iterator;
  */
 
 public class PatternDB extends CSAncillaryDataSet implements Serializable {
-    private final static ObjectStreamField[] serialPersistentFields = {new ObjectStreamField("dirty", boolean.class), new ObjectStreamField("file", File.class), new ObjectStreamField("sequenceFile", File.class), new ObjectStreamField("parms", Parameters.class)};
+    private final static ObjectStreamField[] serialPersistentFields = {new ObjectStreamField("dirty", boolean.class)};
 
     static private ImageIcon icon = new ImageIcon(PatternDB.class.getResource("pattern.gif"));
 
