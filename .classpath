@@ -26,7 +26,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/distributions.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/docking.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/dom4j-1.6.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/ensj-30.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/forms-1.0.5.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/globusSplash.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jai_codec.jar"/>
@@ -77,5 +76,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/commons-math-1.2.jar"/>
 	<classpathentry kind="lib" path="lib/commons-httpclient-3.1.jar"/>
 	<classpathentry kind="lib" path="lib/xalan.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/junit.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
