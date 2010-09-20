@@ -1,17 +1,24 @@
 package org.geworkbench.util.patterns;
 
-import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
-import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeqPattern;
-import org.geworkbench.bison.datastructure.complex.pattern.Parameters;
-//import org.geworkbench.bison.datastructure.complex.pattern.Parameters;
-import org.geworkbench.bison.util.RandomNumberGenerator;
-//import polgara.soapPD_wsdl.Parameters;
-
-import javax.swing.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectStreamField;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
+import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
+import org.geworkbench.bison.datastructure.complex.pattern.Parameters;
+import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeqPattern;
 
 /**
  * <p>Title: Sequence and Pattern Plugin</p>
@@ -20,27 +27,21 @@ import java.util.Iterator;
  * <p>Company: </p>
  *
  * @author not attributable
- * @version 1.0
+ * @version $Id$
  */
 
-public class PatternDB extends CSAncillaryDataSet implements Serializable {
-    private final static ObjectStreamField[] serialPersistentFields = {new ObjectStreamField("dirty", boolean.class)};
+public class PatternDB extends CSAncillaryDataSet<DSSequence> implements Serializable {
+	private static final long serialVersionUID = -902110075425415061L;
+	static Log log = LogFactory.getLog(PatternDB.class);
+	
+	private final static ObjectStreamField[] serialPersistentFields = {new ObjectStreamField("dirty", boolean.class), 
+    	new ObjectStreamField("file", File.class), new ObjectStreamField("sequenceFile", File.class), new ObjectStreamField("parms", Parameters.class)};
 
-    static private ImageIcon icon = new ImageIcon(PatternDB.class.getResource("pattern.gif"));
+    private List<DSMatchedSeqPattern> patterns = new ArrayList<DSMatchedSeqPattern>();
+    private File dataSetFile;
 
-    private boolean dirty = false;
-    protected ArrayList patterns = new ArrayList();
-    private Parameters parms = new Parameters();
-    protected File dataSetFile;
-
-    public PatternDB(File _file, File _seqFile, DSDataSet parent) {
-        super(parent, "PatternDB");
-        dataSetFile = new File(_seqFile.getName());
-        read(file);
-        setID(RandomNumberGenerator.getID());
-    }
-
-    public PatternDB(File _seqFile, DSDataSet parent) {
+    // TODO it seems all the references of this constructor has the second parameter of null
+    public PatternDB(File _seqFile, DSDataSet<DSSequence> parent) {
         super(parent, "PatternDB");
         dataSetFile = new File(_seqFile.getName());
     }
@@ -75,7 +76,7 @@ public class PatternDB extends CSAncillaryDataSet implements Serializable {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
             int i = 0;
-            Iterator it = patterns.iterator();
+            Iterator<DSMatchedSeqPattern> it = patterns.iterator();
             String path = this.getDataSetFile().getCanonicalPath();
             writer.write(org.geworkbench.util.AlgorithmSelectionPanel.DISCOVER);
             writer.newLine();
@@ -100,7 +101,7 @@ public class PatternDB extends CSAncillaryDataSet implements Serializable {
 
     public int getPatternNo() {
         if (patterns == null) {
-            patterns = new ArrayList();
+            patterns = new ArrayList<DSMatchedSeqPattern>();
             read(file);
         }
         return patterns.size();
@@ -120,16 +121,7 @@ public class PatternDB extends CSAncillaryDataSet implements Serializable {
         patterns.add(pattern);
     }
 
-    public void setParameters(Parameters p) {
-        parms = p;
-    }
-
-    public void write() {
-        String name = dataSetFile.getName() + Math.random() + ".pat";
-        file = new File(name);
-        write(file);
-    }
-
+    @Override
     public boolean equals(Object ads) {
         if (ads instanceof PatternDB) {
             PatternDB pdb = (PatternDB) ads;
@@ -142,7 +134,6 @@ public class PatternDB extends CSAncillaryDataSet implements Serializable {
     }
 
     /**
-     * TODO - unused
      *
      * @param out ObjectOutputStream
      * @throws IOException
@@ -152,7 +143,6 @@ public class PatternDB extends CSAncillaryDataSet implements Serializable {
     }
 
     /**
-     * TODO - unused
      *
      * @param in ObjectInputStream
      * @throws IOException
@@ -162,6 +152,7 @@ public class PatternDB extends CSAncillaryDataSet implements Serializable {
         in.defaultReadObject();
     }
 
+    @Override
     public int size(){
         if(patterns!=null){
             return patterns.size();
@@ -169,18 +160,22 @@ public class PatternDB extends CSAncillaryDataSet implements Serializable {
         return 0;
     }
     /**
-     * TODO - unused
      * writeToFile
      *
      * @param fileName String
      */
+    @Override
     public void writeToFile(String fileName) {
+    	// not implemented
+    	log.warn("writeToFile not implemented for PatternDB");
     }
 
+    @Override
     public File getDataSetFile() {
         return dataSetFile;
     }
 
+    @Override
     public void setDataSetFile(File _file) {
         dataSetFile = _file;
     }
