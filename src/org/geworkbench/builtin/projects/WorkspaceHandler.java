@@ -336,8 +336,9 @@ public class WorkspaceHandler {
 				e.printStackTrace();
 			} catch (Exception e) { // null pinter, no serializable
 				pb.dispose();
+				e.printStackTrace();
 				JOptionPane.showMessageDialog(null,
-						"Check that the file contains a valid workspace.",
+						"Check that the file contains a valid workspace.\n"+e,
 						"Open Workspace Error", JOptionPane.ERROR_MESSAGE);
 			}
 			pb.dispose();
@@ -356,6 +357,7 @@ public class WorkspaceHandler {
 				AnnotationParser.setFromSerializable(aps);
 			} catch (Exception e) {
 				// no-op here. user will see error from done();
+				e.printStackTrace();
 			} finally {
 				if(in!=null)
 					in.close();
