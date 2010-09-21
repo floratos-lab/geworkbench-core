@@ -1,5 +1,7 @@
 package org.geworkbench.util.patterns;
 
+import java.io.Serializable;
+
 /**
  * Created by IntelliJ IDEA.
  * User: xiaoqing
@@ -7,7 +9,7 @@ package org.geworkbench.util.patterns;
  * Time: 6:38:29 PM
  * To change this template use File | Settings | File Templates.
  */
-public class PatternOfflet{
+public class PatternOfflet implements Serializable {
     private int position;
     private String token;
 

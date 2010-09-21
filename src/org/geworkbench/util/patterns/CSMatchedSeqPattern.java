@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * <p>Title: </p>
@@ -33,7 +34,7 @@ import java.io.IOException;
 
 
 public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence, CSSeqRegistration> implements DSMatchedSeqPattern, DSPattern<DSSequence,
-        CSSeqRegistration> {
+        CSSeqRegistration>, Serializable {
 
     static java.util.regex.Pattern headerPattern = java.util.regex.Pattern.
             compile("\\[\\d+\\]\\s+(\\S+)\\s+\\[(\\d+)\\D*(\\d+)\\D*(\\d+)\\D*(\\d+\\.?\\d*E?\\d*)\\]");
@@ -43,8 +44,8 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence, CSSeqRegis
     static java.util.regex.Pattern offsetPattern = java.util.regex.Pattern.
             compile("([a-zA-Z]|\\.|\\[[^\\]]+\\])");
 
-    public IntHolder idNo = new IntHolder();
-    public IntHolder seqNo = new IntHolder();
+    public int idNo = 0;
+    public int seqNo = 0;
     protected DSSequenceSet seqDB = null;
     //private ArrayOfintHolder       locusId  = new ArrayOfintHolder();
     //private ArrayOfintHolder       locusOff = new ArrayOfintHolder();
@@ -86,14 +87,6 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence, CSSeqRegis
 
     public static void setOffsetPattern(Pattern offsetPattern) {
         CSMatchedSeqPattern.offsetPattern = offsetPattern;
-    }
-
-    public IntHolder getIdNo() {
-        return idNo;
-    }
-
-    public void setIdNo(IntHolder idNo) {
-        this.idNo = idNo;
     }
 
     public byte[] getLocus() {
@@ -139,7 +132,7 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence, CSSeqRegis
         if (ascii != null) {
             s += ascii + "    ";
         }
-        s += "(" + idNo.value + "," + offset.size() + ")";
+        s += "(" + idNo + "," + offset.size() + ")";
         return s;
     }
 
@@ -178,8 +171,8 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence, CSSeqRegis
             int tokNo = Integer.parseInt(m0.group(4));
             double pVal = Double.parseDouble(m0.group(5));
             this.zScore = pVal;
-            this.seqNo.value = seqNo;
-            this.idNo.value = idNo;
+            this.seqNo = seqNo;
+            this.idNo = idNo;
             this.offset = new ArrayList<PatternOfflet>();
             int offDx = 0;
             int j = 0;
@@ -243,7 +236,6 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence, CSSeqRegis
         // creates the complement of locus1 in locus;
         int prevId = -1;
         int j = 0;
-        int idNo = this.idNo.value;
         int[] support = new int[idNo];
         int i_0 = 0;
         while (i_0 < idNo) {
@@ -265,7 +257,6 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence, CSSeqRegis
         int i_0 = 0;
         int i_1 = 0;
         int j = 0;
-        int idNo = this.idNo.value;
         while ((i_1 < idNo) && (i_0 < base.length)) {
             int l_0 = base[i_0];
             int l_1 = getId(i_1);
@@ -293,22 +284,22 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence, CSSeqRegis
     }
 
     public int getSupport() {
-        return idNo!=null?idNo.value:0;
+        return idNo!=-1?idNo:0;
     }
 
     public int getUniqueSupport() {
-        return seqNo.value;
+        return seqNo;
     }
 
     public int getSeqNo() {
-        return seqNo.value;
+        return seqNo;
     }
 
     public int getMaxLength() {
         int extent = getExtent();
         int maxLen = 0;
         if ((maxLen == 0) && (locus != null)) {
-            for (int i = 0; i < idNo.value; i++) {
+            for (int i = 0; i < idNo; i++) {
                 //int id = getId(i);
                 int dx = getOffset(i);
                 int len = dx + extent;

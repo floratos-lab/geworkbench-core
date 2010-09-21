@@ -2,14 +2,17 @@ package org.geworkbench.bison.datastructure.complex.pattern;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
+import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeqPattern;
 import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.util.FilePathnameUtils;
+import org.geworkbench.util.patterns.PatternDB;
 
 /**
  * <p>Title: Sequence and Pattern Plugin</p>
@@ -89,8 +92,31 @@ public class SoapParmsDataSet extends CSAncillaryDataSet<DSSequence> {
     	log.warn("writeToFile not implemented for SoapParmsDataSet");
     }
 
-    public File getResultFile() {
-        return resultFile;
+	public File getResultFile() {
+		return resultFile;
+	}
+	
+    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+        System.out.println(patternDB);
     }
+
+
+	private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+
+        System.out.println(patternDB);
+        for(DSMatchedSeqPattern x : patternDB.getPatterns()) {
+        	System.out.println(x.toString());
+        }
+        System.out.println(resultFile.getAbsolutePath());
+
+		patternDB.write(resultFile);
+    }
+
+    private PatternDB patternDB = null;
+	public void setPatternDB(PatternDB patternDB) {
+		this.patternDB = patternDB;
+	}
 
 }

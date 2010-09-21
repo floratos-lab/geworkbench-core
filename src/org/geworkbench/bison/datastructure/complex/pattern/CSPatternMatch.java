@@ -12,13 +12,16 @@ package org.geworkbench.bison.datastructure.complex.pattern;
  * <p>Company: Columbia University</p>
  *
  * @author not attributable
- * @version 1.0
+ * @version $Id$
  */
 public class CSPatternMatch <T,R> implements DSPatternMatch<T, R> {
     protected T object = null;
     protected R registration = null;
     protected double pValue = 1.0;
 
+    public CSPatternMatch() {
+    }
+    
     public CSPatternMatch(T object) {
         this.object = object;
     }

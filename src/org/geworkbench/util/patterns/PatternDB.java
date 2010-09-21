@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectStreamField;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -17,7 +16,6 @@ import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
-import org.geworkbench.bison.datastructure.complex.pattern.Parameters;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeqPattern;
 
 /**
@@ -34,9 +32,6 @@ public class PatternDB extends CSAncillaryDataSet<DSSequence> implements Seriali
 	private static final long serialVersionUID = -902110075425415061L;
 	static Log log = LogFactory.getLog(PatternDB.class);
 	
-	private final static ObjectStreamField[] serialPersistentFields = {new ObjectStreamField("dirty", boolean.class), 
-    	new ObjectStreamField("file", File.class), new ObjectStreamField("sequenceFile", File.class), new ObjectStreamField("parms", Parameters.class)};
-
     private List<DSMatchedSeqPattern> patterns = new ArrayList<DSMatchedSeqPattern>();
     private File dataSetFile;
 
@@ -99,6 +94,10 @@ public class PatternDB extends CSAncillaryDataSet<DSSequence> implements Seriali
         label = file.getName();
     }
 
+    public List<DSMatchedSeqPattern> getPatterns() {
+    	return patterns;
+    }
+    
     public int getPatternNo() {
         if (patterns == null) {
             patterns = new ArrayList<DSMatchedSeqPattern>();
