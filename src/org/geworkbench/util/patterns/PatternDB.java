@@ -169,12 +169,10 @@ public class PatternDB extends CSAncillaryDataSet<DSSequence> implements Seriali
     	log.warn("writeToFile not implemented for PatternDB");
     }
 
-    @Override
     public File getDataSetFile() {
         return dataSetFile;
     }
 
-    @Override
     public void setDataSetFile(File _file) {
         dataSetFile = _file;
     }
