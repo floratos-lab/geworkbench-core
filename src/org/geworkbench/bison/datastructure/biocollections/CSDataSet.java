@@ -1,6 +1,7 @@
 package org.geworkbench.bison.datastructure.biocollections;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
@@ -368,5 +369,13 @@ public class CSDataSet <T extends DSBioObject> extends CSSequentialItemList<T> i
 
     public void writeToFile(String fileName) {
 		throw new RuntimeException("Method must be overridden by child class.");
+	}
+
+	protected ArrayList<Integer> columnOrder = new ArrayList<Integer>();
+	public ArrayList<Integer> getColumnOrder() {
+		return columnOrder;
+	}
+	public void setColumnOrder(ArrayList<Integer> columnOrder) {
+		this.columnOrder = columnOrder;
 	}
 }

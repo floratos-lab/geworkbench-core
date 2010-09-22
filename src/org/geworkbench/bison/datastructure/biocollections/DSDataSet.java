@@ -9,6 +9,7 @@ import org.geworkbench.bison.parsers.resources.Resource;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Implementing classes store sets of biological data (such as a set of microarrays or sequences).
@@ -136,4 +137,7 @@ public interface DSDataSet <T extends DSBioObject> extends DSDescribable, DSName
      * @param experimentInformation the experiment information.
      */
     public void setExperimentInformation(String experimentInformation);
+
+	public ArrayList<Integer> getColumnOrder();
+	public void setColumnOrder(ArrayList<Integer> columnOrder);
 }
