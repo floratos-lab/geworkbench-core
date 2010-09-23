@@ -14,8 +14,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/ant-launcher.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/bcel-5.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/cglib-nodep-2.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/cog-axis.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/cog-jglobus.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/collections-generic-4.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-beanutils.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-collections.jar"/>
