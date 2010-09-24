@@ -21,15 +21,11 @@
 	<classpathentry exported="true" kind="lib" path="lib/commons-discovery.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-logging.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/docking.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/dom4j-1.6.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/forms-1.0.5.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/globusSplash.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jai_codec.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jai_core.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/Jama-1.0.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jaxb-rt-1.0-ea.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jaxrpc.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jbcl.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jcommon-1.0.5.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jdom.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jfreechart-1.0.2.jar"/>
@@ -56,8 +52,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/wsdl4j.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xml-apis.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jdo-1.0.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/kodo-jdo.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/kodo-jdo-runtime.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/medusa/saxpath-1.0-FCS.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-codec-1.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/cryptix.jar"/>
