@@ -29,22 +29,11 @@
 	<classpathentry exported="true" kind="lib" path="lib/jcommon-1.0.5.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jdom.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jfreechart-1.0.2.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jgraph.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jgraphpad.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jhall.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/JRclient-RF503.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jsr173_api.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/log4j-1.2.8.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/mail.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/NetComponents.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ostermillerutils_1_04_03_for_kaffe.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/piccolo.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/piccolox.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/poi-2.5.1-final-20040804.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/poi-scratchpad-2.5.1-final-20040804.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/polgara.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/puretls.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/saaj.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/sjsxp.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/stax-1.2.0_rc1-dev.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/swing-layout-1.0.jar"/>
