@@ -155,7 +155,11 @@ public class GoAnalysisResult extends CSAncillaryDataSet<CSMicroarray> {
 	 */
 	static public String getGoTermName(int goTermId) {
 		GeneOntologyTree geneOntologyTree = GeneOntologyTree.getInstance();
-		return geneOntologyTree.getTerm(goTermId).getName();
+		GOTerm goTerm = geneOntologyTree.getTerm(goTermId);
+		if(goTerm!=null)
+			return goTerm.getName();
+		else
+			return null;
 	}
 
 	/**
