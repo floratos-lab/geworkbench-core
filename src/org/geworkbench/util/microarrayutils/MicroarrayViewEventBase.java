@@ -11,7 +11,6 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -33,13 +32,12 @@ import org.geworkbench.engine.config.VisualPlugin;
 import org.geworkbench.engine.management.Publish;
 import org.geworkbench.engine.management.Subscribe;
 import org.geworkbench.events.GeneSelectorEvent;
-import org.geworkbench.events.MicroarraySetViewEvent;
 import org.geworkbench.events.SubpanelChangedEvent;
 
 /**
  * @author unattributable
  * @see VisualPlugin
- * @version $Id: MicroarrayViewEventBase.java,v 1.24 2008-09-02 18:08:21 chiangy Exp $
+ * @version $Id$
  */
 public abstract class MicroarrayViewEventBase implements VisualPlugin {
 
@@ -112,7 +110,7 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 
 		if (e.getMessage().equals(org.geworkbench.events.ProjectEvent.CLEARED)) {
 			refMASet = null;
-			fireModelChangedEvent(null);
+			fireModelChangedEvent();
 		} else {
 			DSDataSet dataSet = e.getDataSet();
 			if (dataSet instanceof DSMicroarraySet) {
@@ -178,7 +176,6 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 	 *            PhenotypeSelectorEvent
 	 */
 	@Subscribe
-	@SuppressWarnings("unchecked")
 	public void receive(org.geworkbench.events.PhenotypeSelectorEvent e,
 			Object source) {
 
@@ -200,14 +197,14 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 		maSetView = getDataSetView();
 		uniqueMarkers = maSetView.getUniqueMarkers();
 
-		fireModelChangedEvent(null);
+		fireModelChangedEvent();
 	}
 
 	/**
 	 * @param event
 	 */
-	protected void fireModelChangedEvent(MicroarraySetViewEvent event) {
-
+	protected void fireModelChangedEvent() {
+		// no-op
 	}
 
 	/**
