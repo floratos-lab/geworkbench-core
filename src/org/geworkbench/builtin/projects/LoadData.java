@@ -41,11 +41,11 @@ import org.apache.commons.logging.LogFactory;
 import org.geworkbench.builtin.projects.remoteresources.RemoteResourceDialog;
 import org.geworkbench.builtin.projects.remoteresources.query.CaARRAYQueryPanel;
 import org.geworkbench.builtin.projects.util.CaARRAYPanel;
-import org.geworkbench.components.parsers.FileFormat;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.events.CaArrayQueryEvent;
 import org.geworkbench.events.CaArrayQueryResultEvent;
 import org.geworkbench.events.CaArrayRequestEvent;
+import org.geworkbench.parsers.FileFormat;
 import org.geworkbench.util.FilePathnameUtils;
 
 /**
@@ -407,7 +407,7 @@ public class LoadData extends JDialog {
 		 * inputFormats[i].getPlugin(); } }
 		 */
 		supportedInputFormats = ComponentRegistry.getRegistry().getModules(
-				org.geworkbench.components.parsers.FileFormat.class);
+				org.geworkbench.parsers.FileFormat.class);
 		Arrays.sort(supportedInputFormats, new FileFormatComparator());
 
 		// Setup the file chooser options.
@@ -615,7 +615,7 @@ public class LoadData extends JDialog {
 										.isSelected());
 						dispose();
 						return;
-					} catch (org.geworkbench.components.parsers.InputFileFormatException iffe) {
+					} catch (org.geworkbench.parsers.InputFileFormatException iffe) {
 						// Let the user know that there was a problem parsing
 						// the file.
 						JOptionPane

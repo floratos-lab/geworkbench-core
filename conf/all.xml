@@ -5,16 +5,16 @@
 	<gui-window name="Main GUI" class="org.geworkbench.engine.skin.Skin" />
       
     <plugin id="SoftFileFilter" name="soft. Format"
-		class="org.geworkbench.components.parsers.SOFTFileFormat" /> 
+		class="org.geworkbench.parsers.SOFTFileFormat" /> 
 		
 	<plugin id="MageTabFileFilter" name="MAGE-TAB. Format"
-		class="org.geworkbench.components.parsers.MageTabFileFormat" /> 
+		class="org.geworkbench.parsers.MageTabFileFormat" /> 
 
 	<plugin id="expressionFileFilter" name="Exp. Format"
-		class="org.geworkbench.components.parsers.ExpressionFileFormat" />
+		class="org.geworkbench.parsers.ExpressionFileFormat" />
 
 	<plugin id="pdbFileFilter" name="PDB Structure Format"
-		class="org.geworkbench.components.parsers.PDBFileFormat" />
+		class="org.geworkbench.parsers.PDBFileFormat" />
 
 	<plugin id="projectWindow" name="Project Panel"
 		class="org.geworkbench.builtin.projects.ProjectPanel">
@@ -39,19 +39,19 @@
 		class="org.geworkbench.engine.skin.ShortCutMenu" />
 
 	<plugin id="CELLoader" name="CEL File Loader"
-		class="org.geworkbench.components.parsers.CELFileFormat" />
+		class="org.geworkbench.parsers.CELFileFormat" />
 
 	<plugin id="affyFilter" name="Affy File Format"
-		class="org.geworkbench.components.parsers.AffyFileFormat" />
+		class="org.geworkbench.parsers.AffyFileFormat" />
 
 	<plugin id="sequenceFileFilter" name="FASTA Format"
-		class="org.geworkbench.components.parsers.sequences.SequenceFileFormat" />
+		class="org.geworkbench.parsers.sequences.SequenceFileFormat" />
 
 	<plugin id="genepixFilter" name="Genepix File Format"
-		class="org.geworkbench.components.parsers.GenePixFileFormat" />
+		class="org.geworkbench.parsers.GenePixFileFormat" />
 	
 	<plugin id="tabDelimitedDataMatrixFileFilter" name="Tab-Delimited Data Matrix File Format"
-		class="org.geworkbench.components.parsers.TabDelimitedDataMatrixFileFormat" />
+		class="org.geworkbench.parsers.TabDelimitedDataMatrixFileFormat" />
 		
 	<!-- 
 	<plugin id="edgeListFilter" name="Edge List File Format"

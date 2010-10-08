@@ -81,7 +81,7 @@ class PDBDialog extends JFrame implements ActionListener {
 			File df = new File(downloaded);
 			File[] fs = new File[] { df };
 			pp.fileOpenAction(fs,
-					new org.geworkbench.components.parsers.PDBFileFormat(),
+					new org.geworkbench.parsers.PDBFileFormat(),
 					false);
 		} catch (Exception ex) {
 			ex.printStackTrace();

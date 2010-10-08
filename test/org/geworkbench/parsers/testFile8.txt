@@ -1,0 +1,5 @@
+Probe Set Name	Stat Pairs	Stat Pairs Used	Signal	Detection	Detection p-value
+AFFX-MurIL2_at	20	20	15	A	0.852061
+AFFX-MurIL10_at	20	20	37	A	0.48511
+AFFX-MurIL4_at	20	20	79.1	A	0.340661
+AFFX-MurFAS_at	20	20	20.3	A	0.455413

@@ -28,10 +28,10 @@ import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
-import org.geworkbench.components.parsers.FileFormat;
-import org.geworkbench.components.parsers.InputFileFormatException;
-import org.geworkbench.components.parsers.microarray.DataSetFileFormat;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
+import org.geworkbench.parsers.DataSetFileFormat;
+import org.geworkbench.parsers.FileFormat;
+import org.geworkbench.parsers.InputFileFormatException;
 
 /**
  * This class is refactored out of ProjectPanel to handle the file open action,

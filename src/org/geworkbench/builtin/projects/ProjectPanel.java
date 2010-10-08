@@ -68,8 +68,6 @@ import org.geworkbench.bison.datastructure.properties.DSNamed;
 import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.bison.util.colorcontext.ColorContext;
 import org.geworkbench.builtin.projects.SaveFileFilterFactory.CustomFileFilter;
-import org.geworkbench.components.parsers.FileFormat;
-import org.geworkbench.components.parsers.microarray.DataSetFileFormat;
 import org.geworkbench.engine.config.GUIFramework;
 import org.geworkbench.engine.config.MenuListener;
 import org.geworkbench.engine.config.VisualPlugin;
@@ -100,6 +98,8 @@ import org.geworkbench.events.ProjectNodeRemovedEvent;
 import org.geworkbench.events.ProjectNodeRenamedEvent;
 import org.geworkbench.events.SingleValueEditEvent;
 import org.geworkbench.events.StructureAnalysisEvent;
+import org.geworkbench.parsers.DataSetFileFormat;
+import org.geworkbench.parsers.FileFormat;
 import org.geworkbench.util.FilePathnameUtils;
 import org.geworkbench.util.SaveImage;
 import org.geworkbench.util.Util;
@@ -1701,13 +1701,13 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 *            The file containing the data to be parsed.
 	 * @param inputFormat
 	 *            The format that the file is expected to conform to.
-	 * @throws org.geworkbench.components.parsers.InputFileFormatException
+	 * @throws org.geworkbench.parsers.InputFileFormatException
 	 *
 	 */
 	public void fileOpenAction(final File[] dataSetFiles,
-			final org.geworkbench.components.parsers.FileFormat inputFormat,
+			final org.geworkbench.parsers.FileFormat inputFormat,
 			boolean merge)
-			throws org.geworkbench.components.parsers.InputFileFormatException,
+			throws org.geworkbench.parsers.InputFileFormatException,
 			InterruptedIOException {
 
 		final boolean mergeFiles = dataSetFiles.length == 1 ? false : merge;
