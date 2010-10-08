@@ -1,2 +1,0 @@
-Probe Set Name	asdf	asdf
-a	a	a
