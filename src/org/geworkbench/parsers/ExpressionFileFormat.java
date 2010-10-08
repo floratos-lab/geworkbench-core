@@ -69,10 +69,7 @@ public class ExpressionFileFormat extends DataSetFileFormat {
     }
 
     private void getMArraySet(File file, CSExprMicroarraySet maSet) {
-        try {
-            maSet.read(file);
-        } catch (Exception e) {
-        }
+    	maSet.read(file);
     }
 
     public DSDataSet<DSMicroarray> getDataFile(File file) {
