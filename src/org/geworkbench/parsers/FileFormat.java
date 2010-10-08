@@ -1,32 +1,26 @@
 package org.geworkbench.parsers;
 
-import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
-import org.geworkbench.bison.parsers.resources.Resource;
-
-import javax.swing.filechooser.FileFilter;
 import java.io.File;
 import java.io.InterruptedIOException;
-import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+
+import javax.swing.filechooser.FileFilter;
+
+import org.geworkbench.bison.parsers.resources.Resource;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: First Genetic Trust Inc.</p>
  *
  * @author First Genetic Trust, Inc.
- * @version 1.0
- */
-
-/**
- * 
  * @author my2248
- * @version $Id: FileFormat.java,v 1.4 2009-10-07 15:38:48 my2248 Exp $
+ * @version $Id$
  * 
  * Base class for reading input data files complying to a desired format.
  * Support for any given microarray data format (e.g., Affymetrix MAS 5,
  * GenePix, etc), can be provide as follows:
  * <UL>
  * <LI> Create a new concrete class extending <code>FileFormat</code> and
- * provide method implementations approrpriate for the new format. </LI>
+ * provide method implementations appropriate for the new format. </LI>
  * <LI> In the configuration file of the application, list an object of the
  * new concrete class as a plugin associated with the extension point
  * titled "input-format".</LI>
@@ -65,32 +59,7 @@ public abstract class FileFormat {
      * @param file
      * @return
      */
-    
-    
     public abstract Resource getResource(File file);
-
-    /**
-     * Generates and returns a <code>MicrorarrauSet</code> from the designated
-     * argument. In <code>file</code> does not conform to the format, returns
-     * <code>null</code>.
-     *
-     * @param file The file containing the input data.
-     * @return The corresponding <code>MicroarraySet</code> object.
-     */
-    public abstract DSDataSet getMArraySet(File file) throws InputFileFormatException, InterruptedIOException;
-
-    /**
-     * Generates and returns a <code>MicrorarraySet</code> from the designated
-     * argument. In <code>file</code> does not conform to the format, returns
-     * <code>null</code>.
-     *
-     * @param file The file containing the input data.
-     * @param maSet The set to load the data in
-     * @return The corresponding <code>MicroarraySet</code> object.
-     */
-    public void getMArraySet(File file, CSExprMicroarraySet maSet) throws InputFileFormatException , InterruptedIOException{
-        throw new UnsupportedOperationException();
-    }
 
     /**
      * Return the list of extensions (if any) for the files following this
