@@ -1,17 +1,18 @@
 package org.geworkbench.parsers;
 
-import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
-import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
-import org.geworkbench.bison.parsers.resources.Resource;
-
-import javax.swing.filechooser.FileFilter;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
+
+import javax.swing.filechooser.FileFilter;
+
+import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
+import org.geworkbench.bison.parsers.resources.Resource;
 
 /**
  * <p>Title: Sequence and Pattern Plugin</p>
@@ -19,15 +20,14 @@ import java.util.List;
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: </p>
  *
- * @version 1.0
- * @xuegong wang
+ *  @xuegong wang
+ *  @version $Id$
  */
-
 public class ExpressionFileFormat extends DataSetFileFormat {
 
-    String[] maExtensions = {"exp"};
-    ExpressionResource resource = new ExpressionResource();
-    AffyFilter maFilter = null;
+    private String[] maExtensions = {"exp"};
+    private ExpressionResource resource = new ExpressionResource();
+    private AffyFilter maFilter = null;
 
     public ExpressionFileFormat() {
         formatName = "Affymetrix File Matrix";
@@ -53,14 +53,14 @@ public class ExpressionFileFormat extends DataSetFileFormat {
         return true;
     }
 
-    public DSDataSet getDataFile(File file, String compatibilityLabel) throws InputFileFormatException {
+    public DSDataSet<DSMicroarray> getDataFile(File file, String compatibilityLabel) throws InputFileFormatException {
         CSExprMicroarraySet maSet = new CSExprMicroarraySet();
         maSet.setCompatibilityLabel(compatibilityLabel);
         getMArraySet(file, maSet);
         return maSet;
     }
 
-    public DSMicroarraySet getMArraySet(File file) {
+    public DSMicroarraySet<DSMicroarray> getMArraySet(File file) {
         CSExprMicroarraySet maSet = new CSExprMicroarraySet();
         getMArraySet(file, maSet);
         if (maSet.loadingCancelled)
@@ -68,20 +68,15 @@ public class ExpressionFileFormat extends DataSetFileFormat {
         return maSet;
     }
 
-    public void getMArraySet(File file, CSExprMicroarraySet maSet) {
+    private void getMArraySet(File file, CSExprMicroarraySet maSet) {
         try {
             maSet.read(file);
         } catch (Exception e) {
         }
     }
 
-    public DSDataSet getDataFile(File file) {
-        return (DSDataSet) getMArraySet(file);
-    }
-
-    public List getOptions() {
-        /**@todo Implement this org.geworkbench.components.parsers.FileFormat abstract method*/
-        throw new java.lang.UnsupportedOperationException("Method getOptions() not yet implemented.");
+    public DSDataSet<DSMicroarray> getDataFile(File file) {
+        return getMArraySet(file);
     }
 
     public FileFilter getFileFilter() {
@@ -94,7 +89,7 @@ public class ExpressionFileFormat extends DataSetFileFormat {
      * @param files File[]
      * @return DataSet
      */
-    public DSDataSet getDataFile(File[] files) {
+    public DSDataSet<DSMicroarray> getDataFile(File[] files) {
         return null;
     }
 
