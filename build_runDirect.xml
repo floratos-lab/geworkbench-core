@@ -34,9 +34,16 @@
 		</path>
 		<!-- Classpath for running -->
 		<path id="run.classpath">
-			<pathelement location="${classes}"/>
+			<!-- pathelement location="${classes}"/ -->
+			<pathelement location="geworkbench-parsers.jar"/>
+			<pathelement location="geworkbench-engine.jar"/>
+			<pathelement location="geworkbench-util.jar"/>
+			<pathelement location="geworkbench-builtin.jar"/>
+			<pathelement location="geworkbench-events.jar"/>
+			<pathelement location="geworkbench-bison.jar"/>
+			<pathelement location="geworkbench-others.jar"/>
 			<pathelement location="${conf}"/>
-	<pathelement location="."/>
+			<pathelement location="."/>
 			<path refid="classpath"/>
 		</path>
 	</target>
@@ -45,7 +52,7 @@
 	<!-- ====================================================================== -->
 	<target name="run" depends="init" description="Runs geWorkbench.">
 		<java fork="true" classname="org.geworkbench.engine.config.UILauncher">
-			<jvmarg value="-Xmx640M"/>
+			<jvmarg value="-Xmx1024M"/>
 			<jvmarg value="-Djava.library.path=lib"/>
 			<arg value="all.xml"/>
 			<classpath refid="run.classpath"/>

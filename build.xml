@@ -59,7 +59,7 @@
 		</path>
 		<!-- BootClasspath for running jdic on mac -->
 		<path id="bootclasspath">
-		  <pathelement path="/Library/Java/Home/lib/plugin.jar:/Library/Java/Home/lib/deploy.jar"/>
+			<pathelement path="/Library/Java/Home/lib/plugin.jar:/Library/Java/Home/lib/deploy.jar"/>
 		</path>
 		<property name="bootclasspath" refid="bootclasspath"/>
 	</target>
@@ -127,7 +127,7 @@
 			</dirset>
 		</subant>
 		<chmod file="./bin/matrixreduce/FitModelMac" perm="700"/>
-		<chmod file="./bin/matrixreduce/FitModel" perm="700"/>		
+		<chmod file="./bin/matrixreduce/FitModel" perm="700"/>
 	</target>
 	<!-- ===================================================================== -->
 	<!-- DIST  -->
@@ -451,9 +451,49 @@
 
 	</target>
 	<!-- ====================================================================== -->
+	<!-- CREATE CORE JARS-->
+	<!-- ====================================================================== -->
+	<target name="jar" depends="compile" description="Creating geWorkbench core jars">
+		<jar destfile="geworkbench-parsers.jar" basedir="${classes}" includes="org/geworkbench/parsers/**">
+			<manifest>
+				<attribute name="Built-By" value="${user.name}" />
+
+				<!-- attribute name="Class-Path" value="" / -->
+				<!-- attribute name="Main-Class" value="" / -->
+			</manifest>
+		</jar>
+		<jar destfile="geworkbench-engine.jar" basedir="${classes}" includes="org/geworkbench/engine/**">
+			<manifest>
+				<attribute name="Built-By" value="${user.name}" />
+			</manifest>
+		</jar>
+		<jar destfile="geworkbench-events.jar" basedir="${classes}" includes="org/geworkbench/events/**">
+			<manifest>
+				<attribute name="Built-By" value="${user.name}" />
+			</manifest>
+		</jar>
+		<jar destfile="geworkbench-builtin.jar" basedir="${classes}" includes="org/geworkbench/builtin/**">
+			<manifest>
+				<attribute name="Built-By" value="${user.name}" />
+			</manifest>
+		</jar>
+		<jar destfile="geworkbench-util.jar" basedir="${classes}" includes="org/geworkbench/util/**">
+			<manifest>
+				<attribute name="Built-By" value="${user.name}" />
+			</manifest>
+		</jar>
+		<jar destfile="geworkbench-bison.jar" basedir="${classes}" includes="org/geworkbench/bison/**">
+			<manifest>
+				<attribute name="Built-By" value="${user.name}" />
+			</manifest>
+		</jar>
+		<jar destfile="geworkbench-others.jar" basedir="${classes}" excludes="org/geworkbench/bison/**,org/geworkbench/engine/**,org/geworkbench/events/**,org/geworkbench/parsers/**,org/geworkbench/util/**,org/geworkbench/builtin/**">
+		</jar>
+	</target>
+	<!-- ====================================================================== -->
 	<!-- CREATE   DISTRIBUTION-->
 	<!-- ====================================================================== -->
-	<target name="createDist" depends="compile" description="Creating a new folder for depositing...">
+	<target name="createDist" depends="compile, jar" description="Creating a new folder for depositing...">
 		<java classname="org.geworkbench.components.versioninfo.VersionInfoDialog" failonerror="true" >
 			<arg value="2.1.0"/>
 			<arg value="./components/versioninfo/classes/org/geworkbench/components/versioninfo/" />
@@ -468,11 +508,12 @@
 		<echo>Begin to create a new source, which is located at ${cleanFolder}, please wait...</echo>
 		<copy todir="${cleanFolder}" includeEmptyDirs="NO">
 			<fileset dir=".">
-				
+
 				<exclude name="CVS" />
 				<exclude name="${conf}/**/*" />
-				
-				<include name="${classes}/**/*" />
+
+				<!-- geworkbenh core jars -->
+				<include name="*.jar" />
 
 				<!-- Include the following components for distribution -->
 				<include name="bin/matrixreduce/*" />
@@ -483,7 +524,7 @@
 				<include name="${components}/aracne-java/**/*" />
 				<include name="${components}/caarray/**/*" />
 				<include name="${components}/celprocessing/**/*" />
-				
+
 				<include name="${components}/somclustering/**/*" />
 				<include name="${components}/colormosaic/**/*" />
 				<include name="${components}/cytoscape/**/*" />
@@ -500,7 +541,7 @@
 				<include name="${components}/mindy/**/*" />
 
 				<include name="${components}/normalization/**/*" />
-				
+
 				<include name="${components}/plots/**/*" />
 				<include name="${components}/poshistogram/**/*" />
 				<include name="${components}/promoter/**/*" />
@@ -508,34 +549,34 @@
 				<include name="${components}/selectors/**/*" />
 				<include name="${components}/sequenceretriever/**/*" />
 				<include name="${components}/sequences/**/*" />
-	 
+
 				<include name="${components}/versioninfo/**/*" />
 				<include name="${components}/viewers/**/*" />
 				<include name="${components}/markus/**/*" />
-				
+
 				<include name="${components}/skyline/**/*" />
 				<include name="${components}/skylineview/**/*" />
 				<include name="${components}/skybase/**/*" />
 				<include name="${components}/skybaseview/**/*" />
-				
+
 				<include name="${components}/ttest/**/*" />
-				
+
 				<!-- Leave out the following components for release -->
 				<exclude name="**/synteny/*" />
 				<exclude name="**/src/**" />
 				<exclude name="**/test/**" />
-				
+
 				<include name="annotation/**/*" />
 				<include name="${lib}/**/*" />
 				<include name="geWorkbenchLicense.txt" />
 				<include name="ReleaseNotes_2.1.0.txt" />
 				<include name="welcometext.html" />
 				<include name="java.policy" />
-				 
+
 				<include name="Bcell-100.exp_ARACNe_AP_threshold.txt" />
 				<include name="Bcell-100.exp_ARACNe_FBW_kernel.txt" />
 				<include name="Bcell-100.exp_ARACNe_FBW_threshold.txt" />
-				
+
 				<include name="launch_geworkbench.bat" />
 				<include name="launch_geworkbench.sh" />
 				<exclude name="**/*.cvsignore" />
