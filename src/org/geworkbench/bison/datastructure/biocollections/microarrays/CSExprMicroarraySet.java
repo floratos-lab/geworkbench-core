@@ -42,9 +42,8 @@ import org.geworkbench.bison.util.Range;
  *
  * @author not attributable
  * @author zji
- * @version $Id: CSExprMicroarraySet.java,v 1.29 2009-11-20 23:05:48 jiz Exp $
+ * @version $Id$
  */
-
 public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implements Serializable {
 	private static final long serialVersionUID = 6763897988197502601L;
     static Log log = LogFactory.getLog(CSExprMicroarraySet.class);
@@ -98,17 +97,13 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
 
     public boolean loadingCancelled = false;
 
+    /**
+     *  Parsing data file. 
+     */
     public void read(File _file) {
         file = _file;
         label = file.getName();
-        readFromFile(file);
-    }
 
-    public String getName() {
-        return label;
-    }
-
-    public void readFromFile(File file) {
         currGeneId = 0;
         CMicroarrayParser parser = new CMicroarrayParser();
         ReaderMonitor rm = null;
@@ -210,11 +205,8 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
         public int markerNo = 0;
 
         //total number of properties
-        public int propNo = 0;
         Vector<String> phenotypes = new Vector<String>();
         int phenotypeNo = 0;
-
-        int currMicroarrayId = 0;
 
         void executeLine(String line, DSMicroarraySet<DSMicroarray> mArraySet) {
             CSAnnotationContextManager manager = CSAnnotationContextManager.getInstance();
@@ -243,9 +235,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
                  */
                 if (token.equalsIgnoreCase("PDFModel")) {
                 } else if (token.equalsIgnoreCase("AffyID")) {
-                    //          String phLabel = st[1];
-                    //          AnnotationParser.reset(phLabel);
-                    boolean isAccession = true; //phLabel.equalsIgnoreCase("Anotation");
+                    boolean isAccession = true; //phLabel.equalsIgnoreCase("Annotation");
                     int i = 0;
                     //read the first line and put label of the arrays in.
                     for (int j = 2; j < st.length; j++) {
@@ -347,10 +337,10 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
             if (line.charAt(0) == '#') {
                 return;
             }
-            //String[] st = line.split("\t");
+
             int startindx = line.indexOf('\t');
             if (startindx > 0) {
-                //                String token = st[0];
+
                 if (line.startsWith("PDFModel")) {
                 } else if (line.substring(0, 6).equalsIgnoreCase("AffyID")) {
                     String[] st = line.split("\t");
@@ -383,7 +373,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
         } //end of inner class parser
     }
 
-    public void parse(CSMarkerValue marker, String value, String status) {
+    private void parse(CSMarkerValue marker, String value, String status) {
         if (Character.isLetter(status.charAt(0))) {
             try {
                 char c = status.charAt(0);
@@ -432,7 +422,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
         }
     }
 
-    public void parse(DSMutableMarkerValue marker, String value) {
+    private void parse(DSMutableMarkerValue marker, String value) {
         if (marker instanceof CSExpressionMarkerValue) {
             String[] parseableValue = value.split(":");
             String expression = parseableValue[parseableValue.length - 1];
@@ -527,30 +517,20 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
             writer.close();
     }
 
-    public void writeToFile(String fileName) {
-        final String f = fileName;
+    // this method used to do writing in a separate thread, meaning return immediately
+    // that is too dangerous an practice. 
+    // let the user of this method to decide to do that if necessary
+	public void writeToFile(String fileName) {
+		File file = new File(fileName);
+		try {
+			save(file);
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null, "File " + fileName
+					+ " is not saved due to IOException " + e.getMessage(),
+					"File Saving Failed", JOptionPane.ERROR_MESSAGE);
 
-        Thread t = new Thread() {
-            public void run() {
-                File file = new File(f);
-                try {
-					save(file);
-				} catch (IOException e) {
-					JOptionPane.showMessageDialog(null,
-						    "File "+f+" is not saved due to IOException "+e.getMessage(),
-						    "File Saving Failed",
-						    JOptionPane.ERROR_MESSAGE);
-
-				}
-            }
-        };
-        t.setPriority(Thread.MIN_PRIORITY);
-        t.start();
-    }
-
-    public int getPlatformType() {
-        return AFFYMETRIX_PLATFORM;
-    }
+		}
+	}
 
     // Convenience class - used as the return value of method
     // <code>createProgressReader()</code>.
