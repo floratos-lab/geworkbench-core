@@ -50,12 +50,12 @@ import org.geworkbench.util.patterns.PatternSequenceDisplayUtil;
 
 /**
  * Widget provides all GUI services for sequence panel displays.
- * 
+ *
  * Widget is controlled by its associated component, SequenceViewAppComponent
  * Copyright: Copyright (c) 2003
- * 
+ *
  * Company: Califano Lab </p>
- * 
+ *
  * @author
  * @version $Id$
  */
@@ -65,7 +65,7 @@ public class SequenceViewWidget extends JPanel {
 	protected HashMap<CSSequence, PatternSequenceDisplayUtil> patternLocationsMatches;
 	protected DSCollection<DSMatchedPattern<DSSequence, CSSeqRegistration>> selectedPatterns = new Collection<DSMatchedPattern<DSSequence, CSSeqRegistration>>();
 
-	public JToolBar jToolBar1 = new JToolBar(); 
+	public JToolBar jToolBar1 = new JToolBar();
 	// TODO create the public/protected method to add button instead of exposing jToolBar1 as public
 
 	protected SequenceViewWidgetPanel seqViewWPanel = new SequenceViewWidgetPanel();
@@ -89,7 +89,7 @@ public class SequenceViewWidget extends JPanel {
 	// these two can be hidden in derived class
 	protected JCheckBox showAllBtn = new JCheckBox();
 	protected  JCheckBox jAllSequenceCheckBox = new JCheckBox();
-	
+
 	private JLabel jViewLabel = new JLabel();
 	protected JComboBox jViewComboBox = new JComboBox();
 	protected static final String LINEVIEW = "Line";
@@ -219,7 +219,7 @@ public class SequenceViewWidget extends JPanel {
 
 	/**
 	 * geneSelectorAction
-	 * 
+	 *
 	 * @param e
 	 *            GeneSelectorEvent
 	 */
@@ -287,13 +287,13 @@ public class SequenceViewWidget extends JPanel {
 		sequencedetailPanel.repaint();
 
 		prevSeqDx = xStartPoint;
-		sequencedetailPanel.setOpaque(false);
+		sequencedetailPanel.setOpaque(true);
 
 	}
 
 	/**
 	 * Update the detail of sequence.
-	 * 
+	 *
 	 * @param e
 	 *            MouseEvent
 	 */
@@ -378,7 +378,7 @@ public class SequenceViewWidget extends JPanel {
 
 	/**
 	 * Initiate the Panel, which should be used as the entry point.
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public void initPanelView() {
