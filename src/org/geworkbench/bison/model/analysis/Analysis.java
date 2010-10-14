@@ -33,7 +33,7 @@ import org.geworkbench.bison.datastructure.properties.DSIdentifiable;
  * @author First Genetic Trust Inc.
  * @author keshav
  * @author yc2480
- * @version $Id: Analysis.java,v 1.2 2009-02-12 22:28:15 keshav Exp $
+ * @version $Id$
  */
 public interface Analysis extends DSDescribable, DSIdentifiable {
     /**
@@ -65,6 +65,4 @@ public interface Analysis extends DSDescribable, DSIdentifiable {
 	public void saveParameters(String filename);
 	
 	public void deleteParameters(String filename);
-
-	public void refreshGUI();
 }
