@@ -26,7 +26,6 @@ import org.geworkbench.bison.model.analysis.ParameterPanel;
 import org.geworkbench.bison.util.DefaultIdentifiable;
 import org.geworkbench.engine.config.PluginRegistry;
 import org.geworkbench.engine.management.ComponentClassLoader;
-import org.geworkbench.engine.management.ComponentResource;
 import org.geworkbench.engine.management.Script;
 import org.geworkbench.util.FilePathnameUtils;
 
@@ -442,20 +441,21 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	 * @param aspp
 	 */
 	private void setParameterFilesPath(AbstractSaveableParameterPanel aspp) {
-			ComponentClassLoader ccl = (ComponentClassLoader) aspp.getClass()
-					.getClassLoader();
-			ComponentResource componentResource = ccl.getComponentResource();
+		String directoryName = "";
+		ClassLoader classLoader = aspp.getClass().getClassLoader();
+		if (classLoader instanceof ComponentClassLoader) {
+			directoryName = ((ComponentClassLoader) classLoader)
+					.getComponentResource().getName();
+		}
+		String userSettingDirectory = FilePathnameUtils
+				.getUserSettingDirectoryPath() + directoryName;
 
-			String userSettingDirectory = FilePathnameUtils.getUserSettingDirectoryPath();
-			userSettingDirectory = userSettingDirectory
-					+ componentResource.getName();
-
-			File parentDir = new File(userSettingDirectory, paramsDir);
-			tmpDir = parentDir.getPath() + File.separatorChar;
-			File pFile = new File(tmpDir);
-			if (!pFile.exists()) {
-				pFile.mkdirs();
-			}
+		File parentDir = new File(userSettingDirectory, paramsDir);
+		tmpDir = parentDir.getPath() + File.separatorChar;
+		File pFile = new File(tmpDir);
+		if (!pFile.exists()) {
+			pFile.mkdirs();
+		}
 	}
 
 	/*
