@@ -29,7 +29,6 @@ import org.geworkbench.engine.management.ComponentClassLoader;
 import org.geworkbench.engine.management.ComponentResource;
 import org.geworkbench.engine.management.Script;
 import org.geworkbench.util.FilePathnameUtils;
-import org.ginkgo.labs.util.FileTools;
 
 /**
  * <p>
@@ -48,11 +47,15 @@ import org.ginkgo.labs.util.FileTools;
  * @author keshav
  * @author yc2480
  * @author os2201
- * @version $Id: AbstractAnalysis.java,v 1.33 2009/09/24 16:22:55 jiz Exp $
+ * @version $Id$
  */
 @SuppressWarnings("unchecked")
 public abstract class AbstractAnalysis implements Analysis, Serializable,
 		java.util.Observer {
+	private static final long serialVersionUID = 7028809841554763107L;
+	
+	private static final String XML = "xml";
+	private static final String FILE_EXTENSION_SEPARATOR = ".";
 
 	private static final String ERR_TXT = FilePathnameUtils.getUserSettingDirectoryPath() + "err.txt";
 
@@ -259,10 +262,10 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 		if (StringUtils.contains(filename, File.separatorChar))
 			filename = StringUtils.substringAfterLast(filename, System
 					.getProperty("file.separator"));
-		if (StringUtils.contains(filename, FileTools.FILE_EXTENSION_SEPARATOR
-				+ FileTools.XML))
+		if (StringUtils.contains(filename, FILE_EXTENSION_SEPARATOR
+				+ XML))
 			filename = StringUtils.substringBeforeLast(filename,
-					FileTools.FILE_EXTENSION_SEPARATOR + FileTools.XML);
+					FILE_EXTENSION_SEPARATOR + XML);
 		return filename;
 	}
 
@@ -439,7 +442,6 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	 * @param aspp
 	 */
 	private void setParameterFilesPath(AbstractSaveableParameterPanel aspp) {
-		try {
 			ComponentClassLoader ccl = (ComponentClassLoader) aspp.getClass()
 					.getClassLoader();
 			ComponentResource componentResource = ccl.getComponentResource();
@@ -451,11 +453,9 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 			File parentDir = new File(userSettingDirectory, paramsDir);
 			tmpDir = parentDir.getPath() + File.separatorChar;
 			File pFile = new File(tmpDir);
-			if (!pFile.exists())
-				FileTools.createDir(tmpDir);
-		} catch (Exception e) {
-			log.error(e, e);
-		}
+			if (!pFile.exists()) {
+				pFile.mkdirs();
+			}
 	}
 
 	/*
@@ -673,25 +673,16 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	}
 
 	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.geworkbench.bison.model.analysis.Analysis#refreshGUI()
-	 */
-	public void refreshGUI() {
-		// It's up to the component to specify how to refresh its analysis gui.
-	}
-
-	/*
 	 * Add path and extension to the file name if needed.
 	 */
 	public String scrubFilename(String filename) {
 		if (!StringUtils.startsWith(filename, tmpDir)) {
 			filename = tmpDir + filename;
 		}
-		if (!StringUtils.endsWith(filename, FileTools.FILE_EXTENSION_SEPARATOR
-				+ FileTools.XML)) {
-			filename = filename + FileTools.FILE_EXTENSION_SEPARATOR
-					+ FileTools.XML;
+		if (!StringUtils.endsWith(filename, FILE_EXTENSION_SEPARATOR
+				+ XML)) {
+			filename = filename + FILE_EXTENSION_SEPARATOR
+					+ XML;
 		}
 		return filename;
 	}
