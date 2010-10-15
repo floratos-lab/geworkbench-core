@@ -1,15 +1,15 @@
 package org.geworkbench.bison.annotation;
 
+import java.io.Serializable;
+import java.util.WeakHashMap;
+
 import org.apache.commons.collections15.set.ListOrderedSet;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.properties.DSNamed;
 
-import java.util.Iterator;
-import java.util.WeakHashMap;
-import java.io.Serializable;
-
 /**
  * @author John Watkinson
+ * @version $Id$
  */
 public class CSAnnotationContextManager implements DSAnnotationContextManager {
 
@@ -24,16 +24,17 @@ public class CSAnnotationContextManager implements DSAnnotationContextManager {
 
     public static final String DEFAULT_CONTEXT_NAME = "Default";
 
-    private WeakHashMap<DSItemList, ListOrderedSet<DSAnnotationContext>> contextMap;
-    private WeakHashMap<DSItemList, String> currentContextMap;
+    private WeakHashMap<DSItemList<? extends DSNamed>, ListOrderedSet<DSAnnotationContext<?>>> contextMap;
+    private WeakHashMap<DSItemList<? extends DSNamed>, String> currentContextMap;
 
-    public CSAnnotationContextManager() {
-        contextMap = new WeakHashMap<DSItemList, ListOrderedSet<DSAnnotationContext>>();
-        currentContextMap = new WeakHashMap<DSItemList, String>();
+    private CSAnnotationContextManager() {
+        contextMap = new WeakHashMap<DSItemList<? extends DSNamed>, ListOrderedSet<DSAnnotationContext<? extends DSNamed>>>();
+        currentContextMap = new WeakHashMap<DSItemList<? extends DSNamed>, String>();
     }
 
-    public <T extends DSNamed> DSAnnotationContext<T>[] getAllContexts(DSItemList<T> itemList) {
-        ListOrderedSet<DSAnnotationContext> contexts = contextMap.get(itemList);
+    @SuppressWarnings("unchecked")
+	public <T extends DSNamed> DSAnnotationContext<T>[] getAllContexts(DSItemList<T> itemList) {
+        ListOrderedSet<DSAnnotationContext<? extends DSNamed>> contexts = contextMap.get(itemList);
         if (contexts == null) {
             return new DSAnnotationContext[0];
         } else {
@@ -41,13 +42,13 @@ public class CSAnnotationContextManager implements DSAnnotationContextManager {
         }
     }
 
-    public <T extends DSNamed> DSAnnotationContext<T> getContext(DSItemList<T> itemList, String name) {
-        ListOrderedSet<DSAnnotationContext> contexts = contextMap.get(itemList);
+    @SuppressWarnings("unchecked")
+	public <T extends DSNamed> DSAnnotationContext<T> getContext(DSItemList<T> itemList, String name) {
+        ListOrderedSet<DSAnnotationContext<? extends DSNamed>> contexts = contextMap.get(itemList);
         if (contexts != null) {
-            for (Iterator<DSAnnotationContext> iterator = contexts.iterator(); iterator.hasNext();) {
-                DSAnnotationContext context = iterator.next();
+            for (DSAnnotationContext<? extends DSNamed> context : contexts) {
                 if (name.equals(context.getName())) {
-                    return context;
+                    return (DSAnnotationContext<T>) context;
                 }
             }
         }
@@ -55,11 +56,10 @@ public class CSAnnotationContextManager implements DSAnnotationContextManager {
         return createContext(itemList, name);
     }
 
-    public boolean hasContext(DSItemList itemList, String name) {
-        ListOrderedSet<DSAnnotationContext> contexts = contextMap.get(itemList);
+    public <T extends DSNamed> boolean hasContext(DSItemList<T> itemList, String name) {
+        ListOrderedSet<DSAnnotationContext<? extends DSNamed>> contexts = contextMap.get(itemList);
         if (contexts != null) {
-            for (Iterator<DSAnnotationContext> iterator = contexts.iterator(); iterator.hasNext();) {
-                DSAnnotationContext context = iterator.next();
+            for (DSAnnotationContext<? extends DSNamed> context : contexts) {
                 if (name.equals(context.getName())) {
                     return true;
                 }
@@ -70,9 +70,9 @@ public class CSAnnotationContextManager implements DSAnnotationContextManager {
 
     public <T extends DSNamed> DSAnnotationContext<T> createContext(DSItemList<T> itemList, String name) {
         CSAnnotationContext<T> context = new CSAnnotationContext<T>(name, itemList);
-        ListOrderedSet<DSAnnotationContext> contexts = contextMap.get(itemList);
+        ListOrderedSet<DSAnnotationContext<? extends DSNamed>> contexts = contextMap.get(itemList);
         if (contexts == null) {
-            contexts = new ListOrderedSet<DSAnnotationContext>();
+            contexts = new ListOrderedSet<DSAnnotationContext<? extends DSNamed>>();
             contextMap.put(itemList, contexts);
         }
         contexts.add(context);
@@ -80,7 +80,7 @@ public class CSAnnotationContextManager implements DSAnnotationContextManager {
     }
 
     public <T extends DSNamed> int getNumberOfContexts(DSItemList<T> itemList) {
-        ListOrderedSet<DSAnnotationContext> contexts = contextMap.get(itemList);
+        ListOrderedSet<DSAnnotationContext<? extends DSNamed>> contexts = contextMap.get(itemList);
         if (contexts == null) {
             return 0;
         } else {
@@ -88,21 +88,22 @@ public class CSAnnotationContextManager implements DSAnnotationContextManager {
         }
     }
 
-    public <T extends DSNamed> DSAnnotationContext<T> getContext(DSItemList<T> itemList, int index) {
-        ListOrderedSet<DSAnnotationContext> contexts = contextMap.get(itemList);
+    @SuppressWarnings("unchecked")
+	public <T extends DSNamed> DSAnnotationContext<T> getContext(DSItemList<T> itemList, int index) {
+        ListOrderedSet<DSAnnotationContext<? extends DSNamed>> contexts = contextMap.get(itemList);
         if (contexts == null) {
             throw new ArrayIndexOutOfBoundsException("Attempt to index an empty context.");
         } else {
-            return contexts.get(index);
+            return (DSAnnotationContext<T>) contexts.get(index);
         }
     }
 
-    public boolean removeContext(DSItemList itemList, String name) {
-        ListOrderedSet<DSAnnotationContext> contexts = contextMap.get(itemList);
+    public <T extends DSNamed> boolean removeContext(DSItemList<T> itemList, String name) {
+        ListOrderedSet<DSAnnotationContext<? extends DSNamed>> contexts = contextMap.get(itemList);
         if (contexts == null) {
             return false;
         } else {
-            DSAnnotationContext context = getContext(itemList, name);
+            DSAnnotationContext<T> context = getContext(itemList, name);
             if (context == null) {
                 return false;
             } else {
@@ -111,8 +112,8 @@ public class CSAnnotationContextManager implements DSAnnotationContextManager {
         }
     }
 
-    public boolean renameContext(DSItemList itemList, String oldName, String newName) {
-        DSAnnotationContext context = getContext(itemList, oldName);
+    public <T extends DSNamed> boolean renameContext(DSItemList<T> itemList, String oldName, String newName) {
+        DSAnnotationContext<T> context = getContext(itemList, oldName);
         if (hasContext(itemList, newName)) {
             throw new IllegalArgumentException("Context with name '" + newName + "' already exists.");
         }
@@ -124,10 +125,11 @@ public class CSAnnotationContextManager implements DSAnnotationContextManager {
         }
     }
 
-    public <T extends DSNamed> DSAnnotationContext<T> getCurrentContext(DSItemList<T> itemList) {
-        ListOrderedSet<DSAnnotationContext> contexts = contextMap.get(itemList);
+    @SuppressWarnings("unchecked")
+	public <T extends DSNamed> DSAnnotationContext<T> getCurrentContext(DSItemList<T> itemList) {
+        ListOrderedSet<DSAnnotationContext<? extends DSNamed>> contexts = contextMap.get(itemList);
         if (contexts == null) {
-            contexts = new ListOrderedSet<DSAnnotationContext>();
+            contexts = new ListOrderedSet<DSAnnotationContext<? extends DSNamed>>();
             contextMap.put(itemList, contexts);
         }
         if (contexts.isEmpty()) {
@@ -136,12 +138,12 @@ public class CSAnnotationContextManager implements DSAnnotationContextManager {
             contexts.add(context);
         }
         String currentContext = currentContextMap.get(itemList);
-        DSAnnotationContext context = null;
+        DSAnnotationContext<T> context = null;
         if (currentContext != null) {
             context = getContext(itemList, currentContext);
         }
         if (context == null) {
-            context = contexts.get(0);
+            context = (DSAnnotationContext<T>) contexts.get(0);
             currentContextMap.put(itemList, context.getName());
         }
         return context;
@@ -153,9 +155,9 @@ public class CSAnnotationContextManager implements DSAnnotationContextManager {
 
     public <T extends DSNamed> void copyContexts(DSItemList<T> from, DSItemList<T> to) {
         DSAnnotationContext<T>[] contexts = getAllContexts(from);
-        ListOrderedSet<DSAnnotationContext> contextSet = contextMap.get(to);
+        ListOrderedSet<DSAnnotationContext<?>> contextSet = contextMap.get(to);
         if (contextSet == null) {
-            contextSet = new ListOrderedSet<DSAnnotationContext>();
+            contextSet = new ListOrderedSet<DSAnnotationContext<? extends DSNamed>>();
             contextMap.put(to, contextSet);
         }
         for (int i = 0; i < contexts.length; i++) {
@@ -169,20 +171,20 @@ public class CSAnnotationContextManager implements DSAnnotationContextManager {
 		 * 
 		 */
 		private static final long serialVersionUID = -8930177139134699811L;
-		private ListOrderedSet<DSAnnotationContext> contexts;
+		private ListOrderedSet<DSAnnotationContext<? extends DSNamed>> contexts;
         private String current;
 
-        public SerializableContexts(ListOrderedSet<DSAnnotationContext> contexts, String current) {
+        private SerializableContexts(ListOrderedSet<DSAnnotationContext<? extends DSNamed>> contexts, String current) {
             this.contexts = contexts;
             this.current = current;
         }
     }
 
-    public SerializableContexts getContextsForSerialization(DSItemList itemList) {
+    public <T extends DSNamed> SerializableContexts getContextsForSerialization(DSItemList<T> itemList) {
         return new SerializableContexts(contextMap.get(itemList), currentContextMap.get(itemList));
     }
 
-    public void setContextsFromSerializedObject(DSItemList itemList, SerializableContexts contexts) {
+    public <T extends DSNamed> void setContextsFromSerializedObject(DSItemList<T> itemList, SerializableContexts contexts) {
         contextMap.put(itemList, contexts.contexts);
         currentContextMap.put(itemList, contexts.current);
     }

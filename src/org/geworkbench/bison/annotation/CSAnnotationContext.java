@@ -1,10 +1,8 @@
 package org.geworkbench.bison.annotation;
 
-import java.awt.Color;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -34,23 +32,10 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
     public static final String CLASS_TEST = "Test";
     public static final String CLASS_IGNORE = "Ignore";
 
-    private static final HashMap<String, Integer> colorMap = new HashMap<String, Integer>();
-
-    static {
-        colorMap.put(CLASS_CASE, Color.RED.getRGB());
-        colorMap.put(CLASS_CONTROL, Color.BLUE.getRGB());
-        colorMap.put(CLASS_TEST, Color.GREEN.getRGB());
-        colorMap.put(CLASS_IGNORE, Color.DARK_GRAY.getRGB());
-    }
-
-    public static int getRGBForClass(String className) {
-        return colorMap.get(className);
-    }
-
     /**
      * Initializes a context to have typical values for describing phenotypes.
      */
-    public static void initializePhenotypeContext(DSAnnotationContext context) {
+    public static <T extends DSNamed> void initializePhenotypeContext(DSAnnotationContext<T> context) {
         context.addLabel(SELECTION);
         context.addClass(CLASS_CASE);
         context.addClass(CLASS_CONTROL);
@@ -60,8 +45,9 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
     }
 
     private class Label implements Cloneable, Serializable {
-
-        public String name;
+		private static final long serialVersionUID = -2093219495767578519L;
+		
+		public String name;
         public DSPanel<T> panel;
 
         public boolean active;
@@ -334,7 +320,7 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
     }
 
     public DSPanel<T> getItemsWithoutLabel(String label) {
-        DSPanel retPanel = new CSPanel("Not " + label);
+        DSPanel<T> retPanel = new CSPanel<T>("Not " + label);
         DSItemList<T> list = getItemList();
         for (T t : list) {
             if (!hasLabel(t, label)) {
@@ -661,9 +647,10 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
         return panel;
     }
 
-    public boolean equals(Object obj) {
+    @SuppressWarnings("unchecked")
+	public boolean equals(Object obj) {
         if (obj instanceof DSAnnotationContext) {
-            DSAnnotationContext other = (DSAnnotationContext) obj;
+            DSAnnotationContext<? extends DSNamed> other = (DSAnnotationContext<? extends DSNamed>) obj;
             if (name == null) {
                 return (other.getName() == null);
             } else {

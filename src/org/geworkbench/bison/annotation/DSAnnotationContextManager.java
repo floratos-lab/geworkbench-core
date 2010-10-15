@@ -11,6 +11,7 @@ import org.geworkbench.bison.datastructure.properties.DSNamed;
  * is a <i>default</i> context associated with each data set.
  *
  * @author John Watkinson
+ * @version $Id$
  */
 public interface DSAnnotationContextManager {
 
@@ -35,7 +36,7 @@ public interface DSAnnotationContextManager {
      * @param name the name to search.
      * @return <tt>true</tt> if the specified context exists, <tt>false</tt> otherwise.
      */
-    public boolean hasContext(DSItemList itemList, String name);
+    public <T extends DSNamed> boolean hasContext(DSItemList<T> itemList, String name);
 
     /**
      * Creates a new context, replacing an existing context if one exists for the same item list and name.
@@ -66,7 +67,7 @@ public interface DSAnnotationContextManager {
      * @param name the name of the context to remove.
      * @return <tt>true</tt> if the context existed before the removal, false otherwise.
      */
-    public boolean removeContext(DSItemList itemList, String name);
+    public <T extends DSNamed> boolean removeContext(DSItemList<T> itemList, String name);
 
     /**
      * Renames the specified context.
@@ -76,7 +77,7 @@ public interface DSAnnotationContextManager {
      * @throws IllegalArgumentException if a context already exists for the specified item list and new name.
      * @return <tt>true</tt> if a context existed by the old name, <tt>false</tt> if no such context existed.
      */
-    public boolean renameContext(DSItemList itemList, String oldName, String newName);
+    public <T extends DSNamed> boolean renameContext(DSItemList<T> itemList, String oldName, String newName);
 
     /**
      * Retrieves the currently-selected context for the given item list.
