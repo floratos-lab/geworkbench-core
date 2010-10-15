@@ -17,10 +17,6 @@ import org.geworkbench.bison.datastructure.properties.DSNamed;
  * An item can hold any number of labels. All labels have an <i>activation status</i>. This provides a convenient way
  * to consider a subset of items for display or analysis.
  * <p>
- * Special labels called <i>Criterion Labels</i> can be created. These
- * labels are automatically applied to the items of the {@link DSItemList} that satisfy the associated
- * {@link DSCriterion criterion}. The criterion is a true/false function of the annotations for that item. Changes to
- * the annotation values of the items will result in automatic membership changes to criterion labels.
  * <h3>Classes</h3>
  * A class is like a label, but each item can only hold one class. Additionally, if an item is not
  * explicitly classified, it will automatically hold the <i>default class</i> (usually <i>Control</i>).
@@ -70,33 +66,11 @@ public interface DSAnnotationContext<T extends DSNamed> extends Cloneable {
     public boolean addLabel(String label);
 
     /**
-     * Adds a criterion label to this context.
-     * @param label the label.
-     * @param criterion the associated criterion.
-     * @return <tt>true</tt> if the label did not already exist, <tt>false</tt> otherwise.
-     */
-    public boolean addCriterionLabel(String label, DSCriterion<T> criterion);
-
-    /**
      * Removes a label from this context.
      * @param label the label to remove.
      * @return <tt>true</tt> if the label existed prior to removal, <tt>false</tt> otherwise.
      */
     public boolean removeLabel(String label);
-
-    /**
-     * Indicates if the specified label is a criterion label, or a simple label.
-     * @param label the label in question.
-     * @return <tt>true</tt> if the label has an associated criterion, <tt>false</tt> otherwise.
-     */
-    public boolean isCriterionLabel(String label);
-
-    /**
-     * Retrieves the criterion for a given criterion label.
-     * @param label the label.
-     * @return the criterion for that label, or <tt>null</tt> if the label is not a criterion label.
-     */
-    public DSCriterion<T> getCriterionForLabel(String label);
 
     /**
      * Retrieves the number of labels in this context.

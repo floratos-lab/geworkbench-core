@@ -63,7 +63,7 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
 
         public String name;
         public DSPanel<T> panel;
-        public DSCriterion<T> criterion;
+
         public boolean active;
 
         /**
@@ -82,18 +82,17 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
                 clonedPanel = new CSPanel<T>(panel);
                 clone = new Label(name, clonedPanel);
             } else {
-                clone = new Label(name, criterion);
+                clone = new Label(name);
             }
             clone.active = active;
             return clone;
         }
 
         /**
-         * A criterion-based label.
+         * A label with null panel.
          */
-        public Label(String name, DSCriterion<T> criterion) {
+        public Label(String name) {
             this.name = name;
-            this.criterion = criterion;
         }
 
         public DSPanel<T> getPanel() {
@@ -101,19 +100,10 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
                 return panel;
             } else {
                 DSPanel<T> panel = new CSPanel<T>(name);
-                DSItemList<T> itemList = itemListReference.get();
-                for (T t : itemList) {
-                    if (criterion.applyCriterion(t, CSAnnotationContext.this)) {
-                        panel.add(t);
-                    }
-                }
                 return panel;
             }
         }
 
-        public boolean isCriterion() {
-            return (criterion != null);
-        }
     }
 
     private String name;
@@ -180,35 +170,8 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
         }
     }
 
-    public boolean addCriterionLabel(String label, DSCriterion<T> criterion) {
-        if (labels.get(label) != null) {
-            return false;
-        } else {
-            labels.put(label, new Label(label, criterion));
-            return true;
-        }
-    }
-
     public boolean removeLabel(String label) {
         return (labels.remove(label) != null);
-    }
-
-    public boolean isCriterionLabel(String label) {
-        Label lab = labels.get(label);
-        if (lab != null) {
-            return lab.isCriterion();
-        } else {
-            return false;
-        }
-    }
-
-    public DSCriterion<T> getCriterionForLabel(String label) {
-        Label lab = labels.get(label);
-        if (lab != null) {
-            return lab.criterion;
-        } else {
-            return null;
-        }
     }
 
     public int getNumberOfLabels() {
@@ -252,9 +215,7 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
             addLabel(label);
             lab = labels.get(label);
         }
-        if (lab.isCriterion()) {
-            throw new IllegalArgumentException("Cannot explicitly label a criterion label.");
-        }
+
         if (lab.panel.contains(item)) {
             return false;
         } else {
@@ -269,9 +230,7 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
             addLabel(label);
             lab = labels.get(label);
         }
-        if (lab.isCriterion()) {
-            throw new IllegalArgumentException("Cannot explicitly label a criterion label.");
-        }
+
         if((lab.panel != null) && (lab.panel.size() == 0)){
         	for(T item: items){
         		lab.panel.add(item);
@@ -294,9 +253,7 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
             addLabel(label);
             lab = labels.get(label);
         }
-        if (lab.isCriterion()) {
-            throw new IllegalArgumentException("Cannot explicitly label a criterion label.");
-        }
+
         if((lab.panel != null) && (lab.panel.size() == 0)){
         	for(T item: items){
         		lab.panel.add(item);
@@ -398,11 +355,7 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
     public boolean hasLabel(T item, String label) {
         Label lab = labels.get(label);
         if (lab != null) {
-            if (lab.isCriterion()) {
-                return lab.criterion.applyCriterion(item, this);
-            } else {
-                return lab.panel.contains(item);
-            }
+            return lab.panel.contains(item);
         } else {
             return false;
         }
@@ -415,11 +368,7 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
     public void clearItemsFromLabel(String label) {
         Label lab = labels.get(label);
         if (lab != null) {
-            if (lab.isCriterion()) {
-                throw new IllegalArgumentException("Cannot modify a criterion label directly.");
-            } else {
-                lab.panel = new CSPanel<T>(lab.name);
-            }
+        	lab.panel = new CSPanel<T>(lab.name);
         }
     }
 
@@ -501,14 +450,9 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
         while (iterator.hasNext()) {
             iterator.next();
             Label lab = iterator.getValue();
-            if (lab.isCriterion()) {
-                if (lab.criterion.applyCriterion(item, this)) {
-                    list.add(iterator.getKey());
-                }
-            } else {
-                if (lab.panel.contains(item)) {
-                    list.add(iterator.getKey());
-                }
+
+            if (lab.panel.contains(item)) {
+                list.add(iterator.getKey());
             }
         }
         return list.toArray(new String[0]);
@@ -519,9 +463,7 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
         if (lab == null) {
             return false;
         }
-        if (lab.isCriterion()) {
-            throw new IllegalArgumentException("Cannot explicitly remove a criterion label.");
-        }
+
         if (lab.panel.contains(item)) {
             lab.panel.remove(item);
             return true;
