@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.collections15.MapIterator;
 import org.apache.commons.collections15.map.ListOrderedMap;
@@ -20,6 +18,7 @@ import org.geworkbench.bison.datastructure.properties.DSNamed;
 
 /**
  * @author John Watkinson
+ * @version $Id$
  */
 public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationContext<T>, Serializable {
 
@@ -125,7 +124,6 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
      */
     private transient WeakReference<DSItemList<T>> itemListReference;
 
-    private ListOrderedMap<DSAnnotationType, HashMap<T, ?>> annotations;
     private ListOrderedMap<String, Label> labels;
     private ListOrderedMap<String, ListOrderedSet<String>> classes;
     private String defaultClass;
@@ -133,7 +131,6 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
     public CSAnnotationContext(String name, DSItemList<T> itemList) {
         this.name = name;
         this.itemListReference = new WeakReference<DSItemList<T>>(itemList);
-        annotations = new ListOrderedMap<DSAnnotationType, HashMap<T, ?>>();
         labels = new ListOrderedMap<String, Label>();
         classes = new ListOrderedMap<String, ListOrderedSet<String>>();
         defaultClass = null;
@@ -144,11 +141,7 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
      */
     public CSAnnotationContext<T> clone() {
         CSAnnotationContext<T> clone = new CSAnnotationContext<T>(name, itemListReference.get());
-        MapIterator<DSAnnotationType, HashMap<T, ?>> annotationsIterator = annotations.mapIterator();
-        while (annotationsIterator.hasNext()) {
-            annotationsIterator.next();
-            clone.annotations.put(annotationsIterator.getKey(), (HashMap<T, ?>) annotationsIterator.getValue().clone());
-        }
+
         MapIterator<String, Label> labelIterator = labels.mapIterator();
         while (labelIterator.hasNext()) {
             labelIterator.next();
@@ -175,66 +168,6 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
 
     public DSItemList<T> getItemList() {
         return itemListReference.get();
-    }
-
-    public boolean addAnnotationType(DSAnnotationType annotationType) {
-        if (annotations.containsKey(annotationType)) {
-            return false;
-        } else {
-            HashMap<T, Object> map = new HashMap<T, Object>();
-            annotations.put(annotationType, map);
-            return true;
-        }
-    }
-
-    public boolean removeAnnotationType(DSAnnotationType annotationType) {
-        return (annotations.remove(annotationType) != null);
-    }
-
-    public int getNumberOfAnnotationTypes() {
-        return annotations.keySet().size();
-    }
-
-    public DSAnnotationType getAnnotationType(int index) {
-        return annotations.get(index);
-    }
-
-    public <Q> void annotateItem(T item, DSAnnotationType<Q> annotationType, Q value) {
-        HashMap<T, Q> map = (HashMap<T, Q>) annotations.get(annotationType);
-        if (map == null) {
-            map = new HashMap<T, Q>();
-            annotations.put(annotationType, map);
-        }
-        map.put(item, value);
-    }
-
-    public boolean removeAnnotationFromItem(T item, DSAnnotationType annotationType) {
-        Map<T, ?> map = annotations.get(annotationType);
-        if (map != null) {
-            return (map.remove(item) != null);
-        } else {
-            return false;
-        }
-    }
-
-    public DSAnnotationType[] getAnnotationTypesForItem(T item) {
-        ArrayList<DSAnnotationType> list = new ArrayList<DSAnnotationType>();
-        Set<DSAnnotationType> keySet = annotations.keySet();
-        for (DSAnnotationType type : keySet) {
-            if (annotations.get(type).containsKey(item)) {
-                list.add(type);
-            }
-        }
-        return list.toArray(new DSAnnotationType[0]);
-    }
-
-    public <Q> Q getAnnotationForItem(T item, DSAnnotationType<Q> annotationType) {
-        Map<T, Q> map = (Map<T, Q>) annotations.get(annotationType);
-        if (map != null) {
-            return map.get(item);
-        } else {
-            return null;
-        }
     }
 
     public boolean addLabel(String label) {
@@ -501,7 +434,7 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
             }
             // Must build up a new labels map
             ListOrderedMap<String, Label> newLabels = new ListOrderedMap<String, Label>();
-            int n = labels.size();
+
             MapIterator<String, Label> iterator = labels.mapIterator();
             while (iterator.hasNext()) {
                 iterator.next();

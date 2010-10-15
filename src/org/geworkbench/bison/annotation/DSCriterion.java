@@ -6,6 +6,7 @@ import org.geworkbench.bison.datastructure.properties.DSNamed;
  * This interface defines a criterion that can be applied
  *
  * @author John Watkinson
+ * @version $Id$
  */
 public interface DSCriterion<T extends DSNamed> {
 
@@ -15,6 +16,6 @@ public interface DSCriterion<T extends DSNamed> {
      * @param annotationSource the source of annotation data for the item.
      * @return <tt>true</tt> if the item fulfills the criterion, <tt>false</tt> otherwise.
      */
-    public boolean applyCriterion(T item, DSAnnotationSource<T> annotationSource);
+    public boolean applyCriterion(T item, DSAnnotationContext<T> annotationSource);
 
 }

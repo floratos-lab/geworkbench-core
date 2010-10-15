@@ -32,8 +32,9 @@ import org.geworkbench.bison.datastructure.properties.DSNamed;
  * its labels.
  *
  * @author John Watkinson
+ * @version $Id$
  */
-public interface DSAnnotationContext<T extends DSNamed> extends DSAnnotationSource<T>, Cloneable {
+public interface DSAnnotationContext<T extends DSNamed> extends Cloneable {
 
     /**
      * Deep clones this context.
@@ -57,57 +58,6 @@ public interface DSAnnotationContext<T extends DSNamed> extends DSAnnotationSour
      * Retrieves the underlying data set on which this context is based.
      */
     public DSItemList<T> getItemList();
-
-    //// ANNOTATIONS
-
-    /**
-     * Adds an annotation type to this context.
-     * This method is a convenience as {@link #annotateItem} will implicitly add the annotation type specified if
-     * it has not already been added.
-     * @return <tt>true</tt> if the annotation type did not already exist, <tt>false</tt> otherwise.
-     */
-    public boolean addAnnotationType(DSAnnotationType annotationType);
-
-    /**
-     * Removes an annotation type, and all annotations associated with that type.
-     * @param annotationType the type to remove.
-     * @return <tt>true</tt> if the annotation existed before removal, <tt>false</tt> if it did not.
-     */
-    public boolean removeAnnotationType(DSAnnotationType annotationType);
-
-    /**
-     * Retrieves the number of annotation types in use in this context.
-     */
-    public int getNumberOfAnnotationTypes();
-
-    /**
-     * Retrieves an annotation type by index.
-     */
-    public DSAnnotationType getAnnotationType(int index);
-
-    /**
-     * Applies an annotation to an item.
-     * @param item the item to annotate.
-     * @param annotationType the type of the annotation. If the annotation type has not yet been added to this context,
-     * this method will implicitly add it.
-     * @param value the value of the annotation.
-     */
-    public <Q> void annotateItem(T item, DSAnnotationType<Q> annotationType, Q value);
-
-    /**
-     * Removes an annotation for an item.
-     * @param item the item from which to remove the annotation.
-     * @param annotationType the type of the annotation to remove.
-     * @return <tt>true</tt> if there was an annotation to remove, <tt>false</tt> otherwise.
-     */
-    public boolean removeAnnotationFromItem(T item, DSAnnotationType annotationType);
-
-    /**
-     * Retrieves the annotation types for all annotations that are applied to an item.
-     * @param item the item for which to retrieve the annotation types.
-     * @return the annotation types. Modifying this array has no effect on the annotations.
-     */
-    public DSAnnotationType[] getAnnotationTypesForItem(T item);
 
     //// LABELS
 
