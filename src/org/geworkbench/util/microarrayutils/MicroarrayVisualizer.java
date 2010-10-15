@@ -1,6 +1,10 @@
 package org.geworkbench.util.microarrayutils;
 
-import org.geworkbench.bison.annotation.DSCriteria;
+import java.awt.BorderLayout;
+import java.awt.Component;
+
+import javax.swing.JPanel;
+
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.views.CSMicroarraySetView;
@@ -8,8 +12,8 @@ import org.geworkbench.bison.datastructure.biocollections.views.DSMicroarraySetV
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
-import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
+import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.builtin.projects.ProjectPanel;
 import org.geworkbench.builtin.projects.ProjectSelection;
 import org.geworkbench.engine.management.Publish;
@@ -19,9 +23,6 @@ import org.geworkbench.events.MarkerSelectedEvent;
 import org.geworkbench.events.ProjectEvent;
 import org.geworkbench.util.associationdiscovery.cluster.CSMatchedMatrixPattern;
 
-import javax.swing.*;
-import java.awt.*;
-
 /**
  * <p>Title: Plug And Play</p>
  * <p>Description: Dynamic Proxy Implementation of enGenious</p>
@@ -29,22 +30,18 @@ import java.awt.*;
  * <p>Company: First Genetic Trust Inc.</p>
  *
  * @author Manjunath Kustagi
- * @version 1.0
+ * @version $Id$
  */
 
 public abstract class MicroarrayVisualizer {
     protected DSMicroarraySetView<DSGeneMarker, DSMicroarray> dataSetView = new CSMicroarraySetView<DSGeneMarker, DSMicroarray>();
-    //    protected DSMicroarraySet mArraySet = null;
-    //    protected DSItemList<DSMicroarray> mArrayVector = null;
-    //    protected DSItemList<DSMarker> markerVector = null;
-    //    protected boolean showAllMArrays = true;
-    //    protected boolean showAllMarkers = true;
+
     protected int microarrayId = 0;
     protected int markerId = 0;
     protected JPanel mainPanel = new JPanel();
     protected BorderLayout borderLayout = new BorderLayout();
     protected boolean usePanel = false;
-    protected DSCriteria<DSBioObject> phCriteria = null;
+
     protected DSPanel<DSGeneMarker> markerPanel;
     protected DSPanel<DSBioObject> mArrayPanel;
     protected DSItemList<DSGeneMarker> uniqueMarkers = null;
