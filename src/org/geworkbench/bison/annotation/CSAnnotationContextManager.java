@@ -13,12 +13,9 @@ import org.geworkbench.bison.datastructure.properties.DSNamed;
  */
 public class CSAnnotationContextManager implements DSAnnotationContextManager {
 
-    private static CSAnnotationContextManager instance;
+    private static final CSAnnotationContextManager instance = new CSAnnotationContextManager();
 
     public static CSAnnotationContextManager getInstance() {
-        if (instance == null) {
-            instance = new CSAnnotationContextManager();
-        }
         return instance;
     }
 
