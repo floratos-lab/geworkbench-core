@@ -2,7 +2,6 @@ package org.geworkbench.builtin.projects;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -16,7 +15,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.io.ObjectInputStream;
@@ -99,12 +97,14 @@ import org.geworkbench.events.ProjectNodeRenamedEvent;
 import org.geworkbench.events.SingleValueEditEvent;
 import org.geworkbench.events.StructureAnalysisEvent;
 import org.geworkbench.parsers.DataSetFileFormat;
-import org.geworkbench.parsers.FileFormat;
 import org.geworkbench.util.FilePathnameUtils;
 import org.geworkbench.util.SaveImage;
 import org.geworkbench.util.Util;
 import org.ginkgo.labs.ws.GridEndpointReferenceType;
 
+// TODO this class has a large number of subscribe methods,
+// many of these should be replaced with direct method call 
+// if the event is specifically meant to be received by this class only.  
 /**
  *
  * Description: Project Panel of geWorkbench is a key controlling element.
@@ -159,10 +159,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	private JPopupMenu pendingMenu = new JPopupMenu();
 
-	/**
-	 * Add MenuItem Listeners here;
-	 */
-
 	protected JProgressBar progressBar = new JProgressBar();
 
 	private JMenuItem jMenuItem1 = new JMenuItem();
@@ -181,9 +177,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	private JMenuItem jViewAnnotations = new JMenuItem();
 
-	/**
-	 * added by XQ 4/7/04
-	 */
 	private JMenuItem jSaveMenuItem = new JMenuItem();
 
 	private JMenuItem jRenameMenuItem = new JMenuItem();
@@ -254,7 +247,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * @throws java.lang.Exception
 	 */
 	protected void jbInit1() throws Exception {
-		// deserialize();
 
 		jMenuItem1.setText("Load Patterns");
 		jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
@@ -626,62 +618,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	}
 
-	/**
-	 * Provide a general File copy function. Xiaoqing
-	 *
-	 * @param fromFileName
-	 * @param toFileName
-	 *
-	 */
-	public static void copy(String fromFileName, String toFileName) {
-		File fromFile = new File(fromFileName);
-		File toFile = new File(toFileName);
-
-		if (!fromFile.exists() || !fromFile.isFile() || !fromFile.canRead()) {
-			return;
-		}
-
-		if (toFile.isDirectory())
-			toFile = new File(toFile, fromFile.getName());
-
-		if (toFile.exists()) {
-			int o = JOptionPane.showConfirmDialog(null,
-
-			"Replace the file", "Replace the existing file?",
-					JOptionPane.YES_NO_CANCEL_OPTION);
-			if (o != JOptionPane.YES_OPTION) {
-				return;
-			}
-		}
-		FileInputStream from = null;
-		FileOutputStream to = null;
-		try {
-			from = new FileInputStream(fromFile);
-			to = new FileOutputStream(toFile);
-			byte[] buffer = new byte[4096];
-			int bytesRead;
-
-			while ((bytesRead = from.read(buffer)) != -1)
-				to.write(buffer, 0, bytesRead); // write
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-
-			if (from != null)
-				try {
-					from.close();
-				} catch (IOException e) {
-					;
-				}
-			if (to != null)
-				try {
-					to.close();
-				} catch (IOException e) {
-					;
-				}
-		}
-	}
-
 	private boolean saveAsFile() {
 		Object mSetSelected = projectTree.getSelectionPath()
 				.getLastPathComponent();
@@ -777,33 +713,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		return false;
 	}
 
-	// Save current file; handle not yet having a filename; report to statusBar.
-	// boolean saveFile(File f, String currFileName) {
-	// try {
-	// File file = new File(currFileName);
-	// FileWriter out = new FileWriter(file);
-	// if (f.getName().equals(currFileName)) {
-	// return false;
-	// } else {
-	// // Open a file of the current name.
-	// FileReader in = new FileReader(f);
-	// int c;
-	//
-	// while ( (c = in.read()) != -1) {
-	// out.write(c);
-	//
-	// }
-	// in.close();
-	// out.close();
-	//
-	// return true;
-	// }
-	// } catch (IOException e) {
-	// e.printStackTrace();
-	// return false;
-	// }
-	// }
-
 	/**
 	 * Change the comment text
 	 *
@@ -814,18 +723,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		ProjectTreeNode selectedNode = selection.getSelectedNode();
 		selectedNode.setDescription(ce.getText());
 	}
-
-	/**
-	 * Retrieve the associated descriptions
-	 *
-	 * @return public String getUserComments() { ProjectTreeNode selectedNode =
-	 *         selection.getSelectedNode(); String text = ""; String[]
-	 *         descriptions = null; if (selectedNode instanceof DataSetNode) {
-	 *         descriptions = ( (DataSetNode)
-	 *         selectedNode).dataFile.getDescriptions(); for (int i = 0; i <
-	 *         descriptions.length; i++) { text += descriptions[i]; } } return
-	 *         text; }
-	 */
 
 	/**
 	 * Inserts a new data set as a new node in the project tree. The node is a
@@ -1019,25 +916,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	}
 
 	@Script
-	// public void addDataSetNode(DSDataSet _dataSet) {
-	// // Retrieve the project node for this node
-	// ProjectNode pNode = selection.getSelectedProjectNode();
-	// if (pNode == null) {
-	// }
-	// if (pNode != null) {
-	// // Inserts the new node and sets the menuNode and other variables to
-	// point to it
-	// DataSetNode node = new DataSetNode(_dataSet);
-	// projectTreeModel.insertNodeInto(node, pNode, pNode.getChildCount());
-	// if (select) {
-	// // Make sure the user can see the lovely new node.
-	// projectTree.scrollPathToVisible(new TreePath(node));
-	// //serialize("default.ws");
-	// projectTree.setSelectionPath(new TreePath(node.getPath()));
-	// selection.setNodeSelection(node);
-	// }
-	// }
-	// }
 	/**
 	 *
 	 * @param pnode
@@ -1188,24 +1066,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		projectTree.setSelectionPath(new TreePath(node.getPath()));
 		selection.setNodeSelection(node);
 	}
-
-	/**
-	 * Stores to a datafile
-	 *
-	 * @param filename
-	 *            void serialize(String filename) { try { for(int i = 0; i <
-	 *            projectTree.getRowCount(); i++) { TreePath path =
-	 *            projectTree.getPathForRow(i); ProjectTreeNode node =
-	 *            (ProjectTreeNode)path.getLastPathComponent(); if(node
-	 *            instanceof DataSetSubNode) { DataSetSubNode dNode =
-	 *            (DataSetSubNode)node; if(dNode._aDataSet instanceof PatternDB) {
-	 *            PatternDB patternDB = (PatternDB)dNode._aDataSet;
-	 *            if(patternDB.getFile() == null) { patternDB.write(); } } } }
-	 *            FileOutputStream f = new FileOutputStream(filename);
-	 *            ObjectOutput s = new ObjectOutputStream(f);
-	 *            s.writeObject(root); s.flush(); } catch (IOException ex) {
-	 *            log.error("Error: " + ex); } }
-	 */
 
 	/**
 	 * Reads from a datafile
@@ -1436,23 +1296,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		} else { // no result from grid server? let's delete this node!
 			removeCanceledNode(pnce.getGridEndpointReferenceType());
 		}
-	}
-
-	/**
-	 * Interface <code>ImageSnapshotListener</code> method for receiving
-	 * <code>ImageSnapshotEvent</code> from Visual Plugins. These events
-	 * contain <code>ImageIcon</code> representing visual state of the plugins
-	 * throwing this event.
-	 *
-	 * @param event
-	 *            <code>ImageSnapshotEvent</code>
-	 */
-	public void saveImage(ImageSnapshotEvent event) {
-		ImageData node = null;
-		node = new ImageData(null);
-		node.setImageIcon(event.getImage());
-		node.addDescription(event.getImage().getDescription());
-		addDataSetSubNode(node);
 	}
 
 	/**
@@ -2135,26 +1978,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 	}
 
-	/**
-	 * Adds the desiganted microarray set <code>maSet</code> as a child node
-	 * to the tree node <code>parent</code>. Makes the newly added node the
-	 * one currently selected.
-	 *
-	 * @param maSet
-	 *            The microarray set to add.
-	 * @param parent
-	 *            The parent tree node.
-	 */
-	protected void addMicroarrays(DSMicroarraySet maSet, ProjectTreeNode parent) {
-		if (projectTree == null || parent == null) {
-			return;
-		}
-		MicroarraySetNode node = new MicroarraySetNode(maSet);
-		projectTreeModel.insertNodeInto(node, parent, parent.getChildCount());
-		setNodeSelection(node);
-		fireNodeSelectionEvent(node);
-	}
-
 	private void updateColorContext(DSMicroarraySet maSet) {
 		ColorContext colorContext = (ColorContext) maSet
 				.getObject(ColorContext.class);
@@ -2230,34 +2053,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 	}
 
-	/**
-	 * Method for receiving Dataset annotations from the
-	 * <code>CommentsPane</code>
-	 *
-	 * @param ce
-	 *            <code>CommentsEventOld</code> thrown by
-	 *            <code>CommentsPane</code>
-	 */
-	// @Subscribe
-	// public void receive(org.geworkbench.events.CommentsEventOld ce, Object
-	// source) {
-	// // Do no bother if the comment change is not for currently selected
-	// // microarray set.
-	// if (ce == null || ce.getMicroarray() == null || !(selectedNode instanceof
-	// MicroarraySetNode) || projectRenderer.microarraySetNodeSelection == null
-	// || projectRenderer.microarraySetNodeSelection.getMicroarraySet() !=
-	// ce.getMicroarray()) {
-	// return;
-	// }
-	//
-	// // Otherwise, mark that the selected node had its comments modified. This
-	// // information will be needed in the method checkModifiedMASet(), in
-	// order
-	// // to decide if the microarray set should be persisted.
-	// DSMicroarraySet temp =
-	// projectRenderer.microarraySetNodeSelection.getMicroarraySet();
-	// temp.addNameValuePair(COMMENTS_MODIFIED, new Boolean(true));
-	// }
 	/**
 	 * Method for receiving <code>TableChangeEvent</code> from the
 	 * <code>TabularView</code> widget. This event contains dataset as altered
@@ -2583,7 +2378,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * application's <code>JMenuBar</code> through the application
 	 * configuration functionality
 	 */
-	protected HashMap listeners = new HashMap();
+	protected HashMap<String, ActionListener> listeners = new HashMap<String, ActionListener>();
 
 	protected void jbInit() throws Exception {
 		ActionListener listener = null;
@@ -2797,69 +2592,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	}
 
 	@Script
-	public void loadDataSet(String filename, FileFormat inputFormat)
-			throws Exception {
-		File[] dataSetFiles = new File[1];
-		dataSetFiles[0] = new File(filename);
-		if (inputFormat instanceof DataSetFileFormat) {
-			progressBar.setStringPainted(true);
-			progressBar.setString("Loading");
-			progressBar.setIndeterminate(true);
-			jDataSetPanel.setCursor(Cursor
-					.getPredefinedCursor(Cursor.WAIT_CURSOR));
-			DSDataSet dataSet;
-			if (dataSetFiles.length == 1) {
-				dataSet = ((DataSetFileFormat) inputFormat)
-						.getDataFile(dataSetFiles[0]);
-			} else {
-				dataSet = ((DataSetFileFormat) inputFormat)
-						.getDataFile(dataSetFiles);
-			}
-			if (dataSet instanceof DSMicroarraySet) {
-				addColorContext((DSMicroarraySet) dataSet);
-			}
-			progressBar.setString("");
-			progressBar.setIndeterminate(false);
-			jDataSetPanel.setCursor(Cursor
-					.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-
-			// If everything went OK, register the newly created microarray set.
-			if (dataSet != null) {
-				// String directory = dataSetFile.getPath();
-				// log.info("data set parsed");
-				jNewProjectItem_actionPerformed(null);
-				addDataSetNode(dataSet, true);
-			} else {
-				log.info("Could not load file: " + dataSetFiles);
-			}
-		} else {
-			// super.fileOpenAction(dataSetFiles, inputFormat);
-		}
-	}
-
-	@Script
 	public DSDataSet getDataSet() {
 		return selection.getDataSet();
-	}
-
-	@Script
-	public void addDataSetNode(DSDataSet dataSet) {
-		if (dataSet instanceof DSAncillaryDataSet) {
-			addDataSetSubNode((DSAncillaryDataSet) dataSet);
-		} else {
-			addDataSetNode(dataSet, true);
-		}
-	}
-
-	@Script
-	public void setcaArrayServer(String url, int portnumber) {
-		loadData.setCaARRAYServer(url, portnumber);
-	}
-
-	@Script
-	public boolean connectcaArray(String username, String password) {
-		// loadData.setCaARRAYServer(url, portnumber);
-		return false;
 	}
 
 	@Publish
