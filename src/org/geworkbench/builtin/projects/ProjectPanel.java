@@ -3,10 +3,7 @@ package org.geworkbench.builtin.projects;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.Image;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -53,6 +50,7 @@ import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.views.CSMicroarraySetView;
+import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.APSerializable;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
@@ -138,7 +136,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	// Initialize default icons
 
-	protected LoadData loadData = new LoadData(this);
+	private LoadData loadData = new LoadData(this);
 
 	private ProjectSelection selection = new ProjectSelection(this);
 
@@ -159,9 +157,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	private JPopupMenu pendingMenu = new JPopupMenu();
 
-	protected JProgressBar progressBar = new JProgressBar();
-
-	private JMenuItem jMenuItem1 = new JMenuItem();
+	JProgressBar progressBar = new JProgressBar();
 
 	private JMenuItem jRemoveProjectItem = new JMenuItem();
 
@@ -180,8 +176,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	private JMenuItem jSaveMenuItem = new JMenuItem();
 
 	private JMenuItem jRenameMenuItem = new JMenuItem();
-
-	private JFileChooser jFileChooser1;
 
 	/*
 	 * enforce ProjectPanel to be singleton: 'regular' method of making
@@ -217,18 +211,14 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		RandomNumberGenerator.setSeed(System.currentTimeMillis());
 
 		try {
-			jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		try {
-			jbInit1();
+			initializeSwingComponents();
+			initializeMore();
+			
 			// Checks if a default workspace exists and loads it
 			File defaultWS = new File("./default.wsp");
 			if (defaultWS.exists()) {
 				deserialize(defaultWS.getName());
-				Enumeration children = root.children();
+				Enumeration<?> children = root.children();
 				while (children.hasMoreElements()) {
 					TreeNode node = (TreeNode) children.nextElement();
 					projectTree.expandPath(new TreePath(node));
@@ -241,34 +231,16 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		INSTANCE = this;
 	}
 
-	/**
-	 * Standard Initialization routing needed by JBuilder
-	 *
-	 * @throws java.lang.Exception
-	 */
-	protected void jbInit1() throws Exception {
+	private void initializeMore() {
 
-		jMenuItem1.setText("Load Patterns");
-		jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				// jMenuItem1_actionPerformed(e);
-			}
-		});
-		jMArrayMenu.add(jMenuItem1);
-
-		jDataSetPanel.add(progressBar, BorderLayout.SOUTH);
-		/**
-		 * added by XQ
-		 */
-		jFileChooser1 = new JFileChooser();
 		jSaveMenuItem.setText("Save");
-		jRenameMenuItem.setText("Rename");
 		jSaveMenuItem.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveNodeAsFile();
 			}
 		});
 
+		jRenameMenuItem.setText("Rename");
 		jRenameMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				jRenameDataset_actionPerformed(e);
@@ -306,7 +278,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		jEditItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (selection.getSelectedNode() instanceof DataSetNode) {
-					DSDataSet ds = selection.getDataSet();
+					DSDataSet<? extends DSBioObject> ds = selection.getDataSet();
 
 					GlobalPreferences prefs = GlobalPreferences.getInstance();
 					String editor = prefs.getTextEditor();
@@ -368,11 +340,11 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		jViewAnnotations.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (selection.getSelectedNode() instanceof DataSetNode) {
-					DSDataSet ds = selection.getDataSet();
+					DSDataSet<? extends DSBioObject> ds = selection.getDataSet();
 					if (!(ds instanceof CSMicroarraySet)) {
 						return;
 					}
-					CSMicroarraySet microarraySet = (CSMicroarraySet) ds;
+					CSMicroarraySet<? extends DSMicroarray> microarraySet = (CSMicroarraySet<? extends DSMicroarray>) ds;
 					String annotationFileName = microarraySet
 							.getAnnotationFileName();
 					if (annotationFileName == null) {
@@ -428,7 +400,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		jProjectMenu.add(jRemoveProjectItem);
 	}
 
-	public void populateFromSaveTree(SaveTree saveTree) {
+	void populateFromSaveTree(SaveTree saveTree) {
 		java.util.List<DataSetSaveNode> projects = saveTree.getNodes();
 		ProjectTreeNode selectedNode = null;
 		Collection<GridEndpointReferenceType> pendingGridEprs = new HashSet<GridEndpointReferenceType>();
@@ -446,7 +418,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				 */
 				publishDirtyDataEvent(new DirtyDataEvent());
 				setComponents(dataNode);
-				DSDataSet dataSet = dataNode.getDataSet();
+				DSDataSet<? extends DSBioObject> dataSet = dataNode.getDataSet();
 				dataSet.setExperimentInformation(dataNode.getDescription());
 				/* pending node */
 				if (dataSet.getLabel() != null
@@ -492,12 +464,12 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 										String.class.getName()), history, true);
 						pendingGridEprs.add(pendingGridEpr);
 					} else {
-						DSAncillaryDataSet ancSet = null;
+						DSAncillaryDataSet<? extends DSBioObject> ancSet = null;
 
 						if (ancNode.getDataSet() instanceof ImageData) {
 							ancSet = (ImageData) ancNode.getDataSet();
 						} else {
-							ancSet = (DSAncillaryDataSet) ancNode.getDataSet();
+							ancSet = (DSAncillaryDataSet<? extends DSBioObject>) ancNode.getDataSet();
 						}
 
 						ancSet.setExperimentInformation(ancNode
@@ -608,7 +580,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			} else if (ds instanceof DataSetSubNode) {
 				DataSetSubNode dataSetSubNode = (DataSetSubNode) ds;
 				if (dataSetSubNode._aDataSet instanceof CSTTestResultSet) {
-					CSTTestResultSet tTestResultSet = (CSTTestResultSet) dataSetSubNode._aDataSet;
+					CSTTestResultSet<? extends DSGeneMarker> tTestResultSet = (CSTTestResultSet<? extends DSGeneMarker>) dataSetSubNode._aDataSet;
 					tTestResultSet.saveDataToCSVFile();
 				} else
 					saveAsFile();
@@ -622,9 +594,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		Object mSetSelected = projectTree.getSelectionPath()
 				.getLastPathComponent();
 		if (mSetSelected != null && mSetSelected instanceof DataSetNode) {
-			DSDataSet ds = ((DataSetNode) mSetSelected).dataFile;
+			DSDataSet<? extends DSBioObject> ds = ((DataSetNode) mSetSelected).dataFile;
 			File f = ds.getFile();
-			jFileChooser1 = new JFileChooser(f);
+			JFileChooser jFileChooser1 = new JFileChooser(f);
 			jFileChooser1.setSelectedFile(f);
 			CustomFileFilter filter = SaveFileFilterFactory.createFilter(ds);
 			jFileChooser1.setFileFilter(filter);
@@ -667,9 +639,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			}
 		} else if (mSetSelected != null
 				&& mSetSelected instanceof DataSetSubNode) {
-			DSDataSet ds = ((DataSetSubNode) mSetSelected)._aDataSet;
+			DSDataSet<? extends DSBioObject> ds = ((DataSetSubNode) mSetSelected)._aDataSet;
 			File f = ds.getFile();
-			jFileChooser1 = new JFileChooser(f);
+			JFileChooser jFileChooser1 = new JFileChooser(f);
 			jFileChooser1.setSelectedFile(f);
 
 			// Use the SAVE version of the dialog, test return for
@@ -726,15 +698,14 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/**
 	 * Inserts a new data set as a new node in the project tree. The node is a
-	 * child of the curently selected project
+	 * child of the currently selected project
 	 *
 	 * @param _dataSet
 	 */
-	public void addDataSetNode(DSDataSet _dataSet, boolean select) {
+	void addDataSetNode(DSDataSet<? extends DSBioObject> _dataSet, boolean select) {
 		// Retrieve the project node for this node
 		ProjectNode pNode = selection.getSelectedProjectNode();
-		if (pNode == null) {
-		}
+
 		if (pNode != null) {
 			// Inserts the new node and sets the menuNode and other variables to
 			// point to it
@@ -745,7 +716,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 			// add to history
 			if (_dataSet instanceof CSMicroarraySet) {
-				CSMicroarraySet microarraySet = (CSMicroarraySet) _dataSet;
+				CSMicroarraySet<? extends DSMicroarray> microarraySet = (CSMicroarraySet<? extends DSMicroarray>) _dataSet;
 				String annotationFileName = microarraySet
 						.getAnnotationFileName();
 
@@ -799,7 +770,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 *
 	 * @param _dataSet
 	 */
-	public PendingTreeNode addPendingNode(GridEndpointReferenceType gridEpr,
+	private PendingTreeNode addPendingNode(GridEndpointReferenceType gridEpr,
 			String description, String history, boolean startNewThread) {
 		// Retrieve the project node for this node
 		ProjectTreeNode pNode = selection.getSelectedNode();
@@ -822,8 +793,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		return node;
 	}
 
-	public void addCompletedNode(GridEndpointReferenceType gridEpr,
-			DSDataSet dataSet) {
+	private void addCompletedNode(GridEndpointReferenceType gridEpr,
+			DSDataSet<? extends DSBioObject> dataSet) {
 		PendingTreeNode node = eprPendingNodeMap.get(gridEpr);
 		if (node != null) {
 			if (dataSet != null) {
@@ -843,8 +814,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 	}
 
-	public void addCompletedNode(GridEndpointReferenceType gridEpr,
-			DSAncillaryDataSet ancillaryDataSet) {
+	private void addCompletedNode(GridEndpointReferenceType gridEpr,
+			DSAncillaryDataSet<? extends DSBioObject> ancillaryDataSet) {
 		PendingTreeNode node = eprPendingNodeMap.get(gridEpr);
 		String history = node.getDescription();
 		boolean pendingNodeFocused = false;
@@ -863,7 +834,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				projectTreeModel.removeNodeFromParent(node);
 				// FIXME: we should check if parent is a DataSetNode or not,
 				// before casting. If not we should find a way to deal with it.
-				((CSAncillaryDataSet) ancillaryDataSet)
+				((CSAncillaryDataSet<? extends DSBioObject>) ancillaryDataSet)
 						.setParent(((DataSetNode) parent).dataFile);
 				DataSetSubNode newNode = new DataSetSubNode(ancillaryDataSet);
 				projectTreeModel.insertNodeInto(newNode, parent, index);
@@ -902,7 +873,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 	}
 
-	public void removeCanceledNode(GridEndpointReferenceType gridEpr) {
+	private void removeCanceledNode(GridEndpointReferenceType gridEpr) {
 		PendingTreeNode node = eprPendingNodeMap.get(gridEpr);
 		if (node != null) {
 			ProjectTreeNode parent = (ProjectTreeNode) node.getParent();
@@ -915,16 +886,15 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 	}
 
-	@Script
 	/**
 	 *
 	 * @param pnode
 	 * @param parentData
 	 * @return
 	 */
-	public DataSetNode getMatchNode(ProjectTreeNode pnode, DSDataSet parentData) {
+	private DataSetNode getMatchNode(ProjectTreeNode pnode, DSDataSet<? extends DSBioObject> parentData) {
 
-		DSDataSet dNodeFile = null;
+		DSDataSet<? extends DSBioObject> dNodeFile = null;
 		if ((pnode instanceof DataSetNode)) {
 			dNodeFile = ((DataSetNode) pnode).dataFile;
 
@@ -932,7 +902,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		if ((dNodeFile != null && dNodeFile.hashCode() == parentData.hashCode())) {
 			return (DataSetNode) pnode;
 		} else if (pnode != null) {
-			Enumeration children = pnode.children();
+			Enumeration<?> children = pnode.children();
 			while (children.hasMoreElements()) {
 				Object obj = children.nextElement();
 				if (getMatchNode((ProjectTreeNode) obj, parentData) != null) {
@@ -947,47 +917,19 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	}
 
 	/**
-	 * @param pnode
-	 * @param fastaFilename
-	 * @return
-	 */
-	public DataSetNode getMatchNode(ProjectTreeNode pnode, File fastaFilename) {
-
-		// if (_ancDataSet instanceof BlastDataSet) {
-		// fastaFilename = ( (BlastDataSet) _ancDataSet).getFastaFile();
-		if ((pnode instanceof DataSetNode)
-				&& ((((DataSetNode) pnode).dataFile.getFile())
-						.equals(fastaFilename))) {
-			return (DataSetNode) pnode;
-		} else if (pnode != null) {
-			Enumeration children = pnode.children();
-			while (children.hasMoreElements()) {
-				Object obj = children.nextElement();
-				if (getMatchNode((ProjectTreeNode) obj, fastaFilename) != null) {
-
-					return getMatchNode((ProjectTreeNode) obj, fastaFilename);
-				}
-			}
-
-		}
-
-		return null;
-	}
-
-	/**
 	 * Inserts a new ancillary data set as a new node in the project tree. The
-	 * node is a child of the curently selected data set
+	 * node is a child of the currently selected data set
 	 *
 	 * @param _ancDataSet
 	 */
-	private void addDataSetSubNode(DSAncillaryDataSet _ancDataSet) {
+	private void addDataSetSubNode(DSAncillaryDataSet<? extends DSBioObject> _ancDataSet) {
 		DataSetNode dNode = selection.getSelectedDataSetNode();
 		DataSetNode matchedDNode = null;
-		DSDataSet parentSet = _ancDataSet.getParentDataSet();
+		DSDataSet<? extends DSBioObject> parentSet = _ancDataSet.getParentDataSet();
 		if (parentSet != null) {
 			if (dNode != null) {
 
-				DSDataSet dNodeFile = dNode.dataFile;
+				DSDataSet<? extends DSBioObject> dNodeFile = dNode.dataFile;
 				if (dNodeFile.hashCode() == parentSet.hashCode()) {
 					_ancDataSet.setDataSetFile(dNode.dataFile.getFile());
 
@@ -1011,11 +953,11 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		_ancDataSet.setDataSetFile(dNode.dataFile.getFile());
 		// Makes sure that we do not already have an exact instance of this
 		// ancillary file
-		Enumeration children = dNode.children();
+		Enumeration<?> children = dNode.children();
 		while (children.hasMoreElements()) {
 			Object obj = children.nextElement();
 			if (obj instanceof DataSetSubNode) {
-				DSAncillaryDataSet ads = ((DataSetSubNode) obj)._aDataSet;
+				DSAncillaryDataSet<? extends DSBioObject> ads = ((DataSetSubNode) obj)._aDataSet;
 				if (_ancDataSet.equals(ads)) {
 					return;
 				}
@@ -1096,7 +1038,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 *
 	 * @param e
 	 */
-	protected void jProjectTree_mouseClicked(MouseEvent e) {
+	private void jProjectTree_mouseClicked(MouseEvent e) {
 
 		TreePath path = projectTree.getSelectionPath();
 		if (path != null) {
@@ -1145,7 +1087,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 *
 	 * @param e
 	 */
-	protected void jProjectTree_mouseReleased(MouseEvent e) {
+	private void jProjectTree_mouseReleased(MouseEvent e) {
 		TreePath path = projectTree.getPathForLocation(e.getX(), e.getY());
 		TreePath[] paths = projectTree.getSelectionPaths();
 		if (path != null) {
@@ -1213,7 +1155,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 *
 	 * @param e
 	 */
-	protected void jProjectTree_keyReleased(KeyEvent e) {
+	private void jProjectTree_keyReleased(KeyEvent e) {
 		TreePath path = projectTree.getSelectionPath();
 		if ((e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_UP)
 				&& path != null) {
@@ -1231,7 +1173,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 *
 	 * @param e
 	 */
-	protected void jProjectTree_keyReleased() {
+	private void jProjectTree_keyReleased() {
 
 		TreePath path = projectTree.getSelectionPath();
 
@@ -1260,11 +1202,11 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	@Subscribe
 	public void receive(org.geworkbench.events.ProjectNodeAddedEvent pnae,
 			Object source) {
-		DSDataSet dataSet = pnae.getDataSet();
+		DSDataSet<? extends DSBioObject> dataSet = pnae.getDataSet();
 		if (dataSet instanceof DSMicroarraySet) {
-			addColorContext((DSMicroarraySet) dataSet);
+			addColorContext((DSMicroarraySet<? extends DSMicroarray>) dataSet);
 		}
-		DSAncillaryDataSet ancillaryDataSet = pnae.getAncillaryDataSet();
+		DSAncillaryDataSet<? extends DSBioObject> ancillaryDataSet = pnae.getAncillaryDataSet();
 		if (dataSet != null) {
 			addDataSetNode(dataSet, true);
 		} else if (ancillaryDataSet != null) {
@@ -2325,17 +2267,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 */
 	protected JPanel jProjectPanel = new JPanel();
 
-	protected JPanel jDataSetPanel = new JPanel();
-
-	protected BorderLayout borderLayout2 = new BorderLayout();
-
-	protected BorderLayout borderLayout4 = new BorderLayout();
-
-	protected GridBagLayout gridBagLayout3 = new GridBagLayout();
-
-	protected JPanel jDataPane = new JPanel();
-
-	protected JLabel jDataSetLabel = new JLabel();
+	private JLabel projectPanelTitleLabel = new JLabel("Project Folders");
 
 	protected JScrollPane jDataSetScrollPane = new JScrollPane();
 
@@ -2352,8 +2284,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	protected JPopupMenu jRootMenu = new JPopupMenu();
 
 	protected JPopupMenu jProjectMenu = new JPopupMenu();
-
-	protected JPopupMenu jMArrayMenu = new JPopupMenu();
 
 	protected JMenuItem jLoadProjectItem = new JMenuItem();
 
@@ -2380,15 +2310,14 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 */
 	protected HashMap<String, ActionListener> listeners = new HashMap<String, ActionListener>();
 
-	protected void jbInit() throws Exception {
+	private void initializeSwingComponents() {
+		projectPanelTitleLabel.setBorder(BorderFactory.createEtchedBorder());
+		projectPanelTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		
 		ActionListener listener = null;
-		jDataSetPanel.setLayout(borderLayout4);
-		jDataPane.setLayout(gridBagLayout3);
 		jDataSetScrollPane.setBorder(BorderFactory.createLoweredBevelBorder());
 		jDataSetScrollPane.setMinimumSize(new Dimension(122, 80));
-		jDataSetLabel.setBorder(BorderFactory.createEtchedBorder());
-		jDataSetLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		jDataSetLabel.setText("Project Folders");
+		
 		ToolTipManager.sharedInstance().registerComponent(projectTree);
 		projectTree.setCellRenderer(projectRenderer);
 		projectTree.getSelectionModel().setSelectionMode(
@@ -2411,17 +2340,16 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		};
 		listeners.put("Edit.Rename.File", listener);
 		jRenameDataset.addActionListener(listener);
-		jDataPane.add(jDataSetPanel, new GridBagConstraints(0, 0, 1, 1, 0.5,
-				1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH,
-				new Insets(0, 0, 0, 0), 0, 0));
-		jDataSetPanel.add(jDataSetLabel, BorderLayout.NORTH);
-		jDataSetPanel.add(jDataSetScrollPane, BorderLayout.CENTER);
+
+		jProjectPanel.setLayout(new BorderLayout());
+		jProjectPanel.add(projectPanelTitleLabel, BorderLayout.NORTH);
+		jProjectPanel.add(jDataSetScrollPane, BorderLayout.CENTER);
+		jProjectPanel.add(progressBar, BorderLayout.SOUTH);
+		//jProjectPanel.setName("Projects"); // no use
+
 		projectTree.setBorder(new EmptyBorder(1, 1, 0, 0));
 		jDataSetScrollPane.getViewport().add(projectTree, null);
-		jDataSetPanel.add(jDataSetScrollPane, BorderLayout.CENTER);
-		jProjectPanel.setLayout(borderLayout2);
-		jProjectPanel.add(jDataPane, BorderLayout.CENTER);
-		jProjectPanel.setName("Projects");
+
 		jNewProjectItem.setText("New Project");
 		listener = new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -2466,8 +2394,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		jProjectMenu.add(jOpenRemotePDBItem);
 		jProjectMenu.addSeparator();
 		jProjectMenu.add(jRenameProjectItem);
-		jMArrayMenu.add(jMergeDatasets);
-		jMArrayMenu.add(jRenameDataset);
+
 		projectTree.addMouseListener(new java.awt.event.MouseAdapter() {
 
 			public void mouseReleased(MouseEvent e) {

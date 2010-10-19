@@ -72,7 +72,7 @@ public class FileOpenHandler {
 		enclosingProjectPanel.progressBar.setStringPainted(true);
 		enclosingProjectPanel.progressBar.setString("Loading");
 		enclosingProjectPanel.progressBar.setIndeterminate(true);
-		enclosingProjectPanel.jDataSetPanel.setCursor(Cursor
+		enclosingProjectPanel.getComponent().setCursor(Cursor
 				.getPredefinedCursor(Cursor.WAIT_CURSOR));
 	}
 
@@ -171,7 +171,7 @@ public class FileOpenHandler {
 				// files, but UI should show canceled
 				enclosingProjectPanel.progressBar.setString("");
 				enclosingProjectPanel.progressBar.setIndeterminate(false);
-				enclosingProjectPanel.jDataSetPanel.setCursor(Cursor
+				enclosingProjectPanel.getComponent().setCursor(Cursor
 						.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
 				dispose();
@@ -201,7 +201,7 @@ public class FileOpenHandler {
 		 * (non-Javadoc)
 		 * @see org.geworkbench.util.threading.SwingWorker#done()
 		 */
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings("rawtypes")
 		@Override
 		protected void done() {
 
@@ -242,17 +242,17 @@ public class FileOpenHandler {
 			pb.dispose();
 			enclosingProjectPanel.progressBar.setString("");
 			enclosingProjectPanel.progressBar.setIndeterminate(false);
-			enclosingProjectPanel.jDataSetPanel.setCursor(Cursor
+			enclosingProjectPanel.getComponent().setCursor(Cursor
 					.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
 
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings("rawtypes")
 		private DSDataSet[] dataSets = null;
 		/*
 		 * (non-Javadoc)
 		 * @see org.geworkbench.util.threading.SwingWorker#doInBackground()
 		 */
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings({ "unchecked", "rawtypes" })
 		@Override
 		protected Void doInBackground() throws Exception {
 			int n = dataSetFiles.length;
@@ -281,7 +281,7 @@ public class FileOpenHandler {
 				 catch (InterruptedIOException ie) {
 				       enclosingProjectPanel.progressBar.setString("");					   
 					   enclosingProjectPanel.progressBar.setIndeterminate(false);
-					   enclosingProjectPanel.jDataSetPanel.setCursor(Cursor
+					   enclosingProjectPanel.getComponent().setCursor(Cursor
 							.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 				       if ( ie.getMessage().equals("progress"))
 					        return null;
@@ -342,14 +342,14 @@ public class FileOpenHandler {
 										JOptionPane.ERROR_MESSAGE);
 						enclosingProjectPanel.progressBar.setString("");
 						enclosingProjectPanel.progressBar.setIndeterminate(false);
-						enclosingProjectPanel.jDataSetPanel.setCursor(Cursor
+						enclosingProjectPanel.getComponent().setCursor(Cursor
 								.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 						return null;
 					} // end of for loop
 				    catch (InterruptedIOException ie) {
 				       enclosingProjectPanel.progressBar.setString("");					   
 					   enclosingProjectPanel.progressBar.setIndeterminate(false);
-					   enclosingProjectPanel.jDataSetPanel.setCursor(Cursor
+					   enclosingProjectPanel.getComponent().setCursor(Cursor
 							.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 				       if ( ie.getMessage().equals("progress"))
 					        return null;
