@@ -770,7 +770,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 *
 	 * @param _dataSet
 	 */
-	private PendingTreeNode addPendingNode(GridEndpointReferenceType gridEpr,
+	public PendingTreeNode addPendingNode(GridEndpointReferenceType gridEpr,
 			String description, String history, boolean startNewThread) {
 		// Retrieve the project node for this node
 		ProjectTreeNode pNode = selection.getSelectedNode();
@@ -1212,15 +1212,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		} else if (ancillaryDataSet != null) {
 			addDataSetSubNode(ancillaryDataSet);
 		}
-	}
-
-	@Subscribe
-	public void receive(org.geworkbench.events.ProjectNodePendingEvent ppne,
-			Object source) {
-		// FIXME why would we pass the source. Nothing is done with it! See
-		// method above
-		addPendingNode(ppne.getGridEndpointReferenceType(), ppne
-				.getDescription(), ppne.getHistory(), false);
 	}
 
 	@Subscribe
