@@ -1209,7 +1209,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 *
 	 * @param e
 	 */
-	protected void jLoadMArrayItem_actionPerformed(ActionEvent e) {
+	private void jLoadMArrayItem_actionPerformed(ActionEvent e) {
 		// Proceed only if there is a single node selected and that node
 		// is a project node.
 		if (projectTree.getSelectionCount() != 1
@@ -1239,7 +1239,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 *
 	 * @param e
 	 */
-	protected void jOpenRemotePDBItem_actionPerformed(ActionEvent e) {
+	private void jOpenRemotePDBItem_actionPerformed(ActionEvent e) {
 		// Proceed only if there is a single node selected and that node
 		// is a project node.
 		if (projectTree.getSelectionCount() != 1
@@ -1260,9 +1260,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * @param e
 	 *            <code>ActionEvent</code>
 	 */
-	protected void jMergeDatasets_actionPerformed(ActionEvent e) {
+	private void jMergeDatasets_actionPerformed(ActionEvent e) {
 		TreePath[] selections;
-		DSMicroarraySet[] sets = null;
+
 		MutableTreeNode node = null;
 		Object parentProject = null;
 		TreePath sibling = null;
@@ -1270,7 +1270,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		int i;
 		// Obtain the selected project tree nodes.
 		selections = projectTree.getSelectionPaths();
-		sets = new DSMicroarraySet[count];
+		DSMicroarraySet<? extends DSMicroarray>[] sets = new DSMicroarraySet[count];
 		// Check that the user has designated only microarray set nodes and that
 		// all microarray sets are from the same project.
 		// Also, identify the node that will become the parent of the new,
@@ -1282,7 +1282,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			if (node instanceof DataSetNode) {
 				try {// Provide fix for bug 666, only merge
 					// Microarraydatasets.
-					sets[i] = (DSMicroarraySet) ((DataSetNode) node).dataFile;
+					sets[i] = (DSMicroarraySet<? extends DSMicroarray>) ((DataSetNode) node).dataFile;
 					if (sibling == null
 							|| sibling.getPathCount() > selections[i]
 									.getPathCount()) {
@@ -1337,14 +1337,14 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * @param sets
 	 * @return
 	 */
-	private static boolean isSameMarkerSets(DSMicroarraySet[] sets) {
+	private static boolean isSameMarkerSets(DSMicroarraySet<? extends DSMicroarray>[] sets) {
 		if (sets == null || sets.length <= 1)
 			return true;
 
-		HashSet set1 = new HashSet();
+		HashSet<DSGeneMarker> set1 = new HashSet<DSGeneMarker>();
 		set1.addAll(sets[0].getMarkers());
 
-		HashSet set2 = new HashSet();
+		HashSet<DSGeneMarker> set2 = new HashSet<DSGeneMarker>();
 		for (int i = 1; i < sets.length; i++) {
 			set2.clear();
 			set2.addAll(sets[i].getMarkers());
@@ -1359,7 +1359,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 *
 	 * @param sets
 	 */
-	public void doMergeSets(DSMicroarraySet[] sets) {
+	public void doMergeSets(DSMicroarraySet<? extends DSMicroarray>[] sets) {
 		if (!isSameMarkerSets(sets)) {
 			JOptionPane
 					.showMessageDialog(
@@ -1369,13 +1369,13 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 							JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
-		DSMicroarraySet mergedSet = null;
+		DSMicroarraySet<DSMicroarray> mergedSet = null;
 		int i;
 		DSMicroarraySet<DSMicroarray> set;
 		if (sets != null) {
 			String desc = "Merged DataSet: ";
 			for (i = 0; i < sets.length; i++) {
-				set = sets[i];
+				set = (DSMicroarraySet<DSMicroarray>)sets[i];
 				if (mergedSet == null) {
 					try {
 						mergedSet = set.getClass().newInstance();
@@ -1430,14 +1430,14 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				mergedSet.setLabel("Merged array set");
 				mergedSet.setLabel(desc);
 				mergedSet.addDescription(desc);
-				((CSMicroarraySet)mergedSet).setAnnotationFileName(
-						((CSMicroarraySet)sets[0]).getAnnotationFileName());
+				((CSMicroarraySet<? extends DSMicroarray>)mergedSet).setAnnotationFileName(
+						((CSMicroarraySet<? extends DSMicroarray>)sets[0]).getAnnotationFileName());
 			}
 			// Add color context
 			addColorContext(mergedSet);
 
 			// Add the new dataset to the project tree.
-			addDataSetNode((DSDataSet) mergedSet, true);
+			addDataSetNode((DSDataSet<? extends DSBioObject>) mergedSet, true);
 		}
 	}
 
@@ -1452,7 +1452,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * @throws org.geworkbench.parsers.InputFileFormatException
 	 *
 	 */
-	public void fileOpenAction(final File[] dataSetFiles,
+	void fileOpenAction(final File[] dataSetFiles,
 			final org.geworkbench.parsers.FileFormat inputFormat,
 			boolean merge)
 			throws org.geworkbench.parsers.InputFileFormatException,
@@ -1469,7 +1469,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 	}
 
-	protected void addColorContext(DSMicroarraySet maSet) {
+	void addColorContext(DSMicroarraySet<? extends DSMicroarray> maSet) {
 		GlobalPreferences prefs = GlobalPreferences.getInstance();
 		Class<? extends ColorContext> type = prefs.getColorContextClass();
 		try {
@@ -1488,7 +1488,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 *
 	 * @param e
 	 */
-	protected void jRenameProjectItem_actionPerformed(ActionEvent e) {
+	private void jRenameProjectItem_actionPerformed(ActionEvent e) {
 		if (projectTree == null || selection == null
 				|| (selection.areNodeSelectionsCleared())
 				|| selection.getSelectedProjectNode() == null) {
