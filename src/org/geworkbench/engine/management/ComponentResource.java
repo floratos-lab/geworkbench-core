@@ -22,6 +22,7 @@ import java.util.List;
  * {@link org.geworkbench.engine.config.VisualPlugin}.
  *
  * @author John Watkinson
+ * @version $Id$
  */
 public class ComponentResource {
 
@@ -92,6 +93,14 @@ public class ComponentResource {
             log.debug("Adding " + baseURL + " to classpath.");
             urls.add(baseURL);
         }
+        // add jar file directory under component directory (typically one)
+        File componentDirectory = new File(dir);
+        File[] jarFiles = componentDirectory.listFiles();
+        for (File file: jarFiles) {
+            if (!file.isDirectory() && file.getName().toLowerCase().endsWith(".jar")) {
+            	urls.add(file.toURI().toURL());
+            }
+        }
 
         // Add conf dir if it exists
         File confDir = new File(dir + '/' + CONF_DIR);
@@ -110,7 +119,7 @@ public class ComponentResource {
                 if (!file.isDirectory()) {
                     String name = file.getName().toLowerCase();
                     if (name.endsWith(".jar") || name.endsWith(".zip") || name.endsWith(".xsd") || name.endsWith(".xml") || name.endsWith(".dtd") || name.endsWith(".properties") || name.endsWith(".ccmproperties")|| name.endsWith(".dll")) {
-                        log.debug("Adding " + file.toURL() + " to classpath.");
+                        // file.toURL() is obsolete
                         /* see http://www.jguru.com/faq/view.jsp?EID=1280051 */
                         urls.add(file.toURI().toURL());
                     }
