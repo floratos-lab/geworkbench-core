@@ -79,7 +79,6 @@ import org.geworkbench.events.CaArrayQueryResultEvent;
 import org.geworkbench.events.CaArrayRequestEvent;
 import org.geworkbench.events.CleanDataEvent;
 import org.geworkbench.events.CommentsEvent;
-import org.geworkbench.events.ComponentConfigurationManagerUpdateEvent;
 import org.geworkbench.events.DirtyDataEvent;
 import org.geworkbench.events.HistoryEvent;
 import org.geworkbench.events.ImageSnapshotEvent;
@@ -1506,15 +1505,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 	}
 
-	/**
-	 * Action listener handling user request to prune tree
-	 *
-	 * @param event
-	 */
-	@Subscribe
-	public void receive(ComponentConfigurationManagerUpdateEvent event,
-			Object source) {
-
+	public void ccmUpdate() {
 		GeawConfigObject.getGuiWindow().setVisualizationType(null);
 		if (root != null) {
 			// FIXME This almost works, but you need to click on the DataNode
@@ -1529,10 +1520,10 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 		DataSetNode selectedDataSetNode = selection.getSelectedDataSetNode();
 		String message = "CCM update";
-		DSMicroarraySet maSet = null;
+		DSMicroarraySet<? extends DSMicroarray> maSet = null;
 		if (selectedDataSetNode != null) {
 			if (selectedDataSetNode.dataFile instanceof DSMicroarraySet) {
-				maSet = (DSMicroarraySet) selectedDataSetNode.dataFile;
+				maSet = (DSMicroarraySet<? extends DSMicroarray>) selectedDataSetNode.dataFile;
 				publishProjectEvent(new ProjectEvent(message, maSet,
 						selectedDataSetNode));
 			} else {

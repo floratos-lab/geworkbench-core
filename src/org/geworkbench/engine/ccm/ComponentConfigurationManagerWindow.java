@@ -41,7 +41,6 @@ import javax.swing.RowFilter;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
@@ -52,7 +51,6 @@ import org.geworkbench.builtin.projects.ProjectPanel;
 import org.geworkbench.engine.ccm.PluginComponent.Category;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.management.ComponentRegistry;
-import org.geworkbench.events.ComponentConfigurationManagerUpdateEvent;
 import org.geworkbench.util.BrowserLauncher;
 import org.geworkbench.util.Util;
 
@@ -584,7 +582,6 @@ public class ComponentConfigurationManagerWindow {
 	 * @param ActionEvent
 	 * @return void
 	 */
-	@SuppressWarnings("unchecked")
 	private void applyCcmSelections_actionPerformed(ActionEvent e) {
 		Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
 		frame.setCursor(hourglassCursor);
@@ -631,15 +628,7 @@ public class ComponentConfigurationManagerWindow {
 		}
 		GeawConfigObject.recreateHelpSets();
 
-		ComponentRegistry componentRegistry = ComponentRegistry.getRegistry();
-		HashMap<Class, List<Class>> acceptors = componentRegistry
-				.getAcceptorsHashMap();
-		
-		ComponentConfigurationManagerUpdateEvent ccmEvent = new ComponentConfigurationManagerUpdateEvent(
-				acceptors);
-		
-		// TODO this has no need to use publish/receive mechanism and should be refactored.
-		ProjectPanel.getInstance().receive(ccmEvent, null);
+		ProjectPanel.getInstance().ccmUpdate();
 
 		setOriginalChoices();
 
@@ -719,22 +708,10 @@ public class ComponentConfigurationManagerWindow {
 				Object value, boolean isSelected, boolean hasFocus, int row,
 				int column) {
 			
-			int modelRow = table.convertRowIndexToModel(row);
-			Boolean selected = (Boolean) (table.getModel().getValueAt(modelRow, CCMTableModel.SELECTION_INDEX));
-
-			Component defaultComponent = defaultRenderer
-					.getTableCellRendererComponent(table, value, isSelected,
-							hasFocus, row, column);
 			Component c = super.getTableCellRendererComponent(table, value,
 					isSelected, hasFocus, row, column);
-//			if (selected) {
-//				c.setBackground(defaultComponent.getBackground().darker());
-//			} else {
-//				c.setBackground(defaultComponent.getBackground());
-//			}
 			return c;
 		}
-	    private static TableCellRenderer defaultRenderer = new DefaultTableCellRenderer();
 	}
 
 	static private class ImageLinkRenderer extends CellRenderer {
