@@ -152,15 +152,14 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 		progressBar.stop();
 		// ready for the next request
 		setOpenButtonEnabled(true);
-		
+
 		if (!ce.isPopulated()) {
 			String errorMessage = ce.getErrorMessage();
 			if (errorMessage == null) {
 				errorMessage = "Cannot connect with the server.";
 			}
 			if (!ce.isSucceed()) {
-				JOptionPane.showMessageDialog(null, "The error: "
-						+ errorMessage);
+				JOptionPane.showMessageDialog(null,errorMessage);
 				return;
 			} else {
 				JOptionPane.showMessageDialog(null, errorMessage);
@@ -357,13 +356,13 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 						if (i > 4) {
 							String htmltext = "<html>" + text + i / 4 + " seconds." + "<br>" + currentState +"</html>";
 							publish(htmltext);
-							
+
 						}
 					} while (stillWaitForConnecting);
 				}
 				return null;
 			}
-			
+
 			@Override
 			protected void process(List<String> list) {
 				  progressBar.setMessage(list.get(list.size() - 1));
@@ -426,7 +425,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 		if (qType != null) {
 			numCurrentArray = 0;
 			numTotalArrays = 0;
-			stillWaitForConnecting = true;						
+			stillWaitForConnecting = true;
 			progressBar
 					.setMessage(LOADING_SELECTED_BIOASSAYS_ELAPSED_TIME);
 			updateProgressBar(LOADING_SELECTED_BIOASSAYS_ELAPSED_TIME);
@@ -447,7 +446,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 		}
 
 	}
-	
+
 	public void setOpenButtonEnabled(boolean b){
 		openButton.setEnabled(b);
 	}
@@ -570,7 +569,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 
 			} else {
 				JOptionPane.showMessageDialog(null,
-						"There is no data associated with that experiment.");
+						"There is no data associated with experiment: " + exp.getName() );
 			}
 
 		} else {
@@ -759,12 +758,12 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 		log.error("Get Cancelled");
 
 		progressBar.dispose();
-		
+
 		CaARRAYPanel.cancelledConnectionInfo = CaARRAYPanel.createConnectonInfo( url, portnumber, user, passwd);
 		CaARRAYPanel.isCancelled = true;
 		// user can get next array now
 		setOpenButtonEnabled(true);
-		
+
 	}
 
 	public boolean isConnectionSuccess() {
@@ -853,7 +852,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 	// eventually will be in some utility class
 	public static volatile String cancelledConnectionInfo = null;
 	public static volatile boolean isCancelled = false;
-	
+
 	// refactored, not sure if needed at all
 	public static String createConnectonInfo(String url, int port, String username,
 			String password) {
