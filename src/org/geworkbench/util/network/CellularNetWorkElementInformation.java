@@ -176,14 +176,14 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 		smallestIncrement = smallestIncrementNumber;
 	}
 
-	public int[] getDistribution() {
+	public int[] getDistribution(List<String> displaySelectedInteractionTypes) {
 		int[] distribution = new int[binNumber];
 		for (int i = 0; i < binNumber; i++)
 			distribution[i] = 0;
 		if (interactionDetails == null || interactionDetails.length <= 0)
 			return distribution;
 		for (InteractionDetail interactionDetail : interactionDetails) {
-			if (interactionDetail != null) {
+			if (interactionDetail != null && displaySelectedInteractionTypes.contains(interactionDetail.getInteractionType())) {
 				int confidence = (int) (interactionDetail.getConfidence() * 100);
 				if (confidence < distribution.length && confidence >= 0) {
 					for (int i = 0; i <= confidence; i++)
