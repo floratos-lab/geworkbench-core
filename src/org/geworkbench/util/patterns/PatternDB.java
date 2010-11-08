@@ -31,14 +31,13 @@ import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeq
 public class PatternDB extends CSAncillaryDataSet<DSSequence> implements Serializable {
 	private static final long serialVersionUID = -902110075425415061L;
 	static Log log = LogFactory.getLog(PatternDB.class);
-	
+
     private List<DSMatchedSeqPattern> patterns = new ArrayList<DSMatchedSeqPattern>();
     private File dataSetFile;
 
-    // TODO it seems all the references of this constructor has the second parameter of null
     public PatternDB(File _seqFile, DSDataSet<DSSequence> parent) {
         super(parent, "PatternDB");
-        dataSetFile = new File(_seqFile.getName());
+        dataSetFile = _seqFile;
     }
 
     public boolean read(File _file) {
@@ -97,7 +96,7 @@ public class PatternDB extends CSAncillaryDataSet<DSSequence> implements Seriali
     public List<DSMatchedSeqPattern> getPatterns() {
     	return patterns;
     }
-    
+
     public int getPatternNo() {
         if (patterns == null) {
             patterns = new ArrayList<DSMatchedSeqPattern>();
