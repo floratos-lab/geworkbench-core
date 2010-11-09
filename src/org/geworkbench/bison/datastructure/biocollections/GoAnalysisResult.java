@@ -162,6 +162,11 @@ public class GoAnalysisResult extends CSAncillaryDataSet<CSMicroarray> {
 			return null;
 	}
 
+	public static boolean isAnnotationParsed() {
+		if(term2Gene.size()==0)return false;
+		else return true;
+	}
+	
 	/**
 	 * return the set of gene annotated to the given Go Term ID
 	 * @param goId
