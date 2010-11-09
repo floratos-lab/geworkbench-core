@@ -254,18 +254,4 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 		return dataSetView;
 	}
 
-    /**
-     * @return
-     */
-    public DSMicroarraySetView<DSGeneMarker, DSMicroarray> getMaSetView() {
-        return maSetView;
-    }
-
-    /**
-     * @param maSetView
-     */
-    public void setMaSetView( DSMicroarraySetView<DSGeneMarker, DSMicroarray> maSetView ) {
-        this.maSetView = maSetView;
-    }
-
 }
