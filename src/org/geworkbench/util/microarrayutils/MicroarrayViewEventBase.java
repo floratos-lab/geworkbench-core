@@ -242,14 +242,14 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public DSMicroarraySetView getDataSetView() {
+	private DSMicroarraySetView getDataSetView() {
 		DSMicroarraySetView dataSetView = new CSMicroarraySetView(this.refMASet);
 		if (activatedMarkers != null && activatedMarkers.panels().size() > 0)
 			dataSetView.setMarkerPanel(activatedMarkers);
 		if (activatedArrays != null && activatedArrays.panels().size() > 0 && activatedArrays.size() > 0)
 			dataSetView.setItemPanel(activatedArrays);
-		dataSetView.useMarkerPanel(onlyActivatedMarkers);
-		dataSetView.useItemPanel(onlyActivatedArrays);
+		dataSetView.useMarkerPanel(!chkAllMarkers.isSelected());
+		dataSetView.useItemPanel(!chkAllArrays.isSelected());
 
 		return dataSetView;
 	}
