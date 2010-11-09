@@ -30,10 +30,8 @@ import org.geworkbench.bison.datastructure.complex.panels.CSPanel;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.engine.config.VisualPlugin;
-import org.geworkbench.engine.management.Publish;
 import org.geworkbench.engine.management.Subscribe;
 import org.geworkbench.events.GeneSelectorEvent;
-import org.geworkbench.events.SubpanelChangedEvent;
 
 /**
  * @author unattributable
@@ -86,15 +84,6 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 		return mainPanel;
 	}
 
-	/**
-	 * @param event
-	 * @return SubpanelChangedEvent
-	 */
-	@Publish
-	public SubpanelChangedEvent publishSubpanelChangedEvent(
-			org.geworkbench.events.SubpanelChangedEvent event) {
-		return event;
-	}
 
 	/**
 	 * receiveProjectSelection
