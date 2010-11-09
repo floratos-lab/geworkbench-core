@@ -10,6 +10,7 @@ package org.geworkbench.util.microarrayutils;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -41,7 +42,7 @@ import org.geworkbench.events.SubpanelChangedEvent;
  */
 public abstract class MicroarrayViewEventBase implements VisualPlugin {
 
-	private Log log = LogFactory.getLog(this.getClass());
+	private Log log = LogFactory.getLog(MicroarrayViewEventBase.class);
 
 	/**
 	 * The reference microarray set.
@@ -218,12 +219,26 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 		BorderLayout borderLayout2 = new BorderLayout();
 		mainPanel.setLayout(borderLayout2);
 
-		chkAllMarkers
-				.addActionListener(new MicroarrayViewPanelBase_chkActivateMarkers_actionAdapter(
-						this));
-		chkAllArrays
-				.addActionListener(new MicroarrayViewPanelBase_chkShowArrays_actionAdapter(
-						this));
+		chkAllMarkers.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onlyActivatedMarkers = !chkAllMarkers.isSelected();
+				refreshMaSetView();
+				mainPanel.repaint();
+			}
+
+		});
+		chkAllArrays.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onlyActivatedArrays = !chkAllArrays.isSelected();
+				refreshMaSetView();
+				mainPanel.repaint();
+			}
+
+		});
 
 		jToolBar3.add(chkAllArrays, null);
 		jToolBar3.add(chkAllMarkers, null);
@@ -232,24 +247,6 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 
 		onlyActivatedMarkers = !chkAllMarkers.isSelected();
 		onlyActivatedArrays = !chkAllArrays.isSelected();
-	}
-
-	/**
-	 * @param e
-	 */
-	void chkShowArrays_actionPerformed(ActionEvent e) {
-		onlyActivatedArrays = !((JCheckBox) e.getSource()).isSelected();
-
-		refreshMaSetView();
-	}
-
-	/**
-	 * @param e
-	 */
-	void chkActivateMarkers_actionPerformed(ActionEvent e) {
-		onlyActivatedMarkers = !((JCheckBox) e.getSource()).isSelected();
-
-		refreshMaSetView();
 	}
 
 	/**
@@ -282,52 +279,4 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
         this.maSetView = maSetView;
     }
 
-}
-
-/**
- * @author unattributable
- */
-class MicroarrayViewPanelBase_chkShowArrays_actionAdapter implements
-		java.awt.event.ActionListener {
-
-	private Log log = LogFactory.getLog(this.getClass());
-
-	MicroarrayViewEventBase adaptee;
-
-	MicroarrayViewPanelBase_chkShowArrays_actionAdapter(
-			MicroarrayViewEventBase adaptee) {
-		this.adaptee = adaptee;
-	}
-
-	/**
-	 *
-	 */
-	public void actionPerformed(ActionEvent e) {
-		log.debug("ActionEvent " + e);
-		adaptee.chkShowArrays_actionPerformed(e);
-		adaptee.getComponent().repaint();
-	}
-}
-
-/**
- * @author unattributable
- */
-class MicroarrayViewPanelBase_chkActivateMarkers_actionAdapter implements
-		java.awt.event.ActionListener {
-
-	private Log log = LogFactory.getLog(this.getClass());
-
-	MicroarrayViewEventBase adaptee;
-
-	MicroarrayViewPanelBase_chkActivateMarkers_actionAdapter(
-			MicroarrayViewEventBase adaptee) {
-		this.adaptee = adaptee;
-	}
-
-	public void actionPerformed(ActionEvent e) {
-		log.debug("actionPerformed " + e);
-
-		adaptee.chkActivateMarkers_actionPerformed(e);
-		adaptee.getComponent().repaint();
-	}
 }
