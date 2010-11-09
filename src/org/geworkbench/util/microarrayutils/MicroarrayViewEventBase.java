@@ -62,7 +62,6 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 	protected DSPanel<DSGeneMarker> activatedMarkers = null;
 	protected DSItemList<? extends DSGeneMarker> uniqueMarkers = null;
 	protected DSPanel activatedArrays = null;
-	private boolean isPlotRefresh = false;
 
 	/**
 	 *
@@ -267,22 +266,6 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 		dataSetView.useItemPanel(onlyActivatedArrays);
 
 		return dataSetView;
-	}
-
-	/**
-	 *
-	 * @return
-	 */
-	public boolean isPlotRefresh() {
-		return isPlotRefresh;
-	}
-
-	/**
-	 *
-	 * @param isPlotRefresh
-	 */
-	public void setPlotRefresh(boolean isPlotRefresh) {
-		this.isPlotRefresh = isPlotRefresh;
 	}
 
     /**
