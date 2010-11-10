@@ -12,7 +12,6 @@ import java.util.concurrent.ExecutionException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileFilter;
 
 import org.apache.commons.logging.Log;
@@ -21,7 +20,9 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.A
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.properties.PropertiesManager;
-import org.geworkbench.util.ProgressBar;
+import org.geworkbench.util.ProgressDialog;
+import org.geworkbench.util.ProgressItem;
+import org.geworkbench.util.ProgressTask;
 
 /**
  * This class handles workspace's saving and opening: showing progress bar
@@ -42,7 +43,8 @@ public class WorkspaceHandler {
 		this.enclosingProjectPanel = enclosingProjectPanel;
 	}
 
-	ProgressBar pb = null;
+	ProgressDialog pdmodal = ProgressDialog.create(ProgressDialog.MODAL_TYPE);
+	ProgressDialog pdnonmodal = ProgressDialog.create(ProgressDialog.NONMODAL_TYPE);
 	
 	private String wsFilePath = "";
 
@@ -114,13 +116,9 @@ public class WorkspaceHandler {
 			}
 
 		    PanelFocusedListener wfl = new PanelFocusedListener();
-			SaveTask task = new SaveTask(wsFilename, terminating, wfl);
-			task.execute();
-			pb = ProgressBar.create(ProgressBar.INDETERMINATE_TYPE);
-			pb.setTitle("Workspace is being saved.");
-			pb.setModal(true);
-			pb.start();
-			
+			SaveTask task = new SaveTask(ProgressItem.INDETERMINATE_TYPE, "Workspace is being saved.", wsFilename, terminating, wfl);
+			pdmodal.executeTask(task);
+
 			wsFilePath = wsFilename;
 
 		}
@@ -169,13 +167,10 @@ public class WorkspaceHandler {
 				e.printStackTrace();
 			}
 
-			OpenTask openTask = new OpenTask(wsFilename);
-			openTask.execute();
-			pb = ProgressBar.create(ProgressBar.INDETERMINATE_TYPE);
-			pb.setTitle("Workspace is being loaded.");
-			pb.setAlwaysOnTop(true);
-			pb.start();
-			
+			pdnonmodal.cancelAllTasks();
+			OpenTask openTask = new OpenTask(ProgressItem.INDETERMINATE_TYPE, "Workspace is being loaded.", wsFilename);
+			pdnonmodal.executeTask(openTask);
+
 			wsFilePath = wsFilename;
 
 		}
@@ -237,13 +232,13 @@ public class WorkspaceHandler {
 	 * @author zji
 	 *
 	 */
-	private class SaveTask extends SwingWorker<Void, Void> {
+	private class SaveTask extends ProgressTask<Void, Void> {
 		private String filename;
 		private boolean terminating;
 		private PanelFocusedListener wfl = null;
 
-		SaveTask(String filename, boolean terminating, PanelFocusedListener wfl ) {
-			super();
+		SaveTask(int pbtype, String message, String filename, boolean terminating, PanelFocusedListener wfl ) {
+			super(pbtype, message);
 			this.filename = filename;
 			this.terminating = terminating;
 			this.wfl = wfl;
@@ -252,13 +247,14 @@ public class WorkspaceHandler {
 		@Override
 		protected void done() {
 			GeawConfigObject.getGuiWindow().removeWindowFocusListener(wfl); 			 
-			pb.dispose();
+			pdmodal.removeTask(this);
+			if (isCancelled()) return;
 			
 			try{
 				this.get();
 	
-				JOptionPane.getRootFrame().setAlwaysOnTop(true);
-				JOptionPane.showMessageDialog(null, "Workspace saved.");
+				//JOptionPane.getRootFrame().setAlwaysOnTop(true);
+				//JOptionPane.showMessageDialog(null, "Workspace saved.");
 	
 				if(terminating) {
 					GeawConfigObject.getGuiWindow().dispose();
@@ -309,16 +305,20 @@ public class WorkspaceHandler {
 	 * @author zji
 	 *
 	 */
-	private class OpenTask extends SwingWorker<Void, Void> {
+	private class OpenTask extends ProgressTask<Void, Void> {
 		private String filename;
 
-		OpenTask(String filename) {
-			super();
+		OpenTask(int pbtype, String message, String filename) {
+			super(pbtype, message);
 			this.filename = filename;
 		}
 
 		@Override
 		protected void done() {
+			if (isCancelled()){
+				pdnonmodal.removeTask(this);
+				return;
+			}
 			enclosingProjectPanel.clear();
 
 			try {
@@ -335,13 +335,13 @@ public class WorkspaceHandler {
 				// exception from doInBackGound
 				e.printStackTrace();
 			} catch (Exception e) { // null pinter, no serializable
-				pb.dispose();
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(null,
 						"Check that the file contains a valid workspace.\n"+e,
 						"Open Workspace Error", JOptionPane.ERROR_MESSAGE);
+			} finally {
+				pdnonmodal.removeTask(this);
 			}
-			pb.dispose();
 		}
 
 		private SaveTree saveTree = null;
@@ -378,10 +378,9 @@ public class WorkspaceHandler {
 
 		public void windowGainedFocus(java.awt.event.WindowEvent e) {
 
-			if (pb.isShowing()) {
-				pb.setFocusable(true);
-				pb.requestFocus();
-
+			if (pdmodal.isShowing()) {
+				pdmodal.setFocusable(true);
+				pdmodal.requestFocus();
 			}
 
 		}
