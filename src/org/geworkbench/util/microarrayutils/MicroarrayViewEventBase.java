@@ -47,7 +47,6 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 	 */
 	protected DSMicroarraySet<DSMicroarray> refMASet = null;
 	protected DSMicroarraySetView<DSGeneMarker, DSMicroarray> maSetView = null;
-	protected DSDataSet refOtherSet = null;
 
 	protected JCheckBox chkAllMarkers = new JCheckBox("All Markers", false);
 	protected JCheckBox chkAllArrays = new JCheckBox("All Arrays", false);
@@ -109,10 +108,6 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 					activatedMarkers = null;
 					uniqueMarkers = null;
 				}
-				this.refOtherSet = null;
-			} else {
-				// no microarray data set
-				this.refOtherSet = dataSet;
 			}
 			refreshMaSetView();
 		}
@@ -180,9 +175,16 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 	/**
 	 * Refreshes the chart view.
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected void refreshMaSetView() {
-		maSetView = getDataSetView();
+		maSetView = new CSMicroarraySetView(this.refMASet);
+		if (activatedMarkers != null && activatedMarkers.panels().size() > 0)
+			maSetView.setMarkerPanel(activatedMarkers);
+		if (activatedArrays != null && activatedArrays.panels().size() > 0 && activatedArrays.size() > 0)
+			maSetView.setItemPanel(activatedArrays);
+		maSetView.useMarkerPanel(!chkAllMarkers.isSelected());
+		maSetView.useItemPanel(!chkAllArrays.isSelected());
+
 		uniqueMarkers = maSetView.getUniqueMarkers();
 
 		fireModelChangedEvent();
@@ -230,22 +232,6 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 		jToolBar3.add(chkAllMarkers, null);
 
 		mainPanel.add(jToolBar3, java.awt.BorderLayout.SOUTH);
-	}
-
-	/**
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	private DSMicroarraySetView getDataSetView() {
-		DSMicroarraySetView dataSetView = new CSMicroarraySetView(this.refMASet);
-		if (activatedMarkers != null && activatedMarkers.panels().size() > 0)
-			dataSetView.setMarkerPanel(activatedMarkers);
-		if (activatedArrays != null && activatedArrays.panels().size() > 0 && activatedArrays.size() > 0)
-			dataSetView.setItemPanel(activatedArrays);
-		dataSetView.useMarkerPanel(!chkAllMarkers.isSelected());
-		dataSetView.useItemPanel(!chkAllArrays.isSelected());
-
-		return dataSetView;
 	}
 
 }
