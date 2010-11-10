@@ -58,7 +58,7 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 	protected DSPanel<DSGeneMarker> markers = null;
 	protected DSPanel<DSGeneMarker> activatedMarkers = null;
 	protected DSItemList<? extends DSGeneMarker> uniqueMarkers = null;
-	protected DSPanel activatedArrays = null;
+	protected DSPanel<DSMicroarray> activatedArrays = null;
 
 	/**
 	 *
@@ -99,10 +99,10 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 			refMASet = null;
 			fireModelChangedEvent();
 		} else {
-			DSDataSet dataSet = e.getDataSet();
+			DSDataSet<?> dataSet = e.getDataSet();
 			if (dataSet instanceof DSMicroarraySet) {
 				if (refMASet != dataSet) {
-					this.refMASet = (DSMicroarraySet) dataSet;
+					this.refMASet = (DSMicroarraySet<DSMicroarray>) dataSet;
 					// panels are now invalid
 					activatedArrays = null;
 					activatedMarkers = null;
@@ -120,13 +120,12 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 	 *            GeneSelectorEvent
 	 */
 	@Subscribe
-	@SuppressWarnings("unchecked")
 	public void receive(GeneSelectorEvent e, Object source) {
 
 		log.debug("Source object " + source);
 
 		markers = e.getPanel();
-		activatedMarkers = new CSPanel();
+		activatedMarkers = new CSPanel<DSGeneMarker>();
 		if (markers != null && markers.size() > 0) {            
 			for (int j = 0; j < markers.panels().size(); j++) {
 				DSPanel<DSGeneMarker> mrk = markers.panels().get(j);
@@ -158,15 +157,16 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 	 * @param e
 	 *            PhenotypeSelectorEvent
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Subscribe
 	public void receive(org.geworkbench.events.PhenotypeSelectorEvent e,
 			Object source) {
 
 		log.debug("Source object " + source);
 
-		if (e.getTaggedItemSetTree() != null)
-
+		if (e.getTaggedItemSetTree() != null) {
 			activatedArrays = e.getTaggedItemSetTree().activeSubset();
+		}
 
 		refreshMaSetView();
 
@@ -176,7 +176,7 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 	 * Refreshes the chart view.
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected void refreshMaSetView() {
+	final protected void refreshMaSetView() {
 		maSetView = new CSMicroarraySetView(this.refMASet);
 		if (activatedMarkers != null && activatedMarkers.panels().size() > 0)
 			maSetView.setMarkerPanel(activatedMarkers);
