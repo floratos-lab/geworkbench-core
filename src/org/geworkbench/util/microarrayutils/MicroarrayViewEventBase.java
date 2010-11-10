@@ -48,8 +48,7 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 	protected DSMicroarraySet<DSMicroarray> refMASet = null;
 	protected DSMicroarraySetView<DSGeneMarker, DSMicroarray> maSetView = null;
 	protected DSDataSet refOtherSet = null;
-	protected boolean onlyActivatedMarkers = true;
-	protected boolean onlyActivatedArrays = true;
+
 	protected JCheckBox chkAllMarkers = new JCheckBox("All Markers", false);
 	protected JCheckBox chkAllArrays = new JCheckBox("All Arrays", false);
 	protected JButton plotButton = new JButton("Plot");
@@ -212,7 +211,6 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				onlyActivatedMarkers = !chkAllMarkers.isSelected();
 				refreshMaSetView();
 				mainPanel.repaint();
 			}
@@ -222,7 +220,6 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				onlyActivatedArrays = !chkAllArrays.isSelected();
 				refreshMaSetView();
 				mainPanel.repaint();
 			}
@@ -233,9 +230,6 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 		jToolBar3.add(chkAllMarkers, null);
 
 		mainPanel.add(jToolBar3, java.awt.BorderLayout.SOUTH);
-
-		onlyActivatedMarkers = !chkAllMarkers.isSelected();
-		onlyActivatedArrays = !chkAllArrays.isSelected();
 	}
 
 	/**
