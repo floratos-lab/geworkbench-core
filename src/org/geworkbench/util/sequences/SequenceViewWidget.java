@@ -287,7 +287,7 @@ public class SequenceViewWidget extends JPanel {
 		sequencedetailPanel.repaint();
 
 		prevSeqDx = xStartPoint;
-		sequencedetailPanel.setOpaque(true);
+		sequencedetailPanel.setOpaque(false);
 
 	}
 
