@@ -1,5 +1,13 @@
 package org.geworkbench.builtin.projects.remoteresources;
 
+import java.security.GeneralSecurityException;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.PBEParameterSpec;
+
 /**
  * <p>Title: </p>
  *
@@ -17,7 +25,8 @@ package org.geworkbench.builtin.projects.remoteresources;
  * A simple wrapper class for resources
  */
 public class RemoteResource {
-    private boolean isDirty = true;
+    private static final String PBE_WITH_MD5_AND_DES = "PBEWithMD5AndDES";
+	private boolean isDirty = true;
     private String username;
     private String password;
     private String connectProtocol;
@@ -28,16 +37,15 @@ public class RemoteResource {
 
     public RemoteResource(String url, String protocal, String user,
                           String passwd) {
-        this("Default", url, protocal, user, passwd);
-    }
-
-    public RemoteResource(String shortname, String url, String protocal,
-                          String user, String passwd) {
         uri = url;
         connectProtocol = protocal;
         username = user;
-        password = passwd;
-        this.shortname = shortname;
+        try {
+			password = encrypt(passwd);
+		} catch (GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+        this.shortname = "Default";
     }
 
     public RemoteResource(String shortname, String url, String port,
@@ -46,7 +54,7 @@ public class RemoteResource {
         uri = url.trim();
         connectProtocol = protocal.trim();
         username = user.trim();
-        password = passwd.trim();
+		password = passwd.trim();
         this.shortname = shortname.trim();
         try {
             if (new Integer(port.trim()).intValue() != 0) {
@@ -60,6 +68,44 @@ public class RemoteResource {
         ;
     }
 
+    //a simple 'key'
+	private static final char[] simpleKey = (System.getProperty("user.name")).toCharArray();
+	private static final int COUNT = 20;
+	// Salt
+    private static byte[] salt = {
+        (byte)0xc7, (byte)0x73, (byte)0x21, (byte)0x8c,
+        (byte)0x7e, (byte)0xc8, (byte)0xee, (byte)0x99
+    };
+
+	// user user name as key to encrypt
+	public static String encrypt(String value)
+			throws GeneralSecurityException {
+		if(value==null || value.equals(""))return "";
+		
+	    // Create PBE parameter set
+	    PBEParameterSpec pbeParamSpec = new PBEParameterSpec(salt, COUNT);
+	    PBEKeySpec pbeKeySpec = new PBEKeySpec(simpleKey);
+	    SecretKeyFactory keyFac = SecretKeyFactory.getInstance(PBE_WITH_MD5_AND_DES);
+        SecretKey pbeKey = keyFac.generateSecret(pbeKeySpec);
+
+		Cipher cipher = Cipher.getInstance(PBE_WITH_MD5_AND_DES);
+		cipher.init(Cipher.ENCRYPT_MODE, pbeKey, pbeParamSpec);
+
+		byte[] encrypted = cipher.doFinal(value.getBytes());
+		return byteArrayToHexString(encrypted);
+	}
+
+	private static String byteArrayToHexString(byte[] b) {
+		StringBuffer sb = new StringBuffer(b.length * 2);
+		for (int i = 0; i < b.length; i++) {
+			int v = b[i] & 0xff;
+			if (v < 16) {
+				sb.append('0');
+			}
+			sb.append(Integer.toHexString(v));
+		}
+		return sb.toString().toUpperCase();
+	}
 
     public static RemoteResource createNewInstance(String[] columns) {
         if (columns.length == 7) {
@@ -79,7 +125,7 @@ public class RemoteResource {
     /**
      * RemoteResource
      */
-    public RemoteResource(String shortname, String url, String port,
+    private RemoteResource(String shortname, String url, String port,
                           String protocal,
                           String user, String passwd, String editableStr
     ) {
@@ -90,10 +136,6 @@ public class RemoteResource {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public void setConnectProtocal(String connectProtocol) {
@@ -129,10 +171,41 @@ public class RemoteResource {
     }
 
     public String getPassword() {
-        return password;
+        try {
+			return decrypt(password);
+		} catch (GeneralSecurityException e) {
+			e.printStackTrace();
+			return null;
+		}
     }
 
-    public String getConnectProtocal() {
+	private static String decrypt(String encryptedPwd)
+			throws GeneralSecurityException {
+		if(encryptedPwd==null || encryptedPwd.equals(""))return "";
+		
+		PBEParameterSpec pbeParamSpec = new PBEParameterSpec(salt, COUNT);
+	    PBEKeySpec pbeKeySpec = new PBEKeySpec(simpleKey);
+	    SecretKeyFactory keyFac = SecretKeyFactory.getInstance(PBE_WITH_MD5_AND_DES);
+        SecretKey pbeKey = keyFac.generateSecret(pbeKeySpec);
+
+		Cipher cipher = Cipher.getInstance(PBE_WITH_MD5_AND_DES);
+		cipher.init(Cipher.DECRYPT_MODE, pbeKey, pbeParamSpec);
+		
+		byte[] decrypted = cipher.doFinal(hexStringToByteArray(encryptedPwd));
+		return new String(decrypted);
+	}
+
+	private static byte[] hexStringToByteArray(String s) {
+		byte[] b = new byte[s.length() / 2];
+		for (int i = 0; i < b.length; i++) {
+			int index = i * 2;
+			int v = Integer.parseInt(s.substring(index, index + 2), 16);
+			b[i] = (byte) v;
+		}
+		return b;
+	}
+
+	public String getConnectProtocal() {
         return connectProtocol;
     }
 
@@ -189,5 +262,9 @@ public class RemoteResource {
     	 }
     	 
     }
+
+	public String getEncryptedPassword() {
+		return password;
+	}
 
 }

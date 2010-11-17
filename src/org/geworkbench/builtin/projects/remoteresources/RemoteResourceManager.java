@@ -85,47 +85,6 @@ public class RemoteResourceManager {
 
 	}
 
-	/**
-	 * Init the existed resources from a Index service.
-	 * 
-	 * @param url
-	 *            name
-	 */
-	protected boolean init(String urlname) {
-		try {
-			String test = null;
-
-			if (test == null) {
-				return false;
-			}
-			removeIndexResources();
-
-			String[] lists = test.split("!");
-			if (lists != null) {
-				for (String s : lists) {
-					String[] cols = s.split(",");
-					if (cols != null && cols.length > 0) {
-						RemoteResource rr = RemoteResource
-								.createNewInstance(cols);
-						if (rr != null) {
-							rr.setEditable(false);
-							existedResources.add(rr);
-
-						}
-					}
-
-				}
-			}
-			return true;
-
-		} catch (Exception e) {
-			System.out.println(e + "RemoteResourceManager.init" + urlname);
-			e.printStackTrace();
-		}
-		return false;
-
-	}
-
 	public void removeIndexResources() {
 		int size = existedResources.size();
 		ArrayList<RemoteResource> newExistedResources = new ArrayList<RemoteResource>();
@@ -254,7 +213,7 @@ public class RemoteResourceManager {
 				writer.write(s.getShortname() + cloumnseparator + s.getUri()
 						+ cloumnseparator + s.getPortnumber() + cloumnseparator
 						+ s.getConnectProtocal() + cloumnseparator
-						+ s.getUsername() + cloumnseparator + s.getPassword()
+						+ s.getUsername() + cloumnseparator + s.getEncryptedPassword()
 						+ cloumnseparator + s.isEditable());
 				writer.newLine();
 			}

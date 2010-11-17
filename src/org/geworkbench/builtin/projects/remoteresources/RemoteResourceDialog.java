@@ -71,9 +71,7 @@ public class RemoteResourceDialog extends JDialog {
         super(frame, title, true);
         currentOption = option;
         currentResourceName = initialName;
-//        if (option == ADD) {
-//            clearFields();
-//        }
+
         try {
             jbInit();
         } catch (Exception ex) {
@@ -119,8 +117,15 @@ public class RemoteResourceDialog extends JDialog {
         jTextField2.setText("www.columbia.edu");
         jTextField3.setText("80");
         jButton1.setText("OK");
-        jButton1.addActionListener(new
-                                   RemoteResourceDialog_jButton1_actionAdapter(this));
+        jButton1.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+		        jButton1_actionPerformed(e);
+			}
+        	
+        });
+
         jButton6.setText("Cancel");
         jButton6.addActionListener(new
                                    RemoteResourceDialog_jButton6_actionAdapter(this));
@@ -252,16 +257,10 @@ public class RemoteResourceDialog extends JDialog {
 
     }
 
-    public void jButton4_actionPerformed(ActionEvent e) {
-        remoteResourceManager.addRemoteResource(collectResourceInfo());
-        dispose();
-    }
-
-    public RemoteResource collectResourceInfo() {
+    private RemoteResource collectResourceInfo() {
 
         String shortname = shortnameTextField.getText().trim();
         String url = jTextField2.getText().trim();
-        String username = jTextField1.getText().trim();
         if (shortname.length() == 0) {
             JOptionPane.showMessageDialog(null, "Profile name can not be empty.",
                                           "Error",
@@ -273,12 +272,6 @@ public class RemoteResourceDialog extends JDialog {
                                           "Error",
                                           JOptionPane.INFORMATION_MESSAGE);
             return null;
-        }
-       if (username.length() == 0) {
-//            JOptionPane.showMessageDialog(null, "UserName can not be empty.",
-//                                          "Error",
-//                                          JOptionPane.INFORMATION_MESSAGE);
-//            return null;
         }
        
        RemoteResource rr = new RemoteResource(
@@ -345,7 +338,7 @@ public class RemoteResourceDialog extends JDialog {
         }
     }
 
-    public void jButton1_actionPerformed(ActionEvent e) {
+    private void jButton1_actionPerformed(ActionEvent e) {
         /*
 		 * if this method been called, it means user clicked OK. Let's set
 		 * executed to true, so the dialog will return true.
@@ -401,19 +394,6 @@ public class RemoteResourceDialog extends JDialog {
         RemoteResourceDialog.previousResourceName = previousResourceName;
     }
 
-    public boolean updateResource(String urlname){
-
-        if(remoteResourceManager.init(urlname)){
-            return true;
-        }else{
-            JOptionPane.showMessageDialog(this, "The caARRAY Index Service is not accessable.",
-                                         "Error",
-                                         JOptionPane.ERROR_MESSAGE);
-
-        }
-        return false;
-
-    }
     public String getCurrentResourceName() {
         return currentResourceName;
     }
@@ -458,13 +438,6 @@ public class RemoteResourceDialog extends JDialog {
             currentUser = rr.getUsername();
             currentPassword = rr.getPassword();
             isSourceDirty =  rr.isDirty();
-//            System.setProperty("RMIServerURL", url + "/SearchCriteriaHandler");
-//            System.setProperty("SecureSessionManagerURL",
-//                               url + "/SecureSessionManager");
-//            System.setProperty("caarray.mage.user", user);
-//            System.setProperty("caarray.mage.password", password);
-
-
         }
     }
 
@@ -512,32 +485,6 @@ class RemoteResourceDialog_jButton6_actionAdapter implements ActionListener {
         adaptee.jButton6_actionPerformed(e);
     }
 }
-
-
-class RemoteResourceDialog_jButton1_actionAdapter implements ActionListener {
-    private RemoteResourceDialog adaptee;
-    RemoteResourceDialog_jButton1_actionAdapter(RemoteResourceDialog adaptee) {
-        this.adaptee = adaptee;
-    }
-
-    public void actionPerformed(ActionEvent e) {
-        adaptee.jButton1_actionPerformed(e);
-    }
-}
-
-
-class RemoteResourceDialog_jButton4_actionAdapter implements ActionListener {
-    private RemoteResourceDialog adaptee;
-    RemoteResourceDialog_jButton4_actionAdapter(RemoteResourceDialog adaptee) {
-        this.adaptee = adaptee;
-    }
-
-    public void actionPerformed(ActionEvent e) {
-
-        adaptee.jButton4_actionPerformed(e);
-    }
-}
-
 
 class RemoteResourceDialog_jComboBox1_actionAdapter implements ActionListener {
     private RemoteResourceDialog adaptee;

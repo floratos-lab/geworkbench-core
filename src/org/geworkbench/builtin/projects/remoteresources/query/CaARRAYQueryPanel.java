@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -121,9 +122,14 @@ public class CaARRAYQueryPanel extends JDialog {
 				properties.setProperty(CaARRAYQueryPanel.class,
 						CAARRAY_USERNAME,
 						resourceDialog.getUsername());
+				String encyrpted = "";
+				try {
+					encyrpted = RemoteResource.encrypt(password);
+				} catch (GeneralSecurityException e) {
+					e.printStackTrace();
+				}
 				properties.setProperty(CaARRAYQueryPanel.class,
-						PASSWORD, resourceDialog
-								.getPassword());
+						PASSWORD, encyrpted );
 				properties.setProperty(CaARRAYQueryPanel.class,
 						SERVERURL, resourceDialog
 								.getUri());

@@ -447,7 +447,7 @@ public class LoadData extends JDialog {
 	 * @param option
 	 *            int
 	 */
-	void displayRemoteResourceDialog(int option) {
+	private void displayRemoteResourceDialog(int option) {
 		RemoteResourceDialog.setPreviousResourceName((String) jComboBox1
 				.getSelectedItem());
 		RemoteResourceDialog.showDialog(this, null, option, null);
@@ -474,20 +474,10 @@ public class LoadData extends JDialog {
 	/**
 	 * displayRemoteResourceDiolog for edit/delete an existed resource.
 	 *
-	 * @param shortname
-	 *            Object
-	 * @param option
-	 *            int
 	 */
-	void displayRemoteResourceDialog(Object shortname, int option) {
-		if (shortname != null) {
-			if (RemoteResourceDialog.showDialog(this, null, option, shortname
-					.toString()))
-				updateExistedResourcesGUI();
-		} else {
-			if (RemoteResourceDialog.showDialog(this, null, option, null))
-				updateExistedResourcesGUI();
-		}
+	private void displayRemoteResourceDialog(String shortname, int option) {
+		if (RemoteResourceDialog.showDialog(this, null, option, shortname))
+			updateExistedResourcesGUI();
 	}
 
 	/**
