@@ -162,18 +162,6 @@ public abstract class AbstractTraining extends AbstractAnalysis implements Clust
         panel.rebuildForm();
     }
 
-    @Subscribe
-    public void receive(org.geworkbench.events.ProjectNodeRemovedEvent e, Object source)
-    {
-    	log.debug("abstracttraining received project node removed event.");
-    }
-
-    @Subscribe
-    public void receive(org.geworkbench.events.ProjectNodeAddedEvent e, Object source)
-    {
-    	log.debug("abstracttraining received project node added event.");
-    }
-
     public int getAnalysisType() {
         return AbstractAnalysis.TTEST_TYPE;
     }
