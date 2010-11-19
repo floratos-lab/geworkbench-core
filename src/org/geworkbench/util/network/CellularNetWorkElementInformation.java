@@ -68,7 +68,7 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 		geneType = GeneOntologyUtil.checkMarkerFunctions(
 				dSGeneMarker);
 
-		reset();
+		resetToUnknown();;
 
 	}
 	
@@ -128,7 +128,18 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 		}
 		binNumber = (int) (1 / smallestIncrement) + 1;
 
-	}
+	} 
+	
+	public void resetToUnknown() {
+
+		for (String interactionType : allInteractionTypes) {
+			interactionNumMap.put(interactionType, -1);
+		}
+		binNumber = (int) (1 / smallestIncrement) + 1;
+
+	} 
+	
+	
 
 	public ArrayList<InteractionDetail> getSelectedInteractions(
 			List<String> interactionIncludedList) {
@@ -282,7 +293,10 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 	 */
 	private void update() {
 
-		reset();
+		if (!isDirty())			 
+		    reset();
+		else
+		    resetToUnknown();
 
 		if (interactionDetails == null || interactionDetails.length == 0) {
 			return;
