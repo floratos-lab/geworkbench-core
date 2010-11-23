@@ -65,71 +65,76 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 				goInfoStr += goTerm.getName() + "; ";
 			}
 		}
-		geneType = GeneOntologyUtil.checkMarkerFunctions(
-				dSGeneMarker);
+		geneType = GeneOntologyUtil.checkMarkerFunctions(dSGeneMarker);
 
-		resetToUnknown();;
+		reset();		 
 
 	}
-	
+
 	private static Set<GOTerm> getAllGOTerms(DSGeneMarker dsGeneMarker) {
 		GeneOntologyTree tree = GeneOntologyTree.getInstance();
-        String geneId = dsGeneMarker.getLabel();
-        String[] goTerms = AnnotationParser.getInfo(geneId, AnnotationParser.GOTERM);
-        if (goTerms != null) {
-            Set<GOTerm> set = new HashSet<GOTerm>();
-            for (String goTerm : goTerms) {
-                String goIdStr = goTerm.split("/")[0].trim();
-                if (!goIdStr.equalsIgnoreCase("---")) {
-                    int goId = new Integer(goIdStr);
-                    if(tree.getTerm(goId)!=null)
-                    set.add(tree.getTerm(goId));
-                }
-            }
-            return set;
-        }
+		String geneId = dsGeneMarker.getLabel();
+		String[] goTerms = AnnotationParser.getInfo(geneId,
+				AnnotationParser.GOTERM);
+		if (goTerms != null) {
+			Set<GOTerm> set = new HashSet<GOTerm>();
+			for (String goTerm : goTerms) {
+				String goIdStr = goTerm.split("/")[0].trim();
+				if (!goIdStr.equalsIgnoreCase("---")) {
+					int goId = new Integer(goIdStr);
+					if (tree.getTerm(goId) != null)
+						set.add(tree.getTerm(goId));
+				}
+			}
+			return set;
+		}
 
-        return null;
+		return null;
 	}
-	
-    public TreeMap<String, Set<GOTerm>> getAllAncestorGoTerms(String catagory) {
+
+	public TreeMap<String, Set<GOTerm>> getAllAncestorGoTerms(String catagory) {
 		GeneOntologyTree tree = GeneOntologyTree.getInstance();
-        String geneId = dSGeneMarker.getLabel();
-        String[] goTerms = AnnotationParser.getInfo(geneId, catagory);
+		String geneId = dSGeneMarker.getLabel();
+		String[] goTerms = AnnotationParser.getInfo(geneId, catagory);
 
-        TreeMap<String, Set<GOTerm>> treeMap = new TreeMap<String, Set<GOTerm>>();
-        if (goTerms != null) {
+		TreeMap<String, Set<GOTerm>> treeMap = new TreeMap<String, Set<GOTerm>>();
+		if (goTerms != null) {
 
-            for (String goTerm : goTerms) {
-                String goIdStr = goTerm.split("/")[0].trim();
-                try {
-                    if (!goIdStr.equalsIgnoreCase("---")) {
-                        Integer goId = new Integer(goIdStr);
-                        if (goId != null) {
-                            treeMap.put(goTerm, tree.getAncestors(goId));
-                        }
-                    }
-                } catch (NumberFormatException ne) {
-                    ne.printStackTrace();
-                }
+			for (String goTerm : goTerms) {
+				String goIdStr = goTerm.split("/")[0].trim();
+				try {
+					if (!goIdStr.equalsIgnoreCase("---")) {
+						Integer goId = new Integer(goIdStr);
+						if (goId != null) {
+							treeMap.put(goTerm, tree.getAncestors(goId));
+						}
+					}
+				} catch (NumberFormatException ne) {
+					ne.printStackTrace();
+				}
 
-            }
-        }
-        return treeMap;
-    }
+			}
+		}
+		return treeMap;
+	}
 
 	/**
 	 * Remove all previous retrieved information.
 	 */
 	public void reset() {
-
-		for (String interactionType : allInteractionTypes) {
-			interactionNumMap.put(interactionType, 0);
+		if (isDirty) {
+			for (String interactionType : allInteractionTypes) {
+				interactionNumMap.put(interactionType, -1);
+			}
+		} else {
+			for (String interactionType : allInteractionTypes) {
+				interactionNumMap.put(interactionType, 0);
+			}
 		}
 		binNumber = (int) (1 / smallestIncrement) + 1;
 
-	} 
-	
+	}
+
 	public void resetToUnknown() {
 
 		for (String interactionType : allInteractionTypes) {
@@ -137,9 +142,7 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 		}
 		binNumber = (int) (1 / smallestIncrement) + 1;
 
-	} 
-	
-	
+	}
 
 	public ArrayList<InteractionDetail> getSelectedInteractions(
 			List<String> interactionIncludedList) {
@@ -160,14 +163,16 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 		return arrayList;
 	}
 
-	public ArrayList<InteractionDetail> getSelectedInteractions(String interactionType) {
+	public ArrayList<InteractionDetail> getSelectedInteractions(
+			String interactionType) {
 		ArrayList<InteractionDetail> arrayList = new ArrayList<InteractionDetail>();
 		if (interactionDetails != null && interactionDetails.length > 0) {
 			for (int i = 0; i < interactionDetails.length; i++) {
 				InteractionDetail interactionDetail = interactionDetails[i];
 				if (interactionDetail != null
 						&& interactionDetail.getConfidence() >= threshold) {
-					if (interactionType.equals(interactionDetail.getInteractionType())) {
+					if (interactionType.equals(interactionDetail
+							.getInteractionType())) {
 						arrayList.add(interactionDetail);
 					}
 
@@ -176,9 +181,9 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 		}
 		return arrayList;
 	}
-	
+
 	public static double getSmallestIncrement() {
-		if (smallestIncrement <= 0 )
+		if (smallestIncrement <= 0)
 			smallestIncrement = defaultSmallestIncrement;
 		return smallestIncrement;
 	}
@@ -194,7 +199,9 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 		if (interactionDetails == null || interactionDetails.length <= 0)
 			return distribution;
 		for (InteractionDetail interactionDetail : interactionDetails) {
-			if (interactionDetail != null && displaySelectedInteractionTypes.contains(interactionDetail.getInteractionType())) {
+			if (interactionDetail != null
+					&& displaySelectedInteractionTypes
+							.contains(interactionDetail.getInteractionType())) {
 				int confidence = (int) (interactionDetail.getConfidence() * 100);
 				if (confidence < distribution.length && confidence >= 0) {
 					for (int i = 0; i <= confidence; i++)
@@ -225,7 +232,7 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 	}
 
 	public void setDirty(boolean dirty) {
-		isDirty = dirty;
+		isDirty = dirty;		 
 	}
 
 	public static void setBinNumber(int binNumber) {
@@ -291,13 +298,10 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 	 * Update the number of interaction based on the new threshold or new
 	 * InteractionDetails.
 	 */
-	private void update() {
-
-		if (!isDirty())			 
-		    reset();
-		else
-		    resetToUnknown();
-
+	private void update() {		 
+			
+		reset();
+		
 		if (interactionDetails == null || interactionDetails.length == 0) {
 			return;
 		}
