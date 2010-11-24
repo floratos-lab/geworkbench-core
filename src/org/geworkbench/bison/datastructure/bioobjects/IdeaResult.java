@@ -3,7 +3,7 @@ package org.geworkbench.bison.datastructure.bioobjects;
 import java.io.File;
 
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
-import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 
 /**
@@ -14,8 +14,17 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 public class IdeaResult extends CSAncillaryDataSet<DSMicroarray> {
 	private static final long serialVersionUID = 1728642489420856774L;
 
-	public IdeaResult(DSDataSet<DSMicroarray> parent, String label, double[][] a) {
-		super(parent, label);
+	public Object[][] output1_loc = null;
+	public Object[][] output1_goc = null;
+	public Object[][] output2 = null;
+
+	public IdeaResult(DSMicroarraySet<DSMicroarray> maSet, String string,
+			Object[][] output1_loc, Object[][] output1_goc, Object[][] output2) {
+		super(maSet, string);
+		
+		this.output1_loc = output1_loc;
+		this.output1_goc = output1_goc;
+		this.output2 = output2;
 	}
 
 	public File getDataSetFile() {
