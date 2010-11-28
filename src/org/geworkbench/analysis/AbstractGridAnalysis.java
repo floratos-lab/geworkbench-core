@@ -18,12 +18,11 @@ import org.geworkbench.bison.model.analysis.ParamValidationResults;
  * abstract class to have the grid analyses exposed.
  * 
  * @author keshav
- * @version $Id: AbstractGridAnalysis.java,v 1.6.2.1 2007/11/05 21:08:42 keshav
- *          Exp $
+ * @version $Id$
  */
 public abstract class AbstractGridAnalysis extends AbstractAnalysis {
-
-	private Log log = LogFactory.getLog(this.getClass());
+	private static final long serialVersionUID = -7310721066701534971L;
+	private Log log = LogFactory.getLog(AbstractGridAnalysis.class);
 
 	/**
 	 * Analyses extending this class will implement this method, setting the
@@ -38,7 +37,7 @@ public abstract class AbstractGridAnalysis extends AbstractAnalysis {
 	 * 
 	 * @return
 	 */
-	public abstract Class getBisonReturnType();
+	public abstract Class<?> getBisonReturnType();
 
 	/**
 	 * Some grid analyses use microarray set views as inputs, some don't.
@@ -73,9 +72,8 @@ public abstract class AbstractGridAnalysis extends AbstractAnalysis {
 	 * @param otherDataset
 	 * @return {@link List} - A list of service inputs.
 	 */
-	@SuppressWarnings("unchecked")
 	public List<Serializable> handleBisonInputs(
-			DSMicroarraySetView microarraySetView, DSDataSet otherDataset) {
+			DSMicroarraySetView<DSGeneMarker, DSMicroarray> microarraySetView, DSDataSet<?> otherDataset) {
 
 		List<Serializable> serviceParameterList = new ArrayList<Serializable>();
 
@@ -96,7 +94,7 @@ public abstract class AbstractGridAnalysis extends AbstractAnalysis {
 		return serviceParameterList;
 	}
 	
-	public abstract ParamValidationResults validInputData(DSMicroarraySetView<DSGeneMarker, DSMicroarray> maSetView, DSDataSet refMASet);
+	public abstract ParamValidationResults validInputData(DSMicroarraySetView<DSGeneMarker, DSMicroarray> maSetView, DSDataSet<?> refMASet);
 	
 	/**
 	 * Authorization is required unless the sub-class overwrite this.
