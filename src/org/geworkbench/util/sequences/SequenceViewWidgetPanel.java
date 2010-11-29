@@ -26,7 +26,6 @@ import org.geworkbench.bison.datastructure.complex.pattern.sequence.CSSeqRegistr
 import org.geworkbench.util.patterns.PatternLocations;
 import org.geworkbench.util.patterns.PatternOperations;
 import org.geworkbench.util.patterns.PatternSequenceDisplayUtil;
-import org.geworkbench.util.promoter.pattern.Display;
 
 /**
  * 
@@ -387,7 +386,7 @@ public class SequenceViewWidgetPanel extends JPanel {
 							PatternLocations.TFTYPE)) {
 						drawPattern(g, seqId, reg.x1, reg.length(), r,
 								PatternOperations.getPatternColor(pl
-										.getIdForDisplay()), Display.OVAL,
+										.getIdForDisplay()),
 								reg.strand);
 
 					}
@@ -403,23 +402,9 @@ public class SequenceViewWidgetPanel extends JPanel {
 	/**
 	 * drawPattern for type TFBS in painttext
 	 * 
-	 * @param g
-	 *            Graphics
-	 * @param seqId
-	 *            int
-	 * @param i
-	 *            int
-	 * @param i1
-	 *            int
-	 * @param r
-	 *            Rectangle
-	 * @param color
-	 *            Color
-	 * @param i2
-	 *            int
 	 */
 	private void drawPattern(Graphics g, int rowId, int xStart, int length,
-			Rectangle r, Color color, int shape, int strandDirection) {
+			Rectangle r, Color color, int strandDirection) {
 
 		int y = yOff + rowId * yStep;
 		if (y <= r.y)
@@ -437,8 +422,8 @@ public class SequenceViewWidgetPanel extends JPanel {
 		g.draw3DRect(xa, y - heightForRect / 2, xb - xa, heightForRect, false);
 		g.fill3DRect(xa, y - heightForRect / 2, xb - xa, heightForRect, false);
 		// create a triangle
-		int[] xi = new int[shape];
-		int[] yi = new int[shape];
+		int[] xi = new int[3];
+		int[] yi = new int[3];
 		if (strandDirection == 0) {
 			xi[0] = xi[1] = xb;
 			yi[0] = y - heightForRect / 2;
@@ -453,8 +438,8 @@ public class SequenceViewWidgetPanel extends JPanel {
 			yi[2] = y;
 		}
 		g.setColor(SEQUENCEBACKGROUDCOLOR);
-		g.drawPolygon(xi, yi, shape);
-		g.fillPolygon(xi, yi, shape);
+		g.drawPolygon(xi, yi, 3);
+		g.fillPolygon(xi, yi, 3);
 	}
 
 	public void setMaxSeqLen(int maxSeqLen) {
