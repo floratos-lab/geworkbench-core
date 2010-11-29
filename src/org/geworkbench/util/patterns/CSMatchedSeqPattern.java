@@ -252,7 +252,6 @@ public final class CSMatchedSeqPattern extends
 		return rand_hash;
 	}
 
-	@Override
     public List<DSPatternMatch<DSSequence, CSSeqRegistration>> match(DSSequence object, double p) {
         List<DSPatternMatch<DSSequence,
                 CSSeqRegistration>>
@@ -267,7 +266,6 @@ public final class CSMatchedSeqPattern extends
         return matchResults;
     }
 
-	@Override
     public CSSeqRegistration match(DSSequence object) {
         for (DSPatternMatch<DSSequence,
              ? extends CSSeqRegistration> match : matches) {
@@ -279,7 +277,6 @@ public final class CSMatchedSeqPattern extends
         return null;
     }
 
-	@Override
     public String toString(DSSequence object, CSSeqRegistration registration) {
         if (ascii != null) {
             return ascii;
