@@ -1,379 +1,258 @@
 package org.geworkbench.util.patterns;
 
-import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
-import org.geworkbench.bison.datastructure.complex.pattern.sequence.CSSeqRegistration;
-import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeqPattern;
-import org.geworkbench.bison.datastructure.complex.pattern.sequence.CSSeqPatternMatch;
-import org.geworkbench.bison.datastructure.complex.pattern.CSMatchedPattern;
-import org.geworkbench.bison.datastructure.complex.pattern.DSPattern;
-import org.geworkbench.bison.datastructure.complex.pattern.DSPatternMatch;
-import org.geworkbench.bison.datastructure.complex.pattern.DSMatchedPattern;
-import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
-
-import javax.xml.rpc.holders.IntHolder;
-
-
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.ArrayList;
-import java.util.List;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+
+import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
+import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
+import org.geworkbench.bison.datastructure.complex.pattern.CSMatchedPattern;
+import org.geworkbench.bison.datastructure.complex.pattern.DSPatternMatch;
+import org.geworkbench.bison.datastructure.complex.pattern.sequence.CSSeqPatternMatch;
+import org.geworkbench.bison.datastructure.complex.pattern.sequence.CSSeqRegistration;
+import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeqPattern;
+import org.geworkbench.util.BinaryEncodeDecode;
 
 /**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2003</p>
- * <p>Company: </p>
- *
+ * 
  * @author not attributable
- * @version 1.0
+ * @version $Id$
  */
 
+public final class CSMatchedSeqPattern extends
+		CSMatchedPattern<DSSequence, CSSeqRegistration> implements
+		DSMatchedSeqPattern, 
+		org.geworkbench.bison.datastructure.complex.pattern.DSPattern<DSSequence, CSSeqRegistration>,
+		Serializable {
+	private static final long serialVersionUID = -8809856414947634034L;
 
-public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence, CSSeqRegistration> implements DSMatchedSeqPattern, DSPattern<DSSequence,
-        CSSeqRegistration>, Serializable {
+	static private final java.util.regex.Pattern headerPattern = java.util.regex.Pattern
+			.compile("\\[\\d+\\]\\s+(\\S+)\\s+\\[(\\d+)\\D*(\\d+)\\D*(\\d+)\\D*(\\d+\\.?\\d*E?\\d*)\\]");
+	static private final java.util.regex.Pattern locusPattern = java.util.regex.Pattern
+			.compile("\\[(\\d+)\\D*(\\d+)\\]");
+	static private final java.util.regex.Pattern offsetPattern = java.util.regex.Pattern
+			.compile("([a-zA-Z]|\\.|\\[[^\\]]+\\])");
 
-    static java.util.regex.Pattern headerPattern = java.util.regex.Pattern.
-            compile("\\[\\d+\\]\\s+(\\S+)\\s+\\[(\\d+)\\D*(\\d+)\\D*(\\d+)\\D*(\\d+\\.?\\d*E?\\d*)\\]");
-    static java.util.regex.Pattern locusPattern = java.util.regex.Pattern.
-                                                  compile(
-            "\\[(\\d+)\\D*(\\d+)\\]");
-    static java.util.regex.Pattern offsetPattern = java.util.regex.Pattern.
-            compile("([a-zA-Z]|\\.|\\[[^\\]]+\\])");
+	private int idNo = 0;
+	private int seqNo = 0;
+	private DSSequenceSet<DSSequence> seqDB = null;
 
-    public int idNo = 0;
-    public int seqNo = 0;
-    protected DSSequenceSet seqDB = null;
-    //private ArrayOfintHolder       locusId  = new ArrayOfintHolder();
-    //private ArrayOfintHolder       locusOff = new ArrayOfintHolder();
-    // locus is a bytecoded int array, where each group of 8 bytes
-    // encode a locusId (4 bytes) and a locusOffset (4 bytes). This
-    // is decoded using the get32BitInteger method and it is used to
-    // dramatically speed up the transfer of patterns over a SOAP
-    // connection.
-    public byte[] locus = null;
-    public ArrayList<PatternOfflet> offset = new ArrayList<PatternOfflet>();
-    public String ascii = null;
-    public int maxLen = 0;
-    protected int rand_hash;
+	// locus is a byte-coded int array, where each group of 8 bytes
+	// encode a locusId (4 bytes) and a locusOffset (4 bytes). This
+	// is decoded using the get32BitInteger method and it is used to
+	// dramatically speed up the transfer of patterns over a SOAP
+	// connection.
+	private byte[] locus = null;
+	private ArrayList<PatternOfflet> offset = new ArrayList<PatternOfflet>();
+	private String ascii = null;
+	private int rand_hash;
 
-    protected CSMatchedSeqPattern() {
+	public void setLocus(byte[] locus) {
+		this.locus = locus;
+	}
+
+	public void setOffset(ArrayList<PatternOfflet> offset) {
+		this.offset = offset;
+	}
+
+	public CSMatchedSeqPattern(final DSSequenceSet<DSSequence> seqDB) {
+		this.seqDB = seqDB;
         pattern = this;
-        rand_hash = new java.util.Random().nextInt();
-    }
+		rand_hash = new java.util.Random().nextInt();
+	}
 
-    public static Pattern getHeaderPattern() {
-        return headerPattern;
-    }
+	public String toString() {
+		String s = new String();
+		if (ascii != null) {
+			s += ascii + "    ";
+		}
+		s += "(" + idNo + "," + offset.size() + ")";
+		return s;
+	}
 
-    public static void setHeaderPattern(Pattern headerPattern) {
-        CSMatchedSeqPattern.headerPattern = headerPattern;
-    }
+	/**
+	 * update the ascii representation. Method to replace PatternOperations.fill
+	 * method.
+	 */
+	public void updateASCII() {
+		String s = new String();
 
-    public static Pattern getLocusPattern() {
-        return locusPattern;
-    }
+		int j = offset.get(0).getPosition();
+		for (int i = 0; i < offset.size(); i++, j++) {
+			int dx = offset.get(i).getPosition();
+			for (; j < dx; j++) {
+				s += '.';
+			}
+			String tokString = offset.get(i).getToken();
+			if (tokString.length() > 1) {
+				s += '[' + tokString + ']';
+			} else {
+				s += tokString;
+			}
+		}
+		ascii = s;
 
-    public static void setLocusPattern(Pattern locusPattern) {
-        CSMatchedSeqPattern.locusPattern = locusPattern;
-    }
+	}
 
-    public static Pattern getOffsetPattern() {
-        return offsetPattern;
-    }
-
-    public static void setOffsetPattern(Pattern offsetPattern) {
-        CSMatchedSeqPattern.offsetPattern = offsetPattern;
-    }
-
-    public byte[] getLocus() {
-        return locus;
-    }
-
-    public void setLocus(byte[] locus) {
-        this.locus = locus;
-    }
-
-    public ArrayList<PatternOfflet> getOffset() {
-        return offset;
-    }
-
-    public void setOffset(ArrayList<PatternOfflet> offset) {
-        this.offset = offset;
-    }
-
-    public String getAscii() {
-        return ascii;
-    }
-
-    public void setAscii(String ascii) {
-        this.ascii = ascii;
-    }
-
-    public int getMaxLen() {
-        return maxLen;
-    }
-
-    public void setMaxLen(int maxLen) {
-        this.maxLen = maxLen;
-    }
-
-    public CSMatchedSeqPattern(DSSequenceSet _seqDB) {
-        seqDB = _seqDB;
+	public CSMatchedSeqPattern(String s) {
         pattern = this;
-        rand_hash = new java.util.Random().nextInt();
-    }
+		Matcher m0 = CSMatchedSeqPattern.headerPattern.matcher(s);
+		rand_hash = new java.util.Random().nextInt();
+		if (m0.find()) {
+			Matcher m1 = CSMatchedSeqPattern.locusPattern.matcher(s);
+			String pat = m0.group(1);
+			int seqNo = Integer.parseInt(m0.group(2));
+			int idNo = Integer.parseInt(m0.group(3));
 
-    public String toString() {
-        String s = new String();
-        if (ascii != null) {
-            s += ascii + "    ";
-        }
-        s += "(" + idNo + "," + offset.size() + ")";
-        return s;
-    }
+			double pVal = Double.parseDouble(m0.group(5));
+			this.zScore = pVal;
+			this.seqNo = seqNo;
+			this.idNo = idNo;
+			this.offset = new ArrayList<PatternOfflet>();
+			int offDx = 0;
+			int j = 0;
+			Matcher m2 = offsetPattern.matcher(pat);
+			while (m2.find()) {
+				String token = m2.group(1);
+				if (!token.equalsIgnoreCase(".")) {
 
-    /**  update the ascii representation.
-     * Method to replace PatternOperations.fill method.
-     */
-    public void updateASCII(){
-        String s = new String();
+					PatternOfflet patternOfflet = new PatternOfflet(offDx,
+							token);
+					if (this.offset.size() <= j) {
+						this.offset.add(j, patternOfflet);
+					} else {
+						this.offset.set(j, patternOfflet);
+					}
+					j++;
+				}
+				offDx++;
+			}
+			this.ascii = pat;
+			int index = m0.end();
+			boolean found = m1.find(index);
+			int locId = 0;
+			locus = new byte[idNo * 8]; // 4 bytes per int for id and offset
+			while (found) {
+				int id = Integer.parseInt(m1.group(1));
+				int dx = Integer.parseInt(m1.group(2));
+				locus[locId++] = (byte) (id % 256);
+				id /= 256;
+				locus[locId++] = (byte) (id % 256);
+				id /= 256;
+				locus[locId++] = (byte) (id % 256);
+				id /= 256;
+				locus[locId++] = (byte) (id % 256);
+				locus[locId++] = (byte) (dx % 256);
+				dx /= 256;
+				locus[locId++] = (byte) (dx % 256);
+				dx /= 256;
+				locus[locId++] = (byte) (dx % 256);
+				dx /= 256;
+				locus[locId++] = (byte) (dx % 256);
+				found = m1.find();
+			}
+		}
+	}
 
-            int j = offset.get(0).getPosition();
-            for (int i = 0; i < offset.size(); i++, j++) {
-                int dx = offset.get(i).getPosition();
-                for (; j < dx; j++) {
-                    s += '.';
-                }
-                String tokString = offset.get(i).getToken();
-                if (tokString.length() > 1) {
-                   s += '[' + tokString + ']';
-                } else {
-                    s += tokString;
-                }
-            }
-            ascii = s;
+	private int getId(int i) {
+		if (locus != null) {
+			return BinaryEncodeDecode.decodeUnsignedInt32(locus, i * 2);
+		}
+		return 0;
+	}
 
-    }
+	public int getLength() {
+		return offset.size();
+	}
 
-    public CSMatchedSeqPattern(String s) {
-        pattern = this;
-        Matcher m0 = CSMatchedSeqPattern.headerPattern.matcher(s);
-        rand_hash = new java.util.Random().nextInt();
-        if (m0.find()) {
-            Matcher m1 = CSMatchedSeqPattern.locusPattern.matcher(s);
-            String pat = m0.group(1);
-            int seqNo = Integer.parseInt(m0.group(2));
-            int idNo = Integer.parseInt(m0.group(3));
-            int tokNo = Integer.parseInt(m0.group(4));
-            double pVal = Double.parseDouble(m0.group(5));
-            this.zScore = pVal;
-            this.seqNo = seqNo;
-            this.idNo = idNo;
-            this.offset = new ArrayList<PatternOfflet>();
-            int offDx = 0;
-            int j = 0;
-            Matcher m2 = CSMatchedSeqPattern.offsetPattern.matcher(pat);
-            while (m2.find()) {
-                String token = m2.group(1);
-                if (!token.equalsIgnoreCase(".")) {
+	public int getSupport() {
+		return idNo != -1 ? idNo : 0;
+	}
 
-                    PatternOfflet patternOfflet = new PatternOfflet(offDx, token);
-                    if(this.offset.size()<=j){
-                    this.offset.add(j, patternOfflet);
-                    }else{
-                    this.offset.set(j, patternOfflet);
-                    }
-                    j++;
-                }
-                offDx++;
-            }
-            this.ascii = pat;
-            int index = m0.end();
-            boolean found = m1.find(index);
-            int locId = 0;
-            locus = new byte[idNo * 8]; // 4 bytes per int for id and offset
-            while (found) {
-                int id = Integer.parseInt(m1.group(1));
-                int dx = Integer.parseInt(m1.group(2));
-                locus[locId++] = (byte) (id % 256);
-                id /= 256;
-                locus[locId++] = (byte) (id % 256);
-                id /= 256;
-                locus[locId++] = (byte) (id % 256);
-                id /= 256;
-                locus[locId++] = (byte) (id % 256);
-                locus[locId++] = (byte) (dx % 256);
-                dx /= 256;
-                locus[locId++] = (byte) (dx % 256);
-                dx /= 256;
-                locus[locId++] = (byte) (dx % 256);
-                dx /= 256;
-                locus[locId++] = (byte) (dx % 256);
-                found = m1.find();
-            }
-        }
-    }
+	public int getUniqueSupport() {
+		return seqNo;
+	}
 
-    public int getId(int i) {
-        if (locus != null) {
-            return get32BitUnsignedInt(locus, i * 2);
-        }
-        return 0;
-    }
+	public int getMaxLength() {
+		int baseOffset = this.offset.get(0).getPosition();
+		int extent = offset.get(getLength() - 1).getPosition() + 1 - baseOffset;
+		
+		int maxLen = 0;
+		if ((maxLen == 0) && (locus != null)) {
+			for (int i = 0; i < idNo; i++) {
+				// int id = getId(i);
+				int dx = getOffset(i);
+				int len = dx + extent;
+				maxLen = Math.max(len, maxLen);
+			}
+		}
+		return maxLen;
+	}
 
-    public int getAbsoluteOffset(int i) {
-        if (locus != null) {
-            return get32BitUnsignedInt(locus, i * 2 + 1);
-        }
-        return 0;
-    }
+	public String getASCII() {
+		return ascii;
+	}
 
-    public int[] getSupportIds() {
-        // creates the complement of locus1 in locus;
-        int prevId = -1;
-        int j = 0;
-        int[] support = new int[idNo];
-        int i_0 = 0;
-        while (i_0 < idNo) {
-            int id = getId(i_0++);
-            if (id > prevId) {
-                prevId = support[j++] = id;
-            }
-        }
-        int[] finalSupport = new int[j];
-        for (int i = 0; i < j; i++) {
-            finalSupport[i] = support[i];
-        }
-        return finalSupport;
-    }
+	public void write(BufferedWriter writer) throws IOException {
+		writer.write(ascii);
+		writer.write("\t");
+		writer.write("[" + seqNo + "," + getSupport() + "," + getLength()
+				+ "," + getPValue() + "]\t");
+		for (int j = 0; j < getSupport(); j++) {
+			int id = getId(j);
+			int dx = getOffset(j);
+			writer.write(new String("[" + id + ',' + dx + ']'));
+		}
+		writer.newLine();
+	}
 
-    public int[] getComplement(int[] base) {
-        // creates the complement of locus1 in locus;
-        int[] complement = new int[base.length];
-        int i_0 = 0;
-        int i_1 = 0;
-        int j = 0;
-        while ((i_1 < idNo) && (i_0 < base.length)) {
-            int l_0 = base[i_0];
-            int l_1 = getId(i_1);
-            if (l_0 < l_1) {
-                complement[j++] = l_0;
-                i_0++;
-            } else if (l_0 == l_1) {
-                i_0++;
-                i_1++;
-            } else {
-                i_1++;
-            }
-        } while (i_0 < base.length) {
-            complement[j++] = base[i_0++];
-        }
-        int[] finalComplement = new int[j];
-        for (int i = 0; i < j; i++) {
-            finalComplement[i] = complement[i];
-        }
-        return finalComplement;
-    }
+	public int getOffset(int j) {
+		int baseOffset = this.offset.get(0).getPosition();
 
-    public int getLength() {
-        return offset.size();
-    }
+		int absoluteOffset = 0;
+		if (locus != null) {
+			absoluteOffset = BinaryEncodeDecode.decodeUnsignedInt32(locus, j * 2 + 1);
+		}
 
-    public int getSupport() {
-        return idNo!=-1?idNo:0;
-    }
+		return absoluteOffset + baseOffset;
+	}
 
-    public int getUniqueSupport() {
-        return seqNo;
-    }
+	private ArrayList<DSPatternMatch<DSSequence, CSSeqRegistration>> matches = new ArrayList<DSPatternMatch<DSSequence, CSSeqRegistration>>();
 
-    public int getSeqNo() {
-        return seqNo;
-    }
+	public DSPatternMatch<DSSequence, CSSeqRegistration> get(int i) {
+		if (matches.size() > i) {
+			return matches.get(i);
+		} else {
+			DSSequence object = getObject(i);
+			if (object != null) {
+				CSSeqPatternMatch match = new CSSeqPatternMatch(object);
+				CSSeqRegistration reg = match.getRegistration();
+				reg.x1 = getOffset(i);
+				reg.x2 = reg.x1 + getLength();
 
-    public int getMaxLength() {
-        int extent = getExtent();
-        int maxLen = 0;
-        if ((maxLen == 0) && (locus != null)) {
-            for (int i = 0; i < idNo; i++) {
-                //int id = getId(i);
-                int dx = getOffset(i);
-                int len = dx + extent;
-                maxLen = Math.max(len, maxLen);
-            }
-        }
-        return maxLen;
-    }
+				return match;
+			}
+		}
+		return null;
+	}
 
-    public String getASCII() {
-        return ascii;
-    }
+	public List<DSPatternMatch<DSSequence, CSSeqRegistration>> matches() {
+		if (matches.size() < 1) {
+			for (int i = 0; i < this.getSupport(); i++) {
+				matches.add(i, get(i));
+			}
+		}
+		return matches;
+	}
 
-    public void write(BufferedWriter writer) throws IOException {
-        writer.write(ascii);
-        writer.write("\t");
-        writer.write("[" + getSeqNo() + "," + getSupport() + "," + getLength() +
-                     "," + getPValue() + "]\t");
-        for (int j = 0; j < getSupport(); j++) {
-            int id = getId(j);
-            int dx = getOffset(j);
-            writer.write(new String("[" + id + ',' + dx + ']'));
-        }
-        writer.newLine();
-    }
+	public int hashCode() {
+		return rand_hash;
+	}
 
-    public int getExtent() {
-        int baseOffset = this.offset.get(0).getPosition();
-        return offset.get(getLength() - 1).getPosition() + 1 - baseOffset;
-    }
-
-    public int getOffset(int j) {
-        int baseOffset =  this.offset.get(0).getPosition();
-        int dx = getAbsoluteOffset(j) + baseOffset;
-        return dx;
-    }
-
-    private int get32BitUnsignedInt(byte[] bytes, int offset) {
-        return org.geworkbench.util.BinaryEncodeDecode.decodeUnsignedInt32(
-                bytes, offset);
-    }
-
- public   ArrayList<DSPatternMatch<DSSequence, CSSeqRegistration>> matches = new ArrayList<DSPatternMatch<
-                                          DSSequence, CSSeqRegistration>>();
-
-    public DSPatternMatch<DSSequence, CSSeqRegistration> get(int i) {
-        if (matches.size() > i) {
-            return matches.get(i);
-        } else {
-            if(getObject(i)!=null){
-            CSSeqPatternMatch match = new CSSeqPatternMatch(getObject(i));
-            CSSeqRegistration reg = match.getRegistration();
-            reg.x1 = getOffset(i);
-            reg.x2 = reg.x1 + getLength();
-            //  System.out.println(match.getObject().getSequence());
-            return match;
-            }
-        }
-        return null;
-    }
-
-    public List<DSPatternMatch<DSSequence, CSSeqRegistration>> matches() {
-        if (matches.size() < 1) {
-            for (int i = 0; i < this.getSupport(); i++) {
-                matches.add(i, get(i));
-            }
-        }
-        return matches;
-    }
-
-    public int hashCode() {
-        return rand_hash;
-    }
-
+	@Override
     public List<DSPatternMatch<DSSequence, CSSeqRegistration>> match(DSSequence object, double p) {
         List<DSPatternMatch<DSSequence,
                 CSSeqRegistration>>
@@ -388,12 +267,8 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence, CSSeqRegis
         return matchResults;
     }
 
+	@Override
     public CSSeqRegistration match(DSSequence object) {
-        CSSeqRegistration result = new CSSeqRegistration();
-        DSMatchedPattern<DSSequence,
-                        CSSeqRegistration>
-                matchResults = new CSMatchedPattern<DSSequence,
-                               CSSeqRegistration>(this);
         for (DSPatternMatch<DSSequence,
              ? extends CSSeqRegistration> match : matches) {
             if (match.getObject().equals(object)) {
@@ -404,6 +279,7 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence, CSSeqRegis
         return null;
     }
 
+	@Override
     public String toString(DSSequence object, CSSeqRegistration registration) {
         if (ascii != null) {
             return ascii;
@@ -412,41 +288,22 @@ public class CSMatchedSeqPattern extends CSMatchedPattern<DSSequence, CSSeqRegis
         }
     }
 
-    public DSSequence getObject(int i)  {
+    private DSSequence getObject(int i)  {
 
-        if ((seqDB != null) && (i < getSupport())) {
-                   return seqDB.getSequence(this.getId(i));
-        } else{
-            //System.out.println("IN CSMATHCEDSP" + i + " "   + getSupport() + seqDB.size());
-             return null;
-        }
+		if ((seqDB != null) && (i < getSupport())) {
+			return seqDB.getSequence(this.getId(i));
+		} else {
+			return null;
+		}
 
-    }
+	}
 
-    public CSSeqRegistration getRegistration(int i) throws
-            IndexOutOfBoundsException {
-        if (i < getSupport()) {
-            CSSeqRegistration seqReg = new CSSeqRegistration();
-            seqReg.x1 = getOffset(i);
-            seqReg.x2 = seqReg.x1 + this.getExtent();
-            return seqReg;
-        }
-        throw new IndexOutOfBoundsException();
-    }
+	public void setIdNo(int value) {
+		idNo = value;
+	}
 
-    public String toString(int i) {
-        if (ascii == null) {
-            PatternOperations.fill(this, seqDB);
-        }
-        return getASCII();
-    }
-
-    public DSSequenceSet getSeqDB() {
-        return seqDB;
-    }
-
-    public void setSeqDB(DSSequenceSet seqDB) {
-        this.seqDB = seqDB;
-    }
+	public void setSeqNo(int value) {
+		seqNo = value;
+	}
 
 }
