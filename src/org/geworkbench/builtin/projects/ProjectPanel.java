@@ -82,7 +82,6 @@ import org.geworkbench.events.CommentsEvent;
 import org.geworkbench.events.DirtyDataEvent;
 import org.geworkbench.events.HistoryEvent;
 import org.geworkbench.events.ImageSnapshotEvent;
-import org.geworkbench.events.MicroarrayNameChangeEvent;
 import org.geworkbench.events.NormalizationEvent;
 import org.geworkbench.events.PendingNodeCancelledEvent;
 import org.geworkbench.events.PendingNodeLoadedFromWorkspaceEvent;
@@ -91,7 +90,6 @@ import org.geworkbench.events.ProjectNodeAddedEvent;
 import org.geworkbench.events.ProjectNodePostCompletedEvent;
 import org.geworkbench.events.ProjectNodeRemovedEvent;
 import org.geworkbench.events.ProjectNodeRenamedEvent;
-import org.geworkbench.events.SingleValueEditEvent;
 import org.geworkbench.events.StructureAnalysisEvent;
 import org.geworkbench.parsers.DataSetFileFormat;
 import org.geworkbench.util.FilePathnameUtils;
@@ -1947,64 +1945,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			}
 			colorContext.updateContext(view);
 		}
-	}
-
-	/**
-	 * Method for receiving <code>TableChangeEvent</code> from the
-	 * <code>TabularView</code> widget. This event contains dataset as altered
-	 * by the user
-	 *
-	 * @param tce
-	 *            <code>TableChangeEvent</code> from the
-	 *            <code>TabularView</code> widget
-	 */
-	@Subscribe
-	public void receive(SingleValueEditEvent tce, Object source) {
-		DSDataSet changedMASet = tce.getReferenceMicroarraySet();
-		// This component only handles changes to the currently selected
-		// micorarray.
-		MicroarraySetNode selectedNode = projectRenderer.microarraySetNodeSelection;
-		if (selectedNode != null
-				&& selectedNode.getMicroarraySet() == changedMASet) {
-			// Update the "history" information to mirror the editing activity.
-			Object[] prevHistory = changedMASet.getValuesForName(HISTORY);
-			changedMASet.clearName(HISTORY);
-			changedMASet.addNameValuePair(HISTORY, (prevHistory == null ? ""
-					: (String) prevHistory[0])
-					+ "Signal for marker "
-					+ " edited to "
-					+ tce.getNewValue().getValue() + "\n");
-			fireNodeSelectionEvent(selectedNode);
-		}
-
-	}
-
-	/**
-	 * For receiving micorarray name change events.
-	 *
-	 * @param mnce
-	 *            <code>MicroarrayNameChangeEvent</code> containing the
-	 *            micorarray that was renamed.
-	 */
-	@Subscribe
-	public void receive(MicroarrayNameChangeEvent mnce, Object source) {
-		// DSMicroarraySet changedMASet =
-		// mnce.getMicroarray().getMicroarraySet();
-		MicroarraySetNode selectedNode = projectRenderer.microarraySetNodeSelection;
-		// This component only handles changes to the currently selected
-		// micorarray.
-		if (selectedNode != null) { // && selectedNode.getMicroarraySet() ==
-			// changedMASet) {
-			// If the microarray is already dirty, then the change in the name
-			// will be persisted when we change the selected microarray set. We
-			// only need to handle the case when this is a "clean" array
-			// if (! ( (MAMemoryStatus) changedMASet).isDirty()) {
-			selectedNode.persist();
-			// }
-
-			fireNodeSelectionEvent(selectedNode);
-		}
-
 	}
 
 	@Subscribe
