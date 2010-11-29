@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
-import org.geworkbench.bison.datastructure.biocollections.DSCollection;
 import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.CSSequence;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
@@ -32,7 +31,7 @@ import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeq
  * </p>
  * 
  * @author not attributable
- * @version 1.0
+ * @version $Id$
  */
 
 public class PatternOperations {
@@ -123,7 +122,7 @@ public class PatternOperations {
 	 * @return HashMap
 	 */
 	public static HashMap<CSSequence, PatternSequenceDisplayUtil> processPatterns(
-			DSCollection<DSMatchedPattern<DSSequence, CSSeqRegistration>> patterns,
+			List<DSMatchedPattern<DSSequence, CSSeqRegistration>> patterns,
 			DSSequenceSet sequenceDB) {
 		return processPatterns(patterns, sequenceDB,
 				PatternLocations.DEFAULTTYPE);
@@ -179,7 +178,7 @@ public class PatternOperations {
 	 * @return HashMap
 	 */
 	public static HashMap<CSSequence, PatternSequenceDisplayUtil> processPatterns(
-			DSCollection<DSMatchedPattern<DSSequence, CSSeqRegistration>> patterns,
+			List<DSMatchedPattern<DSSequence, CSSeqRegistration>> patterns,
 			DSSequenceSet sequenceDB, String patternType) {
 		if (patterns != null && sequenceDB != null) {
 			try {

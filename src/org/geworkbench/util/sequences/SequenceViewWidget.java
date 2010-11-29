@@ -15,7 +15,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.TreeSet;
 
 import javax.swing.BorderFactory;
@@ -29,8 +31,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 
-import org.geworkbench.bison.datastructure.biocollections.Collection;
-import org.geworkbench.bison.datastructure.biocollections.DSCollection;
 import org.geworkbench.bison.datastructure.biocollections.sequences.CSSequenceSet;
 import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
@@ -63,7 +63,7 @@ public class SequenceViewWidget extends JPanel {
 	private static final long serialVersionUID = -6141589995966150788L;
 
 	protected HashMap<CSSequence, PatternSequenceDisplayUtil> patternLocationsMatches;
-	protected DSCollection<DSMatchedPattern<DSSequence, CSSeqRegistration>> selectedPatterns = new Collection<DSMatchedPattern<DSSequence, CSSeqRegistration>>();
+	protected List<DSMatchedPattern<DSSequence, CSSeqRegistration>> selectedPatterns = new ArrayList<DSMatchedPattern<DSSequence, CSSeqRegistration>>();
 
 	public JToolBar jToolBar1 = new JToolBar();
 	// TODO create the public/protected method to add button instead of exposing jToolBar1 as public
@@ -334,7 +334,7 @@ public class SequenceViewWidget extends JPanel {
 	}
 
 	public void setPatterns(
-			DSCollection<DSMatchedPattern<DSSequence, CSSeqRegistration>> matches) {
+			List<DSMatchedPattern<DSSequence, CSSeqRegistration>> matches) {
 		selectedPatterns.clear();
 		for (int i = 0; i < matches.size(); i++) {
 			selectedPatterns.add(matches.get(i));
