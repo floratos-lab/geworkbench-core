@@ -4,31 +4,18 @@ package org.geworkbench.engine.config.events;
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: First Genetic Trust, Inc.</p>
  * @author First Genetic Trust, Inc.
- * @version 1.0
+ * @version $Id$
  */
 
 /**
  * Base class for all application events.
+ * 
+ * @version $Id$
  */
 public class Event {
-    // ---------------------------------------------------------------------------
-    // --------------- Instance variables
-    // ---------------------------------------------------------------------------
-    /**
-     * Reference to the application plugin throwing the event.
-     */
-    protected EventSource source;
-    // ---------------------------------------------------------------------------
-    // --------------- Constructors
-    // ---------------------------------------------------------------------------
-    /**
-     * Instantiate an event thrown by the desiganted source.
-     *
-     * @param s The event source.
-     */
-    public Event(EventSource s) {
-        source = s;
-    }
 
+	// TODO the parameter has no use
+    public Event(Object s) {
+    }
 
 }
