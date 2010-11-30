@@ -8,10 +8,7 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.StringTokenizer;
-import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JMenu;
@@ -23,8 +20,6 @@ import org.geworkbench.engine.config.MenuListener;
 import org.geworkbench.engine.config.PluginDescriptor;
 import org.geworkbench.engine.config.PluginRegistry;
 import org.geworkbench.engine.config.VisualPlugin;
-import org.geworkbench.engine.config.events.AppEventListener;
-import org.geworkbench.engine.config.events.EventSource;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.util.Debug;
 import org.jdom.Document;
@@ -76,19 +71,6 @@ public class PluginObject {
      * The <code>PluginDescriptor</code> created for this plugin.
      */
     private PluginDescriptor compDes = null;
-    /**
-     * Maintains the list of event sources that will throw coupled events to
-     * this plugin. The actual registration of the coupled event relationships
-     * will be performed at the end of parsing, via a call to the method
-     * {@link org.geworkbench.engine.config.rules.PluginObject#finish() finish} below. The keys of
-     * this <code>HashMap</code> are <code>Class</code> objects corresponding to
-     * subinterfaces of <code>AppEventListerner</code> that are (presumably)
-     * implemented by the plugin. Every such key is mapped in the
-     * <code>HashMap</code> to a <code>Vector</code> listing the IDs of all event
-     * source components that this plugin requests receiving coupled events on the
-     * event listener prescribed by the key.
-     */
-    private HashMap<Class<?>, Vector<String>> coupledEventSources = new HashMap<Class<?>, Vector<String>>();
 
     // ---------------------------------------------------------------------------
     // --------------- Constructors
@@ -309,61 +291,11 @@ public class PluginObject {
     public void finish() {
         ComponentRegistry registry = ComponentRegistry.getRegistry();
         registry.registerSubscriptions(compDes.getPlugin(), compDes);
-        Vector<String> eventSourceIDs;
-        Iterator<Class<?>> iter;
-        Class<?> listenerClass;
-        EventSource eventSource;
-        int size;
-        // Set things up
-        iter = coupledEventSources.keySet().iterator();
-        // Go over all listeners that the plugin wants to register.
-        while (iter.hasNext()) {
-            listenerClass = iter.next();
-            eventSourceIDs = coupledEventSources.get(listenerClass);
-            size = eventSourceIDs.size();
-            // Attempt to set up a coupled listener relationship with the proper
-            // event sources.
-            for (int i = 0; i < size; ++i) {
-                try {
-                    eventSource = getEventSourceWithID(eventSourceIDs.get(i));
-                    eventSource.addEventListener(listenerClass, (AppEventListener) compDes.getPlugin());
-                } catch (Exception e) {
-                    System.err.println("PluginObject::finish() - Listener = " + listenerClass.getName());
-                    e.printStackTrace(System.err);
-                }
-
-            }
-
-        }
 
         // If the compDes component is a visual plugin, add this object as a listener
         // to focus events from the plugin.
         if (compDes.isVisualPlugin())
             attachFocusListener(((VisualPlugin) compDes.getPlugin()).getComponent());
-    }
-
-    /**
-     * Get the plugin with the designated ID. This plugin <b>must</b> be of type
-     * <code>EventSource</code>.
-     *
-     * @param id The ID to search for.
-     * @return The <code>EventSource</code> plugin with that id.
-     * @throws NotEventSourceException
-     */
-    private EventSource getEventSourceWithID(String id) throws NotEventSourceException {
-        Object eventSource;
-        eventSource = PluginRegistry.getPluginDescriptor(id).getPlugin();
-        // Make sure that the eventSource subclasses the EventSource class.
-        // If this is the case, add the current plugin as a listener to that
-        // event source.
-        try {
-            if (!Class.forName("org.geworkbench.engine.config.events.EventSource").isAssignableFrom(eventSource.getClass()))
-                throw new NotEventSourceException("PluginObject::getEventSourceWithID()" + " - Attempt to couple listener to the component with ID " + id + " which does not extend the class org.geworkbench.engine.config.events.EventSource.");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace(System.err);
-        }
-
-        return (EventSource) eventSource;
     }
 
     /**
