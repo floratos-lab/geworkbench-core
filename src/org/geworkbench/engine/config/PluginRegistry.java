@@ -1,22 +1,18 @@
 package org.geworkbench.engine.config;
 
-import org.geworkbench.engine.config.events.BroadcastEventRegistry;
-import org.geworkbench.engine.config.events.EventSource;
-import org.geworkbench.engine.management.ComponentResource;
-import org.geworkbench.engine.management.TypeMap;
-
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Vector;
+
+import org.geworkbench.engine.config.events.BroadcastEventRegistry;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: First Genetic Trust, Inc.</p>
  *
  * @author First Genetic Trust, Inc.
- * @version 1.0
+ * @version $Id$
  */
 
 /**
@@ -311,18 +307,6 @@ public class PluginRegistry {
             for (int i = 0; i < size; ++i) {
                 compDes = (PluginDescriptor) componentVector.get(i);
                 System.out.println(">>>>> Working with component with ID = " + compDes.getID());
-                try {
-                    // Check if a plugin is an event source
-                    if (Class.forName("org.geworkbench.engine.config.events.EventSource").isAssignableFrom(compDes.getPlugin().getClass())) {
-                        ((EventSource) compDes.getPlugin()).debugPrint();
-                    } else {
-                        System.out.println("\t\tNot an Event Source");
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace(System.err);
-                }
-
             }
 
             // Finally, print the broadcast events
@@ -342,9 +326,7 @@ public class PluginRegistry {
 	public static Vector getComponentVector(){
 		return componentVector;
 	}
-//    public static Vector getUsedIds(PluginDescriptor pluginDescriptor){
-//    	return pluginDescriptor.getUsedIds();
-//    }
+
     public static Vector<String> getUsedIds(){
     	return PluginDescriptor.getUsedIds();
     }
