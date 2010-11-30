@@ -489,7 +489,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				publishCleanDataEvent(new CleanDataEvent());
 			}
 			publishPendingNodeLoadedFromWorkspaceEvent(new PendingNodeLoadedFromWorkspaceEvent(
-					pendingGridEprs, null));
+					pendingGridEprs));
 		}
 		// Set final selection
 		if (selectedNode != null) {
