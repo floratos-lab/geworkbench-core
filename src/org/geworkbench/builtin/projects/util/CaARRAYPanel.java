@@ -56,7 +56,6 @@ import org.geworkbench.util.ProgressBar;
  * @author xiaoqing
  * @version $Id$
  */
-@SuppressWarnings("unchecked")
 public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 	private static final String LOADING_SELECTED_BIOASSAYS_ELAPSED_TIME = "Loading selected bioassays - elapsed time: ";
 
@@ -406,7 +405,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 		// If there are multiple parents in the paths, it means user tries
 		// to select arrays from different experiments, it's not allowed.
 		TreePath[] paths = remoteFileTree.getSelectionPaths();
-		HashSet set = new HashSet();
+		HashSet<TreePath> set = new HashSet<TreePath>();
 		for (TreePath treePath : paths) {
 			set.add(treePath.getParentPath());
 		}
@@ -481,7 +480,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 							.getUserObject());
 					if (caArray2Experiment.getHybridizations() == null)
 						publishCaArrayRequestHybridizationListEvent(new CaArrayRequestHybridizationListEvent(
-								null, url, portnumber, user, passwd,
+								url, portnumber, user, passwd,
 								caArray2Experiment));
 				}
 			}

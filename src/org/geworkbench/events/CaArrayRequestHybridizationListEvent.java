@@ -2,8 +2,13 @@ package org.geworkbench.events;
 
 import org.geworkbench.builtin.projects.remoteresources.carraydata.CaArray2Experiment;
 import org.geworkbench.engine.config.events.Event;
-import org.geworkbench.engine.config.events.EventSource;
 
+/**
+ * 
+ * @author zji
+ * @version $Id$
+ *
+ */
 public class CaArrayRequestHybridizationListEvent extends Event {
 	private String url;
 	private int port;
@@ -50,10 +55,10 @@ public class CaArrayRequestHybridizationListEvent extends Event {
 	 * @param password
 	 * @param experiment
 	 */
-	public CaArrayRequestHybridizationListEvent(EventSource s, String url,
+	public CaArrayRequestHybridizationListEvent(String url,
 			int port, String username, String password,
 			CaArray2Experiment experiment) {
-		super(s);
+		super(null);
 		this.url = url;
 		this.port = port;
 		this.username = username;
