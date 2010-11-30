@@ -1,6 +1,7 @@
 package org.geworkbench.bison.datastructure.bioobjects;
 
 import java.io.File;
+import java.util.List;
 
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
@@ -14,17 +15,17 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 public class IdeaResult extends CSAncillaryDataSet<DSMicroarray> {
 	private static final long serialVersionUID = 1728642489420856774L;
 
-	public Object[][] output1_loc = null;
-	public Object[][] output1_goc = null;
-	public Object[][] output2 = null;
+	private List<IdeaEdge> locList = null;
+	private List<IdeaEdge> gocList = null;
+	private List<IdeaProbeGene> sigGeneList=null;
 
-	public IdeaResult(DSMicroarraySet<DSMicroarray> maSet, String string,
-			Object[][] output1_loc, Object[][] output1_goc, Object[][] output2) {
+	public IdeaResult(final DSMicroarraySet<DSMicroarray> maSet, String string,
+			List<IdeaEdge> locList, List<IdeaEdge> gocList, List<IdeaProbeGene> sigGeneList) {
 		super(maSet, string);
 		
-		this.output1_loc = output1_loc;
-		this.output1_goc = output1_goc;
-		this.output2 = output2;
+		this.locList = locList;
+		this.gocList = gocList;
+		this.sigGeneList = sigGeneList;
 	}
 
 	public File getDataSetFile() {
@@ -34,5 +35,16 @@ public class IdeaResult extends CSAncillaryDataSet<DSMicroarray> {
 
 	public void setDataSetFile(File file) {
 		// no-op
+	}
+
+	public List<IdeaEdge> getLocList() {
+		return locList;
+	}
+	public List<IdeaEdge> getGocList() {
+		return gocList;
+	}
+
+	public List<IdeaProbeGene> getSignificantGeneList() {
+		return sigGeneList;
 	}
 }
