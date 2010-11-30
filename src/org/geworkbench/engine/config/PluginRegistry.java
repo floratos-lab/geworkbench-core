@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
-import org.geworkbench.engine.config.events.BroadcastEventRegistry;
-
 /**
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: First Genetic Trust, Inc.</p>
@@ -309,9 +307,6 @@ public class PluginRegistry {
                 System.out.println(">>>>> Working with component with ID = " + compDes.getID());
             }
 
-            // Finally, print the broadcast events
-            System.out.println("\n\nPrinting the broadcast registry");
-            BroadcastEventRegistry.debugPrint();
             System.out.flush();
         }
 
