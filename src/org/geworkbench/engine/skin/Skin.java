@@ -68,13 +68,9 @@ import org.geworkbench.engine.config.Closable;
 import org.geworkbench.engine.config.GUIFramework;
 import org.geworkbench.engine.config.PluginDescriptor;
 import org.geworkbench.engine.config.VisualPlugin;
-import org.geworkbench.engine.config.events.AppEventListenerException;
-import org.geworkbench.engine.config.events.EventSource;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.engine.properties.PropertiesManager;
-import org.geworkbench.events.ComponentDockingEvent;
-import org.geworkbench.events.listeners.ComponentDockingListener;
 import org.geworkbench.util.FilePathnameUtils;
 import org.geworkbench.util.JAutoList;
 
@@ -110,9 +106,6 @@ public class Skin extends GUIFramework {
 
     private Map<String, DefaultDockingPort> areas = new Hashtable<String, DefaultDockingPort>();
 
-    DockingNotifier eventSink = new DockingNotifier();
-
-    @SuppressWarnings("unchecked")
 	private Set<Class> acceptors;
     private HashMap<Component, Class<?>> mainComponentClass = new HashMap<Component, Class<?>>();
     private ReferenceMap<DSDataSet<? extends DSBioObject>, String> visualLastSelected = new ReferenceMap<DSDataSet<? extends DSBioObject>, String>();
@@ -314,7 +307,6 @@ public class Skin extends GUIFramework {
     	ComponentConfigurationManagerWindow2.load();
     }
     
-    @SuppressWarnings("unchecked")
 	void chooseComponent() {
         if (acceptors == null) {
             // Get all appropriate acceptors
@@ -446,7 +438,6 @@ public class Skin extends GUIFramework {
         return (String) visualRegistry.get(visualPlugin);
     }
 
-    @SuppressWarnings("unchecked")
 	@Override
     public void addToContainer(String areaName, Component visualPlugin, String pluginName, Class mainPluginClass) {
         visualPlugin.setName(pluginName);
@@ -460,21 +451,6 @@ public class Skin extends GUIFramework {
         }
         visualRegistry.put(visualPlugin, areaName);
         mainComponentClass.put(visualPlugin, mainPluginClass);
-    }
-
-    private void dockingFinished(DockableImpl comp) {
-        for (String area: areas.keySet()) {
-            Component port = (Component) areas.get(area);
-            Component container = comp.getDockable().getParent();
-            if (container instanceof JTabbedPane || container instanceof JSplitPane) {
-                if (container.getParent() == port) {
-                    eventSink.throwEvent(comp.getPlugin(), area);
-                }
-            } else if (container instanceof DefaultDockingPort) {
-                if (container == port)
-                    eventSink.throwEvent(comp.getPlugin(), area);
-            }
-        }
     }
 
     private class DockableImpl extends DockableAdapter {
@@ -621,7 +597,7 @@ public class Skin extends GUIFramework {
         }
 
         public void dockingCompleted() {
-            dockingFinished(this);
+            // no-op
         }
 
     }
@@ -668,16 +644,6 @@ public class Skin extends GUIFramework {
         }
     }
 
-    private class DockingNotifier extends EventSource {
-        public void throwEvent(Component source, String region) {
-            try {
-                throwEvent(ComponentDockingListener.class, "dockingAreaChanged", new ComponentDockingEvent(this, source, region));
-            } catch (AppEventListenerException aele) {
-                aele.printStackTrace();
-            }
-        }
-    }
-
     @SuppressWarnings("unchecked")
 	public void setVisualizationType(DSDataSet type) {
         currentDataSet = type;
@@ -709,7 +675,6 @@ public class Skin extends GUIFramework {
         statusBar.setText(text);
     }
 
-    @SuppressWarnings("unchecked")
 	private void addAppropriateComponents(Set<Class> acceptors, String screenRegion, ArrayList<DockableImpl> dockables) {
         DefaultDockingPort port = (DefaultDockingPort) areas.get(screenRegion);
         for (DockableImpl dockable : dockables) {
@@ -774,7 +739,6 @@ public class Skin extends GUIFramework {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public void showWelcomeScreen() {
     	// TODO Does register needs a public method for add a acceptor? 
 		HashMap<Class, List<Class>> acceptorsNew = ComponentRegistry.getRegistry()
@@ -808,7 +772,6 @@ public class Skin extends GUIFramework {
 		GeawConfigObject.enableWelcomeScreenMenu(false);
 	}
 
-    @SuppressWarnings("unchecked")
 	public void hideWelcomeScreen() {
     	if(acceptors==null)
     		acceptors = ComponentRegistry.getRegistry().getAcceptors(null);
