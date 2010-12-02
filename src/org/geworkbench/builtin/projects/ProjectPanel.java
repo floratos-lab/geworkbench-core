@@ -2367,8 +2367,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	}
 
-	protected void saveWorkspace_actionPerformed(boolean terminating) {
-		WorkspaceHandler ws = new WorkspaceHandler(this);
+	private void saveWorkspace_actionPerformed(boolean terminating) {
+		WorkspaceHandler ws = new WorkspaceHandler();
 		ws.save(WORKSPACE_DIR, terminating);
 		if (!StringUtils.isEmpty(ws.getWorkspacePath()))
 			GUIFramework.getFrame().setTitle(
@@ -2376,8 +2376,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 							+ ws.getWorkspacePath() + "]");
 	}
 
-	protected void openWorkspace_actionPerformed() {
-		WorkspaceHandler ws = new WorkspaceHandler(this);
+	private void openWorkspace_actionPerformed() {
+		WorkspaceHandler ws = new WorkspaceHandler();
 		ws.open(WORKSPACE_DIR);
 		if (!StringUtils.isEmpty(ws.getWorkspacePath()))
 			GUIFramework.getFrame().setTitle(
@@ -2396,8 +2396,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		return event;
 	}
 
-	protected void newWorkspace_actionPerformed(ActionEvent e) {
-		WorkspaceHandler ws = new WorkspaceHandler(this);
+	private void newWorkspace_actionPerformed(ActionEvent e) {
+		WorkspaceHandler ws = new WorkspaceHandler();
 		if (!ws.confirmLoading(WORKSPACE_DIR, null))
 			return;
 		clear();

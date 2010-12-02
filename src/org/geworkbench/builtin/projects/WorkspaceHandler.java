@@ -37,14 +37,10 @@ import org.geworkbench.util.ProgressTask;
 public class WorkspaceHandler {
 	static Log log = LogFactory.getLog(WorkspaceHandler.class);
 
-	private ProjectPanel enclosingProjectPanel = null;
+	private final ProjectPanel enclosingProjectPanel = ProjectPanel.getInstance();
 
-	WorkspaceHandler(ProjectPanel enclosingProjectPanel) {
-		this.enclosingProjectPanel = enclosingProjectPanel;
-	}
-
-	ProgressDialog pdmodal = ProgressDialog.create(ProgressDialog.MODAL_TYPE);
-	ProgressDialog pdnonmodal = ProgressDialog.create(ProgressDialog.NONMODAL_TYPE);
+	private ProgressDialog pdmodal = ProgressDialog.create(ProgressDialog.MODAL_TYPE);
+	private ProgressDialog pdnonmodal = ProgressDialog.create(ProgressDialog.NONMODAL_TYPE);
 	
 	private String wsFilePath = "";
 
@@ -115,8 +111,7 @@ public class WorkspaceHandler {
 				wsFilename += extension;
 			}
 
-		    PanelFocusedListener wfl = new PanelFocusedListener();
-			SaveTask task = new SaveTask(ProgressItem.INDETERMINATE_TYPE, "Workspace is being saved.", wsFilename, terminating, wfl);
+			SaveTask task = new SaveTask(ProgressItem.INDETERMINATE_TYPE, "Workspace is being saved.", wsFilename, terminating);
 			pdmodal.executeTask(task);
 
 			wsFilePath = wsFilename;
@@ -235,18 +230,15 @@ public class WorkspaceHandler {
 	private class SaveTask extends ProgressTask<Void, Void> {
 		private String filename;
 		private boolean terminating;
-		private PanelFocusedListener wfl = null;
 
-		SaveTask(int pbtype, String message, String filename, boolean terminating, PanelFocusedListener wfl ) {
+		SaveTask(int pbtype, String message, String filename, boolean terminating ) {
 			super(pbtype, message);
 			this.filename = filename;
 			this.terminating = terminating;
-			this.wfl = wfl;
 		}
 
 		@Override
 		protected void done() {
-			GeawConfigObject.getGuiWindow().removeWindowFocusListener(wfl); 			 
 			pdmodal.removeTask(this);
 			if (isCancelled()) return;
 			
@@ -275,7 +267,6 @@ public class WorkspaceHandler {
 
 		@Override
 		protected Void doInBackground() throws FileNotFoundException, IOException {
-			GeawConfigObject.getGuiWindow().addWindowFocusListener(wfl);
 			ObjectOutput s = null;
 			FileOutputStream f = null;
 			try {
@@ -368,30 +359,6 @@ public class WorkspaceHandler {
 
 	}
 	
-	/**
-	 * 
-	 * @author zji
-	 *
-	 */
-	private class PanelFocusedListener implements
-			java.awt.event.WindowFocusListener {
-
-		public void windowGainedFocus(java.awt.event.WindowEvent e) {
-
-			if (pdmodal.isShowing()) {
-				pdmodal.setFocusable(true);
-				pdmodal.requestFocus();
-			}
-
-		}
-
-		public void windowLostFocus(java.awt.event.WindowEvent e) {
-			//do nothing; 
-
-		}
-
-	}
-
 	private static class WorkspaceFileFilter extends FileFilter {
 		private static final String fileExt = ".wsp";
 
