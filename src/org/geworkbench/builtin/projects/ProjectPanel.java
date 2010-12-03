@@ -77,9 +77,7 @@ import org.geworkbench.engine.skin.Skin;
 import org.geworkbench.events.CaArrayQueryEvent;
 import org.geworkbench.events.CaArrayQueryResultEvent;
 import org.geworkbench.events.CaArrayRequestEvent;
-import org.geworkbench.events.CleanDataEvent;
 import org.geworkbench.events.CommentsEvent;
-import org.geworkbench.events.DirtyDataEvent;
 import org.geworkbench.events.HistoryEvent;
 import org.geworkbench.events.ImageSnapshotEvent;
 import org.geworkbench.events.NormalizationEvent;
@@ -409,11 +407,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			/* add data sets next */
 			java.util.List<DataSetSaveNode> dataSets = project.getChildren();
 			for (DataSetSaveNode dataNode : dataSets) {
-				/*
-				 * publish an event so others know the data is being accessed by
-				 * the project panel at this time
-				 */
-				publishDirtyDataEvent(new DirtyDataEvent());
 				setComponents(dataNode);
 				DSDataSet<? extends DSBioObject> dataSet = dataNode.getDataSet();
 				dataSet.setExperimentInformation(dataNode.getDescription());
@@ -481,12 +474,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				}
 				selection.setNodeSelection((ProjectTreeNode) selection
 						.getSelectedDataSetNode().getParent());
-
-				/*
-				 * publish an event so others know the data is not being
-				 * accessed by the project panel at this time
-				 */
-				publishCleanDataEvent(new CleanDataEvent());
 			}
 			publishPendingNodeLoadedFromWorkspaceEvent(new PendingNodeLoadedFromWorkspaceEvent(
 					pendingGridEprs));
@@ -498,16 +485,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			projectTree.setSelectionPath(new TreePath(selectedNode.getPath()));
 			selection.setNodeSelection(selectedNode);
 		}
-	}
-
-	@Publish
-	public DirtyDataEvent publishDirtyDataEvent(DirtyDataEvent event) {
-		return event;
-	}
-
-	@Publish
-	public CleanDataEvent publishCleanDataEvent(CleanDataEvent event) {
-		return event;
 	}
 
 	private void setComponents(DataSetSaveNode saveNode) {
