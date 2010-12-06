@@ -241,6 +241,9 @@ public class MageTabFileFormat extends DataSetFileFormat {
 					DSMicroarraySet.affyTxtType);
 			maSet.add(array);	
 		}
+
+        maSet.sortMarkers(possibleMarkers);
+
 		//This buffered reader is used to put insert marker values for one sample at a time from the Series file
 		BufferedReader out = null;
 		int j = 0;
@@ -277,7 +280,7 @@ public class MageTabFileFormat extends DataSetFileFormat {
 									if(valString == null){
 										Float v = Float.NaN;
 										CSExpressionMarkerValue markerValue = new CSExpressionMarkerValue(v);
-										maSet.get(counter).setMarkerValue(j, markerValue);
+										maSet.get(counter).setMarkerValue(maSet.newid[j], markerValue);
 										if (v.isNaN()) {
 											markerValue.setMissing(true);
 										} else {
@@ -295,7 +298,7 @@ public class MageTabFileFormat extends DataSetFileFormat {
 										Float v = value;
 										CSExpressionMarkerValue markerValue = new CSExpressionMarkerValue(
 												v);
-										maSet.get(counter).setMarkerValue(j, markerValue);
+										maSet.get(counter).setMarkerValue(maSet.newid[j], markerValue);
 										if (v.isNaN()) {
 											SwingUtilities.invokeLater(new Runnable() {
 												public void run() {	
@@ -380,7 +383,7 @@ public class MageTabFileFormat extends DataSetFileFormat {
 								if(valString == null){
 									Float v = Float.NaN;
 									CSExpressionMarkerValue markerValue = new CSExpressionMarkerValue(v);
-									maSet.get(k).setMarkerValue(j, markerValue);
+									maSet.get(k).setMarkerValue(maSet.newid[j], markerValue);
 									if (v.isNaN()) {
 										markerValue.setMissing(true);
 									} else {
@@ -397,7 +400,7 @@ public class MageTabFileFormat extends DataSetFileFormat {
 									Float v = value;
 									CSExpressionMarkerValue markerValue = new CSExpressionMarkerValue(
 											v);
-									maSet.get(k).setMarkerValue(j, markerValue);
+									maSet.get(k).setMarkerValue(maSet.newid[j], markerValue);
 									if (v.isNaN()) {
 										markerValue.setMissing(true);
 									} else {

@@ -106,69 +106,55 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
 
         currGeneId = 0;
         CMicroarrayParser parser = new CMicroarrayParser();
-        ReaderMonitor rm = null;
+
         this.label = file.getName();
         this.absPath = file.getAbsolutePath();
+
+        if (!readAndParse(parser, ParseType.STRUCTURE, "Getting structure information from " + file.getName()))
+        	return;
+        if (!readAndParse(parser, ParseType.MARKER, "Loading Marker Data from " + file.getName()))
+        	return;
+        sortMarkers(parser.markerNo);
+        if (!readAndParse(parser, ParseType.VALUE, "Loading Marker Value from " + file.getName()))
+        	return;
+    }
+
+    private enum ParseType {STRUCTURE, MARKER, VALUE};
+    private boolean readAndParse(CMicroarrayParser parser, ParseType type, String message){
+        currGeneId = 0;
+        ReaderMonitor rm = null;
         try {
-            rm = createProgressReader("Getting structure information from " + file.getName(), file);
+            rm = createProgressReader(message, file);
         } catch (FileNotFoundException fnf) {
             fnf.printStackTrace();
-            return;
+            return false;
         }
-        String line;
-        try {
-            while ((line = rm.reader.readLine()) != null){ 
-            	if (!line.trim().equalsIgnoreCase("")) {
-					parser.parseLine(line.trim(), this);
-					if (rm.pm != null) {
-						if (rm.pm.isCanceled()) {
-							loadingCancelled = true;
-							rm.reader.close();
-							return;
-						}
-					}
-				}
-            }
-        } catch (InterruptedIOException iioe) {
-            iioe.printStackTrace();
-            loadingCancelled = true;
-            return;
-        } catch (Exception ioe) {
-            ioe.printStackTrace();
-            return;
-        } finally {
-            try {
-				rm.reader.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        }
-        try {
-            rm = createProgressReader("Loading Data from " + file.getName(), file);
-        } catch (FileNotFoundException fnf) {
-            fnf.printStackTrace();
-            return;
-        }
-        initialize(parser.microarrayNo, parser.markerNo);
+        if (type == ParseType.MARKER)
+        	initialize(parser.microarrayNo, parser.markerNo);
+        String line = null;
         try {
             while ((line = rm.reader.readLine()) != null) {
 				if (!line.trim().equalsIgnoreCase("")) {
-					parser.executeLine(line.trim(), this);
-					if (rm.pm.isCanceled()) {
+			    	if (type == ParseType.STRUCTURE) 
+			    		parser.parseLine(line.trim(), this);
+			    	else if (type == ParseType.MARKER)
+			    		parser.executeLine(line.trim(), this);
+			    	else if (type == ParseType.VALUE)
+			    		parser.parseValue(line.trim());
+					if (rm.pm != null && rm.pm.isCanceled()) {
 						loadingCancelled = true;
 						rm.reader.close();
-						return;
+						return false;
 					}
 				}
 			}
         } catch (InterruptedIOException iioe) {
             loadingCancelled = true;
-            return;
+            return false;
         } catch (Exception ioe) {
             log.error("Error while parsing line: " + line);
             ioe.printStackTrace();
-            return;
+            return false;
         } finally {
 			try {
 				rm.reader.close();
@@ -178,6 +164,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
 			}
 
         }
+        return true;
     }
 
     public boolean initialized = false;
@@ -263,7 +250,6 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
                     }
                 } else if (line.charAt(0) != '\t') {
                     // This handles individual gene lines with (value, pvalue) pairs separated by tabs
-                    int i = 0;
                     DSGeneMarker mi = (DSGeneMarker)mArraySet.getMarkers().get(currGeneId);
                     if (markerVector.size() > currGeneId) {
                         mi = markerVector.get(currGeneId);
@@ -302,9 +288,32 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
                         System.out.println("error parsing " + token);
                         e.printStackTrace();
                     }
+                    currGeneId++;
+                }
+            }
+        } //end of executeLine()
+        
+        void parseValue(String line) {
+            if (line.charAt(0) == '#') {
+                return; //
+            }
+
+            StringTokenizer tokenizer = new StringTokenizer(line, "\t", false);            
+            int n = tokenizer.countTokens();
+            String[] st = new String[n];
+            for (int i = 0; i < n; i++) {
+                st[i] = tokenizer.nextToken();
+            }
+
+            if (st.length > 0) {
+                String token = st[0];
+                if (!token.equalsIgnoreCase("PDFModel") && !token.equalsIgnoreCase("AffyID") 
+                		&& !token.equalsIgnoreCase("Description") && line.charAt(0) != '\t') {
+                    // This handles individual gene lines with (value, pvalue) pairs separated by tabs
+                    int i = 0;
                     boolean pValueExists = ((st.length - 2) > microarrayNo);
                     for (int j = 2; j < st.length; j++) {
-                        CSMarkerValue marker = (CSMarkerValue) get(i).getMarkerValue(currGeneId);
+                        CSMarkerValue marker = (CSMarkerValue) get(i).getMarkerValue(newid[currGeneId]);
                         String value = st[j];
                         if ((value == null) || (value.equalsIgnoreCase(""))) { // skip the extra '/t'
                             value = st[++j];
@@ -320,7 +329,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
                         }
 
                         parse(marker, value, pValue);
-                        ((org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker) markerVector.get(currGeneId)).check(marker, false);
+                        ((org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker) markerVector.get(newid[currGeneId])).check(marker, false);
                         if (marker.isMasked() || marker.isMissing()) {
                             maskedSpots++;
                         }
@@ -330,7 +339,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
                     currGeneId++;
                 }
             }
-        } //end of executeLine()
+        } 
 
         void parseLine(String line, DSMicroarraySet<? extends DSBioObject> mArraySet) {
         	

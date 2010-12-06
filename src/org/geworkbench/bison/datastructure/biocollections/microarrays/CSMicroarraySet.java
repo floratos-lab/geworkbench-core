@@ -10,6 +10,7 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.*;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.util.RandomNumberGenerator;
+import org.geworkbench.engine.preferences.GlobalPreferences;
 
 import java.io.*;
 import java.util.*;
@@ -345,4 +346,35 @@ public class CSMicroarraySet<T extends DSMicroarray> extends CSDataSet<T> implem
 		this.annotationFileName = annotationFileName;
 	}
     
+    public int[] newid;
+    public int[] getNewMarkerOrder(){
+    	return newid;
+    }
+    public void sortMarkers(int mrkNo) {
+		newid = new int[mrkNo];
+		int i = 0;
+		if (GlobalPreferences.getInstance().getMarkerLoadOptions() == GlobalPreferences.ORIGINAL) {
+			for (i = 0; i < markerVector.size(); newid[i] = i++);
+		} else {
+			Collections.sort(markerVector, new MarkerOrderByGene());
+
+			for (DSGeneMarker item : markerVector) {
+				newid[item.getSerial()] = i++;
+			}
+			i = 0;
+			for (DSGeneMarker item : markerVector) {
+				item.setSerial(i++);
+			}
+		}
+	}
+
+    private class MarkerOrderByGene implements Comparator<DSGeneMarker> {
+		public int compare(DSGeneMarker o1, DSGeneMarker o2) {
+			int res = o1.getGeneName().compareToIgnoreCase(((DSGeneMarker)o2).getGeneName());
+			if (res == 0)
+				return o1.getLabel().compareToIgnoreCase(((DSGeneMarker)o2).getLabel());
+			return res;
+		}
+    }
+
 }

@@ -240,6 +240,9 @@ public class AffyFileFormat extends DataSetFileFormat {
                 markerVector.get(count++).setDescription(acc);
             }
             reader.close();
+
+            microarraySet.sortMarkers(v.size());
+
             // Read again, this time loading data
             fileIn = new FileInputStream(file);
             progressIn = new ProgressMonitorInputStream(null, "Loading Data", fileIn);
@@ -248,6 +251,7 @@ public class AffyFileFormat extends DataSetFileFormat {
             microarray.setLabel(file.getName());
             parser.reset();
             parser.setMicroarray(microarray);
+            parser.setNewMarkerOrder(microarraySet.getNewMarkerOrder());
             while ((line = reader.readLine()) != null) {
                 if (!line.trim().equals("")) {
                     parser.parseLine(line);

@@ -50,4 +50,7 @@ public interface DSMicroarraySet <T extends DSMicroarray> extends DSMatrixDataSe
     
     public String getAnnotationFileName();
     public void setAnnotationFileName(String annotationFileName);
+
+    public void sortMarkers(int mrkNo);
+    public int[] getNewMarkerOrder();
 }

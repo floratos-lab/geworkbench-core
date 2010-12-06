@@ -215,7 +215,7 @@ public class AffymetrixParser {
                 tokenIndex++;
             } while (true);
 
-            ( (CSAffyMarkerValue) microarray.getMarkerValue(markerIndex++)).init(context);
+            ( (CSAffyMarkerValue) microarray.getMarkerValue(newid[markerIndex++])).init(context);
             //AffyMarkerValue affyMarker = new AffyMarkerValueImpl(context);
             //microarray.addMarkerValue(affyMarker);
         }
@@ -257,4 +257,10 @@ public class AffymetrixParser {
     public String getExperimentInfo() {
         return experimentInfo;
     }
+    
+    private int[] newid;
+    public void setNewMarkerOrder(int[] ids){
+    	newid = ids;
+    }
+
 }

@@ -275,6 +275,45 @@ public class SOFTFileFormat extends DataSetFileFormat {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+		
+		String result = null;
+		for (int i = 0; i < possibleMarkers; i++) {
+			result = AnnotationParser.matchChipType(maSet, maSet
+					.getMarkerVector().get(i).getLabel(), false);
+			if (result != null) {
+				break;
+			}
+		}
+		if (result == null) {
+			AnnotationParser.matchChipType(maSet, "Unknown", true);
+		} else {
+			maSet.setCompatibilityLabel(result);
+		}
+		for (DSGeneMarker marker : maSet.getMarkerVector()) {
+			String token = marker.getLabel();
+			String[] locusResult = AnnotationParser.getInfo(token,
+					AnnotationParser.LOCUSLINK);
+			String locus = "";
+			if ((locusResult != null)
+					&& (!locusResult[0].trim().equals(""))) {
+				locus = locusResult[0].trim();
+			}
+			if (locus.compareTo("") != 0) {
+				try {
+					marker.setGeneId(Integer.parseInt(locus));
+				} catch (NumberFormatException e) {
+					//log.info("Couldn't parse locus id: " + locus);
+				}
+			}
+			String[] geneNames = AnnotationParser.getInfo(token,
+					AnnotationParser.ABREV);
+			if (geneNames != null) {
+				marker.setGeneName(geneNames[0]);
+			}
+
+			marker.getUnigene().set(token);
+		}
+		
 		//Getting the markers size to include in a loop
 		possibleMarkers = markers.size();
 		for (int i = 0; i < arrayNames.size(); i++) {
@@ -285,7 +324,11 @@ public class SOFTFileFormat extends DataSetFileFormat {
 			maSet.add(array);	
 		}
 		
-		//This buffered reader is used to put insert marker values for one sample at a time from the Series file
+        maSet.sortMarkers(possibleMarkers);
+
+        //for (int w: maSet.getNewMarkerOrder()) System.out.print(w+", ");
+        //System.out.println();
+        //This buffered reader is used to put insert marker values for one sample at a time from the Series file
 		BufferedReader out = null;
 		int j = 0;
 		try {
@@ -302,7 +345,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 								if(valString == null){
 									Float v = Float.NaN;
 									CSExpressionMarkerValue markerValue = new CSExpressionMarkerValue(v);
-									maSet.get(k).setMarkerValue(j, markerValue);
+									maSet.get(k).setMarkerValue(maSet.newid[j], markerValue);
 									if (v.isNaN()) {
 										markerValue.setMissing(true);
 									} else {
@@ -319,7 +362,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 									Float v = value;
 									CSExpressionMarkerValue markerValue = new CSExpressionMarkerValue(
 											v);
-									maSet.get(k).setMarkerValue(j, markerValue);
+									maSet.get(k).setMarkerValue(maSet.newid[j], markerValue);
 									if (v.isNaN()) {
 										markerValue.setMissing(true);
 									} else {
@@ -333,43 +376,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 					line = out.readLine();
 				}
 				out.close();
-				String result = null;
-				for (int i = 0; i < possibleMarkers; i++) {
-					result = AnnotationParser.matchChipType(maSet, maSet
-							.getMarkerVector().get(i).getLabel(), false);
-					if (result != null) {
-						break;
-					}
-				}
-				if (result == null) {
-					AnnotationParser.matchChipType(maSet, "Unknown", true);
-				} else {
-					maSet.setCompatibilityLabel(result);
-				}
-				for (DSGeneMarker marker : maSet.getMarkerVector()) {
-					String token = marker.getLabel();
-					String[] locusResult = AnnotationParser.getInfo(token,
-							AnnotationParser.LOCUSLINK);
-					String locus = "";
-					if ((locusResult != null)
-							&& (!locusResult[0].trim().equals(""))) {
-						locus = locusResult[0].trim();
-					}
-					if (locus.compareTo("") != 0) {
-						try {
-							marker.setGeneId(Integer.parseInt(locus));
-						} catch (NumberFormatException e) {
-							log.info("Couldn't parse locus id: " + locus);
-						}
-					}
-					String[] geneNames = AnnotationParser.getInfo(token,
-							AnnotationParser.ABREV);
-					if (geneNames != null) {
-						marker.setGeneName(geneNames[0]);
-					}
 
-					marker.getUnigene().set(token);
-				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

@@ -16,6 +16,7 @@ public class GlobalPreferences {
     public static final String PREF_GENEPIX_COMPUTATION = "Genepix Value Computation";
     public static final String PREF_TEXT_EDITOR = "Text Editor";
     public static final String RCM_URL = "Remote Components URL";
+    public static final String PREF_MARKER_LOAD = "Marker Load Options";
     
     public static final String[] VISUALIZATION_VALUES = new String[]{"Absolute", "Relative"};
     public static final Class<? extends ColorContext>[] VISUALIZATON_COLOR_CONTEXTS = new Class[]{DefaultColorContext.class, ExpressionPValueColorContext.class};
@@ -31,7 +32,10 @@ public class GlobalPreferences {
     public static final String DEFAULT_TEXT_EDITOR_MAC = "";
 
     public static final String DEFAULT_RCM_URL = "http://cagridnode.c2b2.columbia.edu:8080/v2.0.0/componentRepository";
-
+    
+    public static final String[] MARKER_LOAD_VALUES = new String[]{"Retain original marker order", "Order markers by gene name"};
+    public static final int ORIGINAL = 0, SORTED = 1;
+    
     private static GlobalPreferences instance;
 
     public static GlobalPreferences getInstance() {
@@ -68,11 +72,17 @@ public class GlobalPreferences {
         field4.setValue(GlobalPreferences.DEFAULT_RCM_URL);
         
         // Color Context
+        
+        // Marker order/value options on load
+        ChoiceField field5 = new ChoiceField(GlobalPreferences.PREF_MARKER_LOAD, GlobalPreferences.MARKER_LOAD_VALUES);
+        field5.setSelection(0);
 
         prefs.addField(field1);
         prefs.addField(field2);
         prefs.addField(field3);
         prefs.addField(field4);
+        prefs.addField(field5);
+
         // Load stored values
         PreferencesManager manager = PreferencesManager.getPreferencesManager();
         manager.fillPreferences(null, prefs);
@@ -98,6 +108,10 @@ public class GlobalPreferences {
     public Class<? extends ColorContext> getColorContextClass() {
         int pref = ((ChoiceField) prefs.getField(PREF_VISUALIZATION)).getSelection();
         return VISUALIZATON_COLOR_CONTEXTS[pref];
+    }
+    
+    public int getMarkerLoadOptions() {
+    	return ((ChoiceField)prefs.getField(PREF_MARKER_LOAD)).getSelection();
     }
 
 }
