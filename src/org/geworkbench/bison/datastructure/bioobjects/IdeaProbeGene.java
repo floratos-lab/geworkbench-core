@@ -71,9 +71,8 @@ public class IdeaProbeGene implements Serializable, Comparable<IdeaProbeGene>{
 		return edges;
 	}
 
-	@Override
 	public int compareTo(IdeaProbeGene otherP) {
-		return probeId.compareTo(otherP.getProbeId());
+		return (int)(otherP.getNes() - nes);
 	}
 
 	public void setNes(double nes) {
