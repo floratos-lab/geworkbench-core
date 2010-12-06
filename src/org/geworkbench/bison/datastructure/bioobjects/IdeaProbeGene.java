@@ -72,7 +72,10 @@ public class IdeaProbeGene implements Serializable, Comparable<IdeaProbeGene>{
 	}
 
 	public int compareTo(IdeaProbeGene otherP) {
-		return (int)(otherP.getNes() - nes);
+		double d = otherP.getNes() - nes;
+		if(d<0) return -1;
+		else if (d>0) return 1;
+		else return 0;
 	}
 
 	public void setNes(double nes) {

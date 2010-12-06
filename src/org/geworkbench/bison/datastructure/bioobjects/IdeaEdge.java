@@ -124,7 +124,10 @@ public class IdeaEdge implements Serializable, Comparable<IdeaEdge> {
 	}
 
 	public int compareTo(IdeaEdge otherEdge) {
-		return (int) (zDeltaCorr - otherEdge.getzDeltaCorr());
+		double d = zDeltaCorr - otherEdge.getzDeltaCorr();
+		if(d<0) return -1;
+		else if (d>0) return 1;
+		else return 0;
 	}
 
 	public void setzDeltaCorr(double zDeltaCorr) {
