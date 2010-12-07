@@ -86,10 +86,11 @@ public class IdeaProbeGene implements Serializable, Comparable<IdeaProbeGene>{
 
 	public static class NesComparator implements Comparator<IdeaProbeGene> {
 
+		// descent order
 		public int compare(IdeaProbeGene p1, IdeaProbeGene p2) {
 			double d = p1.getNes() - p2.getNes();
-			if(d<0) return -1;
-			else if (d>0) return 1;
+			if(d<0) return 1;
+			else if (d>0) return -1;
 			else return 0;
 		}
 
