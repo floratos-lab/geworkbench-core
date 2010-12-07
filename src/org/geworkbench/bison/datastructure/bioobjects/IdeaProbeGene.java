@@ -2,6 +2,7 @@ package org.geworkbench.bison.datastructure.bioobjects;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import org.geworkbench.bison.datastructure.bioobjects.IdeaEdge;
 
@@ -72,10 +73,7 @@ public class IdeaProbeGene implements Serializable, Comparable<IdeaProbeGene>{
 	}
 
 	public int compareTo(IdeaProbeGene otherP) {
-		double d = otherP.getNes() - nes;
-		if(d<0) return -1;
-		else if (d>0) return 1;
-		else return 0;
+		return probeId.compareTo(otherP.getProbeId());
 	}
 
 	public void setNes(double nes) {
@@ -84,6 +82,17 @@ public class IdeaProbeGene implements Serializable, Comparable<IdeaProbeGene>{
 
 	public double getNes() {
 		return nes;
+	}
+
+	public static class NesComparator implements Comparator<IdeaProbeGene> {
+
+		public int compare(IdeaProbeGene p1, IdeaProbeGene p2) {
+			double d = p1.getNes() - p2.getNes();
+			if(d<0) return -1;
+			else if (d>0) return 1;
+			else return 0;
+		}
+
 	}
 
 }
