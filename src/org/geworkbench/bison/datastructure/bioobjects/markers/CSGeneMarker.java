@@ -13,27 +13,23 @@ import java.io.*;
  * <p>Company: Columbia University</p>
  *
  * @author not attributable
- * @version 1.0
+ * @version $Id$
  */
 
 public class CSGeneMarker implements DSGeneMarker, Serializable {
 
-    /**
-	 *
-	 */
 	private static final long serialVersionUID = -8778666154593978009L;
 
 	protected String label = null;
     protected String description = null;
     protected String abrev = null;
     protected int markerId = 0;
-    //refactored locusLinkId to geneId -- AM
+
     protected int geneId = -1;
     protected DSUnigene unigene = new CSUnigene();
-	// FIXME Why isn't this set to null? With this, it is initialized to an
-	// empty string.
-	String geneName = null;
-    protected int disPlayType = DSGeneMarker.AFFY_TYPE;
+
+	private String geneName = null;
+    private int disPlayType = DSGeneMarker.AFFY_TYPE;
 
 
     public Object clone() {
@@ -57,6 +53,7 @@ public class CSGeneMarker implements DSGeneMarker, Serializable {
         this.disPlayType = disPlayType;
     }
 
+    // TODO this method is never invoked
     public int getDisPlayType() {
         return disPlayType;
     }
@@ -132,35 +129,6 @@ public class CSGeneMarker implements DSGeneMarker, Serializable {
             }
         }
         return false;
-
-        //            String label = mInfo.getLabel();
-        //            if(label != null){
-        //                return label.equalsIgnoreCase(this.label);
-        //            }else{
-        //                return false;
-        //            }
-        //        }else{
-        //            return false;
-        //        }
-        //        }
-
-        //        if(obj instanceof CSGeneMarker) {
-        //            CSGeneMarker mInfo = (CSGeneMarker)obj;
-        //            if(label == null) {
-        //                return false;
-        //            } else {
-        //                if((label != null) && (mInfo.getDescription() != null)) {
-        //                    if(label.compareTo(mInfo.getDescription()) == 0) {
-        //                        if(this.getClass().equals(mInfo.getClass())) {
-        //                            return true;
-        //                        }
-        //                    }
-        //                }
-        //                return isEquivalent(mInfo);
-        //            }
-        //        } else {
-        //            return false;
-        //        }
     }
 
     /**
@@ -201,55 +169,11 @@ public class CSGeneMarker implements DSGeneMarker, Serializable {
         } else {
             return this.getGeneId() == i.getGeneId();
         }
-
-        //        if((this.getGeneId() == -1) || (i.getGeneId() == -1)) { //can we use locuslink to compare?
-        //            if((this.getUnigene().getUnigeneId() <= 0) || (i.getUnigene().getUnigeneId() <= 0)) { //can we use unigene to compare?
-        //                if((this.getShortName() == null) || (i.getShortName() == null)) { //can we use shortname to compare?
-        //                    if((this.getDescription() == null) || (i.getDescription() == null)) { //can we use label?
-        //                        return false;
-        //                    } else {
-        //                        if(this.getDescription() == i.getDescription()) { //compare label
-        //                            return true;
-        //                        } else {
-        //                            return false;
-        //                        }
-        //
-        //                    }
-        //                } else {
-        //                    if(this.getShortName() == i.getShortName()) {
-        //                        return true;
-        //                    } else {
-        //                        return false;
-        //                    }
-        //                }
-        //            } else {
-        //                if(this.getUnigene() == i.getUnigene()) {
-        //                    return true;
-        //                } else {
-        //                    return false;
-        //                }
-        //            }
-        //
-        //        } else {
-        //            if(this.getGeneId() == i.getGeneId()) {
-        //                return true;
-        //            } else {
-        //                return false;
-        //            }
-        //        }
-
     }
 
     public int hashCode() {
         // watkin -- made consistent with equals()
         return label.hashCode();
-        //        if (geneId != -1) {
-        //            return geneId;
-        //        } else if (label != null) {
-        //            return label.hashCode();
-        //        } else {
-        //            return markerId;
-        //        }
     }
 
     public void write(BufferedWriter writer) throws IOException {
@@ -288,7 +212,7 @@ public class CSGeneMarker implements DSGeneMarker, Serializable {
         return copy;
     }
 
-    public String getCanonicalLabel() {
+    private String getCanonicalLabel() {
         String disType = "";
         if (disPlayType == AFFY_TYPE) {
             disType = label;
