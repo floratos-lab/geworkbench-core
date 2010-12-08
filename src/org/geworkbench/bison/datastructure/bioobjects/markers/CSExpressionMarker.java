@@ -120,6 +120,7 @@ public class CSExpressionMarker extends CSGeneMarker implements
 		gi.range.max = this.range.max;
 		gi.label = label;
 		gi.geneId = geneId;
+		gi.geneIds = geneIds;
 		gi.unigene = unigene;
 		return gi;
 	}
@@ -136,5 +137,21 @@ public class CSExpressionMarker extends CSGeneMarker implements
 			}
 		}
 		return this.geneId;
+	}
+
+	public int[] getGeneIds() {
+		if (this.geneIds == null && label != null) {
+			String[] entrezIds = AnnotationParser.getInfo(label,
+					AnnotationParser.LOCUSLINK);
+			geneIds = new int[entrezIds.length];
+			for (int i = 0; i < entrezIds.length; i++) {
+				try {
+					this.geneIds[i] = Integer.parseInt(entrezIds[i].trim());
+				} catch (NumberFormatException e) {
+					this.geneIds[i] = 0;
+				}
+			}
+		}
+		return this.geneIds;
 	}
 }

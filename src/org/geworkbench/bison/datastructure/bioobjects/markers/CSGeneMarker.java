@@ -26,6 +26,7 @@ public class CSGeneMarker implements DSGeneMarker, Serializable {
     protected int markerId = 0;
 
     protected int geneId = -1;
+    protected int[] geneIds;
     protected DSUnigene unigene = new CSUnigene();
 
 	private String geneName = null;
@@ -90,6 +91,8 @@ public class CSGeneMarker implements DSGeneMarker, Serializable {
 
     public void setGeneId(int locusLink) {
         this.geneId = locusLink;
+        geneIds = new int[1];
+        geneIds[0] = geneId;
     }
 
     public void setGeneName(String geneName) {
@@ -117,9 +120,9 @@ public class CSGeneMarker implements DSGeneMarker, Serializable {
         ois.defaultReadObject();
     }
 
-    public boolean equals(Object obj) {
-        if (obj instanceof CSGeneMarker) {
-            CSGeneMarker mInfo = (CSGeneMarker) obj;
+    public boolean equals(DSGeneMarker marker) {
+        if (marker instanceof CSGeneMarker) {
+            CSGeneMarker mInfo = (CSGeneMarker) marker;
 
             String markerLabel = mInfo.getLabel();
             if (markerLabel != null) {
@@ -137,8 +140,8 @@ public class CSGeneMarker implements DSGeneMarker, Serializable {
      * @param o
      * @return
      */
-    public int compareTo(Object o) {
-        return label.compareToIgnoreCase(((DSGeneMarker) o).getLabel());
+    public int compareTo(DSGeneMarker marker) {
+        return label.compareToIgnoreCase(marker.getLabel());
     }
 
     public String toString() {
@@ -151,24 +154,6 @@ public class CSGeneMarker implements DSGeneMarker, Serializable {
             return label;
         }
         return name;
-    }
-
-    public String getShortName(int maxLength) {
-        String shortName = getShortName().trim();
-        if (shortName.length() > maxLength) {
-            return shortName.substring(0, maxLength);
-        }
-        return shortName;
-    }
-
-    public boolean isEquivalent(DSGeneMarker i) {
-        //I think we may want to enforce only comparing genes on the geneId. This is the only thing
-        //that guarantees 1-to-1 equivalence -- AM
-        if ((this.getGeneId() == -1) || (i.getGeneId() == -1)) {
-            return false;
-        } else {
-            return this.getGeneId() == i.getGeneId();
-        }
     }
 
     public int hashCode() {
@@ -264,4 +249,18 @@ public class CSGeneMarker implements DSGeneMarker, Serializable {
             return text0;
         }
     }
+
+	public int[] getGeneIds() {
+		if(geneIds==null)
+			return new int[] {geneId};
+		else
+			return geneIds;
+	}
+
+	public String[] getShortNames() {
+		if(label==null)
+			return new String[0];
+
+		return getShortName().split(AnnotationParser.MAIN_DELIMITER);
+	}
 }

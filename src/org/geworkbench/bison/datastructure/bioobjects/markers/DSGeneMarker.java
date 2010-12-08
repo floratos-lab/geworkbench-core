@@ -8,69 +8,81 @@ import java.io.IOException;
 import java.io.Serializable;
 
 /**
- * <p>Title: Sequence and Pattern Plugin</p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2003</p>
- * <p>Company: </p>
- *
+ * This class is used to represent any arbitrary genetic marker, such as an Affy
+ * probe, a DNA sequence, etc. The accession should be the universal identifier
+ * of this data. This should be compatible with caBIO representation
+ * <p>
+ * Copyright: Copyright (c) 2003
+ * </p>
+ * <p>
+ * Company:
+ * </p>
+ * 
  * @author not attributable
- * @version 1.0
- *          This class is used to represent any arbitrary genetic marker, such as an Affy probe, a DNA sequence, etc.
- *          The accession should be the universal identifier of this data. This should be compatible with caBIO representation
+ * @version $Id$
  */
 
-public interface DSGeneMarker extends Comparable, DSSequential, Cloneable, Serializable {
+public interface DSGeneMarker extends Comparable<DSGeneMarker>, DSSequential,
+		Cloneable, Serializable {
 
-    static final int AFFY_TYPE = 0;
-    static final int GENEPIX_TYPE = 1;
-    static final int UNIGENE_TYPE = 2;
-    static final int LOCUSLINK_TYPE = 3;
+	static final int AFFY_TYPE = 0;
+	static final int GENEPIX_TYPE = 1;
+	static final int UNIGENE_TYPE = 2;
+	static final int LOCUSLINK_TYPE = 3;
 
-    /**
-     * Returns the textual description of this Marker
-     *
-     * @return a String representing the textual representation
-     */
-    String getDescription();
+	/**
+	 * Returns the textual description of this Marker
+	 * 
+	 * @return a String representing the textual representation
+	 */
+	String getDescription();
 
-    void setDescription(String label);
+	void setDescription(String label);
 
-    /**
-     * Returns a unique identifier that represent this piece of genetic information
-     *
-     * @return a unique identifier
-     */
-    int getGeneId();
+	/**
+	 * Returns a unique identifier that represent this piece of genetic
+	 * information
+	 * 
+	 * @return a unique identifier
+	 */
+	int getGeneId();
+	/**
+	 * return all entrez ID's for this 'marker' (probe set) from annotation file
+	 * @return
+	 */
+	int[] getGeneIds();
 
-    DSUnigene getUnigene();
+	DSUnigene getUnigene();
 
-    /**
-     * @return String
-     */
-    String getShortName();
-    String getShortName(int maxLength);
+	/**
+	 * @return String
+	 */
+	String getShortName();
+	/**
+	 * return all gene symbols for this 'marker' (probe set) from annotation file
+	 * @return
+	 */
+	String[] getShortNames();
 
-    boolean isEquivalent(DSGeneMarker mInfo);
+	/**
+	 * Make a deep copy of this marker.
+	 * 
+	 * @return
+	 */
+	DSGeneMarker deepCopy();
 
-    /**
-     * Make a deep copy of this marker.
-     *
-     * @return
-     */
-    DSGeneMarker deepCopy();
+	void write(BufferedWriter writer) throws IOException;
 
-    void write(BufferedWriter writer) throws IOException;
+	public void setDisPlayType(int disPlayType);
 
-    public void setDisPlayType(int disPlayType);
+	public int getDisPlayType();
 
-    public int getDisPlayType();
+	public void setGeneId(int x);
 
-    public void setGeneId(int x);
+	public void setGeneName(String name);
 
-    public void setGeneName(String name);
+	public String getGeneName();
 
-    public String getGeneName();
-
-    public Object clone();
+	public Object clone();
 
 }
