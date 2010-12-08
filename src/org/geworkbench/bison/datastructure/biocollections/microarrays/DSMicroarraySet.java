@@ -16,8 +16,7 @@ import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 public interface DSMicroarraySet <T extends DSMicroarray> extends DSMatrixDataSet<T>, DSDataSet<T> {
 
     public final static int geneExpType = 0; // Probably needs to be removed
-    public final static int snpType = 1; // Probably needs to be removed
-    public final static int alleleType = 2; // Probably needs to be removed
+
     public final static int expPvalueType = 3; // added by xuegong
     public final static int chipChipType = 4; // added by xuegong
     public final static int genepixGPRType = 5;

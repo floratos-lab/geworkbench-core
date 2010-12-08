@@ -270,15 +270,7 @@ public class CSMicroarraySet<T extends DSMicroarray> extends CSDataSet<T> implem
         try {
             writer = new BufferedWriter(new FileWriter(file));
             writer.write("PDFModel\tAutoNormal\n");
-            switch (type) {
-                case snpType:
-                    writer.write("SNPData\n");
-                    break;
-                case alleleType:
-                    writer.write("AlleleData\n");
-                    break;
-                default:
-            }
+
             writer.write("Description\tAccession");
             for (DSMicroarray ma : this) {
                 writer.write('\t');

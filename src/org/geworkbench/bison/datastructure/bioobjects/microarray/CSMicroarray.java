@@ -76,11 +76,7 @@ public class CSMicroarray implements DSMicroarray, Serializable {
         markerArray = new CSMarkerValue[markerNo];
 
         for (int i = 0; i < markerNo; i++) {
-            if (type == DSMicroarraySet.snpType) {
-                markerArray[i] = new CSGenotypicMarkerValue((int) (Math.random() * 2) + 1, (int) (Math.random() * 2) + 1);
-            } else if (type == DSMicroarraySet.alleleType) {
-                markerArray[i] = new CSGenotypicMarkerValue(0);
-            } else if (type == DSMicroarraySet.expPvalueType) {
+            if (type == DSMicroarraySet.expPvalueType) {
                 markerArray[i] = new CSExpressionMarkerValue(0);
             } else if (type == DSMicroarraySet.genepixGPRType) {
                 markerArray[i] = new CSGenepixMarkerValue(0);
