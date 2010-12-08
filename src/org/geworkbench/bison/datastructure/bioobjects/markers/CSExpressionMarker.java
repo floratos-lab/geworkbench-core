@@ -82,7 +82,7 @@ public class CSExpressionMarker extends CSGeneMarker implements
 	 * @return String
 	 */
 	public String toString() {
-		return getCanonicalLabel();
+		return super.toString();
 	}
 
 	/**
@@ -125,13 +125,13 @@ public class CSExpressionMarker extends CSGeneMarker implements
 	}
 
 	public int getGeneId() {
-		if (this.geneId == -1) {
+		if (this.geneId == -1 && label != null) {
 			String entrezId = AnnotationParser.getInfo(label,
-					AnnotationParser.LOCUSLINK)[0];
+					AnnotationParser.LOCUSLINK)[0].trim();
 
-			if (entrezId.trim().length() != 0) {
+			try {
 				this.geneId = Integer.parseInt(entrezId);
-			} else {
+			} catch (NumberFormatException e) {
 				this.geneId = 0;
 			}
 		}
