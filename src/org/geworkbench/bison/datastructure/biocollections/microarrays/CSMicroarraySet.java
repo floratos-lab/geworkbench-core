@@ -265,28 +265,6 @@ public class CSMicroarraySet<T extends DSMicroarray> extends CSDataSet<T> implem
         return null;
     }
 
-    /**
-     * Should be moved to microarray utility file
-     *
-     * @param aType int
-     * @param id    int
-     */
-    public void randomize(int aType, int id) {
-        this.label = new String("Random Set: ") + id;
-        this.type = aType;
-        for (int j = 0; j < getMarkers().size(); j++) {
-            ArrayList<DSMarkerValue> set = new ArrayList<DSMarkerValue>();
-            for (DSMicroarray ma : this) {
-                set.add(ma.getMarkerValue(j));
-            }
-            for (DSMicroarray ma : this) {
-                int index = (int) (Math.random() * set.size());
-                ma.setMarkerValue(j, set.get(index));
-                set.remove(index);
-            }
-        }
-    }
-
     public void writeToFile(String file) {
         BufferedWriter writer;
         try {
