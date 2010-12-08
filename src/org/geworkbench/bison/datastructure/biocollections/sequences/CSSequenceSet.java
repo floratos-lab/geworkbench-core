@@ -1,5 +1,15 @@
 package org.geworkbench.bison.datastructure.biocollections.sequences;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.HashMap;
+
+import javax.swing.JOptionPane;
+
 import org.geworkbench.bison.datastructure.biocollections.CSDataSet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.SequenceMarker;
@@ -11,332 +21,316 @@ import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.bison.util.SequenceUtils;
 
-import java.io.*;
-import java.util.HashMap;
-
-import javax.swing.JOptionPane;
-
 /**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2003</p>
- * <p>Company: </p>
- *
+ * 
  * @author not attributable
- * @version 1.0
+ * @version $Id$
  */
 
-public class CSSequenceSet<T extends DSSequence> extends CSDataSet<T> implements DSSequenceSet<T> {
+public class CSSequenceSet<T extends DSSequence> extends CSDataSet<T> implements
+		DSSequenceSet<T> {
+	private static final long serialVersionUID = -2426885649247874087L;
 
-    static private HashMap databases = new HashMap();
-    private boolean dirty = false;
-    private boolean isDNA = true;
-    //private ArrayList sequences = new ArrayList();
-    private int maxLength = 0;
-    private String label = "Undefined";
-    private int sequenceNo = 0;
-    private File file = null;
-    private DSItemList<SequenceMarker> markerList = null;
-    //added by xiaoqing for bug fix to create subsetSequenceDB. which matchs the old sequences index with new temp sub seqenceDB index.
-    //Need rewrite to fit with caWorkbench3.
-    private int[] matchIndex;
-    private int[] reverseIndex;
+	static private HashMap<String, CSSequenceSet<?>> databases = new HashMap<String, CSSequenceSet<?>>();
+	private boolean dirty = false;
+	private boolean isDNA = true;
 
-    public CSSequenceSet() {
-        setID(RandomNumberGenerator.getID());
-    }
+	private int maxLength = 0;
+	private String label = "Undefined";
 
-    public void setDNA(boolean DNA) {
-        isDNA = DNA;
-    }
+	private File file = null;
+	private DSItemList<SequenceMarker> markerList = null;
 
-    public String getDataSetName() {
-        return label;
-    }
+	private int[] matchIndex;
+	private int[] reverseIndex;
 
-    public void addASequence(T sequence) {
-        if (!SequenceUtils.isValidDNASeqForBLAST(sequence)) {
-            isDNA = false;
-        }
-        this.add(sequence);
-        sequence.setSerial(this.indexOf(sequence));
-        // @todo - watkin - This marker is not stored anywhere!? Why is it created?
-        SequenceMarker marker = new org.geworkbench.bison.datastructure.
-                                bioobjects.markers.SequenceMarker();
-        marker.parseLabel(sequence.getLabel());
-        marker.setSerial(this.size());
+	public CSSequenceSet() {
+		setID(RandomNumberGenerator.getID());
+	}
 
-        if (sequence.length() > maxLength) {
-            maxLength = sequence.length();
-        }
-    }
+	public void setDNA(boolean DNA) {
+		isDNA = DNA;
+	}
 
-    public int getSequenceNo() {
+	public String getDataSetName() {
+		return label;
+	}
 
-        return this.size();
-    }
+	public void addASequence(T sequence) {
+		if (!SequenceUtils.isValidDNASeqForBLAST(sequence)) {
+			isDNA = false;
+		}
+		this.add(sequence);
+		sequence.setSerial(this.indexOf(sequence));
 
-    public T getSequence(int i) {
-        if ((this.size() == 0) && (file != null)) {
-            readFASTAFile(file);
-        }
-        if (i < this.size() && i >= 0) {
-            return this.get(i);
-        } else {
-            return null;
-        }
-    }
+		if (sequence.length() > maxLength) {
+			maxLength = sequence.length();
+		}
+	}
 
-    public T getSequence(DSGeneMarker marker) {
-    if ((this.size() == 0) && (file != null)) {
-        readFASTAFile(file);
-    }
-    if (markerList!= null && markerList.contains(marker)) {
-        int i = markerList.indexOf(marker);
-        return this.get(i);
-    } else {
-        return null;
-    }
-}
+	public int getSequenceNo() {
 
-public DSSequenceSet getActiveSequenceSet(DSPanel<? extends DSGeneMarker> markerPanel){
-    CSSequenceSet sequenceDB = new CSSequenceSet();
-    if(markerPanel!=null && markerPanel.size()>0){
-        for(DSGeneMarker marker: markerPanel){
+		return this.size();
+	}
 
-                T newSequence = this.getSequence(marker);
-                 if(newSequence!=null){
-                sequenceDB.addASequence(newSequence);
-            }
-        }
-        sequenceDB.setFASTAFile(file);
-    }
-    return sequenceDB;
-}
+	public T getSequence(int i) {
+		if ((this.size() == 0) && (file != null)) {
+			readFASTAFile(file);
+		}
+		if (i < this.size() && i >= 0) {
+			return this.get(i);
+		} else {
+			return null;
+		}
+	}
 
+	public T getSequence(DSGeneMarker marker) {
+		if ((this.size() == 0) && (file != null)) {
+			readFASTAFile(file);
+		}
+		if (markerList != null && markerList.contains(marker)) {
+			int i = markerList.indexOf(marker);
+			return this.get(i);
+		} else {
+			return null;
+		}
+	}
 
+	public DSSequenceSet<DSSequence> getActiveSequenceSet(
+			DSPanel<? extends DSGeneMarker> markerPanel) {
+		CSSequenceSet<DSSequence> sequenceDB = new CSSequenceSet<DSSequence>();
+		if (markerPanel != null && markerPanel.size() > 0) {
+			for (DSGeneMarker marker : markerPanel) {
 
-    public int getMaxLength() {
-        return maxLength;
-    }
+				T newSequence = this.getSequence(marker);
+				if (newSequence != null) {
+					sequenceDB.addASequence(newSequence);
+				}
+			}
+			sequenceDB.setFASTAFile(file);
+		}
+		return sequenceDB;
+	}
 
-    public boolean isDNA() {
-        return isDNA;
-    }
+	public int getMaxLength() {
+		return maxLength;
+	}
 
-    public static DSSequenceSet createFASTAfile(File file) {
-        CSSequenceSet seqDB = new CSSequenceSet();
-        seqDB.readFASTAFile(file);
-        return seqDB;
-    }
+	public boolean isDNA() {
+		return isDNA;
+	}
 
-    public void readFASTAFile(File inputFile) {
-        file = inputFile;
-        label = file.getName();
-        
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new FileReader(file));
-            T sequence = null;
-            String data = new String();
-            String s = reader.readLine();
-            int num = 0;
-            while (reader.ready()) {
-                if (s.trim().length() == 0) {
+	public static DSSequenceSet<DSSequence> createFASTAfile(File file) {
+		CSSequenceSet<DSSequence> seqDB = new CSSequenceSet<DSSequence>();
+		seqDB.readFASTAFile(file);
+		return seqDB;
+	}
 
-                } else if (s.startsWith(">")) {
-                    num++;
-                    if (sequence != null) {
-                        sequence.setSequence(data);
-                        addASequence(sequence);
-                    }
-                    sequence = (T)(new CSSequence());
-                    sequence.setLabel(s);
-                    data = new String();
-                } else {
-                    data += s;
-                }
-                s = reader.readLine();
+	@SuppressWarnings("unchecked")
+	public void readFASTAFile(File inputFile) {
+		file = inputFile;
+		label = file.getName();
 
-            }
-            if (sequence != null) {
-                sequence.setSequence(data + s);
-                addASequence(sequence);
-            }
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } finally {
-        	if( reader != null){
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new FileReader(file));
+			T sequence = null;
+			String data = new String();
+			String s = reader.readLine();
+			int num = 0;
+			while (reader.ready()) {
+				if (s.trim().length() == 0) {
+
+				} else if (s.startsWith(">")) {
+					num++;
+					if (sequence != null) {
+						sequence.setSequence(data);
+						addASequence(sequence);
+					}
+					sequence = (T) (new CSSequence());
+					sequence.setLabel(s);
+					data = new String();
+				} else {
+					data += s;
+				}
+				s = reader.readLine();
+
+			}
+			if (sequence != null) {
+				sequence.setSequence(data + s);
+				addASequence(sequence);
+			}
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		} finally {
+			if (reader != null) {
 				try {
 					reader.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-        	}
-        }
-        parseMarkers();
-        databases.put(file.getPath(), this);
-        addDescription("# of sequences: " + size());
-    }
+			}
+		}
+		parseMarkers();
+		databases.put(file.getPath(), this);
+		addDescription("# of sequences: " + size());
+	}
 
-    public void parseMarkers() {
-        markerList = new CSSequentialItemList<SequenceMarker>();
-        for (int markerId = 0; markerId < size(); markerId++) {
-            SequenceMarker marker = new SequenceMarker();
-            DSSequence sequence = this.get(markerId);
-            marker.parseLabel(sequence.getLabel());
-            sequence.addDescription(sequence.getLabel());
-            // Use the short label as the label for the sequence as well (bug #251)
-            if ((marker.getLabel() != null) && (marker.getLabel().length() > 0)) {
-                sequence.setLabel(marker.getLabel());
-            }
-            marker.setSerial(markerId);
-            markerList.add(markerId, marker);
-        }
-    }
+	public void parseMarkers() {
+		markerList = new CSSequentialItemList<SequenceMarker>();
+		for (int markerId = 0; markerId < size(); markerId++) {
+			SequenceMarker marker = new SequenceMarker();
+			DSSequence sequence = this.get(markerId);
+			marker.parseLabel(sequence.getLabel());
+			sequence.addDescription(sequence.getLabel());
+			// Use the short label as the label for the sequence as well (bug
+			// #251)
+			if ((marker.getLabel() != null) && (marker.getLabel().length() > 0)) {
+				sequence.setLabel(marker.getLabel());
+			}
+			marker.setSerial(markerId);
+			markerList.add(markerId, marker);
+		}
+	}
 
-    /**
-     * initIndexArray
-     */
-    private void initIndexArray() {
-        int size = size();
-        matchIndex = new int[size];
-        reverseIndex = new int[size];
-        for (int i = 0; i < size; i++) { //init.
-            matchIndex[i] = -1;
-            reverseIndex[i] = -1;
-        }
+	/**
+	 * initIndexArray
+	 */
+	private void initIndexArray() {
+		int size = size();
+		matchIndex = new int[size];
+		reverseIndex = new int[size];
+		for (int i = 0; i < size; i++) { // init.
+			matchIndex[i] = -1;
+			reverseIndex[i] = -1;
+		}
 
-    }
+	}
 
-    public void readFromResource() {
+	public void readFromResource() {
 
-    }
+	}
 
-    public void writeToResource() {
+	public void writeToResource() {
 
-    }
+	}
 
-    public boolean isDirty() {
-        return dirty;
-    }
+	public boolean isDirty() {
+		return dirty;
+	}
 
-    public void setDirty(boolean flag) {
-        dirty = flag;
-    }
+	public void setDirty(boolean flag) {
+		dirty = flag;
+	}
 
-    public void setLabel(String label) {
-        this.label = label;
-    }
+	public void setLabel(String label) {
+		this.label = label;
+	}
 
-    public void setMatchIndex(int[] matchIndex) {
-        this.matchIndex = matchIndex;
-    }
+	public void setMatchIndex(int[] matchIndex) {
+		this.matchIndex = matchIndex;
+	}
 
-    public void setReverseIndex(int[] reverseIndex) {
-        this.reverseIndex = reverseIndex;
-    }
+	public void setReverseIndex(int[] reverseIndex) {
+		this.reverseIndex = reverseIndex;
+	}
 
+	public File getFile() {
+		return file;
+	}
 
-    public File getFile() {
-        return file;
-    }
+	public String toString() {
+		if (file != null) {
+			return file.getName();
+		} else {
+			return label;
+		}
+	}
 
-    public String toString() {
-        if (file != null) {
-            return file.getName();
-        } else {
-            return label;
-        }
-    }
+	@SuppressWarnings("rawtypes")
+	static public CSSequenceSet getSequenceDB(File file) {
+		CSSequenceSet<?> sequenceDB = databases
+				.get(file.getPath());
+		if (sequenceDB == null) {
+			sequenceDB = new CSSequenceSet<DSSequence>();
+			sequenceDB.readFASTAFile(file);
+		}
+		return sequenceDB;
+	}
 
-    static public CSSequenceSet getSequenceDB(File file) {
-        CSSequenceSet sequenceDB = (CSSequenceSet) databases.get(file.getPath());
-        if (sequenceDB == null) {
-            sequenceDB = new CSSequenceSet();
-            sequenceDB.readFASTAFile(file);
-        }
-        return sequenceDB;
-    }
+	public String getFASTAFileName() {
+		return file.getAbsolutePath();
+	}
 
-    public String getFASTAFileName() {
-        return file.getAbsolutePath();
-    }
+	public void setFASTAFile(File f) {
+		file = f;
 
-     public String getFASTAFileRelativePath() throws IOException {
-        return file.getCanonicalPath();
-    }
-    public void setFASTAFile(File f) {
-        file = f;
+	}
 
-    }
+	public String getLabel() {
+		return label;
+	}
 
-    public String getLabel() {
-        return label;
-    }
+	/**
+	 * getCompatibilityLabel
+	 * 
+	 * @return String
+	 */
+	public String getCompatibilityLabel() {
+		return "FASTA";
+	}
 
-    /**
-     * getCompatibilityLabel
-     *
-     * @return String
-     */
-    public String getCompatibilityLabel() {
-        return "FASTA";
-    }
+	public DSItemList<? extends DSGeneMarker> getMarkerList() {
+		return markerList;
+	}
 
-    public DSItemList<? extends DSGeneMarker> getMarkerList() {
-        return markerList;
-    }
+	public T get(String label) {
+		DSGeneMarker marker = getMarkerList().get(label);
+		if (marker != null)
+			return get(marker.getSerial());
+		return super.get(label);
+	}
 
-    @Override public T get(String label){
-        DSGeneMarker marker = getMarkerList().get(label);
-        if (marker != null)
-            return get(marker.getSerial());
-        return super.get(label);
-    }
+	public int[] getMatchIndex() {
+		return matchIndex;
+	}
 
-    public int[] getMatchIndex() {
-        return matchIndex;
-    }
+	public int[] getReverseIndex() {
+		return reverseIndex;
+	}
 
-    public int[] getReverseIndex() {
-        return reverseIndex;
-    }
+	public DSSequenceSet<DSSequence> createSubSetSequenceDB(boolean[] included) {
+		DSSequenceSet<DSSequence> newDB = new CSSequenceSet<DSSequence>();
+		int newIndex = 0;
+		initIndexArray();
+		for (int i = 0; i < included.length; i++) {
+			if (i < this.size() && included[i]) {
+				newDB.addASequence(getSequence(i));
+				matchIndex[i] = newIndex;
+				reverseIndex[newIndex] = i;
 
-    public DSSequenceSet createSubSetSequenceDB(boolean[] included) {
-        DSSequenceSet newDB = new CSSequenceSet();
-        int newIndex = 0;
-        initIndexArray();
-        for (int i = 0; i < included.length; i++) {
-            if (i<this.size() && included[i]) {
-                newDB.addASequence(getSequence(i));
-                matchIndex[i] = newIndex;
-                reverseIndex[newIndex] = i;
+				newIndex++;
+			}
+		}
+		return newDB;
+	}
 
-                newIndex++;
-            }
-        }
-        return newDB;
-    }
+	public void writeToFile(String fileName) {
+		file = new File(fileName);
+		String lineBreak = System.getProperty("line.separator");
+		try {
+			BufferedWriter out = new BufferedWriter(new FileWriter(file));
+			for (int i = 0; i < this.getSequenceNo(); i++) {
+				T s = this.getSequence(i);
+				out.write(">" + s.getLabel() + lineBreak);
+				out.write(s.getSequence() + lineBreak);
+			}
+			out.close();
+		} catch (IOException ex) {
+			JOptionPane.showMessageDialog(null, "File " + fileName
+					+ " is not saved due to IOException " + ex.getMessage(),
+					"File Saving Failed", JOptionPane.ERROR_MESSAGE);
+		}
 
-
-    public void writeToFile(String fileName) {
-        file = new File(fileName);
-        String lineBreak = System.getProperty("line.separator");
-        try {
-            BufferedWriter out = new BufferedWriter(new FileWriter(file));
-            for (int i = 0; i < this.getSequenceNo(); i++) {
-                T s = this.getSequence(i);
-                out.write(">" + s.getLabel() + lineBreak);
-                out.write(s.getSequence() + lineBreak);
-            }
-            out.close();
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null,
-				    "File "+fileName+" is not saved due to IOException "+ex.getMessage(),
-				    "File Saving Failed",
-				    JOptionPane.ERROR_MESSAGE);
-        }
-
-    }
+	}
 }
