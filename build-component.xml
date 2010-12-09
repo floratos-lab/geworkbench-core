@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<project name="caWorkBench-component" default="compile">
+<project name="geWorkBench-component" default="compile">
 
     <!-- ===================================================================== -->
     <!-- INIT  -->
@@ -60,7 +60,6 @@
     <!-- ===================================================================== -->
     <!-- COMPILE  -->
     <!-- ===================================================================== -->
-
     <target name="compile" depends="prepare, compile-check" description="Compiles .java source code." if="src-exists">
         <javac srcdir="${src}" destdir="${classes}" debug="${debug}" source="1.6" target="1.6" memorymaximumsize="256M" fork="true">
             <classpath>
@@ -73,6 +72,14 @@
                 <exclude name="**/*.java"/>
             </fileset>
         </copy>
+    </target>
+
+	<!-- ===================================================================== -->
+    <!-- JAR  -->
+    <!-- ===================================================================== -->
+    <target name="jar" depends="compile" description="create a jar file for all files under classes">
+		<basename property="filename" file="${basedir}" />
+    	<jar destfile="${filename}.jar" basedir="${classes}" />
     </target>
 
     <!-- ===================================================================== -->
