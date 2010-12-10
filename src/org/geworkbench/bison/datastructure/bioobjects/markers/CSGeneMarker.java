@@ -238,7 +238,8 @@ public class CSGeneMarker implements DSGeneMarker, Serializable {
                         text = text.substring(index + 1);
                     }
                     String[] labels = text.split("/");
-                    text0 = label + ": " + labels[0].replace('"', ' ').trim();
+                    if(labels!=null && labels.length>0)
+                    	text0 = label + ": " + labels[0].replace('"', ' ').trim();
                 }
             }
         }
