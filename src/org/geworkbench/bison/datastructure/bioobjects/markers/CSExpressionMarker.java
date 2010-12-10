@@ -127,8 +127,12 @@ public class CSExpressionMarker extends CSGeneMarker implements
 
 	public int getGeneId() {
 		if (this.geneId == -1 && label != null) {
-			String entrezId = AnnotationParser.getInfo(label,
-					AnnotationParser.LOCUSLINK)[0].trim();
+			String[] entrezIds = AnnotationParser.getInfo(label,
+					AnnotationParser.LOCUSLINK);
+			if(entrezIds==null || entrezIds.length==0)
+				return 0;
+			
+			String entrezId = entrezIds[0].trim();
 
 			try {
 				this.geneId = Integer.parseInt(entrezId);
