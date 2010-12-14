@@ -3,12 +3,12 @@
 	xsi:noNamespaceSchemaLocation="ConfigurationFile Schema.xsd">
 
 	<gui-window name="Main GUI" class="org.geworkbench.engine.skin.Skin" />
-      
+
     <plugin id="SoftFileFilter" name="soft. Format"
-		class="org.geworkbench.parsers.SOFTFileFormat" /> 
-		
+		class="org.geworkbench.parsers.SOFTFileFormat" />
+
 	<plugin id="MageTabFileFilter" name="MAGE-TAB. Format"
-		class="org.geworkbench.parsers.MageTabFileFormat" /> 
+		class="org.geworkbench.parsers.MageTabFileFormat" />
 
 	<plugin id="expressionFileFilter" name="Exp. Format"
 		class="org.geworkbench.parsers.ExpressionFileFormat" />
@@ -29,7 +29,7 @@
 		class="org.geworkbench.engine.WelcomeScreen">
 		<gui-area name="VisualArea" />
 	</plugin>
-	
+
 	<plugin id="configurationMenu" name="configurationMenu"
 		class="org.geworkbench.engine.ccm.ComponentConfigurationManagerMenu" />
 	<plugin id="preferences" name="preferences"
@@ -44,20 +44,23 @@
 	<plugin id="affyFilter" name="Affy File Format"
 		class="org.geworkbench.parsers.AffyFileFormat" />
 
+	<plugin id="adjMatrixFilter" name="Addjacency Matrix File Format"
+		class="org.geworkbench.parsers.AdjacencyMatrixFileFormat" />
+
 	<plugin id="sequenceFileFilter" name="FASTA Format"
 		class="org.geworkbench.parsers.sequences.SequenceFileFormat" />
 
 	<plugin id="genepixFilter" name="Genepix File Format"
 		class="org.geworkbench.parsers.GenePixFileFormat" />
-	
+
 	<plugin id="tabDelimitedDataMatrixFileFilter" name="Tab-Delimited Data Matrix File Format"
 		class="org.geworkbench.parsers.TabDelimitedDataMatrixFileFormat" />
-		
-	<!-- 
+
+	<!--
 	<plugin id="edgeListFilter" name="Edge List File Format"
 		class="org.geworkbench.components.parsers.EdgeListFileFormat" />
-	
-	 -->	
+
+	 -->
 
 	<plugin id="commentsPanel" name="Dataset Annotation"
 		class="org.geworkbench.builtin.projects.comments.CommentsPanel">
