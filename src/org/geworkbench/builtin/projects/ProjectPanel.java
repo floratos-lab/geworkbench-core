@@ -1,5 +1,6 @@
 package org.geworkbench.builtin.projects;
 
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -208,7 +209,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		try {
 			initializeSwingComponents();
 			initializeMore();
-			
+
 			// Checks if a default workspace exists and loads it
 			File defaultWS = new File("./default.wsp");
 			if (defaultWS.exists()) {
@@ -875,7 +876,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 *
 	 * @param _ancDataSet
 	 */
-	private void addDataSetSubNode(DSAncillaryDataSet<? extends DSBioObject> _ancDataSet) {
+	void addDataSetSubNode(DSAncillaryDataSet<? extends DSBioObject> _ancDataSet) {
 		DataSetNode dNode = selection.getSelectedDataSetNode();
 		DataSetNode matchedDNode = null;
 		DSDataSet<? extends DSBioObject> parentSet = _ancDataSet.getParentDataSet();
@@ -1097,7 +1098,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				}
 			} else
 				jProjectTree_mouseClicked(e);
-			
+
 			Skin skin = (Skin) GeawConfigObject.getGuiWindow();
 			skin.resetSelectorTabOrder();
 		}
@@ -1507,7 +1508,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			}
 			sendCommentsEvent(selectedDataSetNode);
 		}
-		
+
 		selection.setNodeSelection(null);
 	}
 
@@ -2184,11 +2185,11 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	private void initializeSwingComponents() {
 		projectPanelTitleLabel.setBorder(BorderFactory.createEtchedBorder());
 		projectPanelTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		
+
 		ActionListener listener = null;
 		jDataSetScrollPane.setBorder(BorderFactory.createLoweredBevelBorder());
 		jDataSetScrollPane.setMinimumSize(new Dimension(122, 80));
-		
+
 		ToolTipManager.sharedInstance().registerComponent(projectTree);
 		projectTree.setCellRenderer(projectRenderer);
 		projectTree.getSelectionModel().setSelectionMode(

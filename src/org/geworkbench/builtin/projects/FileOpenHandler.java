@@ -29,17 +29,20 @@ import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarr
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
+import org.geworkbench.events.ProjectNodeAddedEvent;
+import org.geworkbench.parsers.AdjacencyMatrixFileFormat;
 import org.geworkbench.parsers.DataSetFileFormat;
 import org.geworkbench.parsers.FileFormat;
 import org.geworkbench.parsers.InputFileFormatException;
+import org.geworkbench.util.pathwaydecoder.mutualinformation.AdjacencyMatrixDataSet;
 
 /**
  * This class is refactored out of ProjectPanel to handle the file open action,
  * especially tackles the progress bar requirement for multiple files.
- * 
+ *
  * @author zji
  * @version $Id: FileOpenHandler.java,v 1.2 2008/07/25 19:13:17 jiz Exp $
- * 
+ *
  */
 public class FileOpenHandler {
 	static Log log = LogFactory.getLog(FileOpenHandler.class);
@@ -53,7 +56,7 @@ public class FileOpenHandler {
 			+ "restart geWorkbench now.\n"
 			+ "To increase memory available to\n"
 			+ "geWorkbench, please refer to\n"
-			+ "geWorkbench documentation.\n\n" 
+			+ "geWorkbench documentation.\n\n"
 			+ "Exit geWorkbench?";
 	private static final String OUT_OF_MEMORY_MESSAGE_TITLE = "Java total heap memory exception";
 
@@ -77,7 +80,7 @@ public class FileOpenHandler {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void openFiles() {
 		task = new OpenMultipleFileTask();
@@ -196,7 +199,7 @@ public class FileOpenHandler {
 	} // end of class ProgressBarDialog
 
 	private class OpenMultipleFileTask extends SwingWorker<Void, Void> {
-		
+
 		/*
 		 * (non-Javadoc)
 		 * @see org.geworkbench.util.threading.SwingWorker#done()
@@ -225,20 +228,32 @@ public class FileOpenHandler {
 							// Add color context
 							enclosingProjectPanel.addColorContext(maSet);
 						}
-						// String directory = dataSetFile.getPath();
-						// System.setProperty("data.files.dir", directory);
-						if (!selected) {
-							enclosingProjectPanel.addDataSetNode(set, true);
-							selected = true;
-						} else {
-							enclosingProjectPanel.addDataSetNode(set, false);
+
+						if (set instanceof AdjacencyMatrixDataSet) {
+							// adjacency matrix as added as a sub node
+							AdjacencyMatrixDataSet adjMatrixDS = (AdjacencyMatrixDataSet) set;
+							ProjectNodeAddedEvent event = new ProjectNodeAddedEvent(
+									"Adjacency Matrix loaded", null,
+									adjMatrixDS);
+							enclosingProjectPanel.addDataSetSubNode(adjMatrixDS);
+							enclosingProjectPanel.publishProjectNodeAddedEvent(event);
+						} else{
+
+							// String directory = dataSetFile.getPath();
+							// System.setProperty("data.files.dir", directory);
+							if (!selected) {
+								enclosingProjectPanel.addDataSetNode(set, true);
+								selected = true;
+							} else {
+								enclosingProjectPanel.addDataSetNode(set, false);
+							}
 						}
 					} else {
 						log.info("Datafile not loaded");
 					}
 				}
 			}
-			
+
 			pb.dispose();
 			enclosingProjectPanel.progressBar.setString("");
 			enclosingProjectPanel.progressBar.setIndeterminate(false);
@@ -258,9 +273,21 @@ public class FileOpenHandler {
 			int n = dataSetFiles.length;
 			dataSets = new DSDataSet[n];
 
+			DataSetFileFormat dataSetFileFormat = (DataSetFileFormat) inputFormat;
 			if (dataSetFiles.length == 1) {
 				try {
-					DataSetFileFormat dataSetFileFormat = (DataSetFileFormat) inputFormat;
+					// adjacency matrix need access to project node
+					if (dataSetFileFormat instanceof AdjacencyMatrixFileFormat) {
+						ProjectTreeNode selectedNode = enclosingProjectPanel
+								.getSelection().getSelectedNode();
+						// it has to be a project node
+						if (selectedNode instanceof ProjectNode) {
+							ProjectNode projectNode = (ProjectNode) selectedNode;
+							((AdjacencyMatrixFileFormat) dataSetFileFormat)
+									.setProjectNode(projectNode);
+						}
+					}
+
 					dataSets[0] = dataSetFileFormat.getDataFile(dataSetFiles[0]);
 					dataSets[0].setAbsPath(dataSetFiles[0].getAbsolutePath());
 				} catch (OutOfMemoryError er) {
@@ -279,7 +306,7 @@ public class FileOpenHandler {
 							"Parsing Error", JOptionPane.ERROR_MESSAGE);
 				}
 				 catch (InterruptedIOException ie) {
-				       enclosingProjectPanel.progressBar.setString("");					   
+				       enclosingProjectPanel.progressBar.setString("");
 					   enclosingProjectPanel.progressBar.setIndeterminate(false);
 					   enclosingProjectPanel.getComponent().setCursor(Cursor
 							.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
@@ -287,9 +314,15 @@ public class FileOpenHandler {
 					        return null;
 				       else
 				    	   ie.printStackTrace();
-					  
-				 }  
+
+				 }
 			} else {
+				// multiple file selection is not supported for adjacency matrix
+				if (dataSetFileFormat instanceof AdjacencyMatrixFileFormat) {
+					JOptionPane.showMessageDialog(null, "multiple file selection is not supported for adjacency matrix");
+					return null;
+				}
+
 				// watkin - none of the file filters implement the
 				// multiple getDataFile method.
 				// dataSets[0] =
@@ -302,14 +335,13 @@ public class FileOpenHandler {
 				// also notice that this will block
 				String chipType = AnnotationParser.matchChipType(null, "", false);; //FileOpenHandler.this.chipType;
 				pb.setVisible(true);
-				
+
 				for (int i = 0; i < dataSetFiles.length; i++) {
 					if (isCancelled()) {
 						return null;
 					}
 					File dataSetFile = dataSetFiles[i];
 					try {
-						DataSetFileFormat dataSetFileFormat = (DataSetFileFormat) inputFormat;
 						try {
 							dataSets[i] = dataSetFileFormat.getDataFile(dataSetFile, chipType);
 							AnnotationParser.setChipType(dataSets[i], chipType);
@@ -347,7 +379,7 @@ public class FileOpenHandler {
 						return null;
 					} // end of for loop
 				    catch (InterruptedIOException ie) {
-				       enclosingProjectPanel.progressBar.setString("");					   
+				       enclosingProjectPanel.progressBar.setString("");
 					   enclosingProjectPanel.progressBar.setIndeterminate(false);
 					   enclosingProjectPanel.getComponent().setCursor(Cursor
 							.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
@@ -355,14 +387,16 @@ public class FileOpenHandler {
 					        return null;
 				       else
 				    	   ie.printStackTrace();
-					  
-				     }  
-					
+
+				     }
+
 					setProgress(i + 1);
 				}
 			}
 
 			return null;
 		}
+
+
 	}
 }

@@ -7,7 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -23,6 +22,7 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.util.RandomNumberGenerator;
+import org.geworkbench.parsers.InputFileFormatException;
 
 /**
  * @author John Watkinson
@@ -86,12 +86,21 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet implements DSAnci
     }
 
     public void readFromFile(String fileName, DSMicroarraySet<DSMicroarray> maSet) {
+    	try {
+			matrix = parseAdjacencyMatrix(fileName, maSet);
+		} catch (InputFileFormatException e) {
+			log.error(e);
+		}
+    }
 
-        int connectionsInstantiated = 0;
-        int connectionsIgnored = 0;
+	public static AdjacencyMatrix parseAdjacencyMatrix(String fileName,
+			DSMicroarraySet<DSMicroarray> maSet)
+			throws InputFileFormatException {
+		int connectionsInstantiated = 0;
+		int connectionsIgnored = 0;
 
         BufferedReader br = null;
-        matrix = new AdjacencyMatrix();
+        AdjacencyMatrix matrix = new AdjacencyMatrix();
         matrix.setMicroarraySet(maSet);
         matrix.setLabel(fileName);
         try {
@@ -127,7 +136,7 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet implements DSAnci
                                 if (m2 == null) { //we don't have this gene in our MicroarraySet
                                 	//we skip it
                                 	continue;
-                                }                                
+                                }
                                 int geneId2 = m2.getSerial();
                                 if (geneId2 >= 0) {
                                     String strMi = new String(tr.nextToken());
@@ -151,14 +160,18 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet implements DSAnci
                 log.debug("Total processed " + (connectionsInstantiated + connectionsIgnored));
             } catch (NumberFormatException ex) {
                 ex.printStackTrace();
+            	throw new InputFileFormatException(ex.getMessage());
             } catch (IOException ex) {
                 ex.printStackTrace();
+            	throw new InputFileFormatException(ex.getMessage());
             }
         } catch (FileNotFoundException ex3) {
             ex3.printStackTrace();
+        	throw new InputFileFormatException(ex3.getMessage());
         }
-        
-    }
+
+        return matrix;
+	}
 
     public AdjacencyMatrix getMatrix() {
         return matrix;
