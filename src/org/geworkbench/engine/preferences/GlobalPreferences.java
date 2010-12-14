@@ -33,8 +33,8 @@ public class GlobalPreferences {
 
     public static final String DEFAULT_RCM_URL = "http://cagridnode.c2b2.columbia.edu:8080/v2.0.0/componentRepository";
     
-    public static final String[] MARKER_LOAD_VALUES = new String[]{"Retain original marker order", "Order markers by gene name"};
-    public static final int ORIGINAL = 0, SORTED = 1;
+    public static final String[] MARKER_LOAD_VALUES = new String[]{"Load markers in the original order", "Load markers ordered by gene name", "Load markers ordered by probe set ID"};
+    public static final int ORIGINAL = 0, SORTED_GENE = 1, SORTED_PROBE = 2;
     
     private static GlobalPreferences instance;
 

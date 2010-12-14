@@ -115,8 +115,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
         if (!readAndParse(parser, ParseType.MARKER, "Loading Marker Data from " + file.getName()))
         	return;
         sortMarkers(parser.markerNo);
-        if (!readAndParse(parser, ParseType.VALUE, "Loading Marker Value from " + file.getName()))
-        	return;
+        readAndParse(parser, ParseType.VALUE, "Loading Marker Value from " + file.getName());
     }
 
     private enum ParseType {STRUCTURE, MARKER, VALUE};
@@ -212,6 +211,9 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
             String[] st = new String[n];
             for (int i = 0; i < n; i++) {
                 st[i] = tokenizer.nextToken();
+                if (i == 1 && !st[0].equalsIgnoreCase("PDFModel") && !st[0].equalsIgnoreCase("AffyID") 
+                		&& !st[0].equalsIgnoreCase("Description") && line.charAt(0) != '\t')
+                	break;
             }
 
             if (st.length > 0) {

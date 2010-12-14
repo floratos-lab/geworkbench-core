@@ -326,7 +326,10 @@ public class CSMicroarraySet<T extends DSMicroarray> extends CSDataSet<T> implem
 		if (GlobalPreferences.getInstance().getMarkerLoadOptions() == GlobalPreferences.ORIGINAL) {
 			for (i = 0; i < markerVector.size(); newid[i] = i++);
 		} else {
-			Collections.sort(markerVector, new MarkerOrderByGene());
+			if (GlobalPreferences.getInstance().getMarkerLoadOptions() == GlobalPreferences.SORTED_GENE) 
+				Collections.sort(markerVector, new MarkerOrderByGene());
+			else
+				Collections.sort(markerVector, new MarkerOrderByProbe());
 
 			for (DSGeneMarker item : markerVector) {
 				newid[item.getSerial()] = i++;
@@ -347,4 +350,9 @@ public class CSMicroarraySet<T extends DSMicroarray> extends CSDataSet<T> implem
 		}
     }
 
+    private class MarkerOrderByProbe implements Comparator<DSGeneMarker> {
+		public int compare(DSGeneMarker o1, DSGeneMarker o2) {
+			return o1.getLabel().compareToIgnoreCase(((DSGeneMarker)o2).getLabel());
+		}
+    }
 }
