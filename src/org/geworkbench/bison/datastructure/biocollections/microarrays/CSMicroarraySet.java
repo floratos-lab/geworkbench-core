@@ -355,4 +355,12 @@ public class CSMicroarraySet<T extends DSMicroarray> extends CSDataSet<T> implem
 			return o1.getLabel().compareToIgnoreCase(((DSGeneMarker)o2).getLabel());
 		}
     }
+
+    private String markerOrder = "original";
+    public String getSelectorMarkerOrder(){
+    	return markerOrder;
+    }
+    public void setSelectorMarkerOrder(String order){
+    	markerOrder = order;
+    }
 }

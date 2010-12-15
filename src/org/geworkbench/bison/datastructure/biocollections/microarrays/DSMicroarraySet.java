@@ -51,5 +51,10 @@ public interface DSMicroarraySet <T extends DSMicroarray> extends DSMatrixDataSe
     public void setAnnotationFileName(String annotationFileName);
 
     public void sortMarkers(int mrkNo);
+    // marker indices in sorted marker list for data file loading
     public int[] getNewMarkerOrder();
+
+    // marker order in marker selector panel: gene, probe, original
+    public String getSelectorMarkerOrder();
+    public void setSelectorMarkerOrder(String order);
 }
