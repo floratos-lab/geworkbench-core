@@ -8,6 +8,7 @@ import java.util.Vector;
 
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.complex.panels.CSSequentialItemList;
+import org.jfree.util.Log;
 
 /**
  * <p>
@@ -87,14 +88,19 @@ public class CSMarkerVector extends CSSequentialItemList<DSGeneMarker> {
 			}
 		}
 
-		Integer geneId = Integer.parseInt(aString);
-		markersSet = geneIdMap.get(geneId);
-		if (markersSet != null && markersSet.size() > 0) {
-			for (DSGeneMarker marker : markersSet) {
-				if (!matchingMarkers.contains(marker)) {
-					matchingMarkers.add(marker);
+		try {
+			Integer geneId = Integer.parseInt(aString);
+			markersSet = geneIdMap.get(geneId);
+			if (markersSet != null && markersSet.size() > 0) {
+				for (DSGeneMarker marker : markersSet) {
+					if (!matchingMarkers.contains(marker)) {
+						matchingMarkers.add(marker);
+					}
 				}
 			}
+		} catch (NumberFormatException e) {
+			// this is not a good idea. leave this way for now.
+			Log.error(e);
 		}
 
 		return matchingMarkers;
@@ -172,7 +178,11 @@ public class CSMarkerVector extends CSSequentialItemList<DSGeneMarker> {
 	// TODO the callers of this method, CSMicroarraySet and
 	// HouseKeepingGeneNormalizer, should use set instead of vector.
 	public Vector<DSGeneMarker> getMatchingMarkers(DSGeneMarker item) {
-		return new Vector<DSGeneMarker>(getMatchingMarkersSet(item));
+		Set<DSGeneMarker> set = getMatchingMarkersSet(item);
+		if (set == null)
+			return null;
+
+		return new Vector<DSGeneMarker>(set);
 	}
 
 	// TODO to replace the Vector version later
