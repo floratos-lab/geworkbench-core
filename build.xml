@@ -99,6 +99,7 @@
 				<include name="geworkbench-core" />
 				<include name="gpmodule_v3_0" />
 				<include name="hierarchicalclustering" />
+				<include name="idea" />
 				<include name="interactions" />
 				<include name="jmol" />
 				<include name="markus" />
@@ -534,6 +535,7 @@
 				<include name="${components}/genspace/**/*" />
 				<include name="${components}/gpmodule_v3_0/**/*" />
 				<include name="${components}/hierarchicalclustering/**/*" />
+				<include name="${components}/idea/**/*" />
 				<include name="${components}/interactions/**/*" />
 				<include name="${components}/jmol/**/*" />
 				<include name="${components}/matrixreduce/**/*" />
