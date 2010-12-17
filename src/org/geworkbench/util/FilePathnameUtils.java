@@ -62,7 +62,7 @@ public class FilePathnameUtils {
 	private static final String DEFAULT_HOUSEKEEPINGNORMALIZERSETTINGS_FILE = DEFAULT_TEMP_FILE_DIR
 			+ FILE_SEPARATOR + "housekeepingnormalizerSettings.config";
 	private static final String DEFAULT_USERSETTINGS_FILE = DEFAULT_TEMP_FILE_DIR
-			+ FILE_SEPARATOR + "userSettings.config";
+			+ FILE_SEPARATOR + "userSettings.config";		
 
 	// file related properties
 	private static final String USER_SETTING_DIR = System
@@ -71,6 +71,8 @@ public class FilePathnameUtils {
 			.getProperty("temporary.files.directory");
 	private static final String HOUSEKEEPINGNORMALIZERSETTINGS_FILE = System
 			.getProperty("housekeepingnormalizerSettings");
+	private static final String IDEASETTINGS_FILE = System
+	.getProperty("ideaSettings");
 	private static final String DATA_FILES_DIR = System
 			.getProperty("data.files.dir");
 	private static final String USERSETTINGS_FILE = System
@@ -84,6 +86,7 @@ public class FilePathnameUtils {
 	private static String userSettingDirectoryPath = null;
 	private static String temporaryFilesDirectoryPath = null;
 	private static String housekeepingnormalizersettingsFilePath = null;
+	private static String ideasettingsFilePath = null;
 	private static String dataFilesDirPath = null;
 	private static String userSettingsFilePath = null;
 
@@ -246,6 +249,17 @@ public class FilePathnameUtils {
 
 	}
 
+	public static String getIDEASettingsPath() {
+		if (ideasettingsFilePath == null) {
+			String ideasettingsFile = IDEASETTINGS_FILE;			
+			ideasettingsFilePath = prependHomeDirName(ideasettingsFile);
+		}
+		checkParentDirExist(ideasettingsFilePath);
+		return ideasettingsFilePath;
+	}
+
+	
+	
 	/**
 	 * will create absolute path starting with home directory as a root from
 	 * relative path doesn't change parameter, use return value.
