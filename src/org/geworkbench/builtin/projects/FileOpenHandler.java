@@ -29,6 +29,7 @@ import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarr
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
+import org.geworkbench.events.AdjacencyMatrixEvent;
 import org.geworkbench.events.ProjectNodeAddedEvent;
 import org.geworkbench.parsers.AdjacencyMatrixFileFormat;
 import org.geworkbench.parsers.DataSetFileFormat;
@@ -237,6 +238,10 @@ public class FileOpenHandler {
 									adjMatrixDS);
 							enclosingProjectPanel.addDataSetSubNode(adjMatrixDS);
 							enclosingProjectPanel.publishProjectNodeAddedEvent(event);
+							enclosingProjectPanel.publishAdjacencyMatrixEvent(new AdjacencyMatrixEvent(adjMatrixDS.getMatrix(),
+									"ARACNE Set", -1, 2, 0.5f,
+									AdjacencyMatrixEvent.Action.DRAW_NETWORK));
+
 						} else{
 
 							// String directory = dataSetFile.getPath();

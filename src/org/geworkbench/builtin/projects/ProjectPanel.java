@@ -75,6 +75,7 @@ import org.geworkbench.engine.management.Subscribe;
 import org.geworkbench.engine.management.TypeMap;
 import org.geworkbench.engine.preferences.GlobalPreferences;
 import org.geworkbench.engine.skin.Skin;
+import org.geworkbench.events.AdjacencyMatrixEvent;
 import org.geworkbench.events.CaArrayQueryEvent;
 import org.geworkbench.events.CaArrayQueryResultEvent;
 import org.geworkbench.events.CaArrayRequestEvent;
@@ -97,8 +98,8 @@ import org.geworkbench.util.Util;
 import org.ginkgo.labs.ws.GridEndpointReferenceType;
 
 // TODO this class has a large number of subscribe methods,
-// many of these should be replaced with direct method call 
-// if the event is specifically meant to be received by this class only.  
+// many of these should be replaced with direct method call
+// if the event is specifically meant to be received by this class only.
 /**
  *
  * Description: Project Panel of geWorkbench is a key controlling element.
@@ -1819,6 +1820,12 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	@Publish
 	public CommentsEvent publishCommentsEvent(CommentsEvent event) {
 		return event;
+	}
+
+	@Publish
+	public AdjacencyMatrixEvent publishAdjacencyMatrixEvent(
+			AdjacencyMatrixEvent ae) {
+		return ae;
 	}
 
 	/**
