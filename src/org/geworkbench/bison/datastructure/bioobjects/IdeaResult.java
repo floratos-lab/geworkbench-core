@@ -23,13 +23,13 @@ public class IdeaResult extends CSAncillaryDataSet<DSMicroarray> {
 	private double pvalue=0.05;
 
 	public IdeaResult(final DSMicroarraySet<DSMicroarray> maSet, String string,
-			List<IdeaEdge> locList, List<IdeaEdge> gocList, List<IdeaProbeGene> sigGeneList) {
+			List<IdeaEdge> locList, List<IdeaEdge> gocList, List<IdeaProbeGene> sigGeneList, double pvalue) {
 		super(maSet, string);
 		
 		this.locList = locList;
 		this.gocList = gocList;
 		this.sigGeneList = sigGeneList;
-		//this.pvalue=pvalue;
+		this.pvalue=pvalue;
 	}
 
 	public File getDataSetFile() {
