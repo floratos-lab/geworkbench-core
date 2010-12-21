@@ -1,6 +1,6 @@
 package org.geworkbench.bison.datastructure.bioobjects.markers;
 
-import org.geworkbench.bison.util.StringUtils;
+import org.geworkbench.util.Util;
 
 import java.io.Serializable;
 
@@ -17,7 +17,7 @@ public class SequenceMarker extends CSGeneMarker implements Serializable {
      */
     public void parseLabel(String s) {
         // Ignore leading '>' and any other '<', '>' or characters enclosed by '</...>'.
-        s = StringUtils.filter(s, "(</.*?>)|[<>]");
+        s = Util.filter(s, "(</.*?>)|[<>]");
         String[] tokens = s.split("[|]");
 
         if (tokens.length > 2) {

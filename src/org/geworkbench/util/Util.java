@@ -1,131 +1,32 @@
 package org.geworkbench.util;
 
-import org.apache.commons.lang.StringUtils;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.Window;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Enumeration;
+import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
+import javax.swing.ImageIcon;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import javax.swing.*;
-import java.io.*;
-import java.util.*;
-import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.awt.*;
-
 public class Util {
     static Log log = LogFactory.getLog(Util.class);
-
-    public Util() {
-    }
-
-    public static HashMap readHashMapFromFile(File file) {
-        HashMap map = new HashMap();
-
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            String line;
-            while ((line = br.readLine()) != null) {
-                StringTokenizer st = new StringTokenizer(line, "\t");
-                String key = st.nextToken();
-                String value = st.nextToken();
-                map.put(key, value);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return map;
-    }
-
-    public static HashMap readHashMapFromFiles(File[] files, String commentString) {
-
-        HashMap map = new HashMap();
-
-        for (int fileCtr = 0; fileCtr < files.length; fileCtr++) {
-            try {
-                map.putAll(readHashMapFromFile(files[fileCtr], commentString));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return map;
-    }
-
-    public static HashMap readHashMapFromFiles(String[] fileNames, String commentString) {
-
-        HashMap map = new HashMap();
-
-        for (int fileCtr = 0; fileCtr < fileNames.length; fileCtr++) {
-            try {
-                File file = new File(fileNames[fileCtr]);
-                if (file.exists()) {
-                    map.putAll(readHashMapFromFile(file, commentString));
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return map;
-    }
-
-    public static HashMap readHashMapFromFile(File file, String commentString) {
-        HashMap map = new HashMap();
-
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (!line.startsWith(commentString)) {
-                    StringTokenizer st = new StringTokenizer(line, "\t");
-                    if (st.countTokens() == 2) {
-                        String key = st.nextToken();
-                        String value = st.nextToken();
-                        map.put(key, value);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return map;
-    }
-
-    public static String getString(HashMap map, String key) {
-        String value = (String) map.get(key);
-        return value;
-    }
-
-    public static int getInt(HashMap map, String key) {
-        Object val = map.get(key);
-        if (val != null) {
-            int value = Integer.parseInt((String) val);
-            return value;
-        } else {
-            return Integer.MIN_VALUE;
-        }
-    }
-
-    public static double getDouble(HashMap map, String key) {
-        Object val = map.get(key);
-        if (val != null) {
-            double value = Double.parseDouble((String) val);
-            return value;
-        } else {
-            return Double.NaN;
-        }
-    }
 
     public static ImageIcon createImageIcon(String path) {
         java.net.URL imgURL = Util.class.getResource(path);
         return new ImageIcon(imgURL);
     }
 
-    public static ImageIcon createImageIcon(String path, String description) {
-        java.net.URL imgURL = Util.class.getResource(path);
-        return new ImageIcon(imgURL, description);
-    }
-    
     static public boolean deleteDirectory(File path) {
         if (path.exists()) {
             File[] files = path.listFiles();
@@ -140,15 +41,11 @@ public class Util {
         return (path.delete());
     }
 
-    public static List unZip(String inFile, String outDir) throws IOException {
-        Enumeration entries;
-        ZipFile zipFile;
+    public static void unZip(String inFile, String outDir) throws IOException {
 
-        List files = new ArrayList();
+        ZipFile zipFile = new ZipFile(inFile);
 
-        zipFile = new ZipFile(inFile);
-
-        entries = zipFile.entries();
+        Enumeration<? extends ZipEntry> entries = zipFile.entries();
 
         while (entries.hasMoreElements()) {
             ZipEntry entry = (ZipEntry) entries.nextElement();
@@ -164,7 +61,6 @@ public class Util {
                     File newdir = new File(outDir, dirSoFar);
                     log.trace("Creating directory "+dirSoFar);
                     newdir.mkdir();
-                    files.add(newdir);
                 }
             } else {
                 log.trace("Extracting file: " + entry.getName());
@@ -174,12 +70,10 @@ public class Util {
                 path.mkdir();
                 copyInputStream(zipFile.getInputStream(entry),
                         new BufferedOutputStream(new FileOutputStream(file)));
-                files.add(file);
             }
         }
 
         zipFile.close();
-        return files;
     }
 
     private static void copyInputStream(InputStream in, OutputStream out) throws IOException {
@@ -269,4 +163,16 @@ public class Util {
 
 		return pBar;
 	}
+
+	/**
+     * Filters the string by removing those patterns that match the regex.
+     */
+    public static String filter(String s, String regex) {
+        String[] tokens = s.split(regex);
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < tokens.length; i++) {
+            sb.append(tokens[i]);
+        }
+        return sb.toString();
+    }
 }
