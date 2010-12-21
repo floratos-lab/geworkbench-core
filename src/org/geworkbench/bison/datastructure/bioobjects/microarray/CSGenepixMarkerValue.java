@@ -1,17 +1,16 @@
 package org.geworkbench.bison.datastructure.bioobjects.microarray;
 
-import org.geworkbench.bison.parsers.GenepixParseContext;
-import org.geworkbench.bison.parsers.NCIParseContext;
-
 import java.io.ObjectStreamField;
 import java.io.Serializable;
 import java.util.HashMap;
+
+import org.geworkbench.bison.parsers.GenepixParseContext;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: First Genetic Trust Inc.</p>
  * @author First Genetic Trust Inc.
- * @version 1.0
+ * @version $Id$
  */
 
 /**
@@ -119,7 +118,7 @@ public class CSGenepixMarkerValue extends CSMarkerValue implements
      * @param context The parse context used for the initialization.
      */
     public CSGenepixMarkerValue(GenepixParseContext context) {
-        HashMap columns = context.getColumnsToUse();
+        HashMap<String, Object> columns = context.getColumnsToUse();
         Object value = null;
         if (columns.containsKey("ID")) {
             value = columns.get("ID");
@@ -197,90 +196,6 @@ public class CSGenepixMarkerValue extends CSMarkerValue implements
                 }
             }
         }
-        if (columns.containsKey("Ratio of Means")) {
-            value = columns.get("Ratio of Means");
-            if (value instanceof Double) {
-                this.ratio = ((Double) value).doubleValue();
-            }
-        }
-
-        computeSignal();
-    }
-
-    /**
-     * Constructs a <code>GenepixMarkerValue</code> object from the contents of
-     * the <code>NCIParseContext</code> argument.
-     *
-     * @param context The parse context used for the initialization.
-     */
-    public CSGenepixMarkerValue(NCIParseContext context) {
-        HashMap columns = context.getColumnsToUse();
-        Object value = null;
-        if (columns.containsKey("ID")) {
-            value = columns.get("ID");
-            //      if (value instanceof String)
-            //      this.markerInfo = new MarkerInfoImpl((String)value);
-        }
-
-        // Notice that the order in which we treat median and mean values implies
-        // that if both median and mean measurements are available, only the
-        // latter will be used.
-        if (columns.containsKey("F532 Median")) {
-            value = columns.get("F532 Median");
-            if (value instanceof Double) {
-                this.ch1f = ((Double) value).doubleValue();
-            }
-        }
-
-        if (columns.containsKey("B532 Median")) {
-            value = columns.get("B532 Median");
-            if (value instanceof Double) {
-                this.ch1b = ((Double) value).doubleValue();
-            }
-        }
-
-        if (columns.containsKey("F635 Median")) {
-            value = columns.get("F635 Median");
-            if (value instanceof Double) {
-                this.ch2f = ((Double) value).doubleValue();
-            }
-        }
-
-        if (columns.containsKey("B635 Median")) {
-            value = columns.get("B635 Median");
-            if (value instanceof Double) {
-                this.ch2b = ((Double) value).doubleValue();
-            }
-        }
-
-        if (columns.containsKey("F532 Mean")) {
-            value = columns.get("F532 Mean");
-            if (value instanceof Double) {
-                this.ch1f = ((Double) value).doubleValue();
-            }
-        }
-
-        if (columns.containsKey("B532 Mean")) {
-            value = columns.get("B532 Mean");
-            if (value instanceof Double) {
-                this.ch1b = ((Double) value).doubleValue();
-            }
-        }
-
-        if (columns.containsKey("F635 Mean")) {
-            value = columns.get("F635 Mean");
-            if (value instanceof Double) {
-                this.ch2f = ((Double) value).doubleValue();
-            }
-        }
-
-        if (columns.containsKey("B635 Mean")) {
-            value = columns.get("B635 Mean");
-            if (value instanceof Double) {
-                this.ch2b = ((Double) value).doubleValue();
-            }
-        }
-
         if (columns.containsKey("Ratio of Means")) {
             value = columns.get("Ratio of Means");
             if (value instanceof Double) {

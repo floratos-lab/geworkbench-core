@@ -1,18 +1,17 @@
 package org.geworkbench.bison.datastructure.bioobjects.microarray;
 
-import org.geworkbench.bison.parsers.AffyParseContext;
-import org.geworkbench.bison.parsers.NCIParseContext;
-
 import java.io.ObjectStreamField;
 import java.io.Serializable;
 import java.util.Map;
+
+import org.geworkbench.bison.parsers.AffyParseContext;
 
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: First Genetic Trust Inc.</p>
  * @author First Genetic Trust Inc.
- * @version 1.0
+ * @version $Id$
  */
 
 /**
@@ -22,7 +21,9 @@ import java.util.Map;
 public class CSAffyMarkerValue extends CSExpressionMarkerValue implements
         DSAffyMarkerValue, Serializable {
 
-    /**
+	private static final long serialVersionUID = -6938649275579408900L;
+	
+	/**
      * Constants used to represent detection call status
      */
     static final char ABSENT    = 'A';
@@ -56,16 +57,6 @@ public class CSAffyMarkerValue extends CSExpressionMarkerValue implements
       }
 
       /**
-       * Constructs a <code>CSAffyMarkerValue</code> object from the contents of
-       * the <code>NCIParseContext</code> argument.
-       * @param val    The parse context used for the initialization.
-       */
-      public CSAffyMarkerValue(NCIParseContext val) {
-    	  if (val != null)
-    		  init(val.getColumnsToUse());    	  
-      }
-
-      /**
        * Creates a copy of the designated <code>AffyMarkerValueImpl</code>. The
        * copy maintains the physical link to the argument's associated
        * <code>MarkerInfo</code> and <code>Microarray</code> objects.
@@ -90,6 +81,7 @@ public class CSAffyMarkerValue extends CSExpressionMarkerValue implements
     		  init(val.getColumnsToUse());
       }
   
+      @SuppressWarnings("rawtypes")
       protected void init(Map columns) {
     	  Object value = null;
     	  boolean pValueFound = false;  // indicates if the "Detection p-value" column is used
