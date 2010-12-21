@@ -1,10 +1,9 @@
 package org.geworkbench.bison.model.clusters;
 
-import org.geworkbench.bison.datastructure.properties.DSIdentifiable;
-
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import org.geworkbench.bison.datastructure.properties.DSIdentifiable;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
@@ -14,9 +13,9 @@ import java.util.Map;
  * like Hierarchical Clustering and Self Organizing Maps
  *
  * @author First Genetic Trust
- * @version 1.0
+ * @version $Id$
  */
-public interface Cluster extends Iterator, DSIdentifiable {
+public interface Cluster extends DSIdentifiable {
     /**
      * Returns the <code>Cluster</code> node that is the parent of this
      * cluster.
