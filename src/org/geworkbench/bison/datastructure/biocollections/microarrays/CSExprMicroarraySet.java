@@ -50,8 +50,6 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
 
     private ArrayList<String> descriptions = new ArrayList<String>();
 
-    private org.geworkbench.bison.parsers.DataParseContext dataContext = new org.geworkbench.bison.parsers.DataParseContext();
-
     private ReaderMonitor createProgressReader(String display, File file) throws FileNotFoundException {
         FileInputStream fileIn = new FileInputStream(file);
         ProgressMonitorInputStream progressIn = new ProgressMonitorInputStream(null, display, fileIn);
@@ -414,16 +412,11 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
             try {
                 double v = Double.parseDouble(value);
                 Range range = ((org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker) markerVector.get(currGeneId)).getRange();
-                if (dataContext.isLog) {
-                    double y = Math.log(Math.max(dataContext.minValue, dataContext.addValue + v));
-                    marker.setValue(y);
-                    range.max = Math.max(range.max, y);
-                    range.min = Math.min(range.min, y);
-                } else {
-                    marker.setValue(v);
-                    range.max = Math.max(range.max, v);
-                    range.min = Math.min(range.min, v);
-                }
+
+                marker.setValue(v);
+                range.max = Math.max(range.max, v);
+                range.min = Math.min(range.min, v);
+
                 double p = Double.parseDouble(status);
                 marker.setConfidence(p);
             } catch (NumberFormatException e) {
@@ -440,16 +433,11 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
             try {
                 double v = Double.parseDouble(expression);
                 org.geworkbench.bison.util.Range range = ((org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker) markerVector.get(currGeneId)).getRange();
-                if (dataContext.isLog) {
-                    double y = Math.log(Math.max(dataContext.minValue, dataContext.addValue + v));
-                    marker.setValue(y);
-                    range.max = Math.max(range.max, y);
-                    range.min = Math.min(range.min, y);
-                } else {
-                    marker.setValue(v);
-                    range.max = Math.max(range.max, v);
-                    range.min = Math.min(range.min, v);
-                }
+
+                marker.setValue(v);
+                range.max = Math.max(range.max, v);
+                range.min = Math.min(range.min, v);
+
             } catch (NumberFormatException e) {
                 marker.setValue(0.0);
                 marker.setMissing(true);
@@ -459,12 +447,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
             String expression = parseableValue[parseableValue.length - 1];
             try {
                 double v = Double.parseDouble(expression);
-                if (dataContext.isLog) {
-                    double y = Math.log(Math.max(dataContext.minValue, dataContext.addValue + v));
-                    marker.setValue(y);
-                } else {
-                    marker.setValue(v);
-                }
+                marker.setValue(v);
             } catch (NumberFormatException e) {
                 marker.setValue(0.0);
                 marker.setMissing(true);
