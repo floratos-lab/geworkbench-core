@@ -7,7 +7,7 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: First Genetic Trust Inc.</p>
  * @author First Genetic Trust Inc.
- * @version 1.0
+ * @version $Id$
  */
 
 /**
@@ -43,18 +43,6 @@ public interface DSMicroarray extends DSBioObject {
     public boolean isMarkerUndefined(int i);
 
     /**
-     *
-     * @return The host microarray set for this microarray.
-     */
-    //DSMicroarraySet  getMicroarraySet();
-
-    /**
-     * Set the host microarray set for this microarray.
-     * @param maSet Tne host microarray set.
-     */
-    //void setMicroarraySet(DSMicroarraySet maSet);
-
-    /**
      * Add the designated marker value at the specified index
      *
      * @param index       int at which marker vale is to be added
@@ -87,13 +75,6 @@ public interface DSMicroarray extends DSBioObject {
      * @return A deep copy of the microarray.
      */
     DSMicroarray deepCopy();
-
-    /**
-     * Return an iterator over the markers
-     *
-     * @return ArrayIterator
-     */
-    java.util.Iterator<DSMutableMarkerValue> iterator();
 
     /**
      * Resize the number of features to a new value. This destroys all previous values

@@ -1,5 +1,7 @@
 package org.geworkbench.bison.datastructure.bioobjects.microarray;
 
+import java.io.Serializable;
+
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.properties.CSDescribable;
@@ -7,26 +9,16 @@ import org.geworkbench.bison.datastructure.properties.CSExtendable;
 import org.geworkbench.bison.util.DefaultIdentifiable;
 import org.geworkbench.bison.util.RandomNumberGenerator;
 
-import java.io.Serializable;
-import java.util.Iterator;
-
+/**
+ * 
+ * @author zji
+ * @version $Id$
+ *
+ */
 public class CSMicroarray implements DSMicroarray, Serializable {
-    /**
-     *     Serializable fields.
-     */
-    //    private final static ObjectStreamField[] serialPersistentFields = {
-    //        new ObjectStreamField("serial", int.class),
-    //        new ObjectStreamField("arrayId", DefaultIdentifiable.class),
-    //        new ObjectStreamField("descriptions", CSDescribable.class),
-    //        new ObjectStreamField("extend", CSExtendable.class),
-    //        new ObjectStreamField("maSet", DSMicroarraySet.class)
-    //    };
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = -1624438489587615570L;
-	//protected DSMicroarraySet microarraySet = null;
+	
     /**
      * Microarray type, defined in DSMicroarraySet
      */
@@ -128,31 +120,6 @@ public class CSMicroarray implements DSMicroarray, Serializable {
         return label;
     }
 
-    /*
-      public void addPropertyValue(DSAnnotLabel property, DSAnnotValue value) {
-        propertyValueMap.put(property, value);
-      }
-
-      public DSAnnotValue getPropertyValue(DSAnnotLabel property) {
-        return (DSAnnotValue) propertyValueMap.get(property);
-      }
-
-      public HashMap getPropertyValueMap() {
-        return propertyValueMap;
-      }
-
-      public void setPropertyValueMap(HashMap map) {
-        this.propertyValueMap = new HashMap(map);
-      }
-     */
-    //  public void setPhenoClassId(int phenoClassId) {
-    //    this.phenoClassId = phenoClassId;
-    //  }
-    //
-    //  public int getPhenoClassId() {
-    //    return phenoClassId;
-    //  }
-
     public boolean enabled() {
         return enabled;
     }
@@ -168,24 +135,6 @@ public class CSMicroarray implements DSMicroarray, Serializable {
     public void setSerial(int id) {
         serial = id;
     }
-
-    /*
-      public void put(DSAnnotLabel property, DSAnnotValue value) {
-        getPropertyValueMap().put(property, value);
-      }
-     */
-
-    //    public void remove() {
-    //        microarraySet.remove(this);
-    //    }
-
-    //    public DSMicroarraySet getMicroarraySet() {
-    //        return microarraySet;
-    //    }
-
-    //    public void setMicroarraySet(DSMicroarraySet m) {
-    //        microarraySet = m;
-    //    }
 
     public String getID() {
         return arrayId.getID();
@@ -285,10 +234,6 @@ public class CSMicroarray implements DSMicroarray, Serializable {
         }
         copy.setID(RandomNumberGenerator.getID());
         return copy;
-    }
-
-    public Iterator<DSMutableMarkerValue> iterator() {
-        return new org.geworkbench.bison.util.ArrayIterator<DSMutableMarkerValue>(markerArray);
     }
 
     public void resize(int size) {
