@@ -43,6 +43,7 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.engine.preferences.PreferencesManager;
 import org.geworkbench.engine.properties.PropertiesManager;
+import org.geworkbench.util.CsvFileFilter;
 
 import com.Ostermiller.util.CSVParser;
 import com.Ostermiller.util.LabeledCSVParser;
@@ -606,10 +607,7 @@ public class AnnotationParser implements Serializable {
 		}
 
 		JFileChooser chooser = new JFileChooser(annotationDir);
-		ExampleFilter filter = new ExampleFilter();
-		filter.addExtension("csv");
-		filter.setDescription("CSV files");
-		chooser.setFileFilter(filter);
+		chooser.setFileFilter(new CsvFileFilter());
 		chooser.setDialogTitle("Please select the annotation file");
 		int returnVal = chooser.showOpenDialog(null);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {

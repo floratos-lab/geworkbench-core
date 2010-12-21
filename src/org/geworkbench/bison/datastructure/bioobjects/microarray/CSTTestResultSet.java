@@ -7,7 +7,7 @@ import javax.swing.JFileChooser;
 
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
-import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.ExampleFilter;
+import org.geworkbench.util.CsvFileFilter;
 
 public class CSTTestResultSet <T extends DSGeneMarker> extends CSSignificanceResultSet<T> implements DSTTestResultSet<T>{
 
@@ -25,10 +25,7 @@ public class CSTTestResultSet <T extends DSGeneMarker> extends CSSignificanceRes
 		 try{  
 			 
 			 JFileChooser chooser = new JFileChooser( ".");
-             ExampleFilter filter = new ExampleFilter();
-             filter.addExtension("csv");
-             filter.setDescription("CSV Files");
-             chooser.setFileFilter(filter);
+             chooser.setFileFilter(new CsvFileFilter());
              int returnVal = chooser.showSaveDialog(null);
              if (returnVal == JFileChooser.APPROVE_OPTION) 
              { 
