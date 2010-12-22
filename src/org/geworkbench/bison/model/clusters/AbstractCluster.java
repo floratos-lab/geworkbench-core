@@ -14,10 +14,13 @@ import java.io.Serializable;
  * Default implementation of the <code>Cluster</code> interface.
  *
  * @author First Genetic Trust
- * @version 1.0
+ * @version $Id$
  */
 public abstract class AbstractCluster implements Cluster, Serializable {
-    /**
+
+	private static final long serialVersionUID = 2957512324725164458L;
+	
+	/**
      * Holds all children of this <code>Cluster</code>
      */
     protected ArrayList<Cluster> children = new ArrayList<Cluster>();
@@ -26,11 +29,7 @@ public abstract class AbstractCluster implements Cluster, Serializable {
      * as a child
      */
     protected Cluster parent = null;
-    /**
-     * {@link java.util.Iterator} to walk through all the children of this
-     * <code>Cluster</code>
-     */
-    protected Iterator iterator = null;
+
     /**
      * Unique ID acting as a key for this <code>Cluster</code>
      */
@@ -100,7 +99,7 @@ public abstract class AbstractCluster implements Cluster, Serializable {
         List<Cluster> leafList = new ArrayList<Cluster>();
         Set<Cluster> visited = new HashSet<Cluster>();
         Stack<Cluster> stack = new Stack<Cluster>();
-        int height = 1;
+
         Cluster end = new DefaultHierCluster();
         stack.push(end);
         Cluster thisnode = this;
@@ -150,7 +149,7 @@ public abstract class AbstractCluster implements Cluster, Serializable {
         Map<Cluster, Integer> map = new HashedMap<Cluster, Integer>();
         Set<Cluster> visited = new HashSet<Cluster>();
         Stack<Cluster> stack = new Stack<Cluster>();
-        int height = 1;
+
         Cluster end = new DefaultHierCluster();
         stack.push(end);
         Cluster thisnode = this;
@@ -209,87 +208,6 @@ public abstract class AbstractCluster implements Cluster, Serializable {
      */
     public void setID(String id) {
         clusterID.setID(id, "Cluster");
-    }
-
-    /**
-     * Gets the name assigned to this <code>Cluster</code>
-     *
-     * @return name
-     */
-    public String getLabel() {
-        return clusterID.getLabel();
-    }
-
-    /**
-     * Sets the name of this <code>Cluster</code>
-     *
-     * @param name name of this node
-     */
-    public void setLabel(String name) {
-        clusterID.setLabel(name);
-    }
-
-    /**
-     * {@link org.geworkbench.bison.model.Microarray} method to walk thorugh all the children of
-     * this <code>Cluster</code>
-     *
-     * @return if more children can be accessed
-     */
-    public boolean hasNext() {
-        return iterator.hasNext();
-    }
-
-    /**
-     * {@link org.geworkbench.bison.model.Microarray} method to walk thorugh all the children of
-     * this <code>Cluster</code>
-     *
-     * @return next child
-     */
-    public Object next() {
-        return iterator.next();
-    }
-
-    /**
-     * {@link org.geworkbench.bison.model.Microarray} method to remove the last <code>Cluster
-     * </code> accessed by the {@link AbstractCluster#next} method
-     */
-    public void remove() {
-        iterator.remove();
-    }
-
-    /**
-     * Removes a <code>Cluster</code> if it is one of the children of this
-     * <code>Cluster</code>
-     *
-     * @param obj child to be removed
-     * @return if the object was removed
-     */
-    public boolean remove(Object obj) {
-        if (obj == null || !Cluster.class.isAssignableFrom(obj.getClass()))
-            return false;
-        else {
-            boolean status = children.remove(obj);
-            if (status)
-                reset();
-            return status;
-        }
-
-    }
-
-    /**
-     * All the children are removed
-     */
-    public void removeAll() {
-        children.clear();
-        reset();
-    }
-
-    /**
-     * Sets the {@link java.util.Iterator} to a state from where it can be used to
-     * walk through all the children again
-     */
-    public void reset() {
-        iterator = children.iterator();
     }
 
 }

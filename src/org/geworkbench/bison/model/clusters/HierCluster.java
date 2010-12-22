@@ -1,19 +1,15 @@
 package org.geworkbench.bison.model.clusters;
 
-/*
- * The geworkbench_3.0 project
+/**
  * 
  * Copyright (c) 2006 Columbia University 
  *
- */
-
-/**
  * Defines a Generalization of a <code>Cluster</code> that would be obtained from a Hierarchical Clustering Analysis
  * 
  * @author First Genetic Trust
- * @version $Id: HierCluster.java,v 1.3 2006-05-04 18:27:32 floratos Exp $
+ * @version $Id$
  */
-public interface HierCluster extends Cluster, Comparable {
+public interface HierCluster extends Cluster, Comparable<HierCluster> {
     /**
      * Sets the height of the node based on Hierarchical Analysis
      * 
@@ -71,5 +67,4 @@ public interface HierCluster extends Cluster, Comparable {
      */
     public HierCluster getNode( int index );
 
-    public void removeAll();
 }

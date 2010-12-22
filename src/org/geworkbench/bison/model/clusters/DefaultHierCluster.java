@@ -1,9 +1,9 @@
 package org.geworkbench.bison.model.clusters;
 
-/*
- * The geworkbench_3.0 project
+/**
  * 
- * Copyright (c) 2006 Columbia University 
+ * Copyright (c) 2006 Columbia University
+ * @version $Id$ 
  *
  */
 
@@ -121,8 +121,7 @@ public class DefaultHierCluster extends AbstractCluster implements HierCluster,
 	 *            <code>HierCluster</li> contains more children </li>
 	 *         <li> 0 if both have same number of children
 	 */
-	public int compareTo(Object o) {
-		assert o instanceof HierCluster;
+	public int compareTo(HierCluster o) {
 		if (((HierCluster) o).getHeight() < height)
 			return -1;
 		else if (((HierCluster) o).getHeight() > height)
