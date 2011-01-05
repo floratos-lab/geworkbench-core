@@ -28,11 +28,11 @@ import org.geworkbench.util.patterns.PatternOperations;
 import org.geworkbench.util.patterns.PatternSequenceDisplayUtil;
 
 /**
- * 
+ *
  * This panel is the central part of SequenceViewWidegt and display the
  * sequences as either lines or full sequences of letters. It is only used in
  * SequenceViewWidget.
- * 
+ *
  * @version $Id$
  */
 public class SequenceViewWidgetPanel extends JPanel {
@@ -81,7 +81,7 @@ public class SequenceViewWidgetPanel extends JPanel {
 	/**
 	 * New Initialization method. It should be used as a main entry point.
 	 * Others initialization method should be disabled or replaced.
-	 * 
+	 *
 	 * @param patternSeqMatches
 	 *            HashMap
 	 * @param seqDB
@@ -212,7 +212,7 @@ public class SequenceViewWidgetPanel extends JPanel {
 					drawPattern(g, theone, reg.x1, xscale, yscale,
 							eachSeqStartRowNum[seqId], cols,
 							PatternOperations.getPatternColor(pl
-									.getIdForDisplay()), pl.getAscii());
+									.getIdForDisplay()), reg.value);
 
 				} else if (pl.getPatternType().equals(PatternLocations.TFTYPE)) {
 					drawPattern(g, theone, reg.x1, Math.abs(reg.x1 - reg.x2),
@@ -401,7 +401,7 @@ public class SequenceViewWidgetPanel extends JPanel {
 
 	/**
 	 * drawPattern for type TFBS in painttext
-	 * 
+	 *
 	 */
 	private void drawPattern(Graphics g, int rowId, int xStart, int length,
 			Rectangle r, Color color, int strandDirection) {
@@ -505,7 +505,7 @@ public class SequenceViewWidgetPanel extends JPanel {
 	// changed for the simplified use,should replace the above method.
 	/**
 	 * Draw pattern DEFAULTTYPE for (1) full view and (2) Single Sequence Mode.
-	 * 
+	 *
 	 * @param g
 	 *            Graphics
 	 * @param hitSeq
@@ -600,7 +600,7 @@ public class SequenceViewWidgetPanel extends JPanel {
 
 	/**
 	 * Draw TFTYPE pattern in full view and Single Sequence Mode.
-	 * 
+	 *
 	 * @param g
 	 *            Graphics
 	 * @param hitSeq
@@ -747,7 +747,7 @@ public class SequenceViewWidgetPanel extends JPanel {
 
 	/**
 	 * Handle Mouse clicks.
-	 * 
+	 *
 	 * @param e
 	 *            MouseEvent
 	 */
@@ -772,7 +772,7 @@ public class SequenceViewWidgetPanel extends JPanel {
 
 	/**
 	 * Set up the corresponding parameters when mouse moves.
-	 * 
+	 *
 	 * @param e
 	 *            MouseEvent
 	 */
@@ -831,7 +831,7 @@ public class SequenceViewWidgetPanel extends JPanel {
 
 	/**
 	 * Set up corresponding parameters when a mouse click happens.
-	 * 
+	 *
 	 * @param e
 	 *            MouseEvent
 	 */
@@ -886,7 +886,7 @@ public class SequenceViewWidgetPanel extends JPanel {
 
 	/**
 	 * getSeqIdInFullView
-	 * 
+	 *
 	 * @param y
 	 *            int
 	 * @return int
@@ -1011,7 +1011,7 @@ public class SequenceViewWidgetPanel extends JPanel {
 
 	/**
 	 * getTipInfo
-	 * 
+	 *
 	 * @param sequence
 	 *            DSSequence
 	 * @param off

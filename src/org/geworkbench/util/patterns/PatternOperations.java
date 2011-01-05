@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.CSSequence;
@@ -29,7 +31,7 @@ import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeq
  * <p>
  * Company:
  * </p>
- * 
+ *
  * @author not attributable
  * @version $Id$
  */
@@ -114,7 +116,7 @@ public class PatternOperations {
 	/**
 	 * A utility to create a match between a sequence with all available
 	 * patterns within the sequence.
-	 * 
+	 *
 	 * @param patterns
 	 *            DSCollection
 	 * @param sequenceDB
@@ -168,7 +170,7 @@ public class PatternOperations {
 	/**
 	 * A utility to create a match between a sequence with all available
 	 * patterns within the sequence.
-	 * 
+	 *
 	 * @param patterns
 	 *            DSCollection
 	 * @param sequenceDB
@@ -290,7 +292,7 @@ public class PatternOperations {
 
 	/**
 	 * Simple method to scan the sequence with a known pattern ASCII.
-	 * 
+	 *
 	 * @param sequence
 	 * @param ascii
 	 * @return
@@ -302,34 +304,23 @@ public class PatternOperations {
 		}
 		String fullSequenceStr = sequence.getSequence();
 		Vector<CSSeqRegistration> vector = new Vector<CSSeqRegistration>();
-		int numberOfScanNeeded = sequence.length() - ascii.length();
-		for (int i = 0; i < numberOfScanNeeded; i++) {
-			String target = fullSequenceStr.substring(i, i + ascii.length());
-			if (isAMatch(target, ascii)) {
-				CSSeqRegistration seqReg = new CSSeqRegistration();
-				seqReg.x1 = i;
-				seqReg.x2 = i + ascii.length();
-				vector.add(seqReg);
-			}
-		}
-		if (vector != null) {
-			CSSeqRegistration[] seqRegs = new CSSeqRegistration[vector.size()];
-			return vector.toArray(seqRegs);
-		}
-		return null;
-	}
 
-	private static boolean isAMatch(String target, String ascii) {
-		if (target.equalsIgnoreCase(ascii)) {
-			return true;
-		}
+		Pattern pattern = Pattern.compile(ascii);
+		Matcher matcher = pattern.matcher(fullSequenceStr);
 
-		for (int i = 0; i < target.length(); i++) {
-			if (!(target.charAt(i) == ascii.charAt(i) || ascii.charAt(i) == '.')) {
-				return false;
-			}
-		}
-		return true;
+        while (matcher.find()) {
+            String regM = matcher.group();
+            int start = matcher.start();
+            int end = matcher.end();
+			CSSeqRegistration seqReg = new CSSeqRegistration();
+			seqReg.x1 = start;
+			seqReg.x2 = end;
+			seqReg.value = regM;
+			vector.add(seqReg);
+        }
+
+		CSSeqRegistration[] seqRegs = new CSSeqRegistration[vector.size()];
+		return vector.toArray(seqRegs);
 	}
 
 	public static HashMap<CSSequence, PatternSequenceDisplayUtil> merge(

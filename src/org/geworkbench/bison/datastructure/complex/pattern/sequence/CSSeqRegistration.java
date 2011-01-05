@@ -13,7 +13,7 @@ import org.geworkbench.bison.util.DSPValue;
  * <p>Company: Columbia University</p>
  *
  * @author not attributable
- * @version 1.0
+ * @version $Id$
  */
 public class CSSeqRegistration implements DSPValue {
     public double getPValue() {
@@ -27,6 +27,7 @@ public class CSSeqRegistration implements DSPValue {
     public float pValue = 1.0F;
     public int x1 = 0;
     public int x2 = 0;
+    public String value;
     // This is used to encode the 5'-3' (0) or 3'-5' (1) strand
     public int strand = 0;
 
