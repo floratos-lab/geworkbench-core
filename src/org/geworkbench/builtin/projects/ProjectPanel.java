@@ -1680,7 +1680,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * @param e
 	 */
 	protected void projectRemove_actionPerformed(ProjectNode node) {
-
 		if (node.getChildCount() > 0) {
 			for (Enumeration en = node.children(); en.hasMoreElements();) {
 				ProjectTreeNode childNode = (ProjectTreeNode) en
@@ -1690,7 +1689,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			}
 		}
 		projectTreeModel.removeNodeFromParent(node);
-
+		GeawConfigObject.getGuiWindow().setVisualizationType(null);
 	}
 
 	/**
