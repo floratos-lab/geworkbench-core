@@ -3,8 +3,14 @@ package org.geworkbench.analysis;
 import java.io.Serializable;
 import java.util.Map;
 
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
+import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.model.analysis.ParamValidationResults;
 import org.geworkbench.bison.model.analysis.ParameterPanel;
 
@@ -32,6 +38,7 @@ public abstract class AbstractSaveableParameterPanel extends ParameterPanel {
 	private static final long serialVersionUID = 4513020172986430772L;
 	private Log log = LogFactory.getLog(this.getClass());
 	String name = null;
+	protected DSPanel<DSGeneMarker> selectorPanel;
 
 	/**
 	 * 
@@ -161,5 +168,46 @@ public abstract class AbstractSaveableParameterPanel extends ParameterPanel {
 	 * For the parameter fields that are not in the input map, add them as default value
 	 */
 	public abstract void fillDefaultValues(Map<Serializable, Serializable> parameters);
+	
+	public static DSPanel<DSGeneMarker> chooseMarkersSet(String setLabel, DSPanel<DSGeneMarker> selectorPanel){
+		DSPanel<DSGeneMarker> selectedSet = null;
+		if (selectorPanel != null){
+			setLabel = setLabel.trim();
+			for (DSPanel<DSGeneMarker> panel : selectorPanel.panels()) {
+				if (StringUtils.equals(setLabel, panel.getLabel().trim())) {
+					selectedSet = panel;
+					break;
+				}
+			}
+		}
+
+		return selectedSet;
+	}
+	public boolean chooseMarkersFromSet(String setLabel, JTextField toPopulate) {
+		DSPanel<DSGeneMarker> selectedSet = chooseMarkersSet(setLabel, selectorPanel);
+
+		if (selectedSet != null) {
+			if (selectedSet.size() > 0) {
+				StringBuilder sb = new StringBuilder();
+				for (DSGeneMarker m : selectedSet) {
+					sb.append(m.getLabel());
+					sb.append(",");
+				}
+				sb.trimToSize();
+				sb.deleteCharAt(sb.length() - 1); // getting rid of last comma
+				toPopulate.setText(sb.toString());
+				return true;
+			} else {				
+				JOptionPane.showMessageDialog(null, "Marker set, " + setLabel
+						+ ", is empty.", "Input Error",
+						JOptionPane.ERROR_MESSAGE);				
+				
+				return false;
+			}
+		}
+
+		return false;
+	}	
+	
 
 }
