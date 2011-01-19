@@ -4,6 +4,7 @@ import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
+import org.geworkbench.bison.datastructure.bioobjects.structure.CSProteinStructure;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.events.ProjectEvent;
 
@@ -122,31 +123,29 @@ public class ProjectSelection {
             selectedNode = node;
             menuNode = node;
             selectedProjectNode = (ProjectNode) getNodeOfClass(node, ProjectNode.class);
-            boolean subNode = false;           
+           
             if (node instanceof DataSetNode) {
                 selectedDataSetNode = (DataSetNode) node;
                 AnnotationParser.setCurrentDataSet(selectedDataSetNode.dataFile);
                 GeawConfigObject.getGuiWindow().setVisualizationType(selectedDataSetNode.dataFile);
+                checkProjectNode();
+                if(selectedDataSetNode.dataFile instanceof CSProteinStructure){
+                	throwEvent("receiveProjectSelection", ProjectEvent.CLEARED);
+                }
+                else throwEvent("receiveProjectSelection", ProjectEvent.SELECTED);
             } else if (node instanceof DataSetSubNode) {
                 selectedDataSetSubNode = (DataSetSubNode) node;
                 selectedDataSetNode = (DataSetNode) getNodeOfClass(node, DataSetNode.class);
                 AnnotationParser.setCurrentDataSet(selectedDataSetNode.dataFile);//Fix bug 1471
                 GeawConfigObject.getGuiWindow().setVisualizationType(selectedDataSetSubNode._aDataSet);
-                subNode = true;
-            } else if (node instanceof ProjectNode && node.getChildCount() == 0) {
+                checkProjectNode();
+                throwSubNodeEvent("receiveProjectSelection");
+            } else  {
                 selectedDataSetNode = null;
                 selectedDataSetSubNode = null;
                 GeawConfigObject.getGuiWindow().setVisualizationType(null);
                 throwEvent("receiveProjectSelection", ProjectEvent.CLEARED);
-            }
-
-            checkProjectNode();
-            if (subNode) {
-                throwSubNodeEvent("receiveProjectSelection");
-            } else {
-                throwEvent("receiveProjectSelection", ProjectEvent.SELECTED);
-            }         
-            
+            }            
         }
     }
 
@@ -207,7 +206,9 @@ public class ProjectSelection {
             }
             
         }
-       
+        else{        	
+        	panel.publishProjectEvent(new ProjectEvent(message,null,selectedDataSetNode));
+        }
         panel.sendCommentsEvent(selectedNode);
     }
 
