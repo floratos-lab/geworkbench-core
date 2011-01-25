@@ -1,5 +1,6 @@
 package org.geworkbench.bison.datastructure.biocollections.views;
 
+import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
@@ -7,28 +8,61 @@ import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 
 /**
- * <p>
- * Title: caWorkbench
- * </p>
- * <p/>
- * <p>
- * Description: Modular Application Framework for Gene Expession, Sequence and
- * Genotype Analysis
- * </p>
- * <p/>
- * <p>
+ * 
+ * Interface of the view of microarray dataset for a given marker subset and a given microarray subset.
+ * 
  * Copyright: Copyright (c) 2003 -2004
- * </p>
- * <p/>
- * <p>
+ * 
  * Company: Columbia University
- * </p>
  * 
  * @author Adam Margolin
- * @version 3.0
+ * @version $Id$
  */
 public interface DSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
-		extends DSMatrixDataSetView<Q> {
+		extends DSDataSetView<Q> {
+	
+	// the following 7 methods used to be in DSDataSetView
+	public int size();
+	/**
+	 * @return A DSItemList containing all the <code>Q</code> type objects
+	 *         (generally microarrays) associated with this
+	 *         <code>DSDataView</code>.
+	 */
+	public DSItemList<Q> items();
+	/**
+	 * Set/reset item subselection based on activated panels.
+	 */
+	public void useItemPanel(boolean status);
+	/**
+	 * Gets the status of item activation.
+	 * 
+	 */
+	public boolean useItemPanel();
+
+	/**
+	 * Assigns a specific item panel selection.
+	 */
+	public void setItemPanel(DSPanel<Q> mArrayPanel);
+
+	/**
+	 * Assigns a specific item panel selection.
+	 */
+	public DSPanel<Q> getItemPanel();
+
+	/**
+	 * Sets the reference {@link DSDataSet} for this <code>DSDataSetView</code>.
+	 * 
+	 * @param dataSet
+	 *            The new reference dataset.
+	 */
+	//only used by AracneNalysis
+	public void setDataSet(DSDataSet<Q> dataSet);
+
+
+	// the following two methods used to be in DSMatrixDataSetView
+    public double[] getRow(int index);
+
+    public double getValue(int markerIndex, int arrayIndex);
 
 	public double getValue(T object, int arrayIndex);
 
@@ -39,8 +73,6 @@ public interface DSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroar
 	public void setMicroarraySet(DSMicroarraySet<Q> ma);
 
 	public DSMicroarraySet<Q> getMicroarraySet();
-
-	// watkin - Moved from DSDataSetView
 
 	/**
 	 * @return A DSItemList containing all the <code>T</code> type objects
@@ -79,5 +111,5 @@ public interface DSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroar
 
 	public Q get(int index);
 
-	DSItemList<T> getUniqueMarkers();
+	public DSItemList<T> getUniqueMarkers();
 }
