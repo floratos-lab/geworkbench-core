@@ -5,21 +5,7 @@ public class EuclideanDistance implements Distance {
     // Singleton
     public final static EuclideanDistance instance = new EuclideanDistance();
 
-    protected EuclideanDistance() {
-    }
-
-    public static double distance(DoubleIterator i, DoubleIterator j) {
-        double d = 0;
-        while (i.hasNext() && j.hasNext()) {
-            double a = i.next();
-            double b = j.next();
-            // The following is a very efficient replacement for Double.isNaN(t).
-            double t = a - b;
-            if (t == t) {
-                d += t * t;
-            }
-        }
-        return Math.sqrt(d);
+    private EuclideanDistance() {
     }
 
     public static double distance(double[] a, double[] b) {
@@ -33,10 +19,6 @@ public class EuclideanDistance implements Distance {
             }
         }
         return Math.sqrt(d);
-    }
-
-    public double compute(DoubleIterator i, DoubleIterator j) {
-        return distance(i, j);
     }
 
     public double compute(double[] a, double[] b) {

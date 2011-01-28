@@ -12,39 +12,12 @@ package org.geworkbench.util;
  * <p>Company: Columbia University</p>
  *
  * @author Frank Wei Guo
- * @version 3.0
+ * @version $Id$
  */
 public class CorrelationDistance implements Distance {
     public final static CorrelationDistance instance = new CorrelationDistance();
 
     protected CorrelationDistance() {
-    }
-
-    public static double distance(DoubleIterator a, DoubleIterator b) {
-        double sumSqX = 0;
-        double sumSqY = 0;
-        double sumCoProduct = 0;
-        double meanX = a.next();
-        double meanY = b.next();
-        int i = 1;
-        while (a.hasNext() && b.hasNext()) {
-            double x = a.next();
-            double y = b.next();
-            double sweep = ((double)i) / (i + 1);
-            double deltaX = x - meanX;
-            double deltaY = y - meanY;
-            sumSqX += deltaX * deltaX * sweep;
-            sumSqY += deltaY * deltaY * sweep;
-            sumCoProduct += deltaX * deltaY * sweep;
-            meanX += deltaX / (i + 1);
-            meanY += deltaY / (i + 1);
-            ++i;
-        }
-        if (i == 0) return 0;
-        double popSDX = Math.sqrt(sumSqX / i);
-        double popSDY = Math.sqrt(sumSqY / i);
-        double covXY = sumCoProduct / i;
-        return (1 - (covXY / (popSDX * popSDY)));
     }
 
     public static double distance(double[] x, double[] y) {
@@ -69,10 +42,6 @@ public class CorrelationDistance implements Distance {
         double popSDY = Math.sqrt(sumSqY / N);
         double covXY = sumCoProduct / N;
         return (1 - (covXY / (popSDX * popSDY)));
-    }
-
-    public double compute(DoubleIterator i, DoubleIterator j) {
-        return distance(i, j);
     }
 
     public double compute(double[] a, double[] b) {

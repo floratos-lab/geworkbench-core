@@ -2,37 +2,16 @@ package org.geworkbench.util;
 
 import java.util.Arrays;
 
+/**
+ * 
+ * @author zji
+ * @version $Id$
+ *
+ */
 public class SpearmanRankDistance implements Distance {
     public final static SpearmanRankDistance instance = new SpearmanRankDistance();
 
     protected SpearmanRankDistance() {
-    }
-
-    public static double distance(DoubleIterator i, DoubleIterator j) {
-        double result = 0;
-        int an = 0;
-        DoubleIterator ii = i;
-        DoubleIterator jj = j;
-        while (ii.hasNext()) {
-            ++an;
-            ii.next(); // discard value
-        }
-        double[] a = new double[an];
-        for (int k = 0; k < an; ++k) {
-            a[k] = ii.next();
-        }
-
-        int bn = 0;
-        while (jj.hasNext()) {
-            ++bn;
-            jj.next(); // discard value
-        }
-        double[] b = new double[bn];
-        for (int k = 0; k < bn; ++k) {
-            b[k] = jj.next();
-        }
-
-        return distance(a, b);
     }
 
     public static double distance(double[] a, double[] b) {
@@ -63,10 +42,6 @@ public class SpearmanRankDistance implements Distance {
         result = result / Math.sqrt(denom1 * denom2);
         result = 1. - result;
         return result;
-    }
-
-    public double compute(DoubleIterator i, DoubleIterator j) {
-        return distance(i, j);
     }
 
     public double compute(double[] a, double[] b) {

@@ -18,11 +18,9 @@ package org.geworkbench.util;
  * one are ignored. If a value is not a number, we silently skip the value.</emph> </p>
  *
  * @author Frank Wei Guo
- * @version 3.0
+ * @version $Id$
  */
 
 public interface Distance {
-    double compute(DoubleIterator i, DoubleIterator j);
-
     double compute(double[] a, double[] b);
 }
