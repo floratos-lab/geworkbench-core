@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoundedRangeModel;
@@ -21,9 +23,9 @@ import javax.swing.SwingConstants;
  * $Id$
  */
 
-public class ProgressItem extends JPanel {
+public class ProgressItem extends JPanel implements PropertyChangeListener {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -4287056285516981445L;
 	/**
      * Defines a ProgressBar that has bounds and values shown increment from a
      * minimum to a maximum
@@ -261,4 +263,12 @@ public class ProgressItem extends JPanel {
             increment = inc;
         }
     }
+    
+    @Override
+    public void propertyChange(PropertyChangeEvent evt){
+		if("progress" == evt.getPropertyName()) {
+			int progress = (Integer)evt.getNewValue();
+			updateTo(progress);
+		}
+	}
 }

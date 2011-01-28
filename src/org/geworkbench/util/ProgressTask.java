@@ -28,7 +28,7 @@ public abstract class ProgressTask<T, V> extends SwingWorker<T, V> {
 		pb.start();
 		
 		if (pbtype == ProgressItem.BOUNDED_TYPE)
-			addPropertyChangeListener(new BoundedProgressListener(pb));
+			addPropertyChangeListener( pb );
 	}
 	
 	public ProgressItem getProgressItem(){
