@@ -1,5 +1,7 @@
 package org.geworkbench.builtin.projects;
 
+import javax.swing.SwingUtilities;
+
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
@@ -143,8 +145,9 @@ public class ProjectSelection {
             } else  {
                 selectedDataSetNode = null;
                 selectedDataSetSubNode = null;
-                GeawConfigObject.getGuiWindow().setVisualizationType(null);
-                throwEvent("receiveProjectSelection", ProjectEvent.CLEARED);
+                GeawConfigObject.getGuiWindow().setVisualizationType(null);                
+                checkProjectNode();
+                panel.publishProjectEvent(new ProjectEvent(ProjectEvent.CLEARED, null, null));                
             }            
         }
     }
@@ -206,9 +209,7 @@ public class ProjectSelection {
             }
             
         }
-        else{        	
-        	panel.publishProjectEvent(new ProjectEvent(message,null,selectedDataSetNode));
-        }
+        
         panel.sendCommentsEvent(selectedNode);
     }
 

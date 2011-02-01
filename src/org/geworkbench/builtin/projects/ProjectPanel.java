@@ -1005,17 +1005,22 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			if (path != null && selectedNode != clickedNode) {
 				setNodeSelection(clickedNode);
 			}
-			else if ((clickedNode != null) && clickedNode instanceof ImageNode) {
-					if (e.getClickCount() == 1) {
-						publishImageSnapshot(new ImageSnapshotEvent(
-								"Image Node Selected",
-								((ImageNode) clickedNode).image,
-								ImageSnapshotEvent.Action.SHOW));
-						sendCommentsEvent(clickedNode);
-					}
-			}			
+			if ((clickedNode != null) && clickedNode instanceof DataSetSubNode) {
+				// DSAncillaryDataSet ds = ((DataSetSubNode)
+				// clickedNode)._aDataSet;
+				// publishProjectEvent(new ProjectEvent("ProjectNode", ds));
+			}
+			if ((clickedNode != null) && clickedNode instanceof ImageNode) {
+				if (e.getClickCount() == 1) {
+					publishImageSnapshot(new ImageSnapshotEvent(
+							"Image Node Selected",
+							((ImageNode) clickedNode).image,
+							ImageSnapshotEvent.Action.SHOW));
+					sendCommentsEvent(clickedNode);
+				}
+			}
+			sendCommentsEvent(clickedNode);
 		}
-		
 	}
 
 	private boolean isPathSelected(TreePath path) {

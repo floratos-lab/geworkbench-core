@@ -102,11 +102,7 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 			DSDataSet<?> dataSet = e.getDataSet();
 			if (dataSet instanceof DSMicroarraySet) {
 				if (refMASet != dataSet) {
-					this.refMASet = (DSMicroarraySet<DSMicroarray>) dataSet;
-					// panels are now invalid
-					activatedArrays = null;
-					activatedMarkers = null;
-					uniqueMarkers = null;
+					this.refMASet = (DSMicroarraySet<DSMicroarray>) dataSet;					
 				}
 			}
 			refreshMaSetView();
