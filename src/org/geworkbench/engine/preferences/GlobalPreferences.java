@@ -17,6 +17,7 @@ public class GlobalPreferences {
     public static final String PREF_TEXT_EDITOR = "Text Editor";
     public static final String RCM_URL = "Remote Components URL";
     public static final String PREF_MARKER_LOAD = "Marker Load Options";
+    public static final String RWSP_URL = "Remote Workspaces URL";
     
     public static final String[] VISUALIZATION_VALUES = new String[]{"Absolute", "Relative"};
     public static final Class<? extends ColorContext>[] VISUALIZATON_COLOR_CONTEXTS = new Class[]{DefaultColorContext.class, ExpressionPValueColorContext.class};
@@ -35,7 +36,9 @@ public class GlobalPreferences {
     
     public static final String[] MARKER_LOAD_VALUES = new String[]{"Load markers in the original order", "Load markers ordered by gene name", "Load markers ordered by probe set ID"};
     public static final int ORIGINAL = 0, SORTED_GENE = 1, SORTED_PROBE = 2;
-    
+
+    public static final String DEFAULT_RWSP_URL = "http://afdev.c2b2.columbia.edu:8081/axis2/services";
+
     private static GlobalPreferences instance;
 
     public static GlobalPreferences getInstance() {
@@ -77,11 +80,16 @@ public class GlobalPreferences {
         ChoiceField field5 = new ChoiceField(GlobalPreferences.PREF_MARKER_LOAD, GlobalPreferences.MARKER_LOAD_VALUES);
         field5.setSelection(0);
 
+        // RWSP URL
+        TextField field6 = new TextField(GlobalPreferences.RWSP_URL);
+        field6.setValue(GlobalPreferences.DEFAULT_RWSP_URL);
+
         prefs.addField(field1);
         prefs.addField(field2);
         prefs.addField(field3);
         prefs.addField(field4);
         prefs.addField(field5);
+        prefs.addField(field6);
 
         // Load stored values
         PreferencesManager manager = PreferencesManager.getPreferencesManager();
@@ -114,4 +122,7 @@ public class GlobalPreferences {
     	return ((ChoiceField)prefs.getField(PREF_MARKER_LOAD)).getSelection();
     }
 
+    public String getRWSP_URL() {
+        return prefs.getField(RWSP_URL).toString();
+    }
 }

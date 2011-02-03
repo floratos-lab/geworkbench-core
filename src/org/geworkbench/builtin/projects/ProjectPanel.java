@@ -35,6 +35,8 @@ import javax.swing.JTree;
 import javax.swing.SwingConstants;
 import javax.swing.ToolTipManager;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeModelListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
@@ -395,6 +397,24 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 		jProjectMenu.addSeparator();
 		jProjectMenu.add(jRemoveProjectItem);
+		
+		projectTreeModel.addTreeModelListener(new TreeModelListener(){
+			public void treeNodesChanged(TreeModelEvent arg0) {
+				RWspHandler.dirty = true;
+			}
+			public void treeNodesInserted(TreeModelEvent arg0) {
+				RWspHandler.dirty = true;
+			}
+			public void treeNodesRemoved(TreeModelEvent arg0) {
+				ProjectTreeNode root = (ProjectTreeNode)arg0.getPath()[0];
+				if (root.isRoot() && root.getChildCount()==0)
+					RWspHandler.wspId = 0;
+				RWspHandler.dirty = true;
+			}
+			public void treeStructureChanged(TreeModelEvent arg0) {
+				RWspHandler.dirty = true;
+			}			
+		});
 	}
 
 	void populateFromSaveTree(SaveTree saveTree) {
@@ -2165,6 +2185,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	protected JMenuItem jLoadProjectItem = new JMenuItem();
 
+	protected JMenuItem jUploadWspItem = new JMenuItem();
+
 	protected JMenuItem jNewProjectItem = new JMenuItem();
 
 	protected JMenuItem jLoadMArrayItem = new JMenuItem();
@@ -2266,7 +2288,18 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		listeners.put("File.OpenRemotePDB.File", listener);
 		jOpenRemotePDBItem.addActionListener(listener);
 
+		jUploadWspItem.setText("Upload to server");
+		listener = new java.awt.event.ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				RWspHandler ws = new RWspHandler();
+				ws.uploadWsp();
+			}
+
+		};
+		jUploadWspItem.addActionListener(listener);	
+
 		jRootMenu.add(jNewProjectItem);
+		jRootMenu.add(jUploadWspItem);
 		jProjectMenu.add(jLoadMArrayItem);
 		jProjectMenu.addSeparator();
 		jProjectMenu.add(jOpenRemotePDBItem);
@@ -2305,6 +2338,20 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 		};
 		listeners.put("File.Open.Workspace", listener);
+		listener = new java.awt.event.ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				RWspHandler ws = new RWspHandler();
+				ws.listWsp(true);
+			}
+		};
+		listeners.put("File.Open.Remote Workspace", listener);
+		listener = new java.awt.event.ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				RWspHandler ws = new RWspHandler();
+				ws.listWsp(false);
+			}
+		};
+		listeners.put("Tools.My Account", listener);
 		listener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				newWorkspace_actionPerformed(e);
