@@ -120,17 +120,24 @@ public class AdjacencyMatrixFileFormat extends DataSetFileFormat {
 				dataSetstmp.add((DataSetNode) node);
 			}
 		}
-		DataSetNode[] dataSets = dataSetstmp.toArray(new DataSetNode[1]);
 
-		Object s = JOptionPane.showInputDialog(
-		                    null,
-		                    "Microarray Dataset:",
-		                    "Select Dataset",
-		                    JOptionPane.PLAIN_MESSAGE,
-		                    null,
-		                    dataSets,
-		                    dataSets[0]);
-		return s;
+		Object ret;
+		if (dataSetstmp.isEmpty()){
+			JOptionPane.showMessageDialog(null, "No Microarray Set is available");
+			ret = null;
+		} else {
+			DataSetNode[] dataSets = dataSetstmp.toArray(new DataSetNode[1]);
+			ret = JOptionPane.showInputDialog(
+                    null,
+                    "Microarray Dataset:",
+                    "Select Dataset",
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    dataSets,
+                    dataSets[0]);
+		}
+
+		return ret;
 	}
 
 	@Override
