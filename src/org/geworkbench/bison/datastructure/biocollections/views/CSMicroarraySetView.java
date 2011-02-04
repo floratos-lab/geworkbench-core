@@ -73,6 +73,9 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
 
 	@SuppressWarnings("unchecked")
 	public DSItemList<T> markers() {
+		if(dataSet==null)
+			return markerPanel;
+		
 		// todo Why is this size > 0 requirement here? Should probably be
 		// changed to return markerPanel if boolean is set no matter what
 		if (markerPanel != null && useMarkerPanel && markerPanel.size() > 0) {
