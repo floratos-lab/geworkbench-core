@@ -120,7 +120,7 @@ public class CSGeneMarker implements DSGeneMarker, Serializable {
         ois.defaultReadObject();
     }
 
-    public boolean equals(DSGeneMarker marker) {
+    public boolean equals(Object marker) {
         if (marker instanceof CSGeneMarker) {
             CSGeneMarker mInfo = (CSGeneMarker) marker;
 
