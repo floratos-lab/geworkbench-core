@@ -3,32 +3,15 @@
  */
 package org.geworkbench.bison.datastructure.bioobjects.microarray;
 
-import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.views.DSMicroarraySetView;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
-import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
-import org.geworkbench.engine.management.Script;
 
 /**
  * @author yc2480
- * @version $id$
+ * @version $Id$
  */
 public interface DSAnovaResultSet<T extends DSGeneMarker> extends
-		DSSignificanceResultSet {
-
-	public Double getSignificance(T marker);
-
-	public void setSignificance(T marker, double signficance);
-
-	public DSPanel<T> getSignificantMarkers();
-
-	public double getCriticalPValue();
-
-	public String[] getLabels(int index);
-
-	public DSMicroarraySet getParentDataSet();
-
-	public void sortMarkersBySignificance();
+		DSSignificanceResultSet<T> {
 	
 	public double[][] getResult2DArray();
 
@@ -38,9 +21,8 @@ public interface DSAnovaResultSet<T extends DSGeneMarker> extends
 	public double getMean(T marker, String label);
 	public double getDeviation(T marker, String label);
 	
-	@Script
 	public void saveToFile(String filename);
 	
-	public void microarraySetViewSetter(DSMicroarraySetView view); //for microarraysetview injection
+	public void microarraySetViewSetter(DSMicroarraySetView<? extends DSGeneMarker, ? extends DSMicroarray> view); //for microarraysetview injection
 	public String[] significantMarkerNamesGetter(); //for panel injection
 }

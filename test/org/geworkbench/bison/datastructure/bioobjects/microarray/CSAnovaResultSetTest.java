@@ -17,7 +17,7 @@ import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 
 /**
  * @author yc2480
- * @version $id$
+ * @version $Id$
  */
 public class CSAnovaResultSetTest extends TestCase {
 
@@ -261,25 +261,6 @@ public class CSAnovaResultSetTest extends TestCase {
 		assertSame(groupNames, anovaResultSet.getLabels(0));
 		assertSame(markerNames, anovaResultSet.significantMarkerNamesGetter());
 		assertSame(result2DArray, anovaResultSet.getResult2DArray());
-	}
-
-	/**
-	 * 
-	 */
-	public final void testCSAnovaResultSetDSMicroarraySetViewStringStringArray() {
-		// test constructor for grid object
-		DSAnovaResultSet<DSGeneMarker> anovaResultSet = new CSAnovaResultSet<DSGeneMarker>(
-				view, "Anova Analysis Result Set", groupNames);
-		assertSame(null, anovaResultSet.getDataSetFile());
-		assertEquals("Anova Analysis Result Set", anovaResultSet.getLabel());
-		// constructor for grid object only create an empty object
-		assertEquals(null, anovaResultSet.getLabels(0));
-		assertEquals(double[][].class, anovaResultSet.getResult2DArray()
-				.getClass());
-		assertEquals(String[].class, anovaResultSet
-				.significantMarkerNamesGetter().getClass());
-		assertEquals("Anova Analysis Result Set", anovaResultSet
-				.getSignificantMarkers().getLabel());
 	}
 
 	/**

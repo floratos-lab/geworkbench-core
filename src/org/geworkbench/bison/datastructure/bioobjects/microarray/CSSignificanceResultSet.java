@@ -1,31 +1,33 @@
 package org.geworkbench.bison.datastructure.bioobjects.microarray;
 
-import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
-import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
-import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
-import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
-import org.geworkbench.bison.datastructure.complex.panels.CSPanel;
-import org.geworkbench.bison.datastructure.complex.panels.DSPanel; 
-import org.geworkbench.engine.management.Script;
-import java.io.File; 
-import java.io.PrintWriter;
-import java.io.FileOutputStream;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
+import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
+import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
+import org.geworkbench.bison.datastructure.complex.panels.CSPanel;
+import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
+
 /**
  * @author John Watkinson
- * @version $Id: CSSignificanceResultSet.java,v 1.13 2008-07-16 21:36:25 chiangy Exp $
+ * @version $Id$
  */
-public class CSSignificanceResultSet <T extends DSGeneMarker> extends CSAncillaryDataSet implements DSSignificanceResultSet<T> {
+public class CSSignificanceResultSet <T extends DSGeneMarker> extends CSAncillaryDataSet<DSMicroarray> implements DSSignificanceResultSet<T> {
 
-    /**
+	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
-
+	private static final long serialVersionUID = -5558984697240843050L;
+	
+	static private Log log = LogFactory.getLog(CSSignificanceResultSet.class);
+	
 	private class SignificanceComparator implements Comparator<Integer> {
 
         public int compare(Integer x, Integer y) {
@@ -50,7 +52,8 @@ public class CSSignificanceResultSet <T extends DSGeneMarker> extends CSAncillar
     private String[][] labels = new String[2][];
     private DSPanel<T> panel;
 
-    public CSSignificanceResultSet(DSMicroarraySet parent, String label, String[] caseLabels, String[] controlLabels, double alpha) {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	public CSSignificanceResultSet(DSMicroarraySet parent, String label, String[] caseLabels, String[] controlLabels, double alpha) {
         super(parent, label);
         this.alpha = alpha;
         significance = new HashMap<T, Double>();
@@ -129,24 +132,6 @@ public class CSSignificanceResultSet <T extends DSGeneMarker> extends CSAncillar
     	panel.add(marker);
     }     
     
-    
-     @Script
-     public void saveToFile(String filename){
-        try{
-            File resultFile = new File(filename);
-            PrintWriter out = new PrintWriter(new FileOutputStream(filename));
-            int i =0;
-            for(T o: panel){
-                  out.println(new StringBuilder().append(((CSExpressionMarker)o).getLabel() + "\t").append(significance.get(o)).toString());
-                i++;
-            }
-            out.flush();
-            out.close();
-        }catch(Exception e){
-
-        }
-     };
-
     public DSPanel<T> getSignificantMarkers() {
         return panel;
     }
@@ -174,7 +159,13 @@ public class CSSignificanceResultSet <T extends DSGeneMarker> extends CSAncillar
         
     }
 
-    public DSMicroarraySet getParentDataSet() {
-        return (DSMicroarraySet) super.getParentDataSet();
+    public DSMicroarraySet<DSMicroarray> getParentDataSet() {
+    	DSDataSet<DSMicroarray> parentDataSet = super.getParentDataSet();
+    	if(parentDataSet instanceof DSMicroarraySet) {
+    		return (DSMicroarraySet<DSMicroarray>) super.getParentDataSet();
+    	} else {
+			log.error("parentDataSet is not an instance DSMicroarraySet");
+    		return null;
+    	}
     }
 }

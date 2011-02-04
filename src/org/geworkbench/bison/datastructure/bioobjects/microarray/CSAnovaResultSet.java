@@ -13,23 +13,23 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.views.DSMicroarraySetView;
 import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.complex.panels.CSPanel;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
-import org.geworkbench.engine.management.Script;
 
 /**
  * @author yc2480
- * @version $Id: CSAnovaResultSet.java,v 1.4 2008-02-05 16:05:19 chiangy Exp $
+ * @version $Id$
  * 
  */
 public class CSAnovaResultSet<T extends DSGeneMarker> extends
-		CSSignificanceResultSet implements DSAnovaResultSet<T> {
+		CSSignificanceResultSet<T> implements DSAnovaResultSet<T> {
 
-	private DSMicroarraySetView microarraySetView;
+	private static final long serialVersionUID = -1727538221152553424L;
+	
+	private DSMicroarraySetView<? extends DSGeneMarker, ? extends DSMicroarray> microarraySetView;
 	private double alpha = 0.05;
 	public double[][] result2DArray; // columns: pval,
 	private String[] groupNames;
@@ -41,7 +41,7 @@ public class CSAnovaResultSet<T extends DSGeneMarker> extends
 	private Map<String, Integer> map = new HashMap<String, Integer>();
 
 	// constructor for local
-	public CSAnovaResultSet(DSMicroarraySetView microarraySetView,
+	public CSAnovaResultSet(DSMicroarraySetView<? extends DSGeneMarker, ? extends DSMicroarray> microarraySetView,
 			String label, String[] groupNames, String[] significantMarkerNames,
 			double[][] result2DArray) {
 		super(microarraySetView.getMicroarraySet(), label, groupNames,
@@ -55,17 +55,6 @@ public class CSAnovaResultSet<T extends DSGeneMarker> extends
 		for (int cx = 0; cx < significantMarkerNames.length; cx++) {
 			map.put(significantMarkerNames[cx], new Integer(cx));
 		}
-	}
-
-	// constructor for grid
-	public CSAnovaResultSet(DSMicroarraySetView microarraySetView,
-			String label, java.lang.String[] groupNames) {
-		super(microarraySetView.getMicroarraySet(), label, groupNames,
-				new String[0], 0.05);
-		result2DArray = new double[0][0];
-		groupNames = new String[0];
-		significantMarkerNames = new String[0];
-		panel = new CSPanel<T>(label);
 	}
 
 	public File getDataSetFile() {
@@ -100,7 +89,7 @@ public class CSAnovaResultSet<T extends DSGeneMarker> extends
 	 * array.
 	 */
 	@Override
-	public void setSignificance(DSGeneMarker marker, double value) {
+	public void setSignificance(T marker, double value) {
 		super.setSignificance(marker, value);
 		ArrayList<String> list = new ArrayList<String>();
 		list.addAll(Arrays.asList(significantMarkerNames));
@@ -114,10 +103,8 @@ public class CSAnovaResultSet<T extends DSGeneMarker> extends
 		// shouldn't we check value>alpha and remove marker?
 	}
 
-	@Script
 	public void saveToFile(String filename) {
 		try {
-			File resultFile = new File(filename);
 			PrintWriter out = new PrintWriter(new FileOutputStream(filename));
 			int i = 0;
 			for (T o : panel) {
@@ -165,7 +152,7 @@ public class CSAnovaResultSet<T extends DSGeneMarker> extends
 		}
 		Collections.sort(indices, new SignificanceComparator());
 		CSPanel<T> newPanel = new CSPanel<T>();
-		ArrayList<String> newList = new ArrayList<String>();
+
 		for (int i = 0; i < n; i++) {
 			newPanel.add(panel.get(indices.get(i)));
 			newSignificantMarkerNames[i] = significantMarkerNames[indices
@@ -179,10 +166,6 @@ public class CSAnovaResultSet<T extends DSGeneMarker> extends
 		map = newMap;
 		result2DArray = newResult2DArray;
 		significantMarkerNames = newSignificantMarkerNames;
-	}
-
-	public DSMicroarraySet getParentDataSet() {
-		return (DSMicroarraySet) super.getParentDataSet();
 	}
 
 	private class SignificanceComparator implements Comparator<Integer> {
@@ -269,11 +252,8 @@ public class CSAnovaResultSet<T extends DSGeneMarker> extends
 		return result2DArray[3 + groupIndex * 2 + 1][markerIndex];
 	};
 
-	public void microarraySetViewSetter(DSMicroarraySetView view) { // for
-																	// injection
-																	// used in
-																	// grid
-																	// service
+	// for injection used in grid service
+	public void microarraySetViewSetter(DSMicroarraySetView<? extends DSGeneMarker, ? extends DSMicroarray> view) { 
 		microarraySetView = view;
 	}
 
