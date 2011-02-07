@@ -507,14 +507,17 @@
 		<mkdir dir="${cleanFolder}" />
 		<mkdir dir="${cleanFolder}/log" />
 		<echo>Begin to create a new source, which is located at ${cleanFolder}, please wait...</echo>
+		<move todir="${cleanFolder}" >
+			<fileset dir=".">
+				<!-- geworkbenh core jars -->
+				<include name="*.jar" />
+			</fileset>
+		</move>
 		<copy todir="${cleanFolder}" includeEmptyDirs="NO">
 			<fileset dir=".">
 
 				<exclude name="CVS" />
 				<exclude name="${conf}/**/*" />
-
-				<!-- geworkbenh core jars -->
-				<include name="*.jar" />
 
 				<!-- Include the following components for distribution -->
 				<include name="bin/matrixreduce/*" />
