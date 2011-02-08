@@ -11,7 +11,6 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -207,10 +206,9 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 		File folder = new File(path);
 		File[] listOfFiles = folder.listFiles();
 		if (listOfFiles.length > 0) {
-			java.util.Arrays.sort(listOfFiles, new Comparator() {
-				public int compare(Object a, Object b) {
-					return (int) (((File) a).lastModified() - ((File) b)
-							.lastModified());
+			java.util.Arrays.sort(listOfFiles, new Comparator<File>() {
+				public int compare(File a, File b) {
+					return (int) ( a.lastModified() - b.lastModified());
 				}
 			});
 			lastParameterSetName = unscrubFilename(listOfFiles[listOfFiles.length - 1]
@@ -289,7 +287,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	 * @return Names of parameterSets as an array of Strings.
 	 */
 	public String[] getNamesOfStoredParameterSets() {
-		Vector paramNames = new Vector();
+		Vector<String> paramNames = new Vector<String>();
 		for (ParameterKey key : parameterHash.keySet()) {
 			if (key.getClassName().equals(getIndex())) {
 				paramNames.add(key.getParameterName());
@@ -344,7 +342,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 					this.getClass().getClassLoader()); // to avoid java bug
 			// #6329581
 			// newaspp = (AbstractSaveableParameterPanel) ois.readObject();
-			HashMap parameters = (HashMap) ois.readObject();
+			HashMap<Serializable, Serializable> parameters = (HashMap<Serializable, Serializable>) ois.readObject();
 			this.setParameters(parameters);
 		} catch (Exception e) {
 			log.error(e, e);
@@ -362,7 +360,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	 */
 	public Map<Serializable, Serializable> deserializeNamedParameterSet(
 			String name) {
-		HashMap parameters = null;
+		HashMap<Serializable, Serializable> parameters = null;
 		try {
 			FileInputStream fis = new FileInputStream(new File(
 					scrubFilename(name)));
@@ -370,7 +368,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 			Thread.currentThread().setContextClassLoader(
 					this.getClass().getClassLoader()); // to avoid java bug
 			// #6329581
-			parameters = (HashMap) ois.readObject();
+			parameters = (HashMap<Serializable, Serializable>) ois.readObject();
 		} catch (Exception e) {
 			log.error(e, e);
 		}
@@ -391,10 +389,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 			result = parameterHash.values().contains(parameterSet);
 		else {// I'll need to loop through all the records. disregard the
 			// ParameterKey and compare others.
-			for (Iterator iterator = parameterHash.values().iterator(); iterator
-					.hasNext();) {
-				Map<Serializable, Serializable> property = (Map<Serializable, Serializable>) iterator
-						.next();
+			for (Map<Serializable, Serializable> property : parameterHash.values()) {
 				Map<Serializable, Serializable> pureParameter = new HashMap<Serializable, Serializable>();
 				pureParameter.putAll(property);
 				pureParameter.remove(ParameterKey.class.getSimpleName());
@@ -525,20 +520,21 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 		analysisId.setID(id, "Analysis");
 	}
 
+	private String label = null;
 	/**
 	 *
 	 * @return
 	 */
 	public String getLabel() {
-		return analysisId.getLabel();
+		return label;
 	}
 
 	/**
 	 *
 	 * @param name
 	 */
-	public void setLabel(String name) {
-		analysisId.setLabel(name);
+	public void setLabel(String label) {
+		this.label = label;
 	}
 
 	/*
