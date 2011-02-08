@@ -1,11 +1,15 @@
 package org.geworkbench.bison.model.clusters;
 
-import org.apache.commons.collections15.map.HashedMap;
-import org.geworkbench.bison.util.DefaultIdentifiable;
-
-import java.lang.reflect.Array;
-import java.util.*;
 import java.io.Serializable;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
+
+import org.apache.commons.collections15.map.HashedMap;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
@@ -29,11 +33,6 @@ public abstract class AbstractCluster implements Cluster, Serializable {
      * as a child
      */
     protected Cluster parent = null;
-
-    /**
-     * Unique ID acting as a key for this <code>Cluster</code>
-     */
-    protected org.geworkbench.bison.util.DefaultIdentifiable clusterID = new DefaultIdentifiable();
 
     /**
      * Gets the <code>Cluster</code> which contains this <code>Cluster</code> as
