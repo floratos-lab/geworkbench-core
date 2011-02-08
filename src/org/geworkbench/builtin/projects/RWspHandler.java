@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -82,7 +83,7 @@ public class RWspHandler {
 	private JTextField groupName = new JTextField(20);
 	private JTextField groupUser = new JTextField(20);
 	protected static final int LocalID = 0, IdID = 1, TitleID = 2, LockID=5, DirtyID=7, SyncID=8, LastSyncID=9;
-	protected static final int LDWidth = 790, LDHeight = 330; 
+	protected static final int LDWidth = 790, LDHeight = 330, SLDHeight = 300; 
 
 	protected static String checkoutstr = "";
 	protected static boolean dirty = false;
@@ -440,6 +441,12 @@ public class RWspHandler {
 		}
 	}
 
+	private JButton downloadBtn = new JButton("Open remote");
+	private JButton openLocalBtn = new JButton("Open local");
+	private JButton renameLocalBtn = new JButton("Rename local");
+	private JButton releaselockBtn = new JButton("Release Lock");
+	private JButton breaklockBtn = new JButton("Break Lock");
+	private JButton removeBtn = new JButton("Remove");
 	private void listWspDialog(String[][] dldwspname, boolean listOnly){
 
 		if (!checkWspdir()) return;
@@ -517,92 +524,94 @@ public class RWspHandler {
 		jp.add(jsp, BorderLayout.CENTER);
 
 		JPanel bp = new JPanel();
-		JButton download = new JButton("Open remote");
-		download.addActionListener(new ActionListener(){
+		downloadBtn.setEnabled(false);
+		downloadBtn.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				int selectedRow = jt.getSelectedRow();
-				if (selectedRow > -1){
-					listDialog.dispose();
-					wspId = Integer.valueOf(jt.getModel().getValueAt(selectedRow, IdID).toString());
-					String remoteId = jt.getModel().getValueAt(selectedRow, IdID).toString();
-					String remoteName = jt.getModel().getValueAt(selectedRow, TitleID).toString();
-					String selectedco = jt.getModel().getValueAt(selectedRow, LastSyncID).toString();
-					//select
-					openWsp(remoteName, remoteId+".wsp", selectedco);
+				listDialog.dispose();
+				wspId = Integer.valueOf(jt.getModel().getValueAt(selectedRow, IdID).toString());
+				String remoteId = jt.getModel().getValueAt(selectedRow, IdID).toString();
+				String remoteName = jt.getModel().getValueAt(selectedRow, TitleID).toString();
+				String selectedco = jt.getModel().getValueAt(selectedRow, LastSyncID).toString();
+				Boolean localdirty = Boolean.valueOf(jt.getModel().getValueAt(selectedRow, DirtyID).toString());
+				if (localdirty){
+					int n = JOptionPane.showConfirmDialog(null, 
+							"This remote workspace differs from your local copy. Do you want to overwrite your local copy?",
+							"Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+					if (n == JOptionPane.CANCEL_OPTION || n == JOptionPane.NO_OPTION)
+						return;
 				}
+				//select
+				openWsp(remoteName, remoteId+".wsp", selectedco);
 			}
 		});
-		bp.add(download);
-		JButton openLocalBtn = new JButton("Open local");
+		bp.add(downloadBtn);
+		openLocalBtn.setEnabled(false);
 		openLocalBtn.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				int selectedRow = jt.getSelectedRow();
-				if (selectedRow > -1){
-					String localwspname = jt.getModel().getValueAt(selectedRow, LocalID).toString();
-					if (!localwspname.equals("")){
-						String wsFilename = wspdir+localwspname;
-						OpenTask openTask = ws.new OpenTask(ProgressItem.INDETERMINATE_TYPE, "Workspace is being loaded.", wsFilename);
-						pdnonmodal.executeTask(openTask);
+				String localwspname = jt.getModel().getValueAt(selectedRow, LocalID).toString();
+				listDialog.dispose();
+				String wsFilename = wspdir+localwspname;
+				OpenTask openTask = ws.new OpenTask(ProgressItem.INDETERMINATE_TYPE, "Workspace is being loaded.", wsFilename);
+				pdnonmodal.executeTask(openTask);
 	
-						wspId = Integer.valueOf(jt.getModel().getValueAt(selectedRow, IdID).toString());
-					}
-				}
+				wspId = Integer.valueOf(jt.getModel().getValueAt(selectedRow, IdID).toString());
 			}
 		});
 		bp.add(openLocalBtn);
-		JButton renameLocalBtn = new JButton("Rename local");
+		renameLocalBtn.setEnabled(false);
 		renameLocalBtn.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				int selectedRow = jt.getSelectedRow();
-				if (selectedRow > -1){
-					String localwspname = jt.getValueAt(selectedRow, LocalID).toString();
-					if (localwspname.endsWith(".wsp")){
-						String wsFilename = wspdir+localwspname;
-						File f = new File(wsFilename);
-						String newName = JOptionPane.showInputDialog("Enter new local workspace name:");
-						if (newName!=null){
-							if (!newName.endsWith(".wsp"))
-								newName = newName+".wsp";
-							File nf = new File(wspdir+newName);
-							if (nf.exists())
-								JOptionPane.showMessageDialog(null, "This local workspace name already exists. Please choose another name.");
-							else {
-								f.renameTo(nf);
-								listDialog.dispose();
-								int id = Integer.valueOf(jt.getValueAt(selectedRow, IdID).toString());
-								WorkspaceServiceClient.wsprenames.put(id, newName);
-							}
-						}
+				String localwspname = jt.getValueAt(selectedRow, LocalID).toString();
+				String wsFilename = wspdir+localwspname;
+				File f = new File(wsFilename);
+				String newName = JOptionPane.showInputDialog("Enter new local workspace name:");
+				if (newName!=null){
+					if (!newName.endsWith(".wsp"))
+						newName = newName+".wsp";
+					File nf = new File(wspdir+newName);
+					if (nf.exists()){
+						int n = JOptionPane.showConfirmDialog(null, 
+								"This local workspace name already exists. Do you want to overwrite it?",
+								"Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+						if (n == JOptionPane.CANCEL_OPTION || n == JOptionPane.NO_OPTION)
+							return;
 					}
+					f.renameTo(nf);
+					listDialog.dispose();
+					int id = Integer.valueOf(jt.getValueAt(selectedRow, IdID).toString());
+					WorkspaceServiceClient.wsprenames.put(id, newName);
 				}
 			}
 		});
 		bp.add(renameLocalBtn);
 		//release lock
-		JButton release = new JButton("Release Lock");
-		release.addActionListener(new ActionListener(){
+		releaselockBtn.setEnabled(false);
+		releaselockBtn.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				releaseLock("RELEASE");
 			}
 		});
-		bp.add(release);
+		bp.add(releaselockBtn);
 		//break lock
-		JButton breaklock = new JButton("Break Lock");
-		breaklock.addActionListener(new ActionListener(){
+		breaklockBtn.setEnabled(false);
+		breaklockBtn.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				releaseLock("BREAK");
 			}
 		});
-		bp.add(breaklock);
+		bp.add(breaklockBtn);
 		//delete
-		JButton remove = new JButton("Remove");
-		remove.addActionListener(new ActionListener(){
+		removeBtn.setEnabled(false);
+		removeBtn.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 						removeWsp();
 				
 			}
 		});
-		bp.add(remove);
+		bp.add(removeBtn);
 		JButton cancel = new JButton("Cancel");
 		cancel.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
@@ -612,6 +621,19 @@ public class RWspHandler {
 		bp.add(cancel);
 		jp.add(bp, BorderLayout.SOUTH);
 		jpw.add(jp);
+
+		jt.addMouseListener(new MouseAdapter(){
+			public void mouseClicked(MouseEvent e){
+				enableBtns();
+			}
+		});
+		if (wspId > 0){
+			for (int i = 0; i < jt.getRowCount(); i++)
+				if (Integer.valueOf(jt.getValueAt(i, IdID).toString()) == wspId){
+					jt.getSelectionModel().setSelectionInterval(i, i);
+					enableBtns();
+				}
+		}
 
 		JTabbedPane jtp = new JTabbedPane();
 		JPanel descpanel = new JPanel(new BorderLayout());
@@ -673,20 +695,31 @@ public class RWspHandler {
 		// else JOptionPane.showMessageDialog(null, "No user profiles for remote workspace available");
 
 		listDialog.pack();
-		listDialog.setVisible(true);
-		listDialog.setLocationRelativeTo(null);
 		listDialog.setSize(LDWidth, LDHeight);
+		if (listOnly) listDialog.setSize(LDWidth, SLDHeight);
+		listDialog.setLocationRelativeTo(null);
+		listDialog.setVisible(true);
+	}
+
+	private void enableBtns(){
+		int selectedRow = jt.getSelectedRow();
+		if (selectedRow > -1){
+			downloadBtn.setEnabled(true);
+			String localwspname = jt.getValueAt(selectedRow, LocalID).toString();
+			if (!localwspname.equals("")){
+				openLocalBtn.setEnabled(true);
+				renameLocalBtn.setEnabled(true);
+			}
+			if (((Boolean)jt.getValueAt(selectedRow, LockID))==Boolean.TRUE){
+				releaselockBtn.setEnabled(true);
+				breaklockBtn.setEnabled(true);
+			} else
+				removeBtn.setEnabled(true);
+		}
 	}
 
 	private void releaseLock(String type){
 		int selectedRow = jt.getSelectedRow();
-		if (selectedRow < 0) return;
-		if (((Boolean)jt.getModel().getValueAt(selectedRow, LockID))==Boolean.FALSE)
-		{
-			JOptionPane.showMessageDialog(null, "Workspace is not locked.");
-			return;
-		}
-
 		String remoteId = jt.getModel().getValueAt(selectedRow, IdID).toString();
 		String res = "";
 		try{
@@ -911,7 +944,7 @@ public class RWspHandler {
 	}
 
 	private void openWsp(String remoteName, String wsFilename, String selectedco) {
-		pdnonmodal.cancelAllTasks();
+		//pdnonmodal.cancelAllTasks();
 		OpenRemoteTask openTask = new OpenRemoteTask(ProgressItem.INDETERMINATE_TYPE, 
 				"Remote workspace "+remoteName+" is being retrieved and loaded.", wsFilename, selectedco);
 		pdnonmodal.executeTask(openTask);
@@ -982,7 +1015,7 @@ public class RWspHandler {
 		
 		UploadNewTask saveTask = new UploadNewTask(ProgressItem.INDETERMINATE_TYPE, 
 				"Remote workspace "+wsFilename+" is being saved and uploaded.", 
-				wsFilename+META_DELIMIETER+desc+META_DELIMIETER+userInfo, terminating);
+				"0"+META_DELIMIETER+wsFilename+META_DELIMIETER+desc+META_DELIMIETER+userInfo, terminating);
 		pdmodal.executeTask(saveTask);
 	}
 
@@ -1007,7 +1040,7 @@ public class RWspHandler {
 			if (rename!=null) fname=rename;
 			UpdateRemoteTask saveTask = new UpdateRemoteTask(ProgressItem.INDETERMINATE_TYPE, 
 					"Remote workspace "+id+" is being saved and uploaded.", wspdir+fname, 
-					id+META_DELIMIETER+checkoutstr+META_DELIMIETER+userInfo, terminating);
+					wspId+META_DELIMIETER+checkoutstr+META_DELIMIETER+userInfo, terminating);
 			pdmodal.executeTask(saveTask);
 		}
 	}
@@ -1020,10 +1053,21 @@ public class RWspHandler {
 		}
 		@Override
 		protected Void doInBackground() throws FileNotFoundException, IOException {
-			dirty = false;
-			super.doInBackground();
+			//get server time as checkoutstr
 			try {
-				checkoutstr = Client.transferFile(new File(filename), meta);
+				checkoutstr = Client.transferFile(null, meta);
+			} catch (RemoteException e1) {
+				JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
+	    				"GeWorkbench cannot upload to remote workspace via axis2 web service.\n" +
+	    				"Please try again later or report the problem to geWorkbench support team.\n",
+	    				"Database connection/data transfer error", JOptionPane.ERROR_MESSAGE);
+			}
+			dirty = false;
+			//save wsp
+			super.doInBackground();
+			//upload saved wsp file
+			try {
+				Client.transferFile(new File(filename), wspId+META_DELIMIETER+userInfo);
 			} catch (RemoteException e1) {
 				JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
     					"GeWorkbench cannot upload to remote workspace via axis2 web service.\n" +
@@ -1075,7 +1119,7 @@ public class RWspHandler {
 			// upload wsp file with just created id, no lock/sync check
 			wspId = Integer.valueOf(id);
 			filename = wspdir+id+".wsp";
-			meta = id+META_DELIMIETER+"new"+META_DELIMIETER+userInfo;
+			meta = wspId+META_DELIMIETER+userInfo;
 			super.doInBackground();
 			return null;
 		}
@@ -1083,12 +1127,6 @@ public class RWspHandler {
 	
 	private void removeWsp(){
 		int selectedRow = jt.getSelectedRow();
-		if (selectedRow < 0) return;
-
-		if (((Boolean)jt.getModel().getValueAt(selectedRow, LockID))==Boolean.TRUE){
-			JOptionPane.showMessageDialog(null, "Workspace is locked.");
-			return;
-		}
 		String wsFilename = jt.getModel().getValueAt(selectedRow, IdID).toString();
 
 		getUserInfo();

@@ -376,7 +376,7 @@ public class RegPanel extends JPanel implements ActionListener {
 		jframe = new JFrame();
 		jframe.add(this);
 		//jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		jframe.setSize(RWspHandler.LDWidth, RWspHandler.LDHeight-30);
+		jframe.setSize(RWspHandler.LDWidth, RWspHandler.SLDHeight);
 		jframe.setLocationRelativeTo(null);
 	}    
 

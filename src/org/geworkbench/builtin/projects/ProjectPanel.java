@@ -8,6 +8,7 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -1104,6 +1105,12 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 					this.jSaveMenuItem.setEnabled(true);
 					this.jEditItem.setEnabled(true);
 					this.jViewAnnotations.setEnabled(true);
+
+					if ((RWspHandler.wspId > 0 && RWspHandler.dirty == false)
+					|| (mNode == root && mNode.getChildCount() == 0))
+						jUploadWspItem.setEnabled(false);
+					else
+						jUploadWspItem.setEnabled(true);
 				}
 
 				if ((mNode == null) || (mNode == root)) {
