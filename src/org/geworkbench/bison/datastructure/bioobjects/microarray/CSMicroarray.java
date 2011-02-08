@@ -144,14 +144,6 @@ public class CSMicroarray implements DSMicroarray, Serializable {
         arrayId.setID(id, "Microarray");
     }
 
-    public String getName() {
-        return arrayId.getLabel();
-    }
-
-    public void setName(String name) {
-        arrayId.setLabel(name);
-    }
-
     public String toString() {
         return getLabel();
     }
