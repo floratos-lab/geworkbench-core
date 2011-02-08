@@ -192,22 +192,4 @@ public abstract class AbstractCluster implements Cluster, Serializable {
         return map;
     }
 
-    /**
-     * Gets the Unique ID of this <code>Cluster</code>
-     *
-     * @return unique ID
-     */
-    public String getID() {
-        return clusterID.getID();
-    }
-
-    /**
-     * Sets the Unique ID of this <code>Cluster</code>
-     *
-     * @param id unique ID
-     */
-    public void setID(String id) {
-        clusterID.setID(id, "Cluster");
-    }
-
 }

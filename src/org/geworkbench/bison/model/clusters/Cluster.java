@@ -3,8 +3,6 @@ package org.geworkbench.bison.model.clusters;
 import java.util.List;
 import java.util.Map;
 
-import org.geworkbench.bison.datastructure.properties.DSIdentifiable;
-
 /**
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: First Genetic Trust Inc.</p>
@@ -15,7 +13,7 @@ import org.geworkbench.bison.datastructure.properties.DSIdentifiable;
  * @author First Genetic Trust
  * @version $Id$
  */
-public interface Cluster extends DSIdentifiable {
+public interface Cluster {
     /**
      * Returns the <code>Cluster</code> node that is the parent of this
      * cluster.
