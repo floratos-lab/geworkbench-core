@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Map;
 
 import org.geworkbench.bison.datastructure.properties.DSDescribable;
-import org.geworkbench.bison.datastructure.properties.DSIdentifiable;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
@@ -35,7 +34,7 @@ import org.geworkbench.bison.datastructure.properties.DSIdentifiable;
  * @author yc2480
  * @version $Id$
  */
-public interface Analysis extends DSDescribable, DSIdentifiable {
+public interface Analysis extends DSDescribable {
     /**
      * returns a GUI for entering analysis-specific parameter values.
      *

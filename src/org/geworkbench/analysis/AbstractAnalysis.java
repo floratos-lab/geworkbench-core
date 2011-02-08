@@ -22,7 +22,6 @@ import org.geworkbench.bison.datastructure.properties.CSDescribable;
 import org.geworkbench.bison.model.analysis.Analysis;
 import org.geworkbench.bison.model.analysis.ParamValidationResults;
 import org.geworkbench.bison.model.analysis.ParameterPanel;
-import org.geworkbench.bison.util.DefaultIdentifiable;
 import org.geworkbench.engine.config.PluginRegistry;
 import org.geworkbench.engine.management.ComponentClassLoader;
 import org.geworkbench.engine.management.Script;
@@ -159,12 +158,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	/**
 	 * Used in the implementation of the <code>Describable</code> interface.
 	 */
-	CSDescribable descriptions = new CSDescribable();
-
-	/**
-	 * Used in the implementation of the <code>Identifiable</code> interface.
-	 */
-	DefaultIdentifiable analysisId = new DefaultIdentifiable();
+	private CSDescribable descriptions = new CSDescribable();
 
 	/**
 	 * Set <code>stopAlgorithm</code> to true to stop the Algorithm, in the
@@ -500,24 +494,6 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	 */
 	public void removeDescription(String desc) {
 		descriptions.removeDescription(desc);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.geworkbench.bison.datastructure.properties.DSIdentifiable#getID()
-	 */
-	public String getID() {
-		return analysisId.getID();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.geworkbench.bison.datastructure.properties.DSIdentifiable#setID(java.lang.String)
-	 */
-	public void setID(String id) {
-		analysisId.setID(id, "Analysis");
 	}
 
 	private String label = null;
