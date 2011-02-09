@@ -6,7 +6,6 @@ import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarr
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.properties.CSDescribable;
 import org.geworkbench.bison.datastructure.properties.CSExtendable;
-import org.geworkbench.bison.util.DefaultIdentifiable;
 import org.geworkbench.bison.util.RandomNumberGenerator;
 
 /**
