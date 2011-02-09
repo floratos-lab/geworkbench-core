@@ -35,7 +35,7 @@ public class CSMicroarray implements DSMicroarray, Serializable {
     /**
      * Used in the implementation of the <code>Identifiable</code> interface.
      */
-    protected org.geworkbench.bison.util.DefaultIdentifiable arrayId = new DefaultIdentifiable();
+    private String arrayId = null;
     /**
      * Used in the implementation of the <code>Extendable</code> interface.
      */
@@ -137,11 +137,11 @@ public class CSMicroarray implements DSMicroarray, Serializable {
     }
 
     public String getID() {
-        return arrayId.getID();
+        return arrayId;
     }
 
     public void setID(String id) {
-        arrayId.setID(id, "Microarray");
+        arrayId = id;
     }
 
     public String toString() {
