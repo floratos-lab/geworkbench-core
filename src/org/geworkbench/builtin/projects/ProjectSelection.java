@@ -1,7 +1,5 @@
 package org.geworkbench.builtin.projects;
 
-import javax.swing.SwingUtilities;
-
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
@@ -17,7 +15,7 @@ import org.geworkbench.events.ProjectEvent;
  * <p>Company: </p>
  *
  * @author not attributable
- * @version 1.0
+ * @version $Id$
  */
 
 public class ProjectSelection {
@@ -101,7 +99,7 @@ public class ProjectSelection {
      * @param parentPath
      * @return
      */
-    public ProjectTreeNode getNodeOfClass(ProjectTreeNode node, Class aClass) {
+    private ProjectTreeNode getNodeOfClass(ProjectTreeNode node, Class aClass) {
         if (node == null) {
             return null;
         }
@@ -140,6 +138,12 @@ public class ProjectSelection {
                 selectedDataSetNode = (DataSetNode) getNodeOfClass(node, DataSetNode.class);
                 AnnotationParser.setCurrentDataSet(selectedDataSetNode.dataFile);//Fix bug 1471
                 GeawConfigObject.getGuiWindow().setVisualizationType(selectedDataSetSubNode._aDataSet);
+                checkProjectNode();
+                throwSubNodeEvent("receiveProjectSelection");
+            } else if (node instanceof PendingTreeNode) {
+                selectedDataSetNode = (DataSetNode) getNodeOfClass(node, DataSetNode.class);
+                AnnotationParser.setCurrentDataSet(selectedDataSetNode.dataFile);
+                GeawConfigObject.getGuiWindow().setVisualizationType(null);
                 checkProjectNode();
                 throwSubNodeEvent("receiveProjectSelection");
             } else  {
@@ -196,7 +200,7 @@ public class ProjectSelection {
      *
      * @param message
      */
-    public void throwEvent(String method, String message) {
+    private void throwEvent(String method, String message) {
         // Notify all listeners of the change in selection
         DSMicroarraySet maSet = null;
         
@@ -213,7 +217,7 @@ public class ProjectSelection {
         panel.sendCommentsEvent(selectedNode);
     }
 
-    public void throwSubNodeEvent(String message) {
+    private void throwSubNodeEvent(String message) {
         if ((selectedDataSetSubNode != null) && (selectedDataSetSubNode._aDataSet != null)) {
             panel.publishProjectEvent(new ProjectEvent(message, selectedDataSetSubNode._aDataSet, selectedDataSetSubNode));           
         }
