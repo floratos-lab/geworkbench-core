@@ -2,7 +2,6 @@ package org.geworkbench.builtin.projects;
 
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.bison.datastructure.bioobjects.structure.CSProteinStructure;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
@@ -48,7 +47,7 @@ public class ProjectSelection {
         selectedDataSetSubNode = null;
         selectedNode = null;
         menuNode = null;
-        throwEvent("receiveProjectSelection", "Project Cleared");
+        throwEvent(ProjectEvent.CLEARED);
     }
 
 
@@ -77,7 +76,8 @@ public class ProjectSelection {
         menuNode = node;
     }
 
-    public DSDataSet getDataSet() {
+    @SuppressWarnings("rawtypes")
+	public DSDataSet getDataSet() {
         if (selectedDataSetNode != null) {
             return selectedDataSetNode.dataFile;
         } else {
@@ -85,7 +85,8 @@ public class ProjectSelection {
         }
     }
 
-    public DSAncillaryDataSet getDataSubSet() {
+    @SuppressWarnings("rawtypes")
+	public DSAncillaryDataSet getDataSubSet() {
         if (selectedDataSetSubNode != null) {
             return selectedDataSetSubNode._aDataSet;
         } else {
@@ -99,7 +100,7 @@ public class ProjectSelection {
      * @param parentPath
      * @return
      */
-    private ProjectTreeNode getNodeOfClass(ProjectTreeNode node, Class aClass) {
+    private ProjectTreeNode getNodeOfClass(ProjectTreeNode node, Class<?> aClass) {
         if (node == null) {
             return null;
         }
@@ -118,7 +119,8 @@ public class ProjectSelection {
      * @param pNode
      * @param node
      */
-    public void setNodeSelection(ProjectTreeNode node) {
+    @SuppressWarnings("unchecked")
+	public void setNodeSelection(ProjectTreeNode node) {
         if (selectedNode != node) {
             selectedNode = node;
             menuNode = node;
@@ -130,9 +132,9 @@ public class ProjectSelection {
                 GeawConfigObject.getGuiWindow().setVisualizationType(selectedDataSetNode.dataFile);
                 checkProjectNode();
                 if(selectedDataSetNode.dataFile instanceof CSProteinStructure){
-                	throwEvent("receiveProjectSelection", ProjectEvent.CLEARED);
+                	throwEvent(ProjectEvent.CLEARED);
                 }
-                else throwEvent("receiveProjectSelection", ProjectEvent.SELECTED);
+                else throwEvent(ProjectEvent.SELECTED);
             } else if (node instanceof DataSetSubNode) {
                 selectedDataSetSubNode = (DataSetSubNode) node;
                 selectedDataSetNode = (DataSetNode) getNodeOfClass(node, DataSetNode.class);
@@ -145,7 +147,7 @@ public class ProjectSelection {
                 AnnotationParser.setCurrentDataSet(selectedDataSetNode.dataFile);
                 GeawConfigObject.getGuiWindow().setVisualizationType(null);
                 checkProjectNode();
-                throwSubNodeEvent("receiveProjectSelection");
+                throwEvent(ProjectEvent.SELECTED);
             } else  {
                 selectedDataSetNode = null;
                 selectedDataSetSubNode = null;
@@ -200,18 +202,9 @@ public class ProjectSelection {
      *
      * @param message
      */
-    private void throwEvent(String method, String message) {
-        // Notify all listeners of the change in selection
-        DSMicroarraySet maSet = null;
-        
+    private void throwEvent(String message) {
         if (selectedDataSetNode != null) {
-            if (selectedDataSetNode.dataFile instanceof DSMicroarraySet) {
-                maSet = (DSMicroarraySet) selectedDataSetNode.dataFile;
-                panel.publishProjectEvent(new ProjectEvent(message, maSet, selectedDataSetNode));
-            } else {
-                panel.publishProjectEvent(new ProjectEvent(message, selectedDataSetNode.dataFile, selectedDataSetNode));
-            }
-            
+        	panel.publishProjectEvent(new ProjectEvent(message, selectedDataSetNode.dataFile, selectedDataSetNode));
         }
         
         panel.sendCommentsEvent(selectedNode);
