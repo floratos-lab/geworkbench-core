@@ -219,7 +219,7 @@ public class GeneOntologyTree {
 			goterm.setName(term.getName());
 			terms.put(id, goterm);
 			List<Integer> parents = term.getParents();
-			if (term.isRoot) {
+			if (term.isRoot()) {
 				roots.put(term.getName(), goterm);
 			}
 			for (int j = 0; j < parents.size(); j++) {
