@@ -72,9 +72,9 @@ public class SaveTree implements Serializable {
 				// FIXME don't like how objects are stored by class name.
 				PendingTreeNode childNode = (PendingTreeNode) treeNode;
 				dataSet = new CSDataSet();
-				dataSet.addObject(childNode.getGridEpr().getClass().getName(),
+				dataSet.addObject(childNode.getGridEpr().getClass(),
 						childNode.getGridEpr());
-				dataSet.addObject(String.class.getName(), childNode
+				dataSet.addObject(String.class, childNode
 						.getDescription());
 				dataSet.setID(RandomNumberGenerator.getID());
 				dataSet.setLabel(PendingTreeNode.class.getName());

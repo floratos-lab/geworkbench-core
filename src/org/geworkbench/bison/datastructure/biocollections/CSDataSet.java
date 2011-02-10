@@ -9,7 +9,6 @@ import org.geworkbench.bison.datastructure.complex.panels.CSSequentialItemList;
 import org.geworkbench.bison.datastructure.properties.CSDescribable;
 import org.geworkbench.bison.datastructure.properties.CSExtendable;
 import org.geworkbench.bison.parsers.resources.Resource;
-import org.geworkbench.bison.util.DefaultIdentifiable;
 
 /**
  * An abstract implementation of {@link DSDataSet}.
@@ -30,7 +29,7 @@ public class CSDataSet <T extends DSBioObject> extends CSSequentialItemList<T> i
     /**
      * Used for the implementation of <code>Identifiable</code>.
      */
-    protected org.geworkbench.bison.util.DefaultIdentifiable arraySetId = new DefaultIdentifiable();
+    private String arraySetId = null;
 
     /**
      * Used in the implementation of the <code>Describable</code> interface.
@@ -48,7 +47,7 @@ public class CSDataSet <T extends DSBioObject> extends CSSequentialItemList<T> i
      */
     protected String experimentInfo = null;
 
-    protected HashMap dataSetProperties = new HashMap();
+    protected HashMap<Class<?>, Object> dataSetProperties = new HashMap<Class<?>, Object>();
 
     /**
      * Creates a new data set.
@@ -62,7 +61,7 @@ public class CSDataSet <T extends DSBioObject> extends CSSequentialItemList<T> i
      * @param tag    the tag for the object.
      * @param object
      */
-    public void addObject(Object tag, Object object) {
+    public void addObject(Class<?> tag, Object object) {
         dataSetProperties.remove(tag);
         dataSetProperties.put(tag, object);
         // Ensures that the value stored is not null
@@ -104,11 +103,11 @@ public class CSDataSet <T extends DSBioObject> extends CSSequentialItemList<T> i
      * @param tag the tag for the object sought.
      * @return the associated object.
      */
-    public Object getObject(Object tag) {
+    public Object getObject(Class<?> tag) {
         Object object = dataSetProperties.get(tag);
-        if (object == null && tag instanceof Class) {
+        if (object == null) {
             try {
-                object = ((Class) tag).newInstance();
+                object = tag.newInstance();
             } catch (IllegalAccessException ex) {
             } catch (InstantiationException ex) {
             }
@@ -116,20 +115,6 @@ public class CSDataSet <T extends DSBioObject> extends CSSequentialItemList<T> i
         }
         return object;
     }
-
-    /**
-     * Sets an annotation label.
-     *
-     * @param property the property to set.
-     * @todo - watkin - Not sure what this does.
-     * watkin - phased out
-     */
-//    public void setSelectedProperty(DSAnnotLabel property) {
-//        DSCriteria<DSBioObject> criteria = CSCriterionManager.getCriteria(this);
-//        DSClassCriteria classCriteria = CSCriterionManager.getClassCriteria(this);
-//        criteria.setSelectedCriterion(property);
-//        classCriteria.setSelectedCriterion(property);
-//    }
 
     /**
      * Gets the activation status of the data set.
@@ -244,12 +229,11 @@ public class CSDataSet <T extends DSBioObject> extends CSSequentialItemList<T> i
 
 
     public String getID() {
-        return arraySetId.getID();
+        return arraySetId;
     }
 
     public void setID(String id) {
-        // @todo - watkin - the use of "MicroarraySet" may be harmless, but is misleading.
-        arraySetId.setID(id, "MicroarraySet");
+        arraySetId = id;
     }
 
     /**

@@ -48,7 +48,7 @@ public interface DSDataSet <T extends DSBioObject> extends DSDescribable, DSName
      * @return the requested object
      * @todo - watkin - This and {@link #addObject(Object, Object)} are very confusing and not type-safe.
      */
-    public Object getObject(Object objectType);
+    public Object getObject(Class<?> objectType);
 
     /**
      * Stores an arbitrary object by type.
@@ -57,7 +57,7 @@ public interface DSDataSet <T extends DSBioObject> extends DSDescribable, DSName
      * @param anObject   the object to store.
      * @todo - watkin - This and {@link #getObject(Object)} are very confusing and not type-safe.
      */
-    public void addObject(Object objectType, Object anObject);
+    public void addObject(Class<?> objectType, Object anObject);
 
     /**
      * Gets the activation status of the data set.

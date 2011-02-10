@@ -2,14 +2,17 @@ package org.geworkbench.bison.datastructure.complex.panels;
 
 import org.geworkbench.bison.datastructure.properties.CSDescribable;
 import org.geworkbench.bison.datastructure.properties.DSNamed;
-import org.geworkbench.bison.util.DefaultIdentifiable;
 
 /**
  * Default implementation of FinalPanel.
  */
 public class CSPanel <T extends DSNamed> extends CSItemList<T> implements DSPanel<T> {
 
-    protected String label = "";
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 8634609117930075231L;
+	protected String label = "";
     protected String subLabel = "";
     protected boolean active = false;
     protected int serial = 0;
@@ -17,7 +20,7 @@ public class CSPanel <T extends DSNamed> extends CSItemList<T> implements DSPane
     /**
      * Used in the implementation of the <code>Identifiable</code> interface.
      */
-    private org.geworkbench.bison.util.DefaultIdentifiable panelId = new DefaultIdentifiable();
+    private String panelId = null;
     /**
      * Used in the implementation of the <code>Describable</code> interface.
      */
@@ -302,9 +305,10 @@ public class CSPanel <T extends DSNamed> extends CSItemList<T> implements DSPane
      * @param o object with which to compare.
      * @return <code>true</code> if the object is a {@link DSPanel} and its label is the same as this panel's label.
      */
-    public boolean equals(Object o) {
+    @SuppressWarnings("unchecked")
+	public boolean equals(Object o) {
         if (o instanceof DSPanel && this.getLabel() != null && this.getSubLabel() != null) {
-            return (this.getLabel().equalsIgnoreCase(((DSPanel) o).getLabel()) && this.getSubLabel().equalsIgnoreCase(((DSPanel) o).getSubLabel()));
+            return (this.getLabel().equalsIgnoreCase(((DSPanel<T>) o).getLabel()) && this.getSubLabel().equalsIgnoreCase(((DSPanel<T>) o).getSubLabel()));
         }
         return false;
     }
@@ -319,7 +323,7 @@ public class CSPanel <T extends DSNamed> extends CSItemList<T> implements DSPane
      * @return the ID of the panel.
      */
     public String getID() {
-        return panelId.getID();
+        return panelId;
     }
 
     /**
@@ -328,7 +332,7 @@ public class CSPanel <T extends DSNamed> extends CSItemList<T> implements DSPane
      * @param id the new ID.
      */
     public void setID(String id) {
-        panelId.setID(id, "PanelImpl");
+        panelId = id;
     }
 
     /**
@@ -389,7 +393,7 @@ public class CSPanel <T extends DSNamed> extends CSItemList<T> implements DSPane
         }
         activePanels.setActive(true);
         int i = 0;
-        for (DSPanel panel : panels()) {
+        for (DSPanel<T> panel : panels()) {
             if (panel.isActive())
                 activePanels.setPanel(i++, panel);
         }

@@ -8,7 +8,6 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -440,10 +439,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 					// FIXME These are stored by class name in SaveTree. Not
 					// sure I like this.
 					GridEndpointReferenceType pendingGridEpr = (GridEndpointReferenceType) dataSet
-							.getObject(GridEndpointReferenceType.class
-									.getName());
+							.getObject(GridEndpointReferenceType.class);
 					addPendingNode(pendingGridEpr, (String) dataSet
-							.getObject(String.class.getName()), dataSet
+							.getObject(String.class), dataSet
 							.getDescriptions()[0], true);
 					pendingGridEprs.add(pendingGridEpr);
 				}
@@ -468,13 +466,12 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 						// sure I like this.
 						GridEndpointReferenceType pendingGridEpr = (GridEndpointReferenceType) ancNode
 								.getDataSet().getObject(
-										GridEndpointReferenceType.class
-												.getName());
+										GridEndpointReferenceType.class);
 						String history = (String) ancNode.getDataSet()
-								.getObject(String.class.getName());
+								.getObject(String.class);
 						addPendingNode(pendingGridEpr,
 								(String) ancNode.getDataSet().getObject(
-										String.class.getName()), history, true);
+										String.class), history, true);
 						pendingGridEprs.add(pendingGridEpr);
 					} else {
 						DSAncillaryDataSet<? extends DSBioObject> ancSet = null;
