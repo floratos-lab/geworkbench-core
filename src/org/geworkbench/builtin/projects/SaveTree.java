@@ -27,12 +27,14 @@ public class SaveTree implements Serializable {
 	private int wspId=0;
 	private boolean dirty = false;
 	private String checkout = null;
+	private String lastchange = null;
 
-	public SaveTree(ProjectPanel panel, DSDataSet selected, int rid, boolean d, String co) {
+	public SaveTree(ProjectPanel panel, DSDataSet selected, int rid, boolean d, String co, String lc) {
 		this.selected = selected;
 		this.wspId = rid;
 		this.dirty = d;
 		this.checkout = co;
+		this.lastchange = lc;
 		nodes = new ArrayList<DataSetSaveNode>();
 		selected = panel.getDataSet();
 		DefaultTreeModel model = panel.projectTreeModel;
@@ -107,5 +109,8 @@ public class SaveTree implements Serializable {
 	}
 	public String getCheckout(){
 		return checkout;
+	}
+	public String getLastchange(){
+		return lastchange;
 	}
 }

@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import javax.activation.DataHandler;
+import javax.swing.JOptionPane;
 import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMAbstractFactory;
@@ -50,7 +51,7 @@ public class WorkspaceServiceClient {
 	private static EndpointReference targetEPR = new EndpointReference(
 			GlobalPreferences.getInstance().getRWSP_URL()+"/WorkspaceService");
 			//"http://localhost:8080/axis2/services/WorkspaceService");
-	private static final String cachedir = RWspHandler.wspdir+"axis2cache";
+	protected static String cachedir = RWspHandler.wspdir+"axis2cache";
 	
 	public static void main(String[] args) throws Exception {
 		if (args.length == 1) {
@@ -104,6 +105,7 @@ public class WorkspaceServiceClient {
         }
 	}
 
+	public static HashMap<Integer, String> wsprenames=new HashMap<Integer, String>();
 	private static String processResponse(MessageContext response, OMElement element) throws Exception {
 		String fname = element.getFirstChildWithName(new QName("http://service.sample/xsd","projectName")).getText();
 		int id = Integer.valueOf(fname.substring(0, fname.indexOf(".wsp")));
@@ -160,7 +162,19 @@ public class WorkspaceServiceClient {
         mc.setEnvelope(env);
         
 		mepClient.addMessageContext(mc);
-		mepClient.execute(true);
+		try{
+			mepClient.execute(true);
+		}catch(Exception e){
+			if (e.getMessage().equals("Connection refused: connect")){
+				JOptionPane.showMessageDialog(null, e.getMessage()+".\n\n"+
+    					"GeWorkbench cannot connect to remote workspace server.\n" +
+    					"The only entries on the list are for remote workspaces for which the user has already downloaded a local copy;\n"+
+    					"for those workspaces some of the fields, such as current lock status etc, will appear grayed out as the relevant information will not be available\n"+
+    					"Please try again later or report the problem to geWorkbench support team.\n",
+    					"Database connection error", JOptionPane.ERROR_MESSAGE);
+				return null;
+			} else throw e;
+		}
 		
 		// Let's get the message context for the response
 		MessageContext response = mepClient.getMessageContext(WSDLConstants.MESSAGE_LABEL_IN_VALUE);
@@ -168,7 +182,7 @@ public class WorkspaceServiceClient {
 		OMElement element = body.getFirstChildWithName(new QName("http://service.sample/xsd","getWorkspaceResponse"));
         if (element!=null)
         {
-        	return processResponseInfo(response, element);
+        	return processResponseInfo(element);
         }else{
             throw new Exception("Malformed response.");
         }
@@ -178,7 +192,7 @@ public class WorkspaceServiceClient {
 	public static final String[] coluser = {"Username", "OnlineStatus", "Access", "LastAccessTime"};
 	public static final String[] colanno = {"Annotation", "Creator", "CreatedAt"};
 	@SuppressWarnings("unchecked")
-	private static HashMap<String, String[][]> processResponseInfo(MessageContext response, OMElement element) throws Exception {
+	private static HashMap<String, String[][]> processResponseInfo(OMElement element) throws Exception {
 		HashMap<String, String[][]> hm = new HashMap<String, String[][]>();
 		OMElement elm = element.getFirstChildWithName(new QName("http://service.sample/xsd","histcount"));
 		if (elm!=null){
@@ -255,7 +269,22 @@ public class WorkspaceServiceClient {
         mc.setEnvelope(env);
         
 		mepClient.addMessageContext(mc);
-		mepClient.execute(true);
+		String[][] locallist = getlocallist();
+		try{
+			mepClient.execute(true);
+		}catch(Exception e){
+			if (e.getMessage().equals("Connection refused: connect")){
+				JOptionPane.showMessageDialog(null, e.getMessage()+".\n\n"+
+    					"GeWorkbench cannot connect to remote workspace server.\n" +
+    					"The only entries on the list are for remote workspaces for which the user has already downloaded a local copy;\n"+
+    					"for those workspaces some of the fields, such as current lock status etc, will not be available.\n"+
+    					"Please try again later or report the problem to geWorkbench support team.\n",
+    					"Database connection error", JOptionPane.ERROR_MESSAGE);
+				HashMap<String, String[][]> hm = new HashMap<String, String[][]>();
+				hm.put("LIST", locallist);
+				return hm;
+			} else throw e;
+		}
 		
 		// Let's get the message context for the response
 		MessageContext response = mepClient.getMessageContext(WSDLConstants.MESSAGE_LABEL_IN_VALUE);
@@ -263,7 +292,7 @@ public class WorkspaceServiceClient {
 		OMElement element = body.getFirstChildWithName(new QName("http://service.sample/xsd","getWorkspaceResponse"));
         if (element!=null)
         {
-        	return processResponseList(response, element);
+        	return processResponseList(locallist, element);
         }else{
             throw new Exception("Malformed response.");
         }
@@ -272,9 +301,10 @@ public class WorkspaceServiceClient {
 	public static final String[] colprofile = {"id", "username", "fname", "lname", "labaff",
 		"email", "phone", "addr1", "addr2", "city", "state", "zipcode"};
 	public static final String[] colgroup = {"Group", "Owner"};
-	public static final String[] colnames = {"Local", "ID", "Title", "Owner", "Access", "Lock", "LocUser", "Dirty", "Sync", "LastSync", "CreatedAt", "Description"};
+	public static final String[] colnames = {"Local", "ID", "Title", "Owner", "Access", "Lock", "LocUser", "Dirty", "Sync", "LastSync", "LastLocalChange", "Description"};
+	private static final int LocalID = RWspHandler.LocalID, IdID = RWspHandler.IdID, DirtyID=RWspHandler.DirtyID, SyncID=RWspHandler.SyncID, LastSyncID=RWspHandler.LastSyncID, LastChangeID=10;
 	@SuppressWarnings("unchecked")
-	private static HashMap<String, String[][]> processResponseList(MessageContext response, OMElement element) throws Exception {
+	private static HashMap<String, String[][]> processResponseList(String[][] locallist, OMElement element) throws Exception {
 		HashMap<String, String[][]> hm = new HashMap<String, String[][]>();
 		String[][] list = new String[1][colprofile.length];
 		int i = 0;
@@ -305,22 +335,35 @@ public class WorkspaceServiceClient {
 		while(wspElementIt.hasNext()) {
 			OMElement elm = wspElementIt.next();
 			for (int j = 1; j < colnames.length; j++){
-				if (j!=7 && j!=8)
+				if (j!=DirtyID && j!=SyncID && j!=LastChangeID)
 					list[i][j] = elm.getAttributeValue(new QName(colnames[j]));
 			}
-			String[] ret = checklocal(Integer.valueOf(list[i][RWspHandler.IdID]), list[i][RWspHandler.LastSyncID]);
-			list[i][RWspHandler.LocalID] = ret[0];
-			list[i][RWspHandler.DirtyID] = ret[1];
-			list[i][RWspHandler.SyncID] = ret[2];
+			for (int k = 0; k < locallist.length; k++)
+				if (list[i][IdID].equals(locallist[k][IdID])){
+					if (Integer.valueOf(list[i][IdID])==RWspHandler.wspId){
+						locallist[k][DirtyID] = Boolean.toString(RWspHandler.dirty);
+						locallist[k][LastChangeID] = RWspHandler.lastchange;
+						if (RWspHandler.checkoutstr!=null) 
+							locallist[k][LastSyncID] = RWspHandler.checkoutstr;
+					}
+					list[i][LocalID] = locallist[k][LocalID];
+					list[i][DirtyID] = locallist[k][DirtyID];
+					list[i][LastChangeID] = locallist[k][LastChangeID];
+					if (list[i][LastSyncID].equals(locallist[k][LastSyncID]))
+						list[i][SyncID] = "true";
+				}
 			i++;
 		}
 		hm.put("LIST", list);
 		return hm;
 	}
-	public static HashMap<Integer, String> wsprenames=new HashMap<Integer, String>();
-	private static String[] checklocal(int id, String lastSync){
+
+	private static String[][] getlocallist(){
+		String[][] locallist = null;
+		RWspHandler.checkWspdir();
 		File wspdir = new File(RWspHandler.wspdir);
 		if (wspdir.exists() && wspdir.isDirectory()){
+			locallist=new String[wspdir.listFiles().length-1][colnames.length]; int i = 0;
 			for (File f : wspdir.listFiles()){
 				if (f.isFile() && f.getName().endsWith(".wsp")){
 					FileInputStream in = null;
@@ -332,15 +375,16 @@ public class WorkspaceServiceClient {
 							int wspid = saveTree.getWspId();
 							boolean dirty = saveTree.getDirty();
 							String co = saveTree.getCheckout();
-							if (wspid == RWspHandler.wspId){
-								dirty = RWspHandler.dirty;
-								if (RWspHandler.checkoutstr!=null)
-										co = RWspHandler.checkoutstr;
-							}
-							if (wspid == id){
-								//System.out.println(id+": "+co+"; "+RWspHandler.checkoutstr+"; "+lastSync);
-								return new String[]{f.getName(), Boolean.toString(dirty), 
-										co==null?"false":Boolean.toString(co.equals(lastSync))};
+							String lc = saveTree.getLastchange();
+							if (wspid > 0){
+								locallist[i] = new String[colnames.length];
+								for (int j=0; j<colnames.length; j++)
+									locallist[i][j] = "";
+								locallist[i][LocalID] = f.getName();
+								locallist[i][IdID] = String.valueOf(wspid);
+								locallist[i][DirtyID] = Boolean.toString(dirty);
+								locallist[i][LastSyncID] = co;
+								locallist[i++][LastChangeID] = lc;
 							}
 						}
 					} catch (Exception e) {
@@ -357,7 +401,7 @@ public class WorkspaceServiceClient {
 				}
 			}
 		}
-		return new String[]{"", "", ""};
+		return locallist;
 	}
 	
 	private static SOAPEnvelope createEnvelope(String destinationFile) {

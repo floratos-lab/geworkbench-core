@@ -4,14 +4,17 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.rmi.RemoteException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
@@ -36,6 +39,7 @@ import javax.swing.table.AbstractTableModel;
 import org.apache.commons.lang.StringUtils;
 import org.geworkbench.builtin.projects.WorkspaceHandler.OpenTask;
 import org.geworkbench.builtin.projects.WorkspaceHandler.SaveTask;
+import org.geworkbench.engine.preferences.GlobalPreferences;
 import org.geworkbench.engine.properties.PropertiesManager;
 import org.geworkbench.util.FilePathnameUtils;
 import org.geworkbench.util.ProgressDialog;
@@ -58,11 +62,12 @@ public class RWspHandler {
 	private JDialog loginDialog;
 	private JTextField usernameField;
 	private JPasswordField passwordField;
-	protected static final String wspdir = FilePathnameUtils
+	private static final String wsproot = FilePathnameUtils
 			.getTemporaryFilesDirectoryPath()
 			+ "wsp" + FilePathnameUtils.FILE_SEPARATOR;
-	private ProgressDialog pdmodal = ProgressDialog.create(ProgressDialog.MODAL_TYPE);
-	private ProgressDialog pdnonmodal = ProgressDialog.create(ProgressDialog.NONMODAL_TYPE);
+	protected static String wspdir = wsproot;
+	private static ProgressDialog pdmodal = ProgressDialog.create(ProgressDialog.MODAL_TYPE);
+	private static ProgressDialog pdnonmodal = ProgressDialog.create(ProgressDialog.NONMODAL_TYPE);
 	private WorkspaceHandler ws = new WorkspaceHandler();
 
 	private JTextArea jtaDesc = new JTextArea();
@@ -82,10 +87,11 @@ public class RWspHandler {
 	private JTable jtgroup = new JTable();
 	private JTextField groupName = new JTextField(20);
 	private JTextField groupUser = new JTextField(20);
-	protected static final int LocalID = 0, IdID = 1, TitleID = 2, LockID=5, DirtyID=7, SyncID=8, LastSyncID=9;
+	protected static final int LocalID = 0, IdID = 1, TitleID = 2, LockID=5, LkUsrID=6, DirtyID=7, SyncID=8, LastSyncID=9;
 	protected static final int LDWidth = 790, LDHeight = 330, SLDHeight = 300; 
 
 	protected static String checkoutstr = "";
+	protected static String lastchange = "";
 	protected static boolean dirty = false;
 	protected static int wspId = 0;
 	private JTable jt;
@@ -396,60 +402,15 @@ public class RWspHandler {
 			return (col==LockID || col==DirtyID||col==SyncID)?Boolean.class:String.class;
 		}
 	}
-	private class SelectionListener implements ListSelectionListener {
-		JTable table;
-
-		SelectionListener(JTable table) {
-			this.table = table;
-		}
-
-		public void valueChanged(ListSelectionEvent e) {
-			if (!e.getValueIsAdjusting()) {
-				int rowid = table.getSelectedRow();
-				if (rowid < 0) return;
-				descbtn.setEnabled(true);
-				addannobtn.setEnabled(true);
-				adduserbtn.setEnabled(true);
-				addgroupbtn.setEnabled(true);
-				String desc = (String) jt.getModel().getValueAt(rowid, jt.getColumnCount());
-				jtaDesc.setText(desc);
-
-				String wspid = (String) jt.getValueAt(rowid, IdID);
-				
-				HashMap<String, String[][]> hm = new HashMap<String, String[][]>();
-				String[][] listhist = null, listuser = null, listanno = null;
-				try {
-					hm = WorkspaceServiceClient.getSavedWorkspaceInfo("INFO"+wspid);
-				} catch (Exception e1) {
-					JOptionPane.showMessageDialog(null, e1.getMessage()+"\n\n"+
-							"Exception: could not retrieve information for remote workspace "+ wspid,
-							"Database connection/data transfer error", JOptionPane.ERROR_MESSAGE);
-				}
-				listhist = hm.get("HIST");
-				if (listhist != null){
-					jthist.setModel(new DetailTableModel(listhist, WorkspaceServiceClient.colhist));
-				}
-				listuser = hm.get("GETUSER");
-				if (listuser!=null){
-					jtuser.setModel(new DetailTableModel(listuser, WorkspaceServiceClient.coluser));
-				}
-				listanno = hm.get("GETANNO");
-				if (listanno != null){
-					jtanno.setModel(new DetailTableModel(listanno, WorkspaceServiceClient.colanno));
-				}
-			}
-		}
-	}
 
 	private JButton downloadBtn = new JButton("Open remote");
 	private JButton openLocalBtn = new JButton("Open local");
 	private JButton renameLocalBtn = new JButton("Rename local");
-	private JButton releaselockBtn = new JButton("Release Lock");
-	private JButton breaklockBtn = new JButton("Break Lock");
+	private JButton saveLocalBtn = new JButton("Save local");
+	private JButton releaselockBtn = new JButton("Release lock");
+	private JButton breaklockBtn = new JButton("Break lock");
 	private JButton removeBtn = new JButton("Remove");
 	private void listWspDialog(String[][] dldwspname, boolean listOnly){
-
-		if (!checkWspdir()) return;
 		listDialog = new JDialog();
 		listDialog.setTitle("Remote workspace List ("+userInfo.split(USER_INFO_DELIMIETER)[0]+")");
 		JPanel jpw = new JPanel(new GridLayout(2, 0));
@@ -518,7 +479,15 @@ public class RWspHandler {
 	    jt.getColumnModel().getColumn(10).setPreferredWidth(140);
 
 	    jt.setPreferredScrollableViewportSize(jt.getPreferredSize());
-	    SelectionListener listener = new SelectionListener(jt);
+	    ListSelectionListener listener = new ListSelectionListener(){
+			public void valueChanged(ListSelectionEvent e) {
+				if (!e.getValueIsAdjusting()) {
+					int selectedRow = jt.getSelectedRow();
+					if (selectedRow > -1)
+						selectionChanged(selectedRow);
+				}
+			}	
+	    };
 	    jt.getSelectionModel().addListSelectionListener(listener);
 	    JScrollPane jsp = new JScrollPane(jt);
 		jp.add(jsp, BorderLayout.CENTER);
@@ -587,6 +556,17 @@ public class RWspHandler {
 			}
 		});
 		bp.add(renameLocalBtn);
+		saveLocalBtn.setEnabled(false);
+		saveLocalBtn.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				int selectedRow = jt.getSelectedRow();
+				String localwspname = jt.getValueAt(selectedRow, LocalID).toString();
+				String wsFilename = wspdir+localwspname;
+				SaveTask task = new WorkspaceHandler().new SaveTask(ProgressItem.INDETERMINATE_TYPE, "Workspace is being saved.", wsFilename, false);
+				pdmodal.executeTask(task);
+			}
+		});
+		bp.add(saveLocalBtn);
 		//release lock
 		releaselockBtn.setEnabled(false);
 		releaselockBtn.addActionListener(new ActionListener(){
@@ -621,19 +601,6 @@ public class RWspHandler {
 		bp.add(cancel);
 		jp.add(bp, BorderLayout.SOUTH);
 		jpw.add(jp);
-
-		jt.addMouseListener(new MouseAdapter(){
-			public void mouseClicked(MouseEvent e){
-				enableBtns();
-			}
-		});
-		if (wspId > 0){
-			for (int i = 0; i < jt.getRowCount(); i++)
-				if (Integer.valueOf(jt.getValueAt(i, IdID).toString()) == wspId){
-					jt.getSelectionModel().setSelectionInterval(i, i);
-					enableBtns();
-				}
-		}
 
 		JTabbedPane jtp = new JTabbedPane();
 		JPanel descpanel = new JPanel(new BorderLayout());
@@ -694,6 +661,14 @@ public class RWspHandler {
 
 		// else JOptionPane.showMessageDialog(null, "No user profiles for remote workspace available");
 
+		if (wspId > 0){
+			for (int i = 0; i < jt.getRowCount(); i++){
+				if (Integer.valueOf(jt.getValueAt(i, IdID).toString()) == wspId){
+					jt.getSelectionModel().setSelectionInterval(i, i);
+				}
+			}
+		}
+
 		listDialog.pack();
 		listDialog.setSize(LDWidth, LDHeight);
 		if (listOnly) listDialog.setSize(LDWidth, SLDHeight);
@@ -701,20 +676,54 @@ public class RWspHandler {
 		listDialog.setVisible(true);
 	}
 
-	private void enableBtns(){
-		int selectedRow = jt.getSelectedRow();
-		if (selectedRow > -1){
+	private void selectionChanged(int selectedRow){
+		String localwspname = jt.getValueAt(selectedRow, LocalID).toString();
+		if (!localwspname.equals("")){
+			openLocalBtn.setEnabled(true);
+			renameLocalBtn.setEnabled(true);
+			saveLocalBtn.setEnabled(true);
+		}
+		if (((Boolean)jt.getValueAt(selectedRow, LockID))==Boolean.TRUE){
+			releaselockBtn.setEnabled(true);
+			breaklockBtn.setEnabled(true);
+		} else
+			removeBtn.setEnabled(true);
+
+		String lkusr = jt.getValueAt(selectedRow, LkUsrID).toString();
+		if (!lkusr.equals("")){
 			downloadBtn.setEnabled(true);
-			String localwspname = jt.getValueAt(selectedRow, LocalID).toString();
-			if (!localwspname.equals("")){
-				openLocalBtn.setEnabled(true);
-				renameLocalBtn.setEnabled(true);
+			descbtn.setEnabled(true);
+			addannobtn.setEnabled(true);
+			adduserbtn.setEnabled(true);
+			addgroupbtn.setEnabled(true);
+			String desc = (String) jt.getModel().getValueAt(selectedRow, jt.getColumnCount());
+			jtaDesc.setText(desc);
+	
+			String wspid = (String) jt.getValueAt(selectedRow, IdID);
+			
+			HashMap<String, String[][]> hm = new HashMap<String, String[][]>();
+			String[][] listhist = null, listuser = null, listanno = null;
+			try {
+				hm = WorkspaceServiceClient.getSavedWorkspaceInfo("INFO"+wspid);
+			} catch (Exception e1) {
+				JOptionPane.showMessageDialog(null, e1.getMessage()+"\n\n"+
+						"Exception: could not retrieve information for remote workspace "+ wspid,
+						"Database connection/data transfer error", JOptionPane.ERROR_MESSAGE);
 			}
-			if (((Boolean)jt.getValueAt(selectedRow, LockID))==Boolean.TRUE){
-				releaselockBtn.setEnabled(true);
-				breaklockBtn.setEnabled(true);
-			} else
-				removeBtn.setEnabled(true);
+			if (hm!=null){
+				listhist = hm.get("HIST");
+				if (listhist != null){
+					jthist.setModel(new DetailTableModel(listhist, WorkspaceServiceClient.colhist));
+				}
+				listuser = hm.get("GETUSER");
+				if (listuser!=null){
+					jtuser.setModel(new DetailTableModel(listuser, WorkspaceServiceClient.coluser));
+				}
+				listanno = hm.get("GETANNO");
+				if (listanno != null){
+					jtanno.setModel(new DetailTableModel(listanno, WorkspaceServiceClient.colanno));
+				}
+			}
 		}
 	}
 
@@ -981,14 +990,37 @@ public class RWspHandler {
 			dirty = false;
 		}
 	}
-	private boolean checkWspdir(){
-		File dir = new File(wspdir);
+	protected static boolean checkWspdir(){
+		File dir = new File(wsproot);
+		if (!dir.exists()){
+			if (!dir.mkdir()){
+				JOptionPane.showMessageDialog(null, "Cannot create wsp dir "+wsproot);
+				return false;
+			}
+		}
+
+		URL url = null;
+		try{
+			url = new URL(GlobalPreferences.getInstance().getRWSP_URL());
+		}catch(MalformedURLException e){
+			JOptionPane.showMessageDialog(null, "Malformed RWSP URL detected -- replaced by default RWSP URL.");
+			try{
+				url = new URL(GlobalPreferences.DEFAULT_RWSP_URL);
+			}catch(Exception e1){
+				e1.printStackTrace();
+				return false;
+			}
+		}
+		wspdir = wsproot + url.getHost() + url.getPort() + FilePathnameUtils.FILE_SEPARATOR;
+		dir = new File(wspdir);
 		if (!dir.exists()){
 			if (!dir.mkdir()){
 				JOptionPane.showMessageDialog(null, "Cannot create wsp dir "+wspdir);
 				return false;
 			}
 		}
+		
+		WorkspaceServiceClient.cachedir = wspdir+"axis2cache";
 		return true;
 	}
 	protected void uploadWsp(){
@@ -1197,6 +1229,74 @@ public class RWspHandler {
 				wspId = 0;
 			} else
 				JOptionPane.showMessageDialog(null, "Could not remove remote workspace "+filename);
+		}
+	}
+
+	protected static void treeModified(){
+		if (wspId > 0){
+			Timestamp now = new Timestamp(new Date().getTime());
+			now.setNanos(0);
+			lastchange = now.toString();
+
+			if (dirty == false){
+				dirty = true;
+
+				AccessRemoteTask accessTask = new AccessRemoteTask(ProgressItem.INDETERMINATE_TYPE,
+				"Remote workspace user access is being retrieved.");
+				pdnonmodal.executeTask(accessTask);
+			}
+		}
+	}
+	
+	private static class AccessRemoteTask extends ProgressTask<String, Void> {
+		AccessRemoteTask(int pbtype, String message) {
+			super(pbtype, message);
+		}
+		@Override
+		protected String doInBackground() throws FileNotFoundException, IOException {
+			String res = "";
+			try {
+				res = WorkspaceServiceClient.modifySavedWorkspace("ACCESS"+wspId+META_DELIMIETER+userInfo.split(USER_INFO_DELIMIETER)[0]);
+			} catch (Exception e1) {
+				JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
+				"It is possible that changes made to the local workspace copy may not be transferable to the server.\n"+
+				"GeWorkbench cannot retrieve user access for remote workspace " +wspId+".\n"+
+				"Please try again later or report the problem to geWorkbench support team.\n",
+				"Database connection/data transfer error", JOptionPane.ERROR_MESSAGE);
+    			return null;
+			}
+
+			return res;
+		}
+		@Override
+		protected void done(){
+			if (isCancelled()){
+				pdnonmodal.removeTask(this);
+				return;
+			}
+			String res = "";
+			try {
+				res = get();
+			} catch (ExecutionException e) {
+				e.getCause().printStackTrace();
+				JOptionPane.showMessageDialog(null,
+						"Exception: could not retrieve user access for remote workspace "+wspId,
+						"Retrieve User Access Error", JOptionPane.ERROR_MESSAGE);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null,
+						"Exception: could not retrieve user access for remote workspace "+wspId+"\n"+
+						"It is possible that changes made to the local workspace copy may not be transferable to the server.\n"+e,
+						"Remove User Access Error", JOptionPane.ERROR_MESSAGE);
+			} finally {
+				pdnonmodal.removeTask(this);
+			}
+			if (res!=null) {
+				JOptionPane.showMessageDialog(null, res);
+			} else
+				JOptionPane.showMessageDialog(null, "Could not retrieve user access for remote workspace "+wspId);
 		}
 	}
 }

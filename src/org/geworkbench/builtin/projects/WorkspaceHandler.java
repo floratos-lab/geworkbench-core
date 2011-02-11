@@ -273,8 +273,8 @@ public class WorkspaceHandler {
 				f = new FileOutputStream(filename);
 				s = new ObjectOutputStream(f);
 				SaveTree saveTree = new SaveTree(enclosingProjectPanel,
-						enclosingProjectPanel.getDataSet(), 
-						RWspHandler.wspId, RWspHandler.dirty, RWspHandler.checkoutstr);
+						enclosingProjectPanel.getDataSet(), RWspHandler.wspId, RWspHandler.dirty, 
+						RWspHandler.checkoutstr, RWspHandler.lastchange);
 				s.writeObject(saveTree);
 				APSerializable aps = AnnotationParser.getSerializable();
 				s.writeObject(aps);
@@ -319,6 +319,7 @@ public class WorkspaceHandler {
 				RWspHandler.wspId = saveTree.getWspId();
 				RWspHandler.dirty = saveTree.getDirty();
 				RWspHandler.checkoutstr = saveTree.getCheckout();
+				RWspHandler.lastchange = saveTree.getLastchange();
 			} catch (ExecutionException e) {
 				// printStackTrace what is from doInBackground
 				e.getCause().printStackTrace();

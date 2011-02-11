@@ -400,19 +400,19 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		
 		projectTreeModel.addTreeModelListener(new TreeModelListener(){
 			public void treeNodesChanged(TreeModelEvent arg0) {
-				RWspHandler.dirty = true;
+				RWspHandler.treeModified();
 			}
 			public void treeNodesInserted(TreeModelEvent arg0) {
-				RWspHandler.dirty = true;
+				RWspHandler.treeModified();
 			}
 			public void treeNodesRemoved(TreeModelEvent arg0) {
 				ProjectTreeNode root = (ProjectTreeNode)arg0.getPath()[0];
 				if (root.isRoot() && root.getChildCount()==0)
 					RWspHandler.wspId = 0;
-				RWspHandler.dirty = true;
+				RWspHandler.treeModified();
 			}
 			public void treeStructureChanged(TreeModelEvent arg0) {
-				RWspHandler.dirty = true;
+				RWspHandler.treeModified();
 			}			
 		});
 	}
