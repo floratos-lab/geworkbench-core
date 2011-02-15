@@ -8,11 +8,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.rmi.RemoteException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
@@ -34,7 +32,6 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.AbstractTableModel;
 
 import org.apache.commons.lang.StringUtils;
 import org.geworkbench.builtin.projects.WorkspaceHandler.OpenTask;
@@ -55,10 +52,10 @@ import com.jgoodies.forms.layout.FormLayout;
  * $Id$
  */
 public class RWspHandler {
-	private static final String USER_INFO_DELIMIETER = "==";
+	protected static final String USER_INFO_DELIMIETER = "==";
 	private static final String USER_INFO = "userinfo";
-	private static final String META_DELIMIETER = "::";
-	private static String userInfo = null;
+	protected static final String META_DELIMIETER = "::";
+	protected static String userInfo = null;
 	private JDialog loginDialog;
 	private JTextField usernameField;
 	private JPasswordField passwordField;
@@ -87,7 +84,7 @@ public class RWspHandler {
 	private JTable jtgroup = new JTable();
 	private JTextField groupName = new JTextField(20);
 	private JTextField groupUser = new JTextField(20);
-	protected static final int LocalID = 0, IdID = 1, TitleID = 2, LockID=5, LkUsrID=6, DirtyID=7, SyncID=8, LastSyncID=9;
+	protected static final int LocalID = 0, IdID = 1, LockID=5, LkUsrID=6, DirtyID=7, SyncID=8, LastSyncID=9;
 	protected static final int LDWidth = 790, LDHeight = 330, SLDHeight = 300; 
 
 	protected static String checkoutstr = "";
@@ -98,7 +95,7 @@ public class RWspHandler {
 	private JTextField name;
 	private JTextField desc;
 	private JDialog newDialog;
-	private JDialog listDialog;
+	protected static JDialog listDialog;
 
 	protected void getUserInfo() {
 		FormLayout layout = new FormLayout("left:max(25dlu;pref), 5dlu, 70dlu");
@@ -266,7 +263,7 @@ public class RWspHandler {
 
 			groups = hm.get("GROUP");
 			if (groups != null){
-				jtgroup.setModel(new DetailTableModel(groups, WorkspaceServiceClient.colgroup));
+				jtgroup.setModel(new RWspHelper.DetailTableModel(groups, WorkspaceServiceClient.colgroup));
 				String[] names=new String[groups.length];
 				for (int i=0; i<groups.length; i++)
 					names[i]=groups[i][0];
@@ -318,6 +315,7 @@ public class RWspHandler {
 			JOptionPane.showMessageDialog(null, "Could not add user to group to remote workspace "+usr);
 
 	}
+
 	private void addGroup(){
 		String grp = groupName.getText();
 		if (grp.equals("")) return;
@@ -350,63 +348,9 @@ public class RWspHandler {
 
 	}
 
-	private class DetailTableModel extends AbstractTableModel
-	{
-		private static final long serialVersionUID = 2482447217249689117L;
-		protected String[][] data;
-		private String[] header;
-
-		public DetailTableModel(String[][] tabledata, String[] tableheader){
-			data = tabledata;
-			header = tableheader;
-		}
-		public int getColumnCount() {
-			return header.length;
-		}
-
-		public int getRowCount() {
-			return data.length;
-		}
-
-		public String getColumnName(int col) {
-			return header[col];
-		}
-
-		public Object getValueAt(int row, int col) {
-			return data[row][col];
-		}
-	}
-	
-	private class WspTableModel extends DetailTableModel
-	{
-		private static final long serialVersionUID = -5175211782386134949L;
-
-		public WspTableModel(String[][] tabledata, String[] tableheader){
-			super(tabledata, tableheader);
-		}
-		/*public boolean isCellEditable(int row, int col) {
-			if (col == localID)	return true;
-			else	return false;
-		}
-		public void setValueAt(Object value, int row, int col) {
-			data[row][col] = (String)value;
-			fireTableCellUpdated(row, col);
-		}*/
-
-		public Object getValueAt(int row, int col) {
-			if (col==LockID || col==DirtyID||col==SyncID) return Boolean.valueOf(data[row][col]);
-			return data[row][col];
-		}
-
-		public Class<?> getColumnClass(int col) {
-			return (col==LockID || col==DirtyID||col==SyncID)?Boolean.class:String.class;
-		}
-	}
-
 	private JButton downloadBtn = new JButton("Open remote");
 	private JButton openLocalBtn = new JButton("Open local");
 	private JButton renameLocalBtn = new JButton("Rename local");
-	private JButton saveLocalBtn = new JButton("Save local");
 	private JButton releaselockBtn = new JButton("Release lock");
 	private JButton breaklockBtn = new JButton("Break lock");
 	private JButton removeBtn = new JButton("Remove");
@@ -453,7 +397,7 @@ public class RWspHandler {
 		}
 
 		JPanel jp = new JPanel(new BorderLayout());
-		jt = new JTable(new WspTableModel(dldwspname, WorkspaceServiceClient.colnames)){
+		jt = new JTable(new RWspHelper.WspTableModel(dldwspname, WorkspaceServiceClient.colnames)){
 			private static final long serialVersionUID = -477589541697891130L;
 
 			public String getToolTipText(MouseEvent e) {
@@ -497,21 +441,13 @@ public class RWspHandler {
 		downloadBtn.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				int selectedRow = jt.getSelectedRow();
-				listDialog.dispose();
-				wspId = Integer.valueOf(jt.getModel().getValueAt(selectedRow, IdID).toString());
 				String remoteId = jt.getModel().getValueAt(selectedRow, IdID).toString();
-				String remoteName = jt.getModel().getValueAt(selectedRow, TitleID).toString();
 				String selectedco = jt.getModel().getValueAt(selectedRow, LastSyncID).toString();
-				Boolean localdirty = Boolean.valueOf(jt.getModel().getValueAt(selectedRow, DirtyID).toString());
-				if (localdirty){
-					int n = JOptionPane.showConfirmDialog(null, 
-							"This remote workspace differs from your local copy. Do you want to overwrite your local copy?",
-							"Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-					if (n == JOptionPane.CANCEL_OPTION || n == JOptionPane.NO_OPTION)
-						return;
-				}
-				//select
-				openWsp(remoteName, remoteId+".wsp", selectedco);
+				listDialog.dispose();
+
+				saveLocalwsp();
+
+				openWsp(remoteId, selectedco);
 			}
 		});
 		bp.add(downloadBtn);
@@ -520,12 +456,13 @@ public class RWspHandler {
 			public void actionPerformed(ActionEvent e){
 				int selectedRow = jt.getSelectedRow();
 				String localwspname = jt.getModel().getValueAt(selectedRow, LocalID).toString();
-				listDialog.dispose();
 				String wsFilename = wspdir+localwspname;
+				listDialog.dispose();
+
+				saveLocalwsp();
+
 				OpenTask openTask = ws.new OpenTask(ProgressItem.INDETERMINATE_TYPE, "Workspace is being loaded.", wsFilename);
 				pdnonmodal.executeTask(openTask);
-	
-				wspId = Integer.valueOf(jt.getModel().getValueAt(selectedRow, IdID).toString());
 			}
 		});
 		bp.add(openLocalBtn);
@@ -534,12 +471,17 @@ public class RWspHandler {
 			public void actionPerformed(ActionEvent e){
 				int selectedRow = jt.getSelectedRow();
 				String localwspname = jt.getValueAt(selectedRow, LocalID).toString();
-				String wsFilename = wspdir+localwspname;
+				String wsFilename = wspdir+localwspname;				
+
 				File f = new File(wsFilename);
 				String newName = JOptionPane.showInputDialog("Enter new local workspace name:");
 				if (newName!=null){
 					if (!newName.endsWith(".wsp"))
 						newName = newName+".wsp";
+					if (localwspname.equals(newName)){
+						JOptionPane.showMessageDialog(null, "Cannot rename to the same workspace name!");
+						return;
+					}
 					File nf = new File(wspdir+newName);
 					if (nf.exists()){
 						int n = JOptionPane.showConfirmDialog(null, 
@@ -556,17 +498,6 @@ public class RWspHandler {
 			}
 		});
 		bp.add(renameLocalBtn);
-		saveLocalBtn.setEnabled(false);
-		saveLocalBtn.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				int selectedRow = jt.getSelectedRow();
-				String localwspname = jt.getValueAt(selectedRow, LocalID).toString();
-				String wsFilename = wspdir+localwspname;
-				SaveTask task = new WorkspaceHandler().new SaveTask(ProgressItem.INDETERMINATE_TYPE, "Workspace is being saved.", wsFilename, false);
-				pdmodal.executeTask(task);
-			}
-		});
-		bp.add(saveLocalBtn);
 		//release lock
 		releaselockBtn.setEnabled(false);
 		releaselockBtn.addActionListener(new ActionListener(){
@@ -677,11 +608,10 @@ public class RWspHandler {
 	}
 
 	private void selectionChanged(int selectedRow){
-		String localwspname = jt.getValueAt(selectedRow, LocalID).toString();
-		if (!localwspname.equals("")){
+		String localwspname = (String)jt.getValueAt(selectedRow, LocalID);
+		if (localwspname!=null && !localwspname.equals("")){
 			openLocalBtn.setEnabled(true);
 			renameLocalBtn.setEnabled(true);
-			saveLocalBtn.setEnabled(true);
 		}
 		if (((Boolean)jt.getValueAt(selectedRow, LockID))==Boolean.TRUE){
 			releaselockBtn.setEnabled(true);
@@ -689,8 +619,8 @@ public class RWspHandler {
 		} else
 			removeBtn.setEnabled(true);
 
-		String lkusr = jt.getValueAt(selectedRow, LkUsrID).toString();
-		if (!lkusr.equals("")){
+		String lkusr = (String)jt.getValueAt(selectedRow, LkUsrID);
+		if (lkusr!=null && !lkusr.equals("")){
 			downloadBtn.setEnabled(true);
 			descbtn.setEnabled(true);
 			addannobtn.setEnabled(true);
@@ -713,18 +643,47 @@ public class RWspHandler {
 			if (hm!=null){
 				listhist = hm.get("HIST");
 				if (listhist != null){
-					jthist.setModel(new DetailTableModel(listhist, WorkspaceServiceClient.colhist));
+					jthist.setModel(new RWspHelper.DetailTableModel(listhist, WorkspaceServiceClient.colhist));
 				}
 				listuser = hm.get("GETUSER");
 				if (listuser!=null){
-					jtuser.setModel(new DetailTableModel(listuser, WorkspaceServiceClient.coluser));
+					jtuser.setModel(new RWspHelper.DetailTableModel(listuser, WorkspaceServiceClient.coluser));
 				}
 				listanno = hm.get("GETANNO");
 				if (listanno != null){
-					jtanno.setModel(new DetailTableModel(listanno, WorkspaceServiceClient.colanno));
+					jtanno.setModel(new RWspHelper.DetailTableModel(listanno, WorkspaceServiceClient.colanno));
 				}
 			}
 		}
+	}
+
+	//save current local wsp and release lock before opening another remote wsp
+	private void saveLocalwsp(){
+		if (wspId == 0) return;
+		String fname = wspId+".wsp";
+		String rename = WorkspaceServiceClient.wsprenames.get(wspId); 
+		if (rename!=null) fname=rename;
+		if (fname!=null && !fname.equals("") && dirty) {
+			String wsFilename = wspdir+fname;
+			File file = new File(wsFilename);
+			if (file.exists()){
+				Timestamp filetime = new Timestamp(file.lastModified());
+				filetime.setNanos(0);
+				//System.out.println(wsFilename+": "+Timestamp.valueOf(lastchange)+"; "+filetime);
+				if (Timestamp.valueOf(lastchange).after(filetime)){
+					SaveTask task = new WorkspaceHandler().new SaveTask(ProgressItem.INDETERMINATE_TYPE, "Workspace is being saved.", wsFilename, false);
+					pdmodal.executeTask(task);
+				}
+			}
+		}
+
+		//if workspace being closed is locked by current user
+		RWspHelper.CheckReleaseRemoteTask releaseTask = new RWspHelper.CheckReleaseRemoteTask(ProgressItem.INDETERMINATE_TYPE, 
+				"Checking remote workspace "+wspId+" lock before release.", wspId);
+		pdnonmodal.executeTask(releaseTask);
+
+		//reset wspId
+		wspId = 0;
 	}
 
 	private void releaseLock(String type){
@@ -760,150 +719,130 @@ public class RWspHandler {
 	
 	private void addDescription(){
 		int selectedRow = jt.getSelectedRow();
-		if (selectedRow > -1){
-			String remoteId = jt.getModel().getValueAt(selectedRow, IdID).toString();
-			//if (!Boolean.valueOf(jt.getModel().getValueAt(selectedRow, LockedID).toString()))
-			{
-				String res = "";
-				try{
-					getUserInfo();
-					if (userInfo == null) return;
-					if (userInfo == "") {
-						JOptionPane
-								.showMessageDialog(
-										null,
-										"Please make sure you entered valid username and password",
-										"Invalid User Account",
-										JOptionPane.ERROR_MESSAGE);
-						return;
-					}
-					String desc = jtaDesc.getText();
-					if (desc.contains(META_DELIMIETER)) desc = desc.replaceAll(META_DELIMIETER, "_");
-					res = WorkspaceServiceClient.modifySavedWorkspace("DESC"+remoteId+META_DELIMIETER+desc+META_DELIMIETER+userInfo);
-				}catch(Exception e1){
-					JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
-	    					"GeWorkbench cannot change description for remote workspace via axis2 web service.\n" +
-	    					"Please try again later or report the problem to geWorkbench support team.\n",
-	    					"Database connection/data transfer error", JOptionPane.ERROR_MESSAGE);
-				}
-				if (res!=null && res.contains("success")){
-					JOptionPane.showMessageDialog(null, res);
-					listDialog.dispose();
-				} else
-					JOptionPane.showMessageDialog(null, "Could not change description for remote workspace "+remoteId);
+		String remoteId = jt.getModel().getValueAt(selectedRow, IdID).toString();
+		String res = "";
+		try{
+			getUserInfo();
+			if (userInfo == null) return;
+			if (userInfo == "") {
+				JOptionPane
+						.showMessageDialog(
+								null,
+								"Please make sure you entered valid username and password",
+								"Invalid User Account",
+								JOptionPane.ERROR_MESSAGE);
+				return;
 			}
+			String desc = jtaDesc.getText();
+			if (desc.contains(META_DELIMIETER)) desc = desc.replaceAll(META_DELIMIETER, "_");
+			res = WorkspaceServiceClient.modifySavedWorkspace("DESC"+remoteId+META_DELIMIETER+desc+META_DELIMIETER+userInfo);
+		}catch(Exception e1){
+			JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
+					"GeWorkbench cannot change description for remote workspace via axis2 web service.\n" +
+    				"Please try again later or report the problem to geWorkbench support team.\n",
+   					"Database connection/data transfer error", JOptionPane.ERROR_MESSAGE);
 		}
+		if (res!=null && res.contains("success")){
+			JOptionPane.showMessageDialog(null, res);
+			listDialog.dispose();
+		} else
+			JOptionPane.showMessageDialog(null, "Could not change description for remote workspace "+remoteId);
 	}
 
 	private void addAnnotation(){
 		int selectedRow = jt.getSelectedRow();
-		if (selectedRow > -1){
-			String remoteId = jt.getModel().getValueAt(selectedRow, IdID).toString();
-			//if (!Boolean.valueOf(jt.getModel().getValueAt(selectedRow, LockedID).toString()))
-			{
-				String res = "";
-				try{
-					getUserInfo();
-					if (userInfo == null) return;
-					if (userInfo == "") {
-						JOptionPane
-								.showMessageDialog(
-										null,
-										"Please make sure you entered valid username and password",
-										"Invalid User Account",
-										JOptionPane.ERROR_MESSAGE);
-						return;
-					}
-					String anno = jtaAnno.getText();
-					if (anno.contains(META_DELIMIETER)) anno = anno.replaceAll(META_DELIMIETER, "_");
-					res = WorkspaceServiceClient.modifySavedWorkspace("ADDANNO"+remoteId+META_DELIMIETER+anno+META_DELIMIETER+userInfo);
-				}catch(Exception e1){
-					JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
-	    					"GeWorkbench cannot add annotation for remote workspace via axis2 web service.\n" +
-	    					"Please try again later or report the problem to geWorkbench support team.\n",
-	    					"Database connection/data transfer error", JOptionPane.ERROR_MESSAGE);
-				}
-				if (res!=null && res.contains("success")){
-					JOptionPane.showMessageDialog(null, res);
-					listDialog.dispose();
-				} else
-					JOptionPane.showMessageDialog(null, "Could not add annotation for remote workspace "+remoteId);
+		String remoteId = jt.getModel().getValueAt(selectedRow, IdID).toString();
+		String res = "";
+		try{
+			getUserInfo();
+			if (userInfo == null) return;
+			if (userInfo == "") {
+				JOptionPane
+						.showMessageDialog(
+								null,
+								"Please make sure you entered valid username and password",
+								"Invalid User Account",
+								JOptionPane.ERROR_MESSAGE);
+				return;
 			}
+			String anno = jtaAnno.getText();
+			if (anno.contains(META_DELIMIETER)) anno = anno.replaceAll(META_DELIMIETER, "_");
+			res = WorkspaceServiceClient.modifySavedWorkspace("ADDANNO"+remoteId+META_DELIMIETER+anno+META_DELIMIETER+userInfo);
+		}catch(Exception e1){
+			JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
+	   				"GeWorkbench cannot add annotation for remote workspace via axis2 web service.\n" +
+	   				"Please try again later or report the problem to geWorkbench support team.\n",
+	   				"Database connection/data transfer error", JOptionPane.ERROR_MESSAGE);
 		}
+		if (res!=null && res.contains("success")){
+			JOptionPane.showMessageDialog(null, res);
+			listDialog.dispose();
+		} else
+			JOptionPane.showMessageDialog(null, "Could not add annotation for remote workspace "+remoteId);
 	}
 
 	private void addUser(){
 		int selectedRow = jt.getSelectedRow();
-		if (selectedRow > -1){
-			String remoteId = jt.getModel().getValueAt(selectedRow, IdID).toString();
-			//if (!Boolean.valueOf(jt.getModel().getValueAt(selectedRow, LockedID).toString()))
-			{
-				String res = "";
-				try{
-					getUserInfo();
-					if (userInfo == null) return;
-					if (userInfo == "") {
-						JOptionPane
-								.showMessageDialog(
-										null,
-										"Please make sure you entered valid username and password",
-										"Invalid User Account",
-										JOptionPane.ERROR_MESSAGE);
-						return;
-					}
-					String uname = jtfUsername.getText();
-					String group = (String)jcb.getSelectedItem();
-					res = WorkspaceServiceClient.modifySavedWorkspace("ADDUSER"+remoteId+META_DELIMIETER+uname+META_DELIMIETER+group+META_DELIMIETER+userInfo);
-				}catch(Exception e1){
-					JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
-	    					"GeWorkbench cannot give user access to remote workspace via axis2 web service.\n" +
-	    					"Please try again later or report the problem to geWorkbench support team.\n",
-	    					"Database connection/data transfer error", JOptionPane.ERROR_MESSAGE);
-				}
-				if (res!=null && res.contains("success")) {
-					JOptionPane.showMessageDialog(null, res);
-					listDialog.dispose();
-				} else
-					JOptionPane.showMessageDialog(null, "Could not give user access to remote workspace "+remoteId);
+		String remoteId = jt.getModel().getValueAt(selectedRow, IdID).toString();
+		String res = "";
+		try{
+			getUserInfo();
+			if (userInfo == null) return;
+			if (userInfo == "") {
+				JOptionPane
+						.showMessageDialog(
+								null,
+								"Please make sure you entered valid username and password",
+								"Invalid User Account",
+								JOptionPane.ERROR_MESSAGE);
+				return;
 			}
+			String uname = jtfUsername.getText();
+			String group = (String)jcb.getSelectedItem();
+			res = WorkspaceServiceClient.modifySavedWorkspace("ADDUSER"+remoteId+META_DELIMIETER+uname+META_DELIMIETER+group+META_DELIMIETER+userInfo);
+		}catch(Exception e1){
+			JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
+					"GeWorkbench cannot give user access to remote workspace via axis2 web service.\n" +
+					"Please try again later or report the problem to geWorkbench support team.\n",
+					"Database connection/data transfer error", JOptionPane.ERROR_MESSAGE);
 		}
+		if (res!=null && res.contains("success")) {
+			JOptionPane.showMessageDialog(null, res);
+			listDialog.dispose();
+		} else
+			JOptionPane.showMessageDialog(null, "Could not give user access to remote workspace "+remoteId);
 	}
 
 	private void addGroupAccess(){
 		int selectedRow = jt.getSelectedRow();
-		if (selectedRow > -1){
-			String remoteId = jt.getModel().getValueAt(selectedRow, IdID).toString();
-			//if (!Boolean.valueOf(jt.getModel().getValueAt(selectedRow, LockedID).toString()))
-			{
-				String res = "";
-				try{
-					getUserInfo();
-					if (userInfo == null) return;
-					if (userInfo == "") {
-						JOptionPane
-								.showMessageDialog(
-										null,
-										"Please make sure you entered valid username and password",
-										"Invalid User Account",
-										JOptionPane.ERROR_MESSAGE);
-						return;
-					}
-					String uname = (String)grpnames.getSelectedItem();
-					String group = (String)grpjcb.getSelectedItem();
-					res = WorkspaceServiceClient.modifySavedWorkspace("ADDGROUP"+remoteId+META_DELIMIETER+uname+META_DELIMIETER+group+META_DELIMIETER+userInfo);
-				}catch(Exception e1){
-					JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
-	    					"GeWorkbench cannot give group access to remote workspace via axis2 web service.\n" +
-	    					"Please try again later or report the problem to geWorkbench support team.\n",
-	    					"Database connection/data transfer error", JOptionPane.ERROR_MESSAGE);
-				}
-				if (res!=null && res.contains("success")) {
-					JOptionPane.showMessageDialog(null, res);
-					listDialog.dispose();
-				} else
-					JOptionPane.showMessageDialog(null, "Could not give group access to remote workspace "+remoteId);
+		String remoteId = jt.getModel().getValueAt(selectedRow, IdID).toString();
+		String res = "";
+		try{
+			getUserInfo();
+			if (userInfo == null) return;
+			if (userInfo == "") {
+				JOptionPane
+						.showMessageDialog(
+								null,
+								"Please make sure you entered valid username and password",
+								"Invalid User Account",
+								JOptionPane.ERROR_MESSAGE);
+				return;
 			}
+			String uname = (String)grpnames.getSelectedItem();
+			String group = (String)grpjcb.getSelectedItem();
+			res = WorkspaceServiceClient.modifySavedWorkspace("ADDGROUP"+remoteId+META_DELIMIETER+uname+META_DELIMIETER+group+META_DELIMIETER+userInfo);
+		}catch(Exception e1){
+			JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
+					"GeWorkbench cannot give group access to remote workspace via axis2 web service.\n" +
+					"Please try again later or report the problem to geWorkbench support team.\n",
+					"Database connection/data transfer error", JOptionPane.ERROR_MESSAGE);
 		}
+		if (res!=null && res.contains("success")) {
+			JOptionPane.showMessageDialog(null, res);
+			listDialog.dispose();
+		} else
+			JOptionPane.showMessageDialog(null, "Could not give group access to remote workspace "+remoteId);
 	}
 
 
@@ -952,44 +891,14 @@ public class RWspHandler {
 		newDialog.setLocationRelativeTo(null);
 	}
 
-	private void openWsp(String remoteName, String wsFilename, String selectedco) {
-		//pdnonmodal.cancelAllTasks();
-		OpenRemoteTask openTask = new OpenRemoteTask(ProgressItem.INDETERMINATE_TYPE, 
-				"Remote workspace "+remoteName+" is being retrieved and loaded.", wsFilename, selectedco);
+	private void openWsp(String wsFilename, String selectedco) {
+		int id = Integer.valueOf(wsFilename);
+		wsFilename = wsFilename+".wsp";
+		RWspHelper.CheckOpenRemoteTask openTask = new RWspHelper.CheckOpenRemoteTask(ProgressItem.INDETERMINATE_TYPE, 
+				"Checking remote workspace "+wsFilename+" access before downloading.", wsFilename, selectedco, id);
 		pdnonmodal.executeTask(openTask);
 	}
 
-	private class OpenRemoteTask extends OpenTask {
-		private String lastSync = "";
-		OpenRemoteTask(int pbtype, String message, String filename, String selectedco) {
-			ws.super(pbtype, message, filename);
-			lastSync = selectedco;
-		}
-		@Override
-		protected Void doInBackground() throws Exception {
-			String dldwspname = "";
-			try {
-				dldwspname = WorkspaceServiceClient.getSavedWorkspace("DOWNLOAD"+filename);
-			} catch (Exception e1) {
-				JOptionPane.showMessageDialog(null, 
-    					"Exception: could not retrieve remote workspace "+filename,
-    					"Database connection/data transfer error", JOptionPane.ERROR_MESSAGE);
-    			return null;
-			}
-			WorkspaceServiceClient.cleanCache();
-
-			filename = dldwspname;
-			super.doInBackground();
-
-			return null;
-		}
-		@Override
-		protected void done(){
-			super.done();
-			checkoutstr = lastSync;
-			dirty = false;
-		}
-	}
 	protected static boolean checkWspdir(){
 		File dir = new File(wsproot);
 		if (!dir.exists()){
@@ -1023,6 +932,7 @@ public class RWspHandler {
 		WorkspaceServiceClient.cachedir = wspdir+"axis2cache";
 		return true;
 	}
+
 	protected void uploadWsp(){
 		if(!checkWspdir()) return;
 
@@ -1045,7 +955,7 @@ public class RWspHandler {
 			return;
 		}
 		
-		UploadNewTask saveTask = new UploadNewTask(ProgressItem.INDETERMINATE_TYPE, 
+		RWspHelper.UploadNewTask saveTask = new RWspHelper.UploadNewTask(ProgressItem.INDETERMINATE_TYPE, 
 				"Remote workspace "+wsFilename+" is being saved and uploaded.", 
 				"0"+META_DELIMIETER+wsFilename+META_DELIMIETER+desc+META_DELIMIETER+userInfo, terminating);
 		pdmodal.executeTask(saveTask);
@@ -1070,96 +980,17 @@ public class RWspHandler {
 			String fname = id+".wsp";
 			String rename = WorkspaceServiceClient.wsprenames.get(id); 
 			if (rename!=null) fname=rename;
-			UpdateRemoteTask saveTask = new UpdateRemoteTask(ProgressItem.INDETERMINATE_TYPE, 
-					"Remote workspace "+id+" is being saved and uploaded.", wspdir+fname, 
-					wspId+META_DELIMIETER+checkoutstr+META_DELIMIETER+userInfo, terminating);
-			pdmodal.executeTask(saveTask);
+			RWspHelper.CheckUpdateRemoteTask saveTask = new RWspHelper.CheckUpdateRemoteTask(ProgressItem.INDETERMINATE_TYPE, 
+					"Checking remote workspace "+id+" access before updating.", wspdir+fname, 
+					id+META_DELIMIETER+checkoutstr+META_DELIMIETER+userInfo, terminating, id);
+			pdnonmodal.executeTask(saveTask);
 		}
 	}
-	
-	private class UpdateRemoteTask extends SaveTask {
-		protected String meta = "";
-		UpdateRemoteTask(int pbtype, String message, String filename, String metadata, boolean terminating) {
-			ws.super(pbtype, message, filename, terminating);
-			meta = metadata;
-		}
-		@Override
-		protected Void doInBackground() throws FileNotFoundException, IOException {
-			//get server time as checkoutstr
-			try {
-				checkoutstr = Client.transferFile(null, meta);
-			} catch (RemoteException e1) {
-				JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
-	    				"GeWorkbench cannot upload to remote workspace via axis2 web service.\n" +
-	    				"Please try again later or report the problem to geWorkbench support team.\n",
-	    				"Database connection/data transfer error", JOptionPane.ERROR_MESSAGE);
-			}
-			dirty = false;
-			//save wsp
-			super.doInBackground();
-			//upload saved wsp file
-			try {
-				Client.transferFile(new File(filename), wspId+META_DELIMIETER+userInfo);
-			} catch (RemoteException e1) {
-				JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
-    					"GeWorkbench cannot upload to remote workspace via axis2 web service.\n" +
-    					"Please try again later or report the problem to geWorkbench support team.\n",
-    					"Database connection/data transfer error", JOptionPane.ERROR_MESSAGE);
-    			return null;
-			}
-			dirty = false;
 
-			int a = JOptionPane.showConfirmDialog(null, "The workspace was successfully uploaded.\n"+
-					"You are the only one who can modify the uploaded workspace.\n" + "Do you wish to release the lock?", 
-					"Release Workspace Lock", JOptionPane.YES_NO_OPTION);
-			if (a == JOptionPane.NO_OPTION ||a == JOptionPane.CLOSED_OPTION)
-				return null;
-			String res = "";
-			try{
-				res = WorkspaceServiceClient.modifySavedWorkspace("RELEASE"+wspId+META_DELIMIETER+userInfo);
-			}catch(Exception e1){
-				JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
-    					"GeWorkbench cannot release lock for remote workspace via axis2 web service.\n" +
-    					"Please try again later or report the problem to geWorkbench support team.\n",
-    					"Database connection/data transfer error", JOptionPane.ERROR_MESSAGE);
-    			return null;
-			}
-			if (res!=null && res.contains("success"))
-				JOptionPane.showMessageDialog(null, res);
-			else
-				JOptionPane.showMessageDialog(null, "Could not release remote workspace "+wspId);
-			return null;
-		}
-	}
-	
-	private class UploadNewTask extends UpdateRemoteTask {
-		UploadNewTask(int pbtype, String message, String metadata, boolean terminating) {
-			super(pbtype, message, "", metadata, terminating);
-		}
-		@Override
-		protected Void doInBackground() throws FileNotFoundException, IOException {
-			String id = "0";
-			// get auto-increment id in workspace table
-			try {
-				id = Client.transferFile(null, meta);
-			} catch (RemoteException e1) {
-				JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
-	    				"GeWorkbench cannot upload to remote workspace via axis2 web service.\n" +
-	    				"Please try again later or report the problem to geWorkbench support team.\n",
-	    				"Database connection/data transfer error", JOptionPane.ERROR_MESSAGE);
-			}
-			// upload wsp file with just created id, no lock/sync check
-			wspId = Integer.valueOf(id);
-			filename = wspdir+id+".wsp";
-			meta = wspId+META_DELIMIETER+userInfo;
-			super.doInBackground();
-			return null;
-		}
-	}
-	
 	private void removeWsp(){
 		int selectedRow = jt.getSelectedRow();
 		String wsFilename = jt.getModel().getValueAt(selectedRow, IdID).toString();
+		String localwspname = jt.getModel().getValueAt(selectedRow, LocalID).toString();
 
 		getUserInfo();
 		if (userInfo == null) return;
@@ -1173,63 +1004,9 @@ public class RWspHandler {
 			return;
 		}
 
-		RemoveRemoteTask removeTask = new RemoveRemoteTask(ProgressItem.INDETERMINATE_TYPE,
-				"Remote workspace "+wsFilename+" is being removed.", wsFilename);
+		RWspHelper.RemoveRemoteTask removeTask = new RWspHelper.RemoveRemoteTask(ProgressItem.INDETERMINATE_TYPE,
+				"Remote workspace "+wsFilename+" is being removed.", wsFilename, localwspname);
 		pdnonmodal.executeTask(removeTask);
-	}
-
-	private class RemoveRemoteTask extends ProgressTask<String, Void> {
-		private String filename;
-		RemoveRemoteTask(int pbtype, String message, String fname) {
-			super(pbtype, message);
-			filename = fname;
-		}
-		@Override
-		protected String doInBackground() throws FileNotFoundException, IOException {
-			String res = "";
-			try {
-				res = WorkspaceServiceClient.modifySavedWorkspace("REMOVE"+filename+META_DELIMIETER+userInfo);
-			} catch (Exception e1) {
-				JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
-				"GeWorkbench cannot remove remote workspace" +filename+".\n"+
-				"Please try again later or report the problem to geWorkbench support team.\n",
-				"Database connection/data transfer error", JOptionPane.ERROR_MESSAGE);
-    			return null;
-			}
-
-			return res;
-		}
-		@Override
-		protected void done(){
-			if (isCancelled()){
-				pdnonmodal.removeTask(this);
-				return;
-			}
-			String res = "";
-			try {
-				res = get();
-			} catch (ExecutionException e) {
-				e.getCause().printStackTrace();
-				JOptionPane.showMessageDialog(null,
-						"Exception: could not remove remote workspace "+filename,
-						"Remove Remote Workspace Error", JOptionPane.ERROR_MESSAGE);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} catch (Exception e) {
-				e.printStackTrace();
-				JOptionPane.showMessageDialog(null,
-						"Exception: could not remove remote workspace "+filename+"\n"+e,
-						"Remove Remote Workspace Error", JOptionPane.ERROR_MESSAGE);
-			} finally {
-				pdnonmodal.removeTask(this);
-			}
-			if (res!=null && res.contains("success")) {
-				JOptionPane.showMessageDialog(null, res);
-				listDialog.dispose();
-				wspId = 0;
-			} else
-				JOptionPane.showMessageDialog(null, "Could not remove remote workspace "+filename);
-		}
 	}
 
 	protected static void treeModified(){
@@ -1237,66 +1014,14 @@ public class RWspHandler {
 			Timestamp now = new Timestamp(new Date().getTime());
 			now.setNanos(0);
 			lastchange = now.toString();
-
+			//System.out.println("treemodified:"+wspId+"; "+dirty);
 			if (dirty == false){
 				dirty = true;
 
-				AccessRemoteTask accessTask = new AccessRemoteTask(ProgressItem.INDETERMINATE_TYPE,
-				"Remote workspace user access is being retrieved.");
+				RWspHelper.AccessRemoteTask accessTask = new RWspHelper.AccessRemoteTask(ProgressItem.INDETERMINATE_TYPE,
+				"Remote workspace status is being retrieved.", wspId);
 				pdnonmodal.executeTask(accessTask);
 			}
-		}
-	}
-	
-	private static class AccessRemoteTask extends ProgressTask<String, Void> {
-		AccessRemoteTask(int pbtype, String message) {
-			super(pbtype, message);
-		}
-		@Override
-		protected String doInBackground() throws FileNotFoundException, IOException {
-			String res = "";
-			try {
-				res = WorkspaceServiceClient.modifySavedWorkspace("ACCESS"+wspId+META_DELIMIETER+userInfo.split(USER_INFO_DELIMIETER)[0]);
-			} catch (Exception e1) {
-				JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
-				"It is possible that changes made to the local workspace copy may not be transferable to the server.\n"+
-				"GeWorkbench cannot retrieve user access for remote workspace " +wspId+".\n"+
-				"Please try again later or report the problem to geWorkbench support team.\n",
-				"Database connection/data transfer error", JOptionPane.ERROR_MESSAGE);
-    			return null;
-			}
-
-			return res;
-		}
-		@Override
-		protected void done(){
-			if (isCancelled()){
-				pdnonmodal.removeTask(this);
-				return;
-			}
-			String res = "";
-			try {
-				res = get();
-			} catch (ExecutionException e) {
-				e.getCause().printStackTrace();
-				JOptionPane.showMessageDialog(null,
-						"Exception: could not retrieve user access for remote workspace "+wspId,
-						"Retrieve User Access Error", JOptionPane.ERROR_MESSAGE);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} catch (Exception e) {
-				e.printStackTrace();
-				JOptionPane.showMessageDialog(null,
-						"Exception: could not retrieve user access for remote workspace "+wspId+"\n"+
-						"It is possible that changes made to the local workspace copy may not be transferable to the server.\n"+e,
-						"Remove User Access Error", JOptionPane.ERROR_MESSAGE);
-			} finally {
-				pdnonmodal.removeTask(this);
-			}
-			if (res!=null) {
-				JOptionPane.showMessageDialog(null, res);
-			} else
-				JOptionPane.showMessageDialog(null, "Could not retrieve user access for remote workspace "+wspId);
 		}
 	}
 }

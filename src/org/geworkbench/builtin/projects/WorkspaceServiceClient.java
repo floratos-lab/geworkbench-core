@@ -16,6 +16,7 @@ package org.geworkbench.builtin.projects;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.HashMap;
@@ -338,24 +339,44 @@ public class WorkspaceServiceClient {
 				if (j!=DirtyID && j!=SyncID && j!=LastChangeID)
 					list[i][j] = elm.getAttributeValue(new QName(colnames[j]));
 			}
-			for (int k = 0; k < locallist.length; k++)
-				if (list[i][IdID].equals(locallist[k][IdID])){
-					if (Integer.valueOf(list[i][IdID])==RWspHandler.wspId){
-						locallist[k][DirtyID] = Boolean.toString(RWspHandler.dirty);
-						locallist[k][LastChangeID] = RWspHandler.lastchange;
-						if (RWspHandler.checkoutstr!=null) 
-							locallist[k][LastSyncID] = RWspHandler.checkoutstr;
+			if (locallist!=null){
+				for (int k = 0; k < locallist.length; k++){
+					if (list[i][IdID].equals(locallist[k][IdID])){
+						if (Integer.valueOf(list[i][IdID])==RWspHandler.wspId){
+							locallist[k][DirtyID] = Boolean.toString(RWspHandler.dirty);
+							locallist[k][LastChangeID] = RWspHandler.lastchange;
+							if (RWspHandler.checkoutstr!=null) 
+								locallist[k][LastSyncID] = RWspHandler.checkoutstr;
+						}
+						list[i][LocalID] = locallist[k][LocalID];
+						list[i][DirtyID] = locallist[k][DirtyID];
+						list[i][LastChangeID] = locallist[k][LastChangeID];
+						if (list[i][LastSyncID].equals(locallist[k][LastSyncID]))
+							list[i][SyncID] = "true";
 					}
-					list[i][LocalID] = locallist[k][LocalID];
-					list[i][DirtyID] = locallist[k][DirtyID];
-					list[i][LastChangeID] = locallist[k][LastChangeID];
-					if (list[i][LastSyncID].equals(locallist[k][LastSyncID]))
-						list[i][SyncID] = "true";
 				}
+			}
 			i++;
 		}
 		hm.put("LIST", list);
 		return hm;
+	}
+
+	private static class FileListFilter implements FilenameFilter {
+		  private String extension; 
+
+		  public FileListFilter(String extension) {
+		    this.extension = extension;
+		  }
+
+		  public boolean accept(File directory, String filename) {
+		    boolean fileOK = true;
+
+		    if (extension != null) {
+		      fileOK &= filename.endsWith('.' + extension);
+		    }
+		    return fileOK;
+		  }
 	}
 
 	private static String[][] getlocallist(){
@@ -363,38 +384,43 @@ public class WorkspaceServiceClient {
 		RWspHandler.checkWspdir();
 		File wspdir = new File(RWspHandler.wspdir);
 		if (wspdir.exists() && wspdir.isDirectory()){
-			locallist=new String[wspdir.listFiles().length-1][colnames.length]; int i = 0;
-			for (File f : wspdir.listFiles()){
-				if (f.isFile() && f.getName().endsWith(".wsp")){
-					FileInputStream in = null;
-					try {
-						in = new FileInputStream(f);
-						ObjectInputStream s = new ObjectInputStream(in);
-						SaveTree saveTree = (SaveTree) s.readObject();
-						if (saveTree!=null) {
-							int wspid = saveTree.getWspId();
-							boolean dirty = saveTree.getDirty();
-							String co = saveTree.getCheckout();
-							String lc = saveTree.getLastchange();
-							if (wspid > 0){
-								locallist[i] = new String[colnames.length];
-								for (int j=0; j<colnames.length; j++)
-									locallist[i][j] = "";
-								locallist[i][LocalID] = f.getName();
-								locallist[i][IdID] = String.valueOf(wspid);
-								locallist[i][DirtyID] = Boolean.toString(dirty);
-								locallist[i][LastSyncID] = co;
-								locallist[i++][LastChangeID] = lc;
+			FilenameFilter filter = new FileListFilter("wsp");
+			int filenums = wspdir.listFiles(filter).length;
+			if (filenums > 0){
+				locallist = new String[filenums][colnames.length]; int i = 0;
+				for (File f : wspdir.listFiles(filter)){
+					if (f.isFile() && f.getName().endsWith(".wsp")){
+						FileInputStream in = null;
+						try {
+							in = new FileInputStream(f);
+							ObjectInputStream s = new ObjectInputStream(in);
+							SaveTree saveTree = (SaveTree) s.readObject();
+							if (saveTree!=null) {
+								int wspid = saveTree.getWspId();
+								boolean dirty = saveTree.getDirty();
+								String co = saveTree.getCheckout();
+								String lc = saveTree.getLastchange();
+								if (wspid > 0){
+									locallist[i] = new String[colnames.length];
+									for (int j=0; j<colnames.length; j++)
+										locallist[i][j] = "";
+									locallist[i][LocalID] = f.getName();
+									locallist[i][IdID] = String.valueOf(wspid);
+									locallist[i][DirtyID] = Boolean.toString(dirty);
+									locallist[i][LastSyncID] = co;
+									locallist[i++][LastChangeID] = lc;
+									wsprenames.put(wspid, f.getName());
+								}
 							}
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					} finally {
-						if(in!=null){
-							try{
-								in.close();
-							}catch(IOException e){
-								e.printStackTrace();
+						} catch (Exception e) {
+							e.printStackTrace();
+						} finally {
+							if(in!=null){
+								try{
+									in.close();
+								}catch(IOException e){
+									e.printStackTrace();
+								}
 							}
 						}
 					}
@@ -455,5 +481,83 @@ public class WorkspaceServiceClient {
             throw new Exception("Malformed response.");
         }
 	}
+	
+	public static HashMap<String, String> getSavedWorkspaceStatus(String projectName) throws Exception {
+
+		Options options = new Options();
+		options.setTo(targetEPR);
+		options.setAction("urn:getWorkspace");
+		options.setSoapVersionURI(SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI);
+
+		//Uncomment to enable client side file caching for the response.
+		options.setProperty(Constants.Configuration.CACHE_ATTACHMENTS, Constants.VALUE_TRUE);
+		options.setProperty(Constants.Configuration.ATTACHMENT_TEMP_DIR, cachedir);
+		options.setProperty(Constants.Configuration.FILE_SIZE_THRESHOLD, "4000");
+
+		options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
+		
+		// Increase the time out to receive large attachments
+		options.setTimeOutInMilliSeconds(300000);
+		
+		ServiceClient sender = new ServiceClient();
+		sender.setOptions(options);
+		OperationClient mepClient = sender.createClient(ServiceClient.ANON_OUT_IN_OP);
+        
+        MessageContext mc = new MessageContext();
+        SOAPEnvelope env = createEnvelope(projectName);
+        mc.setEnvelope(env);
+        
+		mepClient.addMessageContext(mc);
+		try{
+			mepClient.execute(true);
+		}catch(Exception e){
+			if (e.getMessage().equals("Connection refused: connect")){
+				JOptionPane.showMessageDialog(null, e.getMessage()+".\n\n"+
+    					"GeWorkbench cannot connect to remote workspace server.\n" +
+    					"The only entries on the list are for remote workspaces for which the user has already downloaded a local copy;\n"+
+    					"for those workspaces some of the fields, such as current lock status etc, will appear grayed out as the relevant information will not be available\n"+
+    					"Please try again later or report the problem to geWorkbench support team.\n",
+    					"Database connection error", JOptionPane.ERROR_MESSAGE);
+				return null;
+			} else throw e;
+		}
+		
+		// Let's get the message context for the response
+		MessageContext response = mepClient.getMessageContext(WSDLConstants.MESSAGE_LABEL_IN_VALUE);
+		SOAPBody body = response.getEnvelope().getBody();
+		OMElement element = body.getFirstChildWithName(new QName("http://service.sample/xsd","getWorkspaceResponse"));
+        if (element!=null)
+        {
+        	return processResponseStatus(element);
+        }else{
+            throw new Exception("Malformed response.");
+        }
+	}
+
+	@SuppressWarnings("unchecked")
+	private static HashMap<String, String> processResponseStatus(OMElement element) throws Exception {
+		HashMap<String, String> hm = new HashMap<String, String>();
+		OMElement elm = element.getFirstChildWithName(new QName("http://service.sample/xsd","access"));
+		if (elm!=null){
+			hm.put("ACCESS", elm.getText());
+		}
+		
+		elm = element.getFirstChildWithName(new QName("http://service.sample/xsd","lock"));
+		if (elm!=null){
+			hm.put("LOCK", elm.getText());
+		}
+
+		elm = element.getFirstChildWithName(new QName("http://service.sample/xsd","lockuser"));
+		if (elm!=null){
+			hm.put("LOCKUSER", elm.getText());
+		}
+
+		elm = element.getFirstChildWithName(new QName("http://service.sample/xsd","lastsync"));
+		if (elm!=null){
+			hm.put("LASTSYNC", elm.getText());
+		}
+		return hm;
+	}
+
 
 }
