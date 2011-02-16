@@ -27,7 +27,7 @@ import org.geworkbench.util.SplashBitmap;
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: First Genetic Trust, Inc.</p>
  * @author First Genetic Trust, Inc.
- * @version 1.0
+ * @version $Id$
  */
 
 /**
@@ -81,7 +81,7 @@ public class GeawConfigObject {
      * The titles of the default top level menus. Menus will appear in the
      * order listed in this array.
      */
-    static String[] topMenus = {"File", "Edit", "View", "Commands", "Tools", "Help"};
+    static String[] topMenus = {"File", "Edit", "Commands", "Tools", "Help"};
     /**
      * The character that delimits the menu items within the 'path' attribute
      * of the <code>&lt;menu-item&gt;</code> element in the application
