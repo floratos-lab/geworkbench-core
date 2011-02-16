@@ -406,9 +406,16 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				RWspHandler.treeModified();
 			}
 			public void treeNodesRemoved(TreeModelEvent arg0) {
-				ProjectTreeNode root = (ProjectTreeNode)arg0.getPath()[0];
-				if (root.isRoot() && root.getChildCount()==0)
+				TreePath[] tps = projectTree.getSelectionPaths();
+				int pns = 0;
+				for (TreePath tp: tps){
+					if (tp.getLastPathComponent() instanceof ProjectNode)
+						pns++;
+				}
+				if (pns >= root.getChildCount()){
 					RWspHandler.wspId = 0;
+					RWspHandler.lastchange = "";
+				}
 				RWspHandler.treeModified();
 			}
 			public void treeStructureChanged(TreeModelEvent arg0) {

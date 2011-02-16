@@ -348,6 +348,7 @@ public class RWspHelper {
 			super.done();
 			RWspHandler.checkoutstr = lastSync;
 			RWspHandler.dirty = false;
+			RWspHandler.lastchange = "";
 		}
 	}
 
