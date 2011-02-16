@@ -412,7 +412,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 					if (tp.getLastPathComponent() instanceof ProjectNode)
 						pns++;
 				}
-				if (pns >= root.getChildCount()){
+				if (pns == childcount){
 					RWspHandler.wspId = 0;
 					RWspHandler.lastchange = "";
 				}
@@ -1705,12 +1705,14 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		return event;
 	}
 
+	private int childcount = 0;
 	/**
 	 * Action listener handling user requests for removing a project.
 	 *
 	 * @param e
 	 */
 	protected void projectRemove_actionPerformed(ProjectNode node) {
+		childcount = root.getChildCount();
 		if (node.getChildCount() > 0) {
 			for (Enumeration en = node.children(); en.hasMoreElements();) {
 				ProjectTreeNode childNode = (ProjectTreeNode) en
