@@ -1,5 +1,7 @@
 package org.geworkbench.builtin.projects;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -8,7 +10,9 @@ import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import org.geworkbench.builtin.projects.WorkspaceHandler.OpenTask;
 import org.geworkbench.builtin.projects.WorkspaceHandler.SaveTask;
@@ -72,14 +76,34 @@ public class RWspHelper {
 		}*/
 
 		public Object getValueAt(int row, int col) {
-			if (col==RWspHandler.LockID || col==RWspHandler.DirtyID || col==RWspHandler.SyncID)
+			if (col==RWspHandler.DirtyID || col==RWspHandler.SyncID)
 				return Boolean.valueOf(data[row][col]);
 			return data[row][col];
 		}
 
 		public Class<?> getColumnClass(int col) {
-			return (col==RWspHandler.LockID||col==RWspHandler.DirtyID||col==RWspHandler.SyncID)?
+			return (col==RWspHandler.DirtyID||col==RWspHandler.SyncID)?
 					Boolean.class:String.class;
+		}
+	}
+
+	protected static class ColorRenderer extends DefaultTableCellRenderer {
+		private static final long serialVersionUID = -8091519198660967004L;
+
+		public Component getTableCellRendererComponent(JTable table, Object value, 
+				boolean isSelected, boolean hasFocus, int row, int col) {
+			Component comp = super.getTableCellRendererComponent(table, value,
+					isSelected, hasFocus, row, col);
+
+			String s = table.getModel().getValueAt(row, RWspHandler.LkUsrID).toString();
+			if (s != null && !s.equals("")){
+				if (isSelected) comp.setForeground(Color.yellow);
+				else            comp.setForeground(Color.red);
+			} else {
+				if (isSelected) comp.setForeground(Color.white);
+				else            comp.setForeground(null);
+			}
+			return comp;
 		}
 	}
 
@@ -149,20 +173,21 @@ public class RWspHelper {
 				boolean lock = Boolean.valueOf(res.get("LOCK"));
 				String lastsync = res.get("LASTSYNC");
 				if (lock == true) {
-					String lockuser = res.get("LOCKUSER");
+					String lockuname = res.get("LOCKFNAME")+" "+res.get("LOCKLNAME");
+					//String lockuser = res.get("LOCKUSER");
 					//check lock owner or not?
 					//if (!lockuser.equals(RWspHandler.userInfo.split(USER_INFO_DELIMIETER)[0])) {
 						if (RWspHandler.checkoutstr.equals(lastsync)) {
 							JOptionPane.showMessageDialog(null, 
 									"Local workspace is STILL IN SYNC with the copy at the server,\n"+
-									"but the remote workspace is currently locked by user "+lockuser+".\n"+
+									"but the remote workspace is currently locked by user "+lockuname+".\n"+
 									"If you proceed with making changes to the local copy,\n"+
 									"you MAY NOT be able to synchronize them with the server.");
 						} else {
 							Object[] options = {"Download latest", "Keep out of sync"};
 							int n = JOptionPane.showOptionDialog(null, 
 									"Local workspace is OUT OF SYNC with the copy at the server,\n"+
-									"the remote workspace is currently locked by user "+lockuser+".\n"+
+									"the remote workspace is currently locked by user "+lockuname+".\n"+
 									"If you proceed with making changes to the local copy,\n"+
 									"you WILL NOT be able to synchronize them with the server.\n"+
 									"Would you like to download the lastest version of the workspace from the server?",
@@ -288,11 +313,12 @@ public class RWspHelper {
 					boolean lock = Boolean.valueOf(res.get("LOCK"));
 					if (lock == true){
 						String lockuser = res.get("LOCKUSER");
+						String lockuname = res.get("LOCKFNAME")+" "+res.get("LOCKLNAME");
 						if (lockuser.equals(RWspHandler.userInfo.split(USER_INFO_DELIMIETER)[0])) {
 							proceed = true;
 						} else {
 							int t = JOptionPane.showConfirmDialog(null, 
-									"You are downloading a workspace that is locked by "+lockuser+".\n"+
+									"You are downloading a workspace that is locked by "+lockuname+".\n"+
 									"Do you wish to proceed?\n");
 							if (t == JOptionPane.YES_OPTION)
 								proceed = true;
@@ -381,12 +407,13 @@ public class RWspHelper {
 				String lastsync = res.get("LASTSYNC");
 				if (lock == true) {
 					String lockuser = res.get("LOCKUSER");
+					String lockuname = res.get("LOCKFNAME")+" "+res.get("LOCKLNAME");
 					if (!lockuser.equals(RWspHandler.userInfo.split(USER_INFO_DELIMIETER)[0])) {
 						if (RWspHandler.checkoutstr.equals(lastsync)) {
 							JOptionPane.showMessageDialog(null, 
 									"Local workspace is STILL IN SYNC with the copy at the server,\n"+
-									"but the remote workspace is currently locked by another user "+lockuser+".\n"+
-									"Please contact "+lockuser+" and ask them to release their lock,\n"+
+									"but the remote workspace is currently locked by another user "+lockuname+".\n"+
+									"Please contact "+lockuname+" and ask them to release their lock,\n"+
 									"then you can check in your local copy.");
 						} else {
 							JOptionPane.showMessageDialog(null, 

@@ -84,7 +84,7 @@ public class RWspHandler {
 	private JTable jtgroup = new JTable();
 	private JTextField groupName = new JTextField(20);
 	private JTextField groupUser = new JTextField(20);
-	protected static final int LocalID = 0, IdID = 1, LockID=5, LkUsrID=6, DirtyID=7, SyncID=8, LastSyncID=9;
+	protected static final int LocalID = 0, IdID = 1, AccessID=4, LkUsrID=5, DirtyID=6, SyncID=7, LastSyncID=8, LastChangeID=9;
 	protected static final int LDWidth = 790, LDHeight = 330, SLDHeight = 300; 
 
 	protected static String checkoutstr = "";
@@ -406,21 +406,22 @@ public class RWspHandler {
 	             int colIndex = columnAtPoint(p);
 	             int realColumnIndex = convertColumnIndexToModel(colIndex);
 
-	             if (realColumnIndex != IdID && realColumnIndex != LockID &&
+	             if (realColumnIndex != IdID &&
 	            		 realColumnIndex != DirtyID && realColumnIndex != SyncID)
 	            	 return (String)getModel().getValueAt(rowIndex, realColumnIndex);
 	             else	return null;
 			 }
 		};
+		jt.setDefaultRenderer(Object.class, new RWspHelper.ColorRenderer());
 		jt.removeColumn(jt.getColumnModel().getColumn(jt.getColumnCount()-1));
 	    jt.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-	    jt.getColumnModel().getColumn(1).setMaxWidth(30);
-	    jt.getColumnModel().getColumn(4).setMaxWidth(50);
-	    for (int i=5; i<9; i++)
-	    	if (i!=6) jt.getColumnModel().getColumn(i).setMaxWidth(40);
-	    jt.getColumnModel().getColumn(9).setPreferredWidth(140);
-	    jt.getColumnModel().getColumn(10).setPreferredWidth(140);
+	    jt.getColumnModel().getColumn(IdID).setMaxWidth(30);
+	    jt.getColumnModel().getColumn(AccessID).setMaxWidth(50);
+	    jt.getColumnModel().getColumn(DirtyID).setMaxWidth(40);
+	    jt.getColumnModel().getColumn(SyncID).setMaxWidth(40);
+	    jt.getColumnModel().getColumn(LastSyncID).setPreferredWidth(140);
+	    jt.getColumnModel().getColumn(LastChangeID).setPreferredWidth(140);
 
 	    jt.setPreferredScrollableViewportSize(jt.getPreferredSize());
 	    ListSelectionListener listener = new ListSelectionListener(){
@@ -612,15 +613,23 @@ public class RWspHandler {
 		if (localwspname!=null && !localwspname.equals("")){
 			openLocalBtn.setEnabled(true);
 			renameLocalBtn.setEnabled(true);
+		} else {
+			openLocalBtn.setEnabled(false);
+			renameLocalBtn.setEnabled(false);
 		}
-		if (((Boolean)jt.getValueAt(selectedRow, LockID))==Boolean.TRUE){
-			releaselockBtn.setEnabled(true);
-			breaklockBtn.setEnabled(true);
-		} else
-			removeBtn.setEnabled(true);
-
 		String lkusr = (String)jt.getValueAt(selectedRow, LkUsrID);
 		if (lkusr!=null && !lkusr.equals("")){
+			releaselockBtn.setEnabled(true);
+			breaklockBtn.setEnabled(true);
+			removeBtn.setEnabled(false);
+		} else {
+			releaselockBtn.setEnabled(false);
+			breaklockBtn.setEnabled(false);
+			removeBtn.setEnabled(true);
+		}
+
+		String access = (String)jt.getValueAt(selectedRow, AccessID);
+		if (access!=null && !access.equals("")){
 			downloadBtn.setEnabled(true);
 			descbtn.setEnabled(true);
 			addannobtn.setEnabled(true);

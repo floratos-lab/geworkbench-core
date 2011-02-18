@@ -68,12 +68,12 @@ public class RegPanel extends JPanel implements ActionListener {
 		add(jpc);
 		add(passwordDup);
 
-		JLabel j2 = new JLabel(space+"First Name");
+		JLabel j2 = new JLabel(space+"First Name *");
 		fname = new JTextField("", 10);
 		add(j2);
 		add(fname);
 
-		JLabel j3 = new JLabel(space+"Last Name");
+		JLabel j3 = new JLabel(space+"Last Name *");
 		lname = new JTextField("", 10);
 		add(j3);
 		add(lname);
@@ -223,6 +223,8 @@ public class RegPanel extends JPanel implements ActionListener {
 		String pwo = new String(passwordo.getPassword());
 
 		String labaffStr = labaff.getText();
+		String fn = fname.getText();
+		String ln = lname.getText();
 
 		String pho = phone.getText();
 		String em = email.getText();
@@ -251,6 +253,16 @@ public class RegPanel extends JPanel implements ActionListener {
 		if(empty(labaffStr))
 		{
 			msg.append("Lab affiliation cannot be empty\n");
+			valid = false;
+		}
+		if(empty(fn))
+		{
+			msg.append("First name cannot be empty\n");
+			valid = false;
+		}
+		if(empty(ln))
+		{
+			msg.append("Last name cannot be empty\n");
 			valid = false;
 		}
 		if(!empty(pw) && !empty(confirm))

@@ -203,8 +203,12 @@ public class WorkspaceServiceClient {
 			Iterator<OMElement> wspElementIt = element.getChildrenWithName(new QName("http://service.sample/xsd","histlist"));
 			while(wspElementIt.hasNext()) {
 				elm = wspElementIt.next();
-				for (int j = 0; j < colhist.length; j++)
-					list[i][j] = elm.getAttributeValue(new QName(colhist[j]));
+				for (int j = 0; j < colhist.length; j++){
+					if (colhist[j].equals("Username"))
+						list[i][j] = elm.getAttributeValue(new QName("Firstname"))+" "+elm.getAttributeValue(new QName("Lastname"));
+					else
+						list[i][j] = elm.getAttributeValue(new QName(colhist[j]));
+				}
 				i++;
 			}
 			hm.put("HIST", list);
@@ -218,8 +222,12 @@ public class WorkspaceServiceClient {
 			Iterator<OMElement> wspElementIt = element.getChildrenWithName(new QName("http://service.sample/xsd","userlist"));
 			while(wspElementIt.hasNext()) {
 				elm = wspElementIt.next();
-				for (int j = 0; j < coluser.length; j++)
-					list[i][j] = elm.getAttributeValue(new QName(coluser[j]));
+				for (int j = 0; j < coluser.length; j++){
+					if (coluser[j].equals("Username"))
+						list[i][j] = elm.getAttributeValue(new QName("Firstname"))+" "+elm.getAttributeValue(new QName("Lastname"));
+					else
+						list[i][j] = elm.getAttributeValue(new QName(coluser[j]));
+				}
 				i++;
 			}
 			hm.put("GETUSER", list);
@@ -233,8 +241,12 @@ public class WorkspaceServiceClient {
 			Iterator<OMElement> wspElementIt = element.getChildrenWithName(new QName("http://service.sample/xsd","annolist"));
 			while(wspElementIt.hasNext()) {
 				elm = wspElementIt.next();
-				for (int j = 0; j < colanno.length; j++)
-					list[i][j] = elm.getAttributeValue(new QName(colanno[j]));
+				for (int j = 0; j < colanno.length; j++){
+					if (colanno[j].equals("Creator"))
+						list[i][j] = elm.getAttributeValue(new QName("Firstname"))+" "+elm.getAttributeValue(new QName("Lastname"));
+					else
+						list[i][j] = elm.getAttributeValue(new QName(colanno[j]));
+				}
 				i++;
 			}
 			hm.put("GETANNO", list);
@@ -302,8 +314,8 @@ public class WorkspaceServiceClient {
 	public static final String[] colprofile = {"id", "username", "fname", "lname", "labaff",
 		"email", "phone", "addr1", "addr2", "city", "state", "zipcode"};
 	public static final String[] colgroup = {"Group", "Owner"};
-	public static final String[] colnames = {"Local", "ID", "Title", "Owner", "Access", "Lock", "LocUser", "Dirty", "Sync", "LastSync", "LastLocalChange", "Description"};
-	private static final int LocalID = RWspHandler.LocalID, IdID = RWspHandler.IdID, DirtyID=RWspHandler.DirtyID, SyncID=RWspHandler.SyncID, LastSyncID=RWspHandler.LastSyncID, LastChangeID=10;
+	public static final String[] colnames = {"Local", "ID", "Title", "Owner", "Access", "LocUser", "Dirty", "Sync", "LastSync", "LastLocalChange", "Description"};
+	private static final int LocalID = RWspHandler.LocalID, IdID = RWspHandler.IdID, DirtyID=RWspHandler.DirtyID, SyncID=RWspHandler.SyncID, LastSyncID=RWspHandler.LastSyncID, LastChangeID=RWspHandler.LastChangeID;
 	@SuppressWarnings("unchecked")
 	private static HashMap<String, String[][]> processResponseList(String[][] locallist, OMElement element) throws Exception {
 		HashMap<String, String[][]> hm = new HashMap<String, String[][]>();
@@ -323,8 +335,12 @@ public class WorkspaceServiceClient {
 		Iterator<OMElement> wspElementIt = element.getChildrenWithName(new QName("http://service.sample/xsd","grouplist"));
 		while(wspElementIt.hasNext()) {
 			OMElement elm = wspElementIt.next();
-			for (int j = 0; j < colgroup.length; j++)
-				list[i][j] = elm.getAttributeValue(new QName(colgroup[j]));
+			for (int j = 0; j < colgroup.length; j++){
+				if (colgroup[j].equals("Owner"))
+					list[i][j] = elm.getAttributeValue(new QName("Fname"))+" "+elm.getAttributeValue(new QName("Lname"));
+				else
+					list[i][j] = elm.getAttributeValue(new QName(colgroup[j]));
+			}
 			i++;
 		}
 		hm.put("GROUP", list);
@@ -336,7 +352,14 @@ public class WorkspaceServiceClient {
 		while(wspElementIt.hasNext()) {
 			OMElement elm = wspElementIt.next();
 			for (int j = 1; j < colnames.length; j++){
-				if (j!=DirtyID && j!=SyncID && j!=LastChangeID)
+				if (colnames[j].equals("Owner"))
+					list[i][j] = elm.getAttributeValue(new QName("OwnFname"))+" "+elm.getAttributeValue(new QName("OwnLname"));
+				else if (colnames[j].equals("LocUser")){
+					if (elm.getAttributeValue(new QName("Lock")).equals("true"))
+						list[i][j] = elm.getAttributeValue(new QName("LocFname"))+" "+elm.getAttributeValue(new QName("LocLname"));
+					else list[i][j] = "";
+				}
+				else if (j!=DirtyID && j!=SyncID && j!=LastChangeID)
 					list[i][j] = elm.getAttributeValue(new QName(colnames[j]));
 			}
 			if (locallist!=null){
@@ -555,6 +578,16 @@ public class WorkspaceServiceClient {
 		elm = element.getFirstChildWithName(new QName("http://service.sample/xsd","lastsync"));
 		if (elm!=null){
 			hm.put("LASTSYNC", elm.getText());
+		}
+
+		elm = element.getFirstChildWithName(new QName("http://service.sample/xsd","lockfname"));
+		if (elm!=null){
+			hm.put("LOCKFNAME", elm.getText());
+		}
+
+		elm = element.getFirstChildWithName(new QName("http://service.sample/xsd","locklname"));
+		if (elm!=null){
+			hm.put("LOCKLNAME", elm.getText());
 		}
 		return hm;
 	}
