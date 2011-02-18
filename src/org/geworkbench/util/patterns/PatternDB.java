@@ -17,6 +17,7 @@ import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeqPattern;
+import org.geworkbench.bison.util.RandomNumberGenerator;
 
 /**
  * <p>Title: Sequence and Pattern Plugin</p>
@@ -38,6 +39,8 @@ public class PatternDB extends CSAncillaryDataSet<DSSequence> implements Seriali
     public PatternDB(File _seqFile, DSDataSet<DSSequence> parent) {
         super(parent, "PatternDB");
         dataSetFile = _seqFile;
+        String idString =  RandomNumberGenerator.getID();
+        setID(idString);
     }
 
     public boolean read(File _file) {
