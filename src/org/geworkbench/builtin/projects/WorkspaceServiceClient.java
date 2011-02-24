@@ -257,6 +257,13 @@ public class WorkspaceServiceClient {
 	
 	public static HashMap<String, String[][]> getSavedWorkspaceList(String projectName) throws Exception {
 
+		String[][] locallist = getlocallist();
+		if (projectName.equals("LISTlocal")){
+			HashMap<String, String[][]> hm = new HashMap<String, String[][]>();
+			hm.put("LIST", locallist);
+			return hm;
+		}
+		
 		targetEPR.setAddress(GlobalPreferences.getInstance().getRWSP_URL()+"/WorkspaceService");
 		Options options = new Options();
 		options.setTo(targetEPR);
@@ -282,17 +289,20 @@ public class WorkspaceServiceClient {
         mc.setEnvelope(env);
         
 		mepClient.addMessageContext(mc);
-		String[][] locallist = getlocallist();
 		try{
 			mepClient.execute(true);
 		}catch(Exception e){
-			if (e.getMessage().equals("Connection refused: connect")){
+			String msg = e.getMessage();
+			if (msg.equals("Connection refused: connect") || msg.contains("User authentication failed")
+					|| msg.contains("No record found in database for user")){
+				msg = !msg.equals("Connection refused: connect")?"":
+						"GeWorkbench cannot connect to remote workspace server.\n";
 				JOptionPane.showMessageDialog(null, e.getMessage()+".\n\n"+
-    					"GeWorkbench cannot connect to remote workspace server.\n" +
+    					msg +
     					"The only entries on the list are for remote workspaces for which the user has already downloaded a local copy;\n"+
     					"for those workspaces some of the fields, such as current lock status etc, will not be available.\n"+
     					"Please try again later or report the problem to geWorkbench support team.\n",
-    					"Database connection error", JOptionPane.ERROR_MESSAGE);
+    					"Database connection error", JOptionPane.INFORMATION_MESSAGE);
 				HashMap<String, String[][]> hm = new HashMap<String, String[][]>();
 				hm.put("LIST", locallist);
 				return hm;
@@ -592,5 +602,85 @@ public class WorkspaceServiceClient {
 		return hm;
 	}
 
+	public static String[][] getLockedWorkspaceList(String projectName) throws Exception {
+
+		Options options = new Options();
+		options.setTo(targetEPR);
+		options.setAction("urn:getWorkspace");
+		options.setSoapVersionURI(SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI);
+
+		//Uncomment to enable client side file caching for the response.
+		options.setProperty(Constants.Configuration.CACHE_ATTACHMENTS, Constants.VALUE_TRUE);
+		options.setProperty(Constants.Configuration.ATTACHMENT_TEMP_DIR, cachedir);
+		options.setProperty(Constants.Configuration.FILE_SIZE_THRESHOLD, "4000");
+
+		options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
+		
+		// Increase the time out to receive large attachments
+		options.setTimeOutInMilliSeconds(300000);
+		
+		ServiceClient sender = new ServiceClient();
+		sender.setOptions(options);
+		OperationClient mepClient = sender.createClient(ServiceClient.ANON_OUT_IN_OP);
+        
+        MessageContext mc = new MessageContext();
+        SOAPEnvelope env = createEnvelope(projectName);
+        mc.setEnvelope(env);
+        
+		mepClient.addMessageContext(mc);
+		try{
+			mepClient.execute(true);
+		}catch(Exception e){
+			if (e.getMessage().equals("Connection refused: connect")){
+				JOptionPane.showMessageDialog(null, e.getMessage()+".\n\n"+
+    					"GeWorkbench cannot connect to remote workspace server.\n" +
+    					"The current lock status is not available\n"+
+    					"Please try again later or report the problem to geWorkbench support team.\n",
+    					"Database connection error", JOptionPane.ERROR_MESSAGE);
+				return null;
+			} else throw e;
+		}
+		
+		// Let's get the message context for the response
+		MessageContext response = mepClient.getMessageContext(WSDLConstants.MESSAGE_LABEL_IN_VALUE);
+		SOAPBody body = response.getEnvelope().getBody();
+		OMElement element = body.getFirstChildWithName(new QName("http://service.sample/xsd","getWorkspaceResponse"));
+        if (element!=null)
+        {
+        	return processResponseLock(element);
+        }else{
+            throw new Exception("Malformed response.");
+        }
+	}
+
+	public static final String[] collock = {"ID", "Title", "Dirty", "Select"};
+	@SuppressWarnings("unchecked")
+	private static String[][] processResponseLock(OMElement element) throws Exception {
+		int count = Integer.valueOf(element.getFirstChildWithName(new QName("http://service.sample/xsd","lockcount")).getText());
+		String[][] list = new String[count][collock.length];
+		int i = 0;
+		String[][] locallist = getlocallist();
+		Iterator<OMElement> wspElementIt = element.getChildrenWithName(new QName("http://service.sample/xsd","locklist"));
+		while(wspElementIt.hasNext()) {
+			OMElement elm = wspElementIt.next();
+			int j = 0;
+			for (j = 0; j < 2; j++)
+				list[i][j] = elm.getAttributeValue(new QName(collock[j]));
+			
+			if (locallist!=null){
+				for (int k = 0; k < locallist.length; k++){
+					if (list[i][0].equals(locallist[k][IdID])){
+						//not necessary if doSaveLocal at listLock
+						//if (Integer.valueOf(list[i][0])==RWspHandler.wspId)
+						//	locallist[k][DirtyID] = Boolean.toString(RWspHandler.dirty);
+						list[i][j] = locallist[k][DirtyID];
+					}
+				}
+			}
+			i++;
+		}
+
+		return list;
+	}
 
 }

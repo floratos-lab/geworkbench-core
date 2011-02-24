@@ -76,6 +76,7 @@ import org.geworkbench.engine.management.Script;
 import org.geworkbench.engine.management.Subscribe;
 import org.geworkbench.engine.management.TypeMap;
 import org.geworkbench.engine.preferences.GlobalPreferences;
+import org.geworkbench.engine.properties.PropertiesManager;
 import org.geworkbench.engine.skin.Skin;
 import org.geworkbench.events.AdjacencyMatrixEvent;
 import org.geworkbench.events.CaArrayQueryEvent;
@@ -406,16 +407,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				RWspHandler.treeModified();
 			}
 			public void treeNodesRemoved(TreeModelEvent arg0) {
-				TreePath[] tps = projectTree.getSelectionPaths();
-				int pns = 0;
-				for (TreePath tp: tps){
-					if (tp.getLastPathComponent() instanceof ProjectNode)
-						pns++;
-				}
-				if (pns == childcount){
-					RWspHandler.wspId = 0;
-					RWspHandler.lastchange = "";
-				}
 				RWspHandler.treeModified();
 			}
 			public void treeStructureChanged(TreeModelEvent arg0) {
@@ -1705,14 +1696,12 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		return event;
 	}
 
-	private int childcount = 0;
 	/**
 	 * Action listener handling user requests for removing a project.
 	 *
 	 * @param e
 	 */
 	protected void projectRemove_actionPerformed(ProjectNode node) {
-		childcount = root.getChildCount();
 		if (node.getChildCount() > 0) {
 			for (Enumeration en = node.children(); en.hasMoreElements();) {
 				ProjectTreeNode childNode = (ProjectTreeNode) en
@@ -2391,6 +2380,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		// Let the main frame listen to window-closing event ZJ 2008-05-01
 		GeawConfigObject.getGuiWindow().addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
+				RWspHelper.listLock();
+
 				int n = JOptionPane
 						.showConfirmDialog(
 								null,
@@ -2399,6 +2390,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 								JOptionPane.YES_NO_CANCEL_OPTION);
 				if (n == JOptionPane.CANCEL_OPTION)
 					return;
+
+				clearUserInfoCache();
 
 				if (n == JOptionPane.YES_OPTION) {
 					saveWorkspace_actionPerformed(true);
@@ -2411,16 +2404,34 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	}
 
+	private void clearUserInfoCache(){
+		PropertiesManager properties = PropertiesManager.getInstance();
+		try {
+			properties.setProperty(this.getClass(), RWspHandler.USER_INFO, "");
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+	}
+
 	private void saveWorkspace_actionPerformed(boolean terminating) {
-		WorkspaceHandler ws = new WorkspaceHandler();
-		ws.save(WORKSPACE_DIR, terminating);
-		if (!StringUtils.isEmpty(ws.getWorkspacePath()))
-			GUIFramework.getFrame().setTitle(
-					System.getProperty("application.title") + " ["
-							+ ws.getWorkspacePath() + "]");
+		if (RWspHandler.wspId > 0)
+			RWspHandler.saveLocalwsp(terminating);
+		else {		
+			WorkspaceHandler ws = new WorkspaceHandler();
+			ws.save(WORKSPACE_DIR, terminating);
+			if (!StringUtils.isEmpty(ws.getWorkspacePath()))
+				GUIFramework.getFrame().setTitle(
+						System.getProperty("application.title") + " ["
+								+ ws.getWorkspacePath() + "]");
+		}
 	}
 
 	private void openWorkspace_actionPerformed() {
+		if (RWspHandler.wspId > 0) {
+			RWspHandler.saveLocalwsp(false);
+			clear();
+		}
+
 		WorkspaceHandler ws = new WorkspaceHandler();
 		ws.open(WORKSPACE_DIR);
 		if (!StringUtils.isEmpty(ws.getWorkspacePath()))
@@ -2441,9 +2452,13 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	}
 
 	private void newWorkspace_actionPerformed(ActionEvent e) {
-		WorkspaceHandler ws = new WorkspaceHandler();
-		if (!ws.confirmLoading(WORKSPACE_DIR, null))
-			return;
+		if (RWspHandler.wspId > 0)
+			RWspHandler.saveLocalwsp(false);
+		else {
+			WorkspaceHandler ws = new WorkspaceHandler();
+			if (!ws.confirmLoading(WORKSPACE_DIR, null))
+				return;
+		}
 		clear();
 		GUIFramework.getFrame().setTitle(
 				System.getProperty("application.title"));

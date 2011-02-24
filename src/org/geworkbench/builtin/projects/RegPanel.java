@@ -156,13 +156,14 @@ public class RegPanel extends JPanel implements ActionListener {
 	}
 
 	public void changeForUpdate(){
-		remove(b_login);
+		//remove(b_login);
 		userId.setEditable(false);
 		jp.setText (space+"Select new password *");
 		jpc.setText(space+"Confirm new password *");
 		jpo.setText(space+"Enter old password *");
 		passwordo.setVisible(true);
 		save.setText("Update Profile");
+		b_login.setText("Remove Account");
 	}
 
 	private void reset(){
@@ -185,9 +186,18 @@ public class RegPanel extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == b_login){
-			jframe.dispose();
-			RWspHandler ws = new RWspHandler();
-			ws.listWsp(false);
+			if(b_login.getText().equals("Login")){
+				jframe.dispose();
+				RWspHandler ws = new RWspHandler();
+				ws.listWsp(false);
+			}else{
+				int t = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this user account?");
+				if (t==JOptionPane.CANCEL_OPTION || t==JOptionPane.NO_OPTION) return;
+
+				RemoveUserTask removeTask = new RemoveUserTask(ProgressItem.INDETERMINATE_TYPE, 
+						"Remote workspace user account is being removed.");
+				pdnonmodal.executeTask(removeTask);
+			}
 		} else if (e.getSource() == reset){
 			reset();
 		} else {
@@ -295,7 +305,7 @@ public class RegPanel extends JPanel implements ActionListener {
 		// Phone number validation
 		if(!empty(pho))
 		{
-			pattern = Pattern.compile("[^0-9a-zA-Z()-]");
+			pattern = Pattern.compile("[^+0-9a-zA-Z()-]");
 
 			matcher = 
 				pattern.matcher(pho);
@@ -380,6 +390,57 @@ public class RegPanel extends JPanel implements ActionListener {
 			}
 			else
 				JOptionPane.showMessageDialog(null, "Could not register user ");
+		}
+	}
+
+	private class RemoveUserTask extends ProgressTask<String, Void> {
+		RemoveUserTask(int pbtype, String message) {
+			super(pbtype, message);
+		}
+		@Override
+		protected String doInBackground() throws FileNotFoundException, IOException {
+			String res = "";
+			try {
+				res = WorkspaceServiceClient.modifySavedWorkspace("DELUSR"+RWspHandler.userInfo);
+			} catch (Exception e1) {
+				JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
+				"GeWorkbench cannot remove remote workspace user.\n"+
+				"Please try again later or report the problem to geWorkbench support team.\n",
+				"Database connection/data transfer error", JOptionPane.ERROR_MESSAGE);
+    			return null;
+			}
+			return res;
+		}
+
+		@Override
+		protected void done(){
+			if (isCancelled()){
+				pdnonmodal.removeTask(this);
+				return;
+			}
+			String res = "";
+			try {
+				res = get();
+			} catch (ExecutionException e) {
+				e.getCause().printStackTrace();
+				JOptionPane.showMessageDialog(null,
+						"Exception: could not remove remote workspace user.",
+						"Remove Remote Workspace User Error", JOptionPane.ERROR_MESSAGE);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null,
+						"Exception: could not remove remote workspace user.\n"+e,
+						"Remove Remote Workspace User Error", JOptionPane.ERROR_MESSAGE);
+			} finally {
+				pdnonmodal.removeTask(this);
+			}
+			if (res!=null && res.contains("success")) {
+				JOptionPane.showMessageDialog(null, res);
+				RWspHandler.listDialog.dispose();
+			} else
+				JOptionPane.showMessageDialog(null, "Could not remove remote workspace user.");
 		}
 	}
 

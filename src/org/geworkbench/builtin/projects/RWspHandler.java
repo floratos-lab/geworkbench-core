@@ -53,7 +53,7 @@ import com.jgoodies.forms.layout.FormLayout;
  */
 public class RWspHandler {
 	protected static final String USER_INFO_DELIMIETER = "==";
-	private static final String USER_INFO = "userinfo";
+	protected static final String USER_INFO = "userinfo";
 	protected static final String META_DELIMIETER = "::";
 	protected static String userInfo = null;
 	private JDialog loginDialog;
@@ -98,7 +98,7 @@ public class RWspHandler {
 	protected static JDialog listDialog;
 
 	protected void getUserInfo() {
-		FormLayout layout = new FormLayout("left:max(25dlu;pref), 5dlu, 70dlu");
+		FormLayout layout = new FormLayout("left:max(25dlu;pref), 5dlu, 78dlu");
 		DefaultFormBuilder builder = new DefaultFormBuilder(layout);
 		builder.setDefaultDialogBorder();
 		loginDialog = new JDialog();
@@ -106,7 +106,7 @@ public class RWspHandler {
 		passwordField = new JPasswordField(20);
 		builder.append("Username", usernameField);
 		builder.append("Password", passwordField);
-		JButton login = new JButton("OK");
+		JButton login = new JButton("Login");
 		login.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				String username = usernameField.getText();
@@ -148,6 +148,15 @@ public class RWspHandler {
 			}
 		});
 		builder.append(register, buttons);
+		
+		JButton skip = new JButton("Skip Authentication");
+		skip.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				userInfo = "local";
+				loginDialog.dispose();
+			}
+		});
+		builder.append("", skip);
 		
 		PropertiesManager pm = PropertiesManager.getInstance();
 		String savedUserInfo = null;
@@ -446,7 +455,7 @@ public class RWspHandler {
 				String selectedco = jt.getModel().getValueAt(selectedRow, LastSyncID).toString();
 				listDialog.dispose();
 
-				saveLocalwsp();
+				saveLocalwsp(false);
 
 				openWsp(remoteId, selectedco);
 			}
@@ -460,7 +469,7 @@ public class RWspHandler {
 				String wsFilename = wspdir+localwspname;
 				listDialog.dispose();
 
-				saveLocalwsp();
+				saveLocalwsp(false);
 
 				OpenTask openTask = ws.new OpenTask(ProgressItem.INDETERMINATE_TYPE, "Workspace is being loaded.", wsFilename);
 				pdnonmodal.executeTask(openTask);
@@ -667,8 +676,20 @@ public class RWspHandler {
 	}
 
 	//save current local wsp and release lock before opening another remote wsp
-	private void saveLocalwsp(){
-		if (wspId == 0) return;
+	protected static void saveLocalwsp(boolean terminating){
+		if (!doSaveLocal(terminating)) return;
+
+		//if workspace being closed is locked by current user
+		if (userInfo.equals("local")){
+			RWspHelper.CheckReleaseRemoteTask releaseTask = new RWspHelper.CheckReleaseRemoteTask(ProgressItem.INDETERMINATE_TYPE, 
+					"Checking remote workspace "+wspId+" lock before release.", wspId);
+			pdnonmodal.executeTask(releaseTask);
+		}
+		//reset wspId
+		resetWsp();
+	}
+	protected static boolean doSaveLocal(boolean terminating){
+		if (wspId == 0) return false;
 		String fname = wspId+".wsp";
 		String rename = WorkspaceServiceClient.wsprenames.get(wspId); 
 		if (rename!=null) fname=rename;
@@ -680,19 +701,19 @@ public class RWspHandler {
 				filetime.setNanos(0);
 				//System.out.println(wsFilename+": "+Timestamp.valueOf(lastchange)+"; "+filetime);
 				if (Timestamp.valueOf(lastchange).after(filetime)){
-					SaveTask task = new WorkspaceHandler().new SaveTask(ProgressItem.INDETERMINATE_TYPE, "Workspace is being saved.", wsFilename, false);
+					SaveTask task = new WorkspaceHandler().new SaveTask(ProgressItem.INDETERMINATE_TYPE, "Workspace is being saved.", wsFilename, terminating);
 					pdmodal.executeTask(task);
 				}
 			}
 		}
+		return true;
+	}
 
-		//if workspace being closed is locked by current user
-		RWspHelper.CheckReleaseRemoteTask releaseTask = new RWspHelper.CheckReleaseRemoteTask(ProgressItem.INDETERMINATE_TYPE, 
-				"Checking remote workspace "+wspId+" lock before release.", wspId);
-		pdnonmodal.executeTask(releaseTask);
-
-		//reset wspId
+	protected static void resetWsp(){
 		wspId = 0;
+		dirty = false;
+		checkoutstr = "";
+		lastchange = "";
 	}
 
 	private void releaseLock(String type){

@@ -1,7 +1,11 @@
 package org.geworkbench.builtin.projects;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -9,7 +13,10 @@ import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
+import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -66,14 +73,6 @@ public class RWspHelper {
 		public WspTableModel(String[][] tabledata, String[] tableheader){
 			super(tabledata, tableheader);
 		}
-		/*public boolean isCellEditable(int row, int col) {
-			if (col == localID)	return true;
-			else	return false;
-		}
-		public void setValueAt(Object value, int row, int col) {
-			data[row][col] = (String)value;
-			fireTableCellUpdated(row, col);
-		}*/
 
 		public Object getValueAt(int row, int col) {
 			if (col==RWspHandler.DirtyID || col==RWspHandler.SyncID)
@@ -83,6 +82,41 @@ public class RWspHelper {
 
 		public Class<?> getColumnClass(int col) {
 			return (col==RWspHandler.DirtyID||col==RWspHandler.SyncID)?
+					Boolean.class:String.class;
+		}
+	}
+
+	private static final int dirtyID = 2, selectID = 3;
+	private static class LockTableModel extends DetailTableModel
+	{
+		private static final long serialVersionUID = -5175211782386134949L;
+
+		public LockTableModel(String[][] tabledata, String[] tableheader){
+			super(tabledata, tableheader);
+		}
+		public boolean isCellEditable(int row, int col) {
+			if (col == selectID)	return true;
+			else	return false;
+		}
+		public void setValueAt(Object value, int row, int col) {
+			data[row][col] = Boolean.toString((Boolean)value);
+			if ((Boolean)value==true) releasebtn.setEnabled(true);
+			else {
+				releasebtn.setEnabled(false);
+				for(int i=0; i<data.length; i++){
+					if (Boolean.valueOf(data[i][col])==true)
+						releasebtn.setEnabled(true);
+				}
+			}
+			fireTableCellUpdated(row, col);
+		}
+		public Object getValueAt(int row, int col) {
+			if (col==dirtyID || col==selectID)
+				return Boolean.valueOf(data[row][col]);
+			return data[row][col];
+		}
+		public Class<?> getColumnClass(int col) {
+			return (col==dirtyID||col==selectID)?
 					Boolean.class:String.class;
 		}
 	}
@@ -591,6 +625,104 @@ public class RWspHelper {
 				RWspHandler.wspId = 0;
 			} else
 				JOptionPane.showMessageDialog(null, "Could not remove remote workspace "+filename);
+		}
+	}
+	
+	private static JDialog lockDialog;
+	private static JTable table;
+	private static JButton releasebtn;
+	protected static void listLock(){
+		if (RWspHandler.wspId > 0) RWspHandler.doSaveLocal(false);
+		if (RWspHandler.userInfo==null || RWspHandler.userInfo.equals("") 
+				|| RWspHandler.userInfo.equals("local")) return;
+
+		String[][] res = null;
+		try {
+			res = WorkspaceServiceClient.getLockedWorkspaceList("LSLOCK"+RWspHandler.userInfo);
+		} catch (Exception e1) {
+			JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
+			"GeWorkbench cannot retrieve locked remote workspace list.\n"+
+			"Please try again later or report the problem to geWorkbench support team.\n",
+			"Database connection/data transfer error", JOptionPane.ERROR_MESSAGE);
+		}
+
+		if (res == null)
+			JOptionPane.showMessageDialog(null, "Could not retrieve locked remote workspace list");
+		else {
+			lockDialog = new JDialog();
+			lockDialog.setModal(true);
+			lockDialog.setTitle("Remote workspaces locked by current user");
+			lockDialog.setLayout(new BorderLayout());
+			
+			table = new JTable(new LockTableModel(res, WorkspaceServiceClient.collock));
+		    table.setPreferredScrollableViewportSize(table.getPreferredSize());
+			lockDialog.add(new javax.swing.JScrollPane(table), BorderLayout.CENTER);
+			JPanel btnpanel = new JPanel();
+			JButton selectallbtn = new JButton("Select All");
+			releasebtn = new JButton("Release");
+			releasebtn.setEnabled(false);
+			JButton cancelbtn = new JButton("Cancel");
+			btnpanel.add(selectallbtn);
+			selectallbtn.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e){
+					for (int i = 0; i < table.getRowCount(); i++){
+						table.setValueAt(true, i, selectID);
+					}
+				}
+			});
+			btnpanel.add(releasebtn);
+			releasebtn.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e){
+					for (int i = 0; i < table.getRowCount(); i++){
+						if ((Boolean)table.getValueAt(i, selectID)==true){
+							String id = table.getValueAt(i, 0).toString();
+							String ret = "";
+							if ((Boolean)table.getValueAt(i, dirtyID)==true){
+								Object[] options = {"Synchronize before release", "Release without synchronization", "Cancel"};
+								int t = JOptionPane.showOptionDialog(null, 
+										"Do you wish to synchronize the local copy with the server before releasing the lock;\n"
+										+" or release the lock without synchronizing?", "Synchronize before release?", 
+										JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+								if (t==JOptionPane.YES_OPTION){
+									String filename=id+".wsp";
+									try {
+										WorkspaceServiceClient.getSavedWorkspace("DOWNLOAD"+filename);
+									} catch (Exception e1) {
+										JOptionPane.showMessageDialog(null, 
+						    					"Synch Exception: could not retrieve remote workspace "+filename,
+						    					"Database connection/data transfer error", JOptionPane.ERROR_MESSAGE);
+									}
+								} else if (t==JOptionPane.CANCEL_OPTION || t==JOptionPane.CLOSED_OPTION){
+									return;
+								}
+							}
+							try{
+								ret = WorkspaceServiceClient.modifySavedWorkspace("RELEASE"+id+META_DELIMIETER+RWspHandler.userInfo);
+							}catch(Exception ex){
+								JOptionPane.showMessageDialog(null, ex.getMessage()+".\n\n"+
+						    			"GeWorkbench cannot release lock for remote workspace via axis2 web service.\n" +
+						    			"Please try again later or report the problem to geWorkbench support team.\n",
+						    			"Database connection/data transfer error", JOptionPane.ERROR_MESSAGE);
+							}
+							if (ret==null || !ret.contains("success"))
+								JOptionPane.showMessageDialog(null, "Could not release remote workspace "+id);
+						}
+					}
+					lockDialog.dispose();
+				}
+			});
+			btnpanel.add(cancelbtn);
+			cancelbtn.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e){
+					lockDialog.dispose();
+				}
+			});
+			lockDialog.add(btnpanel, BorderLayout.SOUTH);
+
+			lockDialog.pack();
+			lockDialog.setLocationRelativeTo(null);
+			lockDialog.setMinimumSize(new Dimension(400, 300));
+			lockDialog.setVisible(true);
 		}
 	}
 
