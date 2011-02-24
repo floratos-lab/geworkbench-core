@@ -193,20 +193,6 @@ public class CSSequenceSet<T extends DSSequence> extends CSDataSet<T> implements
 		}
 	}
 
-	/**
-	 * initIndexArray
-	 */
-	private void initIndexArray() {
-		int size = size();
-		matchIndex = new int[size];
-		reverseIndex = new int[size];
-		for (int i = 0; i < size; i++) { // init.
-			matchIndex[i] = -1;
-			reverseIndex[i] = -1;
-		}
-
-	}
-
 	public void readFromResource() {
 
 	}
@@ -297,22 +283,6 @@ public class CSSequenceSet<T extends DSSequence> extends CSDataSet<T> implements
 
 	public int[] getReverseIndex() {
 		return reverseIndex;
-	}
-
-	public DSSequenceSet<DSSequence> createSubSetSequenceDB(boolean[] included) {
-		DSSequenceSet<DSSequence> newDB = new CSSequenceSet<DSSequence>();
-		int newIndex = 0;
-		initIndexArray();
-		for (int i = 0; i < included.length; i++) {
-			if (i < this.size() && included[i]) {
-				newDB.addASequence(getSequence(i));
-				matchIndex[i] = newIndex;
-				reverseIndex[newIndex] = i;
-
-				newIndex++;
-			}
-		}
-		return newDB;
 	}
 
 	public void writeToFile(String fileName) {

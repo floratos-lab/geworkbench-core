@@ -35,5 +35,4 @@ public interface DSSequenceSet<T extends DSSequence> extends RandomAccess, Clone
 
     int[] getReverseIndex();
 
-    DSSequenceSet createSubSetSequenceDB(boolean[] included);
 }
