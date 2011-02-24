@@ -10,19 +10,17 @@ import java.awt.event.ActionListener;
  * Dialog that displays some shapes and allows one to be chosen.
  *
  * @author John Watkinson
+ * @version $Id$
  */
 public class JShapeDialog extends JDialog {
 
-    private static final int NUMBER_OF_COLUMNS = 4;
+	private static final long serialVersionUID = -7320339264841448126L;
+
+	private static final int NUMBER_OF_COLUMNS = 4;
 
     private static final int WAITING_FOR_RESULT = -1;
 
     private int result = WAITING_FOR_RESULT;
-
-    public JShapeDialog(Frame owner, String title, Shape[] shapes, Paint paint, final int previousIndex) throws HeadlessException {
-        super(owner, title, true);
-        init(shapes, paint, previousIndex);
-    }
 
     public JShapeDialog(Dialog owner, String title, Shape[] shapes, Paint paint, final int previousIndex) throws HeadlessException {
         super(owner, title, true);
@@ -51,7 +49,9 @@ public class JShapeDialog extends JDialog {
                 if (index >= n) {
                     // Add blank component
                     JComponent blank = new JComponent() {
-                        @Override public Dimension getPreferredSize() {
+						private static final long serialVersionUID = -2176448202694632483L;
+
+						@Override public Dimension getPreferredSize() {
                             return size;
                         }
                     };
@@ -85,15 +85,4 @@ public class JShapeDialog extends JDialog {
         return result;
     }
 
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Test JDialog");
-        frame.pack();
-        frame.setVisible(true);
-        JShapeDialog dialog = new JShapeDialog(frame, "Choose a Shape", PanelVisualProperties.AVAILABLE_SHAPES, Color.BLUE, 5);
-        dialog.pack();
-        dialog.setSize(400, 400);
-        dialog.setVisible(true);
-        int index = dialog.getResult();
-        System.out.println("Shape: " + index + " selected.");
-    }
 }

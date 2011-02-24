@@ -1,7 +1,13 @@
 package org.geworkbench.util.visualproperties;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Paint;
+import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -9,14 +15,21 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+
 /**
  * A component that displays a shape and allows the user to click on it.
  *
  * @author John Watkinson
+ * @version $Id$
  */
 public class JShapeButton extends JComponent {
 
-    private static final float STROKE_WIDTH = 2f;
+	private static final long serialVersionUID = -35780996506593330L;
+
+
+	private static final float STROKE_WIDTH = 2f;
 
 
     private Shape shape;
@@ -24,7 +37,6 @@ public class JShapeButton extends JComponent {
     private ActionListener listener;
     private int percentSize = 80;
     private boolean drawBorder = false;
-    private Dimension preferredSize;
 
     public JShapeButton(Shape shape, Paint paint) {
         this.shape = shape;
