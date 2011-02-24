@@ -4,7 +4,15 @@ import java.io.Serializable;
 import java.text.CollationKey;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 
+/**
+ * 
+ * @author zji
+ * @version $Id$
+ *
+ */
 public class MindyGeneMarker implements Serializable {
+	private static final long serialVersionUID = 3982199635486005070L;
+
 	private DSGeneMarker marker;		// the original gene marker
 	
 	transient private CollationKey nameSortKey;	// for sorting
@@ -20,23 +28,12 @@ public class MindyGeneMarker implements Serializable {
 		return this.marker;
 	}
 	
-	public void setGeneMarker(DSGeneMarker marker){
-		this.marker = marker;
-	}
-	
 	public CollationKey getNameSortKey(){
 		return this.nameSortKey;
-	}
-	
-	public void setNameSortKey(CollationKey key){
-		this.nameSortKey = key;
 	}
 	
 	public CollationKey getDescriptionSortKey(){
 		return this.descSortKey;
 	}
 	
-	public void setDescriptionSortKey(CollationKey key){
-		this.descSortKey = key;
-	}
 }
