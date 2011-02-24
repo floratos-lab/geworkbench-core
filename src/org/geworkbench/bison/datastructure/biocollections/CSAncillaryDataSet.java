@@ -4,10 +4,13 @@ import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 
 /**
  * @author John Watkinson
+ * @version $Id$
  */
 public abstract class CSAncillaryDataSet<T extends DSBioObject> extends CSDataSet<T> implements DSAncillaryDataSet<T> {
 
-    private DSDataSet<T> parent;
+	private static final long serialVersionUID = -2828423786652899938L;
+	
+	private DSDataSet<T> parent;
 
     protected CSAncillaryDataSet(DSDataSet<T> parent, String label) {
         this.parent = parent;
