@@ -1,18 +1,29 @@
 package org.geworkbench.util.visualproperties;
 
-import org.geworkbench.bison.datastructure.complex.panels.CSPanel;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Frame;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JColorChooser;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+
 /**
  * @author John Watkinson
+ * @version $Id$
  */
 public class VisualPropertiesDialog extends JDialog {
 
-    private boolean propertiesChanged = false;
+	private static final long serialVersionUID = -1324174157721236396L;
+
+	private boolean propertiesChanged = false;
 
     private JShapeButton display;
     private PanelVisualProperties properties;
@@ -129,18 +140,4 @@ public class VisualPropertiesDialog extends JDialog {
         }
     }
 
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Test JDialog");
-        frame.pack();
-        frame.setVisible(true);
-        VisualPropertiesDialog dialog = new VisualPropertiesDialog(frame, "Customize Visual Properties", new CSPanel(), 0);
-        dialog.pack();
-        dialog.setSize(600, 600);
-        dialog.setVisible(true);
-        if (dialog.isPropertiesChanged()) {
-            System.out.println("Properties changed to: " + dialog.getVisualProperties());
-        } else {
-            System.out.println("Properties left unchanged.");
-        }
-    }
 }
