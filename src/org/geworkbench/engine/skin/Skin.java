@@ -106,7 +106,7 @@ public class Skin extends GUIFramework {
 
     private Map<String, DefaultDockingPort> areas = new Hashtable<String, DefaultDockingPort>();
 
-	private Set<Class> acceptors;
+	private Set<Class<?>> acceptors;
     private HashMap<Component, Class<?>> mainComponentClass = new HashMap<Component, Class<?>>();
     private ReferenceMap<DSDataSet<? extends DSBioObject>, String> visualLastSelected = new ReferenceMap<DSDataSet<? extends DSBioObject>, String>();
     private ReferenceMap<DSDataSet<? extends DSBioObject>, String> commandLastSelected = new ReferenceMap<DSDataSet<? extends DSBioObject>, String>();
@@ -310,7 +310,7 @@ public class Skin extends GUIFramework {
 	void chooseComponent() {
         if (acceptors == null) {
             // Get all appropriate acceptors
-            acceptors = new HashSet<Class>();
+            acceptors = new HashSet<Class<?>>();
         }
         // 1) Get all visual components
         ComponentRegistry registry = ComponentRegistry.getRegistry();
@@ -318,7 +318,7 @@ public class Skin extends GUIFramework {
         ArrayList<String> availablePlugins = new ArrayList<String>();
         for (int i = 0; i < plugins.length; i++) {
 			String name = registry.getDescriptorForPlugin(plugins[i]).getLabel();
-			for (Class type: acceptors) {
+			for (Class<?> type: acceptors) {
 				if (registry.getDescriptorForPluginClass(type).getLabel().equals(name)) {
 					availablePlugins.add(name);
 					break;
@@ -438,6 +438,7 @@ public class Skin extends GUIFramework {
         return (String) visualRegistry.get(visualPlugin);
     }
 
+	@SuppressWarnings("rawtypes")
 	@Override
     public void addToContainer(String areaName, Component visualPlugin, String pluginName, Class mainPluginClass) {
         visualPlugin.setName(pluginName);
@@ -644,7 +645,7 @@ public class Skin extends GUIFramework {
         }
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
 	public void setVisualizationType(DSDataSet type) {
         currentDataSet = type;
         // These are default acceptors
@@ -675,7 +676,7 @@ public class Skin extends GUIFramework {
         statusBar.setText(text);
     }
 
-	private void addAppropriateComponents(Set<Class> acceptors, String screenRegion, ArrayList<DockableImpl> dockables) {
+	private void addAppropriateComponents(Set<Class<?>> acceptors, String screenRegion, ArrayList<DockableImpl> dockables) {
         DefaultDockingPort port = (DefaultDockingPort) areas.get(screenRegion);
         for (DockableImpl dockable : dockables) {
             dockable.redock(port);
@@ -739,22 +740,16 @@ public class Skin extends GUIFramework {
 		}
 	}
 
+	static private final String welcomeScreenClassName = "org.geworkbench.engine.WelcomeScreen";
 	public void showWelcomeScreen() {
-    	// TODO Does register needs a public method for add a acceptor? 
-		HashMap<Class, List<Class>> acceptorsNew = ComponentRegistry.getRegistry()
-		.getAcceptorsHashMap();
-		List<Class> list = acceptorsNew.get(null);
-		Class welcomeScreenClass;
+		Class<?> welcomeScreenClass;
 		try {
-			welcomeScreenClass = Class.forName("org.geworkbench.engine.WelcomeScreen");
+			welcomeScreenClass = Class.forName(welcomeScreenClassName);
 		} catch (ClassNotFoundException e1) {
 			e1.printStackTrace();
 			return;
 		}
-		if(!list.contains(welcomeScreenClass))
-			list.add(welcomeScreenClass);
-		acceptorsNew.put(null, list);
-		ComponentRegistry.getRegistry().setAcceptorsHashMap(acceptorsNew);
+		ComponentRegistry.getRegistry().addAcceptor(null, welcomeScreenClass);
 
     	if(acceptors==null)
     		acceptors = ComponentRegistry.getRegistry().getAcceptors(null);
@@ -775,26 +770,16 @@ public class Skin extends GUIFramework {
 	public void hideWelcomeScreen() {
     	if(acceptors==null)
     		acceptors = ComponentRegistry.getRegistry().getAcceptors(null);
+    	
+		for (Class<?> componentClass : ComponentRegistry.getRegistry().getAcceptors(null)) {
 
-    	// TODO register needs a public method for remove a acceptor
-		HashMap<Class, List<Class>> acceptorsNew = ComponentRegistry
-				.getRegistry().getAcceptorsHashMap();
-		List<Class> componentList = acceptorsNew.get(null);
-
-		for (Class<?> componentClass : componentList) {
-			String componentClassName = componentClass.getName();
-
-			if ( componentClassName
-					.equals("org.geworkbench.engine.WelcomeScreen") ) {
-				componentList.remove(componentClass);
+			if ( componentClass.getName().equals(welcomeScreenClassName) ) {
 				acceptors.remove(componentClass);
 				break;
 			}
 		}
-
-		acceptorsNew.put(null, componentList);
-		ComponentRegistry.getRegistry().setAcceptorsHashMap(acceptorsNew);
-
+		ComponentRegistry.getRegistry().removeAcceptor(null, welcomeScreenClassName);
+		
         addAppropriateComponents(acceptors, GUIFramework.VISUAL_AREA, visualDockables);
         contentPane.revalidate();
         contentPane.repaint();

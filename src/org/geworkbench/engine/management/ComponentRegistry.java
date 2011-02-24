@@ -1,31 +1,39 @@
 package org.geworkbench.engine.management;
 
-import net.sf.cglib.proxy.*;
+import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import net.sf.cglib.proxy.Callback;
+import net.sf.cglib.proxy.CallbackFilter;
+import net.sf.cglib.proxy.Enhancer;
+import net.sf.cglib.proxy.MethodInterceptor;
+import net.sf.cglib.proxy.MethodProxy;
+import net.sf.cglib.proxy.NoOp;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.geworkbench.engine.config.IdentifiableImpl;
 import org.geworkbench.engine.config.PluginDescriptor;
 import org.geworkbench.engine.config.VisualPlugin;
-import org.geworkbench.util.Util;
-
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Array;
-import java.lang.reflect.Method;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URLClassLoader;
-import java.util.*;
 
 /**
  * Component registry implementation.
+ * @version $Id$
  */
-@SuppressWarnings("unchecked")
 public class ComponentRegistry {
 
     static Log log = LogFactory.getLog(ComponentRegistry.class);
 
     private static ComponentRegistry componentRegistry;
-    private static final String GEAR_EXPLODE_DIR = "gears_exploded";
 
     /**
      * Gets an instance of the ComponentRegistry.
@@ -42,10 +50,10 @@ public class ComponentRegistry {
     private static class MethodProfile {
 
         private Method method;
-        private Class type;
+        private Class<?> type;
         private Class<? extends SynchModel> synchModelType;
 
-        public MethodProfile(Method method, Class type, Class<? extends SynchModel> synchModelType) {
+        public MethodProfile(Method method, Class<?> type, Class<? extends SynchModel> synchModelType) {
             this.method = method;
             this.type = type;
             this.synchModelType = synchModelType;
@@ -55,24 +63,8 @@ public class ComponentRegistry {
             return method;
         }
 
-        public void setMethod(Method method) {
-            this.method = method;
-        }
-
-        public Class getType() {
-            return type;
-        }
-
-        public void setType(Class type) {
-            this.type = type;
-        }
-
         public Class<? extends SynchModel> getSynchModelType() {
             return synchModelType;
-        }
-
-        public void setSynchModelType(Class<? extends SynchModel> synchModelType) {
-            this.synchModelType = synchModelType;
         }
 
         @Override public String toString() {
@@ -90,7 +82,7 @@ public class ComponentRegistry {
 
         private List<MethodProfile> methods;
 
-        public Subscriptions(Class publishedType) {
+        public Subscriptions(Class<?> publishedType) {
             this.publishedType = publishedType;
             methods = new ArrayList<MethodProfile>();
         }
@@ -137,7 +129,7 @@ public class ComponentRegistry {
         public Object intercept(Object callingObject, Method method, Object[] params, MethodProxy methodProxy) throws Throwable {
             if (method.getAnnotation(Module.class) != null) {
                 String methodName = method.getName().toLowerCase();
-                Class returnType = method.getReturnType();
+                Class<?> returnType = method.getReturnType();
                 if (methodName.startsWith("get")) {
                     methodName = methodName.substring(3);
                     Object module = descriptor.getModule(methodName);
@@ -164,12 +156,12 @@ public class ComponentRegistry {
                 } else if (methodName.startsWith("set")) {
                     methodName = methodName.substring(3);
                     // Set the passed in module (overriding config)
-                    // todo: validation should ensure that there is one param here
+                    // TODO: validation should ensure that there is one param here
                     Object module = params[0];
                     descriptor.setModule(methodName, module);
                     return null;
                 } else {
-                    System.out.println("Should be a non-get non-set @Module method here!");
+                    log.info("Should be a non-get non-set @Module method here!");
                     // Just call super
                     return methodProxy.invokeSuper(callingObject, params);
                 }
@@ -183,10 +175,6 @@ public class ComponentRegistry {
                 }
             }
             return result;
-        }
-
-        public Class<T> getBaseClass() {
-            return base;
         }
 
         public T getExtension() {
@@ -214,23 +202,23 @@ public class ComponentRegistry {
     }
 
     // Holds the listener componentRegistry.
-    private TypeMap<List> listeners;
+    private TypeMap<List<Object>> listeners;
     // Holds lists of components that are registered to accept specified types.
-    private HashMap<Class, List<Class>> acceptors;
+    private HashMap<Class<?>, List<Class<?>>> acceptors;
     // Executor Service for asynchronous event dispatching.
-    private Map<Class, SynchModel> synchModels;
+    private Map<Class<?>, SynchModel> synchModels;
     // List of the components themselves.
-    private List components;
+    private List<Object> components;
     // Map from component ID to PluginDescriptor.
     private Map<String, PluginDescriptor> idToDescriptor;
     // Map from component source name to ComponentResource.
     private Map<String, ComponentResource> nameToComponentResource;
 
     private ComponentRegistry() {
-        listeners = new TypeMap<List>();
-        acceptors = new HashMap<Class, List<Class>>();
-        synchModels = new HashMap<Class, SynchModel>();
-        components = new ArrayList();
+        listeners = new TypeMap<List<Object>>();
+        acceptors = new HashMap<Class<?>, List<Class<?>>>();
+        synchModels = new HashMap<Class<?>, SynchModel>();
+        components = new ArrayList<Object>();
         idToDescriptor = new HashMap<String, PluginDescriptor>();
         nameToComponentResource = new HashMap<String, ComponentResource>();
     }
@@ -241,30 +229,23 @@ public class ComponentRegistry {
      * @param type       the type to listen to.
      * @param subscriber the listening subscriber.
      */
-    private synchronized void addListener(Class type, Object subscriber) {
-        List list = listeners.get(type);
+    private synchronized void addListener(Class<?> type, Object subscriber) {
+        List<Object> list = listeners.get(type);
         if (list == null) {
-            list = new ArrayList();
+            list = new ArrayList<Object>();
             listeners.put(type, list);
         }
         list.add(subscriber);
     }
 
-    private synchronized void removeListener(Class type, Object subscriber) {
-        List list = listeners.get(type);
-        if (list != null) {
-            listeners.remove(subscriber);
-        }
-    }
-
     /**
      * Gets the listeners for the given type.
      *
-     * @todo fix
      */
-    public synchronized Set getListeners(Class<?> type) {
+    @SuppressWarnings("rawtypes")
+	private synchronized Set<Object> getListeners(Class<?> type) {
         Set<Class> targetTypes = listeners.keySet();
-        Set subscribers = new HashSet();
+        Set<Object> subscribers = new HashSet<Object>();
         for (Class<?> targetType : targetTypes) {
             if (targetType.isAssignableFrom(type)) {
                 subscribers.addAll(listeners.get(targetType));
@@ -279,10 +260,10 @@ public class ComponentRegistry {
      * @param type       the type to listen to.
      * @param subscriber the listening subscriber.
      */
-    private synchronized void addAcceptor(Class type, Class subscriber) {
-        List<Class> list = acceptors.get(type);
+    public synchronized void addAcceptor(Class<?> type, Class<?> subscriber) {
+        List<Class<?>> list = acceptors.get(type);
         if (list == null) {
-            list = new ArrayList();
+            list = new ArrayList<Class<?>>();
             acceptors.put(type, list);
         }
         list.add(subscriber);
@@ -293,20 +274,20 @@ public class ComponentRegistry {
      *
      * @todo fix
      */
-    public synchronized Set<Class> getAcceptors(Class<?> type) {
+    public synchronized Set<Class<?>> getAcceptors(Class<?> type) {
         if (type == null) {
-            return new HashSet<Class>(acceptors.get(null));
+            return new HashSet<Class<?>>(acceptors.get(null));
         }
         log.debug("getAcceptors for " + type.toString());
-        Set<Class> targetTypes = acceptors.keySet();
-        Set<Class> subscribers = new HashSet<Class>();
+        Set<Class<?>> targetTypes = acceptors.keySet();
+        Set<Class<?>> subscribers = new HashSet<Class<?>>();
         for (Class<?> targetType : targetTypes) {
             if (targetType != null) {
                 log.debug("TargetType: " + targetType.toString());
                 if (targetType.isAssignableFrom(type)) {
                     log.debug("is assignable.");
-                    List<Class> results = acceptors.get(targetType);
-                    for (Class aClass : results) {
+                    List<Class<?>> results = acceptors.get(targetType);
+                    for (Class<?> aClass : results) {
                         log.debug("Found: " + aClass.toString());
                     }
                     subscribers.addAll(results);
@@ -343,9 +324,8 @@ public class ComponentRegistry {
      * @param subscriber
      */
     private void publishToSubscriberHelper(final Object object, final Object publisher, final Object subscriber) {
-        // System.out.println("Publish " + object + " from " + publisher + " to " + subscriber);
         // Use the original class to introspect methods (rather than the CGLib class).
-        Class type = subscriber.getClass().getSuperclass();
+        Class<?> type = subscriber.getClass().getSuperclass();
         // Get all valid subscriptions (@Subscribe methods) for this object.
         Subscriptions subs = new Subscriptions(object.getClass());
         {
@@ -354,12 +334,12 @@ public class ComponentRegistry {
                 Method method = methods[i];
                 Subscribe annotation = method.getAnnotation(Subscribe.class);
                 if (annotation != null) {
-                    Class[] paramTypes = method.getParameterTypes();
+                    Class<?>[] paramTypes = method.getParameterTypes();
                     //TODO figure out what the 2nd argument does
                     if (paramTypes.length != 2) {
                         throw new EventException("Invalid @Subscribe method: " + method + ".");
                     } else {
-                        Class targetType = paramTypes[0];
+                        Class<?> targetType = paramTypes[0];
                         subs.addMethod(method, targetType, annotation.value());
                     }
                 }
@@ -376,12 +356,11 @@ public class ComponentRegistry {
                         try {
                             profile.getMethod().invoke(subscriber, object, publisher);
                         } catch (Exception e) {
-                            // todo: Use Java 1.5 top-level exception handling to better report this exception
-                            System.out.println("--- Error processing event --- ");
-                            System.out.println("- Publisher: " + publisher);
-                            System.out.println("- Object: " + object);
-                            System.out.println("- Called: " + profile);
-                            System.out.println("-------------------------------");
+                            log.error("--- Error processing event --- ");
+                            log.error("- Publisher: " + publisher);
+                            log.error("- Object: " + object);
+                            log.error("- Called: " + profile);
+                            log.error("-------------------------------");
 							if (e instanceof InvocationTargetException) {
 								InvocationTargetException ite = (InvocationTargetException) e;
 								ite.getTargetException().printStackTrace();
@@ -401,7 +380,7 @@ public class ComponentRegistry {
      * Publishes the object to all valid subscribers.
      */
     private void publish(Object object, Object publisher) {
-        Set listeners = getListeners(object.getClass());
+        Set<Object> listeners = getListeners(object.getClass());
         if (listeners != null) {
             for (Object subscriber : listeners) {
                 // Do not allow publishing to oneself
@@ -451,13 +430,13 @@ public class ComponentRegistry {
         return component;
     }
 
-    public <T> void registerTypeAcceptance(Class<T> type) {
+    private <T> void registerTypeAcceptance(Class<T> type) {
         log.debug("Checking acceptance of types for " + type);
         AcceptTypes at = type.getAnnotation(AcceptTypes.class);
         if (at != null) {
-            Class[] accepts = at.value();
+            Class<?>[] accepts = at.value();
             for (int i = 0; i < accepts.length; i++) {
-                Class accept = accepts[i];
+                Class<?> accept = accepts[i];
                 log.debug(type + " registering type " + accept);
                 addAcceptor(accept, type);
             }
@@ -468,19 +447,19 @@ public class ComponentRegistry {
     }
 
     public void registerSubscriptions(Object component, PluginDescriptor descriptor) {
-        Set<Class> subscribeTypes = new HashSet<Class>();
-        Class type = descriptor.getPluginClass();
+        Set<Class<?>> subscribeTypes = new HashSet<Class<?>>();
+        Class<?> type = descriptor.getPluginClass();
         // Register @Subscribe methods (including those residing in super-classes).
         Method[] methods = type.getMethods();
         for (int i = 0; i < methods.length; i++) {
             Method method = methods[i];
             if (method.getAnnotation(Subscribe.class) != null) {
-                Class[] paramTypes = method.getParameterTypes();
+                Class<?>[] paramTypes = method.getParameterTypes();
                 // todo: More careful checking of method signature would happen at compile-time
                 if (paramTypes.length != 2) {
                     throw new EventException("Invalid @Subscribe method: " + method + ".");
                 } else {
-                    Class targetType = paramTypes[0];
+                    Class<?> targetType = paramTypes[0];
                     // Ignore if descriptor indicates that subscription has been disabled
                     if (!descriptor.isInSubscriptionIgnoreSet(targetType)) {
                         if (subscribeTypes.contains(targetType)) {
@@ -489,13 +468,13 @@ public class ComponentRegistry {
                             subscribeTypes.add(targetType);
                         }
                     } else {
-                        System.out.println("  - Subscription disabled: " + targetType);
+                    	log.info("  - Subscription disabled: " + targetType);
                     }
                 }
             }
         }
         // Add the appropriate listeners
-        for (Class subscribeType : subscribeTypes) {
+        for (Class<?> subscribeType : subscribeTypes) {
             addListener(subscribeType, component);
         }
     }
@@ -508,11 +487,12 @@ public class ComponentRegistry {
                 modules.add(moduleType.cast(component));
             }
         }
-        T[] template = (T[]) Array.newInstance(moduleType, 0);
+        @SuppressWarnings("unchecked")
+		T[] template = (T[]) Array.newInstance(moduleType, 0);
         return modules.toArray(template);
     }
 
-    public <T> T getModuleByID(Class<T> moduleType, String id) {
+    private <T> T getModuleByID(Class<T> moduleType, String id) {
         PluginDescriptor descriptor = idToDescriptor.get(id);
         Object component = descriptor.getPlugin();
         if (component != null) {
@@ -534,7 +514,7 @@ public class ComponentRegistry {
         return null;
     }
 
-    public PluginDescriptor getDescriptorForPluginClass(Class mainPluginClass) {
+    public PluginDescriptor getDescriptorForPluginClass(Class<?> mainPluginClass) {
         Set<Map.Entry<String, PluginDescriptor>> entries = idToDescriptor.entrySet();
         for (Iterator<Map.Entry<String, PluginDescriptor>> iterator = entries.iterator(); iterator.hasNext();) {
             Map.Entry<String, PluginDescriptor> entry = iterator.next();
@@ -545,214 +525,106 @@ public class ComponentRegistry {
         return null;
     }
 
-    /**
-     * Gets all the public member methods of the given component type.
-     * Eventually, this will be restricted to only those with the @Script annotation.
-     *
-     * @param componentType the component Class.
-     * @return an array of all public member methods.
-     */
-    public Method[] getMethodsForComponentType(Class componentType) {
-        Method[] methods = componentType.getMethods();
-        List<Method> scriptMethods = new ArrayList<Method>();
-        for (int i = 0; i < methods.length; i++) {
-            Method method = methods[i];
-            if (method.isAnnotationPresent(Script.class)) {
-                scriptMethods.add(method);
-            }
-        }
-        return scriptMethods.toArray(new Method[0]);
-    }
-
-    public Method getScriptMethodByNameAndParameters(Class componentType, String methodName, Class[] c) {
-        Method[] methods = getMethodsForComponentType(componentType);
-        Method retValue = null;
-        LOOP: for ( Method method : methods) {
-            if (method.getName().equals(methodName)) {
-                Class[] k = method.getParameterTypes();
-                if (k != null && c != null && k.length == c.length) {
-                    for (int j = 0; j < k.length; j++) {
-                        if (!(k[j].isAssignableFrom(c[j]))) {
-                            continue LOOP;
-                        }
-                    }
-                    retValue = method;
-                }
-            }
-        }
-        return retValue;
-    }
-
-    public Method getScriptMethodByNameAndParameters(Object component, String methodName, Class[] c) {
-        return getScriptMethodByNameAndParameters(component.getClass(), methodName, c);
-    }
-
-    public Method getScriptMethodByName(Class componentType, String methodName) {
-        Method[] methods = getMethodsForComponentType(componentType);
-        for (int i = 0; i < methods.length; i++) {
-            Method method = methods[i];
-            if (method.getName().equals(methodName)) {
-                return method;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Gets all methods for a component that are available to the scripting engine.
-     * @param componentType the type of the component.
-     * @return an array of methods annotated with @Script.
-     */
-    public Method[] getAllScriptMethods(Class componentType) {
-        Method[] methods = getMethodsForComponentType(componentType);
-        ArrayList<Method> scriptMethods = new ArrayList<Method>();
-        for (int i = 0; i < methods.length; i++) {
-            Method method = methods[i];
-            if (method.getAnnotation(Script.class) != null) {
-                scriptMethods.add(method);
-            }
-        }
-        return scriptMethods.toArray(new Method[scriptMethods.size()]);
-    }
-
-    public Method getScriptMethodByName(Object component, String methodName) {
-        return getScriptMethodByName(component.getClass(), methodName);
-    }
-    /**
-     * Gets all the public member methods of the given component.
-     * Eventually, this will be restricted to only those with the @Script annotation.
-     *
-     * @param component the component.
-     * @return an array of all public member methods.
-     */
-    public Method[] getMethodsForComponent(Object component) {
-        return getMethodsForComponentType(component.getClass());
-    }
-
-    public Collection<PluginDescriptor> getActivePluginDescriptors() {
-        return idToDescriptor.values();
-    }
-
-    public PluginDescriptor getPluginDescriptorByID(String id) {
-        return idToDescriptor.get(id);
-    }
-
-    public Collection<PluginDescriptor> getAllPluginDescriptors() {
-        return idToDescriptor.values();
-    }
-
-    public void initializeGearResources(String gearPath) {
-        // Check for gears
-        File gearDir = new File(gearPath);
-        if (gearDir.exists() && gearDir.isDirectory()) {
-            // Do gears
-            File explode = new File(gearDir.getAbsolutePath() + '/' + GEAR_EXPLODE_DIR);
-            if (!explode.exists()) {
-                explode.mkdir();
-            }
-            File[] libFiles = gearDir.listFiles();
-            for (int i = 0; i < libFiles.length; i++) {
-                File file = libFiles[i];
-                if (!file.isDirectory()) {
-                    String name = file.getName().toLowerCase();
-                    if (name.endsWith(".gear")) {
-                        log.debug("Found gear file " + name);
-                        // Make a dir for this gear file to be extracted into
-                        File thisdir = new File(explode, name.split("\\.")[0]);
-                        if (thisdir.exists()) {
-                            Util.deleteDirectory(thisdir);
-                        }
-                        thisdir.mkdir();
-                        try {
-                            Util.unZip(file.getAbsolutePath(), thisdir.getAbsolutePath());
-                            ComponentResource resource = new ComponentResource(thisdir.getPath(), true);
-                            nameToComponentResource.put(thisdir.getName(), resource);
-                            log.trace("Added " + thisdir.getName() + " to resource locations. ("+thisdir.getPath()+")");
-
-                        } catch (IOException e) {
-                            log.error("Error during unzip of gear file " + name, e);
-                        }
-                    }
-                }
-            }
-        } else {
-            log.error("GEAR file directory ("+gearPath+") not found.");
-        }
-    }
-
-    public void initializeComponentResources(String path) {
-        File dir = new File(path);
-        if (!dir.isDirectory()) {
-            System.out.println("Component resource path is not a directory: " + path);
-            return;
-        }
-        File[] files = dir.listFiles();
-        for (int i = 0; i < files.length; i++) {
-            File file = files[i];
-            if (file.isDirectory()) {
-                try {
-                    ComponentResource resource = new ComponentResource(file.getPath(), false);
-                    nameToComponentResource.put(file.getName(), resource);
-                    log.trace("Added " + file.getName() + " to resource locations. ("+file.getPath()+")");
-                } catch (IOException e) {
-                    System.out.println("Warning: could not initialize component resource '" + file.getName() + "'.");
-                }
-            }
-        }
-        // Finally, add the default resource
-        try {
-            ComponentResource rootResource = new ComponentResource((URLClassLoader)getClass().getClassLoader());
-            nameToComponentResource.put(".", rootResource);
-            
-        } catch (Exception e) {
-            System.out.println("Unable to create root component resource.");
-            e.printStackTrace();
-        }
-
-    }
-
     public ComponentResource getComponentResourceByName(String name) {
         return nameToComponentResource.get(name);
     }
 
-    public Collection<ComponentResource> getAllComponentResources() {
-        return nameToComponentResource.values();
-    }
-    
-    public Map<String, ComponentResource> getComponentResourceMap(){
-    	return nameToComponentResource;
-    }
-    
     /*
-	 * These methods have been exposed for use by the
+	 * The following methods have been exposed mainly for 
 	 * ComponentConfigurationManager
 	 */
+    
+    public void addComponentResource(String name, ComponentResource resource) {
+    	ComponentResource existingComponentResource = nameToComponentResource.get(name);
+		if (existingComponentResource==null){
+			nameToComponentResource.put(name, resource);
+		}
+    }
 
-	public TypeMap<List> getListenersTypeMap() {
-		return listeners;
+    public void removeComponentResource(String name) {
+    	nameToComponentResource.remove(name);
+    }
+
+	/**
+	 * Remove an acceptor from a given type.
+	 * @param type
+	 * @param acceptor
+	 */
+	public synchronized void removeAcceptor(Class<?> type, String acceptorName) {
+		List<Class<?>> acceptorList = acceptors.get(type);
+		List<Class<?>> newList = new ArrayList<Class<?>>();
+		Iterator<Class<?>> iter = acceptorList.iterator();
+		while(iter.hasNext()) {
+			Class<?> componentClass = iter.next();
+			if ( componentClass.getName().equals(acceptorName) ) {
+				continue;
+			}
+			newList.add(componentClass);
+		}
+		acceptors.put(type, newList);
 	}
 
-	public HashMap<Class, List<Class>> getAcceptorsHashMap() {
-		return acceptors;
-	}
-
-	public void setAcceptorsHashMap(HashMap<Class, List<Class>> acceptors) {
-		this.acceptors = acceptors;
-	}
-
-	public Map<Class, SynchModel> getSynchModelsMap() {
-		return synchModels;
-	}
-
+	/**
+	 * 
+	 * @return a list of all components in the registry.
+	 */
 	public List<Object> getComponentsList() {
 		return components;
 	}
 
-	public void setComponentsList(List localComponents) {
-		this.components = localComponents;
+	/**
+	 * Remove a component from the registry.
+	 * @param localComponents
+	 */
+	public void removeComponent(String componentClassName) {
+		/* First, remove from the listeners */
+		for (List<?> listenersForOneEvent : listeners.values()) {
+
+			Iterator<?> iter = listenersForOneEvent.iterator();
+			while (iter.hasNext()) {
+				Object proxiedListener = iter.next();
+				String proxiedClazzName = proxiedListener.getClass().getName();
+				String[] temp = StringUtils.split(proxiedClazzName, "$$");
+				String clazzName = temp[0];
+
+				if (StringUtils.equals(componentClassName, clazzName)) {
+					iter.remove();
+					break;
+				}
+			}
+		}
+		
+		/* Second, remove ad acceptor from all types.*/
+		for (List<Class<?>> acceptorList : acceptors.values()) {
+			Iterator<Class<?>> iter = acceptorList.iterator();
+			while (iter.hasNext()) {
+				Class<?> acceptor = iter.next();
+				if (componentClassName.equals(acceptor.getName())) {
+					iter.remove();
+				}
+			}
+		}
+
+		/* Third */
+		Iterator<Object> iter = components.iterator();
+		while (iter.hasNext()) {
+			Object proxiedComponent = iter.next();
+			// FIXME use a "deproxy" (see cglib or HibernateProxy)
+			String proxiedClazzName = proxiedComponent.getClass().getName();
+			String[] temp = StringUtils.split(proxiedClazzName, "$$");
+			String clazzName = temp[0];
+
+			if (StringUtils.equals(componentClassName, clazzName)) {
+				iter.remove();
+			}
+		}
 	}
 
-	public Map<String, PluginDescriptor> getIdToDescriptorMap() {
-		return idToDescriptor;
+	/**
+	 * Remove plugin for a given name from the registry.
+	 */
+	public void removePlugin(String plugin) {
+		idToDescriptor.remove(plugin);
 	}
+		
 }

@@ -9,14 +9,10 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.Vector;
 import java.util.Map.Entry;
+import java.util.Properties;
+import java.util.Vector;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -33,7 +29,6 @@ import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.config.rules.PluginRule;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.engine.management.ComponentResource;
-import org.geworkbench.engine.management.TypeMap;
 import org.geworkbench.util.FilePathnameUtils;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -266,12 +261,7 @@ public class ComponentConfigurationManager {
 		ComponentResource componentResource = createComponentResource(folder);
 
 		/* add resource to registry */
-		Map<String, ComponentResource> resourceMap = ComponentRegistry
-				.getRegistry().getComponentResourceMap();
-		ComponentResource existingComponentResource = resourceMap.get(folder);
-		if (existingComponentResource==null){
-			resourceMap.put(folder, componentResource);
-		}
+		ComponentRegistry.getRegistry().addComponentResource(folder, componentResource);
 		
 		InputStream is = null;
 
@@ -360,30 +350,6 @@ public class ComponentConfigurationManager {
 		/* plugin registry used ids */
 		Vector<String> usedIds = PluginRegistry.getUsedIds();
 
-		/* GET THE VARIOUS MAPS/VECTORS FROM THE COMPONENT REGISTRY */
-
-		/* component registry listeners */
-		TypeMap<List> listeners = componentRegistry.getListenersTypeMap();
-
-		/* component registry resource map */
-		Map<String, ComponentResource> resourceMap = componentRegistry
-				.getComponentResourceMap();
-
-		/* component registry acceptors */
-		HashMap<Class, List<Class>> acceptors = componentRegistry
-				.getAcceptorsHashMap();
-
-		/* component registry id to descriptor */
-		Map<String, PluginDescriptor> idToDescriptor = componentRegistry
-				.getIdToDescriptorMap();
-
-		/* component registry components list */
-		List<Object> components = componentRegistry.getComponentsList();
-		List<Object> updatedComponentList = new ArrayList<Object>();
-		for (Object cmp : components) {
-			updatedComponentList.add(cmp);
-		}
-
 		// FIXME Can't we get the PluginDesriptor we want other than from the
 		// ccm.xml file?
 		// beginning of processing the plugin
@@ -397,7 +363,7 @@ public class ComponentConfigurationManager {
 			/* PluginRegistry.visualAreaMap */
 			for (Entry<PluginDescriptor, String> entry : visualAreaMap.entrySet()) {
 				Object pluginDescriptor1 = entry.getKey();
-				Class clazz = pluginDescriptor1.getClass();
+				Class<?> clazz = pluginDescriptor1.getClass();
 				String proxiedClazzName = clazz.getName();
 				
 				// TODO Replace $$ parse methods with clazzName = clazz.getSuperclass() 
@@ -423,68 +389,8 @@ public class ComponentConfigurationManager {
 
 			/* START THE REMOVAL PROCESS IN THE COMPONENT REGISTRY */
 
-			/* ComponentRegistry.listeners */
-			// componentRegistry.removeFromListeners(pluginClazzName);
-			for (Map.Entry<Class, List> entry : listeners.entrySet()) {
-				List listenersForOneEvent = entry.getValue();
-
-				for (Object proxiedListener : listenersForOneEvent) {
-					Class clazz = proxiedListener.getClass();
-					String proxiedClazzName = clazz.getName();
-					String[] temp = StringUtils.split(proxiedClazzName, "$$");
-					String clazzName = temp[0];
-
-					if (StringUtils.equals(pluginClazzName, clazzName)) {
-						listenersForOneEvent.remove(proxiedListener);
-						break;
-					}
-				}
-			}
-
-			/* ComponentRegistry.acceptors */
-			HashMap<Class, List<Class>> acceptorsNew = new HashMap<Class, List<Class>>();
-
-			for (Map.Entry<Class, List<Class>> entry : acceptors.entrySet()) {
-				Class acceptorKey = entry.getKey();
-				List<Class> componentList = entry.getValue();
-				List<Class> componentsNew = new ArrayList<Class>();
-
-				ListIterator<Class> componentListIter = componentList
-						.listIterator();
-				while (componentListIter.hasNext()) {
-					Class componentClass = componentListIter.next();
-					String componentClassName = componentClass.getName();
-
-					if (!pluginClazzName.equals(componentClassName)) {
-						componentsNew.add(componentClass);
-					}
-				}
-
-				acceptorsNew.put(acceptorKey, componentsNew);
-			}
-
-			componentRegistry.setAcceptorsHashMap(acceptorsNew);
-
-			/* ComponentRegistry.components */
-			for (Object proxiedComponent : components) {
-				// FIXME use a "deproxy" (see cglib or HibernateProxy)
-				Class clazz = proxiedComponent.getClass();
-				String proxiedClazzName = clazz.getName();
-				String[] temp = StringUtils.split(proxiedClazzName, "$$");
-				String clazzName = temp[0];
-
-				if (StringUtils.equals(pluginClazzName, clazzName)) {
-					updatedComponentList.remove(proxiedComponent);
-				}
-			}
-
-			/* ComponentRegistry.idToDescriptor */
-			String pluginToRemove = ccmComponent.getPluginId();
-			PluginDescriptor tempPluginDescriptor = idToDescriptor
-					.get(pluginToRemove);
-			if (tempPluginDescriptor != null) {
-				idToDescriptor.remove(pluginToRemove);
-			}
+			componentRegistry.removeComponent(pluginClazzName);
+			componentRegistry.removePlugin( ccmComponent.getPluginId() );
 
 		}// end of processing the plugin
 
@@ -513,14 +419,9 @@ public class ComponentConfigurationManager {
 		}
 
 		if (foldersInUse < 1 ){
-			ComponentResource resourceToRemove = resourceMap.get(folderName);
-			if (resourceToRemove != null) {
-				resourceMap.remove(folderName);
-			}
+			componentRegistry.removeComponentResource(folderName);
 		}
 		
-		componentRegistry.setComponentsList(updatedComponentList);
-
 		return true;
 	}
 
