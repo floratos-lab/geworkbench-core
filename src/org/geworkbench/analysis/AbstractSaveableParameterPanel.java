@@ -7,8 +7,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.model.analysis.ParamValidationResults;
@@ -29,15 +27,15 @@ import org.geworkbench.bison.model.analysis.ParameterPanel;
  * @author First Genetic Trust Inc.
  * @author keshav
  * @author yc2480
- * @version $Id: AbstractSaveableParameterPanel.java,v 1.8 2009-07-22 15:34:33 jiz Exp $
+ * @version $Id$
  */
 public abstract class AbstractSaveableParameterPanel extends ParameterPanel {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 4513020172986430772L;
-	private Log log = LogFactory.getLog(this.getClass());
-	String name = null;
+
+	private String name = null;
 	protected DSPanel<DSGeneMarker> selectorPanel;
 
 	/**
