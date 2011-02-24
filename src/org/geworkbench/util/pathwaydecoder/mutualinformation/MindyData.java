@@ -23,14 +23,14 @@ import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
  * @author oshteynb
  * @version $Id$
  */
-@SuppressWarnings("serial")
 public class MindyData implements Serializable {
 
-    static Log log = LogFactory.getLog(MindyData.class);
+	private static final long serialVersionUID = 6291084231320914541L;
+
+	static Log log = LogFactory.getLog(MindyData.class);
 
     // all arrays,
-    @SuppressWarnings("unchecked")
-	private CSMicroarraySet arraySet;
+	private CSMicroarraySet<DSMicroarray> arraySet;
     // selected arrays
     private ArrayList<DSMicroarray> arrayForMindyRun;
 
@@ -49,7 +49,8 @@ public class MindyData implements Serializable {
     private float setFraction;
     private boolean annotated = false;
 
-	public MindyData(CSMicroarraySet arraySet, ArrayList<DSMicroarray> arrayForMindyRun, float setFraction, DSGeneMarker transFac) {
+    /* Constructor used in MindyAnalysis */
+	public MindyData(CSMicroarraySet<DSMicroarray> arraySet, ArrayList<DSMicroarray> arrayForMindyRun, float setFraction, DSGeneMarker transFac) {
 
         this.arraySet = arraySet;
 
@@ -123,9 +124,8 @@ public class MindyData implements Serializable {
 		return sr.getR();
 	}
 
-@SuppressWarnings("unchecked")
-public static ArrayList<DSMicroarray> createArrayForMindyRun(
-			DSMicroarraySet<DSMicroarray> inSet, DSPanel arraySet) {
+	public static ArrayList<DSMicroarray> createArrayForMindyRun(
+			DSMicroarraySet<DSMicroarray> inSet, DSPanel<DSMicroarray> arraySet) {
 		ArrayList<DSMicroarray> arrayListForMindyRun = new ArrayList<DSMicroarray>();
 
 		if ((arraySet != null) && (arraySet.size() > 0)) {
@@ -151,8 +151,7 @@ public static ArrayList<DSMicroarray> createArrayForMindyRun(
     	this.annotated = annotated;
     }
 
-    @SuppressWarnings("unchecked")
-	public CSMicroarraySet getArraySet() {
+	public CSMicroarraySet<DSMicroarray> getArraySet() {
         return arraySet;
     }
 
@@ -351,14 +350,6 @@ public static ArrayList<DSMicroarray> createArrayForMindyRun(
     	return result;
     }
 
-
-//////////////////////////////////////////////////////////////////////////////////////
-///    refactoring stuff that is here for legacy code and should eventually go away or changed
-////////////////////////////////////////////////////////////////////////
-
-
-    // tmp for refactoring two ctr, just for compiling
-    // used by MindyResultsParser, probably testing
     /**
      * Constructor.
      *
@@ -366,22 +357,9 @@ public static ArrayList<DSMicroarray> createArrayForMindyRun(
      * @param data - list of MINDY result rows
      * @param setFraction - Sample per Condition in fraction
      */
-    @SuppressWarnings("unchecked")
-	public MindyData(CSMicroarraySet arraySet, List<MindyResultRow> data, float setFraction) {
+	public MindyData(CSMicroarraySet<DSMicroarray> arraySet, List<MindyResultRow> data, float setFraction) {
         this.arraySet = arraySet;
-//        this.data = data;
         this.setFraction = setFraction;
-//        calculateModulatorInfo(false);
-
-
     }
 
-    @SuppressWarnings("unchecked")
-	public MindyData(CSMicroarraySet arraySet, List<MindyResultRow> data) {
-        this.arraySet = arraySet;
-//        this.data = data;
-//        calculateModulatorInfo(false);
-    }
-
-    // end - tmp for refactoring two ctr
 }
