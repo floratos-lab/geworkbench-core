@@ -21,7 +21,7 @@ import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
  * Class containing MINDY run results.
  * @author mhall
  * @author oshteynb
- * @version $Id: MindyData.java,v 1.19 2009-05-27 15:31:22 oshteynb Exp $
+ * @version $Id$
  */
 @SuppressWarnings("serial")
 public class MindyData implements Serializable {
@@ -36,7 +36,7 @@ public class MindyData implements Serializable {
 
 	private DSGeneMarker transcriptionFactor;
 
-    private HashMap<DSGeneMarker, TargetInfo> targetInfoMap = new HashMap<DSGeneMarker, TargetInfo>();
+    private HashMap<DSGeneMarker, Double> targetInfoMap = new HashMap<DSGeneMarker, Double>();
 
     // can go to global key repository, maybe related to a file
     private HashMap<DSGeneMarker, MindyGeneMarker> geneSortkeyMap = new HashMap<DSGeneMarker, MindyGeneMarker>();
@@ -100,7 +100,7 @@ public class MindyData implements Serializable {
 	 */
 	public void addToTargetInfoMap(double correlation, DSGeneMarker target) {
 		if (!targetInfoMap.containsKey(target)) {
-			targetInfoMap.put(target, new TargetInfo(target, correlation));
+			targetInfoMap.put(target, correlation);
 		}
 	}
 
@@ -293,7 +293,7 @@ public static ArrayList<DSMicroarray> createArrayForMindyRun(
      * @return result of Pearson correlation
      */
     public double getCorrelation(DSGeneMarker target){
-    	return this.targetInfoMap.get(target).getCorrelation();
+    	return this.targetInfoMap.get(target);
     }
 
     /**
