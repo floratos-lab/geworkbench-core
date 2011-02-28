@@ -94,6 +94,7 @@
 				<include name="discovery" />
 				<include name="evidenceintegration" />
 				<include name="filtering" />
+				<include name="foldchange" />
 				<include name="geneontology2" />
 				<include name="genspace" />
 				<include name="geworkbench-core" />
