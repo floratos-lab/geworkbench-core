@@ -13,7 +13,8 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 
 /**
- * AdjacencyMatrix <p>
+ * AdjacencyMatrix
+ * <p>
  * 
  * This class needs deep cleaning-up.
  * 
@@ -44,6 +45,8 @@ public class AdjacencyMatrix implements Serializable {
 	private String adjName;
 
 	static private final double edgeScale = 1024.0 / 0.15;
+
+	private Map<String, String> interactionTypeSifMap = null;
 
 	public AdjacencyMatrix() {
 		super();
@@ -183,7 +186,6 @@ public class AdjacencyMatrix implements Serializable {
 			geneId1 = String.valueOf(getMappedId(new Integer(geneId1)));
 		if (isGene2InMicroarray == true)
 			geneId2 = String.valueOf(getMappedId(new Integer(geneId2)));
-		 
 
 		HashMap<String, Float> row = (HashMap<String, Float>) geneRowsNotInMicroarray
 				.get(geneId1);
@@ -243,7 +245,6 @@ public class AdjacencyMatrix implements Serializable {
 			geneId1 = String.valueOf(getMappedId(new Integer(geneId1)));
 		if (isGene2InMicroarray == true)
 			geneId2 = String.valueOf(getMappedId(new Integer(geneId2)));
-		 
 
 		HashMap<String, String> row = (HashMap<String, String>) geneInteractionRowsNotInMicroarray
 				.get(new String(geneId1));
@@ -318,7 +319,8 @@ public class AdjacencyMatrix implements Serializable {
 
 	public int getConnectionNo() {
 		int connectionNo = 0;
-		Iterator<HashMap<Integer, Float>> valuesIt = geneRows.values().iterator();
+		Iterator<HashMap<Integer, Float>> valuesIt = geneRows.values()
+				.iterator();
 		while (valuesIt.hasNext()) {
 			HashMap<Integer, Float> geneRow = valuesIt.next();
 			connectionNo += geneRow.size();
@@ -329,11 +331,20 @@ public class AdjacencyMatrix implements Serializable {
 
 	public void setMicroarraySet(DSMicroarraySet<DSMicroarray> microarraySet) {
 		maSet = microarraySet;
-		log.debug("set microarray set "+maSet.getDataSetName());
+		log.debug("set microarray set " + maSet.getDataSetName());
 	}
 
 	public DSMicroarraySet<DSMicroarray> getMicroarraySet() {
 		return maSet;
 	}
-	
+
+	public Map<String, String> getInteractionTypeSifMap() {
+		return interactionTypeSifMap;
+	}
+
+	public void setInteractionTypeSifMap(Map<String, String> map) {		 
+			interactionTypeSifMap = map;
+
+	}
+
 }
