@@ -107,8 +107,14 @@ public class SaveTree implements Serializable {
 	public boolean getDirty(){
 		return dirty;
 	}
+	public void setDirty(boolean d){
+		dirty= d;
+	}
 	public String getCheckout(){
 		return checkout;
+	}
+	public void setCheckout(String co){
+		checkout = co;
 	}
 	public String getLastchange(){
 		return lastchange;

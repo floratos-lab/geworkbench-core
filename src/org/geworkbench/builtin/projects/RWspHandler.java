@@ -499,8 +499,15 @@ public class RWspHandler {
 								"Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 						if (n == JOptionPane.CANCEL_OPTION || n == JOptionPane.NO_OPTION)
 							return;
+						if (!nf.delete()){
+							JOptionPane.showMessageDialog(null, "Failed to delete old file "+newName);
+							return;
+						}
 					}
-					f.renameTo(nf);
+					if (!f.renameTo(nf)){
+						JOptionPane.showMessageDialog(null, "Failed to rename file to "+newName);
+						return;
+					}
 					listDialog.dispose();
 					int id = Integer.valueOf(jt.getValueAt(selectedRow, IdID).toString());
 					WorkspaceServiceClient.wsprenames.put(id, newName);

@@ -7,8 +7,13 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
@@ -21,6 +26,8 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.APSerializable;
+import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.builtin.projects.WorkspaceHandler.OpenTask;
 import org.geworkbench.builtin.projects.WorkspaceHandler.SaveTask;
 import org.geworkbench.util.ProgressDialog;
@@ -86,7 +93,7 @@ public class RWspHelper {
 		}
 	}
 
-	private static final int dirtyID = 2, selectID = 3;
+	private static final int titleID = 1, dirtyID = 2, selectID = 3;
 	private static class LockTableModel extends DetailTableModel
 	{
 		private static final long serialVersionUID = -5175211782386134949L;
@@ -648,7 +655,7 @@ public class RWspHelper {
 
 		if (res == null)
 			JOptionPane.showMessageDialog(null, "Could not retrieve locked remote workspace list");
-		else {
+		else if (res.length > 0){
 			lockDialog = new JDialog();
 			lockDialog.setModal(true);
 			lockDialog.setTitle("Remote workspaces locked by current user");
@@ -680,18 +687,28 @@ public class RWspHelper {
 							if ((Boolean)table.getValueAt(i, dirtyID)==true){
 								Object[] options = {"Synchronize before release", "Release without synchronization", "Cancel"};
 								int t = JOptionPane.showOptionDialog(null, 
-										"Do you wish to synchronize the local copy with the server before releasing the lock;\n"
+										"Do you wish to synchronize the local copy of workspace '"
+										+table.getValueAt(i, titleID)+"' with the server before releasing the lock;\n"
 										+" or release the lock without synchronizing?", "Synchronize before release?", 
 										JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
 								if (t==JOptionPane.YES_OPTION){
-									String filename=id+".wsp";
-									try {
-										WorkspaceServiceClient.getSavedWorkspace("DOWNLOAD"+filename);
-									} catch (Exception e1) {
-										JOptionPane.showMessageDialog(null, 
-						    					"Synch Exception: could not retrieve remote workspace "+filename,
-						    					"Database connection/data transfer error", JOptionPane.ERROR_MESSAGE);
+									//synchronize means upload local wsp, not download remote wsp
+									new RWspHandler().getUserInfo();
+									if (RWspHandler.userInfo == null) return;
+									if (RWspHandler.userInfo == "") {
+										JOptionPane.showMessageDialog(null,
+														"Please make sure you entered valid username and password",
+														"Invalid User Account", JOptionPane.ERROR_MESSAGE);
+										return;
 									}
+									String fname = id+".wsp";
+									String rename = WorkspaceServiceClient.wsprenames.get(Integer.valueOf(id));
+									if (rename!=null) fname=rename;
+
+									UpdateRemoteNoOpenTask updateTask = new UpdateRemoteNoOpenTask(ProgressItem.INDETERMINATE_TYPE,
+											"Workspace is being synchronized.", RWspHandler.wspdir+fname);
+									pdmodal.executeTask(updateTask);
+
 								} else if (t==JOptionPane.CANCEL_OPTION || t==JOptionPane.CLOSED_OPTION){
 									return;
 								}
@@ -726,4 +743,94 @@ public class RWspHelper {
 		}
 	}
 
+	//update from local wsp file without populating prjpanel from savetree
+	private static class UpdateRemoteNoOpenTask extends ProgressTask<Void, Void>{
+		private String filename = null;
+		private SaveTree saveTree = null;
+		
+		UpdateRemoteNoOpenTask(int pbtype, String message, String filename) {
+			super(pbtype, message);
+			this.filename = filename;
+		}
+		@Override
+		protected Void doInBackground() {
+			FileInputStream in = null;
+			try {
+				in = new FileInputStream(filename);
+				ObjectInputStream s = new ObjectInputStream(in);
+				saveTree = (SaveTree) s.readObject();
+				APSerializable aps = (APSerializable) s.readObject();
+				AnnotationParser.setFromSerializable(aps);
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				try{
+					if(in!=null) in.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+			int wspId = saveTree.getWspId();
+			String checkoutstr = saveTree.getCheckout();
+			ObjectOutput s = null;
+			FileOutputStream f = null;
+			try{
+				checkoutstr = Client.transferFile(null, 
+						wspId+META_DELIMIETER+checkoutstr+META_DELIMIETER+RWspHandler.userInfo);
+	
+				saveTree.setCheckout(checkoutstr);
+				saveTree.setDirty(false);
+				if (wspId==RWspHandler.wspId){
+					RWspHandler.dirty = false;
+					RWspHandler.checkoutstr = checkoutstr;
+				}
+	
+				f = new FileOutputStream(filename);
+				s = new ObjectOutputStream(f);
+				s.writeObject(saveTree);
+				APSerializable aps = AnnotationParser.getSerializable();
+				s.writeObject(aps);
+				s.flush();
+	
+				Client.transferFile(new File(filename), wspId+META_DELIMIETER+RWspHandler.userInfo);
+			} catch (RemoteException e1) {
+				JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
+    					"GeWorkbench cannot upload to remote workspace via axis2 web service.\n" +
+    					"Please try again later or report the problem to geWorkbench support team.\n",
+    					"Database connection/data transfer error", JOptionPane.ERROR_MESSAGE);
+			} catch (Exception e){
+				JOptionPane.showMessageDialog(null,	"Could not create workspace file for "
+						+e.getMessage()+". \nSave cancelled.", "Error", JOptionPane.ERROR_MESSAGE);
+				File file = new File(filename);
+				file.delete(); 
+			} finally {
+				try {
+					if (f!=null) f.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			return null;
+		}
+		@Override
+		protected void done() {
+			pdmodal.removeTask(this);
+			if (isCancelled()) return;
+	
+			try {
+				get();		
+			} catch (ExecutionException e) {
+				e.getCause().printStackTrace();
+				JOptionPane.showMessageDialog(null, "Couldn't synchronize workspace.",
+						"Synchronize Workspace Error", JOptionPane.ERROR_MESSAGE);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null,	"Couldn't synchronize workspace.\n"+e,
+						"Synchronize Workspace Error", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
 }
