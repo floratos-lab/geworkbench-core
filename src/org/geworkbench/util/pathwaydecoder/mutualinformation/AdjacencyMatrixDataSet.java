@@ -7,8 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.StringTokenizer;
 
 import javax.swing.JOptionPane;
@@ -63,19 +61,19 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet implements DSAnci
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
             DSMicroarraySet mset = matrix.getMicroarraySet();
             DSItemList<DSGeneMarker> markers = mset.getMarkers();
-            HashMap<Integer, HashMap<Integer, AdjacencyMatrix.EdgeInfo>> geneRows = matrix.getGeneRows();
+
             // if entry key is less than 0, for CNKB component, it means the gene is in currently selected microarray.
-            for (Map.Entry<Integer, HashMap<Integer, AdjacencyMatrix.EdgeInfo>> entry : geneRows.entrySet()) {
+            for (Integer node1 : matrix.getNodes()) {
                 String geneName = "unknown";
-                if (entry.getKey() >= 0)
-                	geneName = markers.get(entry.getKey()).getLabel();
+                if (node1 >= 0)
+                	geneName = markers.get(node1).getLabel();
                 writer.write(geneName + "\t");
-                HashMap<Integer, AdjacencyMatrix.EdgeInfo> destRows = entry.getValue();
-                for (Map.Entry<Integer, AdjacencyMatrix.EdgeInfo> entry2 : destRows.entrySet()) {
+
+                for (AdjacencyMatrix.Edge edge : matrix.getEdges(node1)) {
                     String geneName2 = "unknown";
-                    if (entry2.getKey() >= 0)
-                    	geneName2 = markers.get(entry2.getKey()).getLabel();
-                    writer.write(geneName2 + "\t" + entry2.getValue() + "\t");
+                    if (edge.node2 >= 0)
+                    	geneName2 = markers.get(edge.node2).getLabel();
+                    writer.write(geneName2 + "\t" + edge.info.value + "\t");
                 }
                 writer.write("\n");
             }

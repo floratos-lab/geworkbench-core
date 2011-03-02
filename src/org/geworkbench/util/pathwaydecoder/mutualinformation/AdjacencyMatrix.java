@@ -1,7 +1,9 @@
 package org.geworkbench.util.pathwaydecoder.mutualinformation;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -46,6 +48,7 @@ public class AdjacencyMatrix implements Serializable {
 	private final Map<String, String> interactionTypeSifMap;
 
 	private int edgeNumber = 0;
+	private int nodeNumber = 0;
 
 	public AdjacencyMatrix(String name, final DSMicroarraySet<DSMicroarray> microarraySet) {
 		this.name = name;
@@ -59,10 +62,6 @@ public class AdjacencyMatrix implements Serializable {
 		maSet = microarraySet;
 		this.interactionTypeSifMap = interactionTypeSifMap;
 		log.debug("AdjacencyMatrix created with label "+name+" and microarray set "+maSet.getDataSetName()+", with interaction type map");
-	}
-
-	public HashMap<Integer, HashMap<Integer, EdgeInfo>> getGeneRows() {
-		return this.geneRows;
 	}
 
 	public HashMap<String, HashMap<String, EdgeInfo>> getGeneRowsNotInMicroarray() {
@@ -103,6 +102,7 @@ public class AdjacencyMatrix implements Serializable {
 		if (row == null) {
 			row = new HashMap<Integer, EdgeInfo>();
 			geneRows.put(new Integer(geneId), row);
+			nodeNumber++;
 		}
 	}
 
@@ -128,6 +128,7 @@ public class AdjacencyMatrix implements Serializable {
 		if (row == null) {
 			row = new HashMap<Integer, EdgeInfo>();
 			geneRows.put(new Integer(geneId1), row);
+			nodeNumber++;
 		}
 		row.put(new Integer(geneId2), new EdgeInfo(edge, interaction) );
 
@@ -136,6 +137,7 @@ public class AdjacencyMatrix implements Serializable {
 		if (row == null) {
 			row = new HashMap<Integer, EdgeInfo>();
 			geneRows.put(new Integer(geneId2), row);
+			nodeNumber++;
 		}
 		row.put(new Integer(geneId1), new EdgeInfo(edge, interaction) );
 
@@ -225,6 +227,10 @@ public class AdjacencyMatrix implements Serializable {
 	public int getConnectionNo() {
 		return edgeNumber ;
 	}
+	
+	public int getNodeNumber() {
+		return nodeNumber;
+	}
 
 	public DSMicroarraySet<DSMicroarray> getMicroarraySet() {
 		return maSet;
@@ -233,5 +239,50 @@ public class AdjacencyMatrix implements Serializable {
 	public Map<String, String> getInteractionTypeSifMap() {
 		return interactionTypeSifMap;
 	}
+	
+	public static class Edge {
+		public int node1;
+		public int node2;
+		public EdgeInfo info;
+		
+		Edge(int node1, int node2, EdgeInfo info) {
+			this.node1 = node1;
+			this.node2 = node2;
+			this.info = info;
+		}
+	}
 
+	/**
+	 * 
+	 * @return all edges
+	 */
+	public List<Edge> getEdges() {
+		List<Edge> list = new ArrayList<Edge>();
+		for (Integer node1 : geneRows.keySet()) {
+			Map<Integer, AdjacencyMatrix.EdgeInfo> destGenes = geneRows
+					.get(node1);
+			for (Integer node2 : destGenes.keySet()) {
+				list.add(new Edge(node1, node2, destGenes.get(node2)));
+			}
+		}
+		return list;
+	}
+	
+	/**
+	 * 
+	 * @return edges from a given node
+	 */
+	public List<Edge> getEdges(int node1) {
+		List<Edge> list = new ArrayList<Edge>();
+		Map<Integer, AdjacencyMatrix.EdgeInfo> destGenes = geneRows.get(node1);
+		for (Integer node2 : destGenes.keySet()) {
+			list.add(new Edge(node1, node2, destGenes.get(node2)));
+		}
+
+		return list;
+	}
+
+	public List<Integer> getNodes() {
+		return new ArrayList<Integer>(geneRows.keySet());
+	}
 }
