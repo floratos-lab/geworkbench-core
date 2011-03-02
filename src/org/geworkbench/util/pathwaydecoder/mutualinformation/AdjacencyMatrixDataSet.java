@@ -63,15 +63,15 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet implements DSAnci
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
             DSMicroarraySet mset = matrix.getMicroarraySet();
             DSItemList<DSGeneMarker> markers = mset.getMarkers();
-            HashMap<Integer, HashMap<Integer, Float>> geneRows = matrix.getGeneRows();
+            HashMap<Integer, HashMap<Integer, AdjacencyMatrix.EdgeInfo>> geneRows = matrix.getGeneRows();
             // if entry key is less than 0, for CNKB component, it means the gene is in currently selected microarray.
-            for (Map.Entry<Integer, HashMap<Integer, Float>> entry : geneRows.entrySet()) {
+            for (Map.Entry<Integer, HashMap<Integer, AdjacencyMatrix.EdgeInfo>> entry : geneRows.entrySet()) {
                 String geneName = "unknown";
                 if (entry.getKey() >= 0)
                 	geneName = markers.get(entry.getKey()).getLabel();
                 writer.write(geneName + "\t");
-                HashMap<Integer, Float> destRows = entry.getValue();
-                for (Map.Entry<Integer, Float> entry2 : destRows.entrySet()) {
+                HashMap<Integer, AdjacencyMatrix.EdgeInfo> destRows = entry.getValue();
+                for (Map.Entry<Integer, AdjacencyMatrix.EdgeInfo> entry2 : destRows.entrySet()) {
                     String geneName2 = "unknown";
                     if (entry2.getKey() >= 0)
                     	geneName2 = markers.get(entry2.getKey()).getLabel();
@@ -142,7 +142,7 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet implements DSAnci
                                     float mi = Float.parseFloat(strMi);
                                     if (geneId1 != geneId2) {
                                         connectionsInstantiated++;
-                                        matrix.add(geneId1, geneId2, mi);
+                                        matrix.add(geneId1, geneId2, mi, null);
                                         // this.addInteractionType2(geneId1, geneId2, mi);
                                     } else {
                                         connectionsIgnored++;

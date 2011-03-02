@@ -2,7 +2,6 @@ package org.geworkbench.util.pathwaydecoder.mutualinformation;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -12,7 +11,7 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 
 /**
- * AdjacencyMatrix. <p>
+ * AdjacencyMatrix. 
  * 
  * @author not attributable
  * @version $Id$
@@ -23,12 +22,19 @@ public class AdjacencyMatrix implements Serializable {
 	private static final long serialVersionUID = -4163326138016520666L;
 
 	private static Log log = LogFactory.getLog(AdjacencyMatrix.class);
-
-	// TODO xxxRows and xxxInteractionRow should be merged.
-	private HashMap<Integer, HashMap<Integer, Float>> geneRows = new HashMap<Integer, HashMap<Integer, Float>>();
-	private HashMap<Integer, HashMap<Integer, String>> geneInteractionRows = new HashMap<Integer, HashMap<Integer, String>>();
-	private HashMap<String, HashMap<String, Float>> geneRowsNotInMicroarray = new HashMap<String, HashMap<String, Float>>();
-	private HashMap<String, HashMap<String, String>> geneInteractionRowsNotInMicroarray = new HashMap<String, HashMap<String, String>>();
+	
+	public static class EdgeInfo {
+		public float value;
+		public String type;
+		
+		EdgeInfo(float value, String type) {
+			this.value = value;
+			this.type = type;
+		}
+	}
+	
+	private HashMap<Integer, HashMap<Integer, EdgeInfo>> geneRows = new HashMap<Integer, HashMap<Integer, EdgeInfo>>();
+	private HashMap<String, HashMap<String, EdgeInfo>> geneRowsNotInMicroarray = new HashMap<String, HashMap<String, EdgeInfo>>();
 
 	private Map<String, Integer> idToGeneMapper = new HashMap<String, Integer>();
 	private Map<String, Integer> snToGeneMapper = new HashMap<String, Integer>();
@@ -37,28 +43,30 @@ public class AdjacencyMatrix implements Serializable {
 
 	private final String name;
 
-	private Map<String, String> interactionTypeSifMap = null;
+	private final Map<String, String> interactionTypeSifMap;
+
+	private int edgeNumber = 0;
 
 	public AdjacencyMatrix(String name, final DSMicroarraySet<DSMicroarray> microarraySet) {
 		this.name = name;
 		maSet = microarraySet;
+		interactionTypeSifMap = null;
 		log.debug("AdjacencyMatrix created with label "+name+" and microarray set "+maSet.getDataSetName());
 	}
+	
+	public AdjacencyMatrix(String name, final DSMicroarraySet<DSMicroarray> microarraySet, Map<String, String> interactionTypeSifMap) {
+		this.name = name;
+		maSet = microarraySet;
+		this.interactionTypeSifMap = interactionTypeSifMap;
+		log.debug("AdjacencyMatrix created with label "+name+" and microarray set "+maSet.getDataSetName()+", with interaction type map");
+	}
 
-	public HashMap<Integer, HashMap<Integer, Float>> getGeneRows() {
+	public HashMap<Integer, HashMap<Integer, EdgeInfo>> getGeneRows() {
 		return this.geneRows;
 	}
 
-	public HashMap<String, HashMap<String, Float>> getGeneRowsNotInMicroarray() {
+	public HashMap<String, HashMap<String, EdgeInfo>> getGeneRowsNotInMicroarray() {
 		return this.geneRowsNotInMicroarray;
-	}
-
-	public HashMap<Integer, HashMap<Integer, String>> getInteractionMap() {
-		return this.geneInteractionRows;
-	}
-
-	public HashMap<String, HashMap<String, String>> getInteractionNotInMicroarrayMap() {
-		return this.geneInteractionRowsNotInMicroarray;
 	}
 
 	/**
@@ -72,16 +80,28 @@ public class AdjacencyMatrix implements Serializable {
 	public HashMap<Integer, Float> get(int geneId) {
 		geneId = getMappedId(geneId);
 		if (geneId > 0) {
-			return geneRows.get(new Integer(geneId));
+			HashMap<Integer, Float> map = new HashMap<Integer, Float>();
+			HashMap<Integer, EdgeInfo> row = geneRows.get(new Integer(geneId));
+			for(Integer id: row.keySet()) {
+				EdgeInfo e = row.get(id);
+				map.put(id, e.value);
+			}
+			return map;
 		} else {
 			return null;
 		}
 	}
 
+	/**
+	 * Add a node only. 
+	 * This is useful only when there is no edged from this node.
+	 * 
+	 * @param geneId
+	 */
 	public void addGeneRow(int geneId) {
-		HashMap<Integer, Float> row = geneRows.get(new Integer(geneId));
+		HashMap<Integer, EdgeInfo> row = geneRows.get(new Integer(geneId));
 		if (row == null) {
-			row = new HashMap<Integer, Float>();
+			row = new HashMap<Integer, EdgeInfo>();
 			geneRows.put(new Integer(geneId), row);
 		}
 	}
@@ -91,7 +111,7 @@ public class AdjacencyMatrix implements Serializable {
 	}
 
 	/**
-	 * Adds and edge between geneId1 and geneId2
+	 * Adds and edge between geneId1 and geneId2, indexes into the microarray dataset
 	 * 
 	 * @param geneId1
 	 *            int
@@ -100,29 +120,30 @@ public class AdjacencyMatrix implements Serializable {
 	 * @param edge
 	 *            float
 	 */
-	public void add(int geneId1, int geneId2, float edge) {
+	public void add(int geneId1, int geneId2, float edge, String interaction) {
 		geneId1 = getMappedId(geneId1);
 		geneId2 = getMappedId(geneId2);
 
-		HashMap<Integer, Float> row = geneRows.get(new Integer(geneId1));
+		HashMap<Integer, EdgeInfo> row = geneRows.get(new Integer(geneId1));
 		if (row == null) {
-			row = new HashMap<Integer, Float>();
+			row = new HashMap<Integer, EdgeInfo>();
 			geneRows.put(new Integer(geneId1), row);
 		}
-		row.put(new Integer(geneId2), new Float(edge));
+		row.put(new Integer(geneId2), new EdgeInfo(edge, interaction) );
 
 		// doing it both ways; [gene2 -> (gene1, edge)]
 		row = geneRows.get(new Integer(geneId2));
 		if (row == null) {
-			row = new HashMap<Integer, Float>();
+			row = new HashMap<Integer, EdgeInfo>();
 			geneRows.put(new Integer(geneId2), row);
 		}
-		row.put(new Integer(geneId1), new Float(edge));
+		row.put(new Integer(geneId1), new EdgeInfo(edge, interaction) );
 
+		edgeNumber++;
 	}
 
 	/**
-	 * Adds and edge between geneId1 and geneId2
+	 * Adds and edge between geneId1 and geneId2, gene names that are not part of the microarray dataset
 	 * 
 	 * @param geneId1
 	 *            String
@@ -132,81 +153,30 @@ public class AdjacencyMatrix implements Serializable {
 	 *            float
 	 */
 	public void add(String geneId1, String geneId2,
-			boolean isGene1InMicroarray, boolean isGene2InMicroarray, float edge) {
+			boolean isGene1InMicroarray, boolean isGene2InMicroarray, float edge, String interaction) {
 
 		if (isGene1InMicroarray == true)
 			geneId1 = String.valueOf(getMappedId(new Integer(geneId1)));
 		if (isGene2InMicroarray == true)
 			geneId2 = String.valueOf(getMappedId(new Integer(geneId2)));
 
-		HashMap<String, Float> row = (HashMap<String, Float>) geneRowsNotInMicroarray
+		HashMap<String, EdgeInfo> row = (HashMap<String, EdgeInfo>) geneRowsNotInMicroarray
 				.get(geneId1);
 		if (row == null) {
-			row = new HashMap<String, Float>();
+			row = new HashMap<String, EdgeInfo>();
 			geneRowsNotInMicroarray.put(geneId1, row);
 		}
-		row.put(new String(geneId2), new Float(edge));
+		row.put(new String(geneId2), new EdgeInfo(edge, interaction));
 
 		// doing it both ways; [gene2 -> (gene1, edge)]
-		row = (HashMap<String, Float>) geneRowsNotInMicroarray.get(geneId2);
+		row = (HashMap<String, EdgeInfo>) geneRowsNotInMicroarray.get(geneId2);
 		if (row == null) {
-			row = new HashMap<String, Float>();
+			row = new HashMap<String, EdgeInfo>();
 			geneRowsNotInMicroarray.put(geneId2, row);
 		}
-		row.put(geneId1, new Float(edge));
+		row.put(geneId1, new EdgeInfo(edge, interaction));
 
-	}
-
-	/**
-	 * 
-	 * FIXME: this should handle both directions instead of letting the caller to call twice as it is now.
-	 * @param geneId1
-	 *            int
-	 * @param geneId2
-	 *            int
-	 * @param interaction
-	 *            String
-	 */
-	public void addDirectional(int geneId1, int geneId2, String interaction) {
-		geneId1 = getMappedId(geneId1);
-		geneId2 = getMappedId(geneId2);
-
-		HashMap<Integer, String> row = (HashMap<Integer, String>) geneInteractionRows
-				.get(new Integer(geneId1));
-		if (row == null) {
-			row = new HashMap<Integer, String>();
-			geneInteractionRows.put(new Integer(geneId1), row);
-		}
-		row.put(new Integer(geneId2), interaction);
-
-	}
-
-	/**
-	 * 
-	 * FIXME: this should handle both directions instead of letting the caller to call twice as it is now.
-	 * @param geneId1
-	 *            String
-	 * @param geneId2
-	 *            String
-	 * @param interaction
-	 *            String
-	 */
-	public void addDirectional(String geneId1, String geneId2,
-			boolean isGene1InMicroarray, boolean isGene2InMicroarray,
-			String interaction) {
-
-		if (isGene1InMicroarray == true)
-			geneId1 = String.valueOf(getMappedId(new Integer(geneId1)));
-		if (isGene2InMicroarray == true)
-			geneId2 = String.valueOf(getMappedId(new Integer(geneId2)));
-
-		HashMap<String, String> row = (HashMap<String, String>) geneInteractionRowsNotInMicroarray
-				.get(new String(geneId1));
-		if (row == null) {
-			row = new HashMap<String, String>();
-			geneInteractionRowsNotInMicroarray.put(new String(geneId1), row);
-		}
-		row.put(new String(geneId2), interaction);
+		edgeNumber++;
 	}
 
 	/**
@@ -252,17 +222,8 @@ public class AdjacencyMatrix implements Serializable {
 		}
 	}
 
-	// TODO: the only caller (AracneAnalysis) is only interested in the zero case
 	public int getConnectionNo() {
-		int connectionNo = 0;
-		Iterator<HashMap<Integer, Float>> valuesIt = geneRows.values()
-				.iterator();
-		while (valuesIt.hasNext()) {
-			HashMap<Integer, Float> geneRow = valuesIt.next();
-			connectionNo += geneRow.size();
-		}
-
-		return connectionNo;
+		return edgeNumber ;
 	}
 
 	public DSMicroarraySet<DSMicroarray> getMicroarraySet() {
@@ -271,10 +232,6 @@ public class AdjacencyMatrix implements Serializable {
 
 	public Map<String, String> getInteractionTypeSifMap() {
 		return interactionTypeSifMap;
-	}
-
-	public void setInteractionTypeSifMap(Map<String, String> map) {		 
-		interactionTypeSifMap = map;
 	}
 
 }
