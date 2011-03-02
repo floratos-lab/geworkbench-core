@@ -100,9 +100,8 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet implements DSAnci
 		int connectionsIgnored = 0;
 
         BufferedReader br = null;
-        AdjacencyMatrix matrix = new AdjacencyMatrix();
-        matrix.setMicroarraySet(maSet);
-        matrix.setLabel(fileName);
+        AdjacencyMatrix matrix = new AdjacencyMatrix(fileName, maSet);
+
         try {
 
             //            readMappings(new File(name));

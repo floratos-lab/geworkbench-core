@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -13,10 +12,7 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 
 /**
- * AdjacencyMatrix
- * <p>
- * 
- * This class needs deep cleaning-up.
+ * AdjacencyMatrix. <p>
  * 
  * @author not attributable
  * @version $Id$
@@ -24,13 +20,11 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 
 public class AdjacencyMatrix implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -4163326138016520666L;
 
 	private static Log log = LogFactory.getLog(AdjacencyMatrix.class);
 
+	// TODO xxxRows and xxxInteractionRow should be merged.
 	private HashMap<Integer, HashMap<Integer, Float>> geneRows = new HashMap<Integer, HashMap<Integer, Float>>();
 	private HashMap<Integer, HashMap<Integer, String>> geneInteractionRows = new HashMap<Integer, HashMap<Integer, String>>();
 	private HashMap<String, HashMap<String, Float>> geneRowsNotInMicroarray = new HashMap<String, HashMap<String, Float>>();
@@ -39,17 +33,16 @@ public class AdjacencyMatrix implements Serializable {
 	private Map<String, Integer> idToGeneMapper = new HashMap<String, Integer>();
 	private Map<String, Integer> snToGeneMapper = new HashMap<String, Integer>();
 
-	private int[] histogram = new int[1024];
-	private DSMicroarraySet<DSMicroarray> maSet = null;
+	private final DSMicroarraySet<DSMicroarray> maSet;
 
-	private String adjName;
-
-	static private final double edgeScale = 1024.0 / 0.15;
+	private final String name;
 
 	private Map<String, String> interactionTypeSifMap = null;
 
-	public AdjacencyMatrix() {
-		super();
+	public AdjacencyMatrix(String name, final DSMicroarraySet<DSMicroarray> microarraySet) {
+		this.name = name;
+		maSet = microarraySet;
+		log.debug("AdjacencyMatrix created with label "+name+" and microarray set "+maSet.getDataSetName());
 	}
 
 	public HashMap<Integer, HashMap<Integer, Float>> getGeneRows() {
@@ -58,34 +51,6 @@ public class AdjacencyMatrix implements Serializable {
 
 	public HashMap<String, HashMap<String, Float>> getGeneRowsNotInMicroarray() {
 		return this.geneRowsNotInMicroarray;
-	}
-
-	/**
-	 * returns the strength of the edge between geneId1 and geneId2 (0.0 == no
-	 * edge)
-	 * 
-	 * @param geneId1
-	 *            int
-	 * @param geneId2
-	 *            int
-	 * @return float
-	 */
-	public float get(int geneId1, int geneId2) {
-		float maxValue = 0;
-		geneId1 = getMappedId(geneId1);
-		if (geneId1 >= 0) {
-			HashMap<Integer, Float> row = geneRows.get(new Integer(geneId1));
-			if (row != null) {
-				geneId2 = getMappedId(geneId2);
-				if (geneId2 >= 0) {
-					Float f = (Float) row.get(new Integer(geneId2));
-					if (f != null) {
-						maxValue = f.floatValue();
-					}
-				}
-			}
-		}
-		return maxValue;
 	}
 
 	public HashMap<Integer, HashMap<Integer, String>> getInteractionMap() {
@@ -97,22 +62,20 @@ public class AdjacencyMatrix implements Serializable {
 	}
 
 	/**
-	 * Returns a map with all the edges to geneId
+	 * Returns a map with all the edges to geneId.
+	 * This is only used by MRA analysis.
 	 * 
 	 * @param geneId
 	 *            int
 	 * @return HashMap
 	 */
 	public HashMap<Integer, Float> get(int geneId) {
-		try {
-			geneId = getMappedId(geneId);
-			if (geneId > 0) {
-				return geneRows.get(new Integer(geneId));
-			}
-		} catch (Exception ex) {
-			System.out.println("Oh oh");
+		geneId = getMappedId(geneId);
+		if (geneId > 0) {
+			return geneRows.get(new Integer(geneId));
+		} else {
+			return null;
 		}
-		return null;
 	}
 
 	public void addGeneRow(int geneId) {
@@ -124,11 +87,7 @@ public class AdjacencyMatrix implements Serializable {
 	}
 
 	public String getLabel() {
-		return this.adjName;
-	}
-
-	public void setLabel(String name) {
-		this.adjName = name;
+		return name;
 	}
 
 	/**
@@ -144,14 +103,7 @@ public class AdjacencyMatrix implements Serializable {
 	public void add(int geneId1, int geneId2, float edge) {
 		geneId1 = getMappedId(geneId1);
 		geneId2 = getMappedId(geneId2);
-		if ((geneId1 >= 0) && (geneId2 >= 0)) {
-			int bin = Math.min(1023, (int) (edge * edgeScale));
-			if (bin >= 0) {
-				histogram[bin]++;
-			}
-			// adding the neighbor and edge for geneId1
-			// gene1 -> (gene2, edge)
-		}
+
 		HashMap<Integer, Float> row = geneRows.get(new Integer(geneId1));
 		if (row == null) {
 			row = new HashMap<Integer, Float>();
@@ -207,6 +159,7 @@ public class AdjacencyMatrix implements Serializable {
 
 	/**
 	 * 
+	 * FIXME: this should handle both directions instead of letting the caller to call twice as it is now.
 	 * @param geneId1
 	 *            int
 	 * @param geneId2
@@ -230,6 +183,7 @@ public class AdjacencyMatrix implements Serializable {
 
 	/**
 	 * 
+	 * FIXME: this should handle both directions instead of letting the caller to call twice as it is now.
 	 * @param geneId1
 	 *            String
 	 * @param geneId2
@@ -255,68 +209,50 @@ public class AdjacencyMatrix implements Serializable {
 		row.put(new String(geneId2), interaction);
 	}
 
+	/**
+	 * Return an index to the microarray set's marker list.
+	 * 
+	 * If the index points to a marker that has a previously seen label (probeset ID)
+	 * or a previously seen gene name (gene symbol), return the index of the previously seen one;
+	 * if it is a new one, return the input.
+	 * 
+	 * @param geneId - an index to the microarray set's marker list
+	 * @return an different index if the probeset or the gene symbol was seen before.
+	 */
 	public int getMappedId(int geneId) {
-		if (geneId >= 0 && geneId < maSet.getMarkers().size()) {
-			DSGeneMarker gm = maSet.getMarkers().get(geneId);
-			// bug 2000, replaced getShortName() with getGeneName()
-			String sn = gm.getGeneName();
-			if (sn == null || sn.trim().length() == 0) {
-				return geneId;
-			}
-			if (sn.compareToIgnoreCase("ExoBCL6") == 0) {
-				geneId = -1;
-			} else if (gm.getLabel().compareToIgnoreCase("1827_s_at") == 0) {
-				geneId = gm.getSerial();
-			} else if (gm.getLabel().compareToIgnoreCase("1936_s_at") == 0) {
-				geneId = gm.getSerial();
-			} else {
-				if (sn.compareToIgnoreCase("MYC") == 0) {
-					// do nothing
-				}
-				if (gm.getLabel().compareToIgnoreCase("1936_s_at") == 0) {
-					sn = "MYC";
-					try {
-						gm = maSet.getMarkers().get("1973_s_at");
-					} catch (Exception ex) {
-						gm = null;
-					}
-				}
-				if (gm != null) {
-					// Test if a gene with the same name was mapped before.
-					Integer prevId = (Integer) idToGeneMapper
-							.get(gm.getLabel());
-					if (prevId != null) {
-						// This gene was mapped before. Replace with mapped one
-						geneId = prevId.intValue();
-					} else {
-						// Test if a gene with the same name was reported
-						// before.
-						prevId = (Integer) snToGeneMapper.get(sn);
-						if (prevId != null) {
-							// There was a previous gene with the same name.
-							// Hence:
-							// replace the id, and add a new mapping to both
-							// idToGeneMapper
-							// and geneToIdMapper
-							snToGeneMapper.put(sn, prevId);
-							idToGeneMapper.put(gm.getLabel(), prevId);
-							geneId = prevId.intValue();
-						} else {
-							snToGeneMapper.put(sn, new Integer(geneId));
-							idToGeneMapper.put(gm.getLabel(), new Integer(
-									geneId));
-						}
-					}
-				}
-			}
+		if (geneId < 0 || geneId >= maSet.getMarkers().size())
+			return geneId; // garbage in, garbage out
+
+		DSGeneMarker gm = maSet.getMarkers().get(geneId);
+		// bug 2000, replaced getShortName() with getGeneName()
+		String geneName = gm.getGeneName();
+		if (geneName == null || geneName.trim().length() == 0 || geneName.equals("---")) {
+			return geneId;
 		}
-		return geneId;
+
+		String label = gm.getLabel();
+		// Test if a gene with the same label was mapped before.
+		Integer prevId = (Integer) idToGeneMapper.get(label);
+		if (prevId != null) {
+			// This gene was mapped before. Replace with mapped one
+			return prevId.intValue();
+		} 
+		
+		// Test if a gene with the same name was reported before.
+		prevId = (Integer) snToGeneMapper.get(geneName);
+		if (prevId != null) {
+			// There was a previous gene with the same name.
+			// add a new mapping to idToGeneMapper
+			idToGeneMapper.put(label, prevId);
+			return prevId;
+		} else { // new name never seen before
+			snToGeneMapper.put(geneName, new Integer(geneId));
+			idToGeneMapper.put(label, new Integer(geneId));
+			return geneId;
+		}
 	}
 
-	public Set<Integer> getKeys() {
-		return geneRows.keySet();
-	}
-
+	// TODO: the only caller (AracneAnalysis) is only interested in the zero case
 	public int getConnectionNo() {
 		int connectionNo = 0;
 		Iterator<HashMap<Integer, Float>> valuesIt = geneRows.values()
@@ -329,11 +265,6 @@ public class AdjacencyMatrix implements Serializable {
 		return connectionNo;
 	}
 
-	public void setMicroarraySet(DSMicroarraySet<DSMicroarray> microarraySet) {
-		maSet = microarraySet;
-		log.debug("set microarray set " + maSet.getDataSetName());
-	}
-
 	public DSMicroarraySet<DSMicroarray> getMicroarraySet() {
 		return maSet;
 	}
@@ -343,8 +274,7 @@ public class AdjacencyMatrix implements Serializable {
 	}
 
 	public void setInteractionTypeSifMap(Map<String, String> map) {		 
-			interactionTypeSifMap = map;
-
+		interactionTypeSifMap = map;
 	}
 
 }
