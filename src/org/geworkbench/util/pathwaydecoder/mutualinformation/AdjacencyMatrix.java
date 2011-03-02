@@ -49,6 +49,7 @@ public class AdjacencyMatrix implements Serializable {
 
 	private int edgeNumber = 0;
 	private int nodeNumber = 0;
+	private int nodeNumberNotInMicroarray = 0;
 
 	public AdjacencyMatrix(String name, final DSMicroarraySet<DSMicroarray> microarraySet) {
 		this.name = name;
@@ -62,10 +63,6 @@ public class AdjacencyMatrix implements Serializable {
 		maSet = microarraySet;
 		this.interactionTypeSifMap = interactionTypeSifMap;
 		log.debug("AdjacencyMatrix created with label "+name+" and microarray set "+maSet.getDataSetName()+", with interaction type map");
-	}
-
-	public HashMap<String, HashMap<String, EdgeInfo>> getGeneRowsNotInMicroarray() {
-		return this.geneRowsNotInMicroarray;
 	}
 
 	/**
@@ -167,6 +164,7 @@ public class AdjacencyMatrix implements Serializable {
 		if (row == null) {
 			row = new HashMap<String, EdgeInfo>();
 			geneRowsNotInMicroarray.put(geneId1, row);
+			nodeNumberNotInMicroarray++;
 		}
 		row.put(new String(geneId2), new EdgeInfo(edge, interaction));
 
@@ -175,6 +173,7 @@ public class AdjacencyMatrix implements Serializable {
 		if (row == null) {
 			row = new HashMap<String, EdgeInfo>();
 			geneRowsNotInMicroarray.put(geneId2, row);
+			nodeNumberNotInMicroarray++;
 		}
 		row.put(geneId1, new EdgeInfo(edge, interaction));
 
@@ -253,6 +252,22 @@ public class AdjacencyMatrix implements Serializable {
 	}
 
 	/**
+	 * Edge for those not from the input microarray dataset. 
+	 *
+	 */
+	public static class EdgeWithStringNode {
+		public String node1;
+		public String node2;
+		public EdgeInfo info;
+		
+		EdgeWithStringNode(String node1, String node2, EdgeInfo info) {
+			this.node1 = node1;
+			this.node2 = node2;
+			this.info = info;
+		}
+	}
+
+	/**
 	 * 
 	 * @return all edges
 	 */
@@ -284,5 +299,27 @@ public class AdjacencyMatrix implements Serializable {
 
 	public List<Integer> getNodes() {
 		return new ArrayList<Integer>(geneRows.keySet());
+	}
+
+	public int getNodeNumberNotInMicroarray() {
+		return nodeNumberNotInMicroarray ;
+	}
+
+	/**
+	 * 
+	 * @return edges from a given node for those not in input microarray dataset
+	 */
+	public List<EdgeWithStringNode> getEdgesNotInMicroarray(String node1) {
+		List<EdgeWithStringNode> list = new ArrayList<EdgeWithStringNode>();
+		Map<String, AdjacencyMatrix.EdgeInfo> destGenes = geneRowsNotInMicroarray.get(node1);
+		for (String node2 : destGenes.keySet()) {
+			list.add(new EdgeWithStringNode(node1, node2, destGenes.get(node2)));
+		}
+
+		return list;
+	}
+
+	public List<String> getNodesNotInMicroarray() {
+		return new ArrayList<String>(geneRowsNotInMicroarray.keySet());
 	}
 }
