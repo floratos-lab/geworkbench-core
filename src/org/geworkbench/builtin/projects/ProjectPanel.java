@@ -76,7 +76,6 @@ import org.geworkbench.engine.management.Script;
 import org.geworkbench.engine.management.Subscribe;
 import org.geworkbench.engine.management.TypeMap;
 import org.geworkbench.engine.preferences.GlobalPreferences;
-import org.geworkbench.engine.properties.PropertiesManager;
 import org.geworkbench.engine.skin.Skin;
 import org.geworkbench.events.AdjacencyMatrixEvent;
 import org.geworkbench.events.CaArrayQueryEvent;
@@ -2391,8 +2390,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				if (n == JOptionPane.CANCEL_OPTION)
 					return;
 
-				clearUserInfoCache();
-
 				if (n == JOptionPane.YES_OPTION) {
 					saveWorkspace_actionPerformed(true);
 				} else { // if choosing No
@@ -2402,15 +2399,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			}
 		});
 
-	}
-
-	private void clearUserInfoCache(){
-		PropertiesManager properties = PropertiesManager.getInstance();
-		try {
-			properties.setProperty(this.getClass(), RWspHandler.USER_INFO, "");
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		}
 	}
 
 	private void saveWorkspace_actionPerformed(boolean terminating) {

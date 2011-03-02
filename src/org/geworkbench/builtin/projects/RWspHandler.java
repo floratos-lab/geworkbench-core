@@ -8,7 +8,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Timestamp;
@@ -37,7 +36,6 @@ import org.apache.commons.lang.StringUtils;
 import org.geworkbench.builtin.projects.WorkspaceHandler.OpenTask;
 import org.geworkbench.builtin.projects.WorkspaceHandler.SaveTask;
 import org.geworkbench.engine.preferences.GlobalPreferences;
-import org.geworkbench.engine.properties.PropertiesManager;
 import org.geworkbench.util.FilePathnameUtils;
 import org.geworkbench.util.ProgressDialog;
 import org.geworkbench.util.ProgressItem;
@@ -96,6 +94,7 @@ public class RWspHandler {
 	private JTextField desc;
 	private JDialog newDialog;
 	protected static JDialog listDialog;
+	private static String savedUserInfo = null;
 
 	protected void getUserInfo() {
 		FormLayout layout = new FormLayout("left:max(25dlu;pref), 5dlu, 78dlu");
@@ -115,14 +114,7 @@ public class RWspHandler {
 					userInfo = "";
 				} else {
 					userInfo = username + USER_INFO_DELIMIETER + passwd;
-					PropertiesManager properties = PropertiesManager
-							.getInstance();
-					try {
-						properties.setProperty(this.getClass(), USER_INFO,
-								String.valueOf(userInfo));
-					} catch (IOException ioe) {
-						ioe.printStackTrace();
-					}
+					savedUserInfo = userInfo;
 				}
 				loginDialog.dispose();
 			}
@@ -158,19 +150,12 @@ public class RWspHandler {
 		});
 		builder.append("", skip);
 		
-		PropertiesManager pm = PropertiesManager.getInstance();
-		String savedUserInfo = null;
-		try {
-			savedUserInfo = pm.getProperty(this.getClass(), USER_INFO, "");
-			if (!StringUtils.isEmpty(savedUserInfo)) {
-				String s[] = savedUserInfo.split(USER_INFO_DELIMIETER, 2);
-				if (s.length >= 2) {
-					usernameField.setText(s[0]);
-					passwordField.setText(s[1]);
-				}
+		if (!StringUtils.isEmpty(savedUserInfo)) {
+			String s[] = savedUserInfo.split(USER_INFO_DELIMIETER, 2);
+			if (s.length >= 2) {
+				usernameField.setText(s[0]);
+				passwordField.setText(s[1]);
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 		loginDialog.addWindowListener(new WindowAdapter(){
 			public void windowClosing(WindowEvent we){
