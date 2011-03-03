@@ -68,7 +68,7 @@ public class WorkspaceHandler {
 		fc.setFileFilter(filter);
 		fc.setDialogTitle("Save Current Workspace");
 		String extension = filter.getExtension();
-		int choice = fc.showSaveDialog(enclosingProjectPanel.jProjectPanel);
+		int choice = fc.showSaveDialog(enclosingProjectPanel.getComponent());
 		if (choice == JFileChooser.APPROVE_OPTION) {
 			File selectedFile = fc.getSelectedFile();
 			wsFilename = selectedFile.getAbsolutePath();
@@ -144,7 +144,7 @@ public class WorkspaceHandler {
 		fc.setFileFilter(filter);
 		fc.setDialogTitle("Open Workspace");
 		String extension = filter.getExtension();
-		int choice = fc.showOpenDialog(enclosingProjectPanel.jProjectPanel);
+		int choice = fc.showOpenDialog(enclosingProjectPanel.getComponent());
 		if (choice == JFileChooser.APPROVE_OPTION) {
 			wsFilename = fc.getSelectedFile().getAbsolutePath();
 			if (!wsFilename.endsWith(extension)) {
@@ -174,7 +174,7 @@ public class WorkspaceHandler {
 		
 	protected boolean confirmLoading(String wspDir, String wspFname) {
 		// current workspace is not empty
-		if (enclosingProjectPanel.projectTree.getRowCount() > 1) {
+		if (enclosingProjectPanel.countProjectTree() > 1) {
 			// inform user this will overwrite the current workspace
 			// give user a chance to continue or cancel workspace loading
 			String info = "Opening this";
