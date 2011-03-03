@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.security.MessageDigest;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -139,7 +140,7 @@ public class RegPanel extends JPanel implements ActionListener {
 	{
 		RegisterBean bean = new RegisterBean();
 		bean.setUName(userId.getText());
-		bean.setPassword(password.getPassword());
+		bean.setPassword(getEncodedChars(password.getPassword()));
 		bean.setFName(fname.getText());
 		bean.setLName(lname.getText());
 		bean.setLabAffiliation(labaff.getText());
@@ -349,7 +350,7 @@ public class RegPanel extends JPanel implements ActionListener {
 				res = Client.transferFile(new File(tmpfile), "");
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
-				"GeWorkbench cannot register user for remote workspace"+
+				"GeWorkbench cannot register user for remote workspace.\n"+
 				"Please try again later or report the problem to geWorkbench support team.\n",
 				"Database connection/data transfer error", JOptionPane.ERROR_MESSAGE);
     			return null;
@@ -462,5 +463,32 @@ public class RegPanel extends JPanel implements ActionListener {
 	{
 		jframe.setVisible(false); 	
 	}     
+
+    private static final String hash = "MD5";    
+    /**
+     * Encode clear text char[] to digested char[]
+     * @param b
+     * @return
+     */
+    public static char[] getEncodedChars(char[] clearText) {
+		char hexDigit[] = {'0', '1', '2', '3', '4', '5', '6', '7',
+				'8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+		byte[] b = null;
+    	try {
+	    	MessageDigest md = MessageDigest.getInstance(hash);
+	    	md.update(new String(clearText).getBytes());
+	    	b = md.digest();
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	if (b == null)  return null;
+		char[] buf = new char[b.length*2];
+		int i = 0;
+		for (int j=0; j<b.length; j++) {
+			buf[i++] = hexDigit[(b[j] >> 4) & 0x0f];
+			buf[i++] = hexDigit[b[j] & 0x0f];
+		}
+    	return buf;
+	}
 
 }
