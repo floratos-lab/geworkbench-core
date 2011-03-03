@@ -1538,7 +1538,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * not the added subNode, then do nothing.
 	 *
 	 */
-	public void removeAddedSubNode(DSAncillaryDataSet<DSBioObject> aDataSet) {
+	public void removeAddedSubNode(DSAncillaryDataSet<? extends DSBioObject> aDataSet) {
 
 		if (selection.getSelectedNode() instanceof DataSetSubNode) {
 			if (((DataSetSubNode) (selection.getSelectedNode()))._aDataSet != aDataSet) {

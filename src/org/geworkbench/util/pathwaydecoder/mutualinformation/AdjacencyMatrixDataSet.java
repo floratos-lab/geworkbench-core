@@ -14,7 +14,7 @@ import javax.swing.JOptionPane;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
-import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
+import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
@@ -24,8 +24,9 @@ import org.geworkbench.parsers.InputFileFormatException;
 
 /**
  * @author John Watkinson
+ * @version $Id$
  */
-public class AdjacencyMatrixDataSet extends CSAncillaryDataSet implements DSAncillaryDataSet {
+public class AdjacencyMatrixDataSet extends CSAncillaryDataSet<DSMicroarray> {
 
     static Log log = LogFactory.getLog(AdjacencyMatrixDataSet.class);
 
@@ -39,8 +40,9 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet implements DSAnci
     private int depth;
     private String networkName;
 
-    public AdjacencyMatrixDataSet(AdjacencyMatrix matrix, int geneId, double threshold, int depth, String name, String networkName, DSMicroarraySet parent) {
-        super(parent, name);
+	@SuppressWarnings("unchecked")
+	public AdjacencyMatrixDataSet(AdjacencyMatrix matrix, int geneId, double threshold, int depth, String name, String networkName, DSMicroarraySet<? extends DSMicroarray> parent) {
+        super((DSDataSet<DSMicroarray>) parent, name);
         setID(RandomNumberGenerator.getID());
         this.matrix = matrix;
         this.geneId = geneId;
@@ -59,7 +61,7 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet implements DSAnci
                 return;
             }
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-            DSMicroarraySet mset = matrix.getMicroarraySet();
+            DSMicroarraySet<DSMicroarray> mset = matrix.getMicroarraySet();
             DSItemList<DSGeneMarker> markers = mset.getMarkers();
 
             // if entry key is less than 0, for CNKB component, it means the gene is in currently selected microarray.
