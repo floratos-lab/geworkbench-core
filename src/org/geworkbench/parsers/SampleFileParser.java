@@ -9,8 +9,6 @@ import java.io.InterruptedIOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.ProgressMonitorInputStream;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
@@ -20,6 +18,7 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSExpressionMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 
 /**  
  * @author Nikhil
@@ -45,8 +44,7 @@ public class SampleFileParser {
 	 * 
 	 * @see org.geworkbench.components.parsers.FileFormat#getMArraySet(java.io.File)
 	 */
-	@SuppressWarnings("unchecked")
-	public DSMicroarraySet getMArraySet(File file)
+	public DSMicroarraySet<DSMicroarray> getMArraySet(File file)
 			throws InputFileFormatException, InterruptedIOException {   
 		
 		BufferedReader in = null;

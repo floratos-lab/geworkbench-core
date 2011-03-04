@@ -5,8 +5,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.io.InputStreamReader;
+import java.io.InterruptedIOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -16,7 +16,6 @@ import javax.swing.ProgressMonitorInputStream;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
@@ -24,9 +23,11 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSExpressionMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 
 /**  
  * @author Nikhil
+ * @version $Id$
  */
 public class GeoSeriesMatrixParser {
 
@@ -177,8 +178,7 @@ public class GeoSeriesMatrixParser {
 	 * 
 	 * @see org.geworkbench.components.parsers.FileFormat#getMArraySet(java.io.File)
 	 */
-	@SuppressWarnings("unchecked")
-	public DSMicroarraySet getMArraySet(File file)
+	public DSMicroarraySet<DSMicroarray> getMArraySet(File file)
 			throws InputFileFormatException, InterruptedIOException {
 
 		final int extSeperater = '.';
@@ -409,28 +409,5 @@ public class GeoSeriesMatrixParser {
 		return maSet;
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	public List getOptions() {
-		throw new UnsupportedOperationException(
-				"Method getOptions() not yet implemented.");
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.geworkbench.components.parsers.microarray.DataSetFileFormat#getDataFile(java.io.File[])
-	 */
-	@SuppressWarnings("unchecked")
-	public DSDataSet getDataFile(File[] files) {
-		// TODO Implement this
-		// org.geworkbench.components.parsers.microarray.DataSetFileFormat
-		// abstract method
-		throw new UnsupportedOperationException(
-				"Method getDataFile(File[] files) not yet implemented.");
-	}
 }
 

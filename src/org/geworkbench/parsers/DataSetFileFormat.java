@@ -41,16 +41,4 @@ public abstract class DataSetFileFormat extends FileFormat {
 	abstract public DSDataSet<? extends DSBioObject> getDataFile(File[] files)
 			throws InputFileFormatException;
 
-	/**
-	 * Generates and returns a <code>MicrorarraySet</code> from the designated
-	 * argument. In <code>file</code> does not conform to the format, returns
-	 * <code>null</code>.
-	 * 
-	 * @param file
-	 *            The file containing the input data.
-	 * @return The corresponding <code>MicroarraySet</code> object.
-	 */
-	public abstract DSDataSet<? extends DSBioObject> getMArraySet(File file)
-			throws InputFileFormatException, InterruptedIOException;
-
 }

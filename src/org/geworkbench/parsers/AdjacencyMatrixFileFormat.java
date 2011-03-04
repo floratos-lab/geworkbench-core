@@ -56,15 +56,13 @@ public class AdjacencyMatrixFileFormat extends DataSetFileFormat {
 		return ds;
 	}
 
-	@SuppressWarnings("unused")
 	@Override
 	public DSDataSet<? extends DSBioObject> getDataFile(File[] files)
 			throws InputFileFormatException {
 		return null;
 	}
 
-	@SuppressWarnings({ "unchecked", "unused" })
-	@Override
+	@SuppressWarnings({ "unchecked" })
 	public DSDataSet<? extends DSBioObject> getMArraySet(File file)
 			throws InputFileFormatException, InterruptedIOException {
 

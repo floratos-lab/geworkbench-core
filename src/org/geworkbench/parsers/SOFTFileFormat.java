@@ -1,25 +1,19 @@
-
 package org.geworkbench.parsers;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InterruptedIOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import javax.swing.JOptionPane;
-import javax.swing.ProgressMonitorInputStream;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.annotation.CSAnnotationContext;
@@ -35,10 +29,10 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.CSExpressionMar
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.parsers.resources.Resource;
-import org.geworkbench.parsers.GeoSeriesMatrixParser;
 
 /**  
  * @author Nikhil
+ * @version $Id$
  */
 public class SOFTFileFormat extends DataSetFileFormat {
 
@@ -51,10 +45,9 @@ public class SOFTFileFormat extends DataSetFileFormat {
 
 	ExpressionResource resource = new ExpressionResource();
 		
-	SOFTFilter maFilter = null;
+	private final SOFTFilter maFilter = new SOFTFilter();
 	 public SOFTFileFormat() {
 		formatName = "GEO Soft Files & GEO Series Matrix Files";
-		maFilter = new SOFTFilter();
 		Arrays.sort(maExtensions);
 	}
 
@@ -88,6 +81,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 	 */
 	String[] checkLine = null;
 	int carry = 0;
+	@Override
 	public boolean checkFormat(File file) throws InterruptedIOException {
 		BufferedReader check = null;
 		String Checker = null;
@@ -135,12 +129,12 @@ public class SOFTFileFormat extends DataSetFileFormat {
 	 * 
 	 * @see org.geworkbench.components.parsers.microarray.DataSetFileFormat#getDataFile(java.io.File)
 	 */
-	@SuppressWarnings("unchecked")
-	public DSDataSet getDataFile(File file) throws InputFileFormatException, InterruptedIOException{  
+	@Override
+	public DSDataSet<DSMicroarray> getDataFile(File file) throws InputFileFormatException, InterruptedIOException{  
 		
 		BufferedReader readIn = null;
 		String lineCh = null; 
-		DSMicroarraySet maSet1 = new CSExprMicroarraySet();
+		DSMicroarraySet<DSMicroarray> maSet1 = new CSExprMicroarraySet();
 		try {
 			readIn = new BufferedReader(new FileReader(file));
 			try {
@@ -168,7 +162,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 						return maSet1;
 					}
 					if(!lineCh.subSequence(0, 7).equals("^SERIES")){
-						maSet1 = getMArraySet(file);
+						maSet1 = parseSeriesFile(file);
 						return  maSet1;
 					}
 				}
@@ -199,14 +193,8 @@ public class SOFTFileFormat extends DataSetFileFormat {
 		return null;
 	}
 	 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.geworkbench.components.parsers.FileFormat#getMArraySet(java.io.File)
-	 */
-	@SuppressWarnings("unchecked")
-	public DSMicroarraySet getMArraySet(File file)
-			throws InputFileFormatException, InterruptedIOException {
+	public DSMicroarraySet<DSMicroarray> parseSeriesFile(File file)
+		throws InputFileFormatException, InterruptedIOException {
 		
 		if (!checkFormat(file)) {
 			log
@@ -386,10 +374,11 @@ public class SOFTFileFormat extends DataSetFileFormat {
 		labelDisp(file, maSet, arrayNames);
 		return maSet;
 	}
+	
 	/*
 	 * Method adds data to Array/Phenotype Sets drop down in the selection panel 
 	 */
-	public void labelDisp(File dataFile, CSExprMicroarraySet mArraySet, List<String> arrays)
+	private void labelDisp(File dataFile, CSExprMicroarraySet mArraySet, List<String> arrays)
 	{ 
 		List<String> arrayNames = arrays;
 		BufferedReader read = null;
@@ -440,15 +429,6 @@ public class SOFTFileFormat extends DataSetFileFormat {
 		}
 			
 	}
-	/**
-	 * 
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	public List getOptions() {
-		throw new UnsupportedOperationException(
-				"Method getOptions() not yet implemented.");
-	}
 
 	/*
 	 * (non-Javadoc)
@@ -464,8 +444,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 	 * 
 	 * @see org.geworkbench.components.parsers.microarray.DataSetFileFormat#getDataFile(java.io.File[])
 	 */
-	@SuppressWarnings("unchecked")
-	public DSDataSet getDataFile(File[] files) {
+	public DSDataSet<?> getDataFile(File[] files) {
 		// TODO Implement this
 		// org.geworkbench.components.parsers.microarray.DataSetFileFormat
 		// abstract method
