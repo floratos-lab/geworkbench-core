@@ -134,7 +134,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	// Initialize default icons
 
-	private LoadData loadData = new LoadData(this);
+	private LoadDataDialog loadData = new LoadDataDialog(this);
 
 	private ProjectSelection selection = new ProjectSelection(this);
 
@@ -1215,8 +1215,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			return;
 		}
 
-		String dir = LoadData.getLastDataDirectory();
-		String format = LoadData.getLastDataFormat();
+		String dir = LoadDataDialog.getLastDataDirectory();
+		String format = LoadDataDialog.getLastDataFormat();
 		loadData.setDirectory(dir);
 		loadData.setFormat(format);
 		// setupInputFormats() is called at every invocation of the "Open File"

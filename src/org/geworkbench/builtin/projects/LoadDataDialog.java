@@ -54,8 +54,8 @@ import org.geworkbench.util.FilePathnameUtils;
  * @author First Genetic Trust Inc.
  * @version $Id: LoadData.java,v 1.42 2009-10-26 21:02:43 jiz Exp $
  */
-public class LoadData extends JDialog {
-	private Log log = LogFactory.getLog(LoadData.class);
+public class LoadDataDialog extends JDialog {
+	private Log log = LogFactory.getLog(LoadDataDialog.class);
 	/* this class name must match the one in all.xml */
 	private static final String CAARRAYPANEL_CLASS_NAME = "org.geworkbench.builtin.projects.util.CaARRAYPanel";
 	/* this class name must match the one loaded through ccm */
@@ -141,7 +141,7 @@ public class LoadData extends JDialog {
 	private boolean merge;
 	private static final String QUERYTITLE = "Query the caARRAY Server.";
 
-	public LoadData(ProjectPanel parent) {
+	public LoadDataDialog(ProjectPanel parent) {
 		parentProjectPanel = parent;
 
 		try {
@@ -564,11 +564,14 @@ public class LoadData extends JDialog {
 			long maxMemory = runtime.maxMemory();
 			long allocatedMemory = runtime.totalMemory();
 			long freeMemory = runtime.freeMemory();
-			long actualUsedMemory = allocatedMemory - freeMemory; 
+			long actualUsedMemory = allocatedMemory - freeMemory;
+			int empiricalFactor = 1;
 			// From observation, the amount of Java Heap memory used when loading
-			// some files is about 4 times the lenght of the file.
-			// TODO see how much mem each data type uses vs its file size.
-			long proposedMemUsed = actualUsedMemory + 4*totalFileLength ;
+			// some .exp files is about 4 times the lenght of the file.
+			if(selectedFilter.getDescription().startsWith("Affymetrix File Matrix"))
+				empiricalFactor = 4;
+			// TODO see how much memory each data type uses vs its file size.
+			long proposedMemUsed = actualUsedMemory + empiricalFactor*totalFileLength ;
 			long proposedPercentUsed = (100*proposedMemUsed)/maxMemory;
 			if (proposedPercentUsed > 90) {
 				String warningMessage = "Loading this file";
@@ -577,7 +580,7 @@ public class LoadData extends JDialog {
 				}
 				int response = JOptionPane.showConfirmDialog(null,
 						warningMessage + 
-						", may attempt to use\n" + 
+						" may attempt to use\n" + 
 						proposedPercentUsed +
 						"% of your total Java heap memory.\n" +
 						"This may lead to an out of memory exception.\n\n" +

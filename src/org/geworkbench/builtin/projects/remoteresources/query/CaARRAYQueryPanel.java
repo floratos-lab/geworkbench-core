@@ -34,7 +34,7 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.AbstractTableModel;
 
-import org.geworkbench.builtin.projects.LoadData;
+import org.geworkbench.builtin.projects.LoadDataDialog;
 import org.geworkbench.builtin.projects.remoteresources.RemoteResource;
 import org.geworkbench.builtin.projects.remoteresources.RemoteResourceDialog;
 import org.geworkbench.builtin.projects.util.CaARRAYPanel;
@@ -106,7 +106,7 @@ public class CaARRAYQueryPanel extends JDialog {
 	private final static String SERVERURL = "serverlocation";
 	private final static String SERVERPORT = "serverport";
 
-	public void display(LoadData frameComp, String remoteSourceName) {
+	public void display(LoadDataDialog frameComp, String remoteSourceName) {
 		RemoteResource resourceDialog = RemoteResourceDialog
 				.getRemoteResourceManager().getSelectedResouceByName(
 						remoteSourceName.trim());
@@ -267,7 +267,7 @@ public class CaARRAYQueryPanel extends JDialog {
 			165, 163, 151));
 	Border border6 = new TitledBorder(border5, "Value");
 	ValueTableModel tableModel = new ValueTableModel();
-	LoadData loadData;
+	LoadDataDialog loadData;
 	boolean loaded = false; // To present whether the values are retrieved
 
 	// already.

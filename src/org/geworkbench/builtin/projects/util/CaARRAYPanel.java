@@ -40,7 +40,7 @@ import javax.swing.tree.TreeSelectionModel;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.geworkbench.builtin.projects.LoadData;
+import org.geworkbench.builtin.projects.LoadDataDialog;
 import org.geworkbench.builtin.projects.remoteresources.carraydata.CaArray2Experiment;
 import org.geworkbench.engine.config.VisualPlugin;
 import org.geworkbench.engine.management.Publish;
@@ -95,7 +95,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 	private JButton extendButton = new JButton();
 	private JButton openButton = new JButton();
 	private JButton cancelButton = new JButton();
-	private LoadData parent = null;
+	private LoadDataDialog parent = null;
 	private DefaultMutableTreeNode root = new DefaultMutableTreeNode(
 			"caARRAY experiments");
 	private DefaultTreeModel remoteTreeModel = new DefaultTreeModel(root);
@@ -110,7 +110,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 
 	private ProgressBar progressBar = ProgressBar
 			.create(ProgressBar.INDETERMINATE_TYPE);
-	private LoadData parentPanel;
+	private LoadDataDialog parentPanel;
 	private boolean merge;
 	private volatile boolean stillWaitForConnecting = true;
 	private TreeMap<String, CaArray2Experiment> treeMap;
@@ -130,7 +130,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 		}
 	}
 
-	public void setParent(LoadData p) {
+	public void setParent(LoadDataDialog p) {
 		parent = p;
 	}
 
@@ -793,7 +793,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 		return currentResourceName;
 	}
 
-	public LoadData getParentPanel() {
+	public LoadDataDialog getParentPanel() {
 		return parentPanel;
 	}
 
@@ -831,7 +831,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 		repaint();
 	}
 
-	public void setParentPanel(LoadData parentPanel) {
+	public void setParentPanel(LoadDataDialog parentPanel) {
 		this.parentPanel = parentPanel;
 	}
 
