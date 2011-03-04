@@ -117,6 +117,12 @@ public class SOFTFileFormat extends DataSetFileFormat {
 			e.printStackTrace();
 			errorMessage = e.getMessage();
 			return false;
+		} finally {
+			try {
+				br.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		return true;
 	}
@@ -155,11 +161,12 @@ public class SOFTFileFormat extends DataSetFileFormat {
 					lineCh = readIn.readLine();
 					if(lineCh.subSequence(0, 7).equals("^SERIES")){
 						SOFTSeriesParser parser = new SOFTSeriesParser();
-						maSet1 = parser.getMArraySet(file);
+						readIn.close();
+						maSet1 = parser.parseSOFTSeriesFile(file);
 						return maSet1;
 					}
 					if(!lineCh.subSequence(0, 7).equals("^SERIES")){
-						maSet1 = parseSeriesFile(file);
+						maSet1 = parseFile(file);
 						return  maSet1;
 					}
 				}
@@ -190,7 +197,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 		return null;
 	}
 	 
-	private DSMicroarraySet<DSMicroarray> parseSeriesFile(File file)
+	private DSMicroarraySet<DSMicroarray> parseFile(File file)
 		throws InputFileFormatException, InterruptedIOException {
 		
 		if (!checkFormat(file)) {

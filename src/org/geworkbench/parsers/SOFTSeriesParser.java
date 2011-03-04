@@ -38,14 +38,61 @@ public class SOFTSeriesParser {
     static final char MARGINAL  = 'M';
     static final char UNDEFINED = '\0'; 
     char detectionStatus = UNDEFINED;
- 	 
+
+	transient private String errorMessage = null;
+
+	// only check multiple platform for now.
+	private boolean checkFormat(File file) throws InterruptedIOException {
+
+		int platformNumber = 0;
+		BufferedReader br = null;
+		
+		try {
+			br = new BufferedReader(new FileReader(file));
+			String line = br.readLine();
+			if (line == null) {
+				errorMessage = "no content in file";
+				return false;
+			}
+			while (line != null) {
+				if(line.startsWith("!Series_platform_id")) {
+					platformNumber++;
+					if(platformNumber>1) {
+						errorMessage = "more than one platform in this file";
+						return false;
+					}
+				}
+				line = br.readLine();
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			errorMessage = e.getMessage();
+			return false;
+		} catch (IOException e) {
+			e.printStackTrace();
+			errorMessage = e.getMessage();
+			return false;
+		} finally {
+			try {
+				br.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return true;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.geworkbench.components.parsers.FileFormat#getMArraySet(java.io.File)
 	 */
-	public DSMicroarraySet<DSMicroarray> getMArraySet(File file)
+	public DSMicroarraySet<DSMicroarray> parseSOFTSeriesFile(File file)
 			throws InputFileFormatException, InterruptedIOException {
+		
+		if(!checkFormat(file) ) {
+			throw new InputFileFormatException(errorMessage);
+		}
 		
 		BufferedReader in = null;
 		final int extSeperater = '.';
