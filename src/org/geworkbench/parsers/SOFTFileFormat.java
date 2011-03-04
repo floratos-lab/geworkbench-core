@@ -75,52 +75,49 @@ public class SOFTFileFormat extends DataSetFileFormat {
 		return maExtensions;
 	}
 	
-	/*
-	 * (non-Javadoc) 
-	 * @see org.geworkbench.components.parsers.FileFormat#checkFormat(java.io.File)
-	 */
-	String[] checkLine = null;
-	int carry = 0;
+	transient private String errorMessage = null;
+
 	@Override
 	public boolean checkFormat(File file) throws InterruptedIOException {
-		BufferedReader check = null;
-		String Checker = null;
-		int arrays = 0;
+
+		int arrayNumber = 0;
+		BufferedReader br = null;
+		
 		try {
-			check = new BufferedReader(new FileReader(file));
-			try {
-				Checker = check.readLine();
-				if(Checker == null)
-				{
-					carry = 1;
-					return false;
-				}
-				while(Checker != null){
-					int markNum = 0;
-					if(!Checker.startsWith(commentSign1)&& !Checker.startsWith(commentSign2) && !Checker.startsWith(commentSign3)){
-						checkLine = null;
-						checkLine = Checker.split("\t");
-						if(checkLine[0].equals("ID_REF")){
-							arrays = checkLine.length;
-						}
-						if(!checkLine[0].equals("ID_REF")){
-							markNum = checkLine.length;
-							if(markNum != arrays){
-								carry = 2;
-								return false;
-							}
+			br = new BufferedReader(new FileReader(file));
+			String line = br.readLine();
+			if (line == null) {
+				errorMessage = "no content in file";
+				return false;
+			}
+			while (line != null) {
+				if (!line.startsWith(commentSign1)
+						&& !line.startsWith(commentSign2)
+						&& !line.startsWith(commentSign3)) {
+					String[] checkLine = null;
+					checkLine = line.split("\t");
+					if (checkLine[0].equals("ID_REF")) {
+						arrayNumber = checkLine.length;
+					}
+					if (!checkLine[0].equals("ID_REF")) {
+						if (checkLine.length != arrayNumber) {
+							errorMessage = "Number of Arrays and number of marker values are not equal for the marker: "
+									+ checkLine[0];
+							return false;
 						}
 					}
-					Checker = check.readLine();
 				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				line = br.readLine();
 			}
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	
+			errorMessage = e.getMessage();
+			return false;
+		} catch (IOException e) {
+			e.printStackTrace();
+			errorMessage = e.getMessage();
+			return false;
+		}
 		return true;
 	}
 
@@ -193,7 +190,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 		return null;
 	}
 	 
-	public DSMicroarraySet<DSMicroarray> parseSeriesFile(File file)
+	private DSMicroarraySet<DSMicroarray> parseSeriesFile(File file)
 		throws InputFileFormatException, InterruptedIOException {
 		
 		if (!checkFormat(file)) {
@@ -201,9 +198,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 					.info("SOFTFileFormat::getMArraySet - "
 							+ "Attempting to open a file that does not comply with the "
 							+ "GEO SOFT file format.");
-			throw new InputFileFormatException(
-				"Number of Arrays and number of marker values are not equal for the marker: "
-					+ checkLine[0]);
+			throw new InputFileFormatException(errorMessage);
 		}
 					
 		CSExprMicroarraySet maSet = new CSExprMicroarraySet();
