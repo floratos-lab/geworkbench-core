@@ -37,7 +37,7 @@ public class GeoSeriesMatrixParser {
 	private static final String commentSign2 = "!";
 	private static final String commentSign3 = "^";
 	private static final String columnSeperator = "\t";
-	private static final String lineSeperator = "\n";
+
 	private static final String duplicateLabelModificator = "_2";
 
 	CSExprMicroarraySet maSet = new CSExprMicroarraySet();
@@ -90,19 +90,19 @@ public class GeoSeriesMatrixParser {
 						&& (line.indexOf(commentSign3) != 0)
 						&& (line.length() > 0)) {// we'll skip comments and
 					// anything before header
-					if (headerLineIndex == 0)// no header detected yet, then
+					if (headerLineIndex == 0) {
+						// no header detected yet, then
 						// this is the header.
 						headerLineIndex = lineIndex;
-					String token = null;
+					}
+
 					int columnIndex = 0;
 					int accessionIndex = 0;
-					StringTokenizer st = new StringTokenizer(line,
-							columnSeperator + lineSeperator);
-					while (st.hasMoreTokens()) { // for each column
-						token = st.nextToken().trim();
-						if (token.equals("")) {// header
-							accessionIndex = columnIndex;
-						} else if ((headerLineIndex > 0) && (columnIndex == 0)) {
+					String[] tokens = line.split(columnSeperator);
+					for(String token: tokens) { // for each column
+						token = token.trim();
+						
+						if ((headerLineIndex > 0) && (columnIndex == 0)) {
 							/*
 							 * if this line is after header, then first column
 							 * should be our marker name
@@ -114,11 +114,10 @@ public class GeoSeriesMatrixParser {
 							} else {
 								markers.add(token);
 							}
-						} else if (headerLineIndex == lineIndex) {
-							/*
-							 * this is header line for RMA file
-							 */
-							if (arrays.contains(token)) {// duplicate arrays
+						} else if (headerLineIndex == lineIndex) { // header
+							if (token.equals("")) {
+								accessionIndex = columnIndex;
+							} else if (arrays.contains(token)) {// duplicate arrays
 								log.error("Duplicate Arrays labels " + token
 										+ " in " + file.getName());
 								errorMessage = "Duplicate Arrays labels "
@@ -130,7 +129,7 @@ public class GeoSeriesMatrixParser {
 						}
 						columnIndex++;
 						lineIndex++;
-					}
+					} // end of the while loop parsing one line
 					/* check if column match or not */
 					if (headerLineIndex > 0) {
 						/*
@@ -140,7 +139,7 @@ public class GeoSeriesMatrixParser {
 						if (totalColumns == 0) { /* not been set yet */
 							totalColumns = columnIndex - accessionIndex;
 						} else if (columnIndex != totalColumns){ // if not equal
-							errorMessage = "Columns do not match";
+							errorMessage = "Columns do not match: columnIndex="+columnIndex+" totalColumns="+totalColumns+" lineIndex="+lineIndex;
 							return false;
 						}
 					}
