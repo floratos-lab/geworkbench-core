@@ -638,109 +638,140 @@ public class RWspHelper {
 	private static JDialog lockDialog;
 	private static JTable table;
 	private static JButton releasebtn;
+	private static class LSLockTask extends ProgressTask<String[][], Void> {
+
+		LSLockTask(int pbtype, String message) {
+			super(pbtype, message);
+		}
+
+		@Override
+		protected String[][] doInBackground() throws FileNotFoundException, IOException {
+			String[][] res = null;
+			try {
+				res = WorkspaceServiceClient.getLockedWorkspaceList("LSLOCK"+RWspHandler.userInfo);
+			} catch (Exception e1) {
+				JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
+				"GeWorkbench cannot retrieve locked remote workspace list.\n"+
+				"Please try again later or report the problem to geWorkbench support team.\n",
+				"Database connection/data transfer error", JOptionPane.ERROR_MESSAGE);
+			}
+			return res;
+		}
+
+		@Override
+		protected void done() {
+			pdmodal.removeTask(this);
+			if (isCancelled()) return;
+
+			String[][] res = null;
+			try{
+				res = this.get();
+			} catch (ExecutionException e){
+				JOptionPane.showMessageDialog(null,
+						"Could not create retrieve locked remote workspace list.\n "+e.getMessage(), 
+						"Error", JOptionPane.ERROR_MESSAGE);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+			if (res == null)
+				JOptionPane.showMessageDialog(null, "Could not retrieve locked remote workspace list");
+			else if (res.length > 0){
+				lockDialog = new JDialog();
+				lockDialog.setModal(true);
+				lockDialog.setTitle("Remote workspaces locked by current user");
+				lockDialog.setLayout(new BorderLayout());
+				
+				table = new JTable(new LockTableModel(res, WorkspaceServiceClient.collock));
+			    table.setPreferredScrollableViewportSize(table.getPreferredSize());
+				lockDialog.add(new javax.swing.JScrollPane(table), BorderLayout.CENTER);
+				JPanel btnpanel = new JPanel();
+				JButton selectallbtn = new JButton("Select All");
+				releasebtn = new JButton("Release");
+				releasebtn.setEnabled(false);
+				JButton cancelbtn = new JButton("Cancel");
+				btnpanel.add(selectallbtn);
+				selectallbtn.addActionListener(new ActionListener(){
+					public void actionPerformed(ActionEvent e){
+						for (int i = 0; i < table.getRowCount(); i++){
+							table.setValueAt(true, i, selectID);
+						}
+					}
+				});
+				btnpanel.add(releasebtn);
+				releasebtn.addActionListener(new ActionListener(){
+					public void actionPerformed(ActionEvent e){
+						for (int i = 0; i < table.getRowCount(); i++){
+							if ((Boolean)table.getValueAt(i, selectID)==true){
+								String id = table.getValueAt(i, 0).toString();
+								String ret = "";
+								if ((Boolean)table.getValueAt(i, dirtyID)==true){
+									Object[] options = {"Synchronize before release", "Release without synchronization", "Cancel"};
+									int t = JOptionPane.showOptionDialog(null, 
+											"Do you wish to synchronize the local copy of workspace '"
+											+table.getValueAt(i, titleID)+"' with the server before releasing the lock;\n"
+											+" or release the lock without synchronizing?", "Synchronize before release?", 
+											JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+									if (t==JOptionPane.YES_OPTION){
+										//synchronize means upload local wsp, not download remote wsp
+										new RWspHandler().getUserInfo();
+										if (RWspHandler.userInfo == null) return;
+										if (RWspHandler.userInfo == "") {
+											JOptionPane.showMessageDialog(null,
+															"Please make sure you entered valid username and password",
+															"Invalid User Account", JOptionPane.ERROR_MESSAGE);
+											return;
+										}
+										String fname = id+".wsp";
+										String rename = WorkspaceServiceClient.wsprenames.get(Integer.valueOf(id));
+										if (rename!=null) fname=rename;
+
+										UpdateRemoteNoOpenTask updateTask = new UpdateRemoteNoOpenTask(ProgressItem.INDETERMINATE_TYPE,
+												"Workspace is being synchronized.", RWspHandler.wspdir+fname);
+										pdmodal.executeTask(updateTask);
+
+									} else if (t==JOptionPane.CANCEL_OPTION || t==JOptionPane.CLOSED_OPTION){
+										return;
+									}
+								}
+								try{
+									ret = WorkspaceServiceClient.modifySavedWorkspace("RELEASE"+id+META_DELIMIETER+RWspHandler.userInfo);
+								}catch(Exception ex){
+									JOptionPane.showMessageDialog(null, ex.getMessage()+".\n\n"+
+							    			"GeWorkbench cannot release lock for remote workspace via axis2 web service.\n" +
+							    			"Please try again later or report the problem to geWorkbench support team.\n",
+							    			"Database connection/data transfer error", JOptionPane.ERROR_MESSAGE);
+								}
+								if (ret==null || !ret.contains("success"))
+									JOptionPane.showMessageDialog(null, "Could not release remote workspace "+id);
+							}
+						}
+						lockDialog.dispose();
+					}
+				});
+				btnpanel.add(cancelbtn);
+				cancelbtn.addActionListener(new ActionListener(){
+					public void actionPerformed(ActionEvent e){
+						lockDialog.dispose();
+					}
+				});
+				lockDialog.add(btnpanel, BorderLayout.SOUTH);
+
+				lockDialog.pack();
+				lockDialog.setLocationRelativeTo(null);
+				lockDialog.setMinimumSize(new Dimension(400, 300));
+				lockDialog.setVisible(true);
+			}
+		}
+	}
 	protected static void listLock(){
 		if (RWspHandler.wspId > 0) RWspHandler.doSaveLocal(false);
 		if (RWspHandler.userInfo==null || RWspHandler.userInfo.equals("") 
 				|| RWspHandler.userInfo.equals("local")) return;
 
-		String[][] res = null;
-		try {
-			res = WorkspaceServiceClient.getLockedWorkspaceList("LSLOCK"+RWspHandler.userInfo);
-		} catch (Exception e1) {
-			JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
-			"GeWorkbench cannot retrieve locked remote workspace list.\n"+
-			"Please try again later or report the problem to geWorkbench support team.\n",
-			"Database connection/data transfer error", JOptionPane.ERROR_MESSAGE);
-		}
+		LSLockTask task = new LSLockTask(ProgressItem.INDETERMINATE_TYPE, "Locked workspace list is being retrieved.");
+		pdmodal.executeTask(task);
 
-		if (res == null)
-			JOptionPane.showMessageDialog(null, "Could not retrieve locked remote workspace list");
-		else if (res.length > 0){
-			lockDialog = new JDialog();
-			lockDialog.setModal(true);
-			lockDialog.setTitle("Remote workspaces locked by current user");
-			lockDialog.setLayout(new BorderLayout());
-			
-			table = new JTable(new LockTableModel(res, WorkspaceServiceClient.collock));
-		    table.setPreferredScrollableViewportSize(table.getPreferredSize());
-			lockDialog.add(new javax.swing.JScrollPane(table), BorderLayout.CENTER);
-			JPanel btnpanel = new JPanel();
-			JButton selectallbtn = new JButton("Select All");
-			releasebtn = new JButton("Release");
-			releasebtn.setEnabled(false);
-			JButton cancelbtn = new JButton("Cancel");
-			btnpanel.add(selectallbtn);
-			selectallbtn.addActionListener(new ActionListener(){
-				public void actionPerformed(ActionEvent e){
-					for (int i = 0; i < table.getRowCount(); i++){
-						table.setValueAt(true, i, selectID);
-					}
-				}
-			});
-			btnpanel.add(releasebtn);
-			releasebtn.addActionListener(new ActionListener(){
-				public void actionPerformed(ActionEvent e){
-					for (int i = 0; i < table.getRowCount(); i++){
-						if ((Boolean)table.getValueAt(i, selectID)==true){
-							String id = table.getValueAt(i, 0).toString();
-							String ret = "";
-							if ((Boolean)table.getValueAt(i, dirtyID)==true){
-								Object[] options = {"Synchronize before release", "Release without synchronization", "Cancel"};
-								int t = JOptionPane.showOptionDialog(null, 
-										"Do you wish to synchronize the local copy of workspace '"
-										+table.getValueAt(i, titleID)+"' with the server before releasing the lock;\n"
-										+" or release the lock without synchronizing?", "Synchronize before release?", 
-										JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
-								if (t==JOptionPane.YES_OPTION){
-									//synchronize means upload local wsp, not download remote wsp
-									new RWspHandler().getUserInfo();
-									if (RWspHandler.userInfo == null) return;
-									if (RWspHandler.userInfo == "") {
-										JOptionPane.showMessageDialog(null,
-														"Please make sure you entered valid username and password",
-														"Invalid User Account", JOptionPane.ERROR_MESSAGE);
-										return;
-									}
-									String fname = id+".wsp";
-									String rename = WorkspaceServiceClient.wsprenames.get(Integer.valueOf(id));
-									if (rename!=null) fname=rename;
-
-									UpdateRemoteNoOpenTask updateTask = new UpdateRemoteNoOpenTask(ProgressItem.INDETERMINATE_TYPE,
-											"Workspace is being synchronized.", RWspHandler.wspdir+fname);
-									pdmodal.executeTask(updateTask);
-
-								} else if (t==JOptionPane.CANCEL_OPTION || t==JOptionPane.CLOSED_OPTION){
-									return;
-								}
-							}
-							try{
-								ret = WorkspaceServiceClient.modifySavedWorkspace("RELEASE"+id+META_DELIMIETER+RWspHandler.userInfo);
-							}catch(Exception ex){
-								JOptionPane.showMessageDialog(null, ex.getMessage()+".\n\n"+
-						    			"GeWorkbench cannot release lock for remote workspace via axis2 web service.\n" +
-						    			"Please try again later or report the problem to geWorkbench support team.\n",
-						    			"Database connection/data transfer error", JOptionPane.ERROR_MESSAGE);
-							}
-							if (ret==null || !ret.contains("success"))
-								JOptionPane.showMessageDialog(null, "Could not release remote workspace "+id);
-						}
-					}
-					lockDialog.dispose();
-				}
-			});
-			btnpanel.add(cancelbtn);
-			cancelbtn.addActionListener(new ActionListener(){
-				public void actionPerformed(ActionEvent e){
-					lockDialog.dispose();
-				}
-			});
-			lockDialog.add(btnpanel, BorderLayout.SOUTH);
-
-			lockDialog.pack();
-			lockDialog.setLocationRelativeTo(null);
-			lockDialog.setMinimumSize(new Dimension(400, 300));
-			lockDialog.setVisible(true);
-		}
 	}
 
 	//update from local wsp file without populating prjpanel from savetree
