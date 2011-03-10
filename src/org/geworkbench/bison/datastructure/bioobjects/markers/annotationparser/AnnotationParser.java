@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
@@ -169,130 +170,133 @@ public class AnnotationParser implements Serializable {
 		return dummyMicroarraySet.getAnnotationFileName();
 	}
 
-	private static boolean setChipType(DSDataSet<? extends DSBioObject> dataset, String chiptype,
-			File annotationData) {
-		datasetToChipTypes.put(dataset, chiptype);
+	/* if the annotation file is given, this method is called directly without GUI involved */
+	public static void loadAnnotationFile(
+			DSDataSet<? extends DSBioObject> dataset, File annotationData) {
+		if (!annotationData.exists()) { // data file is found
+			log.error("Annotation file " + annotationData + " does not exist.");
+			return;
+		}
+
+		BufferedInputStream bis = null;
+		String chipType = annotationData.getName();
+		try {
+			bis = new BufferedInputStream(new FileInputStream(annotationData));
+
+			CSVParser cvsParser = new CSVParser(bis);
+
+			cvsParser.setCommentStart("#;!");// Skip all comments line.
+												// XQ. The bug is reported
+												// by Bernd.
+
+			LabeledCSVParser parser = new LabeledCSVParser(cvsParser);
+
+			MarkerAnnotation markerAnnotation = new MarkerAnnotation();
+
+			boolean ignoreAll = false;
+			boolean cancelAnnotationFileProcessing = false;
+			while ((parser.getLine() != null)
+					&& !cancelAnnotationFileProcessing) {
+				String affyId = parser.getValueByLabel(labels[0]);
+				affyId = affyId.trim();
+				AnnotationFields fields = new AnnotationFields();
+				for (int i = 1; i < labels.length; i++) {
+					String label = labels[i];
+					String val = parser.getValueByLabel(label);
+					if (label.equals(GENE_ONTOLOGY_BIOLOGICAL_PROCESS)
+							|| label.equals(GENE_ONTOLOGY_CELLULAR_COMPONENT)
+							|| label.equals(GENE_ONTOLOGY_MOLECULAR_FUNCTION)) {
+						// get rid of leading 0's
+						while (val.startsWith("0") && (val.length() > 0)) {
+							val = val.substring(1);
+						}
+					}
+					if (label.equals(GENE_SYMBOL))
+						fields.setGeneSymbol(val);
+					else if (label.equals(LOCUSLINK))
+						fields.setLocusLink(val);
+					else if (label.equals(SWISSPROT))
+						fields.setSwissProt(val);
+					else if (label.equals(DESCRIPTION))
+						fields.setDescription(val);
+					else if (label.equals(GENE_ONTOLOGY_MOLECULAR_FUNCTION))
+						fields.setMolecularFunction(val);
+					else if (label.equals(GENE_ONTOLOGY_CELLULAR_COMPONENT))
+						fields.setCellularComponent(val);
+					else if (label.equals(GENE_ONTOLOGY_BIOLOGICAL_PROCESS))
+						fields.setBiologicalProcess(val);
+					else if (label.equals(UNIGENE))
+						fields.setUniGene(val);
+					else if (label.equals(REFSEQ))
+						fields.setRefSeq(val);
+				}
+
+				if (markerAnnotation.containsMarker(affyId)) {
+					if (!ignoreAll) {
+						String[] options = { "Skip duplicate",
+								"Skip all duplicates", "Cancel", };
+						int code = JOptionPane
+								.showOptionDialog(
+										null,
+										"Duplicate entry. Probe Set ID="
+												+ affyId
+												+ ".\n"
+												+ "Skip duplicate - will ignore this entry\n"
+												+ "Skip all duplicates - will ignore all duplicate entries.\n"
+												+ "Cancel - will cancel the annotation file processing.",
+										"Duplicate entry in annotation file",
+										0, JOptionPane.QUESTION_MESSAGE, null,
+										options, "Proceed");
+						if (code == 1) {
+							ignoreAll = true;
+						}
+						if (code == 2) {
+							cancelAnnotationFileProcessing = true;
+						}
+					}
+				} else {
+					markerAnnotation.addMarker(affyId, fields);
+				}
+			}
+
+			if (!cancelAnnotationFileProcessing) {
+				chipTypeToAnnotation.put(chipType, markerAnnotation);
+			}
+
+			// all fine.
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return;
+		} finally {
+			try {
+				bis.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+		}
+
+		datasetToChipTypes.put(dataset, chipType);
 		currentDataSet = dataset;
-		if(dataset==null) {
-			dummyMicroarraySet.setAnnotationFileName(annotationData.getAbsolutePath());
-		} if(dataset instanceof CSMicroarraySet) {
-			CSMicroarraySet<?> d = (CSMicroarraySet<?>)dataset;
+		if (dataset == null) {
+			dummyMicroarraySet.setAnnotationFileName(annotationData
+					.getAbsolutePath());
+		}
+		if (dataset instanceof CSMicroarraySet) {
+			CSMicroarraySet<?> d = (CSMicroarraySet<?>) dataset;
 			d.setAnnotationFileName(annotationData.getAbsolutePath());
 		}
-		return loadAnnotationData(chiptype, annotationData);
 	}
 
-	private static boolean loadAnnotationData(String chipType, File datafile) {
-		if (datafile.exists()) { // data file is found
-
-			FileInputStream fis = null;
-			BufferedInputStream bis = null;
-			try {
-				fis = new FileInputStream(datafile);
-				bis = new BufferedInputStream(fis);
-
-				CSVParser cvsParser = new CSVParser(bis);
-
-				cvsParser.setCommentStart("#;!");// Skip all comments line.
-													// XQ. The bug is reported
-													// by Bernd.
-
-				LabeledCSVParser parser = new LabeledCSVParser(cvsParser);
-
-				MarkerAnnotation markerAnnotation = new MarkerAnnotation();
-
-				boolean ignoreAll = false;
-				boolean cancelAnnotationFileProcessing = false;
-				while ((parser.getLine() != null) && !cancelAnnotationFileProcessing) {
-					String affyId = parser.getValueByLabel(labels[0]);
-					affyId = affyId.trim();
-					AnnotationFields fields = new AnnotationFields();
-					for (int i = 1; i < labels.length; i++) {
-						String label = labels[i];
-						String val = parser.getValueByLabel(label);
-						if (label.equals(GENE_ONTOLOGY_BIOLOGICAL_PROCESS)
-								|| label
-										.equals(GENE_ONTOLOGY_CELLULAR_COMPONENT)
-								|| label
-										.equals(GENE_ONTOLOGY_MOLECULAR_FUNCTION)) {
-							// get rid of leading 0's
-							while (val.startsWith("0") && (val.length() > 0)) {
-								val = val.substring(1);
-							}
-						}
-						if (label.equals(GENE_SYMBOL))
-							fields.setGeneSymbol(val);
-						else if (label.equals(LOCUSLINK))
-							fields.setLocusLink(val);
-						else if (label.equals(SWISSPROT))
-							fields.setSwissProt(val);
-						else if (label.equals(DESCRIPTION))
-							fields.setDescription(val);
-						else if (label.equals(GENE_ONTOLOGY_MOLECULAR_FUNCTION))
-							fields.setMolecularFunction(val);
-						else if (label.equals(GENE_ONTOLOGY_CELLULAR_COMPONENT))
-							fields.setCellularComponent(val);
-						else if (label.equals(GENE_ONTOLOGY_BIOLOGICAL_PROCESS))
-							fields.setBiologicalProcess(val);
-						else if(label.equals(UNIGENE))
-							fields.setUniGene(val);
-						else if(label.equals(REFSEQ))
-							fields.setRefSeq(val);
-					}
-
-					if (markerAnnotation.containsMarker(affyId)) {
-						if (!ignoreAll){
-						      String[] options = {"Skip duplicate", "Skip all duplicates", "Cancel",};
-						      int code = JOptionPane.showOptionDialog(null,
-						    		  "Duplicate entry. Probe Set ID=" + affyId + "." + "\n" +
-						    		  "Skip duplicate - will ignore this entry" + "\n" +
-						    		  "Skip all duplicates - will ignore all duplicate entries." + "\n" +
-						    		  "Cancel - will cancel the annotation file processing.",
-						         "Duplicate entry in annotation file", 0, JOptionPane.QUESTION_MESSAGE,
-						         null, options, "Proceed");
-						      if (code == 1) {
-						    	  ignoreAll = true;
-						      }
-						      if (code == 2) {
-						    	  cancelAnnotationFileProcessing = true;
-						      }
-						}
-					} else {
-						markerAnnotation.addMarker(affyId, fields);
-					}
-				}
-
-				if (!cancelAnnotationFileProcessing) {
-					chipTypeToAnnotation.put(chipType, markerAnnotation);
-				}
-
-				return true;
-			} catch (Exception e) {
-				log.error("", e);
-				return false;
-			}finally{
-				try {
-					fis.close();
-					bis.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-
-			}
-		} else {
-			return false;
-		}
-	}
-
+	/* !!! return value of this method depends on currentDataSet, which could be suprising if not careful */
 	public static String getGeneName(String id) {
 		try {
 			String chipType = datasetToChipTypes.get(currentDataSet);
 			return chipTypeToAnnotation.get(chipType).getFields(id).getGeneSymbol();
-		} catch (Exception e) {
-			// watkin - removed because it crippled components with repeated
-			// logging
-			// log.warn("Problem getting gene name, returning id. (AffyID: " +
-			// id+")");
+		} catch (NullPointerException e) {
 			return id;
 		}
 	}
@@ -490,7 +494,6 @@ public class AnnotationParser implements Serializable {
 			}
 		}
 
-		String chip = "Other";
 		currentDataSet = dataset;
 
 		try {
@@ -508,10 +511,11 @@ public class AnnotationParser implements Serializable {
 		}
 
 		if (userFile != null) {
-			chip = userFile.getName();
-			setChipType(dataset, chip, userFile);
+			loadAnnotationFile(dataset, userFile);
+			return userFile.getName();
+		} else {
+			return "Other";
 		}
-		return chip;
 	}
 
 	private volatile static File userFile = null;
