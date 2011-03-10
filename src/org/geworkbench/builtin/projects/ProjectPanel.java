@@ -2370,7 +2370,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			ws.save(WORKSPACE_DIR, terminating);
 			if (!StringUtils.isEmpty(ws.getWorkspacePath()))
 				GUIFramework.getFrame().setTitle(
-						System.getProperty("application.title") + " ["
+						((Skin)GeawConfigObject.getGuiWindow()).getApplicationTitle() + " ["
 								+ ws.getWorkspacePath() + "]");
 		}
 	}
@@ -2385,7 +2385,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		ws.open(WORKSPACE_DIR);
 		if (!StringUtils.isEmpty(ws.getWorkspacePath()))
 			GUIFramework.getFrame().setTitle(
-					System.getProperty("application.title") + " ["
+					((Skin)GeawConfigObject.getGuiWindow()).getApplicationTitle() + " ["
 							+ ws.getWorkspacePath() + "]");
 	}
 

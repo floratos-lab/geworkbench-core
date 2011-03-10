@@ -192,7 +192,13 @@ public class Skin extends GUIFramework {
     private void setApplicationTitle() {
     	MessageFormat format = new MessageFormat(System.getProperty("application.title"));
     	Object[] version = { VERSION };
-    	setTitle(format.format(version));
+    	appTitle = format.format(version);
+    	setTitle(appTitle);
+    }
+
+    private String appTitle = "";
+    public String getApplicationTitle() {
+    	return appTitle;
     }
     
     private void jbInit() throws Exception {
@@ -795,5 +801,5 @@ public class Skin extends GUIFramework {
     }
 
 	private static final String WELCOME_SCREEN_KEY = "Welcome Screen ";
-	private static final String VERSION = System.getProperty("application.version");
+	public static final String VERSION = System.getProperty("application.version");
 }
