@@ -10,7 +10,7 @@ import java.util.Comparator;
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: </p>
  * @author not attributable
- * @version 1.0
+ * @version $Id$
  */
 
 /**
@@ -21,18 +21,16 @@ import java.util.Comparator;
  * <p>Company: </p>
  *
  * @author not attributable
- * @version 1.0
+ * @version $Id$
  */
-public class PatternSorter implements Comparator {
+public class PatternSorter implements Comparator<DSMatchedSeqPattern> {
     int mode = 1;
 
     public void setMode(int m) {
         mode = m;
     }
 
-    public int compare(Object o1, Object o2) {
-        DSMatchedSeqPattern p1 = (DSMatchedSeqPattern) o1;
-        DSMatchedSeqPattern p2 = (DSMatchedSeqPattern) o2;
+    public int compare(DSMatchedSeqPattern p1, DSMatchedSeqPattern p2) {
         switch (mode) {
             case 1: // Sort by Sequence Count
                 if (p1.getSupport() < p2.getSupport()) {
