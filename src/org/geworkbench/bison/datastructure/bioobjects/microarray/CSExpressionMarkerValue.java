@@ -10,7 +10,7 @@ import java.text.DecimalFormat;
  * <p>Company: First Genetic Trust Inc.</p>
  *
  * @author Manjunath Kustagi
- * @version 1.0
+ * @version $Id$
  */
 
 public class CSExpressionMarkerValue extends CSMarkerValue implements DSAffyMarkerValue, Serializable {
@@ -64,13 +64,7 @@ public class CSExpressionMarkerValue extends CSMarkerValue implements DSAffyMark
      */
     public String toString() {
         String string = null;
-        ;
-        String mask = null;
-        if (isMasked()) {
-            mask = new String("X");
-        } else {
-            mask = new String("");
-        }
+
         if (!isMissing()) {
             string = new String(formatter.format(getValue()) + "\t" + getStatusAsChar());
         } else {
@@ -94,7 +88,8 @@ public class CSExpressionMarkerValue extends CSMarkerValue implements DSAffyMark
         return (DSMarkerValue) copy;
     }
 
-    public int compareTo(Object o) {
-        return Double.compare(((CSAffyMarkerValue) o).getValue(), getValue());
-    }
+	@Override
+	public int compareTo(DSMarkerValue o) {
+        return Double.compare(o.getValue(), getValue());
+	}
 }

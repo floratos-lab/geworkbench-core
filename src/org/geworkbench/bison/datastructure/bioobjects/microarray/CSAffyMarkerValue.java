@@ -268,8 +268,8 @@ public class CSAffyMarkerValue extends CSExpressionMarkerValue implements
     		   return detectionStatus;
        }
 
-       public int compareTo(Object o) {
-           return Double.compare(((CSAffyMarkerValue) o).getValue(), getValue());
+       public int compareTo(CSAffyMarkerValue o) {
+           return Double.compare(o.getValue(), getValue());
        }
 
 

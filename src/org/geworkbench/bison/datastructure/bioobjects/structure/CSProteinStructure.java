@@ -13,17 +13,16 @@ import java.util.HashMap;
 
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 
 /**
  * 
  * @author mhall
  * @author zji
- * @version $Id: CSProteinStructure.java,v 1.6 2009-05-15 20:33:24 chiangy Exp $
+ * @version $Id$
  * 
  */
-@SuppressWarnings("unchecked")
-// raw type warning depends on other classes
-public class CSProteinStructure extends CSAncillaryDataSet implements
+public class CSProteinStructure extends CSAncillaryDataSet<DSBioObject> implements
 		DSProteinStructure {
 
 	private static final long serialVersionUID = 7279040007729050440L;
@@ -31,7 +30,7 @@ public class CSProteinStructure extends CSAncillaryDataSet implements
 	private int chainoffset = 21;
 	private String content = null;
 
-	public CSProteinStructure(DSDataSet parent, String label) {
+	public CSProteinStructure(DSDataSet<DSBioObject> parent, String label) {
 		super(parent, label);
 	}
 

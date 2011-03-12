@@ -6,7 +6,7 @@ import java.io.Serializable;
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: First Genetic Trust Inc.</p>
  * @author First Genetic Trust Inc.
- * @version 1.0
+ * @version $Id$
  */
 
 /**
@@ -15,7 +15,7 @@ import java.io.Serializable;
  * technology. Technology-specific data points can be added by extending this
  * class.
  */
-public interface DSMarkerValue extends Comparable, Serializable {
+public interface DSMarkerValue extends Comparable<DSMarkerValue>, Serializable {
 
     /**
      * Return the signal measurement for this spot. For 2-channel data, this is

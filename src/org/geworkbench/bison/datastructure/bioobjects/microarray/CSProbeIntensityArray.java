@@ -2,6 +2,7 @@ package org.geworkbench.bison.datastructure.bioobjects.microarray;
 
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -14,21 +15,24 @@ import affymetrix.fusion.cel.FusionCELData;
  * User: mhall
  * Date: Mar 13, 2006
  * Time: 11:43:22 AM
+ * $Id$
  */
-public class CSProbeIntensityArray extends CSAncillaryDataSet implements DSProbeIntensityArray {
+public class CSProbeIntensityArray extends CSAncillaryDataSet<DSBioObject> implements DSProbeIntensityArray {
 
-    static Log log = LogFactory.getLog(CSProbeIntensityArray.class);
+	private static final long serialVersionUID = 1471476047956028360L;
+
+	static Log log = LogFactory.getLog(CSProbeIntensityArray.class);
 
     File dataFile = null;
     private String chipType;
     private float[][] probeIntensities;
     private float[] minMax;
 
-    public CSProbeIntensityArray(DSDataSet parent, String label) {
+    public CSProbeIntensityArray(DSDataSet<DSBioObject> parent, String label) {
         super(parent, label);
     }
 
-    public CSProbeIntensityArray(DSDataSet parent, String label, String chipType, float[][] probeIntensities) {
+    public CSProbeIntensityArray(DSDataSet<DSBioObject> parent, String label, String chipType, float[][] probeIntensities) {
         super(parent, label);
         this.chipType = chipType;
         this.probeIntensities = probeIntensities;

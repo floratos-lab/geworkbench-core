@@ -15,10 +15,11 @@ package org.geworkbench.bison.datastructure.bioobjects.microarray;
  * </p>
  * 
  * @author Andrea Califano
- * @version 1.0
+ * @version $Id$
  */
 
 abstract public class CSMarkerValue implements DSMutableMarkerValue {
+	private static final long serialVersionUID = -8400920535680410429L;
 
 	/**
 	 * Used to define how present/marginal/absent calls should be made based on
@@ -27,7 +28,7 @@ abstract public class CSMarkerValue implements DSMutableMarkerValue {
 	 *          p_threshold <= p-values < m_threshold --> Marginal 
 	 *          p-value >= m_threshold --> Absent
 	 */
-	// Fixme: These value should not be hardcoded, rather specified by the user.
+	// FIXME: These value should not be hardcoded, rather specified by the user.
 	// <AF>This way of overloading confidence to infer detection status and
 	// missing status may save storage space but is not clean and can be
 	// confusing to external developers trying to extend this class. I'd rather

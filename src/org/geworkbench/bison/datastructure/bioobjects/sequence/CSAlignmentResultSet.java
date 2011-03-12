@@ -5,10 +5,14 @@ import java.io.File;
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
+import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 
-public class CSAlignmentResultSet extends CSAncillaryDataSet implements DSAlignmentResultSet {
+public class CSAlignmentResultSet extends CSAncillaryDataSet<DSBioObject> implements DSAlignmentResultSet {
 
-    public CSAlignmentResultSet(String fileName, String inputFile, DSDataSet dataSet) {
+	private static final long serialVersionUID = 3284079552620104447L;
+
+	public CSAlignmentResultSet(String fileName, String inputFile, DSDataSet<DSBioObject> dataSet) {
         super(dataSet, "BLAST Result");
         resultFile = new File(fileName);
         fastaFile = new File(inputFile);
@@ -20,8 +24,9 @@ public class CSAlignmentResultSet extends CSAncillaryDataSet implements DSAlignm
      * @param inputFile
      * @param dataSet
      */
-    public CSAlignmentResultSet(String fileName, String inputFile, DSDataSet blastedParentdataSet, DSDataSet parentDataSet) {
-        super(parentDataSet, "BLAST Result");
+    @SuppressWarnings("unchecked")
+	public CSAlignmentResultSet(String fileName, String inputFile, DSSequenceSet<? extends DSSequence> blastedParentdataSet, DSSequenceSet<? extends DSSequence> parentDataSet) {
+        super((CSAncillaryDataSet<DSBioObject>)parentDataSet, "BLAST Result");
         resultFile = new File(fileName);
         fastaFile = new File(inputFile);
         blastedParentDataSet = blastedParentdataSet;
@@ -32,15 +37,15 @@ public class CSAlignmentResultSet extends CSAncillaryDataSet implements DSAlignm
     private File fastaFile = null;
     private File resultFile = null;
 
-    public DSDataSet getBlastedParentDataSet() {
+    public DSSequenceSet<? extends DSSequence> getBlastedParentDataSet() {
         return blastedParentDataSet;
     }
 
-    public void setBlastedParentDataSet(DSDataSet blastedParentDataSet) {
+    public void setBlastedParentDataSet(DSSequenceSet<? extends DSSequence> blastedParentDataSet) {
         this.blastedParentDataSet = blastedParentDataSet;
     }
 
-    private DSDataSet blastedParentDataSet;
+    private DSSequenceSet<? extends DSSequence> blastedParentDataSet;
 
     public void setResultFile(String outputFilename) {
         resultFile = new File(outputFilename);
@@ -95,12 +100,12 @@ public class CSAlignmentResultSet extends CSAncillaryDataSet implements DSAlignm
     /**
      * @param ads IAncillaryDataSet
      * @return boolean
-     * @todo implement later.
      */
-    public boolean equals(Object ads) {
+    @SuppressWarnings("unchecked")
+	public boolean equals(Object ads) {
         if (ads instanceof DSAncillaryDataSet) {
             return getDataSetName() ==
-                    ((DSAncillaryDataSet) ads).getDataSetName();
+                    ((DSAncillaryDataSet<DSBioObject>) ads).getDataSetName();
         } else {
             return false;
         }
