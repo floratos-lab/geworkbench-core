@@ -1,5 +1,19 @@
 package org.geworkbench.parsers;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.InterruptedIOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+
+import javax.swing.ProgressMonitorInputStream;
+import javax.swing.filechooser.FileFilter;
+
 import org.geworkbench.bison.datastructure.biocollections.CSMarkerVector;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
@@ -10,14 +24,6 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.parsers.GenePixParser;
 import org.geworkbench.bison.parsers.resources.GenepixResource;
 import org.geworkbench.bison.parsers.resources.Resource;
-
-import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
-import java.io.*;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
 
 /**
  * Handles the parsing of Affymetrix .txt files (MAS 5.0). Translates GenePix
@@ -33,7 +39,6 @@ public class GenePixFileFormat extends DataSetFileFormat {
 	 */
 	private String[] genepixExtensions = { "gpr" };
 	private GenepixResource resource = new GenepixResource();
-	private DSMicroarraySet<DSMicroarray> microarraySet = null;
 	/**
 	 * <code>FileFilter</code> for gating Genepix files, based on their
 	 * extension.
@@ -96,8 +101,7 @@ public class GenePixFileFormat extends DataSetFileFormat {
 	 * @throws org.geworkbench.parsers.InputFileFormatException
 	 *             When the input file deviates from the Genepix format.
 	 */
-	@SuppressWarnings("unchecked")
-	public DSMicroarraySet getMArraySet(File file)
+	private DSDataSet<DSMicroarray> getMArraySet(File file)
 			throws org.geworkbench.parsers.InputFileFormatException, InterruptedIOException {
 		// Check that the file is OK before starting allocating space for it.
 		if (!checkFormat(file))
@@ -108,10 +112,11 @@ public class GenePixFileFormat extends DataSetFileFormat {
 		
 		ProgressMonitorInputStream progressIn = null;
 		
+		DSMicroarraySet<DSMicroarray> microarraySet = null;
 		try {
 			microarraySet = new CSExprMicroarraySet();
 			microarraySet.setFile(file);
-			List ctu = new ArrayList();
+			List<String> ctu = new ArrayList<String>();
 			ctu.add("Block");
 			ctu.add("Column");
 			ctu.add("Row");
@@ -142,15 +147,14 @@ public class GenePixFileFormat extends DataSetFileFormat {
 				}
 			}
 
-			Vector v = parser.getAccessions();
+			Vector<String[]> v = parser.getAccessions();
 			microarraySet.setLabel(file.getName());
 			microarraySet.setCompatibilityLabel("Genepix");
 			microarraySet.initialize(1, v.size());
 			CSMarkerVector markerVector = (CSMarkerVector) microarraySet
 					.getMarkers();
 			int count = 0;
-			for (Iterator it = v.iterator(); it.hasNext();) {
-				String[] acc = (String[]) (it.next());
+			for (String[] acc : v) {
 				markerVector.setLabel(count, acc[0]);
 				markerVector.get(count).setDisPlayType(
 						DSGeneMarker.GENEPIX_TYPE);
@@ -196,11 +200,10 @@ public class GenePixFileFormat extends DataSetFileFormat {
 	 *            File
 	 * @return DataSet
 	 */
-	@SuppressWarnings("unchecked")
 	public DSDataSet<DSMicroarray> getDataFile(File file) throws InterruptedIOException {
 		DSDataSet<DSMicroarray> ds = null;
 		try {
-			ds = (DSDataSet<DSMicroarray>) getMArraySet(file);
+			ds = getMArraySet(file);
 		} catch (InputFileFormatException ife) {
 			ife.printStackTrace();
 		}
