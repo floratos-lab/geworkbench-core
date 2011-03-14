@@ -26,7 +26,7 @@ public class CSAlignmentResultSet extends CSAncillaryDataSet<DSBioObject> implem
      */
     @SuppressWarnings("unchecked")
 	public CSAlignmentResultSet(String fileName, String inputFile, DSSequenceSet<? extends DSSequence> blastedParentdataSet, DSSequenceSet<? extends DSSequence> parentDataSet) {
-        super((CSAncillaryDataSet<DSBioObject>)parentDataSet, "BLAST Result");
+        super((DSDataSet<DSBioObject>)parentDataSet, "BLAST Result");
         resultFile = new File(fileName);
         fastaFile = new File(inputFile);
         blastedParentDataSet = blastedParentdataSet;
