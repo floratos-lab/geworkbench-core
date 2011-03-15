@@ -47,10 +47,10 @@ import org.geworkbench.engine.preferences.GlobalPreferences;
  * @author mw2518
  * $Id$
  */
-public class WorkspaceServiceClient {
+public class DownloadClient {
 
 	private static EndpointReference targetEPR = new EndpointReference(
-			GlobalPreferences.getInstance().getRWSP_URL()+"/WorkspaceService");
+			GlobalPreferences.getInstance().getRWSP_URL()+"/DownloadService");
 			//"http://localhost:8080/axis2/services/WorkspaceService");
 	protected static String cachedir = RWspHandler.wspdir+"axis2cache";
 	
@@ -264,7 +264,7 @@ public class WorkspaceServiceClient {
 			return hm;
 		}
 		
-		targetEPR.setAddress(GlobalPreferences.getInstance().getRWSP_URL()+"/WorkspaceService");
+		targetEPR.setAddress(GlobalPreferences.getInstance().getRWSP_URL()+"/DownloadService");
 		Options options = new Options();
 		options.setTo(targetEPR);
 		options.setAction("urn:getWorkspace");

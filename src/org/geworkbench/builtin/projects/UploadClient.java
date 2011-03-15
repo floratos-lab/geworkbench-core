@@ -32,7 +32,7 @@ import org.apache.axis2.Constants;
 import org.apache.axis2.util.CommandLineOption;
 import org.apache.axis2.util.CommandLineOptionParser;
 import org.apache.axis2.util.OptionsValidator;
-import org.apache.ws.axis2.mtomsample.MTOMSampleMTOMSampleSOAP11Port_httpStub;
+import org.apache.ws.axis2.upload.UploadServiceUploadSOAP11Port_httpStub;
 import org.geworkbench.engine.preferences.GlobalPreferences;
 
 /**
@@ -40,7 +40,7 @@ import org.geworkbench.engine.preferences.GlobalPreferences;
  * @author mw2518
  * $Id$
  */
-public class Client {
+public class UploadClient {
 
 	/**
 	 * @param args
@@ -82,8 +82,8 @@ public class Client {
 		// uncomment the following if you need to capture the messages from
 		// TCPMON. Please look at http://ws.apache.org/commons/tcpmon/tcpmontutorial.html
 		// to learn how to setup tcpmon
-		MTOMSampleMTOMSampleSOAP11Port_httpStub serviceStub = new MTOMSampleMTOMSampleSOAP11Port_httpStub(
-				GlobalPreferences.getInstance().getRWSP_URL()+"/MTOMSample"
+		UploadServiceUploadSOAP11Port_httpStub serviceStub = new UploadServiceUploadSOAP11Port_httpStub(
+				GlobalPreferences.getInstance().getRWSP_URL()+"/UploadService"
 				//"http://localhost:8080/axis2/services/MTOMSample"
 		);
 
@@ -105,9 +105,9 @@ public class Client {
 		
 
 		// Populating the code generated beans
-		MTOMSampleMTOMSampleSOAP11Port_httpStub.AttachmentRequest attachmentRequest = new MTOMSampleMTOMSampleSOAP11Port_httpStub.AttachmentRequest();
-		MTOMSampleMTOMSampleSOAP11Port_httpStub.AttachmentType attachmentType = new MTOMSampleMTOMSampleSOAP11Port_httpStub.AttachmentType();
-		MTOMSampleMTOMSampleSOAP11Port_httpStub.Base64Binary base64Binary = new MTOMSampleMTOMSampleSOAP11Port_httpStub.Base64Binary();
+		UploadServiceUploadSOAP11Port_httpStub.AttachmentRequest attachmentRequest = new UploadServiceUploadSOAP11Port_httpStub.AttachmentRequest();
+		UploadServiceUploadSOAP11Port_httpStub.AttachmentType attachmentType = new UploadServiceUploadSOAP11Port_httpStub.AttachmentType();
+		UploadServiceUploadSOAP11Port_httpStub.Base64Binary base64Binary = new UploadServiceUploadSOAP11Port_httpStub.Base64Binary();
 
 		if (file!=null){
 		// Creating a javax.activation.FileDataSource from the input file.
@@ -117,7 +117,7 @@ public class Client {
 		// javax.activation.DataSource interface can fit here.
 		DataHandler dataHandler = new DataHandler(fileDataSource);
 		base64Binary.setBase64Binary(dataHandler);
-        MTOMSampleMTOMSampleSOAP11Port_httpStub.ContentType_type0 param = new MTOMSampleMTOMSampleSOAP11Port_httpStub.ContentType_type0();
+		UploadServiceUploadSOAP11Port_httpStub.ContentType_type0 param = new UploadServiceUploadSOAP11Port_httpStub.ContentType_type0();
         param.setContentType_type0(dataHandler.getContentType());
         base64Binary.setContentType(param);
 		attachmentType.setBinaryData(base64Binary);
@@ -125,7 +125,7 @@ public class Client {
 		attachmentType.setFileName(destination);
 		attachmentRequest.setAttachmentRequest(attachmentType);
 
-		MTOMSampleMTOMSampleSOAP11Port_httpStub.AttachmentResponse response = serviceStub.attachment(attachmentRequest);
+		UploadServiceUploadSOAP11Port_httpStub.AttachmentResponse response = serviceStub.attachment(attachmentRequest);
 		//System.out.println(response.getAttachmentResponse());
 		return response.getAttachmentResponse();
 	}

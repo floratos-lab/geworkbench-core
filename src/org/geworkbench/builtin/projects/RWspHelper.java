@@ -158,7 +158,7 @@ public class RWspHelper {
 		protected HashMap<String, String> doInBackground() {
 			HashMap<String, String> res = new HashMap<String, String>();
 			try {
-				res = WorkspaceServiceClient.getSavedWorkspaceStatus("STATUS"+id+META_DELIMIETER+RWspHandler.userInfo.split(USER_INFO_DELIMIETER)[0]);
+				res = DownloadClient.getSavedWorkspaceStatus("STATUS"+id+META_DELIMIETER+RWspHandler.userInfo.split(USER_INFO_DELIMIETER)[0]);
 			} catch (Exception e1) { 
 				if (e1.getMessage().equals("Connection refused: connect")){
 					JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
@@ -246,7 +246,7 @@ public class RWspHelper {
 					if (RWspHandler.checkoutstr.equals(lastsync)) {
 						String ret = "";
 						try{
-							ret = WorkspaceServiceClient.modifySavedWorkspace("LOCK"+id+META_DELIMIETER+RWspHandler.userInfo);
+							ret = DownloadClient.modifySavedWorkspace("LOCK"+id+META_DELIMIETER+RWspHandler.userInfo);
 						}catch (Exception e){
 							e.printStackTrace();
 						}
@@ -308,7 +308,7 @@ public class RWspHelper {
 			if (proceed){
 				String ret = "";
 				try{
-					ret = WorkspaceServiceClient.modifySavedWorkspace("RELEASE"+id+META_DELIMIETER+RWspHandler.userInfo);
+					ret = DownloadClient.modifySavedWorkspace("RELEASE"+id+META_DELIMIETER+RWspHandler.userInfo);
 				}catch(Exception e){
 					JOptionPane.showMessageDialog(null, e.getMessage()+".\n\n"+
 			    			"GeWorkbench cannot release lock for remote workspace via axis2 web service.\n" +
@@ -370,7 +370,7 @@ public class RWspHelper {
 				}
 			}
 			if (proceed){
-				String localwspname = WorkspaceServiceClient.wsprenames.get(id);
+				String localwspname = DownloadClient.wsprenames.get(id);
 				if (localwspname!=null && !localwspname.equals("")){
 					int n = JOptionPane.showConfirmDialog(null, 
 							"There is a local copy of the workspace being opened. Do you want to overwrite your local copy?",
@@ -396,14 +396,14 @@ public class RWspHelper {
 		protected Void doInBackground() throws Exception {
 			String dldwspname = "";
 			try {
-				dldwspname = WorkspaceServiceClient.getSavedWorkspace("DOWNLOAD"+filename);
+				dldwspname = DownloadClient.getSavedWorkspace("DOWNLOAD"+filename);
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(null, 
     					"Exception: could not retrieve remote workspace "+filename,
     					"Database connection/data transfer error", JOptionPane.ERROR_MESSAGE);
     			return null;
 			}
-			WorkspaceServiceClient.cleanCache();
+			DownloadClient.cleanCache();
 
 			filename = dldwspname;
 			super.doInBackground();
@@ -469,7 +469,7 @@ public class RWspHelper {
 					if (RWspHandler.checkoutstr.equals(lastsync)) {
 						String ret = "";
 						try{
-							ret = WorkspaceServiceClient.modifySavedWorkspace("LOCK"+id+META_DELIMIETER+RWspHandler.userInfo);
+							ret = DownloadClient.modifySavedWorkspace("LOCK"+id+META_DELIMIETER+RWspHandler.userInfo);
 						}catch (Exception e){
 							e.printStackTrace();
 						}
@@ -504,7 +504,7 @@ public class RWspHelper {
 		protected Void doInBackground() throws FileNotFoundException, IOException {
 			//get server time as checkoutstr
 			try {
-				RWspHandler.checkoutstr = Client.transferFile(null, meta);
+				RWspHandler.checkoutstr = UploadClient.transferFile(null, meta);
 			} catch (RemoteException e1) {
 				JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
 	    				"GeWorkbench cannot upload to remote workspace via axis2 web service.\n" +
@@ -516,7 +516,7 @@ public class RWspHelper {
 			super.doInBackground();
 			//upload saved wsp file
 			try {
-				Client.transferFile(new File(filename), RWspHandler.wspId+META_DELIMIETER+RWspHandler.userInfo);
+				UploadClient.transferFile(new File(filename), RWspHandler.wspId+META_DELIMIETER+RWspHandler.userInfo);
 			} catch (RemoteException e1) {
 				JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
     					"GeWorkbench cannot upload to remote workspace via axis2 web service.\n" +
@@ -532,7 +532,7 @@ public class RWspHelper {
 				return null;
 			String res = "";
 			try{
-				res = WorkspaceServiceClient.modifySavedWorkspace("RELEASE"+RWspHandler.wspId+META_DELIMIETER+RWspHandler.userInfo);
+				res = DownloadClient.modifySavedWorkspace("RELEASE"+RWspHandler.wspId+META_DELIMIETER+RWspHandler.userInfo);
 			}catch(Exception e1){
 				JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
     					"GeWorkbench cannot release lock for remote workspace via axis2 web service.\n" +
@@ -557,7 +557,7 @@ public class RWspHelper {
 			String id = "0";
 			// get auto-increment id in workspace table
 			try {
-				id = Client.transferFile(null, meta);
+				id = UploadClient.transferFile(null, meta);
 			} catch (RemoteException e1) {
 				JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
 	    				"GeWorkbench cannot upload to remote workspace via axis2 web service.\n" +
@@ -584,7 +584,7 @@ public class RWspHelper {
 		protected String doInBackground() throws FileNotFoundException, IOException {
 			String res = "";
 			try {
-				res = WorkspaceServiceClient.modifySavedWorkspace("REMOVE"+filename+META_DELIMIETER+RWspHandler.userInfo);
+				res = DownloadClient.modifySavedWorkspace("REMOVE"+filename+META_DELIMIETER+RWspHandler.userInfo);
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
 				"GeWorkbench cannot remove remote workspace" +filename+".\n"+
@@ -648,7 +648,7 @@ public class RWspHelper {
 		protected String[][] doInBackground() throws FileNotFoundException, IOException {
 			String[][] res = null;
 			try {
-				res = WorkspaceServiceClient.getLockedWorkspaceList("LSLOCK"+RWspHandler.userInfo);
+				res = DownloadClient.getLockedWorkspaceList("LSLOCK"+RWspHandler.userInfo);
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
 				"GeWorkbench cannot retrieve locked remote workspace list.\n"+
@@ -682,7 +682,7 @@ public class RWspHelper {
 				lockDialog.setTitle("Remote workspaces locked by current user");
 				lockDialog.setLayout(new BorderLayout());
 				
-				table = new JTable(new LockTableModel(res, WorkspaceServiceClient.collock));
+				table = new JTable(new LockTableModel(res, DownloadClient.collock));
 			    table.setPreferredScrollableViewportSize(table.getPreferredSize());
 				lockDialog.add(new javax.swing.JScrollPane(table), BorderLayout.CENTER);
 				JPanel btnpanel = new JPanel();
@@ -723,7 +723,7 @@ public class RWspHelper {
 											return;
 										}
 										String fname = id+".wsp";
-										String rename = WorkspaceServiceClient.wsprenames.get(Integer.valueOf(id));
+										String rename = DownloadClient.wsprenames.get(Integer.valueOf(id));
 										if (rename!=null) fname=rename;
 
 										UpdateRemoteNoOpenTask updateTask = new UpdateRemoteNoOpenTask(ProgressItem.INDETERMINATE_TYPE,
@@ -735,7 +735,7 @@ public class RWspHelper {
 									}
 								}
 								try{
-									ret = WorkspaceServiceClient.modifySavedWorkspace("RELEASE"+id+META_DELIMIETER+RWspHandler.userInfo);
+									ret = DownloadClient.modifySavedWorkspace("RELEASE"+id+META_DELIMIETER+RWspHandler.userInfo);
 								}catch(Exception ex){
 									JOptionPane.showMessageDialog(null, ex.getMessage()+".\n\n"+
 							    			"GeWorkbench cannot release lock for remote workspace via axis2 web service.\n" +
@@ -807,7 +807,7 @@ public class RWspHelper {
 			ObjectOutput s = null;
 			FileOutputStream f = null;
 			try{
-				checkoutstr = Client.transferFile(null, 
+				checkoutstr = UploadClient.transferFile(null, 
 						wspId+META_DELIMIETER+checkoutstr+META_DELIMIETER+RWspHandler.userInfo);
 	
 				saveTree.setCheckout(checkoutstr);
@@ -824,7 +824,7 @@ public class RWspHelper {
 				s.writeObject(aps);
 				s.flush();
 	
-				Client.transferFile(new File(filename), wspId+META_DELIMIETER+RWspHandler.userInfo);
+				UploadClient.transferFile(new File(filename), wspId+META_DELIMIETER+RWspHandler.userInfo);
 			} catch (RemoteException e1) {
 				JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
     					"GeWorkbench cannot upload to remote workspace via axis2 web service.\n" +

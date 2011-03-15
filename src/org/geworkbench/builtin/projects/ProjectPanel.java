@@ -2410,7 +2410,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 		clear();
 		GUIFramework.getFrame().setTitle(
-				System.getProperty("application.title"));
+				((Skin)GeawConfigObject.getGuiWindow()).getApplicationTitle());
 	}
 
 	private void imageRemove_actionPerformed(ProjectTreeNode node) {
