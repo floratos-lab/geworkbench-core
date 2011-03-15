@@ -25,7 +25,8 @@ public class AdjacencyMatrix implements Serializable {
 
 	private static Log log = LogFactory.getLog(AdjacencyMatrix.class);
 	
-	public static class EdgeInfo {
+	public static class EdgeInfo implements Serializable {
+		private static final long serialVersionUID = 8884626375173162244L;
 		public float value;
 		public String type;
 		
