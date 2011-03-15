@@ -1,6 +1,7 @@
 package org.geworkbench.util.network;
 
-public class CellularNetworkPreference {
+public class CellularNetworkPreference implements java.io.Serializable {
+	private static final long serialVersionUID = -3049737574513104023L;
 	private String title = null;
 	private String context = null;
 	private String version = null;
