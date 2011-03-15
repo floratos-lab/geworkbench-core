@@ -363,7 +363,7 @@ public class CSGenepixMarkerValue extends CSMarkerValue implements
         return 1;
     }
 
-	@Override
+	//@Override
 	public int compareTo(DSMarkerValue o) {
       return Double.compare(o.getValue(), getValue());
 	}

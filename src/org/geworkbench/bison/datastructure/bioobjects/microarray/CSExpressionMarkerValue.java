@@ -88,7 +88,7 @@ public class CSExpressionMarkerValue extends CSMarkerValue implements DSAffyMark
         return (DSMarkerValue) copy;
     }
 
-	@Override
+	//@Override
 	public int compareTo(DSMarkerValue o) {
         return Double.compare(o.getValue(), getValue());
 	}
