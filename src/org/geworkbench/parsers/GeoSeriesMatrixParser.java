@@ -256,7 +256,6 @@ public class GeoSeriesMatrixParser {
 							arrayName1, null, null, false,
 							DSMicroarraySet.affyTxtType);
 					maSet.add(array);
-					System.out.print("\n");
 					
 					if (maSet.size() != (i + 1)) {
 						log.info("We got a duplicate label of array");
