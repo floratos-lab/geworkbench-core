@@ -70,6 +70,9 @@ public class PDBFileFormat extends DataSetFileFormat {
     public FileFilter getFileFilter() {
         return maFilter;
     }
+    
+    public boolean isMergeSupported() {return false;}
+
 
     /**
      * getDataFile

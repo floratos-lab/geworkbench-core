@@ -76,7 +76,11 @@ public abstract class FileFormat {
      */
     public FileFilter getFileFilter() {
         return null;
-    }
+    }    
+     
+    
+    public boolean isMergeSupported() {return true;}
+    
 
 }
 

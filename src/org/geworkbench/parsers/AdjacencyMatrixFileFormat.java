@@ -156,6 +156,9 @@ public class AdjacencyMatrixFileFormat extends DataSetFileFormat {
     public FileFilter getFileFilter() {
         return adjMatrixFilter;
     }
+    
+    
+    public boolean isMergeSupported() {return false;}
 
     class AdjacencyMatrixFileFilter extends FileFilter {
         public String getDescription() {

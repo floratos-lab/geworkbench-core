@@ -81,6 +81,10 @@ public class CELFileFormat extends DataSetFileFormat {
     public DSDataSet getDataFile(File[] files) {
         return null;
     }
+    
+    public boolean isMergeSupported() {return false;}
+
+    
 
     /**
      * Defines a <code>FileFilter</code> to be used when the user is prompted
@@ -103,4 +107,6 @@ public class CELFileFormat extends DataSetFileFormat {
             return returnVal;
         }
     }
+    
+    
 }

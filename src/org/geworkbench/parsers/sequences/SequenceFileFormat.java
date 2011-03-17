@@ -139,6 +139,10 @@ public class SequenceFileFormat extends DataSetFileFormat {
   public FileFilter getFileFilter() {
     return fastaFilter;
   }
+  
+  public boolean isMergeSupported() {return false;}
+
+  
   /**
    *
    * Defines a <code>FileFilter</code> to be used when the user is prompted
