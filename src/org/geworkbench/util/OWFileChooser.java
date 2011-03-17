@@ -14,7 +14,6 @@ public class OWFileChooser extends JFileChooser {
 	private static final long serialVersionUID = -8841673089062156967L;
 
 	public OWFileChooser() {
-		super();
 	}
 
 	public OWFileChooser(String currentDirectory) {
