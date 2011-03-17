@@ -48,6 +48,10 @@ import org.geworkbench.events.CaArrayRequestEvent;
 import org.geworkbench.parsers.FileFormat;
 import org.geworkbench.util.FilePathnameUtils;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+
 /**
  *  Popup to select a file (local or remote) to open.
  *
@@ -109,7 +113,7 @@ public class LoadDataDialog extends JDialog {
 												// shows detail at the top
 												// panel.
 	private CaARRAYQueryPanel caARRAYQueryPanel;
-
+	 
 	/**
 	 * The project panel that manages the dialog box.
 	 */
@@ -314,6 +318,31 @@ public class LoadDataDialog extends JDialog {
 				merge = mergeCheckBox.isSelected();
 			}
 		});
+		
+		
+		jFileChooser1.addPropertyChangeListener(JFileChooser.FILE_FILTER_CHANGED_PROPERTY, new PropertyChangeListener()
+           {
+                   public void propertyChange(PropertyChangeEvent e) 
+                   {                	 
+                	   if ( jFileChooser1.getFileFilter() !=  null )                           
+                	   {   
+                		   if ( isMergeSupported())
+                		   {   
+                			   mergeCheckBox.setEnabled(true);                			 
+                		   }
+                		   else
+                		   {
+                			   mergeCheckBox.setSelected(false);
+                			   mergeCheckBox.setEnabled(false);                		   
+                		   }
+                			   
+                		   
+                	   }
+                   }
+           });
+
+		
+		
 
 		jPanel10.add(jComboBox1);
 		jPanel10.add(openRemoteResourceButton);
@@ -396,7 +425,8 @@ public class LoadDataDialog extends JDialog {
 	 * and sets the file chooser options accordingly.
 	 */
 	public void setupInputFormats() {
-		int i;
+		int i; 		
+	 
 		// Get the supported formats from the registry.
 		/**
 		 * PluginDescriptor[] inputFormats =
@@ -419,12 +449,14 @@ public class LoadDataDialog extends JDialog {
 					.getFileFilter());
 		}
 
-		int idx = 0;
+		int idx = 0;	 
+		
 		if ((format != null)
 				&& (!format.equals(""))
 				&& ((idx = Integer.parseInt(format)) < supportedInputFormats.length)) {
 			jFileChooser1.setFileFilter(supportedInputFormats[idx]
-					.getFileFilter());
+					.getFileFilter());		
+			 
 		}
 	}
 
@@ -806,4 +838,19 @@ public class LoadDataDialog extends JDialog {
 	public boolean isMerge() {
 		return merge;
 	}
+	
+	public boolean isMergeSupported()
+	{
+		FileFilter selectedFilter = jFileChooser1.getFileFilter(); 
+		for (int i = 0; i < supportedInputFormats.length; ++i) {
+			if (selectedFilter == supportedInputFormats[i].getFileFilter()) {
+	           return supportedInputFormats[i].isMergeSupported();
+			
+			}
+		}
+		
+		return false;
+	}
+	
+	
 }
