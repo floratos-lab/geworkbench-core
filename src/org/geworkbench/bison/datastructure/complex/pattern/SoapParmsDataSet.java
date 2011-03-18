@@ -28,7 +28,7 @@ public class SoapParmsDataSet extends CSAncillaryDataSet<DSSequence> {
 	private static final long serialVersionUID = 6919356172704233963L;
 	static Log log = LogFactory.getLog(	SoapParmsDataSet.class);
 	
-    private Parameters parms = null;
+    private PatternDiscoveryParameters parms = null;
     private File dataSetFile = null;
     private File resultFile;
 
@@ -39,7 +39,7 @@ public class SoapParmsDataSet extends CSAncillaryDataSet<DSSequence> {
      * @param parent
      */
     @SuppressWarnings("unchecked")
-	public SoapParmsDataSet(Parameters p, String name, DSDataSet<? extends DSSequence> parent) {
+	public SoapParmsDataSet(PatternDiscoveryParameters p, String name, DSDataSet<? extends DSSequence> parent) {
         super((DSDataSet<DSSequence>)parent, name);
         parms = p;
         String idString =  RandomNumberGenerator.getID();
@@ -70,7 +70,7 @@ public class SoapParmsDataSet extends CSAncillaryDataSet<DSSequence> {
         dataSetFile = _file;
     }
 
-    public Parameters getParameters() {
+    public PatternDiscoveryParameters getParameters() {
         return parms;
     }
 
