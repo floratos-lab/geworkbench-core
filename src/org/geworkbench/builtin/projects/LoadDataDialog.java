@@ -763,6 +763,7 @@ public class LoadDataDialog extends JDialog {
 	private void addRemotePanel_actionPerformed(ActionEvent e) {
 		addRemotePanel();
 		lowerPanel.add(jPanel10);
+		this.mergeCheckBox.setEnabled(true);
 		this.validate();
 		this.repaint();
 	}
@@ -772,6 +773,13 @@ public class LoadDataDialog extends JDialog {
 			this.getContentPane().remove(caArrayDisplayPanel);
 		this.getContentPane().add(jPanel4, BorderLayout.CENTER);
 		lowerPanel.remove(jPanel10);
+		if (isMergeSupported())
+			this.mergeCheckBox.setEnabled(true);
+		else
+		{
+			this.mergeCheckBox.setEnabled(false);
+			this.mergeCheckBox.setSelected(false);
+		}
 		this.validate();
 		this.repaint();
 	}
