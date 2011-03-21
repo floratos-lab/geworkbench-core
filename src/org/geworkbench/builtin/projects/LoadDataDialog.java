@@ -849,6 +849,10 @@ public class LoadDataDialog extends JDialog {
 	
 	public boolean isMergeSupported()
 	{
+		// FIXME temporary fix for bug 2491 fix
+		if(supportedInputFormats==null)
+			return true;
+		
 		FileFilter selectedFilter = jFileChooser1.getFileFilter(); 
 		for (int i = 0; i < supportedInputFormats.length; ++i) {
 			if (selectedFilter == supportedInputFormats[i].getFileFilter()) {
