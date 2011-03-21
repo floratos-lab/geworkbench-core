@@ -394,7 +394,15 @@ public class LoadDataDialog extends JDialog {
 		localFileRadioButton.setSelected(true);
 		localFileRadioButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if (isMergeSupported())
+					mergeCheckBox.setEnabled(true);
+				else
+				{
+					mergeCheckBox.setEnabled(false);
+					mergeCheckBox.setSelected(false);
+				}
 				switchToLocalFileDialog();
+			
 			}
 		});
 		jRadioButton2.addActionListener(new ActionListener() {
@@ -772,14 +780,7 @@ public class LoadDataDialog extends JDialog {
 		if(caArrayDisplayPanel!=null)
 			this.getContentPane().remove(caArrayDisplayPanel);
 		this.getContentPane().add(jPanel4, BorderLayout.CENTER);
-		lowerPanel.remove(jPanel10);
-		if (isMergeSupported())
-			this.mergeCheckBox.setEnabled(true);
-		else
-		{
-			this.mergeCheckBox.setEnabled(false);
-			this.mergeCheckBox.setSelected(false);
-		}
+		lowerPanel.remove(jPanel10);	 
 		this.validate();
 		this.repaint();
 	}
@@ -848,10 +849,12 @@ public class LoadDataDialog extends JDialog {
 	}
 	
 	public boolean isMergeSupported()
-	{
-		// FIXME temporary fix for bug 2491 fix
-		if(supportedInputFormats==null)
+	{		 
+		if(supportedInputFormats == null)
+		{
+			log.warn("supportedInputFormats is null, but it should not happen. Please check code." );
 			return true;
+		}
 		
 		FileFilter selectedFilter = jFileChooser1.getFileFilter(); 
 		for (int i = 0; i < supportedInputFormats.length; ++i) {
