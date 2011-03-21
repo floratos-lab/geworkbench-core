@@ -152,7 +152,7 @@ public class RegPanel extends JPanel implements ActionListener {
 		bean.setState(state.getText());
 		bean.setZipcode(zipcode.getText());
 		if (passwordo.isVisible())
-			bean.setOldPasswd(passwordo.getPassword());
+			bean.setOldPasswd(getEncodedChars(passwordo.getPassword()));
 		return bean;
 	}
 
