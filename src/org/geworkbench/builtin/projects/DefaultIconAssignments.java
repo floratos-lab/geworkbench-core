@@ -7,7 +7,7 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.DSProbeIntensit
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSSignificanceResultSet;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSAlignmentResultSet;
 import org.geworkbench.bison.datastructure.bioobjects.structure.DSProteinStructure;
-import org.geworkbench.bison.datastructure.complex.pattern.SoapParmsDataSet;
+import org.geworkbench.bison.datastructure.complex.pattern.PatternResult;
 import org.geworkbench.bison.datastructure.complex.pattern.matrix.DSMatrixReduceSet;
 import org.geworkbench.bison.model.clusters.DSHierClusterDataSet;
 import org.geworkbench.bison.model.clusters.DSSOMClusterDataSet;
@@ -16,6 +16,7 @@ import org.geworkbench.util.pathwaydecoder.mutualinformation.EdgeListDataSet;
 
 /**
  * @author John Watkinson
+ * @version $Id$
  */
 public class DefaultIconAssignments {
 
@@ -28,7 +29,7 @@ public class DefaultIconAssignments {
         ProjectPanel.setIconForType(DSSequenceSet.class, Icons.SEQUENCE_ICON);
         ProjectPanel.setIconForType(DSSignificanceResultSet.class, Icons.SIGNIFICANCE_ICON);
         ProjectPanel.setIconForType(ImageData.class, Icons.IMAGE_ICON);
-        ProjectPanel.setIconForType(SoapParmsDataSet.class, Icons.PATTERN_ICON);
+        ProjectPanel.setIconForType(PatternResult.class, Icons.PATTERN_ICON);
         ProjectPanel.setIconForType(CSClassifier.class, Icons.CLASSIFIER_ICON);
         ProjectPanel.setIconForType(DSProteinStructure.class, Icons.STRUCTURE_ICON);
         ProjectPanel.setIconForType(DSMatrixReduceSet.class, Icons.PSAM_ICON);
