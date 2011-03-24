@@ -891,7 +891,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 *
 	 * @param _ancDataSet
 	 */
-	void addDataSetSubNode(DSAncillaryDataSet<? extends DSBioObject> _ancDataSet) {
+	public void addDataSetSubNode(DSAncillaryDataSet<? extends DSBioObject> _ancDataSet) {
 		DataSetNode dNode = selection.getSelectedDataSetNode();
 		DataSetNode matchedDNode = null;
 		DSDataSet<? extends DSBioObject> parentSet = _ancDataSet.getParentDataSet();
