@@ -21,6 +21,7 @@ import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
+import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
@@ -203,10 +204,9 @@ public class TabDelimitedDataMatrixFileFormat extends DataSetFileFormat {
 	 * 
 	 * @see org.geworkbench.components.parsers.microarray.DataSetFileFormat#getDataFile(java.io.File)
 	 */
-	@SuppressWarnings("unchecked")
-	public DSDataSet getDataFile(File file) throws InputFileFormatException, InterruptedIOException{
+	public DSDataSet<? extends DSBioObject> getDataFile(File file) throws InputFileFormatException, InterruptedIOException{
 		  
-		  return (DSDataSet) getMArraySet(file);
+		  return (DSDataSet<? extends DSBioObject>) getMArraySet(file);
 	    
 	}
 	 
@@ -215,8 +215,7 @@ public class TabDelimitedDataMatrixFileFormat extends DataSetFileFormat {
 	 * 
 	 * @see org.geworkbench.components.parsers.FileFormat#getMArraySet(java.io.File)
 	 */
-	@SuppressWarnings("unchecked")
-	public DSMicroarraySet getMArraySet(File file)
+	private CSExprMicroarraySet getMArraySet(File file)
 			throws InputFileFormatException, InterruptedIOException {
 
 		/* the sign between file name and extesion, ex: file.ext */
@@ -441,18 +440,6 @@ public class TabDelimitedDataMatrixFileFormat extends DataSetFileFormat {
 		return maSet;
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	public List getOptions() {
-		// org.geworkbench.components.parsers.FileFormat
-		// abstract method
-		throw new UnsupportedOperationException(
-				"Method getOptions() not yet implemented.");
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -467,8 +454,7 @@ public class TabDelimitedDataMatrixFileFormat extends DataSetFileFormat {
 	 * 
 	 * @see org.geworkbench.components.parsers.microarray.DataSetFileFormat#getDataFile(java.io.File[])
 	 */
-	@SuppressWarnings("unchecked")
-	public DSDataSet getDataFile(File[] files) {
+	public DSDataSet<? extends DSBioObject> getDataFile(File[] files) {
 		// org.geworkbench.components.parsers.microarray.DataSetFileFormat
 		// abstract method
 		throw new UnsupportedOperationException(
