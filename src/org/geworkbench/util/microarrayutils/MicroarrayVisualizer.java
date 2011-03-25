@@ -21,7 +21,6 @@ import org.geworkbench.engine.management.Subscribe;
 import org.geworkbench.events.ImageSnapshotEvent;
 import org.geworkbench.events.MarkerSelectedEvent;
 import org.geworkbench.events.ProjectEvent;
-import org.geworkbench.util.associationdiscovery.cluster.CSMatchedMatrixPattern;
 
 /**
  * <p>Title: Plug And Play</p>
@@ -39,7 +38,7 @@ public abstract class MicroarrayVisualizer {
     protected int microarrayId = 0;
     protected int markerId = 0;
     protected JPanel mainPanel = new JPanel();
-    protected BorderLayout borderLayout = new BorderLayout();
+
     protected boolean usePanel = false;
 
     protected DSPanel<DSGeneMarker> markerPanel;
@@ -53,10 +52,6 @@ public abstract class MicroarrayVisualizer {
         }
     }
 
-    @Publish public org.geworkbench.events.SubpanelChangedEvent publishSubpanelChangedEvent(org.geworkbench.events.SubpanelChangedEvent event) {
-        return event;
-    }
-
     @Publish public ImageSnapshotEvent publishImageSnapshotEvent(ImageSnapshotEvent event) {
         return event;
     }
@@ -68,7 +63,7 @@ public abstract class MicroarrayVisualizer {
     private void jbInit() throws Exception {
         dataSetView.useMarkerPanel(true);
         dataSetView.useItemPanel(true);
-        mainPanel.setLayout(borderLayout);
+        mainPanel.setLayout(new BorderLayout());
     }
 
     public DSItemList<DSGeneMarker> getUniqueMarkers() {
@@ -81,15 +76,7 @@ public abstract class MicroarrayVisualizer {
         setMicroarraySet(maSet);
     }
 
-    /**
-     * Just a dummy implementation rather than an abstract method so that JBuilder does not show
-     * a red component.
-     *
-     * @param microarraySet
-     */
-    protected void setMicroarraySet(DSMicroarraySet set) {
-
-    }
+    protected abstract void setMicroarraySet(DSMicroarraySet<? extends DSMicroarray> set);
 
     /**
      * Just a dummy implementation rather than an abstract method so that JBuilder does not show
@@ -97,30 +84,6 @@ public abstract class MicroarrayVisualizer {
      */
     protected void reset() {
         uniqueMarkers = dataSetView.getUniqueMarkers();
-    }
-
-    public void notifyPatternSelection(CSMatchedMatrixPattern[] selectedPatterns) {
-        clearPatterns();
-        for (int i = 0; i < selectedPatterns.length; i++) {
-            addPattern(selectedPatterns[i]);
-        }
-        //repaint();
-    }
-
-    /**
-     * Just a dummy implementation rather than an abstract method so that JBuilder does not show
-     * a red component.
-     */
-    protected void clearPatterns() {
-    }
-
-    /**
-     * Just a dummy implementation rather than an abstract method so that JBuilder does not show
-     * a red component.
-     *
-     * @param pattern
-     */
-    protected void addPattern(CSMatchedMatrixPattern pattern) {
     }
 
     public void showAllMArrays(boolean showAll) {
@@ -135,18 +98,18 @@ public abstract class MicroarrayVisualizer {
         repaint();
     }
 
-    @Subscribe public void receive(org.geworkbench.events.ProjectEvent projectEvent, Object source) {
-      // System.out.println("receiveProjectSelection() in microarrayvisualizer");
+    @SuppressWarnings("unchecked")
+	@Subscribe public void receive(org.geworkbench.events.ProjectEvent projectEvent, Object source) {
+
         if (projectEvent.getMessage().equals(ProjectEvent.CLEARED)) {
             changeMicroArraySet(null);
             repaint();
             return;
         }
             ProjectSelection selection = ((ProjectPanel) source).getSelection();
-            DSDataSet dataFile = selection.getDataSet();
+            DSDataSet<?> dataFile = selection.getDataSet();
             if (dataFile != null && dataFile instanceof DSMicroarraySet) {
-                DSMicroarraySet set = (DSMicroarraySet) dataFile;
-                changeMicroArraySet(set);
+                changeMicroArraySet((DSMicroarraySet<DSMicroarray>) dataFile);
             } else {
                 changeMicroArraySet(null);
             }
@@ -165,7 +128,4 @@ public abstract class MicroarrayVisualizer {
         return dataSetView;
     }
 
-    public DSMicroarraySet<? extends DSMicroarray> getDataSet() {
-        return dataSetView.getMicroarraySet();
-    }
 }
