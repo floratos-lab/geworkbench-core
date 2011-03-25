@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -32,7 +31,6 @@ import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
-import javax.swing.table.AbstractTableModel;
 
 import org.geworkbench.builtin.projects.LoadDataDialog;
 import org.geworkbench.builtin.projects.remoteresources.RemoteResource;
@@ -266,126 +264,15 @@ public class CaARRAYQueryPanel extends JDialog {
 	Border border5 = BorderFactory.createEtchedBorder(Color.white, new Color(
 			165, 163, 151));
 	Border border6 = new TitledBorder(border5, "Value");
-	ValueTableModel tableModel = new ValueTableModel();
+
 	LoadDataDialog loadData;
 	boolean loaded = false; // To present whether the values are retrieved
 
-	// already.
-
-	// SelectedValue is a util class for values.
-	private class SelectedValue {
-		String value;
-		boolean selected;
-
-		public SelectedValue(String _value, boolean _selected) {
-			value = _value;
-			selected = _selected;
-		}
-
-		public void setValue(String _value) {
-			value = _value;
-		}
-
-		public void setSelected(boolean _selected) {
-			selected = _selected;
-		}
-
-		public boolean getSelected() {
-			return selected;
-		}
-
-		public String getValue() {
-			return value;
-		}
-	}
-
-	Vector<SelectedValue> valueHits = new Vector<SelectedValue>();
-	Vector<SelectedValue> tissueHits = new Vector<SelectedValue>();
 	JComboBox chipPlatformBox = new JComboBox();
 	JComboBox piComboxBox = new JComboBox();
 	JComboBox orginsmBox = new JComboBox();
 	JComboBox tissueTypeBox = new JComboBox();
-
-	private class ValueTableModel extends AbstractTableModel {
-		private static final long serialVersionUID = -3400659955278259350L;
-
-		/* array of the column names in order from left to right */
-		final String[] columnNames = { "Value", "Include" };
-		private Vector<SelectedValue> hits;
-
-		/* returns the number of columns in table */
-		public int getColumnCount() {
-			return columnNames.length;
-		}
-
-		/* returns the number of rows in table */
-		public int getRowCount() {
-			return (hits.size());
-		}
-
-		public void setHits(Vector<SelectedValue> theHits) {
-			hits = theHits;
-		}
-
-		/* return the header for the column number */
-		public String getColumnName(int col) {
-			return columnNames[col];
-		}
-
-		/* get the Object data to be displayed at (row, col) in table */
-		public Object getValueAt(int row, int col) {
-
-			SelectedValue hit = hits.get(row);
-			/* display data depending on which column is chosen */
-			switch (col) {
-			case 0:
-				return hit.getValue(); // database ID
-
-			case 1:
-				return hit.getSelected();
-			}
-			return null;
-		}
-
-		/* returns the Class type of the column c */
-		public Class<?> getColumnClass(int c) {
-			return getValueAt(0, c).getClass();
-		}
-
-		/*
-		 * returns if the cell is editable; returns false for all cells in
-		 * columns except column 6
-		 */
-		public boolean isCellEditable(int row, int col) {
-
-			return col >= 1;
-
-		}
-
-		/*
-		 * detect change in cell at (row, col); set cell to value; update the
-		 * table
-		 */
-		public void setValueAt(Object value, int row, int col) {
-			// Set the selection to single selection as requested by Aris. 04/19/2007
-
-			if (hits != null) {
-				for (int i = 0; i < hits.size(); i++) {
-					SelectedValue hit = hits.get(i);
-					if (hit.getSelected()) {
-						hit.setSelected(false);
-						fireTableCellUpdated(i, col);
-					}
-				}
-			}
-
-			SelectedValue hit = hits.get(row);
-			hit.setSelected((Boolean) value);
-			fireTableCellUpdated(row, col);
-		}
-
-	}
-
+	
 	public void jcatagoryComboBox_actionPerformed(ActionEvent e) {
 		JComboBox cb = (JComboBox) e.getSource();
 
@@ -502,10 +389,6 @@ public class CaARRAYQueryPanel extends JDialog {
 	 * @param e
 	 */
 	public void clearAllButton_actionPerformed(ActionEvent e) {
-		// chipPlatformNameField.setText("");
-		// piTextField.setText("");
-		valueHits = new Vector<SelectedValue>();
-		tissueHits = new Vector<SelectedValue>();
 		loaded = false;
 		jPanel2.removeAll();
 		jPanel2.revalidate();
