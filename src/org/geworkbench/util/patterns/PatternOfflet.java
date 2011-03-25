@@ -7,30 +7,26 @@ import java.io.Serializable;
  * User: xiaoqing
  * Date: Jan 25, 2007
  * Time: 6:38:29 PM
- * To change this template use File | Settings | File Templates.
+ * 
+ * @version $Id$
  */
 public class PatternOfflet implements Serializable {
-    private int position;
+	private static final long serialVersionUID = -6441126412656981789L;
+	
+	private int position;
     private String token;
-
-    public int getPosition() {
-        return position;
-    }
 
     public PatternOfflet(int position, String token) {
         this.position = position;
         this.token = token;
     }
 
-    public void setPosition(int position) {
-        this.position = position;
+    public int getPosition() {
+        return position;
     }
 
     public String getToken() {
         return token;
     }
 
-    public void setToken(String token) {
-        this.token = token;
-    }
 }
