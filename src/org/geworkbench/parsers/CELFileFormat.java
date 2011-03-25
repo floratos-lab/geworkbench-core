@@ -1,17 +1,17 @@
 package org.geworkbench.parsers;
 
-import org.geworkbench.bison.parsers.resources.Resource;
-import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
-import org.geworkbench.bison.datastructure.bioobjects.microarray.CSProbeIntensityArray;
-
-import javax.swing.filechooser.FileFilter;
-import java.util.Arrays;
-import java.util.List;
-import java.io.File;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
+
+import javax.swing.filechooser.FileFilter;
+
+import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.CSProbeIntensityArray;
+import org.geworkbench.bison.parsers.resources.Resource;
 
 /**
  * Loads PDB structure format.
@@ -46,7 +46,7 @@ public class CELFileFormat extends DataSetFileFormat {
         return true;
     }
 
-    public DSDataSet getDataFile(File file) {
+    public DSDataSet<? extends DSBioObject> getDataFile(File file) {
         String name = file.getName();
         int index = name.lastIndexOf('.');
         if (index != -1) {
@@ -59,15 +59,6 @@ public class CELFileFormat extends DataSetFileFormat {
         return dataSet;
     }
 
-    public DSMicroarraySet getMArraySet(File file) {
-        return null;
-    }
-
-    public List getOptions() {
-        /**@todo Implement this org.geworkbench.components.parsers.FileFormat abstract method*/
-        throw new UnsupportedOperationException("Method getOptions() not yet implemented.");
-    }
-
     public FileFilter getFileFilter() {
         return maFilter;
     }
@@ -78,7 +69,7 @@ public class CELFileFormat extends DataSetFileFormat {
      * @param files File[]
      * @return DataSet
      */
-    public DSDataSet getDataFile(File[] files) {
+    public DSDataSet<? extends DSBioObject> getDataFile(File[] files) {
         return null;
     }
     
