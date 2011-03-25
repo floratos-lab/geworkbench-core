@@ -18,8 +18,7 @@ public class ModulatorInfo implements Serializable {
 	 */
 	private static final long serialVersionUID = 5637267668779649984L;
 
-	public ModulatorInfo(DSGeneMarker modulator) {
-		this.modulator = modulator;
+	public ModulatorInfo() {
 	}
 
     public void insertRow(MindyResultRow row) {
@@ -72,7 +71,6 @@ public class ModulatorInfo implements Serializable {
 		return row;
 	}
 
-	private DSGeneMarker modulator;
     private ModulatorStatistics modStat= new ModulatorStatistics(0, 0, 0);;
 
     private List<MindyResultRow> data = new ArrayList<MindyResultRow>();
