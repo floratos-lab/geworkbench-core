@@ -13,7 +13,7 @@ import java.io.*;
  * @author zji
  * @version $Id: MarkUsResultDataSet.java,v 1.2 2009-02-17 21:59:39 jiz Exp $
  */
-public class MarkUsResultDataSet<T> extends CSAncillaryDataSet<DSBioObject> {
+public class MarkUsResultDataSet extends CSAncillaryDataSet<DSBioObject> {
 	private static final long serialVersionUID = -5868552586583422711L;
 	
 	String result = null;
