@@ -1,15 +1,14 @@
 package org.geworkbench.util.associationdiscovery.cluster;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
-import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.complex.pattern.CSPatternMatch;
 import org.geworkbench.bison.datastructure.complex.pattern.DSPatternMatch;
 import org.geworkbench.bison.datastructure.complex.pattern.matrix.CSPValued;
 import org.geworkbench.bison.util.DSPValue;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * <p>Title: Bioworks</p>
@@ -21,15 +20,15 @@ import java.util.List;
  * <p>Company: Columbia University</p>
  *
  * @author not attributable
- * @version 1.0
+ * @version $Id$
  */
-
+// this class is used only by Color Mosaic component
 public class CSMatrixPattern implements DSMatrixPattern {
-    protected String patternString = new String("TBD");
-    protected DSMarkerValue[] values = null;
-    protected DSGeneMarker[] markers = null;
-    double[] minValue = null;
-    double[] maxValue = null;
+    private String patternString = new String("TBD");
+
+    private DSGeneMarker[] markers = null;
+    private double[] minValue = null;
+    private double[] maxValue = null;
 
     /**
      * Standard method to determine the pValue of matching a
@@ -41,7 +40,7 @@ public class CSMatrixPattern implements DSMatrixPattern {
     public DSPValue match(DSMicroarray array) {
         DSPValue r = new CSPValued();
         r.setPValue(0.0);
-        boolean isMatch = true;
+
         for (int k = 0; k < markers.length; k++) {
             DSGeneMarker marker = markers[k];
             double m1 = array.getMarkerValue(marker).getValue();
@@ -50,19 +49,6 @@ public class CSMatrixPattern implements DSMatrixPattern {
             }
         }
         return r;
-        //        DSPValue r = new CSPValued();
-        //        r.setPValue(0.0);
-        //        boolean isMatch = true;
-        //        for (int k = 0; k < markers.length; k++) {
-        //            DSMarker marker = markers[k];
-        //            double m1 = array.getMarkerValue(marker).getValue();
-        //            double m2 = values[k].getValue();
-        //            double dm = Math.max(m1, m2) * 0.4;
-        //            if (m1 < m2 - dm || m1 > m2 + dm) {
-        //                r.setPValue(1);
-        //            }
-        //        }
-        //        return r;
     }
 
     public List<DSPatternMatch<DSMicroarray, DSPValue>> match(DSMicroarray array, double p) {
@@ -84,14 +70,10 @@ public class CSMatrixPattern implements DSMatrixPattern {
         return markers;
     }
 
-    //    public DSMarkerValue[] markerValues() {
-    //        return values;
-    //    }
-
     public void init(int size) {
         minValue = new double[size];
         maxValue = new double[size];
-        values = new DSMarkerValue[size];
+
         markers = new DSGeneMarker[size];
         for (int k = 0; k < size; k++) {
             minValue[k] = 999999;
@@ -137,11 +119,4 @@ public class CSMatrixPattern implements DSMatrixPattern {
         }
     }
 
-    //    public void add(DSMicroarray array) {
-    //        int i = 0;
-    //        for (DSMarker marker: markers()) {
-    //            DSMarkerValue value = array.getMarkerValue(marker);
-    //            values[i++] = value.deepCopy();
-    //        }
-    //    }
 }
