@@ -6,7 +6,7 @@ package org.geworkbench.parsers;
  * <p>Company: First Genetic Trust, Inc.</p>
  * <p>
  * @author First Genetic Trust, Inc.
- * @version 1.0
+ * @version $Id$
  */
 
 /**
@@ -14,7 +14,9 @@ package org.geworkbench.parsers;
  * a user-designated format.
  */
 public class InputFileFormatException extends org.geworkbench.util.BaseException {
-    // ---------------------------------------------------------------------------
+	private static final long serialVersionUID = -6720821904782135107L;
+
+	// ---------------------------------------------------------------------------
     // --------------- Constructors
     // ---------------------------------------------------------------------------
     public InputFileFormatException() {
