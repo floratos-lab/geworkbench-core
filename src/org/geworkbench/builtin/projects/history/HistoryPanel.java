@@ -1,21 +1,23 @@
 package org.geworkbench.builtin.projects.history;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
+
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
-import org.geworkbench.bison.datastructure.properties.DSExtendable;
 import org.geworkbench.builtin.projects.ProjectPanel;
 import org.geworkbench.engine.config.VisualPlugin;
 import org.geworkbench.engine.management.AcceptTypes;
 import org.geworkbench.engine.management.Subscribe;
 
-import javax.swing.*;
-import java.awt.*;
-
 /**
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: First Genetic Trust Inc.</p>
  * @author First Genetic Trust
- * @version 1.0
+ * @version $Id$
  */
 
 /**
@@ -28,10 +30,7 @@ import java.awt.*;
      * Text to display when there are no user comments entered.
      */
     private final String DEFAULT_MESSAGE = "";
-    /**
-     * The currently selected microarray set.
-     */
-    protected DSDataSet maSet = null;
+
     protected String datasetHistory = DEFAULT_MESSAGE;
     private BorderLayout borderLayout1 = new BorderLayout();
     protected JScrollPane jScrollPane1 = new JScrollPane();
@@ -72,7 +71,7 @@ import java.awt.*;
      * @param e
      */
     @Subscribe public void receive(org.geworkbench.events.ProjectEvent e, Object source) {
-        maSet = e.getDataSet();
+    	DSDataSet<?>  maSet = e.getDataSet();
         if (maSet != null) {
             datasetHistory = DEFAULT_MESSAGE;
             if (e.getMessage().equals(org.geworkbench.events.ProjectEvent.CLEARED))
@@ -97,7 +96,7 @@ import java.awt.*;
      */
     @Subscribe
 	public void receive(org.geworkbench.events.HistoryEvent e, Object source) {
-		maSet = e.getDataSet();
+    	DSDataSet<?> maSet = e.getDataSet();
 		if (maSet != null) {
 			datasetHistory = DEFAULT_MESSAGE;
 
