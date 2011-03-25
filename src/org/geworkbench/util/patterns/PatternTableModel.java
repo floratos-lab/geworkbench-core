@@ -1,12 +1,12 @@
 package org.geworkbench.util.patterns;
 
-import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeqPattern;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 import javax.swing.SwingWorker;
 import javax.swing.table.AbstractTableModel;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Iterator;
+
+import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeqPattern;
 
 /**
  * <p>Title: Sequence and Pattern Plugin</p>
@@ -20,7 +20,8 @@ import java.util.Iterator;
  */
 
 public class PatternTableModel extends AbstractTableModel {
-    /**
+	private static final long serialVersionUID = 9144326847214513997L;
+	/**
      * Column definition
      */
     static public final int PTMSupport = 0;
@@ -32,7 +33,7 @@ public class PatternTableModel extends AbstractTableModel {
     /**
      * Pattern array - contains the patterns.
      */
-    private ArrayList pattern = new ArrayList();
+    private ArrayList<DSMatchedSeqPattern> pattern = new ArrayList<DSMatchedSeqPattern>();
 
     /**
      * Used to format the pValue/zScore field.
@@ -60,34 +61,7 @@ public class PatternTableModel extends AbstractTableModel {
     /**
      * Will retrieve patterns from a Patterns Source.
      */
-    PatternTableModelWorker worker = null;
-
-    /**
-     * Add a pattern to the model.
-     *
-     * @param pattern
-     */
-    public synchronized void addPattern(DSMatchedSeqPattern pattern) {
-        this.pattern.add(pattern);
-        computeMaxLength(pattern);
-    }
-
-    /**
-     * Add a list of patterns to the model
-     *
-     * @param list ArrayList
-     */
-    public synchronized void addAllPatterns(ArrayList<DSMatchedSeqPattern> list) {
-        if (list != null) {
-            Iterator<DSMatchedSeqPattern> iter = list.iterator();
-            while (iter.hasNext()) {
-                DSMatchedSeqPattern pat = iter.next();
-                computeMaxLength(pat);
-                pattern.add(pat);
-            }
-        }
-    }
-
+    private PatternTableModelWorker worker = null;
 
     /**
      * Set the pattern source for this model.
@@ -193,23 +167,6 @@ public class PatternTableModel extends AbstractTableModel {
         rowCount = rowNum;
     }
 
-
-    /**
-     * Return a copy of all stored patterns
-     *
-     * @return pattern
-     */
-    public synchronized ArrayList getPatterns() {
-        ArrayList copy = new ArrayList();
-        Iterator iter = pattern.iterator();
-
-        while (iter.hasNext()) {
-            copy.add(iter.next());
-        }
-
-        return copy;
-    }
-
     /**
      * Get the pattern at the index row. This method will block until
      * the pattern is retrived from the underline source. See setPatternSource.
@@ -249,16 +206,6 @@ public class PatternTableModel extends AbstractTableModel {
             }
         }
         return pat;
-    }
-
-    /**
-     * Return the maximum extension of all the patterns in the model.
-     *
-     * @return
-     */
-    public synchronized int getMaxLength() {
-        //this method used by PositionHistogramWidget and SequenceViewWidget
-        return maxLen;
     }
 
     private void computeMaxLength(DSMatchedSeqPattern pattern) {
