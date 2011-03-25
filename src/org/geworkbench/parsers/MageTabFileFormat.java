@@ -20,6 +20,7 @@ import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
+import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSExpressionMarkerValue;
@@ -87,21 +88,8 @@ public class MageTabFileFormat extends DataSetFileFormat {
 	 * 
 	 * @see org.geworkbench.components.parsers.microarray.DataSetFileFormat#getDataFile(java.io.File)
 	 */
-	@SuppressWarnings("unchecked")
-	public DSDataSet getDataFile(File file) throws InputFileFormatException, InterruptedIOException{  
-		DSMicroarraySet maSet1 = new CSExprMicroarraySet();
-		maSet1 = getMArraySet(file);
-		return maSet1;
-	}
-	 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.geworkbench.components.parsers.FileFormat#getMArraySet(java.io.File)
-	 */
-	@SuppressWarnings("unchecked")
-	public DSMicroarraySet getMArraySet(File file)
-			throws InputFileFormatException, InterruptedIOException {
+	public DSDataSet<? extends DSBioObject> getDataFile(File file) throws InputFileFormatException, InterruptedIOException{  
+		// TODO this method is too longer. should be refactored.
 		
 		CSExprMicroarraySet maSet = new CSExprMicroarraySet();
 		BufferedReader in = null;
@@ -421,15 +409,6 @@ public class MageTabFileFormat extends DataSetFileFormat {
 		}
 		return maSet;
 	}
-	/**
-	 * 
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	public List getOptions() {
-		throw new UnsupportedOperationException(
-				"Method getOptions() not yet implemented.");
-	}
 
 	/*
 	 * (non-Javadoc)
@@ -445,8 +424,7 @@ public class MageTabFileFormat extends DataSetFileFormat {
 	 * 
 	 * @see org.geworkbench.components.parsers.microarray.DataSetFileFormat#getDataFile(java.io.File[])
 	 */
-	@SuppressWarnings("unchecked")
-	public DSDataSet getDataFile(File[] files) {
+	public DSDataSet<? extends DSBioObject> getDataFile(File[] files) {
 		// TODO Implement this
 		// org.geworkbench.components.parsers.microarray.DataSetFileFormat
 		// abstract method
