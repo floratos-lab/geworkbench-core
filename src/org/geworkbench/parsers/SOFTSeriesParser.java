@@ -161,6 +161,8 @@ public class SOFTSeriesParser {
 			String currentPlatform = null;
 			String currentArrayName = null;
 			boolean rightSample = false;
+			
+			boolean insideSampleTable = false;
 
 			while (line != null) {
 				/*
@@ -211,11 +213,26 @@ public class SOFTSeriesParser {
 					continue;
 				}
 
+				final String sampleTableBeginTag = "!sample_table_begin";
+				final String sampleTableEndTag = "!sample_table_end";
+				
 				if (isComment(line) || !rightSample) {
+					if (!insideSampleTable && line.startsWith(sampleTableBeginTag)) {
+						insideSampleTable = true;
+					}
+					if (insideSampleTable && line.startsWith(sampleTableEndTag)) {
+						insideSampleTable = false;
+					}
+					
 					line = in.readLine();
 					continue;
 				}
 
+				if(!insideSampleTable) {
+					line = in.readLine();
+					continue;
+				}
+				
 				if (line.startsWith("ID_REF")) {
 					if (counter == 0) {
 						String[] valueLabels = line.split("\t");
