@@ -27,7 +27,6 @@ import org.geworkbench.util.pathwaydecoder.mutualinformation.EdgeListDataSet;
  * @author ch2514
  * @version $Id: EdgeListFileFormat.java,v 1.4 2009-10-07 15:38:48 my2248 Exp $
  */
-@SuppressWarnings("unchecked")
 public class EdgeListFileFormat extends DataSetFileFormat {
 	private Log log = LogFactory.getLog(EdgeListFileFormat.class);
 
