@@ -1,12 +1,14 @@
 package org.geworkbench.util.pathwaydecoder.mutualinformation;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 public class EdgeList implements Serializable {
+	private static final long serialVersionUID = -1146449113733368462L;
+
 	static Log log = LogFactory.getLog(EdgeList.class);
 	
 	private ArrayList<Edge> edgeList;

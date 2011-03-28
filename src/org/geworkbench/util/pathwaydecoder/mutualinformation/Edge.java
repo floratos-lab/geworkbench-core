@@ -3,6 +3,8 @@ package org.geworkbench.util.pathwaydecoder.mutualinformation;
 import java.io.Serializable;
 
 public class Edge implements Serializable{
+	private static final long serialVersionUID = 742062775524951624L;
+	
 	private String startNode;
 	private String endNode;
 	

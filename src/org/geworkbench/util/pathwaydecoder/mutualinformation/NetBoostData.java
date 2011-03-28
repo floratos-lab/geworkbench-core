@@ -8,6 +8,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 public class NetBoostData implements Serializable {
+	private static final long serialVersionUID = -4449531098587826175L;
+
 	static Log log = LogFactory.getLog(NetBoostData.class);
 	
 	/* INTERNAL DATASTRUCTURE */
