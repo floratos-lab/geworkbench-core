@@ -348,7 +348,7 @@ public class Cursor {
 			startTime = System.currentTimeMillis();
 			try {
 				while (!this.cursor.isFinishedSet()) {
-					this.sleep(THREAD_SLEEP_INTERVAL);
+					Thread.sleep(THREAD_SLEEP_INTERVAL);
 					currentTime = System.currentTimeMillis();
 					log.debug("mc: cursor not finished...");
 					if ((currentTime - startTime) >= MAX_WAIT_TIME) {

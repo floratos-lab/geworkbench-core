@@ -19,7 +19,9 @@ import java.util.List;
  */
 public class ProgressGraph extends JComponent {
 
-    static Log log = LogFactory.getLog(ProgressGraph.class);
+	private static final long serialVersionUID = -5412121631161441914L;
+
+	static Log log = LogFactory.getLog(ProgressGraph.class);
 
     String description = "";
 

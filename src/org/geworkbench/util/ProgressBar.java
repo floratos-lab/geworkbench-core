@@ -26,12 +26,13 @@ import javax.swing.SwingConstants;
  * application components.
  *
  * @author manjunath at genomecenter dot columbia dot edu
- * @version 2.0
+ * @version $Id$
  */
 
 public class ProgressBar
     extends JDialog {
-    /**
+	private static final long serialVersionUID = 8319899130441466097L;
+	/**
      * Defines a ProgressBar that has bounds and values shown increment from a
      * minimum to a maximum
      */
@@ -328,7 +329,9 @@ public class ProgressBar
      */
     public static class IncrementModel
         extends DefaultBoundedRangeModel {
-        private int increment = 0;
+		private static final long serialVersionUID = 6028593195582948256L;
+		
+		private int increment = 0;
         public IncrementModel(int value, int extent, int min, int max, int inc) {
             super(value, extent, min, max);
             increment = inc;

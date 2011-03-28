@@ -79,10 +79,11 @@ public abstract class BusySwingWorker<T, V> extends javax.swing.SwingWorker<T, V
     }
 
     private class JProgress extends JPanel {
-        int progress = 0, maxProgress = 0;
+		private static final long serialVersionUID = 115276759750235461L;
+		
+		int progress = 0, maxProgress = 0;
 
         protected void paintComponent(Graphics g) {
-//            log.debug("Painting at "+progress);
             Graphics2D g2d = (Graphics2D) g;
             g2d.setColor(Color.white);
             g2d.fillRect(0, 0, getWidth(), getHeight());

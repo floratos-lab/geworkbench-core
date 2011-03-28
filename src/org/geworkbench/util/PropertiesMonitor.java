@@ -4,7 +4,7 @@
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: </p>
  * @author
- * @version 1.0
+ * @version $Id$
  */
 
 package org.geworkbench.util;
@@ -137,7 +137,7 @@ public class PropertiesMonitor {
     public synchronized void addHost(String ht) {
         if (null != ht && !ht.equals("")) {
             //get the set of hosts
-            Set hostSet = getHosts();
+            Set<String> hostSet = getHosts();
             if (hostSet.add(ht)) {
                 //we did not see this host before, add it
                 String hostList = properties.getProperty("host");
@@ -152,11 +152,11 @@ public class PropertiesMonitor {
      *
      * @return Set - the list of hosts.
      */
-    public synchronized Set getHosts() {
+    public synchronized Set<String> getHosts() {
         //note: this is a bit expensive, but really the list of hosts is minimal
         String hostList = properties.getProperty("host");
         StringTokenizer st = new StringTokenizer(hostList);
-        Set hostSet = new TreeSet();
+        Set<String> hostSet = new TreeSet<String>();
         while (st.hasMoreTokens()) {
             hostSet.add(st.nextToken());
         }
@@ -193,7 +193,7 @@ public class PropertiesMonitor {
         return properties.getProperty("defPath");
     }
 
-    public void set(String prop, String val) {
+    private void set(String prop, String val) {
         if (val != null) {
             properties.setProperty(prop, val);
             writeProperties();

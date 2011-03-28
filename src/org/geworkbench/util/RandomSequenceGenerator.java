@@ -16,35 +16,22 @@ public class RandomSequenceGenerator {
      */
     public RandomSequenceGenerator(DSSequenceSet<? extends DSSequence> sequencedb, double pValue) {
         final int maxLen = 20000;
-        if (true) {
-            int length = 0;
-            for (DSSequence seq : sequencedb) {
-                length += seq.length();
-            }
-            length = Math.min(length, maxLen);
-            tokens = new char[length];
-            int pos = 0;
-            for (DSSequence seq : sequencedb) {
-                for (int i = 0; i < seq.length(); i++) {
-                    if (pos >= length) break;
-                    tokens[pos++] = seq.getSequence().charAt(i);
-                }
-            }
 
-        } else {
-            int length = 10000; //(int) (1000.0 / pValue);
-            tokens = new char[length];
-            int i = 0;
-            while (i < length) {
-                int seqId = (int) (Math.random() * sequencedb.size());
-                DSSequence sequence = sequencedb.getSequence(seqId);
-                int pos = (int) (Math.random() * sequence.length()) - 1;
-                char c = sequence.getSequence().charAt(pos);
-                if (c != '#') {
-                    tokens[i++] = c;
-                }
-            }
-        }
+		int length = 0;
+		for (DSSequence seq : sequencedb) {
+			length += seq.length();
+		}
+		length = Math.min(length, maxLen);
+		tokens = new char[length];
+		int pos = 0;
+		for (DSSequence seq : sequencedb) {
+			for (int i = 0; i < seq.length(); i++) {
+				if (pos >= length)
+					break;
+				tokens[pos++] = seq.getSequence().charAt(i);
+			}
+		}
+
         seq = new String(tokens).toUpperCase();
         seq.replace("#", "");
         seq.replace("N", "");

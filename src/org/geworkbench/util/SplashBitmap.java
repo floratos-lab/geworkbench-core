@@ -56,7 +56,9 @@ import java.net.URL;
  */
 public class SplashBitmap extends JWindow {
 
-    private URL bitmapURL = null;
+	private static final long serialVersionUID = -398655317017316525L;
+	
+	private URL bitmapURL = null;
     private JLabel bitmapLabel;
     private Timer timeoutTimer = null;
     private Timer progressTimer = null;
@@ -85,7 +87,7 @@ public class SplashBitmap extends JWindow {
         File bitmapFile = new File(filename);
 
         try {
-            this.bitmapURL = bitmapFile.toURL();
+            this.bitmapURL = bitmapFile.toURI().toURL();
         } catch (MalformedURLException ignore) {
         }
 

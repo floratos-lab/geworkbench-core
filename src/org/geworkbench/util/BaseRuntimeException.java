@@ -11,7 +11,9 @@ package org.geworkbench.util;
  * Base runtime exception class for all application exceptions.
  */
 public class BaseRuntimeException extends RuntimeException {
-    // ---------------------------------------------------------------------------
+	private static final long serialVersionUID = 2439482773256837713L;
+
+	// ---------------------------------------------------------------------------
     // --------------- Constructors
     // ---------------------------------------------------------------------------
     public BaseRuntimeException() {

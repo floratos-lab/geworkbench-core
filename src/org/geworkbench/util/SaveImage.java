@@ -14,7 +14,7 @@ import java.io.IOException;
  * <p>Company: First Genetic Trust Inc.</p>
  *
  * @author First Genetic Trust Inc.
- * @version 1.0
+ * @version $Id$
  */
 public class SaveImage {
     private Image imageToBeSaved = null;
@@ -45,7 +45,7 @@ public class SaveImage {
         if (!filename.endsWith(ext))
             filename += "." + ext;
         RenderedOp op1 = JAI.create("scale", pb, null);
-        RenderedOp op = null;
+
         FileOutputStream stream = null;
         try {
             stream = new FileOutputStream(new File(filename));

@@ -11,7 +11,9 @@ package org.geworkbench.util;
  * Base exception class for all application exceptions.
  */
 public class BaseException extends Exception {
-    // ---------------------------------------------------------------------------
+	private static final long serialVersionUID = -7980428838765239847L;
+
+	// ---------------------------------------------------------------------------
     // --------------- Constructors
     // ---------------------------------------------------------------------------
     public BaseException() {

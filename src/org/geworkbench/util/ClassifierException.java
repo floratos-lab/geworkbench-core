@@ -7,7 +7,9 @@ package org.geworkbench.util;
  * Time: 5:22:41 PM
  */
 public class ClassifierException extends Exception {
-    public ClassifierException(String message) {
+	private static final long serialVersionUID = 7217613511326291355L;
+
+	public ClassifierException(String message) {
         super(message);
     }
 }

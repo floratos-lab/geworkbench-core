@@ -1,10 +1,26 @@
 package org.geworkbench.util;
 
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.ListModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import java.awt.*;
-import java.awt.event.*;
 
 /**
  * A list control that supports interactive text search.
@@ -13,7 +29,9 @@ import java.awt.event.*;
  */
 public class JAutoList extends JPanel {
 
-    public static final String NEXT_BUTTON_TEXT = "Find Next";
+	private static final long serialVersionUID = 5278164284154657596L;
+	
+	public static final String NEXT_BUTTON_TEXT = "Find Next";
     public static final String SEARCH_LABEL_TEXT = "Search:";
 
     protected JList list;

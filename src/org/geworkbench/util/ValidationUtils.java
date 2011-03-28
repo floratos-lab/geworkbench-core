@@ -1,14 +1,12 @@
 package org.geworkbench.util;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 
 import org.apache.commons.lang.StringUtils;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
-import org.geworkbench.bison.datastructure.biocollections.views.DSMicroarraySetView;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 
 public class ValidationUtils {
@@ -19,31 +17,7 @@ public class ValidationUtils {
 	private static String errorMsg = "";
 
 	@SuppressWarnings("unchecked")
-	public static boolean validateMicroarrayMarkers(Object input,
-			String loadedMarkers) {
-		// Init
-		errorMsg = "";
-
-		// Checking to see if there is input data
-		if ((input == null) || (loadedMarkers == null)
-				|| StringUtils.isEmpty(loadedMarkers)) {
-			errorMsg = "Please make sure neither the input data nor the loaded markers are empty.";
-			return false;
-		}
-
-		// Check for proper data type
-		if (input instanceof DSMicroarraySetView) {
-			DSItemList<DSGeneMarker> geWorkbenchMarkers = ((DSMicroarraySetView) input)
-					.getMicroarraySet().getMarkers();
-			return validateMarkers(geWorkbenchMarkers, loadedMarkers);
-		} else {
-			errorMsg = "Input data is not a microarray set.";
-			return false;
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	public static boolean validateMicroarrayMarkers(DSDataSet dataSet,
+	public static boolean validateMicroarrayMarkers(DSDataSet<?> dataSet,
 			String loadedMarkers) {
 		// Init
 		errorMsg = "";
@@ -57,7 +31,7 @@ public class ValidationUtils {
 
 		// Check for proper data type
 		if (dataSet instanceof DSMicroarraySet) {
-			return validateMarkers(((DSMicroarraySet) dataSet).getMarkers(),
+			return validateMarkers(((DSMicroarraySet<DSMicroarray>) dataSet).getMarkers(),
 					loadedMarkers);
 		} else {
 			errorMsg = "Data is not a microarray data set.";
@@ -65,7 +39,6 @@ public class ValidationUtils {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private static boolean validateMarkers(
 			DSItemList<DSGeneMarker> geWorkbenchMarkers, String loadedMarkers) {
 
@@ -110,14 +83,6 @@ public class ValidationUtils {
 			errorMsg = "The following are not valid markers:\n" + s;
 			return false;
 		}
-	}
-
-	public static String getDelimiter() {
-		return delimiter;
-	}
-
-	public static void setDelimiter(String d) {
-		delimiter = d;
 	}
 
 	public static String getErrorMessage() {

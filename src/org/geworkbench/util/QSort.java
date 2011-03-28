@@ -21,8 +21,8 @@ public class QSort {
     public QSort(float[] origA) {
         float[] copyA = new float[origA.length];
         this.ascending = true;
-        Vector NaNIndicesVector = new Vector();
-        Vector negInfinityIndicesVector = new Vector();
+        Vector<Integer> NaNIndicesVector = new Vector<Integer>();
+        Vector<Integer> negInfinityIndicesVector = new Vector<Integer>();
 
         for (int i = 0; i < copyA.length; i++) {
             copyA[i] = origA[i];
@@ -54,8 +54,8 @@ public class QSort {
     public QSort(double[] origA) {
         double[] copyA = new double[origA.length];
         this.ascending = true;
-        Vector NaNIndicesVector = new Vector();
-        Vector negInfinityIndicesVector = new Vector();
+        Vector<Integer> NaNIndicesVector = new Vector<Integer>();
+        Vector<Integer> negInfinityIndicesVector = new Vector<Integer>();
 
         for (int i = 0; i < copyA.length; i++) {
             copyA[i] = origA[i];
@@ -244,25 +244,6 @@ public class QSort {
     }
 
     public float[] getSorted() {
-        /*
-        Vector sortedVector = new Vector();
-        Vector NaNSortedIndices = new Vector();
-
-        for (int i = 0; i < sorted.length; i++) {
-            if (Float.isNaN(sorted[i])) {
-                NaNSortedIndices.add(new Integer(i));
-            } else {
-                sortedVector.add(new Float(sorted[i]));
-            }
-        }
-
-        for (int i = 0; i < NaNSortedIndices.size(); i++) {
-            sortedVector.add(0, new Float(Float.NaN));
-        }
-        for (int i = 0; i < sortedVector.size(); i++) {
-            sorted[i] = ((Float)(sortedVector.get(i))).floatValue();
-        }
-         */
         for (int i = 0; i < NaNIndices.length; i++) {
             sorted[i] = Float.NaN;
         }
@@ -276,25 +257,6 @@ public class QSort {
     }
 
     public double[] getSortedDouble() {
-        /*
-        Vector sortedVector = new Vector();
-        Vector NaNSortedIndices = new Vector();
-
-        for (int i = 0; i < sortedDouble.length; i++) {
-            if (Double.isNaN(sortedDouble[i])) {
-                NaNSortedIndices.add(new Integer(i));
-            } else {
-                sortedVector.add(new Double(sortedDouble[i]));
-            }
-        }
-
-        for (int i = 0; i < NaNSortedIndices.size(); i++) {
-            sortedVector.add(0, new Double(Double.NaN));
-        }
-        for (int i = 0; i < sortedVector.size(); i++) {
-            sortedDouble[i] = ((Double)(sortedVector.get(i))).doubleValue();
-        }
-         */
         for (int i = 0; i < NaNIndices.length; i++) {
             sortedDouble[i] = Double.NaN;
         }
@@ -308,22 +270,6 @@ public class QSort {
     }
 
     public int[] getOrigIndx() {
-        /*
-        Vector origIndxVector = new Vector();
-        for (int i = 0; i < origIndx.length; i++) {
-            if (!isNaNIndex(origIndx[i])) {
-                origIndxVector.add(new Integer(origIndx[i]));
-            }
-        }
-
-        for (int i = 0; i < NaNIndices.length; i++) {
-            origIndxVector.add(0, new Integer(NaNIndices[i]));
-        }
-
-        for (int i = 0; i < origIndxVector.size(); i++) {
-            origIndx[i] = ((Integer)(origIndxVector.get(i))).intValue();
-        }
-         */
 
         for (int i = 0; i < NaNIndices.length; i++) {
             origIndx[i] = NaNIndices[i];
@@ -338,16 +284,6 @@ public class QSort {
         } else {
             return origIndx;
         }
-    }
-
-    private boolean isNaNIndex(int index) {
-        for (int i = 0; i < NaNIndices.length; i++) {
-            if (index == NaNIndices[i]) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     private int[] reverse(int[] arr) {
