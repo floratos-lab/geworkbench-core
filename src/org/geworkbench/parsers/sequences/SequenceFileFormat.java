@@ -1,19 +1,18 @@
 package org.geworkbench.parsers.sequences;
 
-import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
-import org.geworkbench.bison.datastructure.biocollections.sequences.CSSequenceSet;
-import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
-import org.geworkbench.bison.parsers.resources.Resource;
-import org.geworkbench.parsers.DataSetFileFormat;
-import org.geworkbench.parsers.InputFileFormatException;
-
-import javax.swing.filechooser.FileFilter;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
+
+import javax.swing.filechooser.FileFilter;
+
+import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.biocollections.sequences.CSSequenceSet;
+import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
+import org.geworkbench.bison.parsers.resources.Resource;
+import org.geworkbench.parsers.DataSetFileFormat;
+import org.geworkbench.parsers.InputFileFormatException;
 
 /**
  * <p>Title: SequenceFileFormat</p>
@@ -22,7 +21,7 @@ import java.util.List;
  * <p>Company: Califano Lab</p>
  *
  * @author Saroja Hanasoge
- * @version 1.0
+ * @version $Id$
  */
 
 
@@ -62,7 +61,7 @@ public class SequenceFileFormat extends DataSetFileFormat {
             'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
             '-', '*', '#'};
 
-        java.util.HashSet charSet = new java.util.HashSet();
+        java.util.HashSet<Character> charSet = new java.util.HashSet<Character>();
         for (int i = 0; i < accepted.length; i++) {
             charSet.add(new Character(accepted[i]));
         }
@@ -102,7 +101,7 @@ public class SequenceFileFormat extends DataSetFileFormat {
         return ret;
   }
 
-  public DSDataSet getDataFile(File file) throws InputFileFormatException{
+  public DSDataSet<? extends DSBioObject> getDataFile(File file) throws InputFileFormatException{
         if (file == null)
             return null;
 
@@ -113,27 +112,17 @@ public class SequenceFileFormat extends DataSetFileFormat {
                 "Attempting to open a file that does not comply with the " +
                 "FASTA format.");
 
-    DSSequenceSet sequenceDB = null;
-    try {
-      sequenceDB = CSSequenceSet.createFASTAfile(file);
-    } catch (Exception e) {
-      System.out.println("Exception: " + e);
-    }
-    return sequenceDB;
+		try {
+			return CSSequenceSet.createFASTAfile(file);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
   }
-  public DSDataSet getDataFile(File[] files) {
+  
+  public DSDataSet<? extends DSBioObject> getDataFile(File[] files) {
 
     return null;
-  }
-
-
-  public DSMicroarraySet getMArraySet(File file) {
-    return null;
-  }
-
-  public List getOptions() {
-    /**@todo Implement this geaw.resource.FileFormat abstract method*/
-    throw new java.lang.UnsupportedOperationException("Method getOptions() not yet implemented.");
   }
 
   public FileFilter getFileFilter() {
