@@ -5,7 +5,9 @@ package org.geworkbench.engine.preferences;
  */
 public class ValidationException extends Exception {
 
-    public ValidationException(String message) {
+	private static final long serialVersionUID = -811286462820397093L;
+
+	public ValidationException(String message) {
         super(message);
     }
 

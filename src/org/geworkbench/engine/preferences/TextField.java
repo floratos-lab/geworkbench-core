@@ -5,7 +5,9 @@ package org.geworkbench.engine.preferences;
  */
 public class TextField extends Field {
 
-    private String value;
+	private static final long serialVersionUID = -5984019099671463020L;
+	
+	private String value;
 
     public TextField(String fieldName) {
         super(fieldName);

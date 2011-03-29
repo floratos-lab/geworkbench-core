@@ -5,7 +5,9 @@ package org.geworkbench.engine.management;
  * @author John Watkinson
  */
 public class EventException extends RuntimeException {
-    public EventException() {
+	private static final long serialVersionUID = -8737440962644347200L;
+
+	public EventException() {
         super();
     }
 

@@ -1,7 +1,12 @@
 package org.geworkbench.engine.preferences;
 
-import java.awt.*;
-import java.io.*;
+import java.awt.Frame;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.List;
 
 import org.geworkbench.util.FilePathnameUtils;
@@ -50,7 +55,7 @@ public class PreferencesManager {
      * @param component the component class for these preferences, or null for global preferences.
      * @param preferences the preferences with all appropriate fields added.
      */
-    public void fillPreferences(Class component, Preferences preferences) {
+    public void fillPreferences(Class<?> component, Preferences preferences) {
         String fileName;
         if (component == null) {
             fileName = GLOBAL_PREFERENCES + PREFERENCES_EXTENSION;
@@ -76,14 +81,14 @@ public class PreferencesManager {
      * @param owner the owner of the dialog (can be null).
      * @return the preferences resulting after the user's edits.
      */
-    public Preferences showPreferencesDialog(Class component, Preferences preferences, Frame owner) {
+    public Preferences showPreferencesDialog(Class<?> component, Preferences preferences, Frame owner) {
         PreferencesDialog dialog = new PreferencesDialog(preferences);
         Preferences result = dialog.showPreferencesDialog(owner);
         savePreferences(component, result);
         return result;
     }
 
-    public void savePreferences(Class component, Preferences preferences) {
+    public void savePreferences(Class<?> component, Preferences preferences) {
         String fileName;
         if (component == null) {
             fileName = GLOBAL_PREFERENCES + PREFERENCES_EXTENSION;
@@ -130,27 +135,4 @@ public class PreferencesManager {
         return null;
     }
 
-    public static void main(String[] args) {
-    	// setProperty commented out as
-    	//temporary files directory is managed by FilePathnameUtils class now
-        //System.setProperty(TEMP_DIR, ".");
-        TextField field1 = new TextField("Field 1");
-        field1.setValue("default");
-        DoubleField field2 = new DoubleField("Field 2");
-        field2.setValue(0.5D);
-        Preferences preferences = new Preferences();
-        preferences.addField(field1);
-        preferences.addField(field2);
-        Class prefClass = PreferencesManager.class;
-        PreferencesManager manager = PreferencesManager.getPreferencesManager();
-        manager.fillPreferences(prefClass, preferences);
-        Preferences pref2 = new Preferences();
-        DoubleField field3 = new DoubleField("Field 3");
-        field3.setValue(10D);
-        pref2.addField(field1);
-        pref2.addField(field2);
-        pref2.addField(field3);
-        manager.fillPreferences(prefClass, pref2);
-        System.out.println("" + pref2);
-    }
 }

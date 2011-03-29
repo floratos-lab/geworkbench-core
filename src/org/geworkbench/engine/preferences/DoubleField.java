@@ -5,7 +5,9 @@ package org.geworkbench.engine.preferences;
  */
 public class DoubleField extends Field {
 
-    private double value;
+	private static final long serialVersionUID = 3399952170903150872L;
+	
+	private double value;
 
     public DoubleField(String fieldName) {
         super(fieldName);

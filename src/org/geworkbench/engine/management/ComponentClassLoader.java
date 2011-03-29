@@ -2,9 +2,6 @@ package org.geworkbench.engine.management;
 
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Enumeration;
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * A classloader that allows class definitions in the component to override those of the parent.

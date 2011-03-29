@@ -5,11 +5,13 @@ import java.io.File;
 
 /**
  * @author John Watkinson
- * @version $Id: FileField.java,v 1.2 2008-10-28 16:55:18 keshav Exp $
+ * @version $Id$
  */
 public class FileField extends Field {
 
-    private File value;
+	private static final long serialVersionUID = -2701969431540105989L;
+	
+	private File value;
     private FileFilter filter;
 
     public FileField(String fieldName) {

@@ -13,5 +13,6 @@ import java.lang.annotation.Target;
  * Time: 12:45:32 PM
  */
 @Retention(RetentionPolicy.RUNTIME) @Target(ElementType.TYPE) public @interface AcceptTypes {
-    Class<? extends DSDataSet>[] value();
+    @SuppressWarnings("rawtypes")
+	Class<? extends DSDataSet>[] value();
 }

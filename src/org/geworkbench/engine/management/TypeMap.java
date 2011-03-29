@@ -11,9 +11,12 @@ import java.util.HashMap;
  * A HashMap that supports polymorphism. So, if there is an entry for java.lang.Number, but not for java.lang.Float,
  * then passing in java.lang.Float the get statement will return the java.lang.Number entry.
  */
+@SuppressWarnings("rawtypes")
 public class TypeMap<T> extends HashMap<Class, T> {
 
-    public TypeMap() {
+	private static final long serialVersionUID = -2937673130196166730L;
+
+	public TypeMap() {
         super();
     }
 

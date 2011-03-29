@@ -9,7 +9,9 @@ import java.util.List;
  */
 public class Preferences implements Serializable {
 
-    private List<Field> fields;
+	private static final long serialVersionUID = -3239003390502930623L;
+	
+	private List<Field> fields;
 
     public Preferences() {
         fields = new ArrayList<Field>();

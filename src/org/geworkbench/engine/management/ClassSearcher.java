@@ -25,8 +25,6 @@ public class ClassSearcher {
     private static class ClassNode {
         private String className;
         private Map<String,ClassNode> children;
-        private boolean local;
-        private boolean abstractClass;
 
         public ClassNode(String className) {
             this.className = className;
@@ -44,13 +42,6 @@ public class ClassSearcher {
             children.put(child.getClassName(), child);
         }
 
-        public ClassNode getChild(String childName) {
-            if (children == null) {
-                return null;
-            }
-            return (ClassNode) children.get(childName);
-        }
-
         public Collection<ClassNode> getAllChildren() {
             if (children == null) {
                 return null;
@@ -58,21 +49,6 @@ public class ClassSearcher {
             return children.values();
         }
 
-        public boolean isLocal() {
-            return local;
-        }
-
-        public void setLocal(boolean local) {
-            this.local = local;
-        }
-
-        public boolean isAbstractClass() {
-            return abstractClass;
-        }
-
-        public void setAbstractClass(boolean abstractClass) {
-            this.abstractClass = abstractClass;
-        }
     }
 
     private Set<ClassNode> topSet = new HashSet<ClassNode>();
@@ -105,10 +81,7 @@ public class ClassSearcher {
         JavaClass jc = parser.parse();
         String className = jc.getClassName();
         ClassNode node = getClassNode(className);
-        node.setLocal(true);
-        if (jc.isInterface() || jc.isAbstract()) {
-            node.setAbstractClass(true);
-        }
+
         String superClass = jc.getSuperclassName();
         ClassNode superNode = getClassNode(superClass);
         relate(superNode, node);
@@ -186,51 +159,23 @@ public class ClassSearcher {
         log.debug("Searchable Classloader has completed constructing its tree.");
     }
 
-    private void helperAssignable(List<String> nodes, ClassNode parent, boolean concreteOnly) {
-        if (parent.isLocal()) {
-            if (!parent.isAbstractClass() || !concreteOnly) {
-                nodes.add(parent.getClassName());
-            }
-        }
-        Collection<ClassNode> children = parent.getAllChildren();
-        if (children != null) {
-            for (ClassNode child: children) {
-                helperAssignable(nodes, child, concreteOnly);
-            }
-        }
-    }
-
-    public String[] getAllClassesAssignableTo(Class parent, boolean concreteOnly) {
-        return getAllClassesAssignableTo(parent.getName(), concreteOnly);
-    }
-
-    public String[] getAllClassesAssignableTo(String parent, boolean concreteOnly) {
-        ClassNode node = getClassNode(parent);
-        if (node != null) {
-            List<String> nodes = new ArrayList<String>();
-            helperAssignable(nodes, node, concreteOnly);
-            return (String[]) nodes.toArray(new String[0]);
-        }
-        return new String[0];
-    }
-
     private void writeClassTreeHelper(PrintStream out, ClassNode node, int depth) {
         for (int i = 0; i < depth; i++) {
             out.print("  ");
         }
         out.println(node.getClassName());
-        Collection children = node.getAllChildren();
+        Collection<ClassNode> children = node.getAllChildren();
         if (children != null) {
-            for (Iterator iterator = children.iterator(); iterator.hasNext();) {
-                ClassNode child = (ClassNode) iterator.next();
+            for (Iterator<ClassNode> iterator = children.iterator(); iterator.hasNext();) {
+                ClassNode child = iterator.next();
                 writeClassTreeHelper(out, child, depth + 1);
             }
         }
     }
 
     public void writeClassTree(PrintStream out) {
-        for (Iterator iterator = topSet.iterator(); iterator.hasNext();) {
-            ClassNode node = (ClassNode) iterator.next();
+        for (Iterator<ClassNode> iterator = topSet.iterator(); iterator.hasNext();) {
+            ClassNode node = iterator.next();
             writeClassTreeHelper(out, node, 0);
         }
     }

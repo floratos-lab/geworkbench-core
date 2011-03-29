@@ -7,7 +7,9 @@ import java.io.Serializable;
  */
 public abstract class Field implements Serializable, Cloneable {
 
-    private String name;
+	private static final long serialVersionUID = 4966790497816410607L;
+	
+	private String name;
 
     protected Field(String name) {
         this.name = name;

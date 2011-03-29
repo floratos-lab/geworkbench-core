@@ -20,7 +20,8 @@ public class GlobalPreferences {
     public static final String RWSP_URL = "Remote Workspaces URL";
     
     public static final String[] VISUALIZATION_VALUES = new String[]{"Absolute", "Relative"};
-    public static final Class<? extends ColorContext>[] VISUALIZATON_COLOR_CONTEXTS = new Class[]{DefaultColorContext.class, ExpressionPValueColorContext.class};
+    @SuppressWarnings("unchecked")
+	public static final Class<? extends ColorContext>[] VISUALIZATON_COLOR_CONTEXTS = new Class[]{DefaultColorContext.class, ExpressionPValueColorContext.class};
 
     public static final String[] GENEPIX_VALUES = new String[]
             {

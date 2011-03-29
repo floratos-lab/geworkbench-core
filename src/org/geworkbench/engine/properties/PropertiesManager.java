@@ -18,17 +18,13 @@ public class PropertiesManager {
 
     public static final String GLOBAL_PROPERTIES = "configuration.xml";
 
-    private static PropertiesManager instance = null;
+    private static PropertiesManager instance = new PropertiesManager();
 
     public static PropertiesManager getInstance() {
-        if (instance != null) {
-            return instance;
-        } else {
-            return new PropertiesManager();
-        }
+        return instance;
     }
 
-    private File getPropertiesPath(Class component) {
+    private File getPropertiesPath(Class<?> component) {
         if (component == null) {
             return new File(FilePathnameUtils.getGlobalConfigurationSettingsDir() + GLOBAL_PROPERTIES);
         } else {
@@ -44,7 +40,7 @@ public class PropertiesManager {
         }
     }
 
-    private Properties getProperties(Class component) throws IOException {
+    private Properties getProperties(Class<?> component) throws IOException {
         File confFile = getPropertiesPath(component);
 
         if (confFile.exists()) {
@@ -61,7 +57,7 @@ public class PropertiesManager {
         }
     }
 
-    private void saveProperties(Class component, Properties props) throws IOException {
+    private void saveProperties(Class<?> component, Properties props) throws IOException {
         File confFile = getPropertiesPath(component);
         FileOutputStream out = new FileOutputStream(confFile);
         try {
@@ -71,13 +67,13 @@ public class PropertiesManager {
         }
     }
 
-    public void setProperty(Class component, String key, String value) throws IOException {
+    public void setProperty(Class<?> component, String key, String value) throws IOException {
         Properties props = getProperties(component);
         props.setProperty(key, value);
         saveProperties(component, props);
     }
 
-    public String getProperty(Class component, String key, String defaultValue) throws IOException {
+    public String getProperty(Class<?> component, String key, String defaultValue) throws IOException {
         Properties props = getProperties(component);
         return props.getProperty(key, defaultValue);
     }
