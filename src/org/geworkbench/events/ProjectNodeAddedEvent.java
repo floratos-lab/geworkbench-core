@@ -2,6 +2,7 @@ package org.geworkbench.events;
 
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.engine.config.events.Event;
 
 /**
@@ -15,22 +16,22 @@ import org.geworkbench.engine.config.events.Event;
  */
 
 public class ProjectNodeAddedEvent extends Event {
-    protected DSDataSet dataSet = null;
-    protected DSAncillaryDataSet ancDataSet = null;
-    protected String message = null;
+    private final DSDataSet<? extends DSBioObject> dataSet;
+    private final DSAncillaryDataSet<? extends DSBioObject> ancDataSet;
+    private final String message;
 
-    public ProjectNodeAddedEvent(String message, DSDataSet dataSet, DSAncillaryDataSet ancDataSet) {
+    public ProjectNodeAddedEvent(final String message, final DSDataSet<? extends DSBioObject> dataSet, final DSAncillaryDataSet<? extends DSBioObject> ancDataSet) {
         super(null);
         this.dataSet = dataSet;
         this.ancDataSet = ancDataSet;
         this.message = message;
     }
 
-    public DSDataSet getDataSet() {
+    public DSDataSet<? extends DSBioObject> getDataSet() {
         return dataSet;
     }
 
-    public DSAncillaryDataSet getAncillaryDataSet() {
+    public DSAncillaryDataSet<? extends DSBioObject> getAncillaryDataSet() {
         return ancDataSet;
     }
 

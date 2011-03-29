@@ -4,9 +4,9 @@ import java.util.Map;
 import java.util.SortedMap;
 
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.engine.config.events.Event;
 
-@SuppressWarnings("unchecked")
 public class CaArrayRequestEvent extends Event {
 	public static final String CANCEL = "CANCEL";
 	public static final String EXPERIMENT = "EXP";
@@ -16,7 +16,7 @@ public class CaArrayRequestEvent extends Event {
 	private boolean succeed = true;
 	private Map<String, String> filterCrit;
 	private SortedMap<String, String> assayNameFilter;
-	private DSDataSet dataSet = null;
+	private DSDataSet<? extends DSBioObject> dataSet = null;
 	private String url;
 	private int port;
 	private String requestItem;
@@ -31,18 +31,6 @@ public class CaArrayRequestEvent extends Event {
 		super(null);
 		url = _url;
 		port = _port;
-	}
-
-	public CaArrayRequestEvent(String type, String name) {
-		super(null);
-	}
-
-	public CaArrayRequestEvent(String type, String name,
-			Map<String, String> filters,
-			SortedMap<String, String> assayNameFilter) {
-		this(type, name);
-		filterCrit = filters;
-		this.assayNameFilter = assayNameFilter;
 	}
 
 	public String getQType() {
@@ -78,11 +66,6 @@ public class CaArrayRequestEvent extends Event {
 		this.requestItem = requestItem;
 	}
 
-	public CaArrayRequestEvent(String type, String name, DSDataSet data) {
-		this(type, name);
-		dataSet = data;
-	}
-
 	public boolean isPopulated() {
 		return populated;
 	}
@@ -93,10 +76,6 @@ public class CaArrayRequestEvent extends Event {
 
 	public void setQueryExperiment(boolean queryExperiment) {
 		this.queryExperiment = queryExperiment;
-	}
-
-	public void setPopulated(boolean populated) {
-		this.populated = populated;
 	}
 
 	public boolean isSucceed() {
@@ -115,28 +94,12 @@ public class CaArrayRequestEvent extends Event {
 		return url;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
 	public int getPort() {
 		return port;
 	}
 
-	public void setPort(int port) {
-		this.port = port;
-	}
-
-	public void setSucceed(boolean succeed) {
-		this.succeed = succeed;
-	}
-
-	public DSDataSet getDataSet() {
+	public DSDataSet<? extends DSBioObject> getDataSet() {
 		return dataSet;
-	}
-
-	public void setDataSet(DSDataSet dataSet) {
-		this.dataSet = dataSet;
 	}
 
 	public boolean isUseFilterCrit() {

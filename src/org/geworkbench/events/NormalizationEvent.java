@@ -1,6 +1,7 @@
 package org.geworkbench.events;
 
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.engine.config.events.Event;
 
 /**
@@ -18,28 +19,29 @@ public class NormalizationEvent extends Event {
     /**
      * The microarray that was the input to the normalization operation.
      */
-    private DSMicroarraySet sourceMA = null;
+    private final DSMicroarraySet<DSMicroarray> sourceMA;
     /**
      * The microarray that was the result of the normalization operation.
      */
-    private DSMicroarraySet resultMA = null;
+    private final DSMicroarraySet<DSMicroarray> resultMA;
     /**
      * Information about the normalizer used.
      */
     private String normalizerInfo = null;
 
-    public NormalizationEvent(DSMicroarraySet s, DSMicroarraySet r, String info) {
+    @SuppressWarnings("unchecked")
+	public NormalizationEvent(final DSMicroarraySet<?> s, final DSMicroarraySet<?> r, final String info) {
         super(null);
-        sourceMA = s;
-        resultMA = r;
+        sourceMA = (DSMicroarraySet<DSMicroarray>) s;
+        resultMA = (DSMicroarraySet<DSMicroarray>) r;
         normalizerInfo = info;
     }
 
-    public DSMicroarraySet getOriginalMASet() {
+    public DSMicroarraySet<DSMicroarray> getOriginalMASet() {
         return sourceMA;
     }
 
-    public DSMicroarraySet getNormalizedMASet() {
+    public DSMicroarraySet<DSMicroarray> getNormalizedMASet() {
         return resultMA;
     }
 

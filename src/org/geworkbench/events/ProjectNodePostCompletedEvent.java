@@ -1,6 +1,7 @@
 package org.geworkbench.events;
 
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
+import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.builtin.projects.ProjectTreeNode;
 import org.geworkbench.engine.config.events.Event;
 import org.ginkgo.labs.ws.GridEndpointReferenceType;
@@ -8,10 +9,10 @@ import org.ginkgo.labs.ws.GridEndpointReferenceType;
 public class ProjectNodePostCompletedEvent extends Event {
 
 	private ProjectTreeNode parent=null;
-	private DSAncillaryDataSet ancillaryDataSet = null;
+	private DSAncillaryDataSet<? extends DSBioObject> ancillaryDataSet = null;
 	
 	public ProjectNodePostCompletedEvent(String name,
-			GridEndpointReferenceType gridEndpointReferenceType, DSAncillaryDataSet ancillaryDataSet, ProjectTreeNode parent) {
+			GridEndpointReferenceType gridEndpointReferenceType, DSAncillaryDataSet<? extends DSBioObject> ancillaryDataSet, ProjectTreeNode parent) {
 		super(null);
 		this.ancillaryDataSet = ancillaryDataSet;
 		this.parent = parent;
@@ -22,7 +23,7 @@ public class ProjectNodePostCompletedEvent extends Event {
 		return parent;
 	}
 
-	public DSAncillaryDataSet getAncillaryDataSet() {
+	public DSAncillaryDataSet<? extends DSBioObject> getAncillaryDataSet() {
 		return ancillaryDataSet;
 	}
 

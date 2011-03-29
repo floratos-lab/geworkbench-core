@@ -1,6 +1,8 @@
 package org.geworkbench.events;
 
 import org.geworkbench.bison.datastructure.biocollections.views.DSMicroarraySetView;
+import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.model.clusters.DSHierClusterDataSet;
 import org.geworkbench.bison.model.clusters.MarkerHierCluster;
 import org.geworkbench.bison.model.clusters.MicroarrayHierCluster;
@@ -15,14 +17,15 @@ import java.util.EventObject;
  * when the data used in the <code>HierClusterViewWidget</code> get modified.
  *
  * @author First Genetic Trust
- * @version 1.0
+ * @version $Id$
  */
 public class HierClusterModelEvent extends EventObject {
-    /**
+	private static final long serialVersionUID = -3433240912097398524L;
+	/**
      * The underlying micorarray set used in the hierarchical clustering
      * analysis.
      */
-    private DSMicroarraySetView mASet;
+    private DSMicroarraySetView<DSGeneMarker, DSMicroarray> mASet;
     /**
      * The top-level marker cluster produced by the hierarchical clustering
      * analysis.
@@ -61,9 +64,10 @@ public class HierClusterModelEvent extends EventObject {
      * @param mrahc  <code>MicroarrayHierCluster</code> node resulting from
      *               Hierarchical Clustering Analysis representing Microarray clusters
      */
-    public HierClusterModelEvent(Object source, DSHierClusterDataSet clusterSet) {
+    @SuppressWarnings("unchecked")
+	public HierClusterModelEvent(Object source, DSHierClusterDataSet clusterSet) {
         super(source);
-    	mASet = (DSMicroarraySetView)clusterSet.getDataSetView();
+    	mASet = (DSMicroarraySetView<DSGeneMarker, DSMicroarray>)clusterSet.getDataSetView();
     	markerCluster = (MarkerHierCluster)clusterSet.getCluster(0);
     	arrayCluster = (MicroarrayHierCluster)clusterSet.getCluster(1);
     	selectedMarkerCluster = (MarkerHierCluster)clusterSet.getSelectedCluster(0);
@@ -79,7 +83,7 @@ public class HierClusterModelEvent extends EventObject {
      * @return <code>MicroarraySet</code> used for Hierarchical Clustering
      *         Analysis
      */
-    public DSMicroarraySetView getMicroarraySet() {
+    public DSMicroarraySetView<DSGeneMarker, DSMicroarray> getMicroarraySet() {
         return mASet;
     }
 

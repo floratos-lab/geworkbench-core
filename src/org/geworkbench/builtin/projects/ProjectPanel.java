@@ -1546,7 +1546,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				return;
 			}
 
-			publishNodeRemovedEvent(new ProjectNodeRemovedEvent("remove", null,
+			publishNodeRemovedEvent(new ProjectNodeRemovedEvent(
 					((DataSetSubNode) (selection.getSelectedNode()))._aDataSet));
 
 			ProjectTreeNode node = selection.getSelectedNode();
@@ -1655,7 +1655,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 							.nextElement();
 					if (childNode instanceof DataSetSubNode)
 						publishNodeRemovedEvent(new ProjectNodeRemovedEvent(
-								"remove", null,
 								((DataSetSubNode) (childNode))._aDataSet));
 					if (childNode instanceof PendingTreeNode) {
 
@@ -1674,7 +1673,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 
 		if (node instanceof DataSetSubNode)
-			publishNodeRemovedEvent(new ProjectNodeRemovedEvent("remove", null,
+			publishNodeRemovedEvent(new ProjectNodeRemovedEvent(
 					((DataSetSubNode) (node))._aDataSet));
 
 		projectTreeModel.removeNodeFromParent(node);

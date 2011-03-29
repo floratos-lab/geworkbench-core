@@ -11,7 +11,7 @@ import org.geworkbench.engine.config.events.Event;
  * <p>Company: </p>
  *
  * @author not attributable
- * @version $Id: GeneSelectorEvent.java,v 1.1.1.1 2005-07-28 22:36:26 watkin Exp $
+ * @version $Id$
  */
 
 public class GeneSelectorEvent extends Event {
@@ -19,20 +19,21 @@ public class GeneSelectorEvent extends Event {
     public static final int MARKER_SELECTION = 1;
     public static final int PANEL_SELECTION = 2;
 
-    private DSPanel<DSGeneMarker> panel;
-    private DSGeneMarker genericMarker;
-    private int type;
+    private final DSPanel<DSGeneMarker> panel;
+    private final DSGeneMarker genericMarker;
 
-    public GeneSelectorEvent(DSPanel<DSGeneMarker> p) {
+    public GeneSelectorEvent(final DSPanel<DSGeneMarker> p) {
 
         super(null);
         panel = p;
+        genericMarker = null;
 
     }
 
-    public GeneSelectorEvent(DSGeneMarker mi) {
+    public GeneSelectorEvent(final DSGeneMarker mi) {
         super(null);
         genericMarker = mi;
+        panel = null;
 
     }
 

@@ -3,8 +3,6 @@ package org.geworkbench.events;
 import org.geworkbench.engine.config.events.Event;
 import org.geworkbench.util.pathwaydecoder.mutualinformation.AdjacencyMatrix;
 
-import java.util.HashMap;
-
 /**
  * <p>Title: Bioworks</p>
  * <p>Description: Modular Application Framework for Gene Expession, Sequence
@@ -13,7 +11,7 @@ import java.util.HashMap;
  * <p>Company: Columbia University</p>
  *
  * @author manjunath at genomecenter dot columbia dot edu
- * @version 1.0
+ * @version $Id$
  */
 
 public class AdjacencyMatrixEvent extends Event {
@@ -42,9 +40,6 @@ public class AdjacencyMatrixEvent extends Event {
 
     private double threshold = 0d;
 
-    // to be used when user selects to draw the whole geneways network
-    private HashMap genewaysGeneidNameMap = null;
-
     /**
      * Constructs an <code>AdjacencyMatrixEvent</code>
      *
@@ -64,31 +59,6 @@ public class AdjacencyMatrixEvent extends Event {
         depth = d;
         threshold = t;
         this.action = action;
-        this.genewaysGeneidNameMap = null;
-    }
-
-    /**
-     * Constructs an <code>AdjacencyMatrixEvent</code>
-     *
-     * @param am AdjacencyMatrix Adjacency Matrix contained in the
-     *           <code>Event</code>
-     * @param genewaysGeneidNameMap the mapping of geneId and Names
-     *           of proteins in geneways interaction
-     * @param m  String message
-     * @param nf int Accession number of the gene corresponding to the center
-     *           of the network to be drawn
-     * @param d  int depth of the network to be drawn
-     * @param t  double mutual information threshold
-     */
-    public AdjacencyMatrixEvent(AdjacencyMatrix am, HashMap genewaysGeneidNameMap, String m, int nf, int d, double t, Action action) {
-        super(null);
-        adjm = am;
-        message = m;
-        networkFocus = nf;
-        depth = d;
-        threshold = t;
-        this.action = action;
-        this.genewaysGeneidNameMap = genewaysGeneidNameMap;
     }
 
     public AdjacencyMatrix getAdjacencyMatrix() {
@@ -115,7 +85,4 @@ public class AdjacencyMatrixEvent extends Event {
         return action;
     }
 
-    public HashMap getGenewaysGeneidNameMap() {
-        return genewaysGeneidNameMap;
-    }
 }

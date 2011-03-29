@@ -1,6 +1,7 @@
 package org.geworkbench.events;
 
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.engine.config.events.Event;
 
 /**
@@ -19,21 +20,22 @@ public class FilteringEvent extends Event {
      * The <code>microarraySet</code> that was the input to the filtering
      * operation.
      */
-    private DSMicroarraySet sourceMA = null;
+    private final DSMicroarraySet<DSMicroarray> sourceMA;
     /**
      * The <code>microarraySet</code> that was the result of the filtering
      * operation.
      */
-    private DSMicroarraySet resultMA = null;
+    private final DSMicroarraySet<DSMicroarray> resultMA;
     /**
      * Information about the filter used.
      */
     private String filterInfo = null;
 
-    public FilteringEvent(DSMicroarraySet s, DSMicroarraySet r, String info) {
+    @SuppressWarnings("unchecked")
+	public FilteringEvent(final DSMicroarraySet<?> s, final DSMicroarraySet<?> r, final String info) {
         super(null);
-        sourceMA = s;
-        resultMA = r;
+        sourceMA = (DSMicroarraySet<DSMicroarray>) s;
+        resultMA = (DSMicroarraySet<DSMicroarray>) r;
         filterInfo = info;
     }
 
@@ -43,7 +45,7 @@ public class FilteringEvent extends Event {
      *
      * @return the input dataset
      */
-    public DSMicroarraySet getOriginalMASet() {
+    public DSMicroarraySet<DSMicroarray> getOriginalMASet() {
         return sourceMA;
     }
 
@@ -53,7 +55,7 @@ public class FilteringEvent extends Event {
      *
      * @return the filtered dataset
      */
-    public DSMicroarraySet getFilteredMASet() {
+    public DSMicroarraySet<DSMicroarray> getFilteredMASet() {
         return resultMA;
     }
 

@@ -2,7 +2,6 @@ package org.geworkbench.events;
 
 import java.util.HashMap;
 
-import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.engine.config.events.Event;
 
 public class CaArrayQueryEvent extends Event {

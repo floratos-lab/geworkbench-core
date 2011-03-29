@@ -1,7 +1,7 @@
 package org.geworkbench.events;
 
-import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.engine.config.events.Event;
 
 /**
@@ -11,16 +11,16 @@ import org.geworkbench.engine.config.events.Event;
  * <p>Company: Columbia Genomics Center</p>
  *
  * @author not attributable
- * @version $Id: ProjectNodeAddedEvent.java,v 1.1.1.1 2005/07/28 22:36:26 watkin Exp $
+ * @version $Id$
  */
 
 public class ProjectNodeRenamedEvent extends Event {
-    protected DSDataSet dataSet = null;
+    protected DSDataSet<? extends DSBioObject> dataSet = null;
     protected String message = null;
     protected String oldName = null;
     protected String newName = null;
 
-    public ProjectNodeRenamedEvent(String message, DSDataSet dataSet, String oldName, String newName) {
+    public ProjectNodeRenamedEvent(String message, DSDataSet<? extends DSBioObject> dataSet, String oldName, String newName) {
         super(null);
         this.dataSet = dataSet;
         this.message = message;
@@ -28,7 +28,7 @@ public class ProjectNodeRenamedEvent extends Event {
         this.newName = newName;
     }
 
-    public DSDataSet getDataSet() {
+    public DSDataSet<? extends DSBioObject> getDataSet() {
         return dataSet;
     }
 

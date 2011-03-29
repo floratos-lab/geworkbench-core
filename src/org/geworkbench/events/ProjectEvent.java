@@ -1,6 +1,7 @@
 package org.geworkbench.events;
 
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.engine.config.events.Event;
 import org.geworkbench.builtin.projects.ProjectTreeNode;
 import org.geworkbench.builtin.projects.DataSetSubNode;
@@ -13,18 +14,18 @@ import javax.swing.tree.TreeNode;
  * <p>Company: First Genetic Trust Inc.</p>
  *
  * @author First Genetic Trust
- * @version 1.0
+ * @version $Id$
  */
 public class ProjectEvent extends Event {
 
     public static final String CLEARED = "Project Cleared";
     public static final String SELECTED = "Node Selected";
 
-    private String value = null;
-    private DSDataSet dataSet = null;
-    private ProjectTreeNode node;
+    private final String value;
+    private final DSDataSet<? extends DSBioObject> dataSet;
+    private final ProjectTreeNode node;
 
-    public ProjectEvent(String message, DSDataSet dataSet, ProjectTreeNode node) {
+    public ProjectEvent(final String message, final DSDataSet<? extends DSBioObject> dataSet, final ProjectTreeNode node) {
         super(null);
         this.value = message;
         this.dataSet = dataSet;
@@ -35,20 +36,21 @@ public class ProjectEvent extends Event {
         return value;
     }
 
-    public DSDataSet getDataSet() {
+    @SuppressWarnings("rawtypes")
+	public DSDataSet getDataSet() {
         return dataSet;
     }
 
-    public DSDataSet getParent() {
-        if (node != null) {
-            if (node instanceof DataSetSubNode) {
-                DataSetSubNode subNode = (DataSetSubNode) node;
-                TreeNode parent = subNode.getParent();
-                if (parent instanceof DataSetNode) {
-                    return ((DataSetNode)parent).dataFile;
-                }
-            }
-        }
+    @SuppressWarnings("rawtypes")
+	public DSDataSet getParent() {
+		if (node instanceof DataSetSubNode) {
+			DataSetSubNode subNode = (DataSetSubNode) node;
+			TreeNode parent = subNode.getParent();
+			if (parent instanceof DataSetNode) {
+				return ((DataSetNode) parent).dataFile;
+			}
+		}
+
         return null;
     }
 

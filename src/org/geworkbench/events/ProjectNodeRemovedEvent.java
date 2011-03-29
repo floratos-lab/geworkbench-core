@@ -2,6 +2,7 @@ package org.geworkbench.events;
 
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.engine.config.events.Event;
 
 /**
@@ -11,30 +12,26 @@ import org.geworkbench.engine.config.events.Event;
  * <p>Company: Columbia Genomics Center</p>
  *
  * @author not attributable
- * @version $Id: ProjectNodeAddedEvent.java,v 1.1.1.1 2005/07/28 22:36:26 watkin Exp $
+ * @version $Id$
  */
 
 public class ProjectNodeRemovedEvent extends Event {
-    protected DSDataSet dataSet = null;
-    protected DSAncillaryDataSet ancDataSet = null;
-    protected String message = null;
 
-    public ProjectNodeRemovedEvent(String message, DSDataSet dataSet, DSAncillaryDataSet ancDataSet) {
+    private DSAncillaryDataSet<? extends DSBioObject> ancDataSet = null;
+
+    public ProjectNodeRemovedEvent(DSAncillaryDataSet<? extends DSBioObject> ancDataSet) {
         super(null);
-        this.dataSet = dataSet;
         this.ancDataSet = ancDataSet;
-        this.message = message;
     }
 
-    public DSDataSet getDataSet() {
-        return dataSet;
+    // TODO this method is not doing what it was meant to do 
+    // should be removed
+    public DSDataSet<?> getDataSet() {
+        return null;
     }
 
-    public DSAncillaryDataSet getAncillaryDataSet() {
+    public DSAncillaryDataSet<? extends DSBioObject> getAncillaryDataSet() {
         return ancDataSet;
     }
 
-    public String getMessage() {
-        return message;
-    }
 }
