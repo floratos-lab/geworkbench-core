@@ -97,7 +97,7 @@ public class AdjacencyMatrixFileFormat extends DataSetFileFormat {
 				AdjacencyMatrix matrix = AdjacencyMatrixDataSet
 						.parseAdjacencyMatrix(adjMatrixFileStr, mASet);
 
-				adjMatrixDS = new AdjacencyMatrixDataSet(matrix, 0, 0, 0,
+				adjMatrixDS = new AdjacencyMatrixDataSet(matrix, 0,
 						fileName, "network loaded", mASet);
 
 			}

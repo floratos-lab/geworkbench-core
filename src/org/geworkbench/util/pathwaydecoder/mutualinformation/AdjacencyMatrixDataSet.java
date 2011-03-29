@@ -35,19 +35,16 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet<DSMicroarray> {
      */
     private static final long serialVersionUID = -6835973287728524201L;
     private AdjacencyMatrix matrix;
-    private int geneId;
-    private double threshold;
-    private int depth;
+
+    private final double threshold;
     private String networkName;
 
 	@SuppressWarnings("unchecked")
-	public AdjacencyMatrixDataSet(AdjacencyMatrix matrix, int geneId, double threshold, int depth, String name, String networkName, DSMicroarraySet<? extends DSMicroarray> parent) {
+	public AdjacencyMatrixDataSet(final AdjacencyMatrix matrix, final double threshold, final String name, final String networkName, final DSMicroarraySet<? extends DSMicroarray> parent) {
         super((DSDataSet<DSMicroarray>) parent, name);
         setID(RandomNumberGenerator.getID());
         this.matrix = matrix;
-        this.geneId = geneId;
         this.threshold = threshold;
-        this.depth = depth;
         this.networkName = networkName;
     }
 
@@ -176,32 +173,8 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet<DSMicroarray> {
         return matrix;
     }
 
-    public void setMatrix(AdjacencyMatrix matrix) {
-        this.matrix = matrix;
-    }
-
-    public int getGeneId() {
-        return geneId;
-    }
-
-    public void setGeneId(int geneId) {
-        this.geneId = geneId;
-    }
-
     public double getThreshold() {
         return threshold;
-    }
-
-    public void setThreshold(double threshold) {
-        this.threshold = threshold;
-    }
-
-    public int getDepth() {
-        return depth;
-    }
-
-    public void setDepth(int depth) {
-        this.depth = depth;
     }
 
     public File getDataSetFile() {
