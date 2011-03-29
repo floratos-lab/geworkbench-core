@@ -76,7 +76,6 @@ import org.geworkbench.engine.management.Subscribe;
 import org.geworkbench.engine.management.TypeMap;
 import org.geworkbench.engine.preferences.GlobalPreferences;
 import org.geworkbench.engine.skin.Skin;
-import org.geworkbench.events.AdjacencyMatrixEvent;
 import org.geworkbench.events.CaArrayQueryEvent;
 import org.geworkbench.events.CaArrayQueryResultEvent;
 import org.geworkbench.events.CaArrayRequestEvent;
@@ -1827,12 +1826,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	@Publish
 	public CommentsEvent publishCommentsEvent(CommentsEvent event) {
 		return event;
-	}
-
-	@Publish
-	public AdjacencyMatrixEvent publishAdjacencyMatrixEvent(
-			AdjacencyMatrixEvent ae) {
-		return ae;
 	}
 
 	public void sendCommentsEvent(ProjectTreeNode forNode) {
