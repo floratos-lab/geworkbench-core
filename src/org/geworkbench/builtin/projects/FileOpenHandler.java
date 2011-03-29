@@ -28,6 +28,7 @@ import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.events.AdjacencyMatrixEvent;
 import org.geworkbench.events.ProjectNodeAddedEvent;
@@ -205,7 +206,7 @@ public class FileOpenHandler {
 		 * (non-Javadoc)
 		 * @see org.geworkbench.util.threading.SwingWorker#done()
 		 */
-		@SuppressWarnings("rawtypes")
+		@SuppressWarnings({ "rawtypes", "unchecked" })
 		@Override
 		protected void done() {
 
@@ -225,9 +226,8 @@ public class FileOpenHandler {
 						// Do intial color context update if it is a
 						// microarray
 						if (set instanceof DSMicroarraySet) {
-							DSMicroarraySet maSet = (DSMicroarraySet) set;
 							// Add color context
-							enclosingProjectPanel.addColorContext(maSet);
+							enclosingProjectPanel.addColorContext((DSMicroarraySet<DSMicroarray>) set);
 						}
 
 						if (set instanceof AdjacencyMatrixDataSet) {
@@ -239,7 +239,7 @@ public class FileOpenHandler {
 							enclosingProjectPanel.addDataSetSubNode(adjMatrixDS);
 							enclosingProjectPanel.publishProjectNodeAddedEvent(event);
 							enclosingProjectPanel.publishAdjacencyMatrixEvent(new AdjacencyMatrixEvent(adjMatrixDS.getMatrix(),
-									"ARACNE Set", -1, 2, 0.5f,
+									"ARACNE Set", 
 									AdjacencyMatrixEvent.Action.DRAW_NETWORK));
 
 						} else{

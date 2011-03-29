@@ -34,12 +34,6 @@ public class AdjacencyMatrixEvent extends Event {
 
     private String message = null;
 
-    private int networkFocus = 0;
-
-    private int depth = 1;
-
-    private double threshold = 0d;
-
     /**
      * Constructs an <code>AdjacencyMatrixEvent</code>
      *
@@ -51,13 +45,10 @@ public class AdjacencyMatrixEvent extends Event {
      * @param d  int depth of the network to be drawn
      * @param t  double mutual information threshold
      */
-    public AdjacencyMatrixEvent(AdjacencyMatrix am, String m, int nf, int d, double t, Action action) {
+    public AdjacencyMatrixEvent(AdjacencyMatrix am, String m, Action action) {
         super(null);
         adjm = am;
         message = m;
-        networkFocus = nf;
-        depth = d;
-        threshold = t;
         this.action = action;
     }
 
@@ -67,18 +58,6 @@ public class AdjacencyMatrixEvent extends Event {
 
     public String getMessage() {
         return message;
-    }
-
-    public int getNetworkFocus() {
-        return networkFocus;
-    }
-
-    public int getDisplayDepth() {
-        return depth;
-    }
-
-    public double getThreshold() {
-        return threshold;
     }
 
     public Action getAction() {
