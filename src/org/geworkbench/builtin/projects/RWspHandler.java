@@ -35,6 +35,7 @@ import javax.swing.event.ListSelectionListener;
 import org.apache.commons.lang.StringUtils;
 import org.geworkbench.builtin.projects.WorkspaceHandler.OpenTask;
 import org.geworkbench.builtin.projects.WorkspaceHandler.SaveTask;
+import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.preferences.GlobalPreferences;
 import org.geworkbench.util.FilePathnameUtils;
 import org.geworkbench.util.ProgressDialog;
@@ -52,7 +53,6 @@ import com.jgoodies.forms.layout.FormLayout;
 public class RWspHandler {
 	protected static final String USER_INFO_DELIMIETER = "==";
 	protected static final String USER_INFO = "userinfo";
-	protected static final String META_DELIMIETER = "::";
 	protected static String userInfo = null;
 	private JDialog loginDialog;
 	private JTextField usernameField;
@@ -202,7 +202,7 @@ public class RWspHandler {
 			HashMap<String, String[][]> hm = new HashMap<String, String[][]>();
 
 			try {
-				hm = DownloadClient.getSavedWorkspaceList("LIST"+userInfo);
+				hm = DownloadClient.getSavedWorkspaceList(userInfo);
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
     					"GeWorkbench cannot retrieve remote workspace info from axis2 web service.\n" +
@@ -295,7 +295,7 @@ public class RWspHandler {
 				return;
 			}
 
-			res = DownloadClient.modifySavedWorkspace("USERGROUP"+grp+META_DELIMIETER+usr+META_DELIMIETER+userInfo);
+			res = DownloadClient.modifySavedWorkspace("USERGROUP", null, usr, grp, userInfo);
 		}catch(Exception e1){
 			JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
 	    			"GeWorkbench cannot add user to group for remote workspace via axis2 web service.\n" +
@@ -326,8 +326,7 @@ public class RWspHandler {
 								JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-			if (grp.contains(META_DELIMIETER)) grp = grp.replaceAll(META_DELIMIETER, "_");
-			res = DownloadClient.modifySavedWorkspace("GROUP"+grp+META_DELIMIETER+userInfo);
+			res = DownloadClient.modifySavedWorkspace("GROUP", null, null, grp, userInfo);
 		}catch(Exception e1){
 			JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
 	    			"GeWorkbench cannot add user group for remote workspace via axis2 web service.\n" +
@@ -644,7 +643,7 @@ public class RWspHandler {
 			HashMap<String, String[][]> hm = new HashMap<String, String[][]>();
 			String[][] listhist = null, listuser = null, listanno = null;
 			try {
-				hm = DownloadClient.getSavedWorkspaceInfo("INFO"+wspid);
+				hm = DownloadClient.getSavedWorkspaceInfo(wspid);
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(null, e1.getMessage()+"\n\n"+
 						"Exception: could not retrieve information for remote workspace "+ wspid,
@@ -698,6 +697,10 @@ public class RWspHandler {
 				}
 			}
 		}
+		if(terminating) {
+			GeawConfigObject.getGuiWindow().dispose();
+			System.exit(0);
+		}
 		return true;
 	}
 
@@ -725,7 +728,7 @@ public class RWspHandler {
 				return;
 			}
 
-			res = DownloadClient.modifySavedWorkspace(type+remoteId+META_DELIMIETER+userInfo);
+			res = DownloadClient.modifySavedWorkspace(type, remoteId, null, null, userInfo);
 		}catch(Exception e1){
 			JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
 	    			"GeWorkbench cannot release lock for remote workspace via axis2 web service.\n" +
@@ -756,8 +759,7 @@ public class RWspHandler {
 				return;
 			}
 			String desc = jtaDesc.getText();
-			if (desc.contains(META_DELIMIETER)) desc = desc.replaceAll(META_DELIMIETER, "_");
-			res = DownloadClient.modifySavedWorkspace("DESC"+remoteId+META_DELIMIETER+desc+META_DELIMIETER+userInfo);
+			res = DownloadClient.modifySavedWorkspace("DESC", remoteId, desc, null, userInfo);
 		}catch(Exception e1){
 			JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
 					"GeWorkbench cannot change description for remote workspace via axis2 web service.\n" +
@@ -788,8 +790,7 @@ public class RWspHandler {
 				return;
 			}
 			String anno = jtaAnno.getText();
-			if (anno.contains(META_DELIMIETER)) anno = anno.replaceAll(META_DELIMIETER, "_");
-			res = DownloadClient.modifySavedWorkspace("ADDANNO"+remoteId+META_DELIMIETER+anno+META_DELIMIETER+userInfo);
+			res = DownloadClient.modifySavedWorkspace("ADDANNO", remoteId, anno, null, userInfo);
 		}catch(Exception e1){
 			JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
 	   				"GeWorkbench cannot add annotation for remote workspace via axis2 web service.\n" +
@@ -821,7 +822,7 @@ public class RWspHandler {
 			}
 			String uname = jtfUsername.getText();
 			String group = (String)jcb.getSelectedItem();
-			res = DownloadClient.modifySavedWorkspace("ADDUSER"+remoteId+META_DELIMIETER+uname+META_DELIMIETER+group+META_DELIMIETER+userInfo);
+			res = DownloadClient.modifySavedWorkspace("ADDUSER", remoteId, uname, group, userInfo);
 		}catch(Exception e1){
 			JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
 					"GeWorkbench cannot give user access to remote workspace via axis2 web service.\n" +
@@ -853,7 +854,7 @@ public class RWspHandler {
 			}
 			String uname = (String)grpnames.getSelectedItem();
 			String group = (String)grpjcb.getSelectedItem();
-			res = DownloadClient.modifySavedWorkspace("ADDGROUP"+remoteId+META_DELIMIETER+uname+META_DELIMIETER+group+META_DELIMIETER+userInfo);
+			res = DownloadClient.modifySavedWorkspace("ADDGROUP", remoteId, uname, group, userInfo);
 		}catch(Exception e1){
 			JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
 					"GeWorkbench cannot give group access to remote workspace via axis2 web service.\n" +
@@ -888,9 +889,7 @@ public class RWspHandler {
 				}
 				newDialog.dispose();
 
-				if (wsFilename.contains(META_DELIMIETER)) wsFilename = wsFilename.replaceAll(META_DELIMIETER, "_");
 				String description = desc.getText();
-				if (description.contains(META_DELIMIETER))	description = description.replaceAll(META_DELIMIETER, "_");
 
 				uploadWsp(wsFilename, description, false);
 			}
@@ -979,7 +978,7 @@ public class RWspHandler {
 		
 		RWspHelper.UploadNewTask saveTask = new RWspHelper.UploadNewTask(ProgressItem.INDETERMINATE_TYPE, 
 				"Remote workspace "+wsFilename+" is being saved and uploaded.", 
-				"0"+META_DELIMIETER+wsFilename+META_DELIMIETER+desc+META_DELIMIETER+userInfo, terminating);
+				wsFilename, desc, terminating);
 		pdmodal.executeTask(saveTask);
 	}
 
@@ -1004,7 +1003,7 @@ public class RWspHandler {
 			if (rename!=null) fname=rename;
 			RWspHelper.CheckUpdateRemoteTask saveTask = new RWspHelper.CheckUpdateRemoteTask(ProgressItem.INDETERMINATE_TYPE, 
 					"Checking remote workspace "+id+" access before updating.", wspdir+fname, 
-					id+META_DELIMIETER+checkoutstr+META_DELIMIETER+userInfo, terminating, id);
+					terminating, id);
 			pdnonmodal.executeTask(saveTask);
 		}
 	}

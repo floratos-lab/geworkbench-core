@@ -43,7 +43,6 @@ public class RWspHelper {
 	private static ProgressDialog pdmodal = ProgressDialog.create(ProgressDialog.MODAL_TYPE);
 	private static ProgressDialog pdnonmodal = ProgressDialog.create(ProgressDialog.NONMODAL_TYPE);
 	private static final String USER_INFO_DELIMIETER = RWspHandler.USER_INFO_DELIMIETER;
-	private static final String META_DELIMIETER = RWspHandler.META_DELIMIETER;
 	private static WorkspaceHandler ws = new WorkspaceHandler();
 	
 	protected static class DetailTableModel extends AbstractTableModel
@@ -158,7 +157,7 @@ public class RWspHelper {
 		protected HashMap<String, String> doInBackground() {
 			HashMap<String, String> res = new HashMap<String, String>();
 			try {
-				res = DownloadClient.getSavedWorkspaceStatus("STATUS"+id+META_DELIMIETER+RWspHandler.userInfo.split(USER_INFO_DELIMIETER)[0]);
+				res = DownloadClient.getSavedWorkspaceStatus("STATUS", id, RWspHandler.userInfo.split(USER_INFO_DELIMIETER)[0]);
 			} catch (Exception e1) { 
 				if (e1.getMessage().equals("Connection refused: connect")){
 					JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
@@ -246,7 +245,7 @@ public class RWspHelper {
 					if (RWspHandler.checkoutstr.equals(lastsync)) {
 						String ret = "";
 						try{
-							ret = DownloadClient.modifySavedWorkspace("LOCK"+id+META_DELIMIETER+RWspHandler.userInfo);
+							ret = DownloadClient.modifySavedWorkspace("LOCK", String.valueOf(id), null, null, RWspHandler.userInfo);
 						}catch (Exception e){
 							e.printStackTrace();
 						}
@@ -308,7 +307,7 @@ public class RWspHelper {
 			if (proceed){
 				String ret = "";
 				try{
-					ret = DownloadClient.modifySavedWorkspace("RELEASE"+id+META_DELIMIETER+RWspHandler.userInfo);
+					ret = DownloadClient.modifySavedWorkspace("RELEASE", String.valueOf(id), null, null, RWspHandler.userInfo);
 				}catch(Exception e){
 					JOptionPane.showMessageDialog(null, e.getMessage()+".\n\n"+
 			    			"GeWorkbench cannot release lock for remote workspace via axis2 web service.\n" +
@@ -396,11 +395,12 @@ public class RWspHelper {
 		protected Void doInBackground() throws Exception {
 			String dldwspname = "";
 			try {
-				dldwspname = DownloadClient.getSavedWorkspace("DOWNLOAD"+filename);
+				dldwspname = DownloadClient.getSavedWorkspace(filename);
 			} catch (Exception e1) {
-				JOptionPane.showMessageDialog(null, 
+				JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
     					"Exception: could not retrieve remote workspace "+filename,
     					"Database connection/data transfer error", JOptionPane.ERROR_MESSAGE);
+				cancel(true);
     			return null;
 			}
 			DownloadClient.cleanCache();
@@ -420,12 +420,11 @@ public class RWspHelper {
 	}
 
 	protected static class CheckUpdateRemoteTask extends AccessRemoteTask {
-		private String filename = "", metadata = "";
+		private String filename = "";
 		private boolean terminating;
-		CheckUpdateRemoteTask(int pbtype, String message, String filename, String metadata, boolean terminating, int id) {
+		CheckUpdateRemoteTask(int pbtype, String message, String filename, boolean terminating, int id) {
 			super(pbtype, message, id);
 			this.filename = filename;
-			this.metadata = metadata;
 			this.terminating = terminating;
 		}
 
@@ -469,7 +468,7 @@ public class RWspHelper {
 					if (RWspHandler.checkoutstr.equals(lastsync)) {
 						String ret = "";
 						try{
-							ret = DownloadClient.modifySavedWorkspace("LOCK"+id+META_DELIMIETER+RWspHandler.userInfo);
+							ret = DownloadClient.modifySavedWorkspace("LOCK", String.valueOf(id), null, null, RWspHandler.userInfo);
 						}catch (Exception e){
 							e.printStackTrace();
 						}
@@ -488,35 +487,36 @@ public class RWspHelper {
 			if (proceed){
 				UpdateRemoteTask saveTask = new UpdateRemoteTask(ProgressItem.INDETERMINATE_TYPE, 
 						"Remote workspace "+id+" is being saved and uploaded.", filename, 
-						metadata, terminating);
+						terminating, "SVRTIME");
 				pdmodal.executeTask(saveTask);
 			}
 		}
 	}
 
 	private static class UpdateRemoteTask extends SaveTask {
-		protected String meta = "";
-		UpdateRemoteTask(int pbtype, String message, String filename, String metadata, boolean terminating) {
+		protected String type = "SVRTIME";
+		UpdateRemoteTask(int pbtype, String message, String filename, boolean terminating, String type) {
 			ws.super(pbtype, message, filename, terminating);
-			meta = metadata;
+			this.type = type;
 		}
 		@Override
 		protected Void doInBackground() throws FileNotFoundException, IOException {
 			//get server time as checkoutstr
 			try {
-				RWspHandler.checkoutstr = UploadClient.transferFile(null, meta);
+				RWspHandler.checkoutstr = UploadClient.transferFile(null, type, null, null, String.valueOf(RWspHandler.wspId), RWspHandler.checkoutstr, RWspHandler.userInfo);
 			} catch (RemoteException e1) {
 				JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
 	    				"GeWorkbench cannot upload to remote workspace via axis2 web service.\n" +
 	    				"Please try again later or report the problem to geWorkbench support team.\n",
 	    				"Database connection/data transfer error", JOptionPane.ERROR_MESSAGE);
+				return null;
 			}
 			RWspHandler.dirty = false;
 			//save wsp
 			super.doInBackground();
 			//upload saved wsp file
 			try {
-				UploadClient.transferFile(new File(filename), RWspHandler.wspId+META_DELIMIETER+RWspHandler.userInfo);
+				UploadClient.transferFile(new File(filename), "UPDATE", null, null, String.valueOf(RWspHandler.wspId), null, RWspHandler.userInfo);
 			} catch (RemoteException e1) {
 				JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
     					"GeWorkbench cannot upload to remote workspace via axis2 web service.\n" +
@@ -532,7 +532,7 @@ public class RWspHelper {
 				return null;
 			String res = "";
 			try{
-				res = DownloadClient.modifySavedWorkspace("RELEASE"+RWspHandler.wspId+META_DELIMIETER+RWspHandler.userInfo);
+				res = DownloadClient.modifySavedWorkspace("RELEASE", String.valueOf(RWspHandler.wspId), null, null, RWspHandler.userInfo);
 			}catch(Exception e1){
 				JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
     					"GeWorkbench cannot release lock for remote workspace via axis2 web service.\n" +
@@ -549,25 +549,30 @@ public class RWspHelper {
 	}
 	
 	protected static class UploadNewTask extends UpdateRemoteTask {
-		UploadNewTask(int pbtype, String message, String metadata, boolean terminating) {
-			super(pbtype, message, "", metadata, terminating);
+		private String title = "";
+		private String desc = "";
+		UploadNewTask(int pbtype, String message, String title, String desc, boolean terminating) {
+			super(pbtype, message, "", terminating, "NEW");
+			this.title = title;
+			this.desc = desc;
 		}
 		@Override
 		protected Void doInBackground() throws FileNotFoundException, IOException {
 			String id = "0";
 			// get auto-increment id in workspace table
 			try {
-				id = UploadClient.transferFile(null, meta);
+				id = UploadClient.transferFile(null, type, title, desc, id, null, RWspHandler.userInfo);
 			} catch (RemoteException e1) {
 				JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
 	    				"GeWorkbench cannot upload to remote workspace via axis2 web service.\n" +
 	    				"Please try again later or report the problem to geWorkbench support team.\n",
 	    				"Database connection/data transfer error", JOptionPane.ERROR_MESSAGE);
+				return null;
 			}
 			// upload wsp file with just created id, no lock/sync check
 			RWspHandler.wspId = Integer.valueOf(id);
 			filename = RWspHandler.wspdir+id+".wsp";
-			meta = RWspHandler.wspId+META_DELIMIETER+RWspHandler.userInfo;
+			type = "NEWSVRTIME";
 			super.doInBackground();
 			return null;
 		}
@@ -584,7 +589,7 @@ public class RWspHelper {
 		protected String doInBackground() throws FileNotFoundException, IOException {
 			String res = "";
 			try {
-				res = DownloadClient.modifySavedWorkspace("REMOVE"+filename+META_DELIMIETER+RWspHandler.userInfo);
+				res = DownloadClient.modifySavedWorkspace("REMOVE", filename, null, null, RWspHandler.userInfo);
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
 				"GeWorkbench cannot remove remote workspace" +filename+".\n"+
@@ -648,7 +653,7 @@ public class RWspHelper {
 		protected String[][] doInBackground() throws FileNotFoundException, IOException {
 			String[][] res = null;
 			try {
-				res = DownloadClient.getLockedWorkspaceList("LSLOCK"+RWspHandler.userInfo);
+				res = DownloadClient.getLockedWorkspaceList(RWspHandler.userInfo);
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
 				"GeWorkbench cannot retrieve locked remote workspace list.\n"+
@@ -735,7 +740,7 @@ public class RWspHelper {
 									}
 								}
 								try{
-									ret = DownloadClient.modifySavedWorkspace("RELEASE"+id+META_DELIMIETER+RWspHandler.userInfo);
+									ret = DownloadClient.modifySavedWorkspace("RELEASE", String.valueOf(id), null, null, RWspHandler.userInfo);
 								}catch(Exception ex){
 									JOptionPane.showMessageDialog(null, ex.getMessage()+".\n\n"+
 							    			"GeWorkbench cannot release lock for remote workspace via axis2 web service.\n" +
@@ -794,6 +799,7 @@ public class RWspHelper {
 				AnnotationParser.setFromSerializable(aps);
 			} catch (Exception e) {
 				e.printStackTrace();
+				return null;
 			} finally {
 				try{
 					if(in!=null) in.close();
@@ -807,8 +813,8 @@ public class RWspHelper {
 			ObjectOutput s = null;
 			FileOutputStream f = null;
 			try{
-				checkoutstr = UploadClient.transferFile(null, 
-						wspId+META_DELIMIETER+checkoutstr+META_DELIMIETER+RWspHandler.userInfo);
+				checkoutstr = UploadClient.transferFile(null, "SVRTIME", null, null,
+						String.valueOf(wspId), checkoutstr, RWspHandler.userInfo);
 	
 				saveTree.setCheckout(checkoutstr);
 				saveTree.setDirty(false);
@@ -824,7 +830,7 @@ public class RWspHelper {
 				s.writeObject(aps);
 				s.flush();
 	
-				UploadClient.transferFile(new File(filename), wspId+META_DELIMIETER+RWspHandler.userInfo);
+				UploadClient.transferFile(new File(filename), "UPDATE", null, null, String.valueOf(wspId), null, RWspHandler.userInfo);
 			} catch (RemoteException e1) {
 				JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
     					"GeWorkbench cannot upload to remote workspace via axis2 web service.\n" +

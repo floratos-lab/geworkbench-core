@@ -20,18 +20,12 @@
 package org.geworkbench.builtin.projects;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.rmi.RemoteException;
-import java.util.List;
-import java.util.Map;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 
 import org.apache.axis2.Constants;
-import org.apache.axis2.util.CommandLineOption;
-import org.apache.axis2.util.CommandLineOptionParser;
-import org.apache.axis2.util.OptionsValidator;
 import org.apache.ws.axis2.upload.UploadServiceUploadSOAP11Port_httpStub;
 import org.geworkbench.engine.preferences.GlobalPreferences;
 
@@ -42,42 +36,11 @@ import org.geworkbench.engine.preferences.GlobalPreferences;
  */
 public class UploadClient {
 
-	/**
-	 * @param args
-	 * @throws Exception
-	 */
-	public static void main(String[] args) throws Exception {
-		CommandLineOptionParser optionsParser = new CommandLineOptionParser(
-				args);
-		List<?> invalidOptionsList = optionsParser
-				.getInvalidOptions(new OptionsValidator() {
-					public boolean isInvalid(CommandLineOption option) {
-						String optionType = option.getOptionType();
-						return !("dest".equalsIgnoreCase(optionType) || "file"
-								.equalsIgnoreCase(optionType));
-					}
-				});
-
-		if ((invalidOptionsList.size() > 0) || (args.length != 4)) {
-			// printUsage();
-			System.out.println("Invalid Parameters.");
-			return;
-		}
-
-		Map<?, ?> optionsMap = optionsParser.getAllOptions();
-
-		CommandLineOption fileOption = (CommandLineOption) optionsMap
-				.get("file");
-		CommandLineOption destinationOption = (CommandLineOption) optionsMap
-				.get("dest");
-		File file = new File(fileOption.getOptionValue());
-		if (file.exists())
-			transferFile(file, destinationOption.getOptionValue());
-		else
-			throw new FileNotFoundException();
+	public static String registerUser(File file) throws RemoteException {
+		return transferFile(file, "REGUSR", null, null, null, null, null);
 	}
 
-	public static String transferFile(File file, String destination)
+	public static String transferFile(File file, String type, String title, String desc, String remoteId, String checkoutstr, String userInfo)
 			throws RemoteException {
 		// uncomment the following if you need to capture the messages from
 		// TCPMON. Please look at http://ws.apache.org/commons/tcpmon/tcpmontutorial.html
@@ -110,19 +73,24 @@ public class UploadClient {
 		UploadServiceUploadSOAP11Port_httpStub.Base64Binary base64Binary = new UploadServiceUploadSOAP11Port_httpStub.Base64Binary();
 
 		if (file!=null){
-		// Creating a javax.activation.FileDataSource from the input file.
-		FileDataSource fileDataSource = new FileDataSource(file);
-
-		// Create a dataHandler using the fileDataSource. Any implementation of
-		// javax.activation.DataSource interface can fit here.
-		DataHandler dataHandler = new DataHandler(fileDataSource);
-		base64Binary.setBase64Binary(dataHandler);
-		UploadServiceUploadSOAP11Port_httpStub.ContentType_type0 param = new UploadServiceUploadSOAP11Port_httpStub.ContentType_type0();
-        param.setContentType_type0(dataHandler.getContentType());
-        base64Binary.setContentType(param);
-		attachmentType.setBinaryData(base64Binary);
+			// Creating a javax.activation.FileDataSource from the input file.
+			FileDataSource fileDataSource = new FileDataSource(file);
+	
+			// Create a dataHandler using the fileDataSource. Any implementation of
+			// javax.activation.DataSource interface can fit here.
+			DataHandler dataHandler = new DataHandler(fileDataSource);
+			base64Binary.setBase64Binary(dataHandler);
+			UploadServiceUploadSOAP11Port_httpStub.ContentType_type0 param = new UploadServiceUploadSOAP11Port_httpStub.ContentType_type0();
+	        param.setContentType_type0(dataHandler.getContentType());
+	        base64Binary.setContentType(param);
+			attachmentType.setBinaryData(base64Binary);
 		}
-		attachmentType.setFileName(destination);
+		attachmentType.setType(type);
+		attachmentType.setTitle(title);
+		attachmentType.setDesc(desc);
+		attachmentType.setRemoteId(remoteId);
+		attachmentType.setCheckoutstr(checkoutstr);
+		attachmentType.setUserInfo(userInfo);
 		attachmentRequest.setAttachmentRequest(attachmentType);
 
 		UploadServiceUploadSOAP11Port_httpStub.AttachmentResponse response = serviceStub.attachment(attachmentRequest);

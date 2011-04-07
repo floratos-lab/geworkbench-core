@@ -347,7 +347,7 @@ public class RegPanel extends JPanel implements ActionListener {
 				FileOutputStream os = new FileOutputStream(tmpfile);
 				os.write(rb.write());
 				os.close();
-				res = UploadClient.transferFile(new File(tmpfile), "");
+				res = UploadClient.registerUser(new File(tmpfile));
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
 				"GeWorkbench cannot register user for remote workspace.\n"+
@@ -402,7 +402,7 @@ public class RegPanel extends JPanel implements ActionListener {
 		protected String doInBackground() throws FileNotFoundException, IOException {
 			String res = "";
 			try {
-				res = DownloadClient.modifySavedWorkspace("DELUSR"+RWspHandler.userInfo);
+				res = DownloadClient.delUserFromWorkspace(RWspHandler.userInfo);
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(null, e1.getMessage()+".\n\n"+
 				"GeWorkbench cannot remove remote workspace user.\n"+

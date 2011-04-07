@@ -141,18 +141,8 @@ public class DownloadClient {
 
 		Options options = new Options();
 		options.setTo(targetEPR);
-		options.setAction("urn:getWorkspace");
+		options.setAction("urn:getSavedWorkspaceInfo");
 		options.setSoapVersionURI(SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI);
-
-		//Uncomment to enable client side file caching for the response.
-		options.setProperty(Constants.Configuration.CACHE_ATTACHMENTS, Constants.VALUE_TRUE);
-		options.setProperty(Constants.Configuration.ATTACHMENT_TEMP_DIR, cachedir);
-		options.setProperty(Constants.Configuration.FILE_SIZE_THRESHOLD, "4000");
-
-		options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
-		
-		// Increase the time out to receive large attachments
-		options.setTimeOutInMilliSeconds(300000);
 		
 		ServiceClient sender = new ServiceClient();
 		sender.setOptions(options);
@@ -258,7 +248,7 @@ public class DownloadClient {
 	public static HashMap<String, String[][]> getSavedWorkspaceList(String projectName) throws Exception {
 
 		String[][] locallist = getlocallist();
-		if (projectName.equals("LISTlocal")){
+		if (projectName.equals("local")){
 			HashMap<String, String[][]> hm = new HashMap<String, String[][]>();
 			hm.put("LIST", locallist);
 			return hm;
@@ -267,19 +257,9 @@ public class DownloadClient {
 		targetEPR.setAddress(GlobalPreferences.getInstance().getRWSP_URL()+"/DownloadService");
 		Options options = new Options();
 		options.setTo(targetEPR);
-		options.setAction("urn:getWorkspace");
+		options.setAction("urn:getSavedWorkspaceList");
 		options.setSoapVersionURI(SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI);
 
-		//Uncomment to enable client side file caching for the response.
-		options.setProperty(Constants.Configuration.CACHE_ATTACHMENTS, Constants.VALUE_TRUE);
-		options.setProperty(Constants.Configuration.ATTACHMENT_TEMP_DIR, cachedir);
-		options.setProperty(Constants.Configuration.FILE_SIZE_THRESHOLD, "4000");
-
-		options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
-		
-		// Increase the time out to receive large attachments
-		options.setTimeOutInMilliSeconds(300000);
-		
 		ServiceClient sender = new ServiceClient();
 		sender.setOptions(options);
 		OperationClient mepClient = sender.createClient(ServiceClient.ANON_OUT_IN_OP);
@@ -424,9 +404,10 @@ public class DownloadClient {
 				for (File f : wspdir.listFiles(filter)){
 					if (f.isFile() && f.getName().endsWith(".wsp")){
 						FileInputStream in = null;
+						ObjectInputStream s = null;
 						try {
 							in = new FileInputStream(f);
-							ObjectInputStream s = new ObjectInputStream(in);
+							s = new ObjectInputStream(in);
 							SaveTree saveTree = (SaveTree) s.readObject();
 							if (saveTree!=null) {
 								int wspid = saveTree.getWspId();
@@ -451,6 +432,7 @@ public class DownloadClient {
 							if(in!=null){
 								try{
 									in.close();
+									s.close();
 								}catch(IOException e){
 									e.printStackTrace();
 								}
@@ -476,6 +458,26 @@ public class DownloadClient {
 		return env;
 	}
 
+	private static SOAPEnvelope createEnvelope(String type, String remoteId, String par1, String par2, String userInfo) {
+		SOAPFactory fac = OMAbstractFactory.getSOAP11Factory();
+		SOAPEnvelope env = fac.getDefaultEnvelope();
+		OMNamespace omNs = fac.createOMNamespace("http://service.sample/xsd",
+				"swa");
+		OMElement wspElement = fac.createOMElement("getWorkspace", omNs);
+		OMElement nameEle = fac.createOMElement("type", omNs, wspElement);
+		nameEle.setText(type);
+		nameEle = fac.createOMElement("remoteId", omNs, wspElement);
+		nameEle.setText(remoteId);
+		nameEle = fac.createOMElement("par1", omNs, wspElement);
+		nameEle.setText(par1);
+		nameEle = fac.createOMElement("par2", omNs, wspElement);
+		nameEle.setText(par2);
+		nameEle = fac.createOMElement("userInfo", omNs, wspElement);
+		nameEle.setText(userInfo);
+		env.getBody().addChild(wspElement);
+		return env;
+	}
+
 	public static void cleanCache(){
 		System.gc();
 		File cacheDir = new File(cachedir);
@@ -486,10 +488,10 @@ public class DownloadClient {
 		}
 	}
 
-	public static String modifySavedWorkspace(String projectName) throws Exception {
+	public static String modifySavedWorkspace(String type, String remoteId, String par1, String par2, String userInfo) throws Exception {
 		Options options = new Options();
 		options.setTo(targetEPR);
-		options.setAction("urn:getWorkspace");
+		options.setAction("urn:modifySavedWorkspace");
 		options.setSoapVersionURI(SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI);
 		
 		ServiceClient sender = new ServiceClient();
@@ -497,7 +499,7 @@ public class DownloadClient {
 		OperationClient mepClient = sender.createClient(ServiceClient.ANON_OUT_IN_OP);
         
         MessageContext mc = new MessageContext();
-        SOAPEnvelope env = createEnvelope(projectName);
+        SOAPEnvelope env = createEnvelope(type, remoteId, par1, par2, userInfo);
         mc.setEnvelope(env);
         
 		mepClient.addMessageContext(mc);
@@ -515,29 +517,19 @@ public class DownloadClient {
         }
 	}
 	
-	public static HashMap<String, String> getSavedWorkspaceStatus(String projectName) throws Exception {
+	public static HashMap<String, String> getSavedWorkspaceStatus(String type, int id, String username) throws Exception {
 
 		Options options = new Options();
 		options.setTo(targetEPR);
-		options.setAction("urn:getWorkspace");
+		options.setAction("urn:modifySavedWorkspace");
 		options.setSoapVersionURI(SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI);
-
-		//Uncomment to enable client side file caching for the response.
-		options.setProperty(Constants.Configuration.CACHE_ATTACHMENTS, Constants.VALUE_TRUE);
-		options.setProperty(Constants.Configuration.ATTACHMENT_TEMP_DIR, cachedir);
-		options.setProperty(Constants.Configuration.FILE_SIZE_THRESHOLD, "4000");
-
-		options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
-		
-		// Increase the time out to receive large attachments
-		options.setTimeOutInMilliSeconds(300000);
 		
 		ServiceClient sender = new ServiceClient();
 		sender.setOptions(options);
 		OperationClient mepClient = sender.createClient(ServiceClient.ANON_OUT_IN_OP);
         
         MessageContext mc = new MessageContext();
-        SOAPEnvelope env = createEnvelope(projectName);
+        SOAPEnvelope env = createEnvelope(type, String.valueOf(id), null, null, username);
         mc.setEnvelope(env);
         
 		mepClient.addMessageContext(mc);
@@ -602,29 +594,19 @@ public class DownloadClient {
 		return hm;
 	}
 
-	public static String[][] getLockedWorkspaceList(String projectName) throws Exception {
+	public static String[][] getLockedWorkspaceList(String userInfo) throws Exception {
 
 		Options options = new Options();
 		options.setTo(targetEPR);
-		options.setAction("urn:getWorkspace");
+		options.setAction("urn:getLockedWorkspaceList");
 		options.setSoapVersionURI(SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI);
 
-		//Uncomment to enable client side file caching for the response.
-		options.setProperty(Constants.Configuration.CACHE_ATTACHMENTS, Constants.VALUE_TRUE);
-		options.setProperty(Constants.Configuration.ATTACHMENT_TEMP_DIR, cachedir);
-		options.setProperty(Constants.Configuration.FILE_SIZE_THRESHOLD, "4000");
-
-		options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
-		
-		// Increase the time out to receive large attachments
-		options.setTimeOutInMilliSeconds(300000);
-		
 		ServiceClient sender = new ServiceClient();
 		sender.setOptions(options);
 		OperationClient mepClient = sender.createClient(ServiceClient.ANON_OUT_IN_OP);
         
         MessageContext mc = new MessageContext();
-        SOAPEnvelope env = createEnvelope(projectName);
+        SOAPEnvelope env = createEnvelope(userInfo);
         mc.setEnvelope(env);
         
 		mepClient.addMessageContext(mc);
@@ -683,4 +665,32 @@ public class DownloadClient {
 		return list;
 	}
 
+	public static String delUserFromWorkspace(String userInfo) throws Exception {
+		Options options = new Options();
+		options.setTo(targetEPR);
+		options.setAction("urn:delUserFromWorkspace");
+		options.setSoapVersionURI(SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI);
+		
+		ServiceClient sender = new ServiceClient();
+		sender.setOptions(options);
+		OperationClient mepClient = sender.createClient(ServiceClient.ANON_OUT_IN_OP);
+        
+        MessageContext mc = new MessageContext();
+        SOAPEnvelope env = createEnvelope(userInfo);
+        mc.setEnvelope(env);
+        
+		mepClient.addMessageContext(mc);
+		mepClient.execute(true);
+		
+		// Let's get the message context for the response
+		MessageContext response = mepClient.getMessageContext(WSDLConstants.MESSAGE_LABEL_IN_VALUE);
+		SOAPBody body = response.getEnvelope().getBody();
+		OMElement element = body.getFirstChildWithName(new QName("http://service.sample/xsd","getWorkspaceResponse"));
+        if (element!=null)
+        {
+        	return element.getFirstChildWithName(new QName("http://service.sample/xsd","projectName")).getText();
+        }else{
+            throw new Exception("Malformed response.");
+        }
+	}
 }

@@ -1099,7 +1099,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 					this.jViewAnnotations.setEnabled(true);
 
 					if ((RWspHandler.wspId > 0 && RWspHandler.dirty == false)
-					|| (mNode == root && mNode.getChildCount() == 0))
+					|| (RWspHandler.wspId == 0 && mNode == root && mNode.getChildCount() == 0))
 						jUploadWspItem.setEnabled(false);
 					else
 						jUploadWspItem.setEnabled(true);
