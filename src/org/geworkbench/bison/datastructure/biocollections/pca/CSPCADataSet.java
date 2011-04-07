@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
@@ -23,28 +24,30 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 
 /**
  * @author: Marc-Danie Nazaire
- * @version $Id: CSPCADataSet.java,v 1.1 2008-03-14 20:06:21 keshav Exp $
+ * @version $Id$
  */
 @SuppressWarnings("unchecked")
-public class CSPCADataSet extends CSAncillaryDataSet implements DSPCADataSet {
+public class CSPCADataSet extends CSAncillaryDataSet<DSBioObject> implements DSPCADataSet {
 
 	private static final long serialVersionUID = 1L;
 
 	static Log log = LogFactory.getLog(CSPCADataSet.class);
 	private float[][] u_Matrix;
 	private int numPCs;
-	private HashMap eigenValues;
-	private HashMap percentVariations;
-	private HashMap eigenVectors;
+	private HashMap<Integer, Double> eigenValues;
+	private HashMap<Integer, String> percentVariations;
+	private HashMap<Integer, List<String>> eigenVectors;
 	private String variables;
 
-	public CSPCADataSet(DSDataSet parent, String label, String variables,
-			int numPCs, float[][] u_Matrix, HashMap eigenValues,
-			HashMap eigenVectors, HashMap percentVariations) {
-		super(parent, label);
+	public CSPCADataSet(DSDataSet<? extends DSMicroarray> parent, String label, String variables,
+			int numPCs, float[][] u_Matrix, HashMap<Integer, Double> eigenValues,
+			HashMap<Integer, List<String>> eigenVectors, HashMap<Integer, String> percentVariations) {
+		super((DSDataSet<DSBioObject>) parent, label);
 		// this.pcaData = pcaData;
 		this.variables = variables;
 		this.numPCs = numPCs;
@@ -97,7 +100,7 @@ public class CSPCADataSet extends CSAncillaryDataSet implements DSPCADataSet {
 	 * 
 	 * @see org.geworkbench.bison.datastructure.biocollections.pca.DSPCADataSet#getEigenValues()
 	 */
-	public HashMap getEigenValues() {
+	public HashMap<Integer, Double> getEigenValues() {
 		return eigenValues;
 	}
 
@@ -106,7 +109,7 @@ public class CSPCADataSet extends CSAncillaryDataSet implements DSPCADataSet {
 	 * 
 	 * @see org.geworkbench.bison.datastructure.biocollections.pca.DSPCADataSet#getPercentVars()
 	 */
-	public HashMap getPercentVars() {
+	public HashMap<Integer, String> getPercentVars() {
 		return percentVariations;
 	}
 
@@ -115,7 +118,7 @@ public class CSPCADataSet extends CSAncillaryDataSet implements DSPCADataSet {
 	 * 
 	 * @see org.geworkbench.bison.datastructure.biocollections.pca.DSPCADataSet#getEigenVectors()
 	 */
-	public HashMap getEigenVectors() {
+	public HashMap<Integer, List<String>> getEigenVectors() {
 		return eigenVectors;
 	}
 

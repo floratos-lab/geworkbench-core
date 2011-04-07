@@ -4,6 +4,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
+import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 
 import javax.swing.*;
 import java.io.File;
@@ -12,9 +14,9 @@ import java.io.IOException;
 /**
  * Created by IntelliJ IDEA.
  * User: nazaire
- * Date: Jul 7, 2009
+ * @version $Id$
  */
-public class CSGSEAResultDataSet extends CSAncillaryDataSet implements DSGSEAResultDataSet {
+public class CSGSEAResultDataSet extends CSAncillaryDataSet<DSBioObject> implements DSGSEAResultDataSet {
 
 	private static final long serialVersionUID = 1L;
 
@@ -22,8 +24,9 @@ public class CSGSEAResultDataSet extends CSAncillaryDataSet implements DSGSEARes
 	private String reportFile;
 
 
-	public CSGSEAResultDataSet(DSDataSet parent, String label, String reportFile) {
-		super(parent, label);
+	@SuppressWarnings("unchecked")
+	public CSGSEAResultDataSet(DSDataSet<? extends DSMicroarray> parent, String label, String reportFile) {
+		super((DSDataSet<DSBioObject>) parent, label);
 		this.reportFile = reportFile;
 	}
 
@@ -31,11 +34,6 @@ public class CSGSEAResultDataSet extends CSAncillaryDataSet implements DSGSEARes
 	 * (non-Javadoc)
 	 *
 	 * @see org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet#getDataSetFile()
-	 */
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.geworkbench.bison.datastructure.biocollections.pca.DSPCADataSet#getDataSetFile()
 	 */
 	public File getDataSetFile() {
 		// no-op
