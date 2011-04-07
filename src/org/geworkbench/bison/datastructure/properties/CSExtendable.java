@@ -10,14 +10,16 @@ import java.util.Vector;
  * Baseline implementation of interface <code>Extendable</code>.
  *
  * @author First Genetic Trust Inc.
- * @version 1.0
+ * @version $Id$
  */
 public class CSExtendable implements DSExtendable, Serializable {
-    /**
+	private static final long serialVersionUID = -2136995152001635498L;
+	
+	/**
      * Every entry in this vector is an object of type <code>Name<code> and
      * contains all values associated with a given name.
      */
-    Vector nameValuePairs = new Vector();
+    Vector<Name> nameValuePairs = new Vector<Name>();
 
     public void addNameValuePair(String name, Object value) {
         if (name == null || value == null)
@@ -95,9 +97,9 @@ public class CSExtendable implements DSExtendable, Serializable {
      * Structure used to capture the name-value pairs defined for a given 'name'.
      *
      * @author First Genetic Trust, Inc.
-     * @version 1.0
+     * @version $Id$
      */
-    class Name implements Serializable {
+    private class Name implements Serializable {
         /**
 		 * 
 		 */
@@ -105,7 +107,7 @@ public class CSExtendable implements DSExtendable, Serializable {
 		
 		String name = null;
         boolean uniqueValue = false;
-        Vector values = null;
+        Vector<Object> values = null;
 
         Name(String n) {
             name = n;
@@ -122,13 +124,6 @@ public class CSExtendable implements DSExtendable, Serializable {
                 return false;
         }
 
-        public boolean equals(String n) {
-            if (n == null || name == null)
-                return false;
-            else
-                return this.name.equals(n);
-        }
-
         /**
          * Add the designated value <code>v</code> at this name-value pair list,
          * respecting any uniqueness requirements set forth by the instance variable
@@ -138,7 +133,7 @@ public class CSExtendable implements DSExtendable, Serializable {
          */
         public void add(Object v) {
             if (values == null)
-                values = new Vector();
+                values = new Vector<Object>();
             if (uniqueValue)
                 values.clear();
             values.add(v);
