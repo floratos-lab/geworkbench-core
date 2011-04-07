@@ -17,13 +17,9 @@ public abstract class CSAncillaryDataSetKMeans extends CSDataSet implements DSAn
     }
 
     public DSDataSet getParentDataSet() {
-        return parent;  //To change body of implemented methods use File | Settings | File Templates.
+        return parent; 
     }
-
-    /**
-     * This function is designed for injection, used on grid service, when ResultSet doesn't have parent information, ex:microarray data, panels data, etc. we need to assign a parent, then when we want to get it's parent's data, we can.
-     * @param parent
-     */
+    
     public void setParent(DSDataSet parent){ 
     	this.parent=parent;
     }
