@@ -79,6 +79,9 @@ public class AdjacencyMatrix implements Serializable {
 		if (geneId > 0) {
 			HashMap<Integer, Float> map = new HashMap<Integer, Float>();
 			HashMap<Integer, EdgeInfo> row = geneRows.get(new Integer(geneId));
+			if(row==null) {
+				return null;
+			}
 			for(Integer id: row.keySet()) {
 				EdgeInfo e = row.get(id);
 				map.put(id, e.value);
