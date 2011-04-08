@@ -26,6 +26,9 @@ public class GeneOntologyTree {
 	private static final String DEFAULT_OBO_FILE = "data/gene_ontology.1_2.obo";
 	
 	private static final GeneOntologyTree instance = new GeneOntologyTree(DEFAULT_OBO_FILE);
+	
+	private String dataVersion;
+	private String date;
 
 	public static GeneOntologyTree getInstance() {
 		return instance;
@@ -151,8 +154,16 @@ public class GeneOntologyTree {
 		if (!FILE_HEADER1_0.equals(header) && !FILE_HEADER1_2.equals(header)) {
 			throw new Exception("This is not a version 1.0 or 1.2 OBO file.");
 		}
-		log.info("GeneOntologyTree: reading file: " + fileName);
 		String line = in.readLine();
+		if(line.startsWith("data-version:")) {
+			dataVersion = line.substring(line.indexOf(" ")+1);
+		}
+		line = in.readLine();
+		if(line.startsWith("date:")) {
+			date = line.substring(line.indexOf(" ")+1);
+		}
+		log.info("GeneOntologyTree: reading file: " + fileName+" "+dataVersion+" "+date);
+		line = in.readLine();
 		HashMap<Integer, Term> termMap = new HashMap<Integer, Term>();
 		while (line != null) {
 			while ((line != null) && (!line.equals(TERM_START))) {
