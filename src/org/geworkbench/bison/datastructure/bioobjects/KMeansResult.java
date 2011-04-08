@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSetKMeans;
+import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.views.DSDataSetView;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
@@ -15,12 +15,14 @@ import org.geworkbench.bison.model.clusters.SOMCluster;
  * @author zm2165
  * @version $Id$
 */
-public class KMeansResult extends CSAncillaryDataSetKMeans {
+@SuppressWarnings("unchecked")
+public class KMeansResult extends CSAncillaryDataSet {
 
 	private static final long serialVersionUID = -5747912398049332993L;	
 	private int clusterBy=0;
 	private ArrayList<List<String[]>> resultList = null;
 	private DSMicroarraySet<DSMicroarray> maSet;
+	
 	public KMeansResult(final DSMicroarraySet<DSMicroarray> maSet, String name,
 			DSDataSetView<?> dataSetView, SOMCluster[][] graphResults, 
 			int clusterBy, ArrayList<List<String[]>> resultList) {
