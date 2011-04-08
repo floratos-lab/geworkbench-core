@@ -24,9 +24,9 @@ public class CSGSEAResultDataSet extends CSAncillaryDataSet<DSBioObject> impleme
 	private String reportFile;
 
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public CSGSEAResultDataSet(DSDataSet<? extends DSMicroarray> parent, String label, String reportFile) {
-		super((DSDataSet<DSBioObject>) parent, label);
+		super((DSDataSet) parent, label);
 		this.reportFile = reportFile;
 	}
 
