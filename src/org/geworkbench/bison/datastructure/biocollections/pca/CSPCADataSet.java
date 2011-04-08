@@ -44,10 +44,11 @@ public class CSPCADataSet extends CSAncillaryDataSet<DSBioObject> implements DSP
 	private HashMap<Integer, List<String>> eigenVectors;
 	private String variables;
 
+	@SuppressWarnings("rawtypes")
 	public CSPCADataSet(DSDataSet<? extends DSMicroarray> parent, String label, String variables,
 			int numPCs, float[][] u_Matrix, HashMap<Integer, Double> eigenValues,
 			HashMap<Integer, List<String>> eigenVectors, HashMap<Integer, String> percentVariations) {
-		super((DSDataSet<DSBioObject>) parent, label);
+		super((DSDataSet) parent, label);
 		// this.pcaData = pcaData;
 		this.variables = variables;
 		this.numPCs = numPCs;
