@@ -32,6 +32,8 @@
 		<property name="docs" value="web/api" />
 		<!-- The executable libs -->
 		<property name="lib" value="lib" />
+		<!-- The executable 64bit libs -->
+		<property name="lib64" value="lib64" />
 		<!-- The components directory -->
 		<property name="components" value="components" />
 		<!-- Release info -->
@@ -40,17 +42,42 @@
 		<property name="devkit.file" value="${dist}/${app}_v${version}-SDK" />
 		<!-- Location to write reports -->
 		<property name="reports" value="reports" />
+		<condition property="32bit">
+			<equals arg1="${sun.arch.data.model}" arg2="32" />
+		</condition>
+		<condition property="64bit">
+			<equals arg1="${sun.arch.data.model}" arg2="64" />
+		</condition>
 	</target>
-	<!-- ===================================================================== -->
-	<!-- PREPARE  -->
-	<!-- ===================================================================== -->
-	<target name="prepare" depends="init" description="Prepares for compilation.">
-		<mkdir dir="${classes}" />
+	<target name="classpath.32" depends="init" if="32bit">
 		<path id="classpath">
 			<fileset dir="${lib}">
 				<include name="**/*.jar" />
 			</fileset>
 		</path>
+		<property name="Dlib" value="${lib}" />
+		<echo message="32bit: ${32bit}" />
+	</target>
+	<target name="classpath.64" depends="init" if="64bit">
+		<path id="classpath">
+			<fileset dir="${lib}">
+				<include name="**/*.jar" />
+				<exclude name="**/j3dcore.jar" />
+				<exclude name="**/j3dutils.jar" />
+				<exclude name="**/vecmath.jar" />
+			</fileset>
+			<fileset dir="${lib64}">
+				<include name="**/*.jar" />
+			</fileset>
+		</path>
+		<property name="Dlib" value="${lib64};${lib}" />
+		<echo message="64bit: ${64bit}" />
+	</target>
+	<!-- ===================================================================== -->
+	<!-- PREPARE  -->
+	<!-- ===================================================================== -->
+	<target name="prepare" depends="init, classpath.32, classpath.64" description="Prepares for compilation.">
+		<mkdir dir="${classes}" />
 		<!-- Classpath for running -->
 		<path id="run.classpath">
 			<pathelement location="${classes}" />
@@ -296,7 +323,7 @@
 	<target name="run" depends="compile" description="Runs geWorkbench.">
 		<java fork="true" classname="org.geworkbench.engine.config.UILauncher">
 			<jvmarg value="-Xmx1024M" />
-			<jvmarg value="-Djava.library.path=lib" />
+			<jvmarg value="-Djava.library.path=${Dlib}" />
 			<jvmarg value="-Xbootclasspath/p:${bootclasspath}" />
 			<classpath refid="run.classpath" />
 		</java>
