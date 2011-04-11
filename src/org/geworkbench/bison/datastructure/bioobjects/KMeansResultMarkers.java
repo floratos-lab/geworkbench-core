@@ -1,11 +1,12 @@
 package org.geworkbench.bison.datastructure.bioobjects;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.views.DSDataSetView;
+import org.geworkbench.bison.datastructure.biocollections.views.DSMicroarraySetView;
+import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.model.clusters.Cluster;
 import org.geworkbench.bison.model.clusters.DSSOMClusterDataSet;
@@ -17,14 +18,14 @@ public class KMeansResultMarkers extends KMeansResult implements DSSOMClusterDat
 	
 	private int rows, columns;
     private SOMCluster[][] clusters;
-    private DSDataSetView parentSet;
+    private DSMicroarraySetView<? extends DSGeneMarker, ? extends DSMicroarray> parentSet;
 	
 	public KMeansResultMarkers(DSMicroarraySet<DSMicroarray> maSet,
-			String name, DSDataSetView<?> dataSetView,
+			String name, DSMicroarraySetView<? extends DSGeneMarker, ? extends DSMicroarray> dataSetView,
 			SOMCluster[][] clusters, int clusterBy,
 			ArrayList<List<String[]>> resultList) {
-		super(maSet, name, dataSetView, clusters, clusterBy, resultList);
-		// TODO Auto-generated constructor stub
+		super(maSet, name, clusters, clusterBy, resultList);
+
 		rows = clusters.length;
         if (rows > 0) {
             columns = clusters[0].length;
@@ -42,7 +43,8 @@ public class KMeansResultMarkers extends KMeansResult implements DSSOMClusterDat
 	        // No-op
 	    }
 
-	    public DSDataSetView getDataSetView() {
+		@SuppressWarnings("rawtypes")
+		public DSDataSetView getDataSetView() {
 	        return parentSet;
 	    }
 
@@ -69,14 +71,6 @@ public class KMeansResultMarkers extends KMeansResult implements DSSOMClusterDat
 
 	    public int getNumberOfClusters() {
 	        return rows * columns;
-	    }
-
-	    public File getDataSetFile() {
-	        return null;
-	    }
-
-	    public void setDataSetFile(File file) {
-	        // no-op
 	    }
 
 }
