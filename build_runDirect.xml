@@ -77,7 +77,7 @@
 	<!-- ====================================================================== -->
 	<!-- RUN PRODUCTION-->
 	<!-- ====================================================================== -->
-	<target name="run" depends="init" description="Runs geWorkbench.">
+	<target name="run" depends="prepare" description="Runs geWorkbench.">
 		<java fork="true" classname="org.geworkbench.engine.config.UILauncher">
 			<jvmarg value="-Xmx1024M"/>
 			<jvmarg value="-Djava.library.path=${Dlib}"/>
