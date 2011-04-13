@@ -43,7 +43,7 @@ public class KMeansResultMarkers extends KMeansResult implements DSSOMClusterDat
 	        // No-op
 	    }
 
-		@SuppressWarnings("rawtypes")
+
 		public DSDataSetView getDataSetView() {
 	        return parentSet;
 	    }
