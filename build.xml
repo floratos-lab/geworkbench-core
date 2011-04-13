@@ -601,6 +601,7 @@
 
 				<include name="annotation/**/*" />
 				<include name="${lib}/**/*" />
+				<include name="${lib64}/**/*" />
 				<include name="geWorkbenchLicense.txt" />
 				<include name="ReleaseNotes_2.1.0.txt" />
 				<include name="welcometext.html" />
