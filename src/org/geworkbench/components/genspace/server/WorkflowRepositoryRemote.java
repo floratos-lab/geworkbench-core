@@ -9,17 +9,17 @@ import org.geworkbench.components.genspace.entity.WorkflowFolder;
 @Remote
 public interface WorkflowRepositoryRemote {
 
-	boolean deleteMyWorkflow(UserWorkflow uw);
+	boolean deleteMyWorkflow(int uw);
 
-	WorkflowFolder addWorkflow(UserWorkflow uw, WorkflowFolder folder);
+	WorkflowFolder addWorkflow(UserWorkflow uw, int folder);
 
 	WorkflowFolder addFolder(WorkflowFolder folder);
 
-	boolean deleteFromInbox(IncomingWorkflow wi);
+	boolean deleteFromInbox(int wi);
 
-	UserWorkflow addToRepository(IncomingWorkflow wi);
+	UserWorkflow addToRepository(int wi);
 
-	boolean removeComment(WorkflowComment wc);
+	boolean removeComment(int wc);
 
 	WorkflowComment addComment(WorkflowComment wc);
 
@@ -27,6 +27,6 @@ public interface WorkflowRepositoryRemote {
 
 	boolean sendWorkflow(IncomingWorkflow newW, String receiver);
 
-	boolean deleteMyFolder(WorkflowFolder folder);
+	boolean deleteMyFolder(int folder);
 
 }

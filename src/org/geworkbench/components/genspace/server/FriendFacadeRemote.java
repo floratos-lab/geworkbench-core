@@ -20,20 +20,20 @@ public interface FriendFacadeRemote {
 	 * Request a user to become friends with the current user
 	 * @param selectedValue User to ask to be friends with
 	 */
-	public void addFriend(User selectedValue);
+	public void addFriend(int uid);
 	
 	/**
 	 * Reject a friend request from a user
 	 * @param selectedValue User to reject from being friends
 	 */
-	public void rejectFriend(User selectedValue);
+	public void rejectFriend(int uid);
 
 	/**
 	 * Mark a friend as visible or not (ie, that they can or can't see this user's profile)
 	 * @param friend
 	 * @param boolean1
 	 */
-	public void updateFriendVisibility(Friend friend, Boolean boolean1);
+	public void updateFriendVisibility(int friend, Boolean boolean1);
 	
 	/**
 	 * Get the list of all users who are friends with the logged in user
@@ -45,5 +45,5 @@ public interface FriendFacadeRemote {
 	 * Defriend a user
 	 * @param u User to defriend
 	 */
-	public void removeFriend(User u);
+	public void removeFriend(int u);
 }

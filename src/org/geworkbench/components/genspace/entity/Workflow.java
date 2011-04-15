@@ -14,6 +14,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+
+import org.geworkbench.components.genspace.RuntimeEnvironmentSettings;
 
 @Entity
 public class Workflow implements Serializable {
@@ -117,7 +120,7 @@ public class Workflow implements Serializable {
 	@Override
 	public String toString() {
 		String r = "";
-		for(WorkflowTool wt : tools)
+		for(WorkflowTool wt : getTools())
 		{
 			r += wt.getTool().getName() + ", ";
 		}
@@ -172,4 +175,69 @@ public class Workflow implements Serializable {
 		else
 			return getSumRating() / getNumRating();
 	}
+	
+	public void loadToolsFromCache()
+	{
+		if(getToolIds() != null && RuntimeEnvironmentSettings.tools != null)
+		{
+			ArrayList<WorkflowTool> ret = new ArrayList<WorkflowTool>();
+			int j = 1;
+			for(int i : getToolIds())
+			{
+				WorkflowTool t = new WorkflowTool();
+				t.setOrder(j);
+				t.setTool(RuntimeEnvironmentSettings.tools.get(i));
+				t.setWorkflow(this);
+				ret.add(t);
+				j++;
+			}
+			tools = ret;
+		}
+	}
+	private int[] toolIds = null;
+	@Transient
+	public int[] getToolIds() {
+		return toolIds;
+	}
+	public void setToolIds(int[] toolIds) {
+		this.toolIds = toolIds;
+	}
+
+	private int cachedParentId;
+	@Transient
+	public int getCachedParentId() {
+		return cachedParentId;
+	}
+	public void setCachedParentId(int cachedParentId) {
+		this.cachedParentId = cachedParentId;
+	}
+	
+	private int cachedChildrenCount;
+	@Transient
+	public int getCachedChildrenCount() {
+		return cachedChildrenCount;
+	}
+	public void setCachedChildrenCount(int cachedChildrenCount) {
+		this.cachedChildrenCount = cachedChildrenCount;
+	}
+	public Workflow slimDown()
+	{
+		Workflow w = new Workflow();
+		w.setId(this.getId());
+		w.setRatings(this.getRatings());
+		int[] temp = new int[getTools().size()];
+    	for(WorkflowTool t : getTools())
+    	{
+    		temp[t.getOrder()-1] = t.getTool().getId();
+    	}
+		w.setToolIds(temp);
+		w.setUsageCount(getUsageCount());
+		w.setNumRating(getNumRating());
+		w.setSumRating(getSumRating());
+		w.setCachedChildrenCount(getChildren().size());
+		if(getParent() != null)
+			w.setCachedParentId(getParent().getId());
+		return w;
+	}
+	
 }

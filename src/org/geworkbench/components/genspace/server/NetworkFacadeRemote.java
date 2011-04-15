@@ -15,13 +15,13 @@ public interface NetworkFacadeRemote {
 	 * @param networkFilter
 	 * @return
 	 */
-	public List<User> getProfilesByNetwork(Network networkFilter);
+	public List<User> getProfilesByNetwork(int networkFilter);
 	
 	/**
 	 * Request to join a network
 	 * @param n
 	 */
-	public void joinNetwork(Network n);
+	public void joinNetwork(int n);
 	
 	/**
 	 * Create (and then join) a network
@@ -33,7 +33,7 @@ public interface NetworkFacadeRemote {
 	 * Leave a network that the user is currently in
 	 * @param selected
 	 */
-	public void leaveNetwork(UserNetwork selected);
+	public void leaveNetwork(int selected);
 	
 	/**
 	 * Get all networks that you are in
@@ -58,25 +58,25 @@ public interface NetworkFacadeRemote {
 	 * @param nt Network to look for requests
 	 * @return
 	 */
-	public List<UserNetwork> getNetworkRequests(Network nt);
+	public List<UserNetwork> getNetworkRequests(int nt);
 	
 	/**
 	 * Accept a request by a user to join a network which you are the creator of
 	 * @param request
 	 */
-	public void acceptNetworkRequest(UserNetwork request);
+	public void acceptNetworkRequest(int request);
 	/**
 	 * Reject a request by a user to join a network which you are the creator of
 	 * @param request
 	 */
-	public void rejectNetworkRequest(UserNetwork request);
+	public void rejectNetworkRequest(int request);
 	
 	/**
 	 * Set your visibility for a network
 	 * @param network
 	 * @param visibility
 	 */
-	public void updateNetworkVisibility(UserNetwork network,
+	public void updateNetworkVisibility(int network,
 			Boolean visibility);
 	
 	/**

@@ -28,15 +28,15 @@ public interface ToolInformationProvider {
 	 */
 	public List<Tool> getMostPopularWFHeads();
 
-	public Tool getMostPopularNextTool(Tool tool);
+	public Tool getMostPopularNextTool(int toolID);
 
-	public Tool getMostPopularPreviousTool(Tool tool);
+	public Tool getMostPopularPreviousTool(int toolId);
 	public List<Tool> getAllTools();
-	public List<Workflow> getMostPopularWorkflowStartingWith(Tool tool);
-	public List<Workflow> getMostPopularWorkflowIncluding(Tool tool);
-	public List<Workflow> getAllWorkflowsIncluding(Tool tool);
-	public List<Workflow> getToolSuggestion(Workflow cwf);
+	public List<Workflow> getMostPopularWorkflowStartingWith(int toolId);
+	public List<Workflow> getMostPopularWorkflowIncluding(int toolId);
+	public List<Workflow> getAllWorkflowsIncluding(int toolId);
+	public List<Workflow> getToolSuggestion(int workflowID);
 	public Transaction sendUsageEvent(AnalysisEvent e);
 	public Transaction sendUsageLog(List<AnalysisEvent> e);
-	public User getExpertUserFor(Tool tn);
+	public User getExpertUserFor(int toolId);
 }

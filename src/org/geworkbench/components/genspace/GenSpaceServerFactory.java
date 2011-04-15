@@ -2,6 +2,7 @@
 package org.geworkbench.components.genspace;
 
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.naming.InitialContext;
@@ -10,6 +11,7 @@ import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
 import org.geworkbench.components.genspace.entity.Friend;
+import org.geworkbench.components.genspace.entity.Tool;
 import org.geworkbench.components.genspace.entity.User;
 import org.geworkbench.components.genspace.entity.UserNetwork;
 import org.geworkbench.components.genspace.server.FriendFacadeRemote;
@@ -35,7 +37,8 @@ public class GenSpaceServerFactory {
 	private static WorkflowRepositoryRemote workflowFacade;
 	private static InitialContext ctx;
 
-	private static Object getRemote(String remoteName)
+	
+	private synchronized static Object getRemote(String remoteName)
 	{
 		if(Thread.currentThread().getName().contains("AWT-EventQueue"))
 		{
@@ -45,13 +48,25 @@ public class GenSpaceServerFactory {
 			System.setProperty("org.omg.CORBA.ORBInitialHost", RuntimeEnvironmentSettings.SERVER);
 			System.setProperty("com.sun.CORBA.encoding.ORBEnableJavaSerialization","true");
 			System.setProperty("org.omg.CORBA.ORBInitialPort", "3700");
+//			System.setProperty("com.sun.CORBA.giop.ORBFragmentSize","1024000");
+//			System.setProperty("com.sun.CORBA.giop.ORBBufferSize","1024000");
 			System.setProperty("com.sun.corba.ee.transport.ORBMaximumReadByteBufferSize", "3000000");
 			System.setProperty("java.naming.factory.initial", "com.sun.enterprise.naming.SerialInitContextFactory");
 			System.setProperty("java.naming.factory.url.pkgs", "com.sun.enterprise.naming");
 			System.setProperty("java.naming.factory.state", "com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl");
 			if(ctx == null)
 			{
+				System.out.println("getting context");
 				ctx = new InitialContext();
+				System.out.println("have context");
+			}
+			if(RuntimeEnvironmentSettings.tools == null)
+			{
+				RuntimeEnvironmentSettings.tools = new HashMap<Integer, Tool>();
+				for(Tool t : ((PublicFacadeRemote) ctx.lookup("org.geworkbench.components.genspace.server.PublicFacadeRemote")).getAllTools())
+				{
+					RuntimeEnvironmentSettings.tools.put(t.getId(), t);
+				}
 			}
 			return ctx.lookup("org.geworkbench.components.genspace.server."+remoteName+"Remote");
 		} catch (NamingException e) {

@@ -10,8 +10,8 @@ import org.geworkbench.components.genspace.entity.WorkflowRating;
 public interface UsageInformationRemote  extends ToolInformationProvider {
 
 	
-	public ToolRating getMyRating(Tool tool);
+	public ToolRating getMyToolRating(int tool);
 	public Tool saveRating(ToolRating tr);
-	public WorkflowRating getMyRating(Workflow workflow);
+	public WorkflowRating getMyWorkflowRating(int workflow);
 	public Workflow saveRating(WorkflowRating tr);
 }
