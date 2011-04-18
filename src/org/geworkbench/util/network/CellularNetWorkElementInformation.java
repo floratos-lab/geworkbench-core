@@ -72,7 +72,7 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 	}
 
 	private static Set<GOTerm> getAllGOTerms(DSGeneMarker dsGeneMarker) {
-		GeneOntologyTree tree = GeneOntologyTree.getInstance();
+		GeneOntologyTree tree = GeneOntologyTree.getInstanceUntilAvailable();
 		String geneId = dsGeneMarker.getLabel();
 		String[] goTerms = AnnotationParser.getInfo(geneId,
 				AnnotationParser.GOTERM);
@@ -93,7 +93,7 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 	}
 
 	public TreeMap<String, Set<GOTerm>> getAllAncestorGoTerms(String catagory) {
-		GeneOntologyTree tree = GeneOntologyTree.getInstance();
+		GeneOntologyTree tree = GeneOntologyTree.getInstanceUntilAvailable();
 		String geneId = dSGeneMarker.getLabel();
 		String[] goTerms = AnnotationParser.getInfo(geneId, catagory);
 

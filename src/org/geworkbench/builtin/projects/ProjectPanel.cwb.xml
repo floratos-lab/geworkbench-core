@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <component-descriptor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Descriptor Schema.xsd">
     <component
             name="Project Panel"
@@ -17,6 +18,7 @@
         <menu-item path="Edit.Rename.Project" mode="always" var="Edit.Rename.Project"/>
         <menu-item path="Edit.Rename.File" mode="always" var="Edit.Rename.File"/>
         <menu-item path="Tools.My Account" mode="always" var="Tools.My Account"/>
+        <menu-item path="Tools.Choose OBO Source" mode="always" var="Tools.Choose OBO Source"/>
         The Project Panel is responsible for organizing and displaying data sets.
     </component>
 </component-descriptor>

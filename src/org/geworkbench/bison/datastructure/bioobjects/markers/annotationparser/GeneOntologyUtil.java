@@ -17,7 +17,7 @@ public class GeneOntologyUtil {
 	private final static int PHOSPATASE_GOTERM_ID = 4721;
 	
 	public static String checkMarkerFunctions(DSGeneMarker dsGeneMarker) {
-		GeneOntologyTree tree = GeneOntologyTree.getInstance();
+		GeneOntologyTree tree = GeneOntologyTree.getInstanceUntilAvailable();
 		String geneId = dsGeneMarker.getLabel();
 		String[] goTerms = AnnotationParser.getInfo(geneId,
 				AnnotationParser.GENE_ONTOLOGY_MOLECULAR_FUNCTION);

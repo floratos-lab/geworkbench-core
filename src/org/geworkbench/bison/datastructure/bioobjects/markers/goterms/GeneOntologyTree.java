@@ -2,6 +2,11 @@ package org.geworkbench.bison.datastructure.bioobjects.markers.goterms;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -10,8 +15,16 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.collections15.map.ListOrderedMap;
+import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.cookie.CookiePolicy;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.geworkbench.builtin.projects.OboSourcePreference;
 
 /**
  * Represents the Gene Ontology Tree and provides methods to access it.
@@ -22,19 +35,51 @@ import org.apache.commons.logging.LogFactory;
  */
 public class GeneOntologyTree {
 	
-	private Log log = LogFactory.getLog(this.getClass());
-	private static final String DEFAULT_OBO_FILE = "data/gene_ontology.1_2.obo";
+	private static Log log = LogFactory.getLog(GeneOntologyTree.class);
 	
-	private static final GeneOntologyTree instance = new GeneOntologyTree(DEFAULT_OBO_FILE);
+	private static GeneOntologyTree instance = null;
 	
 	private String dataVersion;
 	private String date;
 
+	// at class loading, start creating an instance but do not hold
+	static {
+		OboSourcePreference pref = OboSourcePreference.getInstance();
+		if(pref.getSourceType()== OboSourcePreference.Source.REMOTE) {
+			new Thread() {
+				@Override
+				public void run() {
+					instance = new GeneOntologyTree();
+				}
+			}.start();
+			System.out.println(new java.util.Date());
+		} else {
+			instance = new GeneOntologyTree(OboSourcePreference.DEFAULT_OBO_FILE);
+		}
+	}
+	
+	// this method may block for up to 200 seconds, but always return non null unless timed out
+	public static GeneOntologyTree getInstanceUntilAvailable() {
+		final long ONE_SECOND = 1000;
+		final long LIMIT = 200;
+		long count = 0;
+		while(instance==null && count<LIMIT) {
+			try {
+				Thread.sleep(ONE_SECOND);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			count++;
+		}
+		return instance;
+	}
+
+	// this method return immediately but may return null
 	public static GeneOntologyTree getInstance() {
 		return instance;
 	}
 
-	// Interim object for building up goterm data
+	// Interim object for building up go term data
 	private static class Term {
 		int id;
 		List<Integer> parents;
@@ -136,20 +181,27 @@ public class GeneOntologyTree {
 	private ListOrderedMap<String, GOTerm> roots;
 	private HashMap<Integer, GOTerm> terms;
 
+	private GeneOntologyTree() {
+		roots = new ListOrderedMap<String, GOTerm>();
+		terms = new HashMap<Integer, GOTerm>();
+
+		readFromUrl(OboSourcePreference.DEFAULT_REMOTE_LOCATION);
+	}
+	
 	private GeneOntologyTree(String oboFileName) {
 		roots = new ListOrderedMap<String, GOTerm>();
 		terms = new HashMap<Integer, GOTerm>();
 		
 		try {
-			parseOBOFile(oboFileName);
+			BufferedReader in = new BufferedReader(new FileReader(oboFileName));
+			parseOBOFile(in);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	private void parseOBOFile(String fileName) throws Exception {
-		BufferedReader in = new BufferedReader(new FileReader(fileName));
+	private void parseOBOFile(BufferedReader in) throws Exception {
 		String header = in.readLine();
 		if (!FILE_HEADER1_0.equals(header) && !FILE_HEADER1_2.equals(header)) {
 			throw new Exception("This is not a version 1.0 or 1.2 OBO file.");
@@ -162,7 +214,7 @@ public class GeneOntologyTree {
 		if(line.startsWith("date:")) {
 			date = line.substring(line.indexOf(" ")+1);
 		}
-		log.info("GeneOntologyTree: reading file: " + fileName+" "+dataVersion+" "+date);
+		log.info("GeneOntologyTree: reading from " + in.toString()+" "+dataVersion+" "+date);
 		line = in.readLine();
 		HashMap<Integer, Term> termMap = new HashMap<Integer, Term>();
 		while (line != null) {
@@ -350,5 +402,54 @@ public class GeneOntologyTree {
 		for (GOTerm child : children) {
 			getChildrenHelper(child, set);
 		}
+	}
+	
+	private final static String OBO_FILENAME = "gene_ontology.1_2.obo";
+
+	/**
+	 * Read ontology file from remote URL
+	 */
+	private void readFromUrl(String url) {
+		long time0 = System.currentTimeMillis();
+		HttpClient client = new HttpClient();
+		DefaultHttpMethodRetryHandler retryhandler = new DefaultHttpMethodRetryHandler(
+				2, true);
+		client.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
+				retryhandler);
+		client.getParams().setCookiePolicy(CookiePolicy.IGNORE_COOKIES);
+
+		GetMethod method = new GetMethod(url);
+
+		try {
+			int statusCode = client.executeMethod(method);
+
+			if (statusCode == HttpStatus.SC_OK) {
+				InputStream stream = method.getResponseBodyAsStream();
+				BufferedReader in = new BufferedReader(new InputStreamReader(
+						stream));
+				// this file is put under default current directory meant to be user transparent
+				PrintWriter pw = new PrintWriter(new FileWriter(OBO_FILENAME));
+				String line = in.readLine();
+				while(line!=null) {
+					pw.println(line);
+					line = in.readLine();
+				}
+				pw.close();
+				BufferedReader in2 = new BufferedReader(new FileReader(OBO_FILENAME));
+				parseOBOFile(in2);
+			} else {
+				log.warn("error in reading remote obo from "+url);
+			}
+		} catch (HttpException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			method.releaseConnection();
+		}
+		long time1 = System.currentTimeMillis();
+		log.info("Time taken to update OBO file: "+(time1-time0)+" milliseconds");
 	}
 }

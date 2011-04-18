@@ -2299,6 +2299,17 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			}
 		};
 		listeners.put("File.Open.Remote Workspace", listener);
+		listeners.put("Tools.Choose OBO Source", new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				OboSourceDialog dlg = OboSourceDialog.getInstance();
+				dlg.refresh();
+				dlg.setVisible(true);
+			}
+			
+		});
+		
 		listener = new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				RWspHandler ws = new RWspHandler();
