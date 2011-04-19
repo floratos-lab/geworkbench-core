@@ -323,6 +323,7 @@
 	<target name="run" depends="compile" description="Runs geWorkbench.">
 		<java fork="true" classname="org.geworkbench.engine.config.UILauncher">
 			<jvmarg value="-Xmx1024M" />
+			<jvmarg value="-XX:MaxPermSize=128m" />
 			<jvmarg value="-Djava.library.path=${Dlib}" />
 			<jvmarg value="-Xbootclasspath/p:${bootclasspath}" />
 			<classpath refid="run.classpath" />
