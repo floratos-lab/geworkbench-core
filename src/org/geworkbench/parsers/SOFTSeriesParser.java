@@ -19,6 +19,7 @@ import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
+import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSExpressionMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
@@ -350,6 +351,31 @@ public class SOFTSeriesParser {
 		String annotationFilename = AnnotationParser.matchChipType(maSet, null,
 				false);
 		maSet.setCompatibilityLabel(annotationFilename);
+
+		for (DSGeneMarker marker : maSet.getMarkerVector()) {
+			String token = marker.getLabel();
+			String[] locusResult = AnnotationParser.getInfo(token,
+					AnnotationParser.LOCUSLINK);
+			String locus = "";
+			if ((locusResult != null)
+					&& (!locusResult[0].trim().equals(""))) {
+				locus = locusResult[0].trim();
+			}
+			if (locus.compareTo("") != 0) {
+				try {
+					marker.setGeneId(Integer.parseInt(locus));
+				} catch (NumberFormatException e) {
+					log.info("Couldn't parse locus id: " + locus);
+				}
+			}
+			String[] geneNames = AnnotationParser.getInfo(token,
+					AnnotationParser.ABREV);
+			if (geneNames != null) {
+				marker.setGeneName(geneNames[0]);
+			}
+
+			marker.getUnigene().set(token);
+		}
 
 		return maSet;
 	}
