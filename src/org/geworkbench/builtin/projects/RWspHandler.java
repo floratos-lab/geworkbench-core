@@ -113,7 +113,7 @@ public class RWspHandler {
 				if (username.trim().equals("")) {
 					userInfo = "";
 				} else {
-					userInfo = username + USER_INFO_DELIMIETER + new String(RegPanel.getEncodedChars(passwordField.getPassword()));
+					userInfo = username + USER_INFO_DELIMIETER + RegPanel.getEncodedChars(passwordField.getPassword());
 					savedUserInfo = username + USER_INFO_DELIMIETER + passwd;
 				}
 				loginDialog.dispose();
