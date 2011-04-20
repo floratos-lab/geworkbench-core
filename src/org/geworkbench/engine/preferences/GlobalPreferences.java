@@ -38,7 +38,7 @@ public class GlobalPreferences {
     public static final String[] MARKER_LOAD_VALUES = new String[]{"Load markers in the original order", "Load markers ordered by gene name", "Load markers ordered by probe set ID"};
     public static final int ORIGINAL = 0, SORTED_GENE = 1, SORTED_PROBE = 2;
 
-    public static final String DEFAULT_RWSP_URL = "http://afdev.c2b2.columbia.edu:8081/axis2/services";
+    public static final String DEFAULT_RWSP_URL = "http://genspace.cs.columbia.edu:8080/axis2/services";
 
     private static GlobalPreferences instance;
 
