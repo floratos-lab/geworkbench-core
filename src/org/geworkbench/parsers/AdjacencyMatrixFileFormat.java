@@ -12,6 +12,8 @@ import javax.swing.filechooser.FileFilter;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.geworkbench.bison.datastructure.biocollections.AdjacencyMatrix;
+import org.geworkbench.bison.datastructure.biocollections.AdjacencyMatrixDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
@@ -20,15 +22,13 @@ import org.geworkbench.bison.parsers.resources.Resource;
 import org.geworkbench.builtin.projects.DataSetNode;
 import org.geworkbench.builtin.projects.ProjectNode;
 import org.geworkbench.builtin.projects.ProjectTreeNode;
-import org.geworkbench.util.pathwaydecoder.mutualinformation.AdjacencyMatrix;
-import org.geworkbench.util.pathwaydecoder.mutualinformation.AdjacencyMatrixDataSet;
 
 /**
  * Handles parsing of ARACNe adjacency matrix .txt files.
  * based on AffyFileFormat
  *
  * @author os2201
- * @version $Id: $
+ * @version $Id$
  *
  */
 public class AdjacencyMatrixFileFormat extends DataSetFileFormat {

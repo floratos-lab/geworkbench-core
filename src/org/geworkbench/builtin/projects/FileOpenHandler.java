@@ -35,7 +35,7 @@ import org.geworkbench.parsers.AdjacencyMatrixFileFormat;
 import org.geworkbench.parsers.DataSetFileFormat;
 import org.geworkbench.parsers.FileFormat;
 import org.geworkbench.parsers.InputFileFormatException;
-import org.geworkbench.util.pathwaydecoder.mutualinformation.AdjacencyMatrixDataSet;
+import org.geworkbench.bison.datastructure.biocollections.AdjacencyMatrixDataSet;
 
 /**
  * This class is refactored out of ProjectPanel to handle the file open action,
