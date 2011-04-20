@@ -198,6 +198,36 @@ public class AdjacencyMatrix implements Serializable {
 
 		edgeNumber++;
 	}
+	
+	// this variation is used only by ARACNE
+	// the new edge is added only if the edge is larger
+	public void add(Node node1, Node node2, float edge) {
+
+		HashMap<Node, EdgeInfo> row = geneRows.get(node1);
+		if (row == null) {
+			row = new HashMap<Node, EdgeInfo>();
+			geneRows.put(node1, row);
+			nodeNumber++;
+		}
+		EdgeInfo existingEdge = row.get(node2);
+		if(existingEdge==null || existingEdge.value<edge) {
+			row.put(node2, new EdgeInfo(edge, null));
+		}
+
+		// doing it both ways; [gene2 -> (gene1, edge)]
+		row = geneRows.get(node2);
+		if (row == null) {
+			row = new HashMap<Node, EdgeInfo>();
+			geneRows.put(node2, row);
+			nodeNumber++;
+		}
+		existingEdge = row.get(node1);
+		if(existingEdge==null || existingEdge.value<edge) {
+			row.put(node1, new EdgeInfo(edge, null));
+		}
+
+		edgeNumber++;
+	}
 
 	// this method is not needed any more
 	// public int getMappedId(int geneId)
