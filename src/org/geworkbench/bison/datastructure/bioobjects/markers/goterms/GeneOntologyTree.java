@@ -409,7 +409,8 @@ public class GeneOntologyTree {
 		}
 	}
 	
-	private final static String OBO_FILENAME = "gene_ontology.1_2.obo";
+	// file for the updated version retrieved remotely
+	public final static String OBO_FILENAME = "gene_ontology.1_2.obo";
 
 	/**
 	 * Read ontology file from remote URL
