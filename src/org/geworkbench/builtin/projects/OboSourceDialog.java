@@ -105,6 +105,7 @@ public class OboSourceDialog extends JDialog {
 
 					@Override
 					public boolean accept(File f) {
+						if(f.isDirectory())return true;
 						if(f.getName().toLowerCase().endsWith(".obo")) return true;
 						else return false;
 					}
