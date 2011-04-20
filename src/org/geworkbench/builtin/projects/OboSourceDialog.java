@@ -6,6 +6,7 @@ package org.geworkbench.builtin.projects;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -16,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.filechooser.FileFilter;
 
 import org.geworkbench.builtin.projects.OboSourcePreference.Source;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
@@ -99,6 +101,20 @@ public class OboSourceDialog extends JDialog {
 				if(location==null || location.trim().length()==0)
 					location = OboSourcePreference.DEFAULT_LOCAL_LOCATION;
                 JFileChooser chooser = new JFileChooser(location);
+                chooser.setFileFilter(new FileFilter() {
+
+					@Override
+					public boolean accept(File f) {
+						if(f.getName().toLowerCase().endsWith(".obo")) return true;
+						else return false;
+					}
+
+					@Override
+					public String getDescription() {
+						return "obo file (*.obo)";
+					}
+                	
+                });
                 int returnVal = chooser.showOpenDialog(OboSourceDialog.this);
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
                     sourceLocation.setText(chooser.getSelectedFile().getPath());
