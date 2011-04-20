@@ -79,10 +79,14 @@ public class AdjacencyMatrix implements Serializable {
 			if (node.type == NodeType.MARKER && this.type == NodeType.MARKER
 					&& node.marker.equals(this.marker)) {
 				return true;
-			} else if (node.type == this.type
-					&& node.stringId.equals(this.stringId))
-				return true;
-			else
+			} else if (node.type == this.type) {
+				if(node.stringId==null || this.stringId==null)
+					return false;
+				else if(node.stringId.equals(this.stringId))
+					return true;
+				else
+					return false;
+			} else
 				return false;
 		}
 	}
