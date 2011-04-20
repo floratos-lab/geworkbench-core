@@ -1,18 +1,23 @@
 package org.geworkbench.bison.datastructure.bioobjects.markers.goterms;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import org.apache.commons.collections15.map.ListOrderedMap;
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
@@ -201,10 +206,10 @@ public class GeneOntologyTree {
 		}
 	}
 
-	private void parseOBOFile(BufferedReader in) throws Exception {
+	private void parseOBOFile(BufferedReader in) throws IOException {
 		String header = in.readLine();
 		if (!FILE_HEADER1_0.equals(header) && !FILE_HEADER1_2.equals(header)) {
-			throw new Exception("This is not a version 1.0 or 1.2 OBO file.");
+			throw new IOException("This is not a version 1.0 or 1.2 OBO file.");
 		}
 		String line = in.readLine();
 		if(line.startsWith("data-version:")) {
@@ -441,15 +446,42 @@ public class GeneOntologyTree {
 				log.warn("error in reading remote obo from "+url);
 			}
 		} catch (HttpException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			handleRemoteException(e);
 		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			handleRemoteException(e);
 		} finally {
 			method.releaseConnection();
 		}
 		long time1 = System.currentTimeMillis();
 		log.info("Time taken to update OBO file: "+(time1-time0)+" milliseconds");
+	}
+	
+	private void handleRemoteException(final Exception e) {
+		try {
+			SwingUtilities.invokeAndWait(new Runnable() {
+
+				@Override
+				public void run() {
+					JOptionPane.showMessageDialog(null,
+						    "Remote obo file was not loaded succesfully due to "+e.getMessage()
+						    +"\nLocal copy is loaded instead.",
+						    "Obo file warning",
+						    JOptionPane.WARNING_MESSAGE);
+				}
+				
+			});
+			BufferedReader in = new BufferedReader(new FileReader(OboSourcePreference.DEFAULT_OBO_FILE));
+			parseOBOFile(in);
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		} catch (InvocationTargetException e1) {
+			e1.printStackTrace();
+		} catch (FileNotFoundException e1) {
+			e.printStackTrace();
+		} catch (IOException e1) {
+			e.printStackTrace();
+		}
 	}
 }
