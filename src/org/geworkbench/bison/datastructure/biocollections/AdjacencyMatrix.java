@@ -43,7 +43,9 @@ public class AdjacencyMatrix implements Serializable {
 	};
 
 	// integer Id is not not used for now.
-	public static class Node {
+	public static class Node implements Serializable {
+		private static final long serialVersionUID = -6472302414584701593L;
+		
 		public NodeType type;
 		public DSGeneMarker marker;
 		public String stringId;
