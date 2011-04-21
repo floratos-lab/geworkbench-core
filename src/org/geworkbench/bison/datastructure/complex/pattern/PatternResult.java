@@ -177,12 +177,10 @@ public class PatternResult extends CSAncillaryDataSet<DSSequence> implements
 		return 0;
 	}
 
-	@Override
 	public File getDataSetFile() {
 		return dataSetFile;
 	}
 
-	@Override
 	public void setDataSetFile(File _file) {
 		dataSetFile = _file;
 	}
