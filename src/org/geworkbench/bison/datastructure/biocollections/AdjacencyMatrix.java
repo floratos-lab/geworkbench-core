@@ -89,6 +89,16 @@ public class AdjacencyMatrix implements Serializable {
 			} else
 				return false;
 		}
+		
+		@Override
+		public int hashCode() {
+			int h = 17;
+			if(type!=null) h = 31*h + type.hashCode();
+			if(marker!=null) h = 31*h + marker.hashCode();
+			if(stringId!=null) h = 31*h + stringId.hashCode();
+			h = 31*h + intId;
+			return h;
+		}
 	}
 
 	private HashMap<Node, HashMap<Node, EdgeInfo>> geneRows = new HashMap<Node, HashMap<Node, EdgeInfo>>();
