@@ -721,11 +721,14 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				} else{
 					annotationFileNameString = "Loaded annotation file:  None" + "\n";
 				}
+				
+				String oboInfo = "obo file location: "+ OboSourcePreference.getInstance().getSourceLocation() + "\n";
 
 				String setName = _dataSet.getDataSetName();
 				String dataSetString = "Data file:  " + setName + "\n" ;
 
-				String datasetHistory = dataSetString + annotationFileNameString + "_____________________" + "\n";
+				String datasetHistory = dataSetString + annotationFileNameString + oboInfo 
+					+ "_____________________" + "\n";
 				ProjectPanel.addToHistory(_dataSet, datasetHistory);
 			}
 			publishHistoryEvent(event);
