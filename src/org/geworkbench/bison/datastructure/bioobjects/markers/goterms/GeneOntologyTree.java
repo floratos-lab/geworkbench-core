@@ -463,7 +463,6 @@ public class GeneOntologyTree {
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 
-				@Override
 				public void run() {
 					JOptionPane.showMessageDialog(null,
 						    "Remote obo file was not loaded succesfully due to connection problem:\n>> "+e.getMessage()
