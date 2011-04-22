@@ -57,6 +57,7 @@ import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.APSerializable;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
+import org.geworkbench.bison.datastructure.bioobjects.markers.goterms.GeneOntologyTree;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSTTestResultSet;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.structure.DSProteinStructure;
@@ -722,7 +723,14 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 					annotationFileNameString = "Loaded annotation file:  None" + "\n";
 				}
 				
-				String oboInfo = "obo file location: "+ OboSourcePreference.getInstance().getSourceLocation() + "\n";
+				String oboInfo = "obo file location: "
+						+ OboSourcePreference.getInstance().getSourceLocation()
+						+ "\n";
+				GeneOntologyTree g = GeneOntologyTree.getInstance();
+				if (g != null) {
+					oboInfo += "obo version " + g.getVersion() + "; obo date "
+							+ g.getDate() + "\n";
+				}
 
 				String setName = _dataSet.getDataSetName();
 				String dataSetString = "Data file:  " + setName + "\n" ;

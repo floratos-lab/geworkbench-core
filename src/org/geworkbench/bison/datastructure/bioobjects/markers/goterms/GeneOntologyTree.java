@@ -484,4 +484,12 @@ public class GeneOntologyTree {
 			e.printStackTrace();
 		}
 	}
+
+	public String getVersion() {
+		return dataVersion;
+	}
+
+	public String getDate() {
+		return date;
+	}
 }
