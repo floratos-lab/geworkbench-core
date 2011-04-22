@@ -44,6 +44,16 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet<DSMicroarray> {
         this.networkName = networkName;
     }
 
+	private static String getExportName(AdjacencyMatrix.Node node) {
+        if (node.type == NodeType.MARKER) {
+        	return node.marker.getLabel();
+        } else if (node.type == NodeType.STRING) {
+        	return node.stringId;
+        } else {
+        	return "unknown";
+        }
+	}
+	
     public void writeToFile(String fileName) {
         File file = new File(fileName);
 
@@ -57,16 +67,10 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet<DSMicroarray> {
 
             // if entry key is less than 0, for CNKB component, it means the gene is in currently selected microarray.
             for (AdjacencyMatrix.Node node1 : matrix.getNodes()) {
-                String geneName = "unknown";
-                if (node1.type == NodeType.MARKER)
-                	geneName = node1.marker.getLabel();
-                writer.write(geneName + "\t");
+                writer.write(getExportName(node1) + "\t");
 
                 for (AdjacencyMatrix.Edge edge : matrix.getEdges(node1)) {
-                    String geneName2 = "unknown";
-                    if (edge.node2.type == NodeType.MARKER)
-                    	geneName2 = edge.node2.marker.getLabel();
-                    writer.write(geneName2 + "\t" + edge.info.value + "\t");
+                    writer.write(getExportName(edge.node2) + "\t" + edge.info.value + "\t");
                 }
                 writer.write("\n");
             }
