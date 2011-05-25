@@ -20,7 +20,7 @@
 	
     <mapID target="delete.dataset" url="Delete Dataset.HTML"/>
 
-    <mapID target="Preference" url="Preferences.HTML"/>
+    <mapID target="Preference" url="preferences.HTML"/>
 
     <mapID target="remote.data" url="remote.HTML"/>
 	

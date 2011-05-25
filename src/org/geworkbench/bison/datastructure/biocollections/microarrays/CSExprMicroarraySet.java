@@ -282,7 +282,7 @@ public class CSExprMicroarraySet extends CSMicroarraySet<DSMicroarray> implement
 
                         String[] geneNames = AnnotationParser.getInfo(token, AnnotationParser.ABREV);
                         if (geneNames != null) {
-                            markerVector.get(currGeneId).setGeneName(geneNames[0]);
+                            markerVector.get(currGeneId).setGeneName(geneNames[0].trim());
                         }
                     } catch (Exception e) {
                         System.out.println("error parsing " + token);

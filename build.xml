@@ -50,26 +50,10 @@
 		</condition>
 	</target>
 	<target name="classpath.32" depends="init" if="32bit">
-		<path id="classpath">
-			<fileset dir="${lib}">
-				<include name="**/*.jar" />
-			</fileset>
-		</path>
 		<property name="Dlib" value="${lib}" />
 		<echo message="32bit: ${32bit}" />
 	</target>
 	<target name="classpath.64" depends="init" if="64bit">
-		<path id="classpath">
-			<fileset dir="${lib}">
-				<include name="**/*.jar" />
-				<exclude name="**/j3dcore.jar" />
-				<exclude name="**/j3dutils.jar" />
-				<exclude name="**/vecmath.jar" />
-			</fileset>
-			<fileset dir="${lib64}">
-				<include name="**/*.jar" />
-			</fileset>
-		</path>
 		<property name="Dlib" value="${lib64};${lib}" />
 		<echo message="64bit: ${64bit}" />
 	</target>
@@ -78,6 +62,11 @@
 	<!-- ===================================================================== -->
 	<target name="prepare" depends="init, classpath.32, classpath.64" description="Prepares for compilation.">
 		<mkdir dir="${classes}" />
+		<path id="classpath">
+			<fileset dir="${lib}">
+				<include name="**/*.jar" />
+			</fileset>
+		</path>
 		<!-- Classpath for running -->
 		<path id="run.classpath">
 			<pathelement location="${classes}" />
@@ -347,6 +336,7 @@
 	<target name="run-prod" depends="compile" description="Runs geWorkbench.">
 		<java fork="true" classname="org.geworkbench.engine.config.UILauncher">
 			<jvmarg value="-Xmx640M" />
+			<jvmarg value="-XX:MaxPermSize=128m" />
 			<jvmarg value="-Djava.library.path=lib" />
 			<arg value="all.xml" />
 			<classpath refid="run.classpath" />
@@ -525,7 +515,7 @@
 	<!-- ====================================================================== -->
 	<target name="createDist" depends="compile, jar" description="Creating a new folder for depositing...">
 		<java classname="org.geworkbench.components.versioninfo.VersionInfoDialog" failonerror="true" >
-			<arg value="2.1.0"/>
+			<arg value="2.2.0"/>
 			<arg value="./components/versioninfo/classes/org/geworkbench/components/versioninfo/" />
 			<classpath>
 				<path refid="classpath" />
@@ -604,7 +594,7 @@
 				<include name="${lib}/**/*" />
 				<include name="${lib64}/**/*" />
 				<include name="geWorkbenchLicense.txt" />
-				<include name="ReleaseNotes_2.1.0.txt" />
+				<include name="ReleaseNotes_2.2.0.txt" />
 				<include name="welcometext.html" />
 				<include name="java.policy" />
 
@@ -634,6 +624,7 @@
 				<include name="unmarshaller-xml-mapping.xml" />
 				<include name="application-config-client.xml" />
 				<include name="jdic.properties" />
+				<include name="log4j.properties" />
 			</fileset>
 		</copy>
 		<copy file="build_runDirect.xml" tofile="${cleanFolder}/build.xml" />

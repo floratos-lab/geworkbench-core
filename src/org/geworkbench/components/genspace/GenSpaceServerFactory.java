@@ -9,9 +9,12 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.Semaphore;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 
 
 import org.apache.log4j.Logger;
@@ -41,43 +44,60 @@ public class GenSpaceServerFactory {
 	private static PublicFacadeRemote publicFacade;
 	private static WorkflowRepositoryRemote workflowFacade;
 	private static InitialContext ctx;
-
+	private static Object lock = new Object();
 	
-	private synchronized static Object getRemote(String remoteName)
+	public static void handleExecutionException()
 	{
-		if(Thread.currentThread().getName().contains("AWT-EventQueue"))
+		GenSpaceServerFactory.clearCache();
+		JOptionPane.showMessageDialog(null, "There was an error communicating with the genSpace server.\n Please try your request again", "Error communicating with server", JOptionPane.ERROR_MESSAGE);
+	}
+	public static void clearCache()
+	{
+		userFacade = null;
+		usageFacade = null;
+		friendFacade = null;
+		networkFacade = null;
+		publicFacade = null;
+		workflowFacade = null;	
+	}
+	private static Object getRemote(String remoteName)
+	{
+		synchronized(lock)
 		{
-			throw new IllegalThreadStateException("You may not attempt to access the remote server from an AWT/Swing worker thread");
-		}	
-		try {
-			Properties props = new Properties();
-			props.setProperty("org.omg.CORBA.ORBInitialHost", RuntimeEnvironmentSettings.SERVER);
-//			props.setProperty("com.sun.corba.ee.encoding.ORBEnableJavaSerialization","true");
-//			props.setProperty("com.sun.CORBA.encoding.ORBEnableJavaSerialization", "true");
-			props.setProperty("org.omg.CORBA.ORBInitialPort", "3700");
-//			props.setProperty("com.sun.CORBA.giop.ORBFragmentSize","1024000");
-//			props.setProperty("com.sun.CORBA.giop.ORBBufferSize","1024000");
-//			props("com.sun.corba.ee.transport.ORBMaximumReadByteBufferSize", "3000000");
-			props.setProperty("java.naming.factory.initial", "com.sun.enterprise.naming.SerialInitContextFactory");
-			props.setProperty("java.naming.factory.url.pkgs", "com.sun.enterprise.naming");
-			props.setProperty("java.naming.factory.state", "com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl");
-			if(ctx == null)
+			if(Thread.currentThread().getName().contains("AWT-EventQueue"))
 			{
-				ctx = new InitialContext(props);
-			}
-			if(RuntimeEnvironmentSettings.tools == null)
-			{
-				RuntimeEnvironmentSettings.tools = new HashMap<Integer, Tool>();
-				for(Tool t : ((PublicFacadeRemote) ctx.lookup("org.geworkbench.components.genspace.server.PublicFacadeRemote")).getAllTools())
+				throw new IllegalThreadStateException("You may not attempt to access the remote server from an AWT/Swing worker thread");
+			}	
+			try {
+				Properties props = new Properties();
+				props.setProperty("org.omg.CORBA.ORBInitialHost", RuntimeEnvironmentSettings.SERVER);
+//				props.setProperty("com.sun.corba.ee.encoding.ORBEnableJavaSerialization","true");
+//				props.setProperty("com.sun.CORBA.encoding.ORBEnableJavaSerialization", "true");
+				props.setProperty("org.omg.CORBA.ORBInitialPort", "3700");
+	//			props.setProperty("com.sun.CORBA.giop.ORBFragmentSize","1024000");
+				props.setProperty("com.sun.CORBA.giop.ORBBufferSize","1024000");
+	//			props("com.sun.corba.ee.transport.ORBMaximumReadByteBufferSize", "3000000");
+				props.setProperty("java.naming.factory.initial", "com.sun.enterprise.naming.SerialInitContextFactory");
+				props.setProperty("java.naming.factory.url.pkgs", "com.sun.enterprise.naming");
+				props.setProperty("java.naming.factory.state", "com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl");
+				if(ctx == null)
 				{
-					RuntimeEnvironmentSettings.tools.put(t.getId(), t);
+					ctx = new InitialContext(props);
 				}
+				if(RuntimeEnvironmentSettings.tools == null)
+				{
+					RuntimeEnvironmentSettings.tools = new HashMap<Integer, Tool>();
+					for(Tool t : ((PublicFacadeRemote) ctx.lookup("org.geworkbench.components.genspace.server.PublicFacadeRemote")).getAllTools())
+					{
+						RuntimeEnvironmentSettings.tools.put(t.getId(), t);
+					}
+				}
+				return ctx.lookup("org.geworkbench.components.genspace.server."+remoteName+"Remote");
+			} catch (NamingException e) {
+//				logger.fatal("Unable find remote object for " + remoteName);
 			}
-			return ctx.lookup("org.geworkbench.components.genspace.server."+remoteName+"Remote");
-		} catch (NamingException e) {
-			logger.fatal("Unable find remote object for " + remoteName,e);
+			return null;
 		}
-		return null;
 	}
 	public synchronized static WorkflowRepositoryRemote getWorkflowOps()
 	{
@@ -161,15 +181,24 @@ public class GenSpaceServerFactory {
 	static ProgrammaticLogin pm = new ProgrammaticLogin();
 	@SuppressWarnings("deprecation")
 	public static boolean userLogin(String username, String password) {
-		
-		System.setProperty("java.security.auth.login.config", "components/genspace/src/org/geworkbench/components/genspace/login.conf");
-		try {
-			pm.login(username, password,"GELogin",true);
-			user = getUserOps().getMe();
-		} catch (Exception e) {
-			return false;
+		synchronized(lock)
+		{
+			System.setProperty("java.security.auth.login.config", "components/genspace/classes/org/geworkbench/components/genspace/login.conf");
+			try {
+				if(pm.login(username, password,"GELogin",true))
+					user = getUserOps().getMe();
+				else
+					return false;
+			} 
+			catch (SecurityException e)
+			{
+				return false;
+			}
+			catch (Exception e) {
+				return false;
+			}
+			return true;
 		}
-		return true;
 	
 	}
 	public static void updateCachedUser()
@@ -199,15 +228,14 @@ public class GenSpaceServerFactory {
 	public static void logout() {
 		try {
 			pm.logout(true);
-			userFacade = null;
-			usageFacade = null;
-			friendFacade = null;
-			networkFacade = null;
-			publicFacade = null;
-			workflowFacade = null;
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
+		userFacade = null;
+		usageFacade = null;
+		friendFacade = null;
+		networkFacade = null;
+		publicFacade = null;
+		workflowFacade = null;
 		user = null;
 	}
 

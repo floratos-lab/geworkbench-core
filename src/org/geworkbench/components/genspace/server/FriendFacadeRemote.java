@@ -41,7 +41,10 @@ public interface FriendFacadeRemote {
 	 * Get the list of all users who are friends with the logged in user
 	 * @return List of users
 	 */
-	public List<User> getFriendsProfiles();
+	public List<User> getFriends();
+
+	public byte[] getFriendsBytes();
+
 	
 	/**
 	 * Defriend a user
@@ -49,7 +52,4 @@ public interface FriendFacadeRemote {
 	 */
 	public void removeFriend(int u);
 
-	public List<User> getFriends();
-
-	public byte[] getFriendsBytes();
 }

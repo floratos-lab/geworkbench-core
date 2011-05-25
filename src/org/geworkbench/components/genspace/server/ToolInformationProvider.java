@@ -22,6 +22,8 @@ public interface ToolInformationProvider {
 	 */
 	public List<Workflow> getWorkflowsByPopularity();
 
+	public byte[] getWorkflowsByPopularityBytes();
+
 	/**
 	 * Get the most popular tools for starting new workflows
 	 * @return

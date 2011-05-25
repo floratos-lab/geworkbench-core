@@ -4,13 +4,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -61,6 +61,8 @@ public class Workflow implements Serializable {
 	public void setCreatedAt(java.util.Date createdAt) {
 		this.createdAt = createdAt;
 	}
+	
+	@OneToOne(fetch=FetchType.LAZY)
 	public Transaction getCreationTransaction() {
 		return creationTransaction;
 	}
@@ -68,7 +70,7 @@ public class Workflow implements Serializable {
 		this.creationTransaction = creationTransaction;
 	}
 
-	@OneToMany(mappedBy="workflow", cascade=CascadeType.PERSIST, fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="workflow")
 	@OrderBy("order ASC")
 	public List<WorkflowTool> getTools() {
 		return tools;
@@ -77,14 +79,14 @@ public class Workflow implements Serializable {
 		this.tools = tools;
 	}
 	
-	@OneToMany(mappedBy="parent",fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="parent")
 	public List<Workflow> getChildren() {
 		return children;
 	}
 	public void setChildren(List<Workflow> children) {
 		this.children = children;
 	}
-	@OneToMany(mappedBy="workflow", fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="workflow")
 	public List<WorkflowComment> getComments() {
 		return comments;
 	}
@@ -92,7 +94,7 @@ public class Workflow implements Serializable {
 		this.comments = comments;
 	}
 	
-	@OneToMany(mappedBy="workflow", fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="workflow")
 	public List<WorkflowRating> getRatings() {
 		return ratings;
 	}
@@ -105,7 +107,7 @@ public class Workflow implements Serializable {
 	public void setUsageCount(int usageCount) {
 		this.usageCount = usageCount;
 	}
-
+	@Transient
 	public double getAvgRating() {
 		double result = 0;
 		if (ratings.size() > 0) {
@@ -129,6 +131,7 @@ public class Workflow implements Serializable {
 		return r;
 	}
 	
+	@OneToOne(fetch=FetchType.LAZY)
 	public Workflow getParent() {
 		return parent;
 	}
@@ -148,6 +151,7 @@ public class Workflow implements Serializable {
 		this.sumRating = sumRating;
 	}
 	
+	@Transient
 	public void updateRatingsCache()
 	{
 		//TODO make this called automatically
@@ -161,21 +165,24 @@ public class Workflow implements Serializable {
 		setNumRating(numRating);
 		setSumRating(totalRating);
 	}
+	@Transient
 	public Tool getLastTool()
 	{
 		return this.getTools().get(this.getTools().size() -1).getTool();
 	}
+	@Transient
 	public String getLastToolName()
 	{
 		return this.getLastTool().getName();
 	}
+	@Transient
 	public double getOverallRating() {
 		if(getNumRating() == 0)
 			return 0;
 		else
 			return (double) getSumRating() / (double) getNumRating();
 	}
-	
+	@Transient
 	public void loadToolsFromCache()
 	{
 		if(getToolIds() != null && RuntimeEnvironmentSettings.tools != null)
@@ -203,7 +210,7 @@ public class Workflow implements Serializable {
 		this.toolIds = toolIds;
 	}
 
-	private int cachedParentId;
+	private int cachedParentId = -1;
 	@Transient
 	public int getCachedParentId() {
 		return cachedParentId;
@@ -220,7 +227,32 @@ public class Workflow implements Serializable {
 	public void setCachedChildrenCount(int cachedChildrenCount) {
 		this.cachedChildrenCount = cachedChildrenCount;
 	}
+	@Transient
 	public Workflow slimDown()
+	{
+		Workflow w = new Workflow();
+		w.setId(this.getId());
+		w.setRatings(this.getRatings());
+		int[] temp = new int[getTools().size()];
+    	for(WorkflowTool t : getTools())
+    	{
+    		temp[t.getOrder()-1] = t.getTool().getId();
+    	}
+    	getRatings().size();
+    	w.setRatings(getRatings());
+		w.setToolIds(temp);
+		w.setComments(getComments());
+		w.setUsageCount(getUsageCount());
+		w.setNumRating(getNumRating());
+		w.setSumRating(getSumRating());
+		w.setCreator(getCreator());
+		if(getCachedParentId() < 0 && getParent() != null)
+			w.setCachedParentId(getParent().getId());
+		return w;
+	}
+	
+	@Transient
+	public Workflow slimDownTiny()
 	{
 		Workflow w = new Workflow();
 		w.setId(this.getId());
@@ -234,10 +266,8 @@ public class Workflow implements Serializable {
 		w.setUsageCount(getUsageCount());
 		w.setNumRating(getNumRating());
 		w.setSumRating(getSumRating());
-		w.setCachedChildrenCount(getChildren().size());
-		if(getParent() != null)
+		if(getCachedParentId() < 0 && getParent() != null)
 			w.setCachedParentId(getParent().getId());
 		return w;
 	}
-	
 }

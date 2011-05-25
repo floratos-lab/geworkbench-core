@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
+import javax.persistence.Transient;
 
 
 @Entity
@@ -125,6 +126,7 @@ public class Tool implements Serializable {
 		return getName();
 	}
 	
+	@Transient
 	public void updateRatingCache()
 	{
 		//TODO make this called automatically on save of ratings?
@@ -138,13 +140,14 @@ public class Tool implements Serializable {
 		setNumRating(numRating);
 		setSumRating(totalRating);
 	}
-	
+	@Transient
 	public double getOverallRating() {
 		if(getNumRating() == 0)
 			return 0;
 		else
 			return (double) getSumRating() / (double) getNumRating();
 	}
+	@Transient
 	public void incrementUsageCount() {
 		setUsageCount(getUsageCount() + 1);
 	}

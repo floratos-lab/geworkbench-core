@@ -57,18 +57,27 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 		this.dSGeneMarker = dSGeneMarker;
 		smallestIncrement = defaultSmallestIncrement;
 		isDirty = true;
-		goInfoStr = "";
+		if(GeneOntologyTree.getInstance()==null) {
+			geneType = "pending";
+			goInfoStr = "pending";
+		} else {
+			setGoInfoStr();
+			geneType = GeneOntologyUtil.checkMarkerFunctions(dSGeneMarker);
+		}
+
+		reset();		 
+
+	}
+
+	private void setGoInfoStr() {
 		Set<GOTerm> set = getAllGOTerms(dSGeneMarker);
 
+		goInfoStr = ""; 
 		if (set != null && set.size() > 0) {
 			for (GOTerm goTerm : set) {
 				goInfoStr += goTerm.getName() + "; ";
 			}
 		}
-		geneType = GeneOntologyUtil.checkMarkerFunctions(dSGeneMarker);
-
-		reset();		 
-
 	}
 
 	private static Set<GOTerm> getAllGOTerms(DSGeneMarker dsGeneMarker) {
@@ -363,6 +372,11 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 	}
 
 	public String getGoInfoStr() {
+		if(!goInfoStr.equals("pending") || GeneOntologyTree.getInstance()==null)
+			return goInfoStr;
+		
+		setGoInfoStr();
+
 		return goInfoStr;
 	}
 
@@ -371,6 +385,11 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 	}
 
 	public String getGeneType() {
+		if(!geneType.equals("pending") || GeneOntologyTree.getInstance()==null)
+			return geneType;
+		
+		geneType = GeneOntologyUtil.checkMarkerFunctions(dSGeneMarker);
+
 		return geneType;
 	}
 

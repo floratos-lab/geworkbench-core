@@ -521,7 +521,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 		merge = parent.isMerge();
 		TreePath[] paths = remoteFileTree.getSelectionPaths();
 		CaArray2Experiment exp = null;
-		if (paths.length > 0) {
+		if (paths.length > 0 && paths[0].getPath().length > 1) {
 			currentSelectedExperimentName = (String) ((DefaultMutableTreeNode) paths[0]
 					.getPath()[1]).getUserObject();
 			exp = treeMap.get(currentSelectedExperimentName);

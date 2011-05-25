@@ -31,26 +31,10 @@
 
 	</target>
 	<target name="classpath.32" depends="init" if="32bit">
-		<path id="classpath">
-			<fileset dir="${lib}">
-				<include name="**/*.jar" />
-			</fileset>
-		</path>
 		<property name="Dlib" value="${lib}" />
 		<echo message="32bit: ${32bit}" />
 	</target>
 	<target name="classpath.64" depends="init" if="64bit">
-		<path id="classpath">
-			<fileset dir="${lib}">
-				<include name="**/*.jar" />
-				<exclude name="**/j3dcore.jar" />
-				<exclude name="**/j3dutils.jar" />
-				<exclude name="**/vecmath.jar" />
-			</fileset>
-			<fileset dir="${lib64}">
-				<include name="**/*.jar" />
-			</fileset>
-		</path>
 		<property name="Dlib" value="${lib64};${lib}" />
 		<echo message="64bit: ${64bit}" />
 	</target>
@@ -59,6 +43,11 @@
 	<!-- ===================================================================== -->
 	<target name="prepare" depends="init, classpath.32, classpath.64" description="Prepares for compilation.">
 		<mkdir dir="${classes}"/>
+		<path id="classpath">
+			<fileset dir="${lib}">
+				<include name="**/*.jar" />
+			</fileset>
+		</path>
 		<!-- Classpath for running -->
 		<path id="run.classpath">
 			<!-- pathelement location="${classes}"/ -->
@@ -73,6 +62,11 @@
 			<pathelement location="."/>
 			<path refid="classpath"/>
 		</path>
+		<!-- BootClasspath for running jdic on mac -->
+		<path id="bootclasspath">
+			<pathelement path="/Library/Java/Home/lib/plugin.jar:/Library/Java/Home/lib/deploy.jar"/>
+		</path>
+		<property name="bootclasspath" refid="bootclasspath"/>
 	</target>
 	<!-- ====================================================================== -->
 	<!-- RUN PRODUCTION-->
@@ -80,7 +74,9 @@
 	<target name="run" depends="prepare" description="Runs geWorkbench.">
 		<java fork="true" classname="org.geworkbench.engine.config.UILauncher">
 			<jvmarg value="-Xmx1024M"/>
+			<jvmarg value="-XX:MaxPermSize=128m" />
 			<jvmarg value="-Djava.library.path=${Dlib}"/>
+			<jvmarg value="-Xbootclasspath/p:${bootclasspath}" />
 			<arg value="all.xml"/>
 			<classpath refid="run.classpath"/>
 		</java>

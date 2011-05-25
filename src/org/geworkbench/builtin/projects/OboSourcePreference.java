@@ -74,7 +74,7 @@ public class OboSourcePreference {
 
 		// Load stored values
 		PreferencesManager manager = PreferencesManager.getPreferencesManager();
-		manager.fillPreferences(null, prefs);
+		manager.fillPreferences(this.getClass(), prefs);
 	}
 
 	static public OboSourcePreference getInstance() {
@@ -83,6 +83,6 @@ public class OboSourcePreference {
 
 	public void save() {
 		PreferencesManager manager = PreferencesManager.getPreferencesManager();
-		manager.savePreferences(null, prefs);
+		manager.savePreferences(this.getClass(), prefs);
 	}
 }

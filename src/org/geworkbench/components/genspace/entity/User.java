@@ -354,13 +354,14 @@ public class User implements Serializable, Comparable<User>{
 		        }
 		        return sb.toString();	
 	}
+	@Transient
 	public String getFullName() {
 		return this.getFirstName() + " " + this.getLastName();
 	}
+	@Transient
 	public Friend isFriendsWith(User u) {
 		for(Friend f: getFriends())
 		{
-			System.out.println("Looking to see if " + f.getRightUser()+ " = " + u.toString());
 			if(f.getRightUser().equals(u))
 			{
 				setFriends(true);
@@ -370,6 +371,7 @@ public class User implements Serializable, Comparable<User>{
 		setFriends(false);
 		return null;
 	}
+	@Transient
 	public UserNetwork isInNetwork(Network n) {
 		for(UserNetwork un : getNetworks())
 		{
@@ -378,9 +380,10 @@ public class User implements Serializable, Comparable<User>{
 		}
 		return null;
 	}
+	@Transient
 	private boolean isVisibleTo(User other)
 	{
-		Friend f = other.isFriendsWith(this);
+		Friend f = isFriendsWith(other);
 		if(f != null && f.isVisible())
 		{
 			return true;
@@ -397,13 +400,23 @@ public class User implements Serializable, Comparable<User>{
 		}
 		return false;
 	}
+	@Transient
 	private String na(String s)
 	{
-		return (s == null ? "N/A" : s);
+		return (s == null || s.length() == 0 ? "N/A" : s);
 	}
+	@Transient
+	public String getFullNameWUsername()
+	{
+		if(getFirstName().length() == 0 && getLastName().length() ==0)
+			return getUsername();
+		else
+			return getFirstName() + " "
+			+ getLastName() + " (" + getUsername() + ")";
+	}
+	
 	public String toHTML() {
-		String r = "<html><body><b>" + getFirstName() + " "
-		+ getLastName() + " (" + getUsername() + ")</b><br>";
+		String r = "<html><body><b>" +getFullNameWUsername() + "</b><br>";
 		if (GenSpaceServerFactory.isVisible(this)) {
 			r += "<i>"
 					+ (getWorkTitle() != null
@@ -414,9 +427,10 @@ public class User implements Serializable, Comparable<User>{
 			r += "<b>Contact information:</b><br /><br>Phone: "
 					+ na(getPhone()) + "<br>Email: "
 					+ na(getEmail()) + "<br><br>Mailing Address:<br>"
-					+ na(getAddr1()) + "<br>" + na(getAddr2())
+					+ (getAddr1().length() == 0 && getAddr2().length() == 00 && getCity().length() == 0 && getState().length() == 0 && getZipcode().length() == 0 ? "not provided" : 
+						 na(getAddr1()) + "<br>" + na(getAddr2())
 					+ "<br>" + na(getCity()) + ", "
-					+ na(getState()) + ", " + na(getZipcode());
+					+ na(getState()) + ", " + na(getZipcode()));
 		} else {
 			r += "This user is not visible to you. Please add them as a friend or join one of their networks to see their profile.";
 		}
@@ -424,17 +438,20 @@ public class User implements Serializable, Comparable<User>{
 		r += "</html>";
 		return r;
 	}
+	@Transient
 	public String getShortName() {
 		if(getFirstName() != null && !getFirstName().equals(""))
 			return getFirstName();
 		return getUsername();
 	}
+	@Transient
 	public List<User> getFriendsProfiles() {
 		ArrayList<User> ret = new ArrayList<User>();
 		for(Friend f: getFriends())
 			ret.add(f.getRightUser());
 		return ret;
 	}
+	@Transient
 	public boolean containsFolderByName(String folderName) {
 		for(WorkflowFolder f : getFolders())
 			if(f.getName().equals(folderName))
@@ -448,6 +465,7 @@ public class User implements Serializable, Comparable<User>{
 			return this.getFirstName().compareTo(o.getFirstName());
 		return r;
 	}
+	@Transient
 	public User loadVisibility(User from) {
 		setVisible(isVisibleTo(from));
 		return this;
