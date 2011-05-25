@@ -2264,7 +2264,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		jUploadWspItem.addActionListener(listener);	
 
 		jRootMenu.add(jNewProjectItem);
-//		jRootMenu.add(jUploadWspItem);
+		jRootMenu.add(jUploadWspItem);
 		jProjectMenu.add(jLoadMArrayItem);
 		jProjectMenu.addSeparator();
 		jProjectMenu.add(jOpenRemotePDBItem);
