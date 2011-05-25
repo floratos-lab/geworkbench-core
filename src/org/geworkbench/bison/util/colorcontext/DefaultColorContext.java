@@ -1,17 +1,18 @@
 package org.geworkbench.bison.util.colorcontext;
 
+import java.awt.Color;
+
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.views.DSMicroarraySetView;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMarkerValue;
-
-import java.awt.*;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: First Genetic Trust Inc.</p>
  * @author First Genetic Trust
- * @version 1.0
+ * @version $Id$
  */
 
 /**
@@ -19,9 +20,11 @@ import java.awt.*;
  * in the red spectrum and negative values to the green spectrum.
  */
 
-public class DefaultColorContext implements org.geworkbench.bison.util.colorcontext.ColorContext {
+public class DefaultColorContext implements ColorContext {
 
-    private final Color MISSING_VALUE_COLOR = Color.GRAY;
+	private static final long serialVersionUID = -8105939139046926331L;
+
+	private final Color MISSING_VALUE_COLOR = Color.GRAY;
 
     private double magnitude;
 
@@ -47,13 +50,9 @@ public class DefaultColorContext implements org.geworkbench.bison.util.colorcont
         return color;
     }
 
-    public Color getMarkerValueColor(DSMicroarraySetView maSet, DSMarkerValue mv, DSGeneMarker mInfo, float intensity) {
-        return null;
-    }
-
-    public void updateContext(DSMicroarraySetView view) {
+    public void updateContext(DSMicroarraySetView<DSGeneMarker, DSMicroarray> view) {
         // Use entire set
-        DSMicroarraySet set = view.getMicroarraySet();
+        DSMicroarraySet<DSMicroarray> set = view.getMicroarraySet();
         magnitude = 0.0;
         for (int i = 0; i < set.size(); i++) {
             for (int j = 0; j < set.getMarkers().size(); j++) {

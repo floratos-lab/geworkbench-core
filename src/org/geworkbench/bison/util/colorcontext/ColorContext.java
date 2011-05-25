@@ -1,17 +1,18 @@
 package org.geworkbench.bison.util.colorcontext;
 
+import java.awt.Color;
+import java.io.Serializable;
+
 import org.geworkbench.bison.datastructure.biocollections.views.DSMicroarraySetView;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMarkerValue;
-
-import java.awt.*;
-import java.io.Serializable;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: First Genetic Trust Inc.</p>
  * @author First Genetic Trust, Inc.
- * @version 1.0
+ * @version $Id$
  */
 
 /**
@@ -21,8 +22,6 @@ import java.io.Serializable;
  * Extending classes must be provide a no-arg constructor.
  */
 public interface ColorContext extends Serializable {
-
-    public Color getMarkerValueColor(DSMicroarraySetView maSet, DSMarkerValue mv, DSGeneMarker mInfo, float intensity);
 
     /**
      * @param mv        The <code>MarkerValue</code> that needs to be drawn.
@@ -36,7 +35,7 @@ public interface ColorContext extends Serializable {
     /**
      * Called whenever the view changes so that the ColorContext can (optionally) update itself.
      */
-    public void updateContext(DSMicroarraySetView view);
+    public void updateContext(DSMicroarraySetView<DSGeneMarker, DSMicroarray> view);
 
     /**
      * Returns the color corresponding to the maxiumum value possible at this intensity.
