@@ -1,14 +1,6 @@
 package org.geworkbench.analysis;
 
-import java.io.File;
-import java.util.Map;
-
-import javax.swing.JOptionPane;
-
 import junit.framework.TestCase;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * 
@@ -23,8 +15,6 @@ public class BaseAbstractAnalysisTest extends TestCase {
 	protected static final String PARAMS_SETTING_ID = "test";
 
 	protected AbstractAnalysis analysis = null;
-
-	private Log log = LogFactory.getLog(this.getClass());
 
 	/*
 	 * (non-Javadoc)

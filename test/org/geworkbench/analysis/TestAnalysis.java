@@ -11,7 +11,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Map;
 
 import javax.swing.DefaultListModel;
@@ -97,7 +96,6 @@ class TestAnalysis extends AbstractAnalysis {
 		return -1;
 	}
 
-	@SuppressWarnings("unchecked")
 	public AlgorithmExecutionResults execute(Object input) {
 		log.info("Ran analysis.");
 		return null;

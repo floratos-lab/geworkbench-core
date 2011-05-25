@@ -3,6 +3,7 @@ package org.geworkbench.parsers;
 import junit.framework.TestCase;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
+import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.parsers.DataSetFileFormat;
 
 import java.io.File;
@@ -25,11 +26,10 @@ public class DataSetFileFormatTest extends TestCase {
 	 * @return
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
-	private DSDataSet loadDataSet(String fileName, DataSetFileFormat fileFormat)
+	private DSDataSet<? extends DSBioObject> loadDataSet(String fileName, DataSetFileFormat fileFormat)
 			throws Exception {
 		System.out.println("Loading file...");
-		DSDataSet dataSet = fileFormat.getDataFile(new File(fileName));
+		DSDataSet<? extends DSBioObject> dataSet = fileFormat.getDataFile(new File(fileName));
 		System.out.println("...file loaded.");
 		return dataSet;
 	}
@@ -39,11 +39,10 @@ public class DataSetFileFormatTest extends TestCase {
 	 * @return
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
 	private CSExprMicroarraySet loadDefaultMicroarraySet() throws Exception {
 		String fileName = DEFAULT_MICROARRAY_SET;
 		DataSetFileFormat fileFormat = new org.geworkbench.parsers.ExpressionFileFormat();
-		DSDataSet dataSet = loadDataSet(fileName, fileFormat);
+		DSDataSet<? extends DSBioObject> dataSet = loadDataSet(fileName, fileFormat);
 		return (CSExprMicroarraySet) dataSet;
 	}
 
@@ -52,9 +51,8 @@ public class DataSetFileFormatTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
 	public void testLoadData() throws Exception {
-		DSDataSet dataSet = loadDefaultMicroarraySet();
+		CSExprMicroarraySet dataSet = loadDefaultMicroarraySet();
 		assertNotNull(dataSet);
 	}
 }

@@ -8,6 +8,7 @@ import javax.swing.filechooser.FileFilter;
 import junit.framework.TestCase;
 
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.parsers.resources.AffyResource;
 import org.geworkbench.bison.parsers.resources.Resource;
 
@@ -179,7 +180,7 @@ public class AffyFileFormatTest extends TestCase {
 		boolean invalidFormat = false;
 		try {
 			// please note that calling this way won't have GUI interaction
-			DSDataSet result = affyFileFormat.getDataFile(new File(
+			DSDataSet<? extends DSBioObject> result = affyFileFormat.getDataFile(new File(
 					"test/org/geworkbench/components/parsers/testFile8.txt"),
 					"HG_U95Av2_annot.csv");
 			assertEquals("HG_U95Av2_annot.csv", result.getCompatibilityLabel());
