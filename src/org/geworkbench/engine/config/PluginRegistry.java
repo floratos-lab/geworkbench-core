@@ -1,9 +1,10 @@
 package org.geworkbench.engine.config;
 
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Vector;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
@@ -18,41 +19,33 @@ import java.util.Vector;
  * (2) the association of plugins with extension points.
  */
 public class PluginRegistry {
+	static private Log log = LogFactory.getLog(PluginRegistry.class);
     // ---------------------------------------------------------------------------
     // --------------- Instance and static variables
     // ---------------------------------------------------------------------------
     /**
      * Stores the application plugins and their mappings to extension points.
-     * Every extension point is a key in this HashMap. Its corresponsing value
+     * Every extension point is a key in this HashMap. Its corresponding value
      * is a Vector, containing the <code>PluginDescriptor</code>s for the
      * plugins associated with the extension point.
      */
-    private static HashMap extensionPointsMap = new HashMap();
+	// TODO extensionPointsMap should be removed. It is not implemented to do anything.
+    private static HashMap<String, Vector<PluginDescriptor>> extensionPointsMap = new HashMap<String, Vector<PluginDescriptor>>();
     /**
      * stores the info about visual area and visual plugin info.
      */
-    private static HashMap visualAreaMap = new HashMap();
+    private static HashMap<VisualPlugin, String> visualAreaMap = new HashMap<VisualPlugin, String>();
     /**
      * stores the info about plugin, so the plugin can query it's name even in it's constructor.
      */
-    private static HashMap<String,String> nameMap = new HashMap();
+    private static HashMap<String,String> nameMap = new HashMap<String,String>();
     /**
      * Stores all application plugins.
      */
-    private static Vector componentVector = new Vector(100);
+    private static Vector<PluginDescriptor> componentVector = new Vector<PluginDescriptor>(100);
     // ---------------------------------------------------------------------------
     // --------------- Methods
     // ---------------------------------------------------------------------------
-    /**
-     * Checks if the designated extension point exists in the
-     * <code>PluginRegistry</code>.
-     *
-     * @param extPoint The extension point to check
-     */
-    public static boolean existsExtensionPoint(String extPoint) {
-        return (extensionPointsMap.containsKey(extPoint));
-    }
-
     /**
      * Adds a plugin component descriptor at a named extension point.
      *
@@ -62,51 +55,15 @@ public class PluginRegistry {
      *                 added.
      */
     public static void addPlugInAtExtension(PluginDescriptor compDes, String extPoint) {
-        Vector extPointVector;
         if (!extensionPointsMap.containsKey(extPoint)) {
-            extensionPointsMap.put(extPoint, new Vector());
+            extensionPointsMap.put(extPoint, new Vector<PluginDescriptor>());
         }
 
-        extPointVector = (Vector) extensionPointsMap.get(extPoint);
+        Vector<PluginDescriptor> extPointVector = extensionPointsMap.get(extPoint);
         if (!extPointVector.contains(compDes)) {
             extPointVector.add(compDes);
         }
 
-    }
-
-    /**
-     * Returns all plugins associated with the designated extension point
-     *
-     * @param extPoint The name of the extension point.
-     * @return An array containing the <code>PluginDescriptor</code> objects
-     *         for all plugins associated with the extension point.
-     */
-    public static PluginDescriptor[] getPluginsAtExtension(String extPoint) {
-        return extensionPointsMap.containsKey(extPoint) ? (PluginDescriptor[]) (((Vector) extensionPointsMap.get(extPoint)).toArray(new PluginDescriptor[1])) : null;
-    }
-
-    /**
-     * Returns the list of all extension points for the designated plugin descriptor.
-     *
-     * @param compDes The plugin to check.
-     * @return List of strings, each string being the name of an extension point.
-     */
-    public static String[] getExtensionsForPlugin(PluginDescriptor compDes) {
-        Vector extensionPoints; // Put the results here.
-        java.util.Iterator iter;
-        String extensionName;
-        // Set things up.
-        extensionPoints = new Vector();
-        iter = extensionPointsMap.keySet().iterator();
-        while (iter.hasNext()) {
-            extensionName = (String) iter.next();
-            if (((Vector) extensionPointsMap.get(extensionName)).contains(compDes)) {
-                extensionPoints.add(extensionName);
-            }
-
-        }
-
-        return (String[]) extensionPoints.toArray(new String[1]);
     }
 
     /**
@@ -139,194 +96,74 @@ public class PluginRegistry {
         return null;
     }
 
-    /**
-     * @param plugin Instance of an actual plugin.
-     * @return The corresponding <code>PluginDescripto</code> from the <
-     *         code>PluginRegistry</code>. Otherwise, if such a plugin does
-     *         not exist, null.
-     */
-    public static PluginDescriptor getPluginDescriptor(Object plugin) {
-        int size = componentVector.size();
-        int i;
-        for (i = 0; i < size; ++i) {
-            if (((PluginDescriptor) componentVector.get(i)).getPlugin() == plugin) {
-                return (PluginDescriptor) componentVector.get(i);
-            }
-
-        }
-
-        return null;
-    }
-    
     public static void setNameMap(String className, String name){
     	nameMap.remove(className);
     	nameMap.put(className, name);
     }
+    
     public static String getNameMap(String className){
     	return nameMap.get(className);
-    }
-    
-    /**
-     * @param klass Class of an actual plugin.
-     * @return The corresponding <code>PluginDescripto</code> from the <
-     *         code>PluginRegistry</code>. Otherwise, if such a plugin does
-     *         not exist, null.
-     */
-    public static PluginDescriptor[] getPluginDescriptorsOfType(Class klass) {
-        int size = componentVector.size();
-        int i;
-        Vector descriptors = new Vector();
-        for (i = 0; i < size; i++) {
-            if (klass.isAssignableFrom(((PluginDescriptor) componentVector.get(i)).getPlugin().getClass())) {
-                descriptors.add(componentVector.get(i));
-            }
-
-        }
-
-        PluginDescriptor[] toBeReturned = new PluginDescriptor[descriptors.size()];
-        i = 0;
-        for (Enumeration e = descriptors.elements(); e.hasMoreElements(); i++) {
-            toBeReturned[i] = (PluginDescriptor) e.nextElement();
-        }
-
-        return toBeReturned;
-    }
-
-    /**
-     * Returns all registred application plugins
-     *
-     * @return An array containing the <code>PluginDescriptor</code> objects
-     *         for all plugins in the application.
-     */
-    public static PluginDescriptor[] getPlugins() {
-        return (PluginDescriptor[]) (componentVector.toArray(new PluginDescriptor[1]));
-    }
-
-    /**
-     * Returns all plugins that are not associated with any extension point
-     *
-     * @return An array containing the <code>PluginDescriptor</code> objects
-     *         for all plugins not associated with any extension point.
-     */
-    public static PluginDescriptor[] getUnmappedPlugins() {
-        Vector retValue = new Vector();
-        int size;
-        size = componentVector.size();
-        for (int i = 0; i < size; ++i) {
-            if (getExtensionsForPlugin((PluginDescriptor) componentVector.get(i)).length == 0) {
-                retValue.add(componentVector.get(i));
-            }
-
-        }
-
-        return (PluginDescriptor[]) (retValue.toArray(new PluginDescriptor[1]));
-    }
-
-    /**
-     * remove plugin from registry
-     *
-     * @param compDes
-     * @author Xuegong Wang
-     */
-    public static void removePlugin(PluginDescriptor compDes) {
-        if (!componentVector.contains(compDes)) {
-            componentVector.remove(compDes);
-        }
-
-    }
-
-    /**
-     * @param compDes
-     * @param extPoint
-     * @author Xuegong Wang
-     */
-    public static void removePlugInAtExtension(PluginDescriptor compDes, String extPoint) {
-        Vector extPointVector;
-        if (!extensionPointsMap.containsKey(extPoint)) {
-            extensionPointsMap.put(extPoint, new Vector());
-        }
-
-        extPointVector = (Vector) extensionPointsMap.get(extPoint);
-        if (extPointVector.contains(compDes)) {
-            extPointVector.remove(compDes);
-        }
-
     }
 
     public static void addVisualAreaInfo(String visualAreaName, VisualPlugin comp) {
         visualAreaMap.put(comp, visualAreaName);
     }
 
-    public static void removeVisualAreaInfo(VisualPlugin comp) {
-        visualAreaMap.remove(comp);
-    }
-
-    public static String getVisualAreaInfo(VisualPlugin comp) {
-        return (String) visualAreaMap.get(comp);
-    }
-
     /**
      * For debugging purposes only. Prints the contents of the registry.
      */
     public static void debugPrint() {
-        Vector classVector; // Put the results here.
-        Iterator iter;
-        PluginDescriptor compDes;
-        String key;
-        int size;
+
         if (org.geworkbench.util.Debug.debugStatus) {
-            System.out.println("\n\nContents of PluginRegistry");
-            System.out.println("--------------------------");
+            log.debug("\n\nContents of PluginRegistry");
+            log.debug("--------------------------");
             // Set things up and list all application plugins.
-            classVector = new Vector();
-            System.out.println("********** List of application plugins");
-            size = componentVector.size();
+            log.debug("********** List of application plugins");
+            int size = componentVector.size();
             for (int i = 0; i < size; ++i) {
-                ((PluginDescriptor) componentVector.get(i)).debugPrint();
+                componentVector.get(i).debugPrint();
             }
 
             // List the application plugins under each extension point.
-            classVector = new Vector();
-            iter = extensionPointsMap.keySet().iterator();
-            while (iter.hasNext()) {
-                System.out.println(">>>>>>>>" + (key = (String) iter.next()));
-                size = ((Vector) extensionPointsMap.get(key)).size();
+            for (String key : extensionPointsMap.keySet()) {
+                log.debug(">>>>>>>>" + key);
+                size = extensionPointsMap.get(key).size();
                 for (int i = 0; i < size; ++i) {
-                    ((PluginDescriptor) ((Vector) extensionPointsMap.get(key)).get(i)).debugPrint();
+                    extensionPointsMap.get(key).get(i).debugPrint();
                 }
 
             }
 
             // List the registered listeners for each plugin
-            classVector = new Vector();
-            System.out.println("********** List of registered listeners per event source");
+            log.debug("********** List of registered listeners per event source");
             size = componentVector.size();
             // Go over each application plugin
             for (int i = 0; i < size; ++i) {
-                compDes = (PluginDescriptor) componentVector.get(i);
-                System.out.println(">>>>> Working with component with ID = " + compDes.getID());
+            	PluginDescriptor compDes = componentVector.get(i);
+                log.debug(">>>>> Working with component with ID = " + compDes.getID());
             }
 
-            System.out.flush();
         }
 
     }
 
-	public static HashMap getExtensionPointsMap(){
-		return extensionPointsMap;
-	}
+	// FIXME: this is needed by CCM to remove plugin. It should be implemented as needed,
+	// not to expose this member directly.
+	// AND the usage in ComponentConfigurationManager is wrong - messed up PluginDescriptor and VisualPlugin
+	@SuppressWarnings("rawtypes")
 	public static HashMap getVisualAreaMap(){
 		return visualAreaMap;
 	}
-	public static Vector getComponentVector(){
+	
+	// TODO: this is needed by CCM to remove plugin or get a particular plugin. It should be implemented as needed,
+	// not to expose this member directly.
+	public static Vector<PluginDescriptor> getComponentVector(){
 		return componentVector;
 	}
 
+	// TODO: this should be invoked from PluginDescriptor. no reason to go through this class.
     public static Vector<String> getUsedIds(){
     	return PluginDescriptor.getUsedIds();
     }
 
-    
-
 }
-
