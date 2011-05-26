@@ -1,24 +1,35 @@
 package org.geworkbench.engine.config;
 
-import org.geworkbench.engine.config.rules.*;
+import java.awt.event.ActionListener;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
+
+import javax.help.HelpSet;
+import javax.swing.JMenuItem;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.geworkbench.engine.config.rules.GeawConfigObject;
+import org.geworkbench.engine.config.rules.MalformedMenuItemException;
+import org.geworkbench.engine.config.rules.NotMenuListenerException;
+import org.geworkbench.engine.config.rules.NotVisualPluginException;
+import org.geworkbench.engine.config.rules.PluginObject;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.engine.management.ComponentResource;
 import org.geworkbench.util.Debug;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.logging.Log;
-
-import javax.help.HelpSet;
-import javax.swing.*;
-import java.awt.event.ActionListener;
-import java.net.URL;
-import java.util.*;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: First Genetic Trust, Inc.</p>
  *
  * @author First Genetic Trust, Inc.
- * @version 1.0
+ * @version $Id$
  */
 
 /**
@@ -27,7 +38,7 @@ import java.util.*;
  * a result of processing the <code>&lt;plugin&gt;</code> rules in the
  * application's configuration file.
  */
-public class PluginDescriptor extends IdentifiableImpl implements Comparable {
+public class PluginDescriptor extends IdentifiableImpl implements Comparable<PluginDescriptor> {
     // ---------------------------------------------------------------------------
     // --------------- Instance and static variables
     // ---------------------------------------------------------------------------
@@ -46,7 +57,7 @@ public class PluginDescriptor extends IdentifiableImpl implements Comparable {
      * <code>Vector</code> containing all <code>ActionListener</code>s that
      * the plugin has registered with the corresponding menu item.
      */
-    private HashMap onFocusMenuItems = new HashMap();
+    private HashMap<JMenuItem, Vector<ActionListener>> onFocusMenuItems = new HashMap<JMenuItem, Vector<ActionListener>>();
     /**
      * The keys of this map are <code>JMenuItem</code>s whose selection results
      * in a notification being sent to the plugin REGARDLESS of the plugin having
@@ -55,15 +66,12 @@ public class PluginDescriptor extends IdentifiableImpl implements Comparable {
      * <code>Vector</code> containing all <code>ActionListener</code>s that
      * the plugin has registered with the corresponding menu item.
      */
-    private HashMap alwaysMenuItems = new HashMap();
-    /**
-     * The heplset associated with this plug in.
-     */
-    private HelpSet helpSet = null;
+    private HashMap<JMenuItem, Vector<ActionListener>> alwaysMenuItems = new HashMap<JMenuItem, Vector<ActionListener>>();
     /**
      * the information about the menuitems.
      */
-    private ArrayList menuItemInfos = new ArrayList();
+    // TODO menuItemInfos has no effect
+    private ArrayList<HashMap<String, String>> menuItemInfos = new ArrayList<HashMap<String, String>>();
 
     /**
      * Stores the component for each module method.
@@ -78,6 +86,7 @@ public class PluginDescriptor extends IdentifiableImpl implements Comparable {
     /**
      * Stores the visual location directive
      */
+    // TODO visualLocation has no effect
     private String visualLocation;
 
     /**
@@ -88,20 +97,16 @@ public class PluginDescriptor extends IdentifiableImpl implements Comparable {
     /**
      * The class of this plugin descriptor.
      */
-    private Class pluginClass;
+    private Class<?> pluginClass;
 
     /**
      * Set of subscription types to ignore.
      */
-    private Set<Class> subscriptionIgnoreSet = new HashSet<Class>();
-
-    private String pluginClassPath;
+    private Set<Class<?>> subscriptionIgnoreSet = new HashSet<Class<?>>();
 
     private ClassLoader loader;
 
     private ComponentResource resource;
-
-    private ComponentMetadata metadata;
 
     // ---------------------------------------------------------------------------
     // --------------- Constructors
@@ -118,7 +123,7 @@ public class PluginDescriptor extends IdentifiableImpl implements Comparable {
     public PluginDescriptor(String className, String someID, String someName, String resourceName, int preferredOrder) {
         super(someID, someName);
         this.preferredOrder = preferredOrder;
-        this.pluginClassPath = className;
+
         resource = null;
         if (resourceName != null) {
             resource = ComponentRegistry.getRegistry().getComponentResourceByName(resourceName);
@@ -176,14 +181,13 @@ public class PluginDescriptor extends IdentifiableImpl implements Comparable {
     public boolean equals(Object obj) {
         return (this.id == ((PluginDescriptor) obj).id);
     }
+    
+    public int hashCode() {
+    	return id.hashCode();
+    }
 
-    public int compareTo(Object o) {
-        if (o instanceof PluginDescriptor) {
-            PluginDescriptor other = (PluginDescriptor) o;
-            return (id.compareToIgnoreCase(other.id));
-        } else {
-            return -1;
-        }
+    public int compareTo(PluginDescriptor other) {
+    	return id.compareToIgnoreCase(other.id);
     }
 
     public Object getModule(String moduleMethod) {
@@ -202,10 +206,6 @@ public class PluginDescriptor extends IdentifiableImpl implements Comparable {
         moduleMappings.put(moduleMethod, id);
     }
 
-    public Map<String, String> getModuleMappings() {
-        return moduleMappings;
-    }
-
     void setPlugin(Object pgIn) {
         this.plugin = pgIn;
     }
@@ -214,31 +214,16 @@ public class PluginDescriptor extends IdentifiableImpl implements Comparable {
         return plugin;
     }
 
-    public Class getPluginClass() {
+    public Class<?> getPluginClass() {
         return pluginClass;
-    }
-
-    public void setPluginClass(Class pluginClass) {
-        this.pluginClass = pluginClass;
     }
 
     public ClassLoader getClassLoader(){
         return loader;
     }
 
-    public boolean isLoadedFromGear() {
-        if (resource == null) {
-            return false;
-        }
-        return resource.isFromGear();
-    }
-
     public int getPreferredOrder() {
         return preferredOrder;
-    }
-
-    public void setPreferredOrder(int preferredOrder) {
-        this.preferredOrder = preferredOrder;
     }
 
     /**
@@ -250,14 +235,16 @@ public class PluginDescriptor extends IdentifiableImpl implements Comparable {
      *              notified.
      */
     public void addMenuListener(JMenuItem mItem, ActionListener al, String mode) throws MalformedMenuItemException {
-        HashMap hMap;
-        Vector actionListeners;
-        int i;
         // Register the ActionListener with the menu item.
-        hMap = (mode.compareTo("onFocus") == 0 ? onFocusMenuItems : alwaysMenuItems);
+        HashMap<JMenuItem, Vector<ActionListener>> hMap = null;
+        if(mode.equals("onFocus")) {
+        	hMap = onFocusMenuItems;
+        } else {
+        	hMap = alwaysMenuItems;
+        }
         if (!hMap.containsKey(mItem))
-            hMap.put(mItem, new Vector());
-        actionListeners = (Vector) hMap.get(mItem);
+            hMap.put(mItem, new Vector<ActionListener>());
+        Vector<ActionListener> actionListeners = hMap.get(mItem);
         if (!actionListeners.contains(al))
             actionListeners.add(al);
     }
@@ -305,16 +292,9 @@ public class PluginDescriptor extends IdentifiableImpl implements Comparable {
      * various menu items.
      */
     public void disableFocusMenuItems() {
-        Iterator iter;
-        JMenuItem menuItem;
-        Vector actionListeners;
-        int len;
-        // Set things up.
-        iter = onFocusMenuItems.keySet().iterator();
-        while (iter.hasNext()) {
-            menuItem = (JMenuItem) iter.next();
-            actionListeners = (Vector) onFocusMenuItems.get(menuItem);
-            len = actionListeners.size();
+        for (JMenuItem menuItem: onFocusMenuItems.keySet()) {
+        	Vector<ActionListener> actionListeners = onFocusMenuItems.get(menuItem);
+            int len = actionListeners.size();
             for (int i = 0; i < len; ++i)
                 menuItem.removeActionListener((ActionListener) actionListeners.get(i));
             // If there are no more ActionListeners associated with the menu item,
@@ -332,40 +312,15 @@ public class PluginDescriptor extends IdentifiableImpl implements Comparable {
      * various menu items.
      */
     public void enableFocusMenuItems() {
-        Iterator iter;
-        JMenuItem menuItem;
-        Vector actionListeners;
-        int len;
-        // Set things up.
-        iter = onFocusMenuItems.keySet().iterator();
-        while (iter.hasNext()) {
-            menuItem = (JMenuItem) iter.next();
-            actionListeners = (Vector) onFocusMenuItems.get(menuItem);
-            len = actionListeners.size();
+        for (JMenuItem menuItem : onFocusMenuItems.keySet()) {
+        	Vector<ActionListener> actionListeners = onFocusMenuItems.get(menuItem);
+            int len = actionListeners.size();
             for (int i = 0; i < len; ++i)
                 menuItem.addActionListener((ActionListener) actionListeners.get(i));
             if (menuItem.getActionListeners().length > 0)
                 menuItem.setEnabled(true);
         }
 
-    }
-
-    /**
-     * Set the help set for this plugin. The help set contains references to
-     * the documents comprising the online section that the plugin wants to
-     * register with the application's online help system.
-     *
-     * @param hs The help set to use.
-     */
-    public void setHelpSet(HelpSet hs) {
-        helpSet = hs;
-    }
-
-    /**
-     * Return the helpset corresponding to this plugin.
-     */
-    public HelpSet getHelpSet() {
-        return helpSet;
     }
 
     /**
@@ -378,7 +333,7 @@ public class PluginDescriptor extends IdentifiableImpl implements Comparable {
      * @param accelerator String
      */
     public void addMenuItemInfo(String path, String mode, String var, String icon, String accelerator) {
-        HashMap menu = new HashMap();
+        HashMap<String, String> menu = new HashMap<String, String>();
         menu.put("path", path);
         menu.put("mode", mode);
         menu.put("var", var);
@@ -392,7 +347,7 @@ public class PluginDescriptor extends IdentifiableImpl implements Comparable {
      *
      * @return ArrayList
      */
-    public ArrayList getMenuItemInfos() {
+    public ArrayList<HashMap<String, String>> getMenuItemInfos() {
         return menuItemInfos;
     }
 
@@ -401,10 +356,8 @@ public class PluginDescriptor extends IdentifiableImpl implements Comparable {
      */
     public void debugPrint() {
         if (Debug.debugStatus) {
-            System.out.println("PluginDescriptor -> id = " + id + ", name = " + name + ", Class = " + plugin.getClass().toString());
-            System.out.flush();
+            log.debug("PluginDescriptor -> id = " + id + ", name = " + name + ", Class = " + plugin.getClass().toString());
         }
-
     }
 
     public String getVisualLocation() {
@@ -415,16 +368,16 @@ public class PluginDescriptor extends IdentifiableImpl implements Comparable {
         this.visualLocation = visualLocation;
     }
 
-    public void addTypeToSubscriptionIgnoreSet(Class type) {
+    public void addTypeToSubscriptionIgnoreSet(Class<?> type) {
         subscriptionIgnoreSet.add(type);
     }
 
-    public boolean isInSubscriptionIgnoreSet(Class type) {
+    public boolean isInSubscriptionIgnoreSet(Class<?> type) {
         return subscriptionIgnoreSet.contains(type);
     }
 
     public void setComponentMetadata(ComponentMetadata metadata) throws NotMenuListenerException, MalformedMenuItemException, NotVisualPluginException {
-        this.metadata = metadata;
+
         //// Set up help set
         if (metadata.getHelpSet() != null) {
             String pluginHelpSet = metadata.getHelpSet();
@@ -460,14 +413,15 @@ public class PluginDescriptor extends IdentifiableImpl implements Comparable {
         return getID() + ": " + getLabel();
     }
     
-    public static Vector<String> getUsedIds(){
+    // TODO it is IdentifiableImpl's responsibility to check this
+    @SuppressWarnings("unchecked")
+	public static Vector<String> getUsedIds(){
     	return usedIds;
     }
  
+    // TODO bad idea to expose this member directly for a specific need from ccm
     public ComponentResource getResource() {
 		return resource;
 	}
-
-
     
 }
