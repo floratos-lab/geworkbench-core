@@ -1,6 +1,5 @@
 package org.geworkbench.bison.model.clusters;
 
-import java.util.Vector;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
@@ -19,23 +18,9 @@ import java.util.Vector;
  * parameters for the SOM algorithm).
  *
  * @author First Genetic Trust
- * @version 1.0
+ * @version $Id$
  */
 public interface SOMCluster extends Cluster {
-    /**
-     * Sets the representative for this cluster.
-     *
-     * @param centroid An n-dimensional vector of real numbers.
-     */
-    public void setGridRepresentative(Vector centroid);
-
-    /**
-     * Gets the Cluster representative
-     *
-     * @return The representative for this cluster
-     */
-    public Vector getRepresentative();
-
     /**
      * Sets the grid coordinates for this cluster.
      *

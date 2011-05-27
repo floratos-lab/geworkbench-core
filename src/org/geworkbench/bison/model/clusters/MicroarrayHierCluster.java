@@ -13,10 +13,11 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
  * Phenotype Clustering as obtained from the Hierachical Clustering Analysis
  *
  * @author First Genetic Trust
- * @version 1.0
+ * @version $Id$
  */
 public class MicroarrayHierCluster extends DefaultHierCluster {
-    /**
+	private static final long serialVersionUID = 3866574425702788704L;
+	/**
      * Stores the microarray associated with this cluster. For hierarchical
      * clusters, only leaf nodes have a non-null value in this field.
      */

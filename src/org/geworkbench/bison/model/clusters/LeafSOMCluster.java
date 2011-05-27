@@ -11,10 +11,11 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
  * of this type is obtained from the Self Organizing Map Analysis
  *
  * @author First Genetic Trust
- * @version 1.0
+ * @version $Id$
  */
 public class LeafSOMCluster extends DefaultSOMCluster {
-    /**
+	private static final long serialVersionUID = -1100675244807369959L;
+	/**
      * {@link DSMarker} that contains a reference to a
      * Genetic Marker defined by {@link org.geworkbench.bison.model.microarray.MarkerValue} and
      * referred to by this <code>LeafSOMCluster</code>

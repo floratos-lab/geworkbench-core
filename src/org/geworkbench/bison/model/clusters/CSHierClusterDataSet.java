@@ -15,7 +15,10 @@ import org.geworkbench.bison.datastructure.biocollections.views.DSDataSetView;
  * @author John Watkinson
  * @version $Id$
  */
+@SuppressWarnings("rawtypes")
 public class CSHierClusterDataSet extends CSAncillaryDataSet implements DSHierClusterDataSet {
+	private static final long serialVersionUID = 8176955646021386560L;
+
 	private static Log log = LogFactory.getLog(CSHierClusterDataSet.class);
 
     private HierCluster[] clusters;
@@ -23,7 +26,8 @@ public class CSHierClusterDataSet extends CSAncillaryDataSet implements DSHierCl
     private HierCluster[] selectedClusters;
 	private boolean selectionEnabled;
 
-    public CSHierClusterDataSet(HierCluster[] clusters, HierCluster[] sc, boolean selected, String name, DSDataSetView dataSetView) {
+    @SuppressWarnings("unchecked")
+	public CSHierClusterDataSet(HierCluster[] clusters, HierCluster[] sc, boolean selected, String name, DSDataSetView dataSetView) {
         super(dataSetView.getDataSet(), name);
         this.clusters = clusters;
         this.parentSet = dataSetView;
@@ -94,7 +98,7 @@ public class CSHierClusterDataSet extends CSAncillaryDataSet implements DSHierCl
 		log.debug("finish serialization");
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked" })
 	private void readObject(ObjectInputStream in) throws IOException,
 			ClassNotFoundException {
 

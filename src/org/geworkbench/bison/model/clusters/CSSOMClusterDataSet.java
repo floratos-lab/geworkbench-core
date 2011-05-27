@@ -8,13 +8,17 @@ import java.io.File;
 /**
  * @author John Watkinson
  */
+@SuppressWarnings("rawtypes")
 public class CSSOMClusterDataSet extends CSAncillaryDataSet implements DSSOMClusterDataSet {
 
-    private int rows, columns;
+	private static final long serialVersionUID = -1517435442151993543L;
+	
+	private int rows, columns;
     private SOMCluster[][] clusters;
     private DSDataSetView parentSet;
 
-    public CSSOMClusterDataSet(SOMCluster[][] clusters, String name, DSDataSetView dataSetView) {
+    @SuppressWarnings("unchecked")
+	public CSSOMClusterDataSet(SOMCluster[][] clusters, String name, DSDataSetView dataSetView) {
         super(dataSetView.getDataSet(), name);
         rows = clusters.length;
         if (rows > 0) {

@@ -8,6 +8,7 @@ import org.geworkbench.bison.datastructure.biocollections.views.DSDataSetView;
  *
  * @author John Watkinson
  */
+@SuppressWarnings("rawtypes")
 public interface DSClusterDataSet extends DSAncillaryDataSet {
 
     public int getNumberOfClusters();
