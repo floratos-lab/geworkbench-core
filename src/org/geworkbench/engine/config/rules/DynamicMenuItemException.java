@@ -4,7 +4,7 @@ package org.geworkbench.engine.config.rules;
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: First Genetic Trust, Inc.</p>
  * @author First Genetic Trust, Inc.
- * @version 1.0
+ * @version $Id$
  */
 
 /**
@@ -19,7 +19,9 @@ package org.geworkbench.engine.config.rules;
  * </UI>
  */
 public class DynamicMenuItemException extends org.geworkbench.util.BaseException {
-    // ---------------------------------------------------------------------------
+	private static final long serialVersionUID = -1785392318270874137L;
+
+	// ---------------------------------------------------------------------------
     // --------------- Constructors
     // ---------------------------------------------------------------------------
     public DynamicMenuItemException() {

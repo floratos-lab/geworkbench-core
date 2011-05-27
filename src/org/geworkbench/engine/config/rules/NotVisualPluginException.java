@@ -6,7 +6,7 @@ import org.geworkbench.util.BaseException;
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: First Genetic Trust, Inc.</p>
  * @author First Genetic Trust, Inc.
- * @version 1.0
+ * @version $Id$
  */
 
 /**
@@ -16,7 +16,9 @@ import org.geworkbench.util.BaseException;
  * the focus.
  */
 public class NotVisualPluginException extends BaseException {
-    // ---------------------------------------------------------------------------
+	private static final long serialVersionUID = -879145735495136862L;
+
+	// ---------------------------------------------------------------------------
     // --------------- Constructors
     // ---------------------------------------------------------------------------
     public NotVisualPluginException() {

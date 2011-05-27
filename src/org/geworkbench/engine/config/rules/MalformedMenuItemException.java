@@ -6,7 +6,7 @@ import org.geworkbench.util.BaseException;
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: First Genetic Trust, Inc.</p>
  * @author First Genetic Trust, Inc.
- * @version 1.0
+ * @version $Id$
  */
 
 /**
@@ -15,7 +15,9 @@ import org.geworkbench.util.BaseException;
  * formed.
  */
 public class MalformedMenuItemException extends BaseException {
-    // ---------------------------------------------------------------------------
+	private static final long serialVersionUID = -4892433534916486892L;
+
+	// ---------------------------------------------------------------------------
     // --------------- Constructors
     // ---------------------------------------------------------------------------
     public MalformedMenuItemException() {
