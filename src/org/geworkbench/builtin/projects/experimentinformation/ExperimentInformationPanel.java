@@ -1,27 +1,33 @@
 package org.geworkbench.builtin.projects.experimentinformation;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
+
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.engine.config.VisualPlugin;
 import org.geworkbench.engine.management.AcceptTypes;
 import org.geworkbench.engine.management.Subscribe;
 import org.geworkbench.events.ProjectEvent;
 
-import javax.swing.*;
-import java.awt.*;
-
 /**
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: First Genetic Trust Inc.</p>
  * @author First Genetic Trust
- * @version 1.0
+ * @version $Id$
  */
 
 /**
  * This application component is responsible for displaying the exepriment
  * information (if any) associated with a microarray set.
  */
-@AcceptTypes({DSDataSet.class}) public class ExperimentInformationPanel implements VisualPlugin {
+@AcceptTypes({DSDataSet.class}) 
+public class ExperimentInformationPanel implements VisualPlugin {
 
     /**
      * Text to display when there are no user comments entered.
@@ -31,17 +37,11 @@ import java.awt.*;
     /**
      * The currently selected microarray set.
      */
-    protected DSMicroarraySet maSet = null;
+    private DSMicroarraySet<DSMicroarray> maSet = null;
 
-    protected String experimentInfo = DEFAULT_MESSAGE;
+    private JTextArea experimentTextArea = new JTextArea(DEFAULT_MESSAGE);
 
-    private BorderLayout borderLayout1 = new BorderLayout();
-
-    protected JScrollPane jScrollPane1 = new JScrollPane();
-
-    protected JTextArea experimentTextArea = new JTextArea(experimentInfo);
-
-    protected JPanel experimentPanel = new JPanel();
+    private JPanel experimentPanel = new JPanel();
 
     public String getName() {
         return "Experiment Info";
@@ -57,11 +57,12 @@ import java.awt.*;
     }
 
     private void jbInit() throws Exception {
-        experimentPanel.setLayout(borderLayout1);
-        experimentTextArea.setText(experimentInfo);
+        experimentPanel.setLayout(new BorderLayout());
+        experimentTextArea.setText(DEFAULT_MESSAGE);
         experimentTextArea.setLineWrap(true);
         experimentTextArea.setWrapStyleWord(true);
         experimentTextArea.setEditable(false);
+        JScrollPane jScrollPane1 = new JScrollPane();
         experimentPanel.add(jScrollPane1, BorderLayout.CENTER);
         jScrollPane1.getViewport().add(experimentTextArea, null);
     }
@@ -76,14 +77,15 @@ import java.awt.*;
      *
      * @param e
      */
-    @Subscribe public void receive(ProjectEvent e, Object source) {
-        DSDataSet dataSet = e.getDataSet();
-        if (e != null && dataSet instanceof DSMicroarraySet) {
-            experimentInfo = DEFAULT_MESSAGE;
-            if (e.getMessage().equals(ProjectEvent.CLEARED))
+    @SuppressWarnings("unchecked")
+	@Subscribe public void receive(ProjectEvent e, Object source) {
+        DSDataSet<?> dataSet = e.getDataSet();
+        if (dataSet instanceof DSMicroarraySet) {
+        	String experimentInfo = DEFAULT_MESSAGE;
+            if (e.getMessage().equals(ProjectEvent.CLEARED)) {
                 maSet = null;
-            else if (dataSet != null) {
-                maSet = (DSMicroarraySet) dataSet;
+            } else {
+                maSet = (DSMicroarraySet<DSMicroarray>) dataSet;
                 String[] descriptions = maSet.getDescriptions();
                 if (descriptions != null && descriptions.length > 0)
                     experimentInfo = "";
