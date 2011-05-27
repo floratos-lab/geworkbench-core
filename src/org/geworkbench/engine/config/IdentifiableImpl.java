@@ -8,7 +8,7 @@ import java.util.Vector;
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: First Genetic Trust, Inc.</p>
  * @author First Genetic Trust, Inc.
- * @version 1.0
+ * @version $Id$
  */
 
 /**
@@ -31,7 +31,7 @@ public class IdentifiableImpl implements DSIdentifiable {
     /**
      * Keeps track of ids currently in use.
      */
-    protected static Vector usedIds = new Vector(100);
+    protected static Vector<String> usedIds = new Vector<String>(100);
     // ---------------------------------------------------------------------------
     // --------------- Constructors
     // ---------------------------------------------------------------------------

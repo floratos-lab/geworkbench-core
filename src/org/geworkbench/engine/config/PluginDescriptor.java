@@ -414,7 +414,6 @@ public class PluginDescriptor extends IdentifiableImpl implements Comparable<Plu
     }
     
     // TODO it is IdentifiableImpl's responsibility to check this
-    @SuppressWarnings("unchecked")
 	public static Vector<String> getUsedIds(){
     	return usedIds;
     }

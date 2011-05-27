@@ -1,17 +1,19 @@
 package org.geworkbench.engine.config;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.ImageIcon;
 
 /**
  * Metadata for a component, such as common name, version, description, etc.
  *
  * @author John Watkinson
+ * @version $Id$
  */
 public class ComponentMetadata {
 
-    private Class type;
+    private Class<?> type;
     private String componentResource;
 
     private String name;
@@ -22,13 +24,13 @@ public class ComponentMetadata {
 
     private List<MenuItemInfo> menuInfoList;
 
-    public ComponentMetadata(Class type, String componentResource) {
+    public ComponentMetadata(Class<?> type, String componentResource) {
         this.type = type;
         this.componentResource = componentResource;
         menuInfoList = new ArrayList<MenuItemInfo>();
     }
 
-    public Class getType() {
+    public Class<?> getType() {
         return type;
     }
 

@@ -1,16 +1,18 @@
 package org.geworkbench.engine.config;
 
-import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import java.awt.Component;
+import java.awt.HeadlessException;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JFrame;
+
+import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 
 /**
  *
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: First Genetic Trust, Inc.</p>
  * @author First Genetic Trust, Inc.
- * @version 1.0
+ * @version $Id$
  */
 
 /**
@@ -18,7 +20,9 @@ import java.awt.*;
  */
 public abstract class GUIFramework extends JFrame {
 
-    public static final String TOOL_AREA = "Toolbar";
+	private static final long serialVersionUID = 1498878343817031247L;
+
+	public static final String TOOL_AREA = "Toolbar";
 
     public static final String VISUAL_AREA = "VisualArea";
 
@@ -51,7 +55,7 @@ public abstract class GUIFramework extends JFrame {
      * @param pluginName
      * @param mainPluginClass The main class for this plugin as defined in all.xml. Used to determine which plugins to display for a given datatype
      */
-    public abstract void addToContainer(String areaName, Component visualPlugin, String pluginName, Class mainPluginClass);
+    public abstract void addToContainer(String areaName, Component visualPlugin, String pluginName, Class<?> mainPluginClass);
 
     /**
      * Removes the designated <code>visualPlugin</code> from the GUI.
@@ -72,7 +76,7 @@ public abstract class GUIFramework extends JFrame {
      * visualized. Will allow for the display of only those visualizations that support the selected data type.
      * @param type
      */
-    public abstract void setVisualizationType(DSDataSet type);
+    public abstract void setVisualizationType(DSDataSet<?> type);
 
     private static JFrame frame;
 
