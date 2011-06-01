@@ -198,6 +198,8 @@ public class AnnotationParser implements Serializable {
 			while ((parser.getLine() != null)
 					&& !cancelAnnotationFileProcessing) {
 				String affyId = parser.getValueByLabel(labels[0]);
+				if(affyId==null)
+					continue;
 				affyId = affyId.trim();
 				AnnotationFields fields = new AnnotationFields();
 				for (int i = 1; i < labels.length; i++) {
@@ -381,9 +383,14 @@ public class AnnotationParser implements Serializable {
 	}
 
 	public static Set<String> getGeneIDs(String markerID) {
-		String chipType = datasetToChipTypes.get(currentDataSet);
-
 		HashSet<String> set = new HashSet<String>();
+		String chipType = datasetToChipTypes.get(currentDataSet);
+		
+		// this happens when no annotation or bad annotation is loaded.
+		if(chipType==null) {
+			return set;
+		}
+
 		MarkerAnnotation annotation = chipTypeToAnnotation.get(chipType);
 		AnnotationFields fields = annotation.getFields(markerID);
 		if(fields==null) {
