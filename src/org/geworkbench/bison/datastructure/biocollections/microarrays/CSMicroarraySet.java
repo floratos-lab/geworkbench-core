@@ -7,6 +7,7 @@ import org.geworkbench.bison.annotation.DSAnnotationContextManager;
 import org.geworkbench.bison.datastructure.biocollections.CSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.CSMarkerVector;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
+import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.*;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.util.RandomNumberGenerator;
@@ -323,7 +324,8 @@ public class CSMicroarraySet<T extends DSMicroarray> extends CSDataSet<T> implem
     public void sortMarkers(int mrkNo) {
 		newid = new int[mrkNo];
 		int i = 0;
-		if (GlobalPreferences.getInstance().getMarkerLoadOptions() == GlobalPreferences.ORIGINAL) {
+		if (GlobalPreferences.getInstance().getMarkerLoadOptions() == GlobalPreferences.ORIGINAL
+				|| AnnotationParser.getCurrentChipType() == null) {
 			for (i = 0; i < markerVector.size(); newid[i] = i++);
 		} else {
 			if (GlobalPreferences.getInstance().getMarkerLoadOptions() == GlobalPreferences.SORTED_GENE) 
