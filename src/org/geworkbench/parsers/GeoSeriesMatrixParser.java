@@ -249,9 +249,8 @@ public class GeoSeriesMatrixParser {
 					String markAnn = markArrays.get(i);
 					String markAnn1 = markAnn.replace("\"", "");
 					String arrayName1 = arrayName 
-										+ " ("
-										+markAnn1
-										+")";
+										+ ": "
+										+markAnn1;
 					CSMicroarray array = new CSMicroarray(i, possibleMarkers,
 							arrayName1, null, null, false,
 							DSMicroarraySet.affyTxtType);
