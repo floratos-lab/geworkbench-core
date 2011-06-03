@@ -13,7 +13,7 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 /**
  * A parser of GenePix gpr file.
  * @author manjunath
- * @version $Id: GenePixParser.java,v 1.7 2008-10-07 19:05:50 jiz Exp $
+ * @version $Id$
  */
 public class GenePixParser {
 	private static final String B635_MEAN = "B635 Mean";
@@ -144,7 +144,6 @@ public class GenePixParser {
      *
      * @param line Input file line.
      */
-    @SuppressWarnings("unchecked")
 	public void parseLine(String line) {
         if(line.indexOf(F635_MEDIAN) >=0) { // Read in the header line
             headerFound = true;
