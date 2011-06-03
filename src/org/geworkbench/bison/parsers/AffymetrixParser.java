@@ -11,7 +11,7 @@ import java.util.*;
  * <p>Copyright: Copyright (c) 2003 -2004</p>
  * <p>Company: Columbia University</p>
  * @author manjunath at genomecenter dot columbia dot edu
- * @version 1.0
+ * @version $Id$
  *
  * @todo - Phase out as there a class called AffyParser. Also, remove dependency from Bison.
  */
@@ -31,23 +31,23 @@ public class AffymetrixParser {
      * listed in {@link geaw.bean.microarrray.util.AffyParseContext#columnNames
      * columnNames}) to be used in building the currrent <code>MicroarraySet</code>.
      */
-    private List columnsToUse = null;
+    private List<String> columnsToUse = null;
 
     /**
      * Indexing of columns parsed to an <code>Integer</code> key
      */
-    private Hashtable columnOrder = new Hashtable();
+    private Hashtable<Integer, String> columnOrder = new Hashtable<Integer, String>();
 
     /**
      * Stores auxiliary experiment execution information found in the input
      * file.
      */
-    protected String experimentInfo = "";
+    private String experimentInfo = "";
 
     /**
      * The experiment information stored as properties
      */
-    protected Hashtable props = new Hashtable();
+    private Hashtable<String, String> props = new Hashtable<String, String>();
 
     /**
      * Bit to specify if a header was found in the file being parsed
@@ -59,7 +59,7 @@ public class AffymetrixParser {
      *
      * @param ctu columns to use for parsing
      */
-    public AffymetrixParser(List ctu) {
+    public AffymetrixParser(List<String> ctu) {
         columnsToUse = ctu;
     }
 
@@ -76,7 +76,7 @@ public class AffymetrixParser {
      */
     private int columnOrderIndex = 0;
 
-    private Vector accessions = new Vector();
+    private Vector<String> accessions = new Vector<String>();
 
     private int accessionIndex = 0;
 
@@ -130,7 +130,7 @@ public class AffymetrixParser {
      *
      * @return Vector
      */
-    public Vector getAccessions() {
+    public Vector<String> getAccessions() {
         return accessions;
     }
 
@@ -189,14 +189,14 @@ public class AffymetrixParser {
             token = st.nextToken().trim();
             int tokenIndex = 1;
             AffyParseContext context = new org.geworkbench.bison.parsers.AffyParseContext(columnsToUse);
-            Map ctu = context.getColumnsToUse();
-            String type = null;
-            Object value = null;
-            String column = null;
+            // FIXME this design is as ugly as it can be:
+            // the map entry value starts as String here, and change to the actual value of various types late
+            Map<String, Object> ctu = context.getColumnsToUse();
             do {
-                column = (String) columnOrder.get(new Integer(tokenIndex));
+                String column = columnOrder.get(new Integer(tokenIndex));
                 if (column != null) {
-                    type = (String) ctu.get(column);
+                    String type = (String) ctu.get(column);
+                    Object value = null;
                     if (type.equals("String"))
                         value = new String(token.toCharArray());
                     else if (type.equals("Integer"))

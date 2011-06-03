@@ -13,7 +13,7 @@ import java.util.Map;
  * Parse context to customize parsing of Affymetrix files
  *
  * @author First Genetic Trust
- * @version 1.0
+ * @version $Id$
  */
 public class AffyParseContext implements Serializable {
     /**
@@ -34,7 +34,7 @@ public class AffyParseContext implements Serializable {
      * listed in {@link org.geworkbench.bison.parsers.AffyParseContext#columnNames
      * columnNames}) to be used in building the current <code>MicroarraySet</code>.
      */
-    Hashtable columnsToUse = new Hashtable();
+    Hashtable<String, Object> columnsToUse = new Hashtable<String, Object>();
     /**
      * Serializable fields.
      */
@@ -53,7 +53,7 @@ public class AffyParseContext implements Serializable {
      *
      * @param ctu columns to use for parsing
      */
-    public AffyParseContext(List ctu) {
+    public AffyParseContext(List<String> ctu) {
         columnsToUse.clear();
         for (int i = 0; i < columnNames.length; i++) {
             if (ctu.contains(columnNames[i])) {
@@ -69,7 +69,7 @@ public class AffyParseContext implements Serializable {
      *
      * @return columns to use for parsing
      */
-    public Map getColumnsToUse() {
+    public Map<String, Object> getColumnsToUse() {
         return columnsToUse;
     }
 
