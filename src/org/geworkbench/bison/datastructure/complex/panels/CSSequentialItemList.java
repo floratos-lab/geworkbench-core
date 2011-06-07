@@ -39,11 +39,10 @@ public class CSSequentialItemList<T extends DSSequential> extends CSItemList<T> 
      */
     @Override
     public void add(int index, T item) {
-        String label = item.getLabel();
         boolean exists = index < size();
         super.add(index, item);
         item.setSerial(index);
-        // Todo - watkin - Since this method does not actually insert, we should revisit this. 
+        // TODO - watkin - Since this method does not actually insert, we should revisit this. 
         if (!exists) {
             // Update the serial for items that were pushed to the right by the insert
             for (int i = index + 1; i < size(); i++) {
@@ -58,7 +57,8 @@ public class CSSequentialItemList<T extends DSSequential> extends CSItemList<T> 
      * @param item the item to remove.
      * @return <code>true</code> if the item was found and removed, <code>false</code> if the item was not found.
      */
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public boolean remove(Object item) {
         T removedItem = this.get(((T) item).getLabel());
         if (removedItem != null) {

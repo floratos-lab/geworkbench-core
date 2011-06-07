@@ -132,7 +132,8 @@ public class CSItemList <T extends DSNamed> extends ArrayList<T> implements DSIt
      * @param item the item to remove
      * @return <code>true</code> if the item was found and removed, <code>false</code> if it was not found.
      */
-    @Override public boolean remove(Object item) {
+    @SuppressWarnings("unchecked")
+	@Override public boolean remove(Object item) {
         boolean result = super.remove(item);
         objectMap.remove(((T) item).getLabel());
         return result;
@@ -176,7 +177,7 @@ public class CSItemList <T extends DSNamed> extends ArrayList<T> implements DSIt
 
     public boolean equals(Object o) {
         if (o instanceof DSItemList) {
-            DSItemList other = (DSItemList) o;
+            DSItemList<?> other = (DSItemList<?>) o;
             return id.equals(other.getID());
         } else {
             return false;
