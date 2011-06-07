@@ -1,13 +1,16 @@
 package org.geworkbench.bison.datastructure.complex.pattern.matrix;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
 
 /**
  * @author John Watkinson
+ * @version $Id$
  */
 public class CSPositionSpecificAffinityMatrix implements DSPositionSpecificAffintyMatrix {
 
-    private ImageIcon psamImage;
+	private static final long serialVersionUID = 6336253934311295851L;
+	
+	private ImageIcon psamImage;
     private String psamId;
     private String experimentName;
     private String experimentId;

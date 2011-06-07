@@ -2,14 +2,13 @@ package org.geworkbench.bison.datastructure.complex.pattern.matrix;
 
 import java.util.List;
 
-import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.apache.commons.collections15.map.ListOrderedMap;
-
-import javax.swing.*;
+import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 
 /**
  * @author John Watkinson
  * @author ch2514
+ * @version $Id$
  */
 public interface DSMatrixReduceSet extends DSAncillaryDataSet<DSPositionSpecificAffintyMatrix> {
 

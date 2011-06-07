@@ -2,6 +2,8 @@ package org.geworkbench.bison.datastructure.complex.pattern.matrix;
 
 public class CSMatrixReduceExperiment implements DSMatrixReduceExperiment {
 
+	private static final long serialVersionUID = 3971178468487179811L;
+
 	private double pvalue;
 
 	private double tvalue;
