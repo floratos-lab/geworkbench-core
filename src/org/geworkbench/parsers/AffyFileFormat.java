@@ -191,7 +191,6 @@ public class AffyFileFormat extends DataSetFileFormat {
 	 *             When the input file deviates from the Affy format.
 	 */
 
-	@SuppressWarnings("unchecked")
 	private void getMArraySet(File file, CSExprMicroarraySet maSet)
 			throws InputFileFormatException, InterruptedIOException {
 		// Check that the file is OK before starting allocating space for it.
