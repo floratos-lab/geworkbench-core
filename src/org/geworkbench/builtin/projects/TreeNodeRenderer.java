@@ -23,10 +23,7 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
  */
 public class TreeNodeRenderer extends DefaultTreeCellRenderer {
 	private static final long serialVersionUID = -1879887785935786137L;
-	/**
-     * Current <code>MicroarraySetNode</code> selection
-     */
-    public MicroarraySetNode microarraySetNodeSelection = null;
+
     /**
      * Current <code>ProjectNodeOld</code> selection
      */
@@ -49,7 +46,6 @@ public class TreeNodeRenderer extends DefaultTreeCellRenderer {
      * Clears all Node selections
      */
     public void clearNodeSelections() {
-        microarraySetNodeSelection = null;
         projectNodeSelection = null;
         imageNodeSelection = null;
     }

@@ -202,7 +202,8 @@ public class ProjectSelection {
      *
      * @param message
      */
-    private void throwEvent(String message) {
+    @SuppressWarnings("unchecked")
+	private void throwEvent(String message) {
         if (selectedDataSetNode != null) {
         	panel.publishProjectEvent(new ProjectEvent(message, selectedDataSetNode.dataFile, selectedDataSetNode));
         }
@@ -210,7 +211,8 @@ public class ProjectSelection {
         panel.sendCommentsEvent(selectedNode);
     }
 
-    private void throwSubNodeEvent(String message) {
+    @SuppressWarnings("unchecked")
+	private void throwSubNodeEvent(String message) {
         if ((selectedDataSetSubNode != null) && (selectedDataSetSubNode._aDataSet != null)) {
             panel.publishProjectEvent(new ProjectEvent(message, selectedDataSetSubNode._aDataSet, selectedDataSetSubNode));           
         }

@@ -1,13 +1,14 @@
 package org.geworkbench.builtin.projects;
 
+import java.io.File;
+
+import javax.swing.ImageIcon;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
-import org.geworkbench.bison.util.RandomNumberGenerator;
-
-import javax.swing.*;
-import java.io.File;  
+import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 
 /**
  * <p>Title: Bioworks</p>
@@ -16,10 +17,10 @@ import java.io.File;
  * <p>Company: Columbia University</p>
  *
  * @author Califano Lab
- * @version 1.0
+ * @version $Id$
  */
 
-public class ImageData extends CSAncillaryDataSet {
+public class ImageData extends CSAncillaryDataSet<DSBioObject> {
 
     /**
 	 *
@@ -30,13 +31,11 @@ public class ImageData extends CSAncillaryDataSet {
 	
 	private File imageFile = null;
     private ImageIcon image = null;     
-    private String id = null;
     private boolean isDirty = false;
 
     public ImageData(File image) {
         super(null, "Image");
         imageFile = image;
-        id = RandomNumberGenerator.getID();
     }
 
     public File getDataSetFile() {
@@ -55,9 +54,10 @@ public class ImageData extends CSAncillaryDataSet {
         imageFile = image;
     }
 
-    public boolean equals(Object ads) {
+    @SuppressWarnings("unchecked")
+	public boolean equals(Object ads) {
         if (ads instanceof DSAncillaryDataSet) {
-            return getID().equalsIgnoreCase(((DSAncillaryDataSet) ads).getID());
+            return getID().equalsIgnoreCase(((DSAncillaryDataSet<DSBioObject>) ads).getID());
         } else {
             return false;
         }

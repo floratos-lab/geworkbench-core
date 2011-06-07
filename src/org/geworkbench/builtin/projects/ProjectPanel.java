@@ -1881,9 +1881,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 					projectTreeModel.insertNodeInto(imageNode, node, node
 							.getChildCount());
 				} else if (node instanceof ImageNode) {
-					node = projectRenderer.microarraySetNodeSelection;
-					projectTreeModel.insertNodeInto(imageNode, node, node
-							.getChildCount());
+					// FIXME this does not work
+					log.error("node instanceof ImageNode: not implemented");
+					projectTreeModel.insertNodeInto(imageNode, null, -1);
 				} else if (node instanceof DataSetSubNode) {
 					DataSetSubNode subNode = (DataSetSubNode) node;
 					node = (ProjectTreeNode) subNode.getParent();

@@ -559,7 +559,6 @@ public class DownloadClient {
         }
 	}
 
-	@SuppressWarnings("unchecked")
 	private static HashMap<String, String> processResponseStatus(OMElement element) throws Exception {
 		HashMap<String, String> hm = new HashMap<String, String>();
 		OMElement elm = element.getFirstChildWithName(new QName("http://service.sample/xsd","access"));
