@@ -4,16 +4,16 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.tree.DefaultTreeModel;
-
 import org.geworkbench.bison.datastructure.biocollections.CSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.skin.Skin;
 
 /**
  * @author John Watkinson
+ * @version $Id$
  */
 public class SaveTree implements Serializable {
 
@@ -23,13 +23,13 @@ public class SaveTree implements Serializable {
 	private static final long serialVersionUID = 2534917305724421302L;
 
 	List<DataSetSaveNode> nodes;
-	private DSDataSet selected;
+	private DSDataSet<? extends DSBioObject> selected;
 	private int wspId=0;
 	private boolean dirty = false;
 	private String checkout = null;
 	private String lastchange = null;
 
-	public SaveTree(ProjectPanel panel, DSDataSet selected, int rid, boolean d, String co, String lc) {
+	public SaveTree(ProjectPanel panel, DSDataSet<? extends DSBioObject> selected, int rid, boolean d, String co, String lc) {
 		this.selected = selected;
 		this.wspId = rid;
 		this.dirty = d;
@@ -55,7 +55,7 @@ public class SaveTree implements Serializable {
 		int n = node.getChildCount();
 		for (int i = 0; i < n; i++) {
 			ProjectTreeNode treeNode = (ProjectTreeNode) node.getChildAt(i);
-			DSDataSet dataSet = null;
+			DSDataSet<?> dataSet = null;
 			if (treeNode instanceof DataSetNode) {
 				DataSetNode childNode = (DataSetNode) treeNode;
 				dataSet = childNode.dataFile;
@@ -72,7 +72,7 @@ public class SaveTree implements Serializable {
 			} else if (treeNode instanceof PendingTreeNode) {
 				// FIXME don't like how objects are stored by class name.
 				PendingTreeNode childNode = (PendingTreeNode) treeNode;
-				dataSet = new CSDataSet();
+				dataSet = new CSDataSet<DSBioObject>();
 				dataSet.addObject(childNode.getGridEpr().getClass(),
 						childNode.getGridEpr());
 				dataSet.addObject(String.class, childNode
@@ -96,7 +96,7 @@ public class SaveTree implements Serializable {
 		return nodes;
 	}
 
-	public DSDataSet getSelected() {
+	public DSDataSet<? extends DSBioObject> getSelected() {
 		return selected;
 	}
 
