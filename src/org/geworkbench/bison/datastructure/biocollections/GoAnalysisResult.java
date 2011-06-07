@@ -3,13 +3,7 @@
  */
 package org.geworkbench.bison.datastructure.biocollections;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -108,26 +102,6 @@ public class GoAnalysisResult extends CSAncillaryDataSet<CSMicroarray> {
 	}
 	
 	/**
-	 * return gene detail for a give gene symbol
-	 */
-	static public String getGeneDetail(String geneSymbol) {
-		if(geneDetails==null || geneDetails.get(geneSymbol)==null)
-			return "";
-		return geneDetails.get(geneSymbol).toString();
-	}
-	
-	/**
-	 * return entrez ID for a given gene symbol
-	 * @param geneSymbol
-	 * @return
-	 */
-	static public int getEntrezId(String geneSymbol) {
-		if(geneDetails==null || geneDetails.get(geneSymbol)==null)
-			return 0;
-		return geneDetails.get(geneSymbol).getEntrezId();
-	}
-
-	/**
 	 * return list of child IDs for a GO term ID
 	 * @param goTermId
 	 * @return
@@ -161,20 +135,6 @@ public class GoAnalysisResult extends CSAncillaryDataSet<CSMicroarray> {
 		else
 			return null;
 	}
-
-	public static boolean isAnnotationParsed() {
-		if(term2Gene.size()==0)return false;
-		else return true;
-	}
-	
-	/**
-	 * return the set of gene annotated to the given Go Term ID
-	 * @param goId
-	 * @return
-	 */
-	static public Set<String> getAnnotatedGenes(int goTermId) {
-		return term2Gene.get(goTermId);
-	}
 	
 	static public  Set<Integer>  getNamespaceIds() {
 		if(namespaceIds.size()>0) {
@@ -187,7 +147,7 @@ public class GoAnalysisResult extends CSAncillaryDataSet<CSMicroarray> {
 		}
 	}
 
-	private static HashMap<Integer, Set<String>> term2Gene = new HashMap<Integer, Set<String> >();
+	private HashMap<Integer, Set<String>> term2Gene = new HashMap<Integer, Set<String> >();
 	private static Set<Integer> namespaceIds = new TreeSet<Integer>();
 	
 	private static final Set<String> namespace;
@@ -197,128 +157,7 @@ public class GoAnalysisResult extends CSAncillaryDataSet<CSMicroarray> {
 		namespace.add("biological_process");
 		namespace.add("cellular_component");
 	};
-	
-	private static int countUnexpectedEntrezId = 0;
 
-	public static void parseAnnotation(String annotationFileName) throws IOException {
-		term2Gene.clear();
-		geneDetails.clear();
-		
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(annotationFileName));
-			String line = br.readLine();
-			int count = 0;
-			countUnexpectedEntrezId = 0;
-			while(line!=null) {
-				while(line.startsWith("#"))
-					line = br.readLine();
-				line = line.substring(1, line.length()-2); // trimming the leading and trailing quotation mark
-				String[] fields = line.split("\",\"");
-				final int AFFY_COLUMN_COUNT = 41;
-				if(fields.length!=AFFY_COLUMN_COUNT) {
-					throw new IOException("Annotation file "+annotationFileName+" not recognized.");
-				}
-				String geneSymbolField = fields[ANNOTATION_INDEX_GENE_SYMBOL];
-				String biologicalProcess = fields[ANNOTATION_INDEX_BIOLOGICAL_PROCESS];
-				String cellularComponent = fields[ANNOTATION_INDEX_CELLULAR_COMPONENT];
-				String molecularFunction = fields[ANNOTATION_INDEX_MOLECULAR_FUNCTION];
-				if (count > 0 && !geneSymbolField.equals("---") ) {
-					String[] geneSymbols = geneSymbolField.split("///");
-					String[] geneTitles = fields[ANNOTATION_INDEX_GENE_TITLE].trim().split("///");
-					String[] entrezIds = fields[ANNOTATION_INDEX_ENTREZ_ID].trim().split("///");
-					for(int i=0; i<geneSymbols.length; i++)
-						geneSymbols[i] = geneSymbols[i].trim(); 
-					parseOneNameSpace(biologicalProcess, geneSymbols, geneTitles, entrezIds);
-					parseOneNameSpace(cellularComponent, geneSymbols, geneTitles, entrezIds);
-					parseOneNameSpace(molecularFunction, geneSymbols, geneTitles, entrezIds);
-				}
-				count++;
-				
-				line = br.readLine();
-			}
-			br.close();
-			log.debug("total records in annotation file is "+count);
-			if(countUnexpectedEntrezId>0)
-				log.warn("total count of unexpected entrezId "+countUnexpectedEntrezId);
-
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			log.error("Annotation map is not successfullly created due to FileNotException: "+e.getMessage());
-		}
-		staticAnnotationFileName = annotationFileName;
-	}
-
-	private final static int ANNOTATION_INDEX_ENTREZ_ID = 18;
-	private final static int ANNOTATION_INDEX_GENE_TITLE = 13;
-	private final static int ANNOTATION_INDEX_GENE_SYMBOL = 14;
-	private final static int ANNOTATION_INDEX_BIOLOGICAL_PROCESS = 30;
-	private final static int ANNOTATION_INDEX_CELLULAR_COMPONENT = 31;
-	private final static int ANNOTATION_INDEX_MOLECULAR_FUNCTION = 32;
-
-	private static void parseOneNameSpace(String namespaceAnnotation, String[] geneSymbols, String[] geneTitles, String[] entrezIds) {
-		for (Integer goId : getGoId(namespaceAnnotation)) {
-			Set<String> genes = term2Gene.get(goId);
-			if (genes == null) {
-				genes = new HashSet<String>();
-				term2Gene.put(goId, genes);
-			}
-			for(int i=0; i<geneSymbols.length; i++) {
-				String geneSymbol = geneSymbols[i];
-				String geneTitle = "";
-				if(i<geneTitles.length)
-					geneTitle = geneTitles[i];
-				int entrezId = 0;
-				if(i<entrezIds.length) {
-					try {
-						entrezId = Integer.parseInt(entrezIds[i].trim());
-					} catch (NumberFormatException e) {
-						log.debug("unexpected entrezId field "+entrezIds[i]);
-						countUnexpectedEntrezId++;
-						continue;
-					}
-				}
-				genes.add(geneSymbol);
-				if(!geneDetails.containsKey(geneSymbol) && entrezId!=0) {
-					GeneDetails details = new GeneDetails(geneTitle, entrezId);
-					geneDetails.put(geneSymbol, details);
-				}
-			}
-		}
-		
-	}
-
-	private static List<Integer> getGoId(String annotationField) {
-		List<Integer> ids = new ArrayList<Integer>();
-
-		String[] goTerm = annotationField.split("///");
-		for(String g: goTerm) {
-			String[] f = g.split("//");
-			try {
-				ids.add( Integer.valueOf(f[0].trim()) );
-			} catch (NumberFormatException e) {
-				// do nothing for non-number case, like "---"
-				// log.debug("non-number in annotation "+f[0]);
-			}
-		}
-		return ids;
-	}
-
-	private static Map<String, GeneDetails> geneDetails = new HashMap<String, GeneDetails>();
-	// this is necessary because there may be need to include more details
-	private static class GeneDetails {
-		public GeneDetails(String geneTitle, int entrezId) {
-			this.geneTitle = geneTitle;
-			this.entrezId = entrezId;
-		}
-
-		private String geneTitle;
-		private int entrezId;
-		
-		public int getEntrezId() {return entrezId; }
-		
-		public String toString() {return geneTitle; }
-	}
-	
 	// used by GoAnalysis to build up the result object
 	public void addChangedGenes(String gene) {
 		changedGenes.add(gene);
@@ -400,24 +239,13 @@ public class GoAnalysisResult extends CSAncillaryDataSet<CSMicroarray> {
 		}
 	}
 
-	// implement saving workspace
-	private String annotationFileName = null;
-	private static String staticAnnotationFileName = null;
-	
-	private void writeObject(ObjectOutputStream out) throws IOException {
-		annotationFileName = staticAnnotationFileName;
-		
-		out.defaultWriteObject();
-	}
-     
-	private void readObject(ObjectInputStream in) throws IOException,
-			ClassNotFoundException {
-		in.defaultReadObject();
-		parseAnnotation(annotationFileName);
-	}
-
 	public static void parseOboFile(String oboFilename2) {
 		// TODO place holder for future feature of multiple gene ontology trees
 	}
+
+	public void setTerm2Gene(HashMap<Integer, Set<String>> term2Gene2) {
+		term2Gene = term2Gene2;
+	}
 	
+	public Set<String> getAnnotatedGenes(int goTermId) { return term2Gene.get(goTermId); }
 }

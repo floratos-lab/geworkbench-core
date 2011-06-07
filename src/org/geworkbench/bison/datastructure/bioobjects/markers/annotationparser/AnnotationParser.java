@@ -353,22 +353,41 @@ public class AnnotationParser implements Serializable {
 		}
 	}
 
-	static public String getInfoAsString(String affyID, String fieldID) {
-		String[] result = getInfo(affyID, fieldID);
+	// this method is similar to the previous one except it take dataset instead
+	// of using currentDataSet
+	static public String[] getInfo(DSMicroarraySet<DSMicroarray> dataset,
+			String affyID, String fieldID) {
+		String chipType = datasetToChipTypes.get(dataset);
+		String field = null;
 
-		String info = " ";
-		if (result == null) {
-			return affyID;
+		AnnotationFields fields = chipTypeToAnnotation.get(chipType).getFields(
+				affyID);
+		// individual field to be process separately to eventually get rid of
+		// the large map
+		if (fieldID.equals(ABREV)) { // same as GENE_SYMBOL
+			field = fields.getGeneSymbol();
+		} else if (fieldID.equals(LOCUSLINK)) {
+			field = fields.getLocusLink();
+		} else if (fieldID.equals(DESCRIPTION)) {
+			field = fields.getDescription();
+		} else if (fieldID.equals(GENE_ONTOLOGY_MOLECULAR_FUNCTION)) {
+			field = fields.getMolecularFunction();
+		} else if (fieldID.equals(GENE_ONTOLOGY_CELLULAR_COMPONENT)) {
+			field = fields.getCellularComponent();
+		} else if (fieldID.equals(GENE_ONTOLOGY_BIOLOGICAL_PROCESS)) {
+			field = fields.getBiologicalProcess();
+		} else if (fieldID.equals(UNIGENE)) {
+			field = fields.getUniGene();
+		} else if (fieldID.equals(REFSEQ)) {
+			field = fields.getRefSeq();
+		} else if (fieldID.equals(SWISSPROT)) {
+			field = fields.getSwissProt();
+		} else {
+			log.error("trying to retreive unsupported field " + fieldID
+					+ " from marker annotation. null is returned.");
+			return null;
 		}
-
-		if (result.length > 0) {
-			info = result[0];
-			for (int i = 1; i < result.length; i++) {
-				info += "/" + result[i];
-			}
-		}
-
-		return info;
+		return field.split(MAIN_DELIMITER);
 	}
 
 	public static Set<String> getSwissProtIDs(String markerID) {
