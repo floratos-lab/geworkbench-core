@@ -39,12 +39,11 @@ public class SequenceViewWidgetPanel extends JPanel {
 
 	private static final long serialVersionUID = 7202257250696337753L;
 
-	private final int xOff = 80;
+	private int xOff = 80;
 	private final int yOff = 20;
 
 	private final int yStep = 14;
 	private double scale = 1.0;
-	private final static int maxDisplayChars = 12;
 	private int selected = 0;
 	private int maxSeqLen = 1;
 	private String displayInfo = "";
@@ -95,6 +94,8 @@ public class SequenceViewWidgetPanel extends JPanel {
 		sequencePatternmatches = patternSeqMatches;
 		sequenceDB = seqDB;
 		lineView = isLineView;
+		// keep the original xOff/labelLength ratio: xOff=80 -> maxDisplayChars=12
+		xOff = getMaxLabLen() * 20 / 3;
 		repaint();
 
 	}
@@ -473,11 +474,7 @@ public class SequenceViewWidgetPanel extends JPanel {
 		int x = xOff + (int) (len * scale);
 		g.setColor(SEQUENCEBACKGROUDCOLOR);
 
-		if (lab.length() > maxDisplayChars) {
-			g.drawString(lab.substring(0, maxDisplayChars), 4, y + 3);
-		} else {
-			g.drawString(lab, 4, y + 3);
-		}
+		g.drawString(lab, 4, y + 3);
 		g.drawLine(xOff, y, x, y);
 
 	}
@@ -1066,6 +1063,19 @@ public class SequenceViewWidgetPanel extends JPanel {
 
 	public void setSeqXclickPoint(int seqXclickPoint) {
 		this.seqXclickPoint = seqXclickPoint;
+	}
+	
+	private int getMaxLabLen(){
+		int maxLabLen = 0;
+		int seqNo = sequenceDB.getSequenceNo();
+		for (int seqId = 0; seqId < seqNo; seqId++) {
+			String lab = ">seq " + seqId;
+			DSSequence theSequence = sequenceDB.getSequence(seqId);
+			if (theSequence != null && theSequence.getLabel().length() > 0)
+				lab = theSequence.getLabel();
+			if (maxLabLen < lab.length())  maxLabLen = lab.length();
+		}
+		return maxLabLen;
 	}
 
 }
