@@ -144,19 +144,11 @@ public class AdjacencyMatrix implements Serializable {
 		Set<DSGeneMarker> set = new HashSet<DSGeneMarker>();
 		HashMap<Node, EdgeInfo> row = geneRows.get(new Node(marker));
 		if (row == null) {
-			row = geneRows.get(new Node(NodeType.GENE_SYMBOL, marker.getGeneName()));			 
+			return null;
 		}
-		if ( row == null)
-		    return null;
 		for (Node id : row.keySet()) {
 			if (id.type == NodeType.MARKER)
 				set.add(id.marker);
-			else if (id.type == NodeType.GENE_SYMBOL)
-			{
-				DSGeneMarker m = maSet.getMarkers().get(id.stringId);			 
-				if ( m != null )
-				   set.add(maSet.getMarkers().get(id.stringId));
-			}
 		}
 		return set;
 	}
