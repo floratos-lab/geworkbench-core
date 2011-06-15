@@ -120,6 +120,7 @@
 				<include name="interactions" />
 				<include name="jmol" />
 				<include name="markus" />
+				<include name="masterregulator" />
 				<include name="matrixreduce" />
 				<include name="medusa" />
 				<include name="microarrays" />
@@ -560,6 +561,7 @@
 				<include name="${components}/idea/**/*" />
 				<include name="${components}/interactions/**/*" />
 				<include name="${components}/jmol/**/*" />
+				<include name="${components}/masterregulator**/*" />
 				<include name="${components}/matrixreduce/**/*" />
 				<include name="${components}/microarrays/**/*" />
 				<include name="${components}/mindy/**/*" />
