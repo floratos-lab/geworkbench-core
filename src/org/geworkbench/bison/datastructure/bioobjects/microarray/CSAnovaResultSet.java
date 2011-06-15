@@ -3,8 +3,11 @@
  */
 package org.geworkbench.bison.datastructure.bioobjects.microarray;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,11 +16,14 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.JFileChooser;
+
 import org.geworkbench.bison.datastructure.biocollections.views.DSMicroarraySetView;
 import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.complex.panels.CSPanel;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
+import org.geworkbench.util.CsvFileFilter;
 
 /**
  * @author yc2480
@@ -260,4 +266,125 @@ public class CSAnovaResultSet<T extends DSGeneMarker> extends
 	public String[] significantMarkerNamesGetter() {
 		return significantMarkerNames;
 	}
+	
+	public void saveDataToCSVFile()
+    {
+		BufferedWriter out = null;
+		 try{
+			 JFileChooser chooser = new JFileChooser( ".");
+             chooser.setFileFilter(new CsvFileFilter());
+             int returnVal = chooser.showSaveDialog(null);
+             if (returnVal == JFileChooser.APPROVE_OPTION) 
+             { 
+            	 String csvFname = chooser.getSelectedFile().getAbsolutePath();
+            	 if (!csvFname.toLowerCase().endsWith(".csv"))  csvFname += ".csv";
+			     out = new BufferedWriter(new FileWriter(csvFname));
+    	         out.write(toCVS());
+    	         out.flush();
+             }
+		 }catch(Exception e){
+			 e.printStackTrace();
+	     }finally{
+	    	 if (out!=null){
+		    	 try{
+		    		  out.close();
+		    	 }catch(IOException ioe){
+		    		 ioe.printStackTrace();
+		    	 }
+	    	 }
+	     }
+    }
+
+	private boolean fStat = true;
+	private boolean pVal = true;
+	private boolean mean = true;
+	private boolean std = true;
+	private String[] header = null;
+	private Object[][] A = null;
+	
+	private void refreshTable() {
+		int groupNum = getLabels(0).length;
+		int meanStdStartAtIndex = 1 + (fStat ? 1 : 0) + (pVal ? 1 : 0);
+		header = new String[meanStdStartAtIndex + groupNum
+				* ((mean ? 1 : 0) + (std ? 1 : 0))];
+		int fieldIndex = 0;
+		header[fieldIndex++] = "Marker Name";
+		if (pVal) {
+			header[fieldIndex++] = "P-Value";
+		}
+		if (fStat) {
+			header[fieldIndex++] = "F-statistic";
+		}
+		for (int cx = 0; cx < groupNum; cx++) {
+			if (mean) {
+				header[meanStdStartAtIndex + cx
+						* ((mean ? 1 : 0) + (std ? 1 : 0)) + 0] = getLabels(0)[cx] + "_Mean";
+			}
+			if (std) {
+				header[meanStdStartAtIndex + cx
+						* ((mean ? 1 : 0) + (std ? 1 : 0)) + (mean ? 1 : 0)] = getLabels(0)[cx] + "_Std";
+			}
+		}
+
+		A = new Object[getSignificantMarkers().size()][header.length];
+
+		double[][] result2DArray = getResult2DArray();
+		int significantMarkerNumbers = getSignificantMarkers()
+				.size();
+		for (int cx = 0; cx < significantMarkerNumbers; cx++) {
+			fieldIndex = 0;
+			A[cx][fieldIndex++] = ((DSGeneMarker)getSignificantMarkers().get(cx)).getShortName();
+			if (pVal) {
+				A[cx][fieldIndex++] = new Float(result2DArray[0][cx]);
+			}
+			if (fStat) {
+				A[cx][fieldIndex++] = result2DArray[2][cx];
+			}
+			for (int gc = 0; gc < groupNum; gc++) {
+				if (mean) {
+					A[cx][meanStdStartAtIndex + gc
+							* ((mean ? 1 : 0) + (std ? 1 : 0)) + 0] = result2DArray[3 + gc * 2][cx];
+				}
+				if (std) {
+					A[cx][meanStdStartAtIndex + gc
+							* ((mean ? 1 : 0) + (std ? 1 : 0)) + (mean ? 1 : 0)] = result2DArray[4 + gc * 2][cx];
+				}
+			}
+		}
+
+	}
+
+	private String toCVS() {
+		refreshTable();
+		String answer = "";
+
+		boolean newLine = true;
+
+		for (int cx = 0; cx < header.length; cx++) {
+			if (newLine) {
+				newLine = false;
+			} else {
+				answer += ",";
+			}
+			answer += "\"" + header[cx] + "\"";
+		}
+		answer += "\n";
+		newLine = true;
+
+		// print the table
+		for (int cx = 0; cx < A.length; cx++) {
+			for (int cy = 0; cy < header.length; cy++) {
+				if (newLine) {
+					newLine = false;
+				} else {
+					answer += ",";
+				}
+				answer += "\"" + A[cx][cy] + "\"";
+			}
+			answer += "\n";
+			newLine = true;
+		}
+		return answer;
+	}
+
 }

@@ -42,5 +42,6 @@ public interface DSSignificanceResultSet <T extends DSGeneMarker> extends DSAnci
     public void setMarker(T marker, double signficance);
     
     public void addSigGenToPanel(T marker);   
-    
+
+    public void saveDataToCSVFile();
 }

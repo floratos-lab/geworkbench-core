@@ -168,4 +168,6 @@ public class CSSignificanceResultSet <T extends DSGeneMarker> extends CSAncillar
     		return null;
     	}
     }
+
+    public void saveDataToCSVFile(){}
 }
