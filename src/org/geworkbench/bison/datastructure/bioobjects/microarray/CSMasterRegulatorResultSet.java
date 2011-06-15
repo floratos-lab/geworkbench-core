@@ -2,6 +2,7 @@ package org.geworkbench.bison.datastructure.bioobjects.microarray;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
@@ -17,9 +18,11 @@ public class CSMasterRegulatorResultSet <T extends DSGeneMarker> extends CSAncil
 	HashMap<DSGeneMarker,Double> TF2PValue = new HashMap<DSGeneMarker,Double>();
 	HashMap<String,Double> TFGeneAndTargetGene2PValue = new HashMap<String,Double>();
 	HashMap<String,Double> TFGeneAndTargetGene2TTestValue = new HashMap<String,Double>();
-	DSSignificanceResultSet<DSGeneMarker> sigSet = null;
+	//DSSignificanceResultSet<DSGeneMarker> sigSet = null;
 	DSMicroarraySet<DSMicroarray> maSet = null;
 	private int markerCount = 0;
+
+	private Map<DSGeneMarker, Double> tValues;
 
 	public CSMasterRegulatorResultSet(DSMicroarraySet<DSMicroarray> parent, String label, int markerCount) {
 		super(parent, label);
@@ -95,15 +98,28 @@ public class CSMasterRegulatorResultSet <T extends DSGeneMarker> extends CSAncil
 		result.addAll(TF2GenesInTargetList.keySet());
 		return result;
 	}
+	
 	public void setSignificanceResultSet(DSSignificanceResultSet<DSGeneMarker> sigSet){
-		this.sigSet = sigSet;
+		//this.sigSet = sigSet;
 	}
 	public DSSignificanceResultSet<DSGeneMarker> getSignificanceResultSet(){
-		return this.sigSet;
+		return null; //this.sigSet;
 	}
 
 	public int getMarkerCount() {
 		return markerCount;
+	}
+
+	public void setTValues(Map<DSGeneMarker, Double> tValues){
+		this.tValues = tValues;
+	}
+
+	public double getTValue(DSGeneMarker key) {
+		if(tValues==null) return Double.NaN;
+		
+		Double v =  tValues.get(key);
+		if(v==null) v = Double.NaN;
+		return v;
 	}
 	
 }

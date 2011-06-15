@@ -1,5 +1,7 @@
 package org.geworkbench.bison.datastructure.bioobjects.microarray;
 
+import java.util.Map;
+
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
@@ -29,4 +31,6 @@ public interface DSMasterRagulatorResultSet <T extends DSGeneMarker> extends DSA
 	public void setSignificanceResultSet(DSSignificanceResultSet<DSGeneMarker> sigSet);
 	public DSSignificanceResultSet<DSGeneMarker> getSignificanceResultSet();
 	public int getMarkerCount();
+	public double getTValue(DSGeneMarker marker);
+	public void setTValues(Map<DSGeneMarker, Double> tTestResult);
 }
