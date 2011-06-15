@@ -58,7 +58,10 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet<DSMicroarray> {
 	private static String getExportName(AdjacencyMatrix.Node node) {
 		if (node.type == NodeType.MARKER) {
 			return node.marker.getLabel();
-		}		 
+		}
+		else if (node.type == NodeType.GENE_SYMBOL) {
+			return node.stringId;
+		}
 		else if (node.type == NodeType.STRING) {
 			return node.stringId;
 		} else {
@@ -167,8 +170,13 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet<DSMicroarray> {
 						{
 							node = new AdjacencyMatrix.Node(NodeType.STRING, strGeneId1);
 						}
-						else
-							node = new AdjacencyMatrix.Node(m);
+						else 
+						{
+						    if (selectedRepresentedBy.equals(PROBESET_ID))							
+							   node = new AdjacencyMatrix.Node(m);
+						    else 
+						       node = new AdjacencyMatrix.Node(NodeType.GENE_SYMBOL, m.getGeneName());
+						}
 
 						if (format.equals(SIF_FORMART) && tr.hasMoreTokens())
 							interactionType = tr.nextToken();
@@ -192,7 +200,12 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet<DSMicroarray> {
 								node2 = new AdjacencyMatrix.Node(NodeType.STRING, strGeneId2);
 							}
 							else
-								node2 = new AdjacencyMatrix.Node(m2);
+							{ 
+								 if (selectedRepresentedBy.equals(PROBESET_ID))	
+								      node2 = new AdjacencyMatrix.Node(m2);
+								 else 
+								      node2 = new AdjacencyMatrix.Node(NodeType.GENE_SYMBOL, m2.getGeneName());
+							}
 							
 							if (format.equals(ADJ_FORMART) ) {	
 								if (!tr.hasMoreTokens())
