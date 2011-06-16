@@ -28,8 +28,7 @@ public interface DSMasterRagulatorResultSet <T extends DSGeneMarker> extends DSA
     public void setPValue(DSGeneMarker TF, double pValue);
     public double getPValue(DSGeneMarker TF);
 	public DSItemList<DSGeneMarker> getTFs();
-	public void setSignificanceResultSet(DSSignificanceResultSet<DSGeneMarker> sigSet);
-	public DSSignificanceResultSet<DSGeneMarker> getSignificanceResultSet();
+
 	public int getMarkerCount();
 	public double getTValue(DSGeneMarker marker);
 	public void setTValues(Map<DSGeneMarker, Double> tTestResult);

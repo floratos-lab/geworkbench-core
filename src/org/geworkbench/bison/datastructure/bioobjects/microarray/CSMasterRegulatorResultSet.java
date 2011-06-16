@@ -18,7 +18,7 @@ public class CSMasterRegulatorResultSet <T extends DSGeneMarker> extends CSAncil
 	HashMap<DSGeneMarker,Double> TF2PValue = new HashMap<DSGeneMarker,Double>();
 	HashMap<String,Double> TFGeneAndTargetGene2PValue = new HashMap<String,Double>();
 	HashMap<String,Double> TFGeneAndTargetGene2TTestValue = new HashMap<String,Double>();
-	//DSSignificanceResultSet<DSGeneMarker> sigSet = null;
+
 	DSMicroarraySet<DSMicroarray> maSet = null;
 	private int markerCount = 0;
 
@@ -99,13 +99,6 @@ public class CSMasterRegulatorResultSet <T extends DSGeneMarker> extends CSAncil
 		return result;
 	}
 	
-	public void setSignificanceResultSet(DSSignificanceResultSet<DSGeneMarker> sigSet){
-		//this.sigSet = sigSet;
-	}
-	public DSSignificanceResultSet<DSGeneMarker> getSignificanceResultSet(){
-		return null; //this.sigSet;
-	}
-
 	public int getMarkerCount() {
 		return markerCount;
 	}
