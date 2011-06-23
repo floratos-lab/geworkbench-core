@@ -6,6 +6,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
+import org.geworkbench.bison.datastructure.biocollections.AdjacencyMatrixDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
@@ -99,7 +100,7 @@ public class TreeNodeRenderer extends DefaultTreeCellRenderer {
                     setToolTipText("This is an undefined Data set");
                 }
             } else if (value.getClass() == DataSetSubNode.class) {
-                DSAncillaryDataSet<? extends DSBioObject> adf = ((DataSetSubNode) value)._aDataSet;
+                DSAncillaryDataSet<? extends DSBioObject> adf = ((DataSetSubNode) value)._aDataSet;               
                 ImageIcon icon = ProjectPanel.getIconForType(adf.getClass());
                 if (icon != null) {
                     setIcon(icon);
@@ -107,11 +108,21 @@ public class TreeNodeRenderer extends DefaultTreeCellRenderer {
                     setIcon(Icons.DATASUBSET_ICON);
                 }
                 String[] descriptions = adf.getDescriptions();
+                
                 if (descriptions.length > 0) {
                     setToolTipText("This is a Ancillary Data set: " + descriptions[0]);
-                } else {
-                    setToolTipText("This is an undefined Ancillary Data set");
-                }
+                } else {                	
+	                if (adf instanceof AdjacencyMatrixDataSet){
+	                	AdjacencyMatrixDataSet adjSet = (AdjacencyMatrixDataSet) adf;                
+		                int nodeNumber = adjSet.getMatrix().getNodeNumber();
+		                int edgeNumber = adjSet.getMatrix().getEdges().size();
+		                edgeNumber/=2;                
+		                setToolTipText("# of nodes: "+nodeNumber+ ", # of edges: "+ edgeNumber);
+	                }
+	                else {
+	                	setToolTipText("This is an undefined Ancillary Data set");
+	                }
+                }  
             } else if (value.getClass() == ImageNode.class) {
                 setIcon(Icons.IMAGE_ICON);
             }
