@@ -147,6 +147,8 @@ public class CSExpressionMarker extends CSGeneMarker implements
 		if (this.geneIds == null && label != null) {
 			String[] entrezIds = AnnotationParser.getInfo(label,
 					AnnotationParser.LOCUSLINK);
+			if (entrezIds == null || entrezIds.length <= 0 )
+				return null;
 			geneIds = new int[entrezIds.length];
 			for (int i = 0; i < entrezIds.length; i++) {
 				try {

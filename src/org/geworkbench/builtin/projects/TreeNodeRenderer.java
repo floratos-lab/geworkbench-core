@@ -115,8 +115,8 @@ public class TreeNodeRenderer extends DefaultTreeCellRenderer {
 	                if (adf instanceof AdjacencyMatrixDataSet){
 	                	AdjacencyMatrixDataSet adjSet = (AdjacencyMatrixDataSet) adf;                
 		                int nodeNumber = adjSet.getMatrix().getNodeNumber();
-		                int edgeNumber = adjSet.getMatrix().getEdges().size();
-		                edgeNumber/=2;                
+		                int edgeNumber = adjSet.getMatrix().getConnectionNo();
+		                //edgeNumber/=2;                
 		                setToolTipText("# of nodes: "+nodeNumber+ ", # of edges: "+ edgeNumber);
 	                }
 	                else {

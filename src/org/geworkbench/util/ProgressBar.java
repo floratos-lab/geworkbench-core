@@ -288,7 +288,7 @@ public class ProgressBar
         cancelButton.setRequestFocusEnabled(true);
 
         container.setLayout(new GridBagLayout());
-        jLabel1.setToolTipText("");
+
         jLabel1.setHorizontalAlignment(SwingConstants.CENTER);
         jLabel1.setText("Message");
         jLabel1.setVerticalTextPosition(SwingConstants.CENTER);

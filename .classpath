@@ -58,8 +58,5 @@
 	<classpathentry kind="lib" path="lib/axis2-transport-http-1.5.3.jar"/>
 	<classpathentry kind="lib" path="lib/httpcore-4.0.jar"/>
 	<classpathentry kind="lib" path="lib/axis2-upload-client.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/genspace/persistence-common.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/genspace/kernel.jar"/>
-	<classpathentry kind="lib" path="lib/genspace/appclient.security.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

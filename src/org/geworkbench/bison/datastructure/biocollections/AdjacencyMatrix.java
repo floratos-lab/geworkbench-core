@@ -36,6 +36,32 @@ public class AdjacencyMatrix implements Serializable {
 			this.value = value;
 			this.type = type;
 		}
+		
+		@Override
+		public boolean equals(Object obj) {
+			if (!(obj instanceof EdgeInfo))
+				return false;
+
+			EdgeInfo edgeInfo = (EdgeInfo) obj;	
+			
+			if (type == null || edgeInfo.type == null)
+				return true;
+			
+			if (edgeInfo.type.equals(this.type)	)				 
+				return true;
+		    else
+				return false;
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+            int h = 5;  
+            if (type != null)
+                h =  prime * h + this.type.hashCode() + 21;
+			return h;
+		}  
+		
 	}
 
 	public enum NodeType {
@@ -45,7 +71,7 @@ public class AdjacencyMatrix implements Serializable {
 	// integer Id is not not used for now.
 	public static class Node implements Serializable {
 		private static final long serialVersionUID = -6472302414584701593L;
-		
+
 		public NodeType type;
 		public DSGeneMarker marker;
 		public String stringId;
@@ -82,37 +108,40 @@ public class AdjacencyMatrix implements Serializable {
 					&& node.marker.equals(this.marker)) {
 				return true;
 			} else if (node.type == this.type) {
-				if(node.stringId==null || this.stringId==null)
+				if (node.stringId == null || this.stringId == null)
 					return false;
-				else if(node.stringId.equals(this.stringId))
+				else if (node.stringId.equals(this.stringId))
 					return true;
 				else
 					return false;
 			} else
 				return false;
 		}
-		
+
 		@Override
 		public int hashCode() {
 			int h = 17;
-			if(type!=null) h = 31*h + type.hashCode();
-			if(marker!=null) h = 31*h + marker.hashCode();
-			if(stringId!=null) h = 31*h + stringId.hashCode();
-			h = 31*h + intId;
+			if (type != null)
+				h = 31 * h + type.hashCode();
+			if (marker != null)
+				h = 31 * h + marker.hashCode();
+			if (stringId != null)
+				h = 31 * h + stringId.hashCode();
+			h = 31 * h + intId;
 			return h;
 		}
 	}
 
-	private HashMap<Node, HashMap<Node, EdgeInfo>> geneRows = new HashMap<Node, HashMap<Node, EdgeInfo>>();
+	private HashMap<Node, HashMap<Node, Set<EdgeInfo>>> geneRows = new HashMap<Node, HashMap<Node, Set<EdgeInfo>>>();
 
-	private final DSMicroarraySet<DSMicroarray> maSet;
+	private final DSMicroarraySet<DSMicroarray> maSet;	
 
 	private final String name;
 
 	private final Map<String, String> interactionTypeSifMap; // TODO check ?
 
-	private int edgeNumber = 0;
-	private int nodeNumber = 0;
+    private Set<Node> nodeSet = new HashSet<Node>();
+    
 
 	public AdjacencyMatrix(String name,
 			final DSMicroarraySet<DSMicroarray> microarraySet) {
@@ -135,27 +164,26 @@ public class AdjacencyMatrix implements Serializable {
 	}
 
 	/**
-	 * Returns a map with all the edges to geneId. This is only used by MRA
-	 * analysis.
+	 * Returns a map with all the edges to geneId. This is only used by
+	 * master regulator analysis.
 	 * 
 	 */
-	// this replace the original public HashMap<Integer, Float> get(int geneId)
 	public Set<DSGeneMarker> get(DSGeneMarker marker) {
 		Set<DSGeneMarker> set = new HashSet<DSGeneMarker>();
-		HashMap<Node, EdgeInfo> row = geneRows.get(new Node(marker));
+		HashMap<Node, Set<EdgeInfo>> row = geneRows.get(new Node(marker));
 		if (row == null) {
-			row = geneRows.get(new Node(NodeType.GENE_SYMBOL, marker.getGeneName()));			 
+			row = geneRows.get(new Node(NodeType.GENE_SYMBOL, marker
+					.getGeneName()));
 		}
-		if ( row == null)
-		    return null;
+		if (row == null)
+			return null;
 		for (Node id : row.keySet()) {
 			if (id.type == NodeType.MARKER)
 				set.add(id.marker);
-			else if (id.type == NodeType.GENE_SYMBOL)
-			{
-				DSGeneMarker m = maSet.getMarkers().get(id.stringId);			 
-				if ( m != null )
-				   set.add(m);
+			else if (id.type == NodeType.GENE_SYMBOL) {
+				DSGeneMarker m = maSet.getMarkers().get(id.stringId);
+				if (m != null)
+					set.add(m);
 			}
 		}
 		return set;
@@ -167,12 +195,12 @@ public class AdjacencyMatrix implements Serializable {
 	 * 
 	 * @param geneId
 	 */
-	// this replaces public void addGeneRow(int geneId) {
+	// TODO this feature may no be necessary
 	public void addGeneRow(Node node) {
-		HashMap<Node, EdgeInfo> row = geneRows.get(node);
+		HashMap<Node, Set<EdgeInfo>> row = geneRows.get(node);
 		if (row == null) {
-			geneRows.put(node, new HashMap<Node, EdgeInfo>());
-			nodeNumber++;
+			geneRows.put(node, new HashMap<Node, Set<EdgeInfo>>());
+			nodeSet.add(node);
 		}
 	}
 
@@ -181,88 +209,62 @@ public class AdjacencyMatrix implements Serializable {
 	}
 
 	/**
-	 * Adds and edge between geneId1 and geneId2, indexes into the microarray
-	 * dataset
+	 * Adds and edge between geneId1 and geneId2.
 	 * 
-	 * @param geneId1
-	 *            int
-	 * @param geneId2
-	 *            int
-	 * @param edge
-	 *            float
-	 */
-	/*
-	 * This replaces two methods: public void add(int geneId1, int geneId2,
-	 * float edge, String interaction) {
-	 * 
-	 * public void add(String geneId1, String geneId2, boolean
-	 * isGene1InMicroarray, boolean isGene2InMicroarray, float edge, String
-	 * interaction) {
-	 * 
-	 * the getMappedId functionality is supported by the node itself
 	 */
 	public void add(Node node1, Node node2, float edge, String interaction) {
-
-		HashMap<Node, EdgeInfo> row = geneRows.get(node1);
+		 
+		HashMap<Node, Set<EdgeInfo>> row = geneRows.get(node1);
 		if (row == null) {
-			row = new HashMap<Node, EdgeInfo>();
+			row = new HashMap<Node, Set<EdgeInfo>>();
 			geneRows.put(node1, row);
-			nodeNumber++;
+			nodeSet.add(node1);
 		}
-		row.put(node2, new EdgeInfo(edge, interaction));
 
-		// doing it both ways; [gene2 -> (gene1, edge)]
-		row = geneRows.get(node2);
-		if (row == null) {
-			row = new HashMap<Node, EdgeInfo>();
-			geneRows.put(node2, row);
-			nodeNumber++;
+		Set<EdgeInfo> edgeSet = row.get(node2);
+		if (edgeSet == null)
+		{
+			edgeSet = new HashSet<EdgeInfo>();
+			nodeSet.add(node2);
 		}
-		row.put(node1, new EdgeInfo(edge, interaction));
 
-		edgeNumber++;
+	    edgeSet.add(new EdgeInfo(edge, interaction));
+		 
+
+		row.put(node2, edgeSet);
+		
 	}
-	
+
 	// this variation is used only by ARACNE
 	// the new edge is added only if the edge is larger
 	public void add(Node node1, Node node2, float edge) {
 
-		HashMap<Node, EdgeInfo> row = geneRows.get(node1);
+		HashMap<Node, Set<EdgeInfo>> row = geneRows.get(node1);
 		if (row == null) {
-			row = new HashMap<Node, EdgeInfo>();
+			row = new HashMap<Node, Set<EdgeInfo>>();
 			geneRows.put(node1, row);
-			nodeNumber++;
-		}
-		EdgeInfo existingEdge = row.get(node2);
-		if(existingEdge==null || existingEdge.value<edge) {
-			row.put(node2, new EdgeInfo(edge, null));
+			nodeSet.add(node1);
 		}
 
-		// doing it both ways; [gene2 -> (gene1, edge)]
-		row = geneRows.get(node2);
-		if (row == null) {
-			row = new HashMap<Node, EdgeInfo>();
-			geneRows.put(node2, row);
-			nodeNumber++;
+		Set<EdgeInfo> edgeSet = row.get(node2);
+		EdgeInfo existingEdge = null;
+		if (edgeSet != null && !edgeSet.isEmpty())
+			existingEdge = (EdgeInfo) (edgeSet.toArray()[0]);
+		if (existingEdge == null || existingEdge.value < edge) {
+			edgeSet = new HashSet<EdgeInfo>();
+			edgeSet.add(new EdgeInfo(edge, null));
+			row.put(node2, edgeSet);			 
 		}
-		existingEdge = row.get(node1);
-		if(existingEdge==null || existingEdge.value<edge) {
-			row.put(node1, new EdgeInfo(edge, null));
-		}
+		nodeSet.add(node2);
 
-		edgeNumber++;
 	}
 
-	// this method is not needed any more
-	// public int getMappedId(int geneId)
-	// }
-
 	public int getConnectionNo() {
-		return edgeNumber;
+		return getEdges().size() ;
 	}
 
 	public int getNodeNumber() {
-		return nodeNumber;
+		return nodeSet.size();
 	}
 
 	public DSMicroarraySet<DSMicroarray> getMicroarraySet() {
@@ -286,31 +288,16 @@ public class AdjacencyMatrix implements Serializable {
 	}
 
 	/**
-	 * Edge for those not from the input microarray dataset.
-	 * 
-	 */
-	public static class EdgeWithStringNode {
-		public String node1;
-		public String node2;
-		public EdgeInfo info;
-
-		EdgeWithStringNode(String node1, String node2, EdgeInfo info) {
-			this.node1 = node1;
-			this.node2 = node2;
-			this.info = info;
-		}
-	}
-
-	/**
 	 * 
 	 * @return all edges
 	 */
 	public List<Edge> getEdges() {
 		List<Edge> list = new ArrayList<Edge>();
 		for (Node node1 : geneRows.keySet()) {
-			Map<Node, AdjacencyMatrix.EdgeInfo> destGenes = geneRows.get(node1);
+			Map<Node, Set<EdgeInfo>> destGenes = geneRows.get(node1);
 			for (Node node2 : destGenes.keySet()) {
-				list.add(new Edge(node1, node2, destGenes.get(node2)));
+				for (EdgeInfo e : destGenes.get(node2))
+					list.add(new Edge(node1, node2, e));
 			}
 		}
 		return list;
@@ -318,23 +305,23 @@ public class AdjacencyMatrix implements Serializable {
 
 	/**
 	 * 
-	 * @return edges from a given node
+	 * @return edges starting from a given node
 	 */
-	// replace public List<Edge> getEdges(int node1) {
-	// replace as well public List<EdgeWithStringNode>
-	// getEdgesNotInMicroarray(String node1) {
 	public List<Edge> getEdges(Node node1) {
 		List<Edge> list = new ArrayList<Edge>();
-		Map<Node, AdjacencyMatrix.EdgeInfo> destGenes = geneRows.get(node1);
+		Map<Node, Set<EdgeInfo>> destGenes = geneRows.get(node1);
 		for (Node node2 : destGenes.keySet()) {
-			list.add(new Edge(node1, node2, destGenes.get(node2)));
+			for(EdgeInfo e : destGenes.get(node2))
+			list.add(new Edge(node1, node2, e));
 		}
 
 		return list;
 	}
 
-	// replace public List<Integer> getNodes() and public List<String>
-	// getNodesNotInMicroarray()
+	/**
+	 * Return the starting nodes of all edges.
+	 * Please note that this method name may be misleading. It does not return all nodes.
+	 */
 	public List<Node> getNodes() {
 		return new ArrayList<Node>(geneRows.keySet());
 	}

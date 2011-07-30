@@ -2,6 +2,8 @@ package org.geworkbench.util.pathwaydecoder.mutualinformation;
 
 import java.io.Serializable;
 import java.text.CollationKey;
+import java.text.Collator;
+
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 
 /**
@@ -29,10 +31,20 @@ public class MindyGeneMarker implements Serializable {
 	}
 	
 	public CollationKey getNameSortKey(){
+		if(nameSortKey==null) {
+			Collator myCollator = Collator.getInstance();
+			nameSortKey = myCollator.getCollationKey(marker.getLabel());
+		}
+		
 		return this.nameSortKey;
 	}
 	
 	public CollationKey getDescriptionSortKey(){
+		if(descSortKey==null) {
+			Collator myCollator = Collator.getInstance();
+			descSortKey = myCollator.getCollationKey(marker.getDescription());
+		}
+		
 		return this.descSortKey;
 	}
 	

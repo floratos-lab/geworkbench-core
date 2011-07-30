@@ -305,7 +305,6 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 		jScrollPane1.getViewport().add(remoteFileTree, null);
 		jPanel6.add(caArrayDetailPanel);
 
-		remoteFileTree.setToolTipText("");
 		remoteFileTree.getSelectionModel().setSelectionMode(
 				TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
 		remoteFileTree.addTreeSelectionListener(new TreeSelectionListener() {

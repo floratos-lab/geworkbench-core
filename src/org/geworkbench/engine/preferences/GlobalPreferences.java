@@ -18,6 +18,7 @@ public class GlobalPreferences {
     public static final String RCM_URL = "Remote Components URL";
     public static final String PREF_MARKER_LOAD = "Marker Load Options";
     public static final String RWSP_URL = "Remote Workspaces URL";
+    public static final String MAX_NETWORK_OBJECT_NUMBER = "Soft Limit on Cytoscape Network Objects (nodes+edges)";
     
     public static final String[] VISUALIZATION_VALUES = new String[]{"Absolute", "Relative"};
     @SuppressWarnings("unchecked")
@@ -37,7 +38,7 @@ public class GlobalPreferences {
     public static final String DEFAULT_RCM_URL = "http://cagridnode.c2b2.columbia.edu:8080/"+VERSION+"/componentRepository";
     
     public static final String[] MARKER_LOAD_VALUES = new String[]{"Load markers in the original order", "Load markers ordered by gene name", "Load markers ordered by probe set ID"};
-    public static final int ORIGINAL = 0, SORTED_GENE = 1, SORTED_PROBE = 2;
+    public static final int ORIGINAL = 0, SORTED_GENE = 1, SORTED_PROBE = 2, MAX_INTERACTION_NUM = 5000;
 
     public static final String DEFAULT_RWSP_URL = "http://genspace.cs.columbia.edu:8080/axis2/services";
 
@@ -85,6 +86,10 @@ public class GlobalPreferences {
         // RWSP URL
         TextField field6 = new TextField(GlobalPreferences.RWSP_URL);
         field6.setValue(GlobalPreferences.DEFAULT_RWSP_URL);
+        
+        // reasonable number of interactions for create cytoscape network 
+        IntegerField field7 = new IntegerField(MAX_NETWORK_OBJECT_NUMBER);
+        field7.setValue(MAX_INTERACTION_NUM);
 
         prefs.addField(field1);
         prefs.addField(field2);
@@ -92,6 +97,7 @@ public class GlobalPreferences {
         prefs.addField(field4);
         prefs.addField(field5);
         prefs.addField(field6);
+        prefs.addField(field7);
 
         // Load stored values
         PreferencesManager manager = PreferencesManager.getPreferencesManager();
@@ -127,4 +133,9 @@ public class GlobalPreferences {
     public String getRWSP_URL() {
         return prefs.getField(RWSP_URL).toString();
     }
+    
+    public int getMAX_INTERACTION_NUMBER() {
+        return ((IntegerField)prefs.getField(MAX_NETWORK_OBJECT_NUMBER)).getValue();
+    }
+    
 }

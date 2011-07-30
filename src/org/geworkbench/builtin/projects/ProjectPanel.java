@@ -47,6 +47,7 @@ import javax.swing.tree.TreeSelectionModel;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.geworkbench.bison.datastructure.biocollections.AdjacencyMatrixDataSet;
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
@@ -76,6 +77,7 @@ import org.geworkbench.engine.management.Publish;
 import org.geworkbench.engine.management.Subscribe;
 import org.geworkbench.engine.management.TypeMap;
 import org.geworkbench.engine.preferences.GlobalPreferences;
+import org.geworkbench.engine.properties.PropertiesManager;
 import org.geworkbench.engine.skin.Skin;
 import org.geworkbench.events.CaArrayQueryEvent;
 import org.geworkbench.events.CaArrayQueryResultEvent;
@@ -580,6 +582,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	}
 
+	private static final String subnodeDir = "subnodeDir";
 	private boolean saveAsFile() {
 		Object mSetSelected = projectTree.getSelectionPath()
 				.getLastPathComponent();
@@ -633,6 +636,20 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			File f = ds.getFile();
 			JFileChooser jFileChooser1 = new JFileChooser(f);
 			jFileChooser1.setSelectedFile(f);
+			PropertiesManager properties = PropertiesManager.getInstance();
+			if (f == null){
+				try{
+					String dir = properties.getProperty(this.getClass(), subnodeDir, jFileChooser1.getCurrentDirectory().getPath());
+					jFileChooser1.setCurrentDirectory(new File(dir));
+				}catch(IOException ioe){
+					ioe.printStackTrace();
+				}
+			}
+			CustomFileFilter filter = null;
+			if (ds instanceof AdjacencyMatrixDataSet){
+				filter = SaveFileFilterFactory.createFilter(ds);
+				jFileChooser1.setFileFilter(filter);
+			}
 
 			// Use the SAVE version of the dialog, test return for
 			// Approve/Cancel
@@ -641,6 +658,15 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				// Set the current file name to the user's selection,
 				// then do a regular saveFile
 				String newFileName = jFileChooser1.getSelectedFile().getPath();
+				if (f == null){
+					try{
+						properties.setProperty(this.getClass(), subnodeDir, jFileChooser1.getSelectedFile().getParent());
+					}catch(IOException ioe){
+						ioe.printStackTrace();
+					}
+				}
+				if (filter != null && !newFileName.endsWith(filter.getExtension()))
+					newFileName += filter.getExtension();
 				// repaints menu after item is selected
 				log.info(newFileName);
 				// if(f != null) {

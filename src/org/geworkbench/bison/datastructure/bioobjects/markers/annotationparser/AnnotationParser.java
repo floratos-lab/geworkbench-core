@@ -75,7 +75,7 @@ public class AnnotationParser implements Serializable {
 
 	public static final String PROBE_SET_ID = "Probe Set ID";
 
-	public static final String MAIN_DELIMITER = "///";
+	public static final String MAIN_DELIMITER = "\\s*///\\s*";
 
 	// field names
 	public static final String DESCRIPTION = "Gene Title"; // (full name)

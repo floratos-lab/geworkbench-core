@@ -52,18 +52,29 @@ public class CSMarkerVector extends CSSequentialItemList<DSGeneMarker> {
 		geneIdMap.clear();
 		geneNameMap.clear();
 		for (DSGeneMarker item : this) {
-			Integer geneId = new Integer(item.getGeneId());
-			if (geneId != null && geneId.intValue() > 0) {
-				addItem(geneIdMap, geneId, item);
+
+			if (item.getGeneIds() != null && item.getGeneIds().length > 0) {
+				int[] ids = item.getGeneIds();
+				for (int i = 0; i < ids.length; i++) {
+					Integer geneId = new Integer(ids[i]);
+					if (geneId != null && geneId.intValue() > 0) {
+						addItem(geneIdMap, geneId, item);
+					}
+				}
 			}
 
-			String geneName = item.getGeneName();
-			String label = item.getLabel();
-			if (geneName != null && (!"---".equals(geneName))) {
-				if (label != null && geneName.equals("")) {
-					addItem(geneNameMap, label, item);
-				} else {
-					addItem(geneNameMap, geneName, item);
+			if (item.getShortNames() != null && item.getShortNames().length > 0) {
+				String[] geneNames = item.getShortNames();
+				String label = item.getLabel();
+				for (int i = 0; i < geneNames.length; i++) {
+					String geneName = geneNames[i];
+					if (geneName != null && (!"---".equals(geneName.trim()))) {
+						if (label != null && geneName.equals("")) {
+							addItem(geneNameMap, label, item);
+						} else {
+							addItem(geneNameMap, geneName.trim(), item);
+						}
+					}
 				}
 			}
 
@@ -132,16 +143,26 @@ public class CSMarkerVector extends CSSequentialItemList<DSGeneMarker> {
 
 		boolean result = super.add(item);
 		if (result) {
-			Integer geneId = new Integer(item.getGeneId());
-			if (geneId != null && geneId.intValue() > 0) {
-				addItem(geneIdMap, geneId, item);
+
+			if (item.getGeneIds() != null && item.getGeneIds().length > 0) {
+				int[] ids = item.getGeneIds();
+				for (int i = 0; i < ids.length; i++) {
+					Integer geneId = new Integer(ids[i]);
+					if (geneId != null && geneId.intValue() > 0) {
+						addItem(geneIdMap, geneId, item);
+					}
+				}
 			}
 
-			String geneName = item.getGeneName();
-			if (geneName != null && (!"---".equals(geneName))) {
-				addItem(geneNameMap, geneName, item);
+			if (item.getShortNames() != null && item.getShortNames().length > 0) {
+				String[] geneNames = item.getShortNames();
+				for (int i = 0; i < geneNames.length; i++) {
+					String geneName = geneNames[i];
+					if (geneName != null && (!"---".equals(geneName.trim()))) {
+						addItem(geneNameMap, geneName.trim(), item);
+					}
+				}
 			}
-
 		}
 
 		return result;
@@ -150,14 +171,25 @@ public class CSMarkerVector extends CSSequentialItemList<DSGeneMarker> {
 	/* add an item at the given index */
 	public void add(int i, DSGeneMarker item) {
 		super.add(i, item);
-		Integer geneId = new Integer(item.getGeneId());
-		if (geneId != null && geneId.intValue() > 0) {
-			addItem(geneIdMap, geneId, item);
+
+		if (item.getGeneIds() != null && item.getGeneIds().length > 0) {
+			int[] ids = item.getGeneIds();
+			for (int j = 0; j < ids.length; j++) {
+				Integer geneId = new Integer(ids[j]);
+				if (geneId != null && geneId.intValue() > 0) {
+					addItem(geneIdMap, geneId, item);
+				}
+			}
 		}
 
-		String geneName = item.getGeneName();
-		if (geneName != null && (!"---".equals(geneName))) {
-			addItem(geneNameMap, geneName, item);
+		if (item.getShortNames() != null && item.getShortNames().length > 0) {
+			String[] geneNames = item.getShortNames();
+			for (int j = 0; j < geneNames.length; j++) {
+				String geneName = geneNames[j];
+				if (geneName != null && (!"---".equals(geneName.trim()))) {
+					addItem(geneNameMap, geneName.trim(), item);
+				}
+			}
 		}
 
 	}

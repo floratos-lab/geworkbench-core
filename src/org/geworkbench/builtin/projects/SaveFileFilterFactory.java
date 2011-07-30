@@ -7,6 +7,7 @@ import java.io.File;
 
 import javax.swing.filechooser.FileFilter;
 
+import org.geworkbench.bison.datastructure.biocollections.AdjacencyMatrixDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.sequences.CSSequenceSet;
@@ -30,6 +31,8 @@ public class SaveFileFilterFactory {
 			return new PDBFileFilter();
 		} else if (dataset instanceof CSSequenceSet) {
 			return new SequenceFileFilter();
+		} else if (dataset instanceof AdjacencyMatrixDataSet) {
+			return new AdjFileFilter();
 		} else {
 			return new DefaultFileFilter();
 		}
@@ -156,6 +159,25 @@ public class SaveFileFilterFactory {
 			return "fa";
 		}
 
+	}
+
+	private static class AdjFileFilter extends CustomFileFilter {
+		private static final String fileExt = ".adj";
+
+		public String getExtension() {
+			return fileExt;
+		}
+
+		public String getDescription() {
+			return "Adjacency Matrix Files";
+		}
+
+		public boolean accept(File f) {
+			if (f.isDirectory() || f.getName().endsWith(fileExt)) {
+				return true;
+			}
+			return false;
+		}
 	}
 
 	/**

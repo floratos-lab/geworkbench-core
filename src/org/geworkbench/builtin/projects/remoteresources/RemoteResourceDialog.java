@@ -106,7 +106,6 @@ public class RemoteResourceDialog extends JDialog {
 
         jPanel2.setLayout(boxLayout21);
 
-        jTextField1.setToolTipText("");
         jLabel4.setPreferredSize(new Dimension(100, 20));
         jLabel4.setText("Hostname:");
         jLabel4.setHorizontalAlignment(JLabel.RIGHT);

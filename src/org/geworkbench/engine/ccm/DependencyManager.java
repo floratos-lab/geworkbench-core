@@ -135,7 +135,7 @@ public class DependencyManager {
 				relatedName = (String) ccmTableModel.getValueAt(
 						relatedRow, CCMTableModel.NAME_INDEX);
 			}
-			requireAndRelated.add(relatedName);
+			requireAndRelated.add(relatedName+" (recommended)");
 		}
 		String message = "The following is a list of plugins known to be\n";
 		message += "compatible with the plugin you have chosen to load\n";
@@ -144,7 +144,7 @@ public class DependencyManager {
 		for (int i = 0; i < requireAndRelated.size(); i++) {
 			message += "* " + requireAndRelated.get(i) + "\n";
 		}
-		message += "\nContinue: select the additional required components\n";		  
+		message += "\nContinue: select those components marked \"required\"\n";		  
 		message += "Cancel: cancel the selection of requested component\n" ;
 				 
 		textPane.setText(message);

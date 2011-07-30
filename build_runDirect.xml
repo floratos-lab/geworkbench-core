@@ -73,6 +73,7 @@
 	<!-- ====================================================================== -->
 	<target name="run" depends="prepare" description="Runs geWorkbench.">
 		<java fork="true" classname="org.geworkbench.engine.config.UILauncher">
+			<jvmarg value="-Xss1024k"/>
 			<jvmarg value="-Xmx1024M"/>
 			<jvmarg value="-XX:MaxPermSize=128m" />
 			<jvmarg value="-Djava.library.path=${Dlib}"/>

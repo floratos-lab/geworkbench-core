@@ -325,7 +325,8 @@ public class CSMicroarraySet<T extends DSMicroarray> extends CSDataSet<T> implem
 		newid = new int[mrkNo];
 		int i = 0;
 		if (GlobalPreferences.getInstance().getMarkerLoadOptions() == GlobalPreferences.ORIGINAL
-				|| AnnotationParser.getCurrentChipType() == null) {
+				|| (AnnotationParser.getCurrentChipType() == null && GlobalPreferences
+						.getInstance().getMarkerLoadOptions() == GlobalPreferences.SORTED_GENE)) {
 			for (i = 0; i < markerVector.size(); newid[i] = i++);
 		} else {
 			if (GlobalPreferences.getInstance().getMarkerLoadOptions() == GlobalPreferences.SORTED_GENE) 

@@ -5,22 +5,21 @@ import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.net.ConnectException;
+import java.io.FileInputStream;
+import java.util.Properties;
 import java.net.SocketTimeoutException;
-
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Properties;
+
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -43,8 +42,8 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.parsers.resources.Resource;
 import org.geworkbench.builtin.projects.DataSetNode;
 import org.geworkbench.builtin.projects.ProjectNode;
-import org.geworkbench.builtin.projects.ProjectTreeNode;
-
+import org.geworkbench.builtin.projects.ProjectTreeNode; 
+import org.geworkbench.engine.properties.PropertiesManager;
 import org.geworkbench.util.ResultSetlUtil;
 import org.geworkbench.util.Util;
 
@@ -57,11 +56,12 @@ import org.geworkbench.util.Util;
  * 
  */
 public class AdjacencyMatrixFileFormat extends DataSetFileFormat {
-	private Log log = LogFactory.getLog(this.getClass());
+	private Log log = LogFactory.getLog(AdjacencyMatrixFileFormat.class);
 
-	private final String MAX_INTERACTIONS_NUMBER = "max_interaction_number";
-	private final String PROPERTIES_FILE = "conf/application.properties";
-
+	public static final String INTERACTIONS_SERVLET_URL = "interactions_servlet_url";
+	public static final String PROPERTIES_FILE = "conf/application.properties";
+	public static final String INTERACTIONS_SERVLET_CONNECTION_TIMEOUT = "interactions_servlet_connection_timeout";
+	
 	String[] adjMatrixExtensions = { "txt", "adj", "sif" };
 	String[] representedByList;
 	AdjacencyMatrixFileFilter adjMatrixFilter = null;
@@ -74,27 +74,15 @@ public class AdjacencyMatrixFileFormat extends DataSetFileFormat {
 	private boolean isCancel = false;
 	private String fileName = null;
 
-	private int maxInteractionNum = 3000;
-
 	public void setProjectNode(ProjectNode projectNode) {
 		this.projectNode = projectNode;
 	}
 
 	public AdjacencyMatrixFileFormat() {
-		formatName = "Adjacency Matrix"; // Setup the display name for the
+		formatName = "Networks"; // Setup the display name for the
 		// format.
 		adjMatrixFilter = new AdjacencyMatrixFileFilter();
 
-		Properties prop = new Properties();
-		try {
-			prop.load(new FileInputStream(PROPERTIES_FILE));
-			maxInteractionNum = new Integer(prop
-					.getProperty(MAX_INTERACTIONS_NUMBER));
-		} catch (java.io.IOException ie) {
-			log.error(ie.getMessage());
-		} catch (Exception e) {
-			log.error(e.getMessage());
-		}
 	}
 
 	@Override
@@ -157,18 +145,23 @@ public class AdjacencyMatrixFileFormat extends DataSetFileFormat {
 
 		}
 
-		if ((selectedFormart.equalsIgnoreCase(AdjacencyMatrixDataSet.SIF_FORMART) && !fileName.toLowerCase().endsWith(".sif")) || (fileName.toLowerCase().endsWith(".sif") && !selectedFormart.equalsIgnoreCase(AdjacencyMatrixDataSet.SIF_FORMART)))
-		{
-			String theMessage = "Please select the correct format. Otherwise, the result could be wrong. \nClick \"YES\" to terminate this process.";
-				 
-			int result = JOptionPane.showConfirmDialog(
-					(Component) null, theMessage, "alert",
-					JOptionPane.YES_NO_OPTION);
-			if (result == JOptionPane.YES_OPTION)
-				return null;	
-			 
-		}		
-	 
+		if ((selectedFormart
+				.equalsIgnoreCase(AdjacencyMatrixDataSet.SIF_FORMART) && !fileName
+				.toLowerCase().endsWith(".sif"))
+				|| (fileName.toLowerCase().endsWith(".sif") && !selectedFormart
+						.equalsIgnoreCase(AdjacencyMatrixDataSet.SIF_FORMART))) {
+			String theMessage = "The network format selected may not match that of the file.  \nClick \"Cancel\" to terminate this process.";
+			Object[] optionChoices = { "Continue", "Cancel"};
+			int result = JOptionPane.showOptionDialog(
+				(Component) null, theMessage, "Warning",
+				JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
+				null, optionChoices, optionChoices[1]);
+			if (result == JOptionPane.NO_OPTION)
+				return null;
+	
+
+		}
+
 		AdjacencyMatrixDataSet adjMatrixDS = null;
 		if ((selectedDataSetNode != null)) {
 			DSDataSet<DSMicroarray> ds = selectedDataSetNode.dataFile;
@@ -181,42 +174,28 @@ public class AdjacencyMatrixFileFormat extends DataSetFileFormat {
 				String adjMatrixFileStr = file.getPath();
 				String fileName = file.getName();
 
-				HashMap<String, String> interactionTypeMap =  null;
-				
-				if (selectedFormart.equalsIgnoreCase(AdjacencyMatrixDataSet.SIF_FORMART))
-				{
+				HashMap<String, String> interactionTypeMap = null;
+
+				if (selectedFormart
+						.equalsIgnoreCase(AdjacencyMatrixDataSet.SIF_FORMART)) {
 					interactionTypeMap = getInteractionTypeMap();
 				}
 				AdjacencyMatrix matrix = AdjacencyMatrixDataSet
-						.parseAdjacencyMatrix(adjMatrixFileStr, mASet, interactionTypeMap,
-								selectedFormart, selectedRepresentedBy,
-								isRestrict);
-				 
-				if (matrix.getConnectionNo() > maxInteractionNum) {
-					String theMessage = "Too many interactions in the loaded file. It will take long time and maybe run out of memory.\nDo you want to cancel the process? Please click \"YES\" to terminate this process.";
-					int result = JOptionPane.showConfirmDialog(
-							(Component) null, theMessage, "alert",
-							JOptionPane.YES_NO_OPTION);
-					if (result == JOptionPane.YES_OPTION)
-						return null;
-					else
-						adjMatrixDS = new AdjacencyMatrixDataSet(matrix, 0,
-								fileName, "network loaded", mASet);
+						.parseAdjacencyMatrix(adjMatrixFileStr, mASet,
+								interactionTypeMap, selectedFormart,
+								selectedRepresentedBy, isRestrict);
 
-				} else
-					adjMatrixDS = new AdjacencyMatrixDataSet(matrix, 0,
-							fileName, "network loaded", mASet);
+				adjMatrixDS = new AdjacencyMatrixDataSet(matrix, 0, fileName,
+						"network loaded", mASet);
 
 			}
 		} else {
 			JOptionPane.showMessageDialog(null, "No Microarray Set selected",
 					"Unable to Load", JOptionPane.ERROR_MESSAGE);
 		}
-		 
+
 		return adjMatrixDS;
 	}
-
-	 
 
 	@Override
 	public boolean checkFormat(File file) throws InterruptedIOException {
@@ -241,8 +220,7 @@ public class AdjacencyMatrixFileFormat extends DataSetFileFormat {
 		return false;
 	}
 
-	public HashMap<String, String> getInteractionTypeMap()
-	{
+	public HashMap<String, String> getInteractionTypeMap() {
 		HashMap<String, String> map = new HashMap<String, String>();
 
 		ResultSetlUtil rs = null;
@@ -251,9 +229,11 @@ public class AdjacencyMatrixFileFormat extends DataSetFileFormat {
 
 		try {
 
+			if (ResultSetlUtil.getUrl() == null || !ResultSetlUtil.getUrl().trim().equals(""))
+				ResultSetlUtil.setUrl(getURLProperty())	;
 			String methodAndParams = "getInteractionTypes";
 			rs = ResultSetlUtil.executeQuery(methodAndParams,
-					ResultSetlUtil.INTERACTIONS_SERVLET_URL);
+					ResultSetlUtil.getUrl());
 
 			while (rs.next()) {
 
@@ -269,17 +249,17 @@ public class AdjacencyMatrixFileFormat extends DataSetFileFormat {
 			if (log.isErrorEnabled()) {
 				log.error(ce.getMessage());
 			}
-			 
+
 		} catch (SocketTimeoutException se) {
 			if (log.isErrorEnabled()) {
 				log.error(se.getMessage());
 			}
-			 
+
 		} catch (IOException ie) {
 			if (log.isErrorEnabled()) {
 				log.error(ie.getMessage());
 			}
-			 
+
 		} catch (Exception se) {
 			if (log.isErrorEnabled()) {
 				log
@@ -289,6 +269,31 @@ public class AdjacencyMatrixFileFormat extends DataSetFileFormat {
 		}
 		return map;
 	}
+	
+	public String getURLProperty() throws Exception{
+		 
+		String urlStr = PropertiesManager.getInstance().getProperty(this.getClass(),
+					"url", "");
+		Properties iteractionsProp = new Properties();
+		iteractionsProp.load(new FileInputStream(PROPERTIES_FILE));		
+		if (urlStr == null
+					|| urlStr.trim().equals("")) {
+		
+			urlStr = iteractionsProp
+						.getProperty(INTERACTIONS_SERVLET_URL);			
+		}
+		
+		Integer timeout = new Integer(
+				iteractionsProp
+						.getProperty(INTERACTIONS_SERVLET_CONNECTION_TIMEOUT));
+		ResultSetlUtil.setTimeout(timeout);
+			 
+		return urlStr;
+	}
+
+	
+	
+	
 
 	class AdjacencyMatrixFileFilter extends FileFilter {
 		public String getDescription() {
@@ -342,6 +347,11 @@ public class AdjacencyMatrixFileFormat extends DataSetFileFormat {
 			formatJcb = new JComboBox();
 			formatJcb.addItem(AdjacencyMatrixDataSet.ADJ_FORMART);
 			formatJcb.addItem(AdjacencyMatrixDataSet.SIF_FORMART);
+			if (fileName.toLowerCase().endsWith(".sif"))
+				formatJcb.setSelectedItem(AdjacencyMatrixDataSet.SIF_FORMART);
+			else
+				formatJcb.setSelectedItem(AdjacencyMatrixDataSet.ADJ_FORMART);
+
 			JLabel label2 = new JLabel("Node Represented By:   ");
 
 			representedByList = new String[4];
@@ -419,7 +429,7 @@ public class AdjacencyMatrixFileFormat extends DataSetFileFormat {
 		private void continueButtonActionPerformed() {
 
 			selectedFormart = formatJcb.getSelectedItem().toString();
-		
+
 			selectedRepresentedBy = presentJcb.getSelectedItem().toString();
 			selectedDataSetNode = (DataSetNode) microarraySetJcb
 					.getSelectedItem();

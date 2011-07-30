@@ -200,7 +200,6 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 		mainPanel = new JPanel();
 
 		jToolBar3 = new JToolBar();
-		chkAllMarkers.setToolTipText("");
 
 		BorderLayout borderLayout2 = new BorderLayout();
 		mainPanel.setLayout(borderLayout2);

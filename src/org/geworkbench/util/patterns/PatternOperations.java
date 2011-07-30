@@ -9,9 +9,11 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.CSSequence;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
+import org.geworkbench.bison.datastructure.complex.pattern.CSPatternMatch;
 import org.geworkbench.bison.datastructure.complex.pattern.DSMatchedPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.DSPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.DSPatternMatch;
@@ -25,6 +27,8 @@ import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeq
  */
 
 public class PatternOperations {
+	private static org.apache.commons.logging.Log log = LogFactory.getLog(PatternOperations.class);
+	
 	static private ArrayList<Color> colors;
 
 	static private ArrayList<Color> store = new ArrayList<Color>();
@@ -164,7 +168,17 @@ public class PatternOperations {
 					if (sp == null) {
 						continue;
 					}
-					DSSequence hitSeq = sp.getObject();
+					DSSequence hitSeq = null;
+					try {
+						hitSeq = sp.getObject();
+					} catch (IndexOutOfBoundsException e) {
+						if (!(sp instanceof CSPatternMatch) ) {
+							log.warn("Unexpected IndexOutOfBoundsException "
+									+ e);
+						}
+						continue;
+					}
+
 					CSSeqRegistration reg = sp.getRegistration();
 					// if
 					// (sequencePatternMatches.containsKey(hitSeq))

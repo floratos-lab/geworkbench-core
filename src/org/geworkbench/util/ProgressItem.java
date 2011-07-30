@@ -100,7 +100,6 @@ public class ProgressItem extends JPanel implements PropertyChangeListener {
 
         //this.setLayout(new GridBagLayout());
         jLabel1 = new JLabel();
-        jLabel1.setToolTipText("");
         jLabel1.setHorizontalAlignment(SwingConstants.CENTER);
         jLabel1.setText("Message");
         jLabel1.setVerticalTextPosition(SwingConstants.CENTER);

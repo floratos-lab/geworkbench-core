@@ -326,14 +326,8 @@ public class LoadDataDialog extends JDialog {
                    {                	 
                 	   if ( jFileChooser1.getFileFilter() !=  null )                           
                 	   {   
-                		   if ( isMergeSupported())
-                		   {   
-                			   mergeCheckBox.setEnabled(true);                			 
-                		   }
-                		   else
-                		   {
+                		   if (!isMergeSupported()) {
                 			   mergeCheckBox.setSelected(false);
-                			   mergeCheckBox.setEnabled(false);                		   
                 		   }
                 			   
                 		   
@@ -394,11 +388,7 @@ public class LoadDataDialog extends JDialog {
 		localFileRadioButton.setSelected(true);
 		localFileRadioButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (isMergeSupported())
-					mergeCheckBox.setEnabled(true);
-				else
-				{
-					mergeCheckBox.setEnabled(false);
+				if (!isMergeSupported()) {
 					mergeCheckBox.setSelected(false);
 				}
 				switchToLocalFileDialog();

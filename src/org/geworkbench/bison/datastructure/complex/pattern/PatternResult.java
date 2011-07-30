@@ -35,6 +35,10 @@ public class PatternResult extends CSAncillaryDataSet<DSSequence> implements
 
 	private static Log log = LogFactory.getLog(PatternResult.class);
 
+	//algorithm names
+    public static final String DISCOVER = "discovery";
+    public static final String EXHAUSTIVE = "exhaustive";
+    
 	private final PatternDiscoveryParameters parameters;
 	private List<DSMatchedSeqPattern> patterns = new ArrayList<DSMatchedSeqPattern>();
 	private File dataSetFile;
@@ -111,7 +115,7 @@ public class PatternResult extends CSAncillaryDataSet<DSSequence> implements
 			int i = 0;
 			Iterator<DSMatchedSeqPattern> it = patterns.iterator();
 			String path = this.getDataSetFile().getCanonicalPath();
-			writer.write(org.geworkbench.util.AlgorithmSelectionPanel.DISCOVER);
+			writer.write(DISCOVER);
 			writer.newLine();
 			writer.write("File:" + path);
 			writer.newLine();
