@@ -8,6 +8,7 @@ import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.Map;
 import java.util.Observer;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -506,7 +508,12 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 			}
 		}
 		// at this point, caArray2Experiment.getHybridizations() should never be null. It could be zero size though.
+		Vector<String> vector = new Vector<String>();
 		for (String hybName: caArray2Experiment.getHybridizations().keySet()) {
+			vector.add(hybName);
+		}
+		Collections.sort(vector);
+		for (String hybName: vector) {
 			DefaultMutableTreeNode assayNode = new DefaultMutableTreeNode(hybName);
 			remoteTreeModel.insertNodeInto(assayNode, experimentNode, experimentNode
 					.getChildCount());
