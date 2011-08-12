@@ -56,17 +56,15 @@ public class FilePathnameUtils {
 	private static final String DEFAULT_USER_SETTING_DIR = ".geworkbench";
 	private static final String DEFAULT_TEMP_FILE_DIR = "temp" + FILE_SEPARATOR
 			+ "GEAW";
+	private static final String USER_SETTING_DIR = System
+			.getProperty("user.setting.directory");
 	private static final String DEFAULT_DATA_FILES_DIR = ".";
-
-	// files
-	private static final String DEFAULT_HOUSEKEEPINGNORMALIZERSETTINGS_FILE = DEFAULT_TEMP_FILE_DIR
-			+ FILE_SEPARATOR + "housekeepingnormalizerSettings.config";
+	
 	private static final String DEFAULT_USERSETTINGS_FILE = DEFAULT_TEMP_FILE_DIR
 			+ FILE_SEPARATOR + "userSettings.config";		
 
 	// file related properties
-	private static final String USER_SETTING_DIR = System
-			.getProperty("user.setting.directory");
+	
 	private static final String TEMP_FILE_DIR = System
 			.getProperty("temporary.files.directory");
 	private static final String HOUSEKEEPINGNORMALIZERSETTINGS_FILE = System
@@ -222,23 +220,14 @@ public class FilePathnameUtils {
 	}
 
 	/**
-	 * will create absolute path starting with home directory as a root for
-	 * housekeepingnormalizersettings file if "housekeepingnormalizerSettings"
-	 * property is not set - will use
-	 * DEFAULT_HOUSEKEEPINGNORMALIZERSETTINGS_FILE
-	 *
-	 * consider placing file under user setting directory, then there will be no
-	 * need to add user setting directory manually.
-	 *
 	 * @return housekeepingnormalizersettings file as an absolute path
 	 *
 	 */
+	
 	public static String getHousekeepingnormalizerSettingsPath() {
 		if (housekeepingnormalizersettingsFilePath == null) {
-			String housekeepingnormalizersettingsFile = HOUSEKEEPINGNORMALIZERSETTINGS_FILE;
-			if (housekeepingnormalizersettingsFile == null) {
-				housekeepingnormalizersettingsFile = DEFAULT_HOUSEKEEPINGNORMALIZERSETTINGS_FILE;
-			}
+			String housekeepingnormalizersettingsFile = USER_SETTING_DIR 
+					+ FILE_SEPARATOR + HOUSEKEEPINGNORMALIZERSETTINGS_FILE;	
 			// keep housekeepingnormalizersettings file under user home
 			// directory
 			housekeepingnormalizersettingsFilePath = prependHomeDirName(housekeepingnormalizersettingsFile);
