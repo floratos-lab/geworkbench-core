@@ -121,6 +121,8 @@ public class AnnotationManager {
 					map.put(goTermId, genes);
 				}
 				for (String s : geneSymbols) {
+					if(s.endsWith("---")) continue;
+					
 					if (!genes.contains(s))
 						genes.add(s);
 				}
