@@ -13,18 +13,16 @@ import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 public class CSMasterRegulatorResultSet <T extends DSGeneMarker> extends CSAncillaryDataSet<DSMicroarray> implements DSMasterRagulatorResultSet<T> {
 	private static final long serialVersionUID = -416598071322541982L;
 	
-	HashMap<DSGeneMarker,DSItemList<DSGeneMarker>> TF2GenesInRegulon = new HashMap<DSGeneMarker,DSItemList<DSGeneMarker>>();
-	HashMap<DSGeneMarker,DSItemList<DSGeneMarker>> TF2GenesInTargetList = new HashMap<DSGeneMarker,DSItemList<DSGeneMarker>>();
-	HashMap<DSGeneMarker,Double> TF2PValue = new HashMap<DSGeneMarker,Double>();
-	HashMap<String,Double> TFGeneAndTargetGene2PValue = new HashMap<String,Double>();
-	HashMap<String,Double> TFGeneAndTargetGene2TTestValue = new HashMap<String,Double>();
+	private HashMap<DSGeneMarker,DSItemList<DSGeneMarker>> TF2GenesInRegulon = new HashMap<DSGeneMarker,DSItemList<DSGeneMarker>>();
+	private HashMap<DSGeneMarker,DSItemList<DSGeneMarker>> TF2GenesInTargetList = new HashMap<DSGeneMarker,DSItemList<DSGeneMarker>>();
+	private HashMap<DSGeneMarker,Double> TF2PValue = new HashMap<DSGeneMarker,Double>();
 
-	DSMicroarraySet<DSMicroarray> maSet = null;
+	private final DSMicroarraySet<DSMicroarray> maSet;
 	private int markerCount = 0;
 
 	private Map<DSGeneMarker, Double> tValues;
 
-	public CSMasterRegulatorResultSet(DSMicroarraySet<DSMicroarray> parent, String label, int markerCount) {
+	public CSMasterRegulatorResultSet(final DSMicroarraySet<DSMicroarray> parent, String label, int markerCount) {
 		super(parent, label);
 		this.maSet = parent;
 		this.markerCount = markerCount;
@@ -35,13 +33,12 @@ public class CSMasterRegulatorResultSet <T extends DSGeneMarker> extends CSAncil
 	}
 	
 	public File getDataSetFile() {
-		// TODO Auto-generated method stub
+		// ignored method
 		return null;
 	}
 
 	public void setDataSetFile(File file) {
-		// TODO Auto-generated method stub
-		
+		// no op
 	}
 
 	public void setGenesInRegulon(DSGeneMarker TF, DSItemList<DSGeneMarker> markers) {
@@ -58,30 +55,6 @@ public class CSMasterRegulatorResultSet <T extends DSGeneMarker> extends CSAncil
 
 	public DSItemList<DSGeneMarker> getGenesInTargetList(DSGeneMarker TF) {
 		return TF2GenesInTargetList.get(TF);
-	}
-
-	public double getPValueOf(DSGeneMarker TF, DSGeneMarker targetGene) {
-		return TFGeneAndTargetGene2PValue.get(TF.getSerial()+"-"+targetGene.getSerial()).doubleValue();
-	}
-
-	public double getTTestValueOf(DSGeneMarker TF, DSGeneMarker targetGene) {
-		return TFGeneAndTargetGene2TTestValue.get(TF.getSerial()+"-"+targetGene.getSerial()).doubleValue();
-	}
-
-	public void setPValueOf(DSGeneMarker TF, DSGeneMarker targetGene, double pValue) {
-		TFGeneAndTargetGene2PValue.put(TF.getSerial()+"-"+targetGene.getSerial(), new Double(pValue));
-	}
-
-	public void setTTestValueOf(DSGeneMarker TF, DSGeneMarker targetGene, double tTestValue) {
-		TFGeneAndTargetGene2TTestValue.put(TF.getSerial()+"-"+targetGene.getSerial(), new Double(tTestValue));
-	}
-
-	public int getGeneNumInRegulon(DSGeneMarker TF) {
-		return getGenesInRegulon(TF).size();
-	}
-
-	public int getGeneNumInTargetList(DSGeneMarker TF) {
-		return getGenesInTargetList(TF).size();
 	}
 
 	public void setPValue(DSGeneMarker TF, double pValue) {
