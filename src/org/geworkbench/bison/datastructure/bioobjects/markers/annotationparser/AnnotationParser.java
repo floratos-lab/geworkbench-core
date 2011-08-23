@@ -426,31 +426,6 @@ public class AnnotationParser implements Serializable {
 		return set;
 	}
 
-	public static Map<String, List<Integer>> getGeneIdToMarkerIDMapping(
-			DSMicroarraySet<? extends DSMicroarray> microarraySet) {
-		Map<String, List<Integer>> map = new HashMap<String, List<Integer>>();
-		DSItemList<DSGeneMarker> markers = microarraySet.getMarkers();
-		int index = 0;
-		for (DSGeneMarker marker : markers) {
-			if (marker != null && marker.getLabel() != null) {
-				Set<String> geneIDs = getGeneIDs(marker.getLabel());
-				for (String s : geneIDs) {
-					List<Integer> list = map.get(s);
-					if (list == null) {
-						list = new ArrayList<Integer>();
-						list.add(index);
-						map.put(s, list);
-					} else {
-						list.add(index);
-					}
-				}
-				index++;
-			}
-		}
-		return map;
-
-	}
-	
 	public static Map<String, List<Integer>> getGeneNameToMarkerIDMapping(
 			DSMicroarraySet<? extends DSMicroarray> microarraySet) {
 		Map<String, List<Integer>> map = new HashMap<String, List<Integer>>();
