@@ -106,6 +106,7 @@
 				<include name="celprocessing" />
 				<include name="cgems" />
 				<include name="colormosaic" />
+				<include name="cupid" />
 				<include name="cytoscape" />
 				<include name="discovery" />
 				<include name="evidenceintegration" />
@@ -511,6 +512,17 @@
 		</jar>
 		<jar destfile="geworkbench-others.jar" basedir="${classes}" excludes="org/geworkbench/bison/**,org/geworkbench/engine/**,org/geworkbench/events/**,org/geworkbench/parsers/**,org/geworkbench/util/**,org/geworkbench/builtin/**">
 		</jar>
+
+		<!-- jar components -->
+		<subant target="jar" genericantfile="build-component.xml">
+			<dirset dir="components">
+				<include name="analysis" />
+				<include name="ttest" />
+				<include name="hierarchicalclustering" />
+				<!-- exclude the dead projets -->
+				<exclude name="skylinecontour" />
+			</dirset>
+		</subant>
 	</target>
 	<!-- ====================================================================== -->
 	<!-- CREATE   DISTRIBUTION-->
