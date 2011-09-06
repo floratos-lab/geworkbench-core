@@ -10,7 +10,7 @@ public class IdeaNode implements Serializable, Comparable<IdeaNode>{
 	 */
 	private static final long serialVersionUID = 1610758764072258387L;
 	private String probe;
-	private String gene;
+	private String geneSymbol;
 	private String chrBand;
 	private int	conn;
 	private double nes;
@@ -23,11 +23,11 @@ public class IdeaNode implements Serializable, Comparable<IdeaNode>{
 	private double goCEs;
 	private double goCNes;
 	
-	public IdeaNode(String probe, String gene, String chrBand, int	conn,
+	public IdeaNode(String probe, String geneSymbol, String chrBand, int	conn,
 		double nes, int loc, int loCHits, double loCEs, double loCNes,
 			int goc, int goCHits, double goCEs, double goCNes){
 		this.probe=probe;
-		this.gene=gene;
+		this.geneSymbol=geneSymbol;
 		this.chrBand=chrBand;
 		this.conn=conn;
 		this.nes=nes;
@@ -41,7 +41,7 @@ public class IdeaNode implements Serializable, Comparable<IdeaNode>{
 		this.goCNes=goCNes;		
 	}
 	
-	@Override
+
 	public int compareTo(IdeaNode ideaNode2) {
 		double d = nes - ideaNode2.getNes();
 		if(d<0) return -1;
@@ -66,7 +66,7 @@ public class IdeaNode implements Serializable, Comparable<IdeaNode>{
 	}
 
 	public String getGene() {
-		return gene;
+		return geneSymbol;
 	}
 
 	public String getChrBand() {

@@ -9,23 +9,23 @@ public class IdeaModule implements Serializable{
   	 *@author zm2165 $Id$ 
 	 */
 	private static final long serialVersionUID = 6652015492936201564L;
-	private String gene1;
-	private String gene2;
+	private String probe1;
+	private String probe2;
 	private String connType;
 	private String gLoc;
 	
-	public IdeaModule(String gene1, String gene2, String connType, String gLoc){
-		this.gene1=gene1;
-		this.gene2=gene2;
+	public IdeaModule(String probe1, String probe2, String connType, String gLoc){
+		this.probe1=probe1;
+		this.probe2=probe2;
 		this.connType=connType;
 		this.gLoc=gLoc;
 	}
 	
 	public String getGene1() {
-		return gene1;
+		return probe1;
 	}
 	public String getGene2() {
-		return gene2;
+		return probe2;
 	}
 	public String getConnType() {
 		return connType;

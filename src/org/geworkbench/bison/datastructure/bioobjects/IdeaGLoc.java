@@ -10,26 +10,26 @@ public class IdeaGLoc implements Serializable, Comparable<IdeaGLoc> {
 	*/
 	private static final long serialVersionUID = 7415476418084003832L;
 	private String probe1;
-	private String gene1;
+	private String geneSymbol1;
 	private String probe2;
-	private String gene2;
+	private String geneSymbol2;
 	private double mi;
 	private double deltaMi;
 	private double zScore;
 	
-	public IdeaGLoc(String probe1,String gene1,String probe2,String gene2,
+	public IdeaGLoc(String probe1,String geneSymbol1,String probe2,String geneSymbol2,
 			double mi, double deltaMi,double zScore){
 		this.probe1=probe1;
-		this.gene1=gene1;
+		this.geneSymbol1=geneSymbol1;
 		this.probe2=probe2;
-		this.gene2=gene2;
+		this.geneSymbol2=geneSymbol2;
 		this.mi=mi;
 		this.deltaMi=deltaMi;
 		this.zScore=zScore;
 	}
 	
 	
-	@Override
+
 	public int compareTo(IdeaGLoc ideaGLoc2) {
 		double d = zScore - ideaGLoc2.getzScore();
 		if(d<0) return -1;
@@ -48,11 +48,11 @@ public class IdeaGLoc implements Serializable, Comparable<IdeaGLoc> {
 	public String getProbe1() {
 		return probe1;
 	}
-	public void setGene1(String gene1) {
-		this.gene1 = gene1;
+	public void setGene1(String geneSymbol1) {
+		this.geneSymbol1 = geneSymbol1;
 	}
 	public String getGene1() {
-		return gene1;
+		return geneSymbol1;
 	}
 	public void setProbe2(String probe2) {
 		this.probe2 = probe2;
@@ -60,11 +60,11 @@ public class IdeaGLoc implements Serializable, Comparable<IdeaGLoc> {
 	public String getProbe2() {
 		return probe2;
 	}
-	public void setGene2(String gene2) {
-		this.gene2 = gene2;
+	public void setGene2(String geneSymbol2) {
+		this.geneSymbol2 = geneSymbol2;
 	}
 	public String getGene2() {
-		return gene2;
+		return geneSymbol2;
 	}
 	public void setMi(double mi) {
 		this.mi = mi;
