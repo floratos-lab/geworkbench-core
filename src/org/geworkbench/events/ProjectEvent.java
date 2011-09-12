@@ -53,5 +53,7 @@ public class ProjectEvent extends Event {
 
         return null;
     }
+    
+    public ProjectTreeNode getTreeNode() { return node; }
 
 }

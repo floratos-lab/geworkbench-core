@@ -82,7 +82,6 @@ import org.geworkbench.engine.skin.Skin;
 import org.geworkbench.events.CaArrayQueryEvent;
 import org.geworkbench.events.CaArrayQueryResultEvent;
 import org.geworkbench.events.CaArrayRequestEvent;
-import org.geworkbench.events.CommentsEvent;
 import org.geworkbench.events.HistoryEvent;
 import org.geworkbench.events.ImageSnapshotEvent;
 import org.geworkbench.events.NormalizationEvent;
@@ -704,12 +703,10 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	/**
 	 * Change the comment text
 	 *
-	 * @param ce
 	 */
-	@Subscribe
-	public void receive(CommentsEvent ce, Object source) {
+	public void setCommentText(String newComments) {
 		ProjectTreeNode selectedNode = selection.getSelectedNode();
-		selectedNode.setDescription(ce.getText());
+		selectedNode.setDescription(newComments);
 	}
 
 	/**
@@ -1066,10 +1063,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 							"Image Node Selected",
 							((ImageNode) clickedNode).image,
 							ImageSnapshotEvent.Action.SHOW));
-					sendCommentsEvent(clickedNode);
 				}
 			}
-			sendCommentsEvent(clickedNode);
 		}
 	}
 
@@ -1203,10 +1198,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				publishImageSnapshot(new ImageSnapshotEvent(
 						"Image Node Selected", ((ImageNode) clickedNode).image,
 						ImageSnapshotEvent.Action.SHOW));
-				sendCommentsEvent(clickedNode);
 
 			}
-			sendCommentsEvent(clickedNode);
+
 		}
 	}
 
@@ -1563,7 +1557,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				publishProjectEvent(new ProjectEvent(message,
 						selectedDataSetNode.dataFile, selectedDataSetNode));
 			}
-			sendCommentsEvent(selectedDataSetNode);
 		}
 
 		selection.setNodeSelection(null);
@@ -1858,21 +1851,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	public ProjectNodeAddedEvent publishProjectNodeAddedEvent(
 			ProjectNodeAddedEvent event) {
 		return event;
-	}
-
-	@Publish
-	public CommentsEvent publishCommentsEvent(CommentsEvent event) {
-		return event;
-	}
-
-	public void sendCommentsEvent(ProjectTreeNode forNode) {
-		if (forNode != null) {
-			String description = forNode.getDescription();
-			if (description == null) {
-				description = "";
-			}
-			publishCommentsEvent(new CommentsEvent(description));
-		}
 	}
 
 	private void updateColorContext(DSMicroarraySet<DSMicroarray> maSet) {

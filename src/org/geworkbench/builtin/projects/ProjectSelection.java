@@ -207,8 +207,6 @@ public class ProjectSelection {
         if (selectedDataSetNode != null) {
         	panel.publishProjectEvent(new ProjectEvent(message, selectedDataSetNode.dataFile, selectedDataSetNode));
         }
-        
-        panel.sendCommentsEvent(selectedNode);
     }
 
     @SuppressWarnings("unchecked")
@@ -216,7 +214,5 @@ public class ProjectSelection {
         if ((selectedDataSetSubNode != null) && (selectedDataSetSubNode._aDataSet != null)) {
             panel.publishProjectEvent(new ProjectEvent(message, selectedDataSetSubNode._aDataSet, selectedDataSetSubNode));           
         }
-       
-        panel.sendCommentsEvent(selectedNode);
     }
 }
