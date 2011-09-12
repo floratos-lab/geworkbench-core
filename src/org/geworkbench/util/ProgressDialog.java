@@ -51,7 +51,6 @@ public class ProgressDialog extends JDialog {
             tasks = nonmodaltasks;
         }
 
-        this.setMinimumSize(new Dimension(400, 300));
         this.setTitle("Progress");
     	gl = new GridLayout(0, 1); 
         jp = new JPanel(gl);
@@ -90,6 +89,7 @@ public class ProgressDialog extends JDialog {
 
 		ProgressItem pb = task.getProgressItem();
 		jp.add(pb);
+		this.pack();
 
 		task.execute();
 		
