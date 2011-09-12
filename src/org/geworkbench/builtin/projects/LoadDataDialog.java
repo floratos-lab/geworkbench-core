@@ -10,6 +10,8 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -19,6 +21,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeMap;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -43,14 +47,9 @@ import org.geworkbench.builtin.projects.remoteresources.query.CaARRAYQueryPanel;
 import org.geworkbench.builtin.projects.util.CaARRAYPanel;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.events.CaArrayQueryEvent;
-import org.geworkbench.events.CaArrayQueryResultEvent;
 import org.geworkbench.events.CaArrayRequestEvent;
 import org.geworkbench.parsers.FileFormat;
 import org.geworkbench.util.FilePathnameUtils;
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
 
 /**
  *  Popup to select a file (local or remote) to open.
@@ -177,10 +176,6 @@ public class LoadDataDialog extends JDialog {
 		localFileRadioButton.setSelected(true);
 		switchToLocalFileDialog();
 		remoteRadioButton.setEnabled(false);
-	}
-
-	public void receive(CaArrayQueryResultEvent ce) {
-		caARRAYQueryPanel.receiveCaAraryQueryResultEvent(ce);
 	}
 
 	public void setCaARRAYServer(String url, int portnumber) {
@@ -856,6 +851,9 @@ public class LoadDataDialog extends JDialog {
 		
 		return false;
 	}
-	
+
+	public void processCaAraryQueryResult(boolean succeeded, String message, TreeMap<String, Set<String>> treeMap) {
+		caARRAYQueryPanel.processCaAraryQueryResult(succeeded, message, treeMap);
+	}
 	
 }

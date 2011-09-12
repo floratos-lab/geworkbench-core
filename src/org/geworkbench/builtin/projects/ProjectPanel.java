@@ -20,6 +20,8 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -80,7 +82,6 @@ import org.geworkbench.engine.preferences.GlobalPreferences;
 import org.geworkbench.engine.properties.PropertiesManager;
 import org.geworkbench.engine.skin.Skin;
 import org.geworkbench.events.CaArrayQueryEvent;
-import org.geworkbench.events.CaArrayQueryResultEvent;
 import org.geworkbench.events.CaArrayRequestEvent;
 import org.geworkbench.events.HistoryEvent;
 import org.geworkbench.events.ImageSnapshotEvent;
@@ -1930,10 +1931,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 	}
 
-	@Subscribe
-	public void receive(CaArrayQueryResultEvent ce, Object source) {
-
-		loadData.receive(ce);
+	public void processCaArrayResult(boolean succeeded, String message, TreeMap<String, Set<String>> treeMap) {
+		loadData.processCaAraryQueryResult(succeeded, message, treeMap);
 	}
 
 	/**

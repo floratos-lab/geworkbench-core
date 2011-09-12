@@ -38,7 +38,6 @@ import org.geworkbench.builtin.projects.remoteresources.RemoteResourceDialog;
 import org.geworkbench.builtin.projects.util.CaARRAYPanel;
 import org.geworkbench.engine.properties.PropertiesManager;
 import org.geworkbench.events.CaArrayQueryEvent;
-import org.geworkbench.events.CaArrayQueryResultEvent;
 import org.geworkbench.events.CaArrayRequestEvent;
 
 /**
@@ -61,16 +60,15 @@ public class CaARRAYQueryPanel extends JDialog {
 		loadData.publishCaArrayQueryEvent(event);
 	}
 
-	public void receiveCaAraryQueryResultEvent(CaArrayQueryResultEvent event) {
+	public void processCaAraryQueryResult(boolean succeeded, String message, TreeMap<String, Set<String>> treeMap) {
 
 		progressBar.setIndeterminate(false);
 
-		if (!event.isSucceed()) {
-			JOptionPane.showMessageDialog(this, event.getErrorMessage());
+		if (!succeeded) {
+			JOptionPane.showMessageDialog(this, message);
 			return;
 		}
 
-		TreeMap<String, Set<String>> treeMap = event.getQueryPairs();
 		if (treeMap == null) {
 			JOptionPane.showMessageDialog(this,
 					"No data can be retrieved from the caArray Server!");
