@@ -65,11 +65,11 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.CSTTestResultSe
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
-import org.geworkbench.bison.datastructure.properties.DSExtendable;
 import org.geworkbench.bison.datastructure.properties.DSNamed;
 import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.bison.util.colorcontext.ColorContext;
 import org.geworkbench.builtin.projects.SaveFileFilterFactory.CustomFileFilter;
+import org.geworkbench.builtin.projects.history.HistoryPanel;
 import org.geworkbench.engine.config.GUIFramework;
 import org.geworkbench.engine.config.MenuListener;
 import org.geworkbench.engine.config.VisualPlugin;
@@ -97,9 +97,6 @@ import org.geworkbench.util.SaveImage;
 import org.geworkbench.util.Util;
 import org.ginkgo.labs.ws.GridEndpointReferenceType;
 
-// TODO this class has a large number of subscribe methods,
-// many of these should be replaced with direct method call
-// if the event is specifically meant to be received by this class only.
 /**
  *
  * Description: Project Panel of geWorkbench is a key controlling element.
@@ -758,7 +755,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 				String datasetHistory = dataSetString + annotationFileNameString + oboInfo 
 					+ "_____________________" + "\n";
-				ProjectPanel.addToHistory(_dataSet, datasetHistory);
+				HistoryPanel.addToHistory(_dataSet, datasetHistory);
 			}
 			publishHistoryEvent(event);
 
@@ -839,8 +836,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				DataSetSubNode newNode = new DataSetSubNode(ancillaryDataSet);
 				projectTreeModel.insertNodeInto(newNode, parent, index);
 				eprPendingNodeMap.remove(gridEpr);
-				// TODO: now we need to put history on new node
-				ProjectPanel.addToHistory(ancillaryDataSet, history);
+
+				HistoryPanel.addToHistory(ancillaryDataSet, history);
 
 				// Make sure the user can see the lovely new node.
 				projectTree.scrollPathToVisible(new TreePath(newNode));
@@ -1940,16 +1937,16 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 		updateColorContext(resultMA);
 		// Set up the "history" information for the new dataset.
-		Object[] prevHistory = sourceMA.getValuesForName(HISTORY);
+		Object[] prevHistory = sourceMA.getValuesForName(HistoryPanel.HISTORY);
 
-		Object[] historyDetail = sourceMA.getValuesForName(HISTORYDETAIL);
+		Object[] historyDetail = sourceMA.getValuesForName(HistoryPanel.HISTORYDETAIL);
 		String detail = (historyDetail == null ? "" : (String) historyDetail[0]);
-		sourceMA.clearName(HISTORYDETAIL);
+		sourceMA.clearName(HistoryPanel.HISTORYDETAIL);
 
 		if (prevHistory != null) {
-			sourceMA.clearName(HISTORY);
+			sourceMA.clearName(HistoryPanel.HISTORY);
 		}
-		sourceMA.addNameValuePair(HISTORY, (prevHistory == null ? ""
+		sourceMA.addNameValuePair(HistoryPanel.HISTORY, (prevHistory == null ? ""
 				: (String) prevHistory[0])
 				+ "Normalized with " + information + "\n" + detail + "\n");
 
@@ -1963,24 +1960,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			publishProjectEvent(new ProjectEvent(ProjectEvent.SELECTED,
 					sourceMA, selectedNode));
 		}
-	}
-
-	public static void addHistoryDetail(DSExtendable objectWithHistory,
-			String detail) {
-		objectWithHistory.clearName(HISTORYDETAIL);
-		objectWithHistory.addNameValuePair(HISTORYDETAIL, detail);
-	}
-
-	public static void addToHistory(DSExtendable objectWithHistory,
-			String newHistory) {
-
-		Object[] prevHistory = objectWithHistory.getValuesForName(HISTORY);
-		if (prevHistory != null) {
-			objectWithHistory.clearName(HISTORY);
-		}
-		objectWithHistory.addNameValuePair(HISTORY, (prevHistory == null ? ""
-				: (String) prevHistory[0])
-				+ newHistory + "\n");
 	}
 
 	/**
@@ -1999,11 +1978,11 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 
 		// Set up the "history" information for the new dataset.
-		Object[] prevHistory = sourceMA.getValuesForName(HISTORY);
+		Object[] prevHistory = sourceMA.getValuesForName(HistoryPanel.HISTORY);
 		if (prevHistory != null) {
-			sourceMA.clearName(HISTORY);
+			sourceMA.clearName(HistoryPanel.HISTORY);
 		}
-		sourceMA.addNameValuePair(HISTORY, (prevHistory == null ? ""
+		sourceMA.addNameValuePair(HistoryPanel.HISTORY, (prevHistory == null ? ""
 				: (String) prevHistory[0])
 				+ "Filtered with " + fe.getInformation() + "\n");
 		// Notify interested components that the selected dataset has changed
@@ -2034,14 +2013,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		publishProjectEvent(new ProjectEvent(ProjectEvent.CLEARED, null, null));
 		selection.clearNodeSelections();
 	}
-
-	/**
-	 * Used as the "name" in the name-value pair that keeps track of the history
-	 * of changes that a given dataset is being submitted to.
-	 */
-	public static final String HISTORY = "History";
-
-	private static final String HISTORYDETAIL = "HistoryDetail";
 
 	@Publish
 	public ImageSnapshotEvent publishImageSnapshot(ImageSnapshotEvent event) {

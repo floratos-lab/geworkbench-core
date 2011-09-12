@@ -8,7 +8,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.builtin.projects.ProjectPanel;
+import org.geworkbench.bison.datastructure.properties.DSExtendable;
 import org.geworkbench.engine.config.VisualPlugin;
 import org.geworkbench.engine.management.AcceptTypes;
 import org.geworkbench.engine.management.Subscribe;
@@ -77,7 +77,7 @@ import org.geworkbench.engine.management.Subscribe;
             if (e.getMessage().equals(org.geworkbench.events.ProjectEvent.CLEARED))
                 maSet = null;
             else if (maSet != null) {
-                Object[] values = maSet.getValuesForName(ProjectPanel.HISTORY);
+                Object[] values = maSet.getValuesForName(HISTORY);
                 if (values != null && values.length > 0) {
                     datasetHistory = (String) values[0];
                     if (datasetHistory.trim().equals(""))
@@ -100,7 +100,7 @@ import org.geworkbench.engine.management.Subscribe;
 		if (maSet != null) {
 			datasetHistory = DEFAULT_MESSAGE;
 
-			Object[] values = maSet.getValuesForName(ProjectPanel.HISTORY);
+			Object[] values = maSet.getValuesForName(HISTORY);
 			if (values != null && values.length > 0) {
 				datasetHistory = (String) values[0];
 				if (datasetHistory.trim().equals(""))
@@ -109,6 +109,33 @@ import org.geworkbench.engine.management.Subscribe;
 			historyTextArea.setText(datasetHistory);
 			historyTextArea.setCaretPosition(0);
 		}
+	}
+
+    /**
+	 * Used as the "name" in the name-value pair that keeps track of the history
+	 * of changes that a given dataset is being submitted to.
+	 */
+	public static final String HISTORY = "History";
+
+	// TODO this name probably is not really used 
+	public static final String HISTORYDETAIL = "HistoryDetail";
+
+    public static void addHistoryDetail(DSExtendable objectWithHistory,
+			String detail) {
+		objectWithHistory.clearName(HISTORYDETAIL);
+		objectWithHistory.addNameValuePair(HISTORYDETAIL, detail);
+	}
+
+	public static void addToHistory(DSExtendable objectWithHistory,
+			String newHistory) {
+
+		Object[] prevHistory = objectWithHistory.getValuesForName(HISTORY);
+		if (prevHistory != null) {
+			objectWithHistory.clearName(HISTORY);
+		}
+		objectWithHistory.addNameValuePair(HISTORY, (prevHistory == null ? ""
+				: (String) prevHistory[0])
+				+ newHistory + "\n");
 	}
 }
 
