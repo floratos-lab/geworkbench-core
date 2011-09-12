@@ -63,7 +63,6 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.A
 import org.geworkbench.bison.datastructure.bioobjects.markers.goterms.GeneOntologyTree;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSTTestResultSet;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
-import org.geworkbench.bison.datastructure.bioobjects.structure.DSProteinStructure;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.datastructure.properties.DSExtendable;
@@ -93,7 +92,6 @@ import org.geworkbench.events.ProjectNodeAddedEvent;
 import org.geworkbench.events.ProjectNodePostCompletedEvent;
 import org.geworkbench.events.ProjectNodeRemovedEvent;
 import org.geworkbench.events.ProjectNodeRenamedEvent;
-import org.geworkbench.events.StructureAnalysisEvent;
 import org.geworkbench.parsers.DataSetFileFormat;
 import org.geworkbench.util.FilePathnameUtils;
 import org.geworkbench.util.SaveImage;
@@ -1975,49 +1973,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				&& (DSMicroarraySet<DSMicroarray>) currentDS == sourceMA) {
 			publishProjectEvent(new ProjectEvent(ProjectEvent.SELECTED,
 					sourceMA, selectedNode));
-		}
-	}
-
-	/**
-	 * For receiving the submission / results of comparative modeling analysis
-	 * to PDB protein structure
-	 *
-	 * @param sae
-	 */
-	@Subscribe
-	public void receive(StructureAnalysisEvent sae, Object source) {
-		if (sae == null) {
-			return;
-		}
-		DSProteinStructure dsp = sae.getDataSet();
-		if (dsp == null) {
-			return;
-		}
-
-		String res = sae.getAnalyzedStructure();
-
-		String desc = new String("SkyLine job submitted for ");
-		if (res != null && res == "SkyLine results available") {
-			desc = res + " for ";
-		}
-
-		// Set up the "history" information for the new dataset.
-		Object[] prevHistory = dsp.getValuesForName(HISTORY);
-		if (prevHistory != null) {
-			dsp.clearName(HISTORY);
-		}
-		dsp.addNameValuePair(HISTORY, (prevHistory == null ? ""
-				: (String) prevHistory[0])
-				+ desc + dsp.getLabel() + "\n");
-		// Notify interested components that the selected dataset has changed
-		// The event is thrown only if the analyzed dataset is the one
-		// currently selectd in the project panel.
-		DSDataSet<? extends DSBioObject> currentDS = (selection != null ? selection.getDataSet()
-				: null);
-		if (currentDS != null && currentDS instanceof DSProteinStructure
-				&& (DSProteinStructure) currentDS == dsp) {
-			publishProjectEvent(new ProjectEvent(ProjectEvent.SELECTED, dsp,
-					selectedNode));
 		}
 	}
 
