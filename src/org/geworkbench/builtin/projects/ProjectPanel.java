@@ -84,7 +84,6 @@ import org.geworkbench.events.CaArrayQueryEvent;
 import org.geworkbench.events.CaArrayRequestEvent;
 import org.geworkbench.events.HistoryEvent;
 import org.geworkbench.events.ImageSnapshotEvent;
-import org.geworkbench.events.NormalizationEvent;
 import org.geworkbench.events.PendingNodeCancelledEvent;
 import org.geworkbench.events.PendingNodeLoadedFromWorkspaceEvent;
 import org.geworkbench.events.ProjectEvent;
@@ -1934,21 +1933,11 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	}
 
 	/**
-	 * For receiving the results of applying a normalizer to a microarray set.
+	 * process the results of applying a normalizer to a microarray set.
 	 *
-	 * @param ne
 	 */
-	@Subscribe
-	public void receive(NormalizationEvent ne, Object source) {
-		if (ne == null) {
-			return;
-		}
-		DSMicroarraySet<DSMicroarray> sourceMA = ne.getOriginalMASet();
-		if (sourceMA == null) {
-			return;
-		}
+	public void processNormalization(DSMicroarraySet<?> sourceMA, DSMicroarraySet<DSMicroarray> resultMA, String information) {
 
-		DSMicroarraySet<DSMicroarray> resultMA = ne.getNormalizedMASet();
 		updateColorContext(resultMA);
 		// Set up the "history" information for the new dataset.
 		Object[] prevHistory = sourceMA.getValuesForName(HISTORY);
@@ -1962,7 +1951,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 		sourceMA.addNameValuePair(HISTORY, (prevHistory == null ? ""
 				: (String) prevHistory[0])
-				+ "Normalized with " + ne.getInformation() + "\n" + detail + "\n");
+				+ "Normalized with " + information + "\n" + detail + "\n");
 
 		// Notify interested components that the selected dataset has changed
 		// The event is thrown only if the normalized dataset is the one
