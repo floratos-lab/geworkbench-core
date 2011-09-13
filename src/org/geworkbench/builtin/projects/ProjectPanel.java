@@ -1,6 +1,5 @@
 package org.geworkbench.builtin.projects;
 
-
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -124,22 +123,16 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	private static TypeMap<ImageIcon> iconMap = new TypeMap<ImageIcon>();
 
+	// Initialize default icons
 	static {
 		DefaultIconAssignments.initializeDefaultIconAssignments();
 	}
-
-	// Initialize default icons
 
 	private LoadDataDialog loadData = new LoadDataDialog(this);
 
 	private ProjectSelection selection = new ProjectSelection(this);
 
 	private HashMap<GridEndpointReferenceType, PendingTreeNode> eprPendingNodeMap = new HashMap<GridEndpointReferenceType, PendingTreeNode>();
-
-	// The undo buffer
-	ProjectTreeNode undoNode = null;
-
-	ProjectTreeNode undoParent = null;
 
 	/**
 	 * XQ uses dataSetMenu to save/modify the new generated/old Fasta file
@@ -153,23 +146,15 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	JProgressBar progressBar = new JProgressBar();
 
-	private JMenuItem jRemoveProjectItem = new JMenuItem();
+	private JMenuItem jRenameSubItem = new JMenuItem("Rename");
 
-	private JMenuItem jRemoveDatasetItem = new JMenuItem();
+	private JMenuItem jEditItem = new JMenuItem("View in Editor");
 
-	private JMenuItem jRemovePendingItem = new JMenuItem();
+	private JMenuItem jViewAnnotations = new JMenuItem("View Annotations");
 
-	private JMenuItem jRemoveSubItem = new JMenuItem();
+	private JMenuItem jSaveMenuItem = new JMenuItem("Save");
 
-	private JMenuItem jRenameSubItem = new JMenuItem();
-
-	private JMenuItem jEditItem = new JMenuItem();
-
-	private JMenuItem jViewAnnotations = new JMenuItem();
-
-	private JMenuItem jSaveMenuItem = new JMenuItem();
-
-	private JMenuItem jRenameMenuItem = new JMenuItem();
+	private JMenuItem jRenameMenuItem = new JMenuItem("Rename");
 
 	/*
 	 * enforce ProjectPanel to be singleton: 'regular' method of making
@@ -201,172 +186,69 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 					"Second instance of ProjectPanle cannot be created.");
 
 		// Initializes Random number generator to generate unique ID's
-		// because of the unique seed
 		RandomNumberGenerator.setSeed(System.currentTimeMillis());
 
-		try {
-			initializeSwingComponents();
-			initializeMore();
+		initializeMenuListeners();
+		initializeMainPanel();
+		initializePopupMenuItems();
 
-			// Checks if a default workspace exists and loads it
-			File defaultWS = new File("./default.wsp");
-			if (defaultWS.exists()) {
-				deserialize(defaultWS.getName());
-				Enumeration<?> children = root.children();
-				while (children.hasMoreElements()) {
-					TreeNode node = (TreeNode) children.nextElement();
-					projectTree.expandPath(new TreePath(node));
-				}
+		// Checks if a default workspace exists and loads it
+		File defaultWS = new File("./default.wsp");
+		if (defaultWS.exists()) {
+			deserialize(defaultWS.getName());
+			Enumeration<?> children = root.children();
+			while (children.hasMoreElements()) {
+				TreeNode node = (TreeNode) children.nextElement();
+				projectTree.expandPath(new TreePath(node));
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 
+		initializeWorkspaceBehavior();
+		
 		INSTANCE = this;
 	}
 
-	private void initializeMore() {
+	private void initializePopupMenuItems() {
+		// root menu
+		jUploadWspItem.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				RWspHandler ws = new RWspHandler();
+				ws.uploadWsp();
+			}
 
-		jSaveMenuItem.setText("Save");
+		});
+		
+		// dataset menu
 		jSaveMenuItem.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveNodeAsFile();
 			}
 		});
 
-		jRenameMenuItem.setText("Rename");
 		jRenameMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				jRenameDataset_actionPerformed(e);
 			}
 		});
 
-		jRemoveDatasetItem.setText("Remove");
+		JMenuItem jRemoveDatasetItem = new JMenuItem("Remove");
 		jRemoveDatasetItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				remove_actionPerformed();
 			}
 		});
 
-		jRemovePendingItem.setText("Remove");
-		jRemovePendingItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				remove_actionPerformed();
-			}
-		});
-
-		jRenameSubItem.setText("Rename");
-		jRenameSubItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				jRenameDataset_actionPerformed(e);
-			}
-		});
-
-		jRemoveSubItem.setText("Remove");
-		jRemoveSubItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				remove_actionPerformed();
-			}
-		});
-		jEditItem.setText("View in Editor");
 		jEditItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (selection.getSelectedNode() instanceof DataSetNode) {
-					DSDataSet<? extends DSBioObject> ds = selection.getDataSet();
-
-					GlobalPreferences prefs = GlobalPreferences.getInstance();
-					String editor = prefs.getTextEditor();
-					if (editor == null) {
-						log.info("No editor configured.");
-						JOptionPane
-						.showMessageDialog(
-								null,
-								"No editor configured.",
-								"Unable to Edit",
-								JOptionPane.INFORMATION_MESSAGE);
-					} else {
-						if (ds.getFile() == null) {
-							JOptionPane
-									.showMessageDialog(
-											null,
-											"There is no local file for this data set.",
-											"Unable to Edit",
-											JOptionPane.INFORMATION_MESSAGE);
-						} else {
-							if (Util.isRunningOnAMac()) {
-								editor = "Open";
-							}
-
-							String[] args = { editor,
-									ds.getFile().getAbsolutePath() };
-							try {
-								Runtime.getRuntime().exec(args);
-							} catch (IOException e1) {
-								log.info("Error opening editor:");
-								JOptionPane
-								.showMessageDialog(
-										null,
-										"IOException in opening editor: "+e1.getMessage(),
-										"Unable to Edit",
-										JOptionPane.INFORMATION_MESSAGE);
-								e1.printStackTrace();
-							} catch (SecurityException se) {
-								JOptionPane
-								.showMessageDialog(
-										null,
-										"SecurityException in opening editor: "+se.getMessage(),
-										"Unable to Edit",
-										JOptionPane.INFORMATION_MESSAGE);
-							} catch (Exception ee) {
-								JOptionPane
-								.showMessageDialog(
-										null,
-										"Other Exception in opening editor: "+ee.getMessage(),
-										"Unable to Edit",
-										JOptionPane.INFORMATION_MESSAGE);
-							}
-						}
-					}
+					viewInExternalEditor();
 				}
 			}
 		});
-		jViewAnnotations.setText("View Annotations");
 		jViewAnnotations.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (selection.getSelectedNode() instanceof DataSetNode) {
-					DSDataSet<? extends DSBioObject> ds = selection.getDataSet();
-					if (!(ds instanceof CSMicroarraySet)) {
-						return;
-					}
-					CSMicroarraySet<? extends DSMicroarray> microarraySet = (CSMicroarraySet<? extends DSMicroarray>) ds;
-					String annotationFileName = microarraySet
-							.getAnnotationFileName();
-					if (annotationFileName == null) {
-						JOptionPane
-								.showMessageDialog(
-										null,
-										"There are no annotations loaded for this dataset.",
-										"Unable to View",
-										JOptionPane.INFORMATION_MESSAGE);
-						return;
-					}
-
-					GlobalPreferences prefs = GlobalPreferences.getInstance();
-					String editor = prefs.getTextEditor();
-					if (editor == null) {
-						log.info("No editor configured.");
-					} else {
-						if (Util.isRunningOnAMac()) {
-							editor = "Open";
-						}
-						String[] args = { editor, annotationFileName };
-						try {
-							Runtime.getRuntime().exec(args);
-						} catch (IOException e1) {
-							log.info("Error opening editor:");
-							e1.printStackTrace();
-						}
-					}
+					viewAnnotationInExternalEditor();
 				}
 			}
 		});
@@ -378,12 +260,32 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		dataSetMenu.add(jEditItem);
 		dataSetMenu.add(jViewAnnotations);
 
+		// dataset sub menu
+		jRenameSubItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				jRenameDataset_actionPerformed(e);
+			}
+		});
+		JMenuItem jRemoveSubItem = new JMenuItem("Remove");
+		jRemoveSubItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				remove_actionPerformed();
+			}
+		});
 		dataSetSubMenu.add(jRenameSubItem);
 		dataSetSubMenu.add(jRemoveSubItem);
 
+		// pending menu
+		JMenuItem jRemovePendingItem = new JMenuItem("Remove");
+		jRemovePendingItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				remove_actionPerformed();
+			}
+		});
 		pendingMenu.add(jRemovePendingItem);
 
-		jRemoveProjectItem.setText("Remove Project");
+		// project menu
+		JMenuItem jRemoveProjectItem = new JMenuItem("Remove Project");
 		jRemoveProjectItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				remove_actionPerformed();
@@ -392,23 +294,103 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 		jProjectMenu.addSeparator();
 		jProjectMenu.add(jRemoveProjectItem);
-		
-		projectTreeModel.addTreeModelListener(new TreeModelListener(){
-			public void treeNodesChanged(TreeModelEvent arg0) {
-				RWspHandler.treeModified();
-			}
-			public void treeNodesInserted(TreeModelEvent arg0) {
-				RWspHandler.treeModified();
-			}
-			public void treeNodesRemoved(TreeModelEvent arg0) {
-				RWspHandler.treeModified();
-			}
-			public void treeStructureChanged(TreeModelEvent arg0) {
-				RWspHandler.treeModified();
-			}			
-		});
 	}
 
+	private void viewInExternalEditor() {
+
+		DSDataSet<? extends DSBioObject> ds = selection.getDataSet();
+
+		GlobalPreferences prefs = GlobalPreferences.getInstance();
+		String editor = prefs.getTextEditor();
+		if (editor == null) {
+			log.info("No editor configured.");
+			JOptionPane
+			.showMessageDialog(
+					null,
+					"No editor configured.",
+					"Unable to Edit",
+					JOptionPane.INFORMATION_MESSAGE);
+		} else {
+			if (ds.getFile() == null) {
+				JOptionPane
+						.showMessageDialog(
+								null,
+								"There is no local file for this data set.",
+								"Unable to Edit",
+								JOptionPane.INFORMATION_MESSAGE);
+			} else {
+				if (Util.isRunningOnAMac()) {
+					editor = "Open";
+				}
+
+				String[] args = { editor,
+						ds.getFile().getAbsolutePath() };
+				try {
+					Runtime.getRuntime().exec(args);
+				} catch (IOException e1) {
+					log.info("Error opening editor:");
+					JOptionPane
+					.showMessageDialog(
+							null,
+							"IOException in opening editor: "+e1.getMessage(),
+							"Unable to Edit",
+							JOptionPane.INFORMATION_MESSAGE);
+					e1.printStackTrace();
+				} catch (SecurityException se) {
+					JOptionPane
+					.showMessageDialog(
+							null,
+							"SecurityException in opening editor: "+se.getMessage(),
+							"Unable to Edit",
+							JOptionPane.INFORMATION_MESSAGE);
+				} catch (Exception ee) {
+					JOptionPane
+					.showMessageDialog(
+							null,
+							"Other Exception in opening editor: "+ee.getMessage(),
+							"Unable to Edit",
+							JOptionPane.INFORMATION_MESSAGE);
+				}
+			}
+		}
+	}
+	
+	private void viewAnnotationInExternalEditor() {
+		DSDataSet<? extends DSBioObject> ds = selection.getDataSet();
+		if (!(ds instanceof CSMicroarraySet)) {
+			return;
+		}
+		CSMicroarraySet<? extends DSMicroarray> microarraySet = (CSMicroarraySet<? extends DSMicroarray>) ds;
+		String annotationFileName = microarraySet
+				.getAnnotationFileName();
+		if (annotationFileName == null) {
+			JOptionPane
+					.showMessageDialog(
+							null,
+							"There are no annotations loaded for this dataset.",
+							"Unable to View",
+							JOptionPane.INFORMATION_MESSAGE);
+			return;
+		}
+
+		GlobalPreferences prefs = GlobalPreferences.getInstance();
+		String editor = prefs.getTextEditor();
+		if (editor == null) {
+			log.info("No editor configured.");
+		} else {
+			if (Util.isRunningOnAMac()) {
+				editor = "Open";
+			}
+			String[] args = { editor, annotationFileName };
+			try {
+				Runtime.getRuntime().exec(args);
+			} catch (IOException e1) {
+				log.info("Error opening editor:");
+				e1.printStackTrace();
+			}
+		}
+	}
+	
 	void populateFromSaveTree(SaveTree saveTree) {
 		java.util.List<DataSetSaveNode> projects = saveTree.getNodes();
 		ProjectTreeNode selectedNode = null;
@@ -1105,11 +1087,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 					this.jSaveMenuItem.setEnabled(false);
 					this.jOpenRemotePDBItem.setEnabled(false);
 					this.jLoadMArrayItem.setEnabled(false);
-					this.jRenameDataset.setEnabled(false);
 					this.jRenameMenuItem.setEnabled(false);
 					this.jRenameProjectItem.setEnabled(false);
 					this.jRenameSubItem.setEnabled(false);
-					this.jSaveMenuItem.setEnabled(false);
 					this.jEditItem.setEnabled(false);
 					this.jViewAnnotations.setEnabled(false);
 				} else {
@@ -1117,11 +1097,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 					this.jSaveMenuItem.setEnabled(true);
 					this.jOpenRemotePDBItem.setEnabled(true);
 					this.jLoadMArrayItem.setEnabled(true);
-					this.jRenameDataset.setEnabled(true);
 					this.jRenameMenuItem.setEnabled(true);
 					this.jRenameProjectItem.setEnabled(true);
 					this.jRenameSubItem.setEnabled(true);
-					this.jSaveMenuItem.setEnabled(true);
 					this.jEditItem.setEnabled(true);
 					this.jViewAnnotations.setEnabled(true);
 
@@ -1783,7 +1761,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * @param child
 	 *            The node to be added
 	 * @param shouldBeVisible
-	 *            wether it should be visible or not
+	 *            whether it should be visible or not
 	 * @return
 	 */
 	private ProjectNode addToProject(ProjectNode child, boolean shouldBeVisible) {
@@ -1808,20 +1786,17 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	private void setNodeSelection(ProjectTreeNode node) {
 
 		if (node == null) {
-
 			return;
 		}
 		selection.setNodeSelection(node);
 		projectTree.setSelectionPath(new TreePath(node.getPath()));
-		// todo - watkin - replace with a more appropriate event firing
+		// TODO - watkin - replace with a more appropriate event firing
 		// projectTreeModel.nodeStructureChanged(node);
 	}
 
 	public ProjectSelection getSelection() {
 		return selection;
 	}
-
-	// ----------------------------------------------------------------------
 
 	private ProjectTreeNode selectedNode = null;
 
@@ -1899,26 +1874,26 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	}
 
 	@Subscribe
-	public void receive(org.geworkbench.events.PhenotypeSelectorEvent<DSMicroarray> e,
+	public void receive(
+			org.geworkbench.events.PhenotypeSelectorEvent<DSMicroarray> e,
 			Object source) {
-		if (e.getDataSet() instanceof DSMicroarraySet) {
-			DSMicroarraySet<DSMicroarray> microarraySet = (DSMicroarraySet<DSMicroarray>) e.getDataSet();
-			updateColorContext(microarraySet, e);
-		}
-	}
 
-	private void updateColorContext(DSMicroarraySet<DSMicroarray> microarraySet,
-			org.geworkbench.events.PhenotypeSelectorEvent<DSMicroarray> e) {
+		if (!(e.getDataSet() instanceof DSMicroarraySet)) {
+			return;
+		}
+
+		DSMicroarraySet<DSMicroarray> microarraySet = (DSMicroarraySet<DSMicroarray>) e
+				.getDataSet();
 		ColorContext colorContext = (ColorContext) microarraySet
 				.getObject(ColorContext.class);
 		if (colorContext != null) {
-			CSMicroarraySetView<DSGeneMarker, DSMicroarray> view 
-				= new CSMicroarraySetView<DSGeneMarker, DSMicroarray>(microarraySet);
+			CSMicroarraySetView<DSGeneMarker, DSMicroarray> view = new CSMicroarraySetView<DSGeneMarker, DSMicroarray>(
+					microarraySet);
 			view.useItemPanel(true);
 			if (e.getTaggedItemSetTree() != null
 					&& e.getTaggedItemSetTree().size() > 0) {
-				DSPanel<DSMicroarray> activatedArrays = e.getTaggedItemSetTree()
-						.activeSubset();
+				DSPanel<DSMicroarray> activatedArrays = e
+						.getTaggedItemSetTree().activeSubset();
 				view.setItemPanel(activatedArrays);
 			}
 			colorContext.updateContext(view);
@@ -2068,20 +2043,16 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	private JPopupMenu jProjectMenu = new JPopupMenu();
 
-	private JMenuItem jUploadWspItem = new JMenuItem();
+	private JMenuItem jUploadWspItem = new JMenuItem("Upload to server");
 
-	private JMenuItem jNewProjectItem = new JMenuItem();
+	private JMenuItem jNewProjectItem = new JMenuItem("New Project");
 
-	private JMenuItem jLoadMArrayItem = new JMenuItem();
+	private JMenuItem jLoadMArrayItem = new JMenuItem("Open File(s)");
 
-	private JMenuItem jOpenRemotePDBItem = new JMenuItem();
-
-	private JMenuItem jMergeDatasets = new JMenuItem();
+	private JMenuItem jOpenRemotePDBItem = new JMenuItem("Open PDB File from RCSB Protein Data Bank");
 
 	private JMenuItem jRenameProjectItem = new JMenuItem();
 
-	private JMenuItem jRenameDataset = new JMenuItem();
-	
 	public int countProjectTree() {
 		return projectTree.getRowCount();
 	}
@@ -2093,11 +2064,10 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 */
 	private HashMap<String, ActionListener> listeners = new HashMap<String, ActionListener>();
 
-	private void initializeSwingComponents() {
+	private void initializeMainPanel() {
 		projectPanelTitleLabel.setBorder(BorderFactory.createEtchedBorder());
 		projectPanelTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-		ActionListener listener = null;
 		jDataSetScrollPane.setBorder(BorderFactory.createLoweredBevelBorder());
 		jDataSetScrollPane.setMinimumSize(new Dimension(122, 80));
 
@@ -2105,81 +2075,14 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		projectTree.setCellRenderer(projectRenderer);
 		projectTree.getSelectionModel().setSelectionMode(
 				TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
-		jRenameProjectItem.setText("Rename Project");
-		listener = new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				jRenameProjectItem_actionPerformed(e);
-			}
-
-		};
-		listeners.put("Edit.Rename.Project", listener);
-		jRenameProjectItem.addActionListener(listener);
-		jRenameDataset.setText("Rename File");
-		listener = new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				jRenameDataset_actionPerformed(e);
-			}
-
-		};
-		listeners.put("Edit.Rename.File", listener);
-		jRenameDataset.addActionListener(listener);
 
 		jProjectPanel.setLayout(new BorderLayout());
 		jProjectPanel.add(projectPanelTitleLabel, BorderLayout.NORTH);
 		jProjectPanel.add(jDataSetScrollPane, BorderLayout.CENTER);
 		jProjectPanel.add(progressBar, BorderLayout.SOUTH);
-		//jProjectPanel.setName("Projects"); // no use
 
 		projectTree.setBorder(new EmptyBorder(1, 1, 0, 0));
 		jDataSetScrollPane.getViewport().add(projectTree, null);
-
-		jNewProjectItem.setText("New Project");
-		listener = new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				jNewProjectItem_actionPerformed(e);
-			}
-
-		};
-		listeners.put("File.New.Project", listener);
-		jNewProjectItem.addActionListener(listener);
-		jLoadMArrayItem.setText("Open File(s)");
-		listener = new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				jLoadMArrayItem_actionPerformed(e);
-			}
-
-		};
-		listeners.put("File.Open.File", listener);
-		jLoadMArrayItem.addActionListener(listener);
-		jMergeDatasets.setText("Merge Files");
-		listener = new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				jMergeDatasets_actionPerformed(e);
-			}
-
-		};
-		listeners.put("File.Merge Datasets", listener);
-		jMergeDatasets.addActionListener(listener);
-
-		jOpenRemotePDBItem.setText("Open PDB File from RCSB Protein Data Bank");
-		listener = new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				jOpenRemotePDBItem_actionPerformed(e);
-			}
-
-		};
-		listeners.put("File.OpenRemotePDB.File", listener);
-		jOpenRemotePDBItem.addActionListener(listener);
-
-		jUploadWspItem.setText("Upload to server");
-		listener = new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				RWspHandler ws = new RWspHandler();
-				ws.uploadWsp();
-			}
-
-		};
-		jUploadWspItem.addActionListener(listener);	
 
 		jRootMenu.add(jNewProjectItem);
 		jRootMenu.add(jUploadWspItem);
@@ -2194,7 +2097,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			public void mouseReleased(MouseEvent e) {
 				jProjectTree_mouseReleased(e);
 			}
-
 		});
 
 		projectTree.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -2202,32 +2104,85 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			public void keyReleased(KeyEvent e) {
 				jProjectTree_keyReleased(e);
 			}
-
 		});
+	}
 
-		// Add the action listeners that respond to the various menu selections
-		// and popup selections.
+	/**
+	 * Add the action listeners that respond to the various menu selections
+	 * and popup selections.
+	 */
+	private void initializeMenuListeners() {
+		// the following section is those invoked by both main frame menus AND the context menu (right-clicked invoked)
+		ActionListener listener = null; // reused just for simplicity
+
+		jRenameProjectItem.setText("Rename Project");
+		listener = new java.awt.event.ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				jRenameProjectItem_actionPerformed(e);
+			}
+
+		};
+		listeners.put("Edit.Rename.Project", listener);
+		jRenameProjectItem.addActionListener(listener);
+		
+		listener = new java.awt.event.ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				jNewProjectItem_actionPerformed(e);
+			}
+
+		};
+		listeners.put("File.New.Project", listener);
+		jNewProjectItem.addActionListener(listener);
+		
+		listener = new java.awt.event.ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				jLoadMArrayItem_actionPerformed(e);
+			}
+
+		};
+		listeners.put("File.Open.File", listener);
+		jLoadMArrayItem.addActionListener(listener);
+		
 		listener = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				jOpenRemotePDBItem_actionPerformed(e);
+			}
+		};
+		listeners.put("File.OpenRemotePDB.File", listener);
+		jOpenRemotePDBItem.addActionListener(listener);
+		
+		// the following section is those only invoked by main frame menus
+		listeners.put("Edit.Rename.File", new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				jRenameDataset_actionPerformed(e);
+			}
+		});
+		
+		listeners.put("File.Merge Datasets", new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				jMergeDatasets_actionPerformed(e);
+			}
+		});
+		
+		listeners.put("File.Save.Workspace", new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveWorkspace_actionPerformed(false);
 			}
+		});
 
-		};
-		listeners.put("File.Save.Workspace", listener);
-		listener = new ActionListener() {
+		listeners.put("File.Open.Workspace", new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				openWorkspace_actionPerformed();
 			}
+		});
 
-		};
-		listeners.put("File.Open.Workspace", listener);
-		listener = new java.awt.event.ActionListener() {
+		listeners.put("File.Open.Remote Workspace", new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				RWspHandler ws = new RWspHandler();
 				ws.listWsp(true);
 			}
-		};
-		listeners.put("File.Open.Remote Workspace", listener);
+		});
+		
 		listeners.put("Tools.Choose OBO Source", new ActionListener() {
 
 			@Override
@@ -2236,40 +2191,36 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				dlg.refresh();
 				dlg.setVisible(true);
 			}
-			
 		});
 		
-		listener = new java.awt.event.ActionListener() {
+		listeners.put("Tools.My Account", new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				RWspHandler ws = new RWspHandler();
 				ws.listWsp(false);
 			}
-		};
-		listeners.put("Tools.My Account", listener);
-		listener = new ActionListener() {
+		});
+
+		listeners.put("File.New.Workspace", new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				newWorkspace_actionPerformed(e);
 			}
+		});
 
-		};
-		listeners.put("File.New.Workspace", listener);
-		listener = new ActionListener() {
+		listeners.put("File.Remove", new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				remove_actionPerformed();
 			}
+		});
 
-		};
-		listeners.put("File.Remove", listener);
-
-		listener = new ActionListener() {
+		listeners.put("File.Export", new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveNodeAsFile();
 			}
-
-		};
-		listeners.put("File.Export", listener);
-
-		// Let the main frame listen to window-closing event ZJ 2008-05-01
+		});
+	}
+	
+	private void initializeWorkspaceBehavior() {
+		// Let the main frame listen to window-closing event
 		GeawConfigObject.getGuiWindow().addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				RWspHelper.listLock();
@@ -2292,6 +2243,20 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			}
 		});
 
+		projectTreeModel.addTreeModelListener(new TreeModelListener(){
+			public void treeNodesChanged(TreeModelEvent arg0) {
+				RWspHandler.treeModified();
+			}
+			public void treeNodesInserted(TreeModelEvent arg0) {
+				RWspHandler.treeModified();
+			}
+			public void treeNodesRemoved(TreeModelEvent arg0) {
+				RWspHandler.treeModified();
+			}
+			public void treeStructureChanged(TreeModelEvent arg0) {
+				RWspHandler.treeModified();
+			}			
+		});
 	}
 
 	private void saveWorkspace_actionPerformed(boolean terminating) {
