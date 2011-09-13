@@ -1,4 +1,4 @@
-package org.geworkbench.builtin.projects.remoteresources.query;
+package org.geworkbench.builtin.projects.remoteresources;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -34,8 +34,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.builtin.projects.LoadDataDialog;
 import org.geworkbench.builtin.projects.ProjectPanel;
-import org.geworkbench.builtin.projects.remoteresources.RemoteResource;
-import org.geworkbench.builtin.projects.remoteresources.RemoteResourceDialog;
 import org.geworkbench.builtin.projects.util.CaARRAYPanel;
 import org.geworkbench.engine.properties.PropertiesManager;
 import org.geworkbench.events.CaArrayQueryEvent;

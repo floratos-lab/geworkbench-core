@@ -38,8 +38,8 @@ import javax.swing.filechooser.FileFilter;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.geworkbench.builtin.projects.remoteresources.CaArrayFilteringDialog;
 import org.geworkbench.builtin.projects.remoteresources.RemoteResourceDialog;
-import org.geworkbench.builtin.projects.remoteresources.query.CaArrayFilteringDialog;
 import org.geworkbench.builtin.projects.util.CaARRAYPanel;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.parsers.DataSetFileFormat;
