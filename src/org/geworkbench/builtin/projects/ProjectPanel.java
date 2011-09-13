@@ -22,7 +22,6 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -62,7 +61,6 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.goterms.GeneOntolo
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSTTestResultSet;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
-import org.geworkbench.bison.datastructure.properties.DSNamed;
 import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.bison.util.colorcontext.ColorContext;
 import org.geworkbench.builtin.projects.SaveFileFilterFactory.CustomFileFilter;
@@ -73,7 +71,6 @@ import org.geworkbench.engine.config.VisualPlugin;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.management.Publish;
 import org.geworkbench.engine.management.Subscribe;
-import org.geworkbench.engine.management.TypeMap;
 import org.geworkbench.engine.preferences.GlobalPreferences;
 import org.geworkbench.engine.properties.PropertiesManager;
 import org.geworkbench.engine.skin.Skin;
@@ -113,17 +110,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	static Log log = LogFactory.getLog(ProjectPanel.class);
 
 	private static final String WORKSPACE_DIR = "workspaceDir";
-
-	/**
-	 * Additional Menu related instance variables that do not exist in parent
-	 */
-
-	private static TypeMap<ImageIcon> iconMap = new TypeMap<ImageIcon>();
-
-	// Initialize default icons
-	static {
-		DefaultIconAssignments.initializeDefaultIconAssignments();
-	}
 
 	private LoadDataDialog loadData = new LoadDataDialog();
 
@@ -486,20 +472,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				.getCommandSelected());
 		skin.setSelectionLastSelected(saveNode.getDataSet(), saveNode
 				.getSelectionSelected());
-	}
-
-	public static ImageIcon getIconForType(Class<? extends DSNamed> type) {
-		ImageIcon icon = iconMap.get(type);
-		if (icon == null) {
-			return Icons.GENERIC_ICON;
-		} else {
-			return icon;
-		}
-	}
-
-	public static void setIconForType(Class<? extends DSNamed> type,
-			ImageIcon icon) {
-		iconMap.put(type, icon);
 	}
 
 	private void saveNodeAsFile() {
@@ -1710,7 +1682,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				ImageNode imageNode = new ImageNode(event.getImage());
 				ProjectTreeNode node = (ProjectTreeNode) path
 						.getLastPathComponent();
-				projectRenderer.imageNodeSelection = imageNode;
 				if (node instanceof DataSetNode) {
 					projectTreeModel.insertNodeInto(imageNode, node, node
 							.getChildCount());
@@ -1841,7 +1812,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		if (root != null) {
 			root.removeAllChildren();
 			projectTreeModel.reload(root);
-			projectRenderer.clearNodeSelections();
 			selectedNode = null;
 		}
 
@@ -1897,7 +1867,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	private JTree projectTree = new JTree(projectTreeModel);
 
-	private TreeNodeRenderer projectRenderer = new TreeNodeRenderer(selection);
+	private TreeNodeRenderer projectRenderer = new TreeNodeRenderer();
 
 	private JPopupMenu jRootMenu = new JPopupMenu();
 

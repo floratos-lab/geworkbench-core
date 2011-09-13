@@ -21,19 +21,19 @@ import org.geworkbench.util.pathwaydecoder.mutualinformation.EdgeListDataSet;
 public class DefaultIconAssignments {
 
     public static void initializeDefaultIconAssignments() {
-        ProjectPanel.setIconForType(AdjacencyMatrixDataSet.class, Icons.NETWORK_ICON);
-        ProjectPanel.setIconForType(DSMicroarraySet.class, Icons.MICROARRAYS_ICON);
-        ProjectPanel.setIconForType(DSAlignmentResultSet.class, Icons.ALIGNMENT_ICON);
-        ProjectPanel.setIconForType(DSHierClusterDataSet.class, Icons.DENDOGRAM_ICON);
-        ProjectPanel.setIconForType(DSSOMClusterDataSet.class, Icons.SOM_ICON);
-        ProjectPanel.setIconForType(DSSequenceSet.class, Icons.SEQUENCE_ICON);
-        ProjectPanel.setIconForType(DSSignificanceResultSet.class, Icons.SIGNIFICANCE_ICON);
-        ProjectPanel.setIconForType(ImageData.class, Icons.IMAGE_ICON);
-        ProjectPanel.setIconForType(PatternResult.class, Icons.PATTERN_ICON);
-        ProjectPanel.setIconForType(CSClassifier.class, Icons.CLASSIFIER_ICON);
-        ProjectPanel.setIconForType(DSProteinStructure.class, Icons.STRUCTURE_ICON);
-        ProjectPanel.setIconForType(DSMatrixReduceSet.class, Icons.PSAM_ICON);
-        ProjectPanel.setIconForType(DSProbeIntensityArray.class, Icons.CEL_ICON);
-        ProjectPanel.setIconForType(EdgeListDataSet.class, Icons.EDGELIST_ICON);
+    	TreeNodeRenderer.setIconForType(AdjacencyMatrixDataSet.class, Icons.NETWORK_ICON);
+        TreeNodeRenderer.setIconForType(DSMicroarraySet.class, Icons.MICROARRAYS_ICON);
+        TreeNodeRenderer.setIconForType(DSAlignmentResultSet.class, Icons.ALIGNMENT_ICON);
+        TreeNodeRenderer.setIconForType(DSHierClusterDataSet.class, Icons.DENDOGRAM_ICON);
+        TreeNodeRenderer.setIconForType(DSSOMClusterDataSet.class, Icons.SOM_ICON);
+        TreeNodeRenderer.setIconForType(DSSequenceSet.class, Icons.SEQUENCE_ICON);
+        TreeNodeRenderer.setIconForType(DSSignificanceResultSet.class, Icons.SIGNIFICANCE_ICON);
+        TreeNodeRenderer.setIconForType(ImageData.class, Icons.IMAGE_ICON);
+        TreeNodeRenderer.setIconForType(PatternResult.class, Icons.PATTERN_ICON);
+        TreeNodeRenderer.setIconForType(CSClassifier.class, Icons.CLASSIFIER_ICON);
+        TreeNodeRenderer.setIconForType(DSProteinStructure.class, Icons.STRUCTURE_ICON);
+        TreeNodeRenderer.setIconForType(DSMatrixReduceSet.class, Icons.PSAM_ICON);
+        TreeNodeRenderer.setIconForType(DSProbeIntensityArray.class, Icons.CEL_ICON);
+        TreeNodeRenderer.setIconForType(EdgeListDataSet.class, Icons.EDGELIST_ICON);
     }
 }
