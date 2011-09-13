@@ -61,7 +61,6 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.A
 import org.geworkbench.bison.datastructure.bioobjects.markers.goterms.GeneOntologyTree;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSTTestResultSet;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
-import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.datastructure.properties.DSNamed;
 import org.geworkbench.bison.util.RandomNumberGenerator;
@@ -690,7 +689,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 *
 	 * @param _dataSet
 	 */
-	void addDataSetNode(DSDataSet<? extends DSBioObject> _dataSet, boolean select) {
+	public void addDataSetNode(DSDataSet<? extends DSBioObject> _dataSet, boolean select) {
 		// Retrieve the project node for this node
 		ProjectNode pNode = selection.getSelectedProjectNode();
 
@@ -1323,118 +1322,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				return;
 			}
 		}
-		doMergeSets(sets);
-	}
-
-	/**
-	 * Check for markers in DSMicroarraySets, if markers are all the same,
-	 * return true. This method assume there's no duplicate markers within each
-	 * set.
-	 *
-	 * @param sets
-	 * @return
-	 */
-	private static boolean isSameMarkerSets(DSMicroarraySet<? extends DSMicroarray>[] sets) {
-		if (sets == null || sets.length <= 1)
-			return true;
-
-		HashSet<DSGeneMarker> set1 = new HashSet<DSGeneMarker>();
-		set1.addAll(sets[0].getMarkers());
-
-		HashSet<DSGeneMarker> set2 = new HashSet<DSGeneMarker>();
-		for (int i = 1; i < sets.length; i++) {
-			set2.clear();
-			set2.addAll(sets[i].getMarkers());
-			if (!set1.equals(set2))
-				return false;
-		}
-		return true; // all marker sets are identical
-	}
-
-	/**
-	 * Merger an array of MSMicroarraySets and create a new dataset node.
-	 *
-	 * @param sets
-	 */
-	public void doMergeSets(DSMicroarraySet<? extends DSMicroarray>[] sets) {
-		if (!isSameMarkerSets(sets)) {
-			JOptionPane
-					.showMessageDialog(
-							null,
-							"Can't merge datasets.  Only datasets with the same markers can be merged.",
-							"Operation failed while merging",
-							JOptionPane.INFORMATION_MESSAGE);
-			return;
-		}
-		DSMicroarraySet<DSMicroarray> mergedSet = null;
-		int i;
-		DSMicroarraySet<DSMicroarray> set;
-		if (sets != null) {
-			String desc = "Merged DataSet: ";
-			for (i = 0; i < sets.length; i++) {
-				set = (DSMicroarraySet<DSMicroarray>)sets[i];
-				if (mergedSet == null) {
-					try {
-						mergedSet = set.getClass().newInstance();
-						mergedSet.addObject(ColorContext.class, set
-								.getObject(ColorContext.class));
-						// mergedSet.setMarkerNo(set.size());
-						// mergedSet.setMicroarrayNo(set.size());
-
-						((DSMicroarraySet<DSMicroarray>) mergedSet)
-								.setCompatibilityLabel(set
-										.getCompatibilityLabel());
-						((DSMicroarraySet<DSMicroarray>) mergedSet)
-								.getMarkers().addAll(set.getMarkers());
-						DSItemList<DSGeneMarker> markerList = set.getMarkers();
-						for (int j = 0; j < markerList.size(); j++) {
-							DSGeneMarker dsGeneMarker = markerList.get(j);
-							((DSMicroarraySet<DSMicroarray>) mergedSet)
-									.getMarkers().add(dsGeneMarker.deepCopy());
-						}
-						for (int k = 0; k < set.size(); k++) {
-							mergedSet.add(set.get(k).deepCopy());
-						}
-						desc += set.getLabel() + " ";
-						// XQ fix bug 1539, add annotation information to the
-						// merged dataset.
-						String chipType = AnnotationParser.getChipType(set);
-						AnnotationParser.setChipType(mergedSet, chipType);
-					} catch (InstantiationException ie) {
-						ie.printStackTrace();
-					} catch (IllegalAccessException iae) {
-						iae.printStackTrace();
-					}
-				} else {
-					desc += set.getLabel() + " ";
-					try {
-						mergedSet.mergeMicroarraySet(set);
-					} catch (Exception ex) {
-						ex.printStackTrace();
-						JOptionPane
-								.showMessageDialog(
-										null,
-										"Only microarray sets created"
-												+ " from the same chip set can be merged",
-										"Merge Error",
-										JOptionPane.ERROR_MESSAGE);
-						return;
-					}
-				}
-			}
-
-			if (mergedSet != null) {
-				mergedSet.setLabel("Merged array set");
-				mergedSet.setLabel(desc);
-				mergedSet.addDescription(desc);
-				((CSMicroarraySet<? extends DSMicroarray>)mergedSet).setAnnotationFileName(
-						((CSMicroarraySet<? extends DSMicroarray>)sets[0]).getAnnotationFileName());
-			}
-			// Add color context
-			addColorContext(mergedSet);
-
-			// Add the new dataset to the project tree.
-			addDataSetNode((DSDataSet<? extends DSBioObject>) mergedSet, true);
+		DSMicroarraySet<DSMicroarray> mergedSet = FileOpenHandler.doMergeSets(sets);
+		if(mergedSet!=null) {
+			addDataSetNode(mergedSet, true);
 		}
 	}
 

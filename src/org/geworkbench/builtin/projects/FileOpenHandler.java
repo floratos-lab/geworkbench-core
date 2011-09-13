@@ -9,6 +9,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.InterruptedIOException;
+import java.util.HashSet;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -24,18 +25,21 @@ import javax.swing.UIManager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.geworkbench.bison.datastructure.biocollections.AdjacencyMatrixDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
+import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
+import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
+import org.geworkbench.bison.util.colorcontext.ColorContext;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.events.ProjectNodeAddedEvent;
 import org.geworkbench.parsers.AdjacencyMatrixFileFormat;
 import org.geworkbench.parsers.DataSetFileFormat;
 import org.geworkbench.parsers.FileFormat;
 import org.geworkbench.parsers.InputFileFormatException;
-import org.geworkbench.bison.datastructure.biocollections.AdjacencyMatrixDataSet;
 
 /**
  * This class is refactored out of ProjectPanel to handle the file open action,
@@ -221,7 +225,10 @@ public class FileOpenHandler {
 				for (int i = 0; i < dataSets.length; i++) {
 					maSets[i] = (DSMicroarraySet) dataSets[i];
 				}
-				projectPanel.doMergeSets(maSets);
+				DSMicroarraySet<DSMicroarray> mergedSet = doMergeSets(maSets);
+				if(mergedSet!=null) {
+					projectPanel.addDataSetNode(mergedSet, true);
+				}
 			} else {
 				boolean selected = false;
 				for (int i = 0; i < dataSets.length; i++) {
@@ -399,5 +406,120 @@ public class FileOpenHandler {
 			return null;
 		}
 
+	}
+
+	/**
+	 * Merger an array of MSMicroarraySets and create a new dataset node.
+	 * 
+	 * This method may return null.
+	 *
+	 * @param sets
+	 */
+	@SuppressWarnings("unchecked")
+	public static DSMicroarraySet<DSMicroarray> doMergeSets(DSMicroarraySet<? extends DSMicroarray>[] sets) {
+		if (!isSameMarkerSets(sets)) {
+			JOptionPane
+					.showMessageDialog(
+							null,
+							"Can't merge datasets.  Only datasets with the same markers can be merged.",
+							"Operation failed while merging",
+							JOptionPane.INFORMATION_MESSAGE);
+			return null;
+		}
+		DSMicroarraySet<DSMicroarray> mergedSet = null;
+		int i;
+		DSMicroarraySet<DSMicroarray> set;
+		if (sets != null) {
+			String desc = "Merged DataSet: ";
+			for (i = 0; i < sets.length; i++) {
+				set = (DSMicroarraySet<DSMicroarray>)sets[i];
+				if (mergedSet == null) {
+					try {
+						mergedSet = set.getClass().newInstance();
+						mergedSet.addObject(ColorContext.class, set
+								.getObject(ColorContext.class));
+						// mergedSet.setMarkerNo(set.size());
+						// mergedSet.setMicroarrayNo(set.size());
+
+						((DSMicroarraySet<DSMicroarray>) mergedSet)
+								.setCompatibilityLabel(set
+										.getCompatibilityLabel());
+						((DSMicroarraySet<DSMicroarray>) mergedSet)
+								.getMarkers().addAll(set.getMarkers());
+						DSItemList<DSGeneMarker> markerList = set.getMarkers();
+						for (int j = 0; j < markerList.size(); j++) {
+							DSGeneMarker dsGeneMarker = markerList.get(j);
+							((DSMicroarraySet<DSMicroarray>) mergedSet)
+									.getMarkers().add(dsGeneMarker.deepCopy());
+						}
+						for (int k = 0; k < set.size(); k++) {
+							mergedSet.add(set.get(k).deepCopy());
+						}
+						desc += set.getLabel() + " ";
+						// XQ fix bug 1539, add annotation information to the
+						// merged dataset.
+						String chipType = AnnotationParser.getChipType(set);
+						AnnotationParser.setChipType(mergedSet, chipType);
+					} catch (InstantiationException ie) {
+						ie.printStackTrace();
+					} catch (IllegalAccessException iae) {
+						iae.printStackTrace();
+					}
+				} else {
+					desc += set.getLabel() + " ";
+					try {
+						mergedSet.mergeMicroarraySet(set);
+					} catch (Exception ex) {
+						ex.printStackTrace();
+						JOptionPane
+								.showMessageDialog(
+										null,
+										"Only microarray sets created"
+												+ " from the same chip set can be merged",
+										"Merge Error",
+										JOptionPane.ERROR_MESSAGE);
+						return null;
+					}
+				}
+			}
+
+			if (mergedSet != null) {
+				mergedSet.setLabel("Merged array set");
+				mergedSet.setLabel(desc);
+				mergedSet.addDescription(desc);
+				((CSMicroarraySet<? extends DSMicroarray>)mergedSet).setAnnotationFileName(
+						((CSMicroarraySet<? extends DSMicroarray>)sets[0]).getAnnotationFileName());
+			}
+			// Add color context
+			ProjectPanel.addColorContext(mergedSet);
+
+			return mergedSet;
+		}
+		return null;
+	}
+
+	/**
+	 * Check for markers in DSMicroarraySets, if markers are all the same,
+	 * return true. This method assume there's no duplicate markers within each
+	 * set.
+	 *
+	 * @param sets
+	 * @return
+	 */
+	private static boolean isSameMarkerSets(DSMicroarraySet<? extends DSMicroarray>[] sets) {
+		if (sets == null || sets.length <= 1)
+			return true;
+
+		HashSet<DSGeneMarker> set1 = new HashSet<DSGeneMarker>();
+		set1.addAll(sets[0].getMarkers());
+
+		HashSet<DSGeneMarker> set2 = new HashSet<DSGeneMarker>();
+		for (int i = 1; i < sets.length; i++) {
+			set2.clear();
+			set2.addAll(sets[i].getMarkers());
+			if (!set1.equals(set2))
+				return false;
+		}
+		return true; // all marker sets are identical
 	}
 }
