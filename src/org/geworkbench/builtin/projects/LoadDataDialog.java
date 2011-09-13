@@ -39,7 +39,7 @@ import javax.swing.filechooser.FileFilter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.builtin.projects.remoteresources.RemoteResourceDialog;
-import org.geworkbench.builtin.projects.remoteresources.query.CaARRAYQueryPanel;
+import org.geworkbench.builtin.projects.remoteresources.query.CaArrayFilteringDialog;
 import org.geworkbench.builtin.projects.util.CaARRAYPanel;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.parsers.DataSetFileFormat;
@@ -83,7 +83,7 @@ public class LoadDataDialog extends JDialog {
 	private String currentDetailedResourceName; // current resource name which
 												// shows detail at the top
 												// panel.
-	private CaARRAYQueryPanel caarrayFilterQueryDialog; // TODO the class name is bad. fix it later
+	private CaArrayFilteringDialog caarrayFilterQueryDialog;
 	 
 	/**
 	 * Stores the <code>FileFormat</code> objects for the supported input
@@ -192,7 +192,7 @@ public class LoadDataDialog extends JDialog {
 
 		});
 
-		caarrayFilterQueryDialog = new CaARRAYQueryPanel(JOptionPane
+		caarrayFilterQueryDialog = new CaArrayFilteringDialog(JOptionPane
 				.getFrameForComponent(this), QUERYTITLE);
 		queryButton.setToolTipText("Filtering the selections.");
 		queryButton.setText("Filtering");
@@ -202,7 +202,7 @@ public class LoadDataDialog extends JDialog {
 				String remoteSourceName = (String) jComboBox1.getSelectedItem();
 				RemoteResourceDialog.setPreviousResourceName(remoteSourceName);
 				if (caarrayFilterQueryDialog == null) {
-					caarrayFilterQueryDialog = new CaARRAYQueryPanel(JOptionPane
+					caarrayFilterQueryDialog = new CaArrayFilteringDialog(JOptionPane
 							.getFrameForComponent(LoadDataDialog.this), QUERYTITLE);
 				}
 				caarrayFilterQueryDialog.display(LoadDataDialog.this, remoteSourceName);
