@@ -13,7 +13,6 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.io.ObjectInputStream;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -90,7 +89,6 @@ import org.geworkbench.events.ProjectNodeAddedEvent;
 import org.geworkbench.events.ProjectNodePostCompletedEvent;
 import org.geworkbench.events.ProjectNodeRemovedEvent;
 import org.geworkbench.events.ProjectNodeRenamedEvent;
-import org.geworkbench.parsers.DataSetFileFormat;
 import org.geworkbench.util.FilePathnameUtils;
 import org.geworkbench.util.SaveImage;
 import org.geworkbench.util.Util;
@@ -144,7 +142,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	private JPopupMenu pendingMenu = new JPopupMenu();
 
-	JProgressBar progressBar = new JProgressBar();
+	private JProgressBar progressBar = new JProgressBar();
 
 	private JMenuItem jRenameSubItem = new JMenuItem("Rename");
 
@@ -1248,7 +1246,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			return;
 		}
 
-		PDBDialog pd = new PDBDialog(this);
+		PDBDialog pd = new PDBDialog();
 		pd.create();
 	}
 
@@ -1440,35 +1438,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 	}
 
-	/**
-	 * Invoked from the "Open File" dialog box to handle opening a local
-	 * dataset.
-	 *
-	 * @param dataSetFiles
-	 *            The file containing the data to be parsed.
-	 * @param inputFormat
-	 *            The format that the file is expected to conform to.
-	 * @throws org.geworkbench.parsers.InputFileFormatException
-	 *
-	 */
-	void fileOpenAction(final File[] dataSetFiles,
-			final org.geworkbench.parsers.FileFormat inputFormat,
-			boolean merge)
-			throws org.geworkbench.parsers.InputFileFormatException,
-			InterruptedIOException {
-
-		final boolean mergeFiles = dataSetFiles.length == 1 ? false : merge;
-		if (inputFormat instanceof DataSetFileFormat) {
-			FileOpenHandler handler = new FileOpenHandler(dataSetFiles,
-					inputFormat, mergeFiles, this);
-			handler.openFiles();
-		} else {
-			log
-					.error("unreachable branch: all FileFormat's are DataSetFileFormat");
-		}
-	}
-
-	void addColorContext(DSMicroarraySet<DSMicroarray> maSet) {
+	static void addColorContext(DSMicroarraySet<DSMicroarray> maSet) {
 		GlobalPreferences prefs = GlobalPreferences.getInstance();
 		Class<? extends ColorContext> type = prefs.getColorContextClass();
 		try {
@@ -1823,7 +1793,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		return event;
 	}
 
-	private void updateColorContext(DSMicroarraySet<DSMicroarray> maSet) {
+	private static void updateColorContext(DSMicroarraySet<DSMicroarray> maSet) {
 		ColorContext colorContext = (ColorContext) maSet
 				.getObject(ColorContext.class);
 		if (colorContext != null) {
@@ -1927,7 +1897,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 		// Notify interested components that the selected dataset has changed
 		// The event is thrown only if the normalized dataset is the one
-		// currently selectd in the project panel.
+		// currently selected in the project panel.
 		DSDataSet<? extends DSBioObject> currentDS = (selection != null ? selection.getDataSet()
 				: null);
 		if (currentDS != null && currentDS instanceof DSMicroarraySet
@@ -1962,7 +1932,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				+ "Filtered with " + fe.getInformation() + "\n");
 		// Notify interested components that the selected dataset has changed
 		// The event is thrown only if the dataset filtered is the one
-		// currently selectd in the project panel.
+		// currently selected in the project panel.
 		DSDataSet<? extends DSBioObject> currentDS = (selection != null ? selection.getDataSet()
 				: null);
 
@@ -1975,7 +1945,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/**
 	 * Clears the current workspace from the project window and notifies all
-	 * componets that have registered to receive workspace clearing events.
+	 * components that have registered to receive workspace clearing events.
 	 */
 	void clear() {
 		if (root != null) {
@@ -2051,7 +2021,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	private JMenuItem jOpenRemotePDBItem = new JMenuItem("Open PDB File from RCSB Protein Data Bank");
 
-	private JMenuItem jRenameProjectItem = new JMenuItem();
+	private JMenuItem jRenameProjectItem = new JMenuItem("Rename Project");
 
 	public int countProjectTree() {
 		return projectTree.getRowCount();
@@ -2115,7 +2085,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		// the following section is those invoked by both main frame menus AND the context menu (right-clicked invoked)
 		ActionListener listener = null; // reused just for simplicity
 
-		jRenameProjectItem.setText("Rename Project");
 		listener = new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				jRenameProjectItem_actionPerformed(e);
@@ -2342,4 +2311,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	public ProjectTreeNode getRoot() {
 		return (ProjectTreeNode) projectTreeModel.getRoot();
 	}
+	
+	JProgressBar getProgressBar() { return progressBar; }
 }

@@ -48,6 +48,7 @@ import org.geworkbench.builtin.projects.util.CaARRAYPanel;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.events.CaArrayQueryEvent;
 import org.geworkbench.events.CaArrayRequestEvent;
+import org.geworkbench.parsers.DataSetFileFormat;
 import org.geworkbench.parsers.FileFormat;
 import org.geworkbench.util.FilePathnameUtils;
 
@@ -626,11 +627,18 @@ public class LoadDataDialog extends JDialog {
 						filepath = jFileChooser1.getCurrentDirectory()
 								.getCanonicalPath();
 						setLastDataInfo(filepath, format);
-						// Delegates the actual file loading to the project
-						// panel
-						parentProjectPanel.fileOpenAction(files,
-								supportedInputFormats[i], mergeCheckBox
-										.isSelected());
+
+						final boolean mergeFiles = files.length == 1 ? false : mergeCheckBox
+								.isSelected();
+						if (supportedInputFormats[i] instanceof DataSetFileFormat) {
+							FileOpenHandler handler = new FileOpenHandler(files,
+									supportedInputFormats[i], mergeFiles);
+							handler.openFiles();
+						} else {
+							log
+									.error("unreachable branch: all FileFormat's are DataSetFileFormat");
+						}
+						
 						dispose();
 						return;
 					} catch (org.geworkbench.parsers.InputFileFormatException iffe) {

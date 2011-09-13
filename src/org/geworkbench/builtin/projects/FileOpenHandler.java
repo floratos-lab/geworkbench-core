@@ -42,7 +42,7 @@ import org.geworkbench.bison.datastructure.biocollections.AdjacencyMatrixDataSet
  * especially tackles the progress bar requirement for multiple files.
  *
  * @author zji
- * @version $Id: FileOpenHandler.java,v 1.2 2008/07/25 19:13:17 jiz Exp $
+ * @version $Id$
  *
  */
 public class FileOpenHandler {
@@ -51,7 +51,9 @@ public class FileOpenHandler {
 	private final File[] dataSetFiles;
 	private final FileFormat inputFormat;
 	private final boolean mergeFiles;
-	private final ProjectPanel enclosingProjectPanel;
+	private final ProjectPanel projectPanel;
+	private final JProgressBar projectPanelProgressBar;
+	
 	private static final String OUT_OF_MEMORY_MESSAGE = "In order to prevent data corruption,\n"
 			+ "it is strongly suggested that you\n"
 			+ "restart geWorkbench now.\n"
@@ -61,22 +63,20 @@ public class FileOpenHandler {
 			+ "Exit geWorkbench?";
 	private static final String OUT_OF_MEMORY_MESSAGE_TITLE = "Java total heap memory exception";
 
-	ProgressBarDialog pb = null;
-	OpenMultipleFileTask task = null;
-
 	FileOpenHandler(final File[] dataSetFiles, final FileFormat inputFormat,
-			final boolean mergeFiles, final ProjectPanel enclosingProjectPanel)
+			final boolean mergeFiles)
 			throws InputFileFormatException {
 		this.dataSetFiles = dataSetFiles;
 		this.inputFormat = inputFormat;
 
 		this.mergeFiles = mergeFiles;
-		this.enclosingProjectPanel = enclosingProjectPanel;
 
-		enclosingProjectPanel.progressBar.setStringPainted(true);
-		enclosingProjectPanel.progressBar.setString("Loading");
-		enclosingProjectPanel.progressBar.setIndeterminate(true);
-		enclosingProjectPanel.getComponent().setCursor(Cursor
+		projectPanel = ProjectPanel.getInstance();
+		projectPanelProgressBar = projectPanel.getProgressBar();
+		projectPanelProgressBar.setStringPainted(true);
+		projectPanelProgressBar.setString("Loading");
+		projectPanelProgressBar.setIndeterminate(true);
+		ProjectPanel.getInstance().getComponent().setCursor(Cursor
 				.getPredefinedCursor(Cursor.WAIT_CURSOR));
 	}
 
@@ -84,14 +84,16 @@ public class FileOpenHandler {
 	 *
 	 */
 	public void openFiles() {
-		task = new OpenMultipleFileTask();
-		task.execute();
+		OpenMultipleFileTask task = new OpenMultipleFileTask();
 
-		pb = new ProgressBarDialog(GeawConfigObject.getGuiWindow(),
-				"Files are being opened.");
+		ProgressBarDialog pb = new ProgressBarDialog(GeawConfigObject.getGuiWindow(),
+				"Files are being opened.", task);
 		pb.setMessageAndNote(String.format("Completed %d out of %d files.", 0,
 				dataSetFiles.length), String.format(
 				"Currently being processed is %s.", dataSetFiles[0].getName()));
+		
+		task.progressBarDialog = pb;
+		task.execute();
 
 		task.addPropertyChangeListener(pb);
 	}
@@ -104,19 +106,22 @@ public class FileOpenHandler {
 		private JLabel note = null;
 		private JButton cancelButton = null;
 
-		protected void setMessageAndNote(String message, String note) {
+		private final OpenMultipleFileTask task;
+		private void setMessageAndNote(String message, String note) {
 			this.message.setText(message);
 			this.note.setText(note);
 			this.message.invalidate();
 		}
 
-		ProgressBarDialog(JFrame ownerFrame, String title) {
+		ProgressBarDialog(JFrame ownerFrame, String title, final OpenMultipleFileTask task) {
 			// it is important to make it non-modal - for the same reason
 			// customizing dialog is necessary
 			// because this class FileOpenHandler is used within a file chooser
 			// event handler, so it would leave the file open dialog open
 			// otherwise
 			super(ownerFrame, title, false);
+			
+			this.task = task;
 
 			this.setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
 			JPanel leftPanel = new JPanel();
@@ -173,9 +178,9 @@ public class FileOpenHandler {
 
 				// task is really stopped when checking isCancel between reading
 				// files, but UI should show canceled
-				enclosingProjectPanel.progressBar.setString("");
-				enclosingProjectPanel.progressBar.setIndeterminate(false);
-				enclosingProjectPanel.getComponent().setCursor(Cursor
+				projectPanelProgressBar.setString("");
+				projectPanelProgressBar.setIndeterminate(false);
+				projectPanel.getComponent().setCursor(Cursor
 						.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
 				dispose();
@@ -192,7 +197,7 @@ public class FileOpenHandler {
 				if (progress >= 0 && progress < dataSetFiles.length)
 					note = String.format("Currently being processed is %s.",
 							dataSetFiles[progress].getName());
-				pb.setMessageAndNote(String.format(
+				setMessageAndNote(String.format(
 						"Completed %d out %d files.", progress,
 						dataSetFiles.length), note);
 			}
@@ -200,6 +205,7 @@ public class FileOpenHandler {
 	} // end of class ProgressBarDialog
 
 	private class OpenMultipleFileTask extends SwingWorker<Void, Void> {
+		ProgressBarDialog progressBarDialog;
 
 		/*
 		 * (non-Javadoc)
@@ -215,49 +221,45 @@ public class FileOpenHandler {
 				for (int i = 0; i < dataSets.length; i++) {
 					maSets[i] = (DSMicroarraySet) dataSets[i];
 				}
-				enclosingProjectPanel.doMergeSets(maSets);
+				projectPanel.doMergeSets(maSets);
 			} else {
 				boolean selected = false;
 				for (int i = 0; i < dataSets.length; i++) {
 					DSDataSet set = dataSets[i];
 
-					if (set != null) {
-						// Do intial color context update if it is a
-						// microarray
-						if (set instanceof DSMicroarraySet) {
-							// Add color context
-							enclosingProjectPanel.addColorContext((DSMicroarraySet<DSMicroarray>) set);
-						}
+					if (set == null) {
+						log.info("null dataset encountered");
+						continue;
+					}
 
-						if (set instanceof AdjacencyMatrixDataSet) {
-							// adjacency matrix as added as a sub node
-							AdjacencyMatrixDataSet adjMatrixDS = (AdjacencyMatrixDataSet) set;
-							ProjectNodeAddedEvent event = new ProjectNodeAddedEvent(
-									"Adjacency Matrix loaded", null,
-									adjMatrixDS);
-							enclosingProjectPanel.addDataSetSubNode(adjMatrixDS);
-							enclosingProjectPanel.publishProjectNodeAddedEvent(event);
-						} else{
+					// Do initial color context update if it is a microarray
+					if (set instanceof DSMicroarraySet) {
+						ProjectPanel
+								.addColorContext((DSMicroarraySet<DSMicroarray>) set);
+					}
 
-							// String directory = dataSetFile.getPath();
-							// System.setProperty("data.files.dir", directory);
-							if (!selected) {
-								enclosingProjectPanel.addDataSetNode(set, true);
-								selected = true;
-							} else {
-								enclosingProjectPanel.addDataSetNode(set, false);
-							}
-						}
+					if (set instanceof AdjacencyMatrixDataSet) {
+						// adjacency matrix as added as a sub node
+						AdjacencyMatrixDataSet adjMatrixDS = (AdjacencyMatrixDataSet) set;
+						ProjectNodeAddedEvent event = new ProjectNodeAddedEvent(
+								"Adjacency Matrix loaded", null, adjMatrixDS);
+						projectPanel.addDataSetSubNode(adjMatrixDS);
+						projectPanel.publishProjectNodeAddedEvent(event);
 					} else {
-						log.info("Datafile not loaded");
+						if (!selected) {
+							projectPanel.addDataSetNode(set, true);
+							selected = true;
+						} else {
+							projectPanel.addDataSetNode(set, false);
+						}
 					}
 				}
 			}
 
-			pb.dispose();
-			enclosingProjectPanel.progressBar.setString("");
-			enclosingProjectPanel.progressBar.setIndeterminate(false);
-			enclosingProjectPanel.getComponent().setCursor(Cursor
+			progressBarDialog.dispose();
+			projectPanelProgressBar.setString("");
+			projectPanelProgressBar.setIndeterminate(false);
+			projectPanel.getComponent().setCursor(Cursor
 					.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
 
@@ -278,7 +280,7 @@ public class FileOpenHandler {
 				try {
 					// adjacency matrix need access to project node
 					if (dataSetFileFormat instanceof AdjacencyMatrixFileFormat) {
-						ProjectTreeNode selectedNode = enclosingProjectPanel
+						ProjectTreeNode selectedNode = ProjectPanel.getInstance()
 								.getSelection().getSelectedNode();
 						// it has to be a project node
 						if (selectedNode instanceof ProjectNode) {
@@ -306,9 +308,9 @@ public class FileOpenHandler {
 							"Parsing Error", JOptionPane.ERROR_MESSAGE);
 				}
 				 catch (InterruptedIOException ie) {
-				       enclosingProjectPanel.progressBar.setString("");
-					   enclosingProjectPanel.progressBar.setIndeterminate(false);
-					   enclosingProjectPanel.getComponent().setCursor(Cursor
+					 projectPanelProgressBar.setString("");
+					 projectPanelProgressBar.setIndeterminate(false);
+					 projectPanel.getComponent().setCursor(Cursor
 							.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 				       if ( ie.getMessage().equals("progress"))
 					        return null;
@@ -334,7 +336,7 @@ public class FileOpenHandler {
 				// different from the previous algorithm.
 				// also notice that this will block
 				String chipType = AnnotationParser.matchChipType(null, "", false);; //FileOpenHandler.this.chipType;
-				pb.setVisible(true);
+				progressBarDialog.setVisible(true);
 
 				for (int i = 0; i < dataSetFiles.length; i++) {
 					if (isCancelled()) {
@@ -372,16 +374,16 @@ public class FileOpenHandler {
 										"The input file does not comply with the designated format.",
 										"Parsing Error",
 										JOptionPane.ERROR_MESSAGE);
-						enclosingProjectPanel.progressBar.setString("");
-						enclosingProjectPanel.progressBar.setIndeterminate(false);
-						enclosingProjectPanel.getComponent().setCursor(Cursor
+						projectPanelProgressBar.setString("");
+						projectPanelProgressBar.setIndeterminate(false);
+						projectPanel.getComponent().setCursor(Cursor
 								.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 						return null;
 					} // end of for loop
 				    catch (InterruptedIOException ie) {
-				       enclosingProjectPanel.progressBar.setString("");
-					   enclosingProjectPanel.progressBar.setIndeterminate(false);
-					   enclosingProjectPanel.getComponent().setCursor(Cursor
+				    	projectPanelProgressBar.setString("");
+				    	projectPanelProgressBar.setIndeterminate(false);
+				    	projectPanel.getComponent().setCursor(Cursor
 							.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 				       if ( ie.getMessage().equals("progress"))
 					        return null;
@@ -396,7 +398,6 @@ public class FileOpenHandler {
 
 			return null;
 		}
-
 
 	}
 }

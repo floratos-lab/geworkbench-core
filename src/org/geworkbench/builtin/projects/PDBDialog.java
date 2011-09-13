@@ -22,6 +22,7 @@ import javax.swing.JTextField;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.geworkbench.parsers.DataSetFileFormat;
 import org.geworkbench.util.FilePathnameUtils;
 
 /**
@@ -34,13 +35,13 @@ import org.geworkbench.util.FilePathnameUtils;
  */
 class PDBDialog extends JFrame implements ActionListener {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -65845653635549609L;
 
-	private Log log = LogFactory.getLog(this.getClass());
+	private Log log = LogFactory.getLog(PDBDialog.class);
 
 	private JTextField jt = new JTextField(4);
-	public ProjectPanel pp = null;
-	String message = "<html><b>Invalid PDB ID!  Please try again.</b></html>\n"
+
+	private static final String message = "<html><b>Invalid PDB ID!  Please try again.</b></html>\n"
 			+ "<html>Each structure in the PDB is represented by a PDB ID with </html>\n"
 			+ "<html><b>4 characters</b> in the form of <b>[0-9][a-z,0-9][a-z,0-9][a-z,0-9]</b>.</html>\n"
 			+ "For example, 4HHB, 9INS are PDB IDs for hemoglobin and insulin.";
@@ -80,9 +81,10 @@ class PDBDialog extends JFrame implements ActionListener {
 
 			File df = new File(downloaded);
 			File[] fs = new File[] { df };
-			pp.fileOpenAction(fs,
-					new org.geworkbench.parsers.PDBFileFormat(),
+			DataSetFileFormat inputFormat = new org.geworkbench.parsers.PDBFileFormat();
+			FileOpenHandler handler = new FileOpenHandler(fs, inputFormat,
 					false);
+			handler.openFiles();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -96,11 +98,9 @@ class PDBDialog extends JFrame implements ActionListener {
 	 *
 	 * @param mainpp
 	 */
-	public PDBDialog(ProjectPanel mainpp) {
+	public PDBDialog() {
 		super("Open RCSB PDB File");
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-
-		pp = mainpp;
 	}
 
 	/*
