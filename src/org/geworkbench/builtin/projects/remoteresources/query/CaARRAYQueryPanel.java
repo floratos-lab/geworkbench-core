@@ -33,6 +33,7 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
 import org.geworkbench.builtin.projects.LoadDataDialog;
+import org.geworkbench.builtin.projects.ProjectPanel;
 import org.geworkbench.builtin.projects.remoteresources.RemoteResource;
 import org.geworkbench.builtin.projects.remoteresources.RemoteResourceDialog;
 import org.geworkbench.builtin.projects.util.CaARRAYPanel;
@@ -54,10 +55,6 @@ public class CaARRAYQueryPanel extends JDialog {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-	}
-
-	public void publishCaArrayQueryEvent(CaArrayQueryEvent event) {
-		loadData.publishCaArrayQueryEvent(event);
 	}
 
 	public void processCaAraryQueryResult(boolean succeeded, String message, TreeMap<String, Set<String>> treeMap) {
@@ -295,7 +292,7 @@ public class CaARRAYQueryPanel extends JDialog {
 	 * should only be called once per session and it would get all required
 	 * information back not just the selected content.
 	 */
-	public void populateHits() {
+	private void populateHits() {
 		if (!loaded) {
 
 			Runnable thread = new Runnable() {
@@ -304,7 +301,7 @@ public class CaARRAYQueryPanel extends JDialog {
 							portnumber, username, password,
 							CaArrayQueryEvent.GOTVALIDVALUES);
 					event.setQueries(listContent);
-					publishCaArrayQueryEvent(event);
+					ProjectPanel.getInstance().publishCaArrayQueryEvent(event);
 
 					loaded = true;
 				}
@@ -464,7 +461,7 @@ public class CaARRAYQueryPanel extends JDialog {
 
 			Runnable thread = new Runnable() {
 				public void run() {
-					loadData.publishCaArrayRequestEvent(event);
+					ProjectPanel.getInstance().publishCaArrayRequestEvent(event);
 				}
 			};
 			Thread t = new Thread(thread);

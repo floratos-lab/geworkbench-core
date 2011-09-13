@@ -125,7 +125,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		DefaultIconAssignments.initializeDefaultIconAssignments();
 	}
 
-	private LoadDataDialog loadData = new LoadDataDialog(this);
+	private LoadDataDialog loadData = new LoadDataDialog();
 
 	private ProjectSelection selection = new ProjectSelection(this);
 

@@ -205,11 +205,6 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 		return event;
 	}
 
-	public void publishProjectNodeAddedEvent(
-			org.geworkbench.events.ProjectNodeAddedEvent event) {
-		parent.publishProjectNodeAddedEvent(event);
-	}
-
 	private void jbInit() throws Exception {
 		border1 = BorderFactory.createLineBorder(SystemColor.controlText, 1);
 		border2 = BorderFactory.createLineBorder(SystemColor.controlText, 1);
