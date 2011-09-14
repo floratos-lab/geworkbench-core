@@ -22,12 +22,6 @@ public class ProjectSelection {
     private DataSetNode selectedDataSetNode = null;
     private DataSetSubNode selectedDataSetSubNode = null;
     private ProjectTreeNode selectedNode = null;
-    private ProjectTreeNode menuNode = null; // The node that a popup menu is invoked on
-    private ProjectPanel panel;
-
-    public ProjectSelection(ProjectPanel panel) {
-        this.panel = panel;
-    }
 
     /**
      * Returns whether the selections have all been cleared
@@ -46,7 +40,7 @@ public class ProjectSelection {
         selectedDataSetNode = null;
         selectedDataSetSubNode = null;
         selectedNode = null;
-        menuNode = null;
+
         throwEvent(ProjectEvent.CLEARED);
     }
 
@@ -66,14 +60,6 @@ public class ProjectSelection {
 
     public ProjectTreeNode getSelectedNode() {
         return selectedNode;
-    }
-
-    public ProjectTreeNode getMenuNode() {
-        return menuNode;
-    }
-
-    public void setMenuNode(ProjectTreeNode node) {
-        menuNode = node;
     }
 
     @SuppressWarnings("rawtypes")
@@ -123,7 +109,7 @@ public class ProjectSelection {
 	public void setNodeSelection(ProjectTreeNode node) {
         if (selectedNode != node) {
             selectedNode = node;
-            menuNode = node;
+
             selectedProjectNode = (ProjectNode) getNodeOfClass(node, ProjectNode.class);
            
             if (node instanceof DataSetNode) {
@@ -153,7 +139,7 @@ public class ProjectSelection {
                 selectedDataSetSubNode = null;
                 GeawConfigObject.getGuiWindow().setVisualizationType(null);                
                 checkProjectNode();
-                panel.publishProjectEvent(new ProjectEvent(ProjectEvent.CLEARED, null, null));                
+                ProjectPanel.getInstance().publishProjectEvent(new ProjectEvent(ProjectEvent.CLEARED, null, null));                
             }            
         }
     }
@@ -204,15 +190,20 @@ public class ProjectSelection {
      */
     @SuppressWarnings("unchecked")
 	private void throwEvent(String message) {
-        if (selectedDataSetNode != null) {
-        	panel.publishProjectEvent(new ProjectEvent(message, selectedDataSetNode.dataFile, selectedDataSetNode));
-        }
-    }
+		if (selectedDataSetNode != null) {
+			ProjectPanel.getInstance().publishProjectEvent(
+					new ProjectEvent(message, selectedDataSetNode.dataFile,
+							selectedDataSetNode));
+		}
+	}
 
-    @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	private void throwSubNodeEvent(String message) {
-        if ((selectedDataSetSubNode != null) && (selectedDataSetSubNode._aDataSet != null)) {
-            panel.publishProjectEvent(new ProjectEvent(message, selectedDataSetSubNode._aDataSet, selectedDataSetSubNode));           
-        }
-    }
+		if ((selectedDataSetSubNode != null)
+				&& (selectedDataSetSubNode._aDataSet != null)) {
+			ProjectPanel.getInstance().publishProjectEvent(
+					new ProjectEvent(message, selectedDataSetSubNode._aDataSet,
+							selectedDataSetSubNode));
+		}
+	}
 }

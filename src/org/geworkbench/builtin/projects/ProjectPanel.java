@@ -113,7 +113,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	private LoadDataDialog loadData = new LoadDataDialog();
 
-	private ProjectSelection selection = new ProjectSelection(this);
+	private ProjectSelection selection = new ProjectSelection();
 
 	private HashMap<GridEndpointReferenceType, PendingTreeNode> eprPendingNodeMap = new HashMap<GridEndpointReferenceType, PendingTreeNode>();
 
@@ -1004,7 +1004,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		if (path != null) {
 			ProjectTreeNode mNode = (ProjectTreeNode) path
 					.getLastPathComponent();
-			selection.setMenuNode(mNode);
 
 			if (e.isMetaDown() || e.getClickCount() >= 2) {
 
@@ -1072,9 +1071,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		TreePath path = projectTree.getSelectionPath();
 		if ((e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_UP)
 				&& path != null) {
-			ProjectTreeNode mNode = (ProjectTreeNode) path
-					.getLastPathComponent();
-			selection.setMenuNode(mNode);
 
 			setSelection();
 
@@ -1789,8 +1785,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	private JTree projectTree = new JTree(projectTreeModel);
 
-	private TreeNodeRenderer projectRenderer = new TreeNodeRenderer();
-
 	private JPopupMenu jRootMenu = new JPopupMenu();
 
 	private JPopupMenu jProjectMenu = new JPopupMenu();
@@ -1824,7 +1818,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		jDataSetScrollPane.setMinimumSize(new Dimension(122, 80));
 
 		ToolTipManager.sharedInstance().registerComponent(projectTree);
-		projectTree.setCellRenderer(projectRenderer);
+		projectTree.setCellRenderer(new TreeNodeRenderer());
 		projectTree.getSelectionModel().setSelectionMode(
 				TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
 
