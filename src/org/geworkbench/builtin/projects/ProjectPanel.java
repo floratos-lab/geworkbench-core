@@ -11,9 +11,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -55,7 +53,6 @@ import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarr
 import org.geworkbench.bison.datastructure.biocollections.views.CSMicroarraySetView;
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
-import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.APSerializable;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.bison.datastructure.bioobjects.markers.goterms.GeneOntologyTree;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSTTestResultSet;
@@ -64,6 +61,7 @@ import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.bison.util.colorcontext.ColorContext;
 import org.geworkbench.builtin.projects.SaveFileFilterFactory.CustomFileFilter;
+import org.geworkbench.builtin.projects.WorkspaceHandler.OpenTask;
 import org.geworkbench.builtin.projects.history.HistoryPanel;
 import org.geworkbench.engine.config.GUIFramework;
 import org.geworkbench.engine.config.MenuListener;
@@ -86,6 +84,8 @@ import org.geworkbench.events.ProjectNodePostCompletedEvent;
 import org.geworkbench.events.ProjectNodeRemovedEvent;
 import org.geworkbench.events.ProjectNodeRenamedEvent;
 import org.geworkbench.util.FilePathnameUtils;
+import org.geworkbench.util.ProgressDialog;
+import org.geworkbench.util.ProgressItem;
 import org.geworkbench.util.SaveImage;
 import org.geworkbench.util.Util;
 import org.ginkgo.labs.ws.GridEndpointReferenceType;
@@ -178,7 +178,14 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		// Checks if a default workspace exists and loads it
 		File defaultWS = new File("./default.wsp");
 		if (defaultWS.exists()) {
-			deserialize(defaultWS.getName());
+			WorkspaceHandler ws = new WorkspaceHandler();
+			ProgressDialog pdnonmodal = ProgressDialog.create(ProgressDialog.NONMODAL_TYPE);
+			OpenTask openTask = ws.new OpenTask(ProgressItem.INDETERMINATE_TYPE, "Workspace is being loaded.", defaultWS.getName());
+			pdnonmodal.executeTask(openTask);
+			GUIFramework.getFrame().setTitle(
+					((Skin)GeawConfigObject.getGuiWindow()).getApplicationTitle() + " ["
+							+ defaultWS.getName() + "]");
+			
 			Enumeration<?> children = root.children();
 			while (children.hasMoreElements()) {
 				TreeNode node = (TreeNode) children.nextElement();
@@ -955,30 +962,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		// serialize("default.ws");
 		projectTree.setSelectionPath(new TreePath(node.getPath()));
 		selection.setNodeSelection(node);
-	}
-
-	/**
-	 * Reads from a datafile
-	 *
-	 * @param filename
-	 */
-	void deserialize(String filename) {
-		try {
-			FileInputStream in = new FileInputStream(filename);
-			ObjectInputStream s = new ObjectInputStream(in);
-			SaveTree saveTree = (SaveTree) s.readObject();
-			populateFromSaveTree(saveTree);
-			APSerializable aps = (APSerializable) s.readObject();
-			AnnotationParser.setFromSerializable(aps);
-			// root = (ProjectTreeNode) s.readObject();
-			// selection.clearNodeSelections();
-			// projectTreeModel = new DefaultTreeModel(root);
-			// projectTree.setModel(projectTreeModel);
-		} catch (ClassNotFoundException ex) {
-			log.error("Error: " + ex);
-		} catch (IOException ex) {
-			log.error("Error: " + ex);
-		}
 	}
 
 	/**
