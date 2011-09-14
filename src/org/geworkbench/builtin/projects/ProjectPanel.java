@@ -964,12 +964,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		selection.setNodeSelection(node);
 	}
 
-	/**
-	 * Action listener responding to the selection of a project tree node.
-	 *
-	 * @param e
-	 */
-	private void jProjectTree_mouseClicked(MouseEvent e) {
+	private void setSelection(int clickCount) {
 
 		TreePath path = projectTree.getSelectionPath();
 		if (path != null) {
@@ -981,13 +976,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			if (path != null && selectedNode != clickedNode) {
 				setNodeSelection(clickedNode);
 			}
-			if ((clickedNode != null) && clickedNode instanceof DataSetSubNode) {
-				// DSAncillaryDataSet ds = ((DataSetSubNode)
-				// clickedNode)._aDataSet;
-				// publishProjectEvent(new ProjectEvent("ProjectNode", ds));
-			}
+
 			if ((clickedNode != null) && clickedNode instanceof ImageNode) {
-				if (e.getClickCount() == 1) {
+				if (clickCount == 1) {
 					publishImageSnapshot(new ImageSnapshotEvent(
 							"Image Node Selected",
 							((ImageNode) clickedNode).image,
@@ -1029,7 +1020,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				if (!isPathSelected(path)) {
 					// Force selection of this path
 					projectTree.setSelectionPath(path);
-					jProjectTree_mouseClicked(e);
+					setSelection(e.getClickCount());
 
 				}
 				// Make the jPopupMenu visible relative to the current mouse
@@ -1074,7 +1065,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 					pendingMenu.show(projectTree, e.getX(), e.getY());
 				}
 			} else
-				jProjectTree_mouseClicked(e);
+				setSelection(e.getClickCount());
 
 			Skin skin = (Skin) GeawConfigObject.getGuiWindow();
 			skin.resetSelectorTabOrder();
@@ -1094,37 +1085,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 					.getLastPathComponent();
 			selection.setMenuNode(mNode);
 
-			jProjectTree_keyReleased();
-
-		}
-	}
-
-	/**
-	 * Key listener responding to the selection of a project tree node.
-	 *
-	 * @param e
-	 */
-	private void jProjectTree_keyReleased() {
-
-		TreePath path = projectTree.getSelectionPath();
-
-		if (path != null) {
-			path.getLastPathComponent();
-			selectedNode = selection.getSelectedNode();
-			ProjectTreeNode clickedNode = (ProjectTreeNode) path
-					.getLastPathComponent();
-			// Take action only if a new node is selected.
-			if (path != null && selectedNode != clickedNode) {
-				setNodeSelection(clickedNode);
-			}
-
-			if ((clickedNode != null) && clickedNode instanceof ImageNode) {
-
-				publishImageSnapshot(new ImageSnapshotEvent(
-						"Image Node Selected", ((ImageNode) clickedNode).image,
-						ImageSnapshotEvent.Action.SHOW));
-
-			}
+			setSelection(1); // 1 means equivalent to 1 mouse click
 
 		}
 	}
