@@ -20,6 +20,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -1600,42 +1601,34 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 	}
 
-	/**
-	 * Interface <code>ImageSnapshotListener</code> method for receiving
-	 * <code>ImageSnapshotEvent</code> from Visual Plugins. These events
-	 * contain <code>ImageIcon</code> representing visual state of the plugins
-	 * throwing this event.
-	 *
-	 * @param event
-	 *            <code>ImageSnapshotEvent</code>
-	 */
+	/* Publishers of ImageSnapshotEvent are recommended to directly call addImageNode(ImageIcon) */
 	@Subscribe
 	public void receive(ImageSnapshotEvent event, Object source) {
 		if (event.getAction() == ImageSnapshotEvent.Action.SAVE) {
-			TreePath path = projectTree.getSelectionPath();
-			if (path != null) {
-				ImageNode imageNode = new ImageNode(event.getImage());
-				ProjectTreeNode node = (ProjectTreeNode) path
-						.getLastPathComponent();
+			addImageNode(event.getImage());
+		}
+	}
+
+	/**
+	 * Add an image node under the last selected path.
+	 */
+	public void addImageNode(ImageIcon imageIcon) {
+		TreePath path = projectTree.getSelectionPath();
+		if (path != null) {
+			ImageNode imageNode = new ImageNode(imageIcon);
+			ProjectTreeNode node = (ProjectTreeNode) path
+					.getLastPathComponent();
+			if (node instanceof DataSetNode) {
+				projectTreeModel.insertNodeInto(imageNode, node, node
+						.getChildCount());
+			} else if (node instanceof DataSetSubNode) {
+				DataSetSubNode subNode = (DataSetSubNode) node;
+				node = (ProjectTreeNode) subNode.getParent();
 				if (node instanceof DataSetNode) {
 					projectTreeModel.insertNodeInto(imageNode, node, node
 							.getChildCount());
-				} else if (node instanceof ImageNode) {
-					// FIXME this does not work
-					log.error("node instanceof ImageNode: not implemented");
-					projectTreeModel.insertNodeInto(imageNode, null, -1);
-				} else if (node instanceof DataSetSubNode) {
-					DataSetSubNode subNode = (DataSetSubNode) node;
-					node = (ProjectTreeNode) subNode.getParent();
-					if (node instanceof DataSetNode) {
-						projectTreeModel.insertNodeInto(imageNode, node, node
-								.getChildCount());
-					}
 				}
-
 			}
-		} else {
-			// Ignore all other actions.
 		}
 	}
 
