@@ -80,7 +80,6 @@ import org.geworkbench.events.ImageSnapshotEvent;
 import org.geworkbench.events.PendingNodeCancelledEvent;
 import org.geworkbench.events.PendingNodeLoadedFromWorkspaceEvent;
 import org.geworkbench.events.ProjectEvent;
-import org.geworkbench.events.ProjectNodeAddedEvent;
 import org.geworkbench.events.ProjectNodePostCompletedEvent;
 import org.geworkbench.events.ProjectNodeRemovedEvent;
 import org.geworkbench.events.ProjectNodeRenamedEvent;
@@ -1582,12 +1581,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	@Publish
 	public CaArrayQueryEvent publishCaArrayQueryEvent(CaArrayQueryEvent event) {
-		return event;
-	}
-
-	@Publish
-	public ProjectNodeAddedEvent publishProjectNodeAddedEvent(
-			ProjectNodeAddedEvent event) {
 		return event;
 	}
 

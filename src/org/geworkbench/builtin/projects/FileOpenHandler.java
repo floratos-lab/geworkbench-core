@@ -35,7 +35,6 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.util.colorcontext.ColorContext;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
-import org.geworkbench.events.ProjectNodeAddedEvent;
 import org.geworkbench.parsers.AdjacencyMatrixFileFormat;
 import org.geworkbench.parsers.DataSetFileFormat;
 import org.geworkbench.parsers.FileFormat;
@@ -248,10 +247,7 @@ public class FileOpenHandler {
 					if (set instanceof AdjacencyMatrixDataSet) {
 						// adjacency matrix as added as a sub node
 						AdjacencyMatrixDataSet adjMatrixDS = (AdjacencyMatrixDataSet) set;
-						ProjectNodeAddedEvent event = new ProjectNodeAddedEvent(
-								"Adjacency Matrix loaded", null, adjMatrixDS);
 						projectPanel.addDataSetSubNode(adjMatrixDS);
-						projectPanel.publishProjectNodeAddedEvent(event);
 					} else {
 						if (!selected) {
 							projectPanel.addDataSetNode(set, true);
