@@ -1081,14 +1081,20 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 	}
 
+	/* Publishers of ProjectNodeAddedEvent are recommended to directly call addProjectNode(...) */
 	@Subscribe
 	public void receive(org.geworkbench.events.ProjectNodeAddedEvent pnae,
 			Object source) {
 		DSDataSet<? extends DSBioObject> dataSet = pnae.getDataSet();
+		DSAncillaryDataSet<? extends DSBioObject> ancillaryDataSet = pnae.getAncillaryDataSet();
+		addProjectNode(dataSet, ancillaryDataSet);
+	}
+	
+	public void addProjectNode(DSDataSet<? extends DSBioObject> dataSet,
+			DSAncillaryDataSet<? extends DSBioObject> ancillaryDataSet) {
 		if (dataSet instanceof DSMicroarraySet) {
 			addColorContext((DSMicroarraySet<DSMicroarray>) dataSet);
 		}
-		DSAncillaryDataSet<? extends DSBioObject> ancillaryDataSet = pnae.getAncillaryDataSet();
 		if (dataSet != null) {
 			addDataSetNode(dataSet, true);
 		} else if (ancillaryDataSet != null) {
