@@ -964,7 +964,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		selection.setNodeSelection(node);
 	}
 
-	private void setSelection(int clickCount) {
+	private void setSelection() {
 
 		TreePath path = projectTree.getSelectionPath();
 		if (path != null) {
@@ -975,15 +975,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			// Take action only if a new node is selected.
 			if (path != null && selectedNode != clickedNode) {
 				setNodeSelection(clickedNode);
-			}
-
-			if ((clickedNode != null) && clickedNode instanceof ImageNode) {
-				if (clickCount == 1) {
-					publishImageSnapshot(new ImageSnapshotEvent(
-							"Image Node Selected",
-							((ImageNode) clickedNode).image,
-							ImageSnapshotEvent.Action.SHOW));
-				}
 			}
 		}
 	}
@@ -1020,7 +1011,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				if (!isPathSelected(path)) {
 					// Force selection of this path
 					projectTree.setSelectionPath(path);
-					setSelection(e.getClickCount());
+					setSelection();
 
 				}
 				// Make the jPopupMenu visible relative to the current mouse
@@ -1065,7 +1056,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 					pendingMenu.show(projectTree, e.getX(), e.getY());
 				}
 			} else
-				setSelection(e.getClickCount());
+				setSelection();
 
 			Skin skin = (Skin) GeawConfigObject.getGuiWindow();
 			skin.resetSelectorTabOrder();
@@ -1085,7 +1076,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 					.getLastPathComponent();
 			selection.setMenuNode(mNode);
 
-			setSelection(1); // 1 means equivalent to 1 mouse click
+			setSelection();
 
 		}
 	}
@@ -1380,7 +1371,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			if (node instanceof ProjectNode)
 				projectRemove_actionPerformed((ProjectNode) node);
 			else if (node instanceof ImageNode)
-				imageRemove_actionPerformed(node);
+				projectTreeModel.removeNodeFromParent(node);
 			else
 				fileRemove_actionPerformed(node);
 			paths = projectTree.getSelectionPaths();
@@ -1763,11 +1754,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		selection.clearNodeSelections();
 	}
 
-	@Publish
-	public ImageSnapshotEvent publishImageSnapshot(ImageSnapshotEvent event) {
-		return event;
-	}
-
 	/**
 	 * Interface <code>MenuListener</code> method that returns the appropriate
 	 * <code>ActionListener</code> to handle <code>MenuEvent</code>
@@ -2081,13 +2067,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		clear();
 		GUIFramework.getFrame().setTitle(
 				((Skin)GeawConfigObject.getGuiWindow()).getApplicationTitle());
-	}
-
-	private void imageRemove_actionPerformed(ProjectTreeNode node) {
-
-		projectTreeModel.removeNodeFromParent(node);
-		publishImageSnapshot(new ImageSnapshotEvent("ImageSnapshot", null,
-				ImageSnapshotEvent.Action.SHOW));
 	}
 
 	public DSDataSet<? extends DSBioObject> getDataSet() {
