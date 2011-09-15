@@ -741,32 +741,33 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	}
 
 	/**
-	 * Inserts a new pending node a new node in the project tree. The node is a
-	 * child of the curently selected project
+	 * Inserts a new pending node in the project tree. The node is a
+	 * child of the currently selected project
 	 *
 	 * @param _dataSet
 	 */
-	public PendingTreeNode addPendingNode(GridEndpointReferenceType gridEpr,
+	public void addPendingNode(GridEndpointReferenceType gridEpr,
 			String description, String history, boolean startNewThread) {
-		// Retrieve the project node for this node
+		// get the parent node for this node
 		ProjectTreeNode pNode = selection.getSelectedNode();
-		PendingTreeNode node = null;
 		if (pNode == null) {
+			// should never happen
+			log.error("parent node of the pending node to be added is null");
+			return;
 		}
-		if (pNode != null) {
-			/*
-			 * Inserts the new node and sets the menuNode and other variables to
-			 * point to it.
-			 */
-			node = new PendingTreeNode(description, history, gridEpr);
-			projectTreeModel.insertNodeInto(node, pNode, pNode.getChildCount());
-			// Make sure the user can see the lovely new node.
-			projectTree.scrollPathToVisible(new TreePath(node));
-			projectTree.setSelectionPath(new TreePath(node.getPath()));
-			selection.setNodeSelection(node);
-			eprPendingNodeMap.put(gridEpr, node);
-		}
-		return node;
+
+		/*
+		 * Inserts the new node and sets the menuNode and other variables to
+		 * point to it.
+		 */
+		PendingTreeNode node = new PendingTreeNode(description, history,
+				gridEpr);
+		projectTreeModel.insertNodeInto(node, pNode, pNode.getChildCount());
+		// Make sure the user can see the lovely new node.
+		projectTree.scrollPathToVisible(new TreePath(node));
+		projectTree.setSelectionPath(new TreePath(node.getPath()));
+		selection.setNodeSelection(node);
+		eprPendingNodeMap.put(gridEpr, node);
 	}
 
 	private void removeCanceledNode(GridEndpointReferenceType gridEpr) {
