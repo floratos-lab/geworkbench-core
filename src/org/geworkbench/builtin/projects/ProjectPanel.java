@@ -769,65 +769,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		return node;
 	}
 
-	private void addCompletedNode(GridEndpointReferenceType gridEpr,
-			DSAncillaryDataSet<? extends DSBioObject> ancillaryDataSet) {
-		PendingTreeNode node = eprPendingNodeMap.get(gridEpr);
-		String history = node.getDescription();
-		boolean pendingNodeFocused = false;
-		if (node != null) {
-			if (ancillaryDataSet != null) {
-				TreePath pathNow = projectTree.getSelectionPath();
-				Object lastSelected = projectTree
-						.getLastSelectedPathComponent();
-				if (lastSelected.getClass().getName() == PendingTreeNode.class
-						.getName()) {
-					if (((PendingTreeNode) lastSelected).getGridEpr() == gridEpr)
-						pendingNodeFocused = true;
-				}
-				ProjectTreeNode parent = (ProjectTreeNode) node.getParent();
-				int index = parent.getIndex(node);
-				projectTreeModel.removeNodeFromParent(node);
-				// FIXME: we should check if parent is a DataSetNode or not,
-				// before casting. If not we should find a way to deal with it.
-				((CSAncillaryDataSet<? extends DSBioObject>) ancillaryDataSet)
-						.setParent(((DataSetNode) parent).dataFile);
-				DataSetSubNode newNode = new DataSetSubNode(ancillaryDataSet);
-				projectTreeModel.insertNodeInto(newNode, parent, index);
-				eprPendingNodeMap.remove(gridEpr);
-
-				HistoryPanel.addToHistory(ancillaryDataSet, history);
-
-				// Make sure the user can see the lovely new node.
-				projectTree.scrollPathToVisible(new TreePath(newNode));
-				projectTree.setSelectionPath(new TreePath(newNode.getPath()));
-				projectTree.setSelectionPath(pathNow);
-				// If the pending node is focused,
-				// we assume the user is interested in this result.
-				// we visually set the focus to the new node,
-				// and select the node so user can see the result)
-				if (pendingNodeFocused) {
-					projectTree
-							.setSelectionPath(new TreePath(newNode.getPath()));
-					selection.setNodeSelection(newNode);
-				}
-				// PS: this post processing event has to follow the node
-				// selection. otherwise it might affect wrong node.
-				// ex: significance result set will add a significant markers in
-				// the panel for wrong node.
-				publishPostProcessingEvent(new ProjectNodePostCompletedEvent(
-						ancillaryDataSet.getDataSetName(), gridEpr,
-						ancillaryDataSet, parent));
-
-			} else {
-				JOptionPane
-						.showMessageDialog(
-								null,
-								"The service didn't return any results. Please check your input parameters and try again");
-				node.setUserObject("No Results");
-			}
-		}
-	}
-
 	private void removeCanceledNode(GridEndpointReferenceType gridEpr) {
 		PendingTreeNode node = eprPendingNodeMap.get(gridEpr);
 		if (node != null) {
@@ -1098,14 +1039,65 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 	}
 
-	public void processNodeCompleted(GridEndpointReferenceType gridEPR,
+	public void processNodeCompleted(GridEndpointReferenceType gridEpr,
 			DSAncillaryDataSet<? extends DSBioObject> ancillaryDataSet) {
 		if (ancillaryDataSet == null) {
 			// no result from grid server? let's delete this node!
-			removeCanceledNode(gridEPR);
-		} else {
-			addCompletedNode(gridEPR, ancillaryDataSet);
+			removeCanceledNode(gridEpr);
+			return;
 		}
+
+		PendingTreeNode node = eprPendingNodeMap.get(gridEpr);
+		if (node == null) {
+			log.debug("pending node is null"); // should never happen
+			return;
+		}
+
+		String history = node.getDescription();
+		boolean pendingNodeFocused = false;
+
+		TreePath pathNow = projectTree.getSelectionPath();
+		Object lastSelected = projectTree.getLastSelectedPathComponent();
+		if (lastSelected instanceof PendingTreeNode) {
+			if (((PendingTreeNode) lastSelected).getGridEpr() == gridEpr)
+				pendingNodeFocused = true;
+		}
+		ProjectTreeNode parent = (ProjectTreeNode) node.getParent();
+		int index = parent.getIndex(node);
+		projectTreeModel.removeNodeFromParent(node);
+
+		if (!(parent instanceof DataSetNode)) {
+			log.error("parent of the pending node is null"); // should never
+																// happen
+		}
+
+		((CSAncillaryDataSet<? extends DSBioObject>) ancillaryDataSet)
+				.setParent(((DataSetNode) parent).dataFile);
+		DataSetSubNode newNode = new DataSetSubNode(ancillaryDataSet);
+		projectTreeModel.insertNodeInto(newNode, parent, index);
+		eprPendingNodeMap.remove(gridEpr);
+
+		HistoryPanel.addToHistory(ancillaryDataSet, history);
+
+		// Make sure the user can see the lovely new node.
+		projectTree.scrollPathToVisible(new TreePath(newNode));
+		projectTree.setSelectionPath(new TreePath(newNode.getPath()));
+		projectTree.setSelectionPath(pathNow);
+		// If the pending node is focused,
+		// we assume the user is interested in this result.
+		// we visually set the focus to the new node,
+		// and select the node so user can see the result)
+		if (pendingNodeFocused) {
+			projectTree.setSelectionPath(new TreePath(newNode.getPath()));
+			selection.setNodeSelection(newNode);
+		}
+		// PS: this post processing event has to follow the node
+		// selection. otherwise it might affect wrong node.
+		// ex: significance result set will add a significant markers in
+		// the panel for wrong node.
+		publishPostProcessingEvent(new ProjectNodePostCompletedEvent(
+				ancillaryDataSet.getDataSetName(), gridEpr, ancillaryDataSet,
+				parent));
 	}
 
 	/**
