@@ -1274,34 +1274,10 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 	}
 
+	/** Force refreshing the visible components. */
 	public void ccmUpdate() {
-		GeawConfigObject.getGuiWindow().setVisualizationType(null);
-		if (root != null) {
-			// FIXME This almost works, but you need to click on the DataNode
-			// before you click on visual node, to make it work.
-			// projectTreeModel.reload((selection.getSelectedNode()).getParent());
-			projectTreeModel.reload(root);
-		}
-
-		if (projectTree == null) {
-			return;
-		}
-
 		DataSetNode selectedDataSetNode = selection.getSelectedDataSetNode();
-		String message = "CCM update";
-		DSMicroarraySet<? extends DSMicroarray> maSet = null;
-		if (selectedDataSetNode != null) {
-			if (selectedDataSetNode.dataFile instanceof DSMicroarraySet) {
-				maSet = (DSMicroarraySet<? extends DSMicroarray>) selectedDataSetNode.dataFile;
-				publishProjectEvent(new ProjectEvent(message, maSet,
-						selectedDataSetNode));
-			} else {
-				publishProjectEvent(new ProjectEvent(message,
-						selectedDataSetNode.dataFile, selectedDataSetNode));
-			}
-		}
-
-		selection.setNodeSelection(null);
+		GeawConfigObject.getGuiWindow().setVisualizationType(selectedDataSetNode.dataFile);
 	}
 
 	/*
