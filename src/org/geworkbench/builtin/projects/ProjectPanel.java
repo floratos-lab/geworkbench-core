@@ -1531,12 +1531,11 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	private void setNodeSelection(ProjectTreeNode node) {
 
 		if (node == null) {
+			log.error("selected node is null");
 			return;
 		}
 		selection.setNodeSelection(node);
 		projectTree.setSelectionPath(new TreePath(node.getPath()));
-		// TODO - watkin - replace with a more appropriate event firing
-		// projectTreeModel.nodeStructureChanged(node);
 	}
 
 	public ProjectSelection getSelection() {
