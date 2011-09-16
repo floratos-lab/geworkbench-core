@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.geworkbench.bison.datastructure.biocollections.CSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.util.RandomNumberGenerator;
@@ -70,15 +69,8 @@ public class SaveTree implements Serializable {
 				if (dataSet.getID() == null)
 					dataSet.setID(RandomNumberGenerator.getID());
 			} else if (treeNode instanceof PendingTreeNode) {
-				// FIXME don't like how objects are stored by class name.
 				PendingTreeNode childNode = (PendingTreeNode) treeNode;
-				dataSet = new CSDataSet<DSBioObject>();
-				dataSet.addObject(childNode.getGridEpr().getClass(),
-						childNode.getGridEpr());
-				dataSet.addObject(String.class, childNode
-						.getDescription());
-				dataSet.setID(RandomNumberGenerator.getID());
-				dataSet.setLabel(PendingTreeNode.class.getName());
+				dataSet = childNode.getDSDataSet();
 			}
 
 			DataSetSaveNode childSave = new DataSetSaveNode(dataSet);

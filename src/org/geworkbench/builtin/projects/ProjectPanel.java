@@ -381,6 +381,16 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 	}
 	
+	private void restorePendingNode(DSDataSet<?> dataset,
+			final Collection<GridEndpointReferenceType> pendingGridEprs) {
+		GridEndpointReferenceType pendingGridEpr = (GridEndpointReferenceType) dataset
+				.getObject(GridEndpointReferenceType.class);
+		String history = dataset.getDescriptions()[0];
+		addPendingNode(pendingGridEpr,
+				dataset.getLabel(), history, true);
+		pendingGridEprs.add(pendingGridEpr);
+	}
+	
 	void populateFromSaveTree(SaveTree saveTree) {
 		java.util.List<DataSetSaveNode> projects = saveTree.getNodes();
 		ProjectTreeNode selectedNode = null;
@@ -397,20 +407,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				DSDataSet<? extends DSBioObject> dataSet = dataNode.getDataSet();
 				dataSet.setExperimentInformation(dataNode.getDescription());
 				/* pending node */
-				if (dataSet.getLabel() != null
-						&& dataSet.getLabel().equals(
-								PendingTreeNode.class.getName())) {
-					// FIXME These are stored by class name in SaveTree. Not
-					// sure I like this.
-					GridEndpointReferenceType pendingGridEpr = (GridEndpointReferenceType) dataSet
-							.getObject(GridEndpointReferenceType.class);
-					addPendingNode(pendingGridEpr, (String) dataSet
-							.getObject(String.class), dataSet
-							.getDescriptions()[0], true);
-					pendingGridEprs.add(pendingGridEpr);
-				}
-				/* real node */
-				else {
+				if (dataSet instanceof PendingTreeNode.PendingNode) {
+					restorePendingNode(dataSet, pendingGridEprs);
+				} else { /* real node */
 					addDataSetNode(dataSet, true);
 				}
 				if (dataSet == saveTree.getSelected()) {
@@ -423,20 +422,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 					setComponents(ancNode);
 
 					/* pending node */
-					if (ancNode.getDataSet().getDataSetName() != null
-							&& ancNode.getDataSet().getDataSetName().equals(
-									PendingTreeNode.class.getName())) {
-						// FIXME These are stored by class name in SaveTree. Not
-						// sure I like this.
-						GridEndpointReferenceType pendingGridEpr = (GridEndpointReferenceType) ancNode
-								.getDataSet().getObject(
-										GridEndpointReferenceType.class);
-						String history = (String) ancNode.getDataSet()
-								.getObject(String.class);
-						addPendingNode(pendingGridEpr,
-								(String) ancNode.getDataSet().getObject(
-										String.class), history, true);
-						pendingGridEprs.add(pendingGridEpr);
+					if (ancNode.getDataSet() instanceof PendingTreeNode.PendingNode) {
+						restorePendingNode(ancNode
+								.getDataSet(), pendingGridEprs);
 					} else {
 						DSAncillaryDataSet<? extends DSBioObject> ancSet = null;
 
@@ -747,7 +735,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * @param _dataSet
 	 */
 	public void addPendingNode(GridEndpointReferenceType gridEpr,
-			String description, String history, boolean startNewThread) {
+			String label, String history, boolean startNewThread) {
 		// get the parent node for this node
 		ProjectTreeNode pNode = selection.getSelectedNode();
 		if (pNode == null) {
@@ -760,7 +748,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		 * Inserts the new node and sets the menuNode and other variables to
 		 * point to it.
 		 */
-		PendingTreeNode node = new PendingTreeNode(description, history,
+		PendingTreeNode node = new PendingTreeNode(label, history,
 				gridEpr);
 		projectTreeModel.insertNodeInto(node, pNode, pNode.getChildCount());
 		// Make sure the user can see the lovely new node.
