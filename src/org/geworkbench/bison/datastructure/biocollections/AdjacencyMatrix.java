@@ -89,14 +89,28 @@ public class AdjacencyMatrix implements Serializable {
 			stringId = id;
 			intId = -1;
 			marker = null;
-		}
+		}	
+		
+		/*
+		 * if node type is GENE_SYMBOL and intId is 0, it means that the gene does not
+		 * presented in the current microarray set.
+		 */
+		public Node(NodeType type, String stringId, int intId ) {
+			this.type = type;
+			this.stringId = stringId;
+			this.intId = intId;
+			marker = null;
+		}		
+		
+		
 
-		Node(NodeType type, int id) {
+		public Node(NodeType type, int id) {
 			this.type = type;
 			intId = id;
 			stringId = null;
 			marker = null;
-		}
+		}		
+	 
 
 		@Override
 		public boolean equals(Object obj) {
