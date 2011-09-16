@@ -1259,6 +1259,12 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	public void ccmUpdate() {
 		DataSetNode selectedDataSetNode = selection.getSelectedDataSetNode();
 		GeawConfigObject.getGuiWindow().setVisualizationType(selectedDataSetNode.dataFile);
+		
+		String message = "CCM update";
+		if (selectedDataSetNode != null) {
+			publishProjectEvent(new ProjectEvent(message,
+					selectedDataSetNode.dataFile, selectedDataSetNode));
+		}
 	}
 
 	/*
