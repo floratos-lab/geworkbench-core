@@ -296,8 +296,12 @@ public class Skin extends GUIFramework {
         ActionListener timerAction = new ActionListener() {
         	final private static long MEGABYTE = 1024*1024;
             public void actionPerformed(ActionEvent evt) {
-            	setStatusBarText("Free memory "+Runtime.getRuntime().freeMemory()/MEGABYTE+"M out of total "+
-        				Runtime.getRuntime().totalMemory()/MEGABYTE +"M");            }
+            	Runtime runtime = Runtime.getRuntime();
+            	long total = runtime.totalMemory();
+            	long free = runtime.freeMemory();
+            	long used = total-free;
+            	setStatusBarText("Memory: "+used/MEGABYTE+"M Used, "+free/MEGABYTE+"M Free, "+total/MEGABYTE+"M Total.");
+            }
         };
         if(showMemoryUsage)
         	new Timer(10000, timerAction).start();

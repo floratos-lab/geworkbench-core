@@ -202,11 +202,16 @@ public class GeawConfigObject {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+            	Runtime runtime = Runtime.getRuntime();
+            	long total = runtime.totalMemory();
+            	long free = runtime.freeMemory();
+            	long used = total-free;
 				StringBuffer sb = new StringBuffer("\n========== ==========\n");
 				sb.append("Java memory usage:\n")
-					.append(Runtime.getRuntime().totalMemory()/MEGABYTE).append(" MB total\n")
-					.append(Runtime.getRuntime().freeMemory()/MEGABYTE).append(" MB free\n")
-					.append(Runtime.getRuntime().maxMemory()/MEGABYTE).append(" MB maximum");
+					.append(total/MEGABYTE).append(" MB total\n")
+					.append(free/MEGABYTE).append(" MB free\n")
+					.append(used/MEGABYTE).append(" MB used\n")
+					.append(runtime.maxMemory()/MEGABYTE).append(" MB maximum");
 				JOptionPane.showMessageDialog(null, sysInfo+sb, "System Information", JOptionPane.INFORMATION_MESSAGE);
 			}
 			
