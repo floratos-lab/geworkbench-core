@@ -752,19 +752,15 @@ public class Skin extends GUIFramework {
 
 	static private final String welcomeScreenClassName = "org.geworkbench.engine.WelcomeScreen";
 	public void showWelcomeScreen() {
-		Class<?> welcomeScreenClass;
-		try {
-			welcomeScreenClass = Class.forName(welcomeScreenClassName);
-		} catch (ClassNotFoundException e1) {
-			e1.printStackTrace();
-			return;
-		}
-		ComponentRegistry.getRegistry().addAcceptor(null, welcomeScreenClass);
+		Class<?> welcomeScreenClass = org.geworkbench.engine.WelcomeScreen.class;
+		ComponentRegistry.getRegistry().addAcceptor(null, org.geworkbench.engine.WelcomeScreen.class);
 
     	if(acceptors==null)
     		acceptors = ComponentRegistry.getRegistry().getAcceptors(null);
 		acceptors.add(welcomeScreenClass);
         addAppropriateComponents(acceptors, GUIFramework.VISUAL_AREA, visualDockables);
+        PluginDescriptor desc = ComponentRegistry.getRegistry().getDescriptorForPluginClass(welcomeScreenClass);
+        selectLastComponent(GUIFramework.VISUAL_AREA, desc.getLabel());
         contentPane.revalidate();
 
 		PropertiesManager pm = PropertiesManager.getInstance();
