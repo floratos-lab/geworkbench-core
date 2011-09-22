@@ -12,6 +12,8 @@ import java.net.URL;
 import java.util.Properties;
 import java.util.TreeMap;
 
+import org.geworkbench.engine.config.UILauncher;
+
  
 /**
  * @author oleg shteynbuk
@@ -259,6 +261,7 @@ public class ResultSetlUtil {
 				}
 
 			}
+			UILauncher.printTimeStamp("geWorkbench exited.");
 			System.exit(0);
 		}
 	}

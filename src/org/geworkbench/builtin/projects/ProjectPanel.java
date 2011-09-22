@@ -66,6 +66,7 @@ import org.geworkbench.builtin.projects.WorkspaceHandler.OpenTask;
 import org.geworkbench.builtin.projects.history.HistoryPanel;
 import org.geworkbench.engine.config.GUIFramework;
 import org.geworkbench.engine.config.MenuListener;
+import org.geworkbench.engine.config.UILauncher;
 import org.geworkbench.engine.config.VisualPlugin;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.management.Publish;
@@ -1945,6 +1946,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 					saveWorkspace_actionPerformed(true);
 				} else { // if choosing No
 					GeawConfigObject.getGuiWindow().dispose();
+					UILauncher.printTimeStamp("geWorkbench exited.");
 					System.exit(0);
 				}
 			}

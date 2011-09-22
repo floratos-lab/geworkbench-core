@@ -18,6 +18,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.APSerializable;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
+import org.geworkbench.engine.config.UILauncher;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.properties.PropertiesManager;
 import org.geworkbench.util.ProgressDialog;
@@ -250,6 +251,7 @@ public class WorkspaceHandler {
 	
 				if(terminating) {
 					GeawConfigObject.getGuiWindow().dispose();
+					UILauncher.printTimeStamp("geWorkbench exited.");
 					System.exit(0);
 				}
 			} catch (ExecutionException e){

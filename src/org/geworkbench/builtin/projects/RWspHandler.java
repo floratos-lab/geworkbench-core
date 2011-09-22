@@ -35,13 +35,13 @@ import javax.swing.event.ListSelectionListener;
 import org.apache.commons.lang.StringUtils;
 import org.geworkbench.builtin.projects.WorkspaceHandler.OpenTask;
 import org.geworkbench.builtin.projects.WorkspaceHandler.SaveTask;
+import org.geworkbench.engine.config.UILauncher;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.preferences.GlobalPreferences;
 import org.geworkbench.util.FilePathnameUtils;
 import org.geworkbench.util.ProgressDialog;
 import org.geworkbench.util.ProgressItem;
 import org.geworkbench.util.ProgressTask;
-
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 
@@ -699,6 +699,7 @@ public class RWspHandler {
 		}
 		if(terminating) {
 			GeawConfigObject.getGuiWindow().dispose();
+			UILauncher.printTimeStamp("geWorkbench exited.");
 			System.exit(0);
 		}
 		return true;
