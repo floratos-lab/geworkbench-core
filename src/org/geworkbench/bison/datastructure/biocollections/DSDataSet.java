@@ -1,15 +1,14 @@
 package org.geworkbench.bison.datastructure.biocollections;
 
+import java.io.File;
+import java.io.Serializable;
+import java.util.ArrayList;
+
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.properties.DSDescribable;
 import org.geworkbench.bison.datastructure.properties.DSExtendable;
 import org.geworkbench.bison.datastructure.properties.DSNamed;
-import org.geworkbench.bison.parsers.resources.Resource;
-
-import java.io.File;
-import java.io.Serializable;
-import java.util.ArrayList;
 
 /**
  * Implementing classes store sets of biological data (such as a set of microarrays or sequences).
@@ -90,36 +89,6 @@ public interface DSDataSet <T extends DSBioObject> extends DSDescribable, DSName
     public void setAbsPath(String absPath);
 
     /**
-     * Associates the given resource with this data set.
-     *
-     * @param resource the resource to associate with this data set.
-     * @todo - watkin - Should be moved to an resource-management interface.
-     */
-    public void setResource(Resource resource);
-
-    /**
-     * Disassociates the specified resource from this data set.
-     *
-     * @param resource the resource to remove.
-     * @todo - watkin - Should be moved to an resource-management interface.
-     */
-    public void removeResource(Resource resource);
-
-    /**
-     * Reads from the resource associated with this data set.
-     *
-     * @todo - watkin - Should be moved to an resource-management interface.
-     */
-    public void readFromResource();
-
-    /**
-     * Writes to the resource associated with this data set.
-     *
-     * @todo - watkin - Should be moved to an resource-management interface.
-     */
-    public void writeToResource();
-
-    /**
      * Returns the experiment information associated with the data set.
      * What constitutes "experiment information" varies, depending on the
      * input source where the data set came from. E.g., for Affy input
@@ -140,4 +109,8 @@ public interface DSDataSet <T extends DSBioObject> extends DSDescribable, DSName
 
 	public ArrayList<Integer> getColumnOrder();
 	public void setColumnOrder(ArrayList<Integer> columnOrder);
+
+	public void deactivate();
+
+	public void activate();
 }
