@@ -38,15 +38,12 @@ public class ExpressionFileFormat extends DataSetFileFormat {
     }
 
     public DSDataSet<DSMicroarray> getDataFile(File file, String compatibilityLabel) throws InputFileFormatException {
-        CSExprMicroarraySet maSet = new CSExprMicroarraySet();
-        maSet.setCompatibilityLabel(compatibilityLabel);
-        maSet.read(file);
+        CSExprMicroarraySet maSet = new MicroarraySetParser().parseCSExprMicroarraySet(file, compatibilityLabel);
         return maSet;
     }
 
     public DSDataSet<DSMicroarray> getDataFile(File file) {
-        CSExprMicroarraySet maSet = new CSExprMicroarraySet();
-        maSet.read(file);
+        CSExprMicroarraySet maSet = new MicroarraySetParser().parseCSExprMicroarraySet(file);
         if (maSet.loadingCancelled)
             return null;
         return maSet;
