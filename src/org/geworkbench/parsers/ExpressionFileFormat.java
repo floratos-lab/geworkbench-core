@@ -1,9 +1,6 @@
 package org.geworkbench.parsers;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.Arrays;
 
 import javax.swing.filechooser.FileFilter;
@@ -11,7 +8,6 @@ import javax.swing.filechooser.FileFilter;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
-import org.geworkbench.bison.parsers.resources.Resource;
 
 /**
  * <p>Title: Sequence and Pattern Plugin</p>
@@ -25,23 +21,12 @@ import org.geworkbench.bison.parsers.resources.Resource;
 public class ExpressionFileFormat extends DataSetFileFormat {
 
     private String[] maExtensions = {"exp"};
-    private ExpressionResource resource = new ExpressionResource();
     private AffyFilter maFilter = null;
 
     public ExpressionFileFormat() {
         formatName = "Affymetrix File Matrix";
         maFilter = new AffyFilter();
         Arrays.sort(maExtensions);
-    }
-
-    public Resource getResource(File file) {
-        try {
-            resource.setReader(new BufferedReader(new FileReader(file)));
-            resource.setInputFileName(file.getName());
-        } catch (IOException ioe) {
-            ioe.printStackTrace(System.err);
-        }
-        return resource;
     }
 
     public String[] getFileExtensions() {

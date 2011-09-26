@@ -10,16 +10,15 @@ import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.net.ConnectException;
-import java.io.FileInputStream;
-import java.util.Properties;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
-
+import java.util.Properties;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -39,10 +38,9 @@ import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
-import org.geworkbench.bison.parsers.resources.Resource;
 import org.geworkbench.builtin.projects.DataSetNode;
 import org.geworkbench.builtin.projects.ProjectNode;
-import org.geworkbench.builtin.projects.ProjectTreeNode; 
+import org.geworkbench.builtin.projects.ProjectTreeNode;
 import org.geworkbench.engine.properties.PropertiesManager;
 import org.geworkbench.util.ResultSetlUtil;
 import org.geworkbench.util.Util;
@@ -200,11 +198,6 @@ public class AdjacencyMatrixFileFormat extends DataSetFileFormat {
 	@Override
 	public boolean checkFormat(File file) throws InterruptedIOException {
 		return true;
-	}
-
-	@Override
-	public Resource getResource(File file) {
-		return null;
 	}
 
 	@Override

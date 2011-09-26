@@ -5,8 +5,6 @@ import java.io.InterruptedIOException;
 
 import javax.swing.filechooser.FileFilter;
 
-import org.geworkbench.bison.parsers.resources.Resource;
-
 /**
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: First Genetic Trust Inc.</p>
@@ -52,14 +50,6 @@ public abstract class FileFormat {
      *         according to the format or not.
      */
     public abstract boolean checkFormat(File file) throws InterruptedIOException;
-
-    /**
-     * Return a <code>Resource</code> object for the designated file.
-     *
-     * @param file
-     * @return
-     */
-    public abstract Resource getResource(File file);
 
     /**
      * Return the list of extensions (if any) for the files following this
