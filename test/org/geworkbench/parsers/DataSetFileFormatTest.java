@@ -1,12 +1,12 @@
 package org.geworkbench.parsers;
 
-import junit.framework.TestCase;
-import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
-import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
-import org.geworkbench.parsers.DataSetFileFormat;
-
 import java.io.File;
+
+import junit.framework.TestCase;
+
+import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
+import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 
 /**
  * Tests loading of microarray sets, and makes loading services available to
@@ -39,11 +39,12 @@ public class DataSetFileFormatTest extends TestCase {
 	 * @return
 	 * @throws Exception
 	 */
-	private CSExprMicroarraySet loadDefaultMicroarraySet() throws Exception {
+	@SuppressWarnings("rawtypes")
+	private CSMicroarraySet loadDefaultMicroarraySet() throws Exception {
 		String fileName = DEFAULT_MICROARRAY_SET;
 		DataSetFileFormat fileFormat = new org.geworkbench.parsers.ExpressionFileFormat();
 		DSDataSet<? extends DSBioObject> dataSet = loadDataSet(fileName, fileFormat);
-		return (CSExprMicroarraySet) dataSet;
+		return (CSMicroarraySet) dataSet;
 	}
 
 	/**
@@ -51,8 +52,9 @@ public class DataSetFileFormatTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@SuppressWarnings("rawtypes")
 	public void testLoadData() throws Exception {
-		CSExprMicroarraySet dataSet = loadDefaultMicroarraySet();
+		CSMicroarraySet dataSet = loadDefaultMicroarraySet();
 		assertNotNull(dataSet);
 	}
 }
