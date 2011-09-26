@@ -1,20 +1,40 @@
 package org.geworkbench.bison.datastructure.biocollections.microarrays;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.TreeMap;
+import java.util.Vector;
+
+import javax.swing.JOptionPane;
+import javax.swing.ProgressMonitor;
+
 import org.apache.commons.math.stat.StatUtils;
+import org.geworkbench.bison.annotation.CSAnnotationContext;
 import org.geworkbench.bison.annotation.CSAnnotationContextManager;
 import org.geworkbench.bison.annotation.DSAnnotationContext;
 import org.geworkbench.bison.annotation.DSAnnotationContextManager;
 import org.geworkbench.bison.datastructure.biocollections.CSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.CSMarkerVector;
+import org.geworkbench.bison.datastructure.biocollections.DSMatrixDataSet;
+import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
-import org.geworkbench.bison.datastructure.bioobjects.microarray.*;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.CSAffyMarkerValue;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMarkerValue;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMutableMarkerValue;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.engine.preferences.GlobalPreferences;
-
-import java.io.*;
-import java.util.*;
 
 /**
  * <p>Title: caWorkbench</p>
@@ -47,6 +67,12 @@ public class CSMicroarraySet<T extends DSMicroarray> extends CSDataSet<T> implem
     public CSMicroarraySet() {
         setID(RandomNumberGenerator.getID());
         setLabel("");
+
+        type = DSMicroarraySet.expPvalueType;
+
+        addDescription("Microarray experiment");
+        DSAnnotationContext<T> context = CSAnnotationContextManager.getInstance().getCurrentContext(this);
+        CSAnnotationContext.initializePhenotypeContext(context);
     }
 
     public double getValue(DSGeneMarker marker, int maIndex) {
@@ -134,27 +160,6 @@ public class CSMicroarraySet<T extends DSMicroarray> extends CSDataSet<T> implem
 
     public void setCompatibilityLabel(String compatibilityLabel) {
         this.compatibilityLabel = compatibilityLabel;
-    }
-
-    @SuppressWarnings("unchecked")
-	private void writePhenotypeValueArray(BufferedWriter writer) throws IOException {
-        DSAnnotationContextManager manager = CSAnnotationContextManager.getInstance();
-        DSAnnotationContext<T>[] contexts = manager.getAllContexts(this);
-        for (int j = 0; j < contexts.length; j++) {
-            DSAnnotationContext<T> context = contexts[j];
-            writer.write("Description\t" + context.getName());
-            for (int i = 0; i < size(); i++) {
-                DSMicroarray mArray = get(i);
-                String[] labels = context.getLabelsForItem((T)mArray);
-                // TODO - watkin - this file format does not support multiple labellings per item
-                if (labels.length > 0) {
-                    writer.write("\t" + labels[0]);
-                } else {
-                    writer.write("\tUndefined");
-                }
-            }
-            writer.write('\n');
-        }
     }
 
     private void writeObject(ObjectOutputStream oos) throws IOException {
@@ -266,39 +271,96 @@ public class CSMicroarraySet<T extends DSMicroarray> extends CSDataSet<T> implem
         return null;
     }
 
-    public void writeToFile(String file) {
-        BufferedWriter writer;
-        try {
-            writer = new BufferedWriter(new FileWriter(file));
-            writer.write("PDFModel\tAutoNormal\n");
+	public void writeToFile(String fileName) {
+		File file = new File(fileName);
+		this.absPath = file.getAbsolutePath();
 
-            writer.write("Description\tAccession");
-            for (DSMicroarray ma : this) {
-                writer.write('\t');
-                writer.write(ma.getLabel());
-            }
-            writer.write('\n');
-            // Write the Phenotypes Definitions
-            writePhenotypeValueArray(writer);
-            for (DSGeneMarker m : getMarkers()) {
-                ((DSGeneMarker) m).write(writer);
-                for (DSMicroarray ma : this) {
-                    writer.write('\t' + ma.getMarkerValue(m.getSerial()).toString());
-                }
-                writer.write('\n');
-            }
-            writer.flush();
-            writer.close();
-        } catch (IOException e) {
-            System.out.println("Exception in JMicroarrays.Write(): " + e);
-        }
-    }
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+			// start processing the data.
+			// Start with the header line, comprising the array names.
+			String outLine = "AffyID" + "\t" + "Annotation";
+			for (int i = 0; i < size(); ++i) {
+				outLine = outLine.concat("\t" + get(i).toString());
+			}
+			writer.write(outLine);
+			writer.newLine();
+
+			DSAnnotationContextManager manager = CSAnnotationContextManager
+					.getInstance();
+			int n = manager.getNumberOfContexts(this);
+			for (int i = 0; i < n; i++) {
+				DSAnnotationContext<T> context = manager.getContext(
+						this, i);
+				StringBuilder line = new StringBuilder("Description" + '\t'
+						+ context.getName());
+				for (Iterator<T> iterator = this.iterator(); iterator
+						.hasNext();) {
+					T microarray = iterator.next();
+					String label = "";
+					String[] labels = context.getLabelsForItem(microarray);
+					// watkin - Unfortunately, the file format only supports one
+					// label per context.
+					if (labels.length > 0) {
+						label = labels[0];
+						if (labels.length > 1)
+							for (int j = 1; j < labels.length; j++)
+								label += "|" + labels[j];
+					}
+					line.append('\t' + label);
+				}
+				writer.write(line.toString());
+				writer.newLine();
+			}
+
+			ProgressMonitor pm = new ProgressMonitor(null, "Total "
+					+ markerVector.size(), "saving ", 0, markerVector.size());
+			// Proceed to write one marker at a time
+			for (int i = 0; i < markerVector.size(); ++i) {
+				pm.setProgress(i);
+				pm.setNote("saving " + i);
+				outLine = markerVector.get(i).getLabel();
+				outLine = outLine.concat('\t' + getMarkers().get(i).getLabel());
+				for (int j = 0; j < size(); ++j) {
+					DSMarkerValue mv = get(j).getMarkerValue(i);
+					if (!mv.isMissing())
+						outLine = outLine.concat("\t" + (float) mv.getValue()
+								+ '\t')
+								+ (float) mv.getConfidence();
+					else
+						outLine = outLine.concat("\t" + "n/a" + '\t')
+								+ (float) mv.getConfidence();
+				}
+				writer.write(outLine);
+				writer.newLine();
+			}
+			pm.close();
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null, "File " + fileName
+					+ " is not saved due to IOException " + e.getMessage(),
+					"File Saving Failed", JOptionPane.ERROR_MESSAGE);
+
+		}
+	}
 
     public CSMarkerVector getMarkerVector() {
         return markerVector;
     }
 
-    public void initialize(int maNo, int mrkNo) {
+    @SuppressWarnings("unchecked")
+	public void initialize(int maNo, int mrkNo) {
+        // this is required so that the microarray vector may create arrays of the right size
+        for (int microarrayId = 0; microarrayId < maNo; microarrayId++) {
+            add(microarrayId, (T)new CSMicroarray(microarrayId, mrkNo, "Test", null, null, false, type));
+        }
+
+        for (int i = 0; i < mrkNo; i++) {
+            CSExpressionMarker mi = new CSExpressionMarker();
+            mi.reset(i, maNo, mrkNo);
+            markerVector.add(i, mi);
+        }
     }
 
     private String annotationFileName = null;
@@ -363,7 +425,13 @@ public class CSMicroarraySet<T extends DSMicroarray> extends CSDataSet<T> implem
     public String getSelectorMarkerOrder(){
     	return markerOrder;
     }
+    
     public void setSelectorMarkerOrder(String order){
     	markerOrder = order;
     }
+
+    // used only by MicroarraySetParser
+    public void increaseMaskedSpots() {
+		maskedSpots++;
+	}
 }
