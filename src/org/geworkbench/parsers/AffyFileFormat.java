@@ -21,7 +21,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.CSMarkerVector;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
@@ -48,6 +48,7 @@ import org.geworkbench.bison.parsers.resources.Resource;
  * @version $Id$
  * 
  */
+@SuppressWarnings( {"rawtypes", "unchecked"} )
 public class AffyFileFormat extends DataSetFileFormat {
 	private static Log log = LogFactory.getLog(AffyFileFormat.class);
 
@@ -190,8 +191,7 @@ public class AffyFileFormat extends DataSetFileFormat {
 	 * @throws InputFileFormatException
 	 *             When the input file deviates from the Affy format.
 	 */
-
-	private void getMArraySet(File file, CSExprMicroarraySet maSet)
+	private void getMArraySet(File file, CSMicroarraySet maSet)
 			throws InputFileFormatException, InterruptedIOException {
 		// Check that the file is OK before starting allocating space for it.
 		if (!checkFormat(file))
@@ -303,17 +303,15 @@ public class AffyFileFormat extends DataSetFileFormat {
 
 	public DSMicroarraySet<? extends DSBioObject> getMArraySet(File file)
 			throws InputFileFormatException, InterruptedIOException {
-		CSExprMicroarraySet maSet = new CSExprMicroarraySet();
+		CSMicroarraySet maSet = new CSMicroarraySet();
 		getMArraySet(file, maSet);
-		if (maSet.loadingCancelled)
-			return null;
 		return maSet;
 	}
 
 	public DSDataSet<? extends DSBioObject> getDataFile(File file,
 			String compatibilityLabel) throws InputFileFormatException,
 			InterruptedIOException {
-		CSExprMicroarraySet maSet = new CSExprMicroarraySet();
+		CSMicroarraySet maSet = new CSMicroarraySet();
 		maSet.setCompatibilityLabel(compatibilityLabel);
 		getMArraySet(file, maSet);
 		return maSet;
