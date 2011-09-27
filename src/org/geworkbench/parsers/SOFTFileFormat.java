@@ -34,7 +34,6 @@ import org.geworkbench.bison.parsers.resources.Resource;
  * @author Nikhil
  * @version $Id$
  */
-@SuppressWarnings( {"rawtypes", "unchecked"} )
 public class SOFTFileFormat extends DataSetFileFormat {
 
 	static Log log = LogFactory.getLog(SOFTFileFormat.class);

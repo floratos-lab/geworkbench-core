@@ -37,7 +37,6 @@ import org.geworkbench.bison.parsers.resources.Resource;
  * @version $Id$
  * 
  */
-@SuppressWarnings( {"rawtypes", "unchecked"} )
 public class TabDelimitedDataMatrixFileFormat extends DataSetFileFormat {
 
 	static Log log = LogFactory.getLog(TabDelimitedDataMatrixFileFormat.class);

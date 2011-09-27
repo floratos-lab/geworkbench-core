@@ -37,13 +37,11 @@ public class ExpressionFileFormat extends DataSetFileFormat {
         return true;
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
 	public DSDataSet<DSMicroarray> getDataFile(File file, String compatibilityLabel) throws InputFileFormatException {
         CSMicroarraySet maSet = new MicroarraySetParser().parseCSMicroarraySet(file, compatibilityLabel);
         return maSet;
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
 	public DSDataSet<DSMicroarray> getDataFile(File file) {
         CSMicroarraySet maSet = new MicroarraySetParser().parseCSMicroarraySet(file);
         return maSet;

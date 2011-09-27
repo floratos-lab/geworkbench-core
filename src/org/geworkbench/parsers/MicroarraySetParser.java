@@ -29,7 +29,6 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMutableMarkerValue;
 import org.geworkbench.bison.util.Range;
 
-@SuppressWarnings("rawtypes")
 public class MicroarraySetParser {
 	private static Log log = LogFactory.getLog(MicroarraySetParser.class);
 
@@ -73,7 +72,6 @@ public class MicroarraySetParser {
 		STRUCTURE, MARKER, VALUE
 	};
 
-	@SuppressWarnings("unchecked")
 	private boolean readAndParse(ParseType type, String message) {
 		currGeneId = 0;
 		ReaderMonitor rm = null;

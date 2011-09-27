@@ -48,7 +48,6 @@ import org.geworkbench.bison.parsers.resources.Resource;
  * @version $Id$
  * 
  */
-@SuppressWarnings( {"rawtypes", "unchecked"} )
 public class AffyFileFormat extends DataSetFileFormat {
 	private static Log log = LogFactory.getLog(AffyFileFormat.class);
 

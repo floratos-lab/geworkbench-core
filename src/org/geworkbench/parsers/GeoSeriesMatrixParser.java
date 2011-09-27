@@ -30,7 +30,6 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
  * @author Nikhil
  * @version $Id$
  */
-@SuppressWarnings( {"rawtypes", "unchecked"} )
 public class GeoSeriesMatrixParser {
 
 	static Log log = LogFactory.getLog(SOFTFileFormat.class);

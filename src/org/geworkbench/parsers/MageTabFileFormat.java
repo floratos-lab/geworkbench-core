@@ -32,7 +32,6 @@ import org.geworkbench.bison.parsers.resources.Resource;
 /**  
  * @author Nikhil
  */
-@SuppressWarnings( {"rawtypes", "unchecked"} )
 public class MageTabFileFormat extends DataSetFileFormat {
 
 	static Log log = LogFactory.getLog(MageTabFileFormat.class);

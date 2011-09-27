@@ -23,7 +23,6 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 /**  
  * @author Nikhil
  */
-@SuppressWarnings( {"rawtypes", "unchecked"} )
 public class SampleFileParser {
 
 	static Log log = LogFactory.getLog(SOFTFileFormat.class);
