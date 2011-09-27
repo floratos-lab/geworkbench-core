@@ -18,7 +18,7 @@ import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.annotation.CSAnnotationContext;
 import org.geworkbench.bison.annotation.CSAnnotationContextManager;
 import org.geworkbench.bison.annotation.DSAnnotationContext;
-import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
@@ -29,10 +29,11 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMutableMarkerValue;
 import org.geworkbench.bison.util.Range;
 
+@SuppressWarnings("rawtypes")
 public class MicroarraySetParser {
 	private static Log log = LogFactory.getLog(MicroarraySetParser.class);
 
-	private transient CSExprMicroarraySet csExprMicroarraySet;
+	private transient CSMicroarraySet miroarraySet;
 
 	private transient int currGeneId = 0;
 
@@ -40,20 +41,20 @@ public class MicroarraySetParser {
 
 	// this method returns a parsed CSExprMicroarraySet. It could return null in
 	// case parsing fails.
-	public CSExprMicroarraySet parseCSExprMicroarraySet(File file) {
-		CSExprMicroarraySet m = new CSExprMicroarraySet();
-		return parseCSExprMicroarraySet(file, m);
+	CSMicroarraySet parseCSMicroarraySet(File file) {
+		CSMicroarraySet m = new CSMicroarraySet();
+		return parseCSMicroarraySet(file, m);
 	}
 
 	// this extra layer is only to provide the chance to set compatibilityLabel
 	// (annotation file) before parsing
-	private CSExprMicroarraySet parseCSExprMicroarraySet(File file,
-			CSExprMicroarraySet m) {
+	private CSMicroarraySet parseCSMicroarraySet(File file,
+			CSMicroarraySet m) {
 		this.file = file;
 
-		csExprMicroarraySet = m;
-		csExprMicroarraySet.setLabel(file.getName());
-		csExprMicroarraySet.setAbsPath(file.getAbsolutePath());
+		miroarraySet = m;
+		miroarraySet.setLabel(file.getName());
+		miroarraySet.setAbsPath(file.getAbsolutePath());
 
 		if (!readAndParse(ParseType.STRUCTURE,
 				"Getting structure information from " + file.getName()))
@@ -61,17 +62,18 @@ public class MicroarraySetParser {
 		if (!readAndParse(ParseType.MARKER,
 				"Loading Marker Data from " + file.getName()))
 			return null;
-		csExprMicroarraySet.sortMarkers(markerNo);
+		miroarraySet.sortMarkers(markerNo);
 		readAndParse(ParseType.VALUE,
 				"Loading Marker Value from " + file.getName());
 
-		return csExprMicroarraySet;
+		return miroarraySet;
 	}
 
 	private enum ParseType {
 		STRUCTURE, MARKER, VALUE
 	};
 
+	@SuppressWarnings("unchecked")
 	private boolean readAndParse(ParseType type, String message) {
 		currGeneId = 0;
 		ReaderMonitor rm = null;
@@ -82,26 +84,24 @@ public class MicroarraySetParser {
 			return false;
 		}
 		if (type == ParseType.MARKER)
-			csExprMicroarraySet.initialize(microarrayNo, markerNo);
+			miroarraySet.initialize(microarrayNo, markerNo);
 		String line = null;
 		try {
 			while ((line = rm.reader.readLine()) != null) {
 				if (!line.trim().equalsIgnoreCase("")) {
 					if (type == ParseType.STRUCTURE)
-						parseLine(line.trim(), csExprMicroarraySet);
+						parseLine(line.trim(), miroarraySet);
 					else if (type == ParseType.MARKER)
-						executeLine(line.trim(), csExprMicroarraySet);
+						executeLine(line.trim(), miroarraySet);
 					else if (type == ParseType.VALUE)
 						parseValue(line.trim());
 					if (rm.pm != null && rm.pm.isCanceled()) {
-						csExprMicroarraySet.loadingCancelled = true;
 						rm.reader.close();
 						return false;
 					}
 				}
 			}
 		} catch (InterruptedIOException iioe) {
-			csExprMicroarraySet.loadingCancelled = true;
 			return false;
 		} catch (Exception ioe) {
 			log.error("Error while parsing line: " + line);
@@ -168,7 +168,8 @@ public class MicroarraySetParser {
 				for (int j = 2; j < st.length; j++) {
 					if (isAccession) {
 						String maLabel = new String(st[j]);
-						this.csExprMicroarraySet.get(i++).setLabel(maLabel);
+						DSMicroarray microarray = (DSMicroarray)miroarraySet.get(i++); 
+						microarray.setLabel(maLabel);
 					}
 				}
 			} else if (token.equalsIgnoreCase("Description")) {
@@ -193,8 +194,8 @@ public class MicroarraySetParser {
 				// separated by tabs
 				DSGeneMarker mi = (DSGeneMarker) mArraySet.getMarkers().get(
 						currGeneId);
-				if (this.csExprMicroarraySet.getMarkerVector().size() > currGeneId) {
-					mi = this.csExprMicroarraySet.getMarkerVector().get(
+				if (this.miroarraySet.getMarkerVector().size() > currGeneId) {
+					mi = this.miroarraySet.getMarkerVector().get(
 							currGeneId);
 				}
 				((org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker) mi)
@@ -205,7 +206,7 @@ public class MicroarraySetParser {
 				// set the annotation field of current marker
 				mi.setDescription(label);
 
-				this.csExprMicroarraySet.getMarkerVector().add(currGeneId, mi);
+				this.miroarraySet.getMarkerVector().add(currGeneId, mi);
 				try {
 					String[] result = AnnotationParser.getInfo(token,
 							AnnotationParser.LOCUSLINK);
@@ -215,12 +216,12 @@ public class MicroarraySetParser {
 						locus = result[0];
 
 					}
-					this.csExprMicroarraySet.getMarkerVector().get(currGeneId)
+					this.miroarraySet.getMarkerVector().get(currGeneId)
 							.getUnigene().set(token);
 
 					if (locus.compareTo(" ") != 0) {
 						try {
-							this.csExprMicroarraySet.getMarkerVector()
+							this.miroarraySet.getMarkerVector()
 									.get(currGeneId)
 									.setGeneId(Integer.parseInt(locus.trim()));
 						} catch (NumberFormatException e) {
@@ -232,7 +233,7 @@ public class MicroarraySetParser {
 					String[] geneNames = AnnotationParser.getInfo(token,
 							AnnotationParser.ABREV);
 					if (geneNames != null) {
-						this.csExprMicroarraySet.getMarkerVector()
+						this.miroarraySet.getMarkerVector()
 								.get(currGeneId)
 								.setGeneName(geneNames[0].trim());
 					}
@@ -268,9 +269,9 @@ public class MicroarraySetParser {
 				int i = 0;
 				boolean pValueExists = ((st.length - 2) > microarrayNo);
 				for (int j = 2; j < st.length; j++) {
-					CSMarkerValue marker = (CSMarkerValue) this.csExprMicroarraySet
-							.get(i).getMarkerValue(
-									this.csExprMicroarraySet.newid[currGeneId]);
+					DSMicroarray microarray = (DSMicroarray)miroarraySet.get(i);
+					CSMarkerValue marker = (CSMarkerValue) microarray.getMarkerValue(
+									this.miroarraySet.newid[currGeneId]);
 					String value = st[j];
 					if ((value == null) || (value.equalsIgnoreCase(""))) { // skip
 																			// the
@@ -292,12 +293,12 @@ public class MicroarraySetParser {
 					}
 
 					parse(marker, value, pValue);
-					((org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker) this.csExprMicroarraySet
+					((org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker) this.miroarraySet
 							.getMarkerVector().get(
-									this.csExprMicroarraySet.newid[currGeneId]))
+									this.miroarraySet.newid[currGeneId]))
 							.check(marker, false);
 					if (marker.isMasked() || marker.isMissing()) {
-						this.csExprMicroarraySet.increaseMaskedSpots();
+						this.miroarraySet.increaseMaskedSpots();
 					}
 					// getIMicroarray(i).setIMarker(i, marker);
 					i++;
@@ -377,7 +378,7 @@ public class MicroarraySetParser {
 		} else {
 			try {
 				double v = Double.parseDouble(value);
-				Range range = ((org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker) csExprMicroarraySet
+				Range range = ((org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker) miroarraySet
 						.getMarkerVector().get(currGeneId)).getRange();
 
 				marker.setValue(v);
@@ -399,7 +400,7 @@ public class MicroarraySetParser {
 			String expression = parseableValue[parseableValue.length - 1];
 			try {
 				double v = Double.parseDouble(expression);
-				org.geworkbench.bison.util.Range range = ((org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker) csExprMicroarraySet
+				org.geworkbench.bison.util.Range range = ((org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker) miroarraySet
 						.getMarkerVector().get(currGeneId)).getRange();
 
 				marker.setValue(v);
@@ -442,11 +443,11 @@ public class MicroarraySetParser {
 		return retValue;
 	}
 
-	public CSExprMicroarraySet parseCSExprMicroarraySet(File file2,
+	CSMicroarraySet parseCSMicroarraySet(File file2,
 			String compatibilityLabel) {
-		CSExprMicroarraySet m = new CSExprMicroarraySet();
+		CSMicroarraySet m = new CSMicroarraySet();
 		m.setCompatibilityLabel(compatibilityLabel);
-		return parseCSExprMicroarraySet(file2, m);
+		return parseCSMicroarraySet(file2, m);
 	}
 
 }

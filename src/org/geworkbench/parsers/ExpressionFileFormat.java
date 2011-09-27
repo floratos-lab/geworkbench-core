@@ -6,7 +6,7 @@ import java.util.Arrays;
 import javax.swing.filechooser.FileFilter;
 
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 
 /**
@@ -37,15 +37,15 @@ public class ExpressionFileFormat extends DataSetFileFormat {
         return true;
     }
 
-    public DSDataSet<DSMicroarray> getDataFile(File file, String compatibilityLabel) throws InputFileFormatException {
-        CSExprMicroarraySet maSet = new MicroarraySetParser().parseCSExprMicroarraySet(file, compatibilityLabel);
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	public DSDataSet<DSMicroarray> getDataFile(File file, String compatibilityLabel) throws InputFileFormatException {
+        CSMicroarraySet maSet = new MicroarraySetParser().parseCSMicroarraySet(file, compatibilityLabel);
         return maSet;
     }
 
-    public DSDataSet<DSMicroarray> getDataFile(File file) {
-        CSExprMicroarraySet maSet = new MicroarraySetParser().parseCSExprMicroarraySet(file);
-        if (maSet.loadingCancelled)
-            return null;
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	public DSDataSet<DSMicroarray> getDataFile(File file) {
+        CSMicroarraySet maSet = new MicroarraySetParser().parseCSMicroarraySet(file);
         return maSet;
     }
 
