@@ -35,7 +35,6 @@ import javax.swing.ToolTipManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -45,7 +44,6 @@ import javax.swing.tree.TreeSelectionModel;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.geworkbench.bison.datastructure.biocollections.AdjacencyMatrixDataSet;
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
@@ -471,175 +469,100 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	}
 
 	private void saveNodeAsFile() {
-		ProjectTreeNode ds = selection.getSelectedNode();
-		if (ds != null) {
-			if (ds instanceof ImageNode) {
-				Image currentImage = ((ImageNode) ds).image.getImage();
-				SaveImage si = new SaveImage(currentImage);
-				JFileChooser fc = new JFileChooser(".");
-
-				FileFilter bitmapFilter = new ImageFileFilter.BitmapFileFilter();
-				FileFilter jpegFilter = new ImageFileFilter.JPEGFileFilter();
-				FileFilter pngFilter = new ImageFileFilter.PNGFileFilter();
-				FileFilter tiffFilter = new ImageFileFilter.TIFFFileFilter();
-				fc.setFileFilter(tiffFilter);
-				fc.setFileFilter(pngFilter);
-				fc.setFileFilter(jpegFilter);
-				fc.setFileFilter(bitmapFilter);
-
-				int choice = fc.showSaveDialog(jProjectPanel);
-				if (choice == JFileChooser.APPROVE_OPTION) {
-					String imageFilename = fc.getSelectedFile()
-							.getAbsolutePath();
-					String filename = fc.getSelectedFile().getName();
-					String ext = null;
-					int i = filename.lastIndexOf('.');
-					if (i > 0 && i < filename.length() - 1) {
-						ext = filename.substring(i + 1).toLowerCase();
-					} else {
-						FileFilter filter = fc.getFileFilter();
-						if (filter instanceof ImageFileFilter) {
-							ImageFileFilter selectedFilter = (ImageFileFilter) filter;
-							ext = selectedFilter.getExtension();
-							log.info("File extension: " + ext);
-						}
-					}
-					if (ext == null)
-						ext = "jpg";
-					if (imageFilename != null) {
-						si.save(imageFilename, ext);
-					}
-				}
-			} else if (ds instanceof DataSetSubNode) {
-				DataSetSubNode dataSetSubNode = (DataSetSubNode) ds;
-				if (dataSetSubNode._aDataSet instanceof CSTTestResultSet) {
-					CSTTestResultSet<? extends DSGeneMarker> tTestResultSet = (CSTTestResultSet<? extends DSGeneMarker>) dataSetSubNode._aDataSet;
-					tTestResultSet.saveDataToCSVFile();
-				} else
-					saveAsFile();
-			} else
-				saveAsFile();
+		ProjectTreeNode selectedNode = selection.getSelectedNode();
+		if (selectedNode == null) {
+			return;
 		}
 
-	}
+		// case 1: ImageNode
+		if (selectedNode instanceof ImageNode) {
+			Image currentImage = ((ImageNode) selectedNode).image.getImage();
+			SaveImage si = new SaveImage(currentImage);
+			si.save();
+			return;
+		}
 
-	private static final String subnodeDir = "subnodeDir";
-	private boolean saveAsFile() {
-		Object mSetSelected = projectTree.getSelectionPath()
-				.getLastPathComponent();
-		if (mSetSelected != null && mSetSelected instanceof DataSetNode) {
-			DSDataSet<? extends DSBioObject> ds = ((DataSetNode) mSetSelected).dataFile;
-			File f = ds.getFile();
-			JFileChooser jFileChooser1 = new JFileChooser(f);
-			jFileChooser1.setSelectedFile(f);
-			CustomFileFilter filter = SaveFileFilterFactory.createFilter(ds);
-			jFileChooser1.setFileFilter(filter);
-
-			// Use the SAVE version of the dialog, test return for
-			// Approve/Cancel
-			if (JFileChooser.APPROVE_OPTION == jFileChooser1
-					.showSaveDialog(jSaveMenuItem)) {
-				// Set the current file name to the user's selection,
-				// then do a regular saveFile
-				String newFileName = jFileChooser1.getSelectedFile().getPath();
-				newFileName = jFileChooser1.getSelectedFile().getAbsolutePath();
-
-				if (filter.accept(new File(newFileName))) {
-					// Use the current file name.
-				} else {
-					newFileName += "." + filter.getExtension();
-				}
-
-				// repaints menu after item is selected
-				log.info(newFileName);
-				// if(f != null) {
-				// return saveFile(f, newFileName);
-				// } else {
-				if (new File(newFileName).exists()) {
-					int o = JOptionPane.showConfirmDialog(null,
-
-					"Replace the file", "Replace the existing file?",
-							JOptionPane.YES_NO_CANCEL_OPTION);
-					if (o != JOptionPane.YES_OPTION) {
-						return false;
-					}
-				}
-
-				ds.writeToFile(newFileName);
-
-			} else {
-				// this.repaint();
-				return false;
+		// case 2: CSTTestResultSet
+		if (selectedNode instanceof DataSetSubNode) {
+			DataSetSubNode dataSetSubNode = (DataSetSubNode) selectedNode;
+			if (dataSetSubNode._aDataSet instanceof CSTTestResultSet) {
+				CSTTestResultSet<? extends DSGeneMarker> tTestResultSet = (CSTTestResultSet<? extends DSGeneMarker>) dataSetSubNode._aDataSet;
+				tTestResultSet.saveDataToCSVFile();
+				return;
 			}
-		} else if (mSetSelected != null
-				&& mSetSelected instanceof DataSetSubNode) {
-			DSDataSet<? extends DSBioObject> ds = ((DataSetSubNode) mSetSelected)._aDataSet;
-			File f = ds.getFile();
-			JFileChooser jFileChooser1 = new JFileChooser(f);
-			jFileChooser1.setSelectedFile(f);
-			PropertiesManager properties = PropertiesManager.getInstance();
-			if (f == null){
-				try{
-					String dir = properties.getProperty(this.getClass(), subnodeDir, jFileChooser1.getCurrentDirectory().getPath());
-					jFileChooser1.setCurrentDirectory(new File(dir));
-				}catch(IOException ioe){
-					ioe.printStackTrace();
-				}
-			}
-			CustomFileFilter filter = null;
-			if (ds instanceof AdjacencyMatrixDataSet){
-				filter = SaveFileFilterFactory.createFilter(ds);
-				jFileChooser1.setFileFilter(filter);
-			}
+		}
 
-			// Use the SAVE version of the dialog, test return for
-			// Approve/Cancel
-			if (JFileChooser.APPROVE_OPTION == jFileChooser1
-					.showSaveDialog(jSaveMenuItem)) {
-				// Set the current file name to the user's selection,
-				// then do a regular saveFile
-				String newFileName = jFileChooser1.getSelectedFile().getPath();
-				if (f == null){
-					try{
-						properties.setProperty(this.getClass(), subnodeDir, jFileChooser1.getSelectedFile().getParent());
-					}catch(IOException ioe){
-						ioe.printStackTrace();
-					}
-				}
-				if (filter != null && !newFileName.endsWith(filter.getExtension()))
-					newFileName += filter.getExtension();
-				// repaints menu after item is selected
-				log.info(newFileName);
-				// if(f != null) {
-				// return saveFile(f, newFileName);
-				// } else {
-				if (new File(newFileName).exists()) {
-					int o = JOptionPane.showConfirmDialog(null,
-
-					"Replace the file", "Replace the existing file?",
-							JOptionPane.YES_NO_CANCEL_OPTION);
-					if (o != JOptionPane.YES_OPTION) {
-						return false;
-					}
-				}
-				try {
-					ds.writeToFile(newFileName);
-				} catch (RuntimeException e) {
-					JOptionPane.showMessageDialog(null,
-							e.getMessage()+" "+ds.getClass().getName(), "Save Error",
-							JOptionPane.ERROR_MESSAGE);
-				}
-			} else {
-				// this.repaint();
-				return false;
-			}
-
+		// other cases
+		String dirPropertyKey = "";
+		DSDataSet<? extends DSBioObject> ds = null;
+		if (selectedNode instanceof DataSetNode) {
+			ds = ((DataSetNode) selectedNode).dataFile;
+			dirPropertyKey = "datanodeDir";
+		} else if (selectedNode instanceof DataSetSubNode) {
+			ds = ((DataSetSubNode) selectedNode)._aDataSet;
+			dirPropertyKey = "subnodeDir";
 		} else {
 			JOptionPane.showMessageDialog(null,
 					"This node contains no Dataset.", "Save Error",
 					JOptionPane.ERROR_MESSAGE);
+			return;
 		}
-		return false;
+
+		// at this point ds is not null
+		File f = ds.getFile();
+		JFileChooser jFileChooser1 = new JFileChooser(f);
+		jFileChooser1.setSelectedFile(f);
+
+		PropertiesManager properties = PropertiesManager.getInstance();
+		if (f == null) {
+			try {
+				String dir = properties.getProperty(this.getClass(),
+						dirPropertyKey, jFileChooser1.getCurrentDirectory()
+								.getPath());
+				jFileChooser1.setCurrentDirectory(new File(dir));
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+			}
+		}
+
+		CustomFileFilter filter = SaveFileFilterFactory.createFilter(ds);
+		jFileChooser1.setFileFilter(filter);
+
+		if (JFileChooser.APPROVE_OPTION == jFileChooser1
+				.showSaveDialog(jSaveMenuItem)) {
+			String newFileName = jFileChooser1.getSelectedFile()
+					.getAbsolutePath();
+
+			if (f == null) {
+				try {
+					properties.setProperty(this.getClass(), dirPropertyKey,
+							jFileChooser1.getSelectedFile().getParent());
+				} catch (IOException ioe) {
+					ioe.printStackTrace();
+				}
+			}
+
+			if (!filter.accept(new File(newFileName))) {
+				newFileName += "." + filter.getExtension();
+			}
+
+			if (new File(newFileName).exists()) {
+				int o = JOptionPane.showConfirmDialog(null, "Replace the file",
+						"Replace the existing file?",
+						JOptionPane.YES_NO_CANCEL_OPTION);
+				if (o != JOptionPane.YES_OPTION) {
+					return;
+				}
+			}
+
+			try {
+				ds.writeToFile(newFileName);
+			} catch (RuntimeException e) {
+				JOptionPane.showMessageDialog(null, e.getMessage() + " "
+						+ ds.getClass().getName(), "Save Error",
+						JOptionPane.ERROR_MESSAGE);
+			}
+		}
 	}
 
 	/**

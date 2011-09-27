@@ -1,13 +1,19 @@
 package org.geworkbench.util;
 
-import javax.media.jai.InterpolationNearest;
-import javax.media.jai.JAI;
-import javax.media.jai.RenderedOp;
-import java.awt.*;
+import java.awt.Image;
 import java.awt.image.renderable.ParameterBlock;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import javax.media.jai.InterpolationNearest;
+import javax.media.jai.JAI;
+import javax.media.jai.RenderedOp;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileFilter;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
@@ -17,7 +23,9 @@ import java.io.IOException;
  * @version $Id$
  */
 public class SaveImage {
-    private Image imageToBeSaved = null;
+	private static Log log = LogFactory.getLog(SaveImage.class);
+	
+	private Image imageToBeSaved = null;
 
     public SaveImage() {
     }
@@ -30,7 +38,45 @@ public class SaveImage {
         imageToBeSaved = image;
     }
 
-    public void save(String filename, String ext) {
+    // this method is to be invoked from GUI (EDT)
+    public void save() {
+		JFileChooser fc = new JFileChooser(".");
+
+		FileFilter bitmapFilter = new ImageFileFilter.BitmapFileFilter();
+		FileFilter jpegFilter = new ImageFileFilter.JPEGFileFilter();
+		FileFilter pngFilter = new ImageFileFilter.PNGFileFilter();
+		FileFilter tiffFilter = new ImageFileFilter.TIFFFileFilter();
+		fc.setFileFilter(tiffFilter);
+		fc.setFileFilter(pngFilter);
+		fc.setFileFilter(jpegFilter);
+		fc.setFileFilter(bitmapFilter);
+
+		int choice = fc.showSaveDialog(null);
+		if (choice == JFileChooser.APPROVE_OPTION) {
+			String imageFilename = fc.getSelectedFile()
+					.getAbsolutePath();
+			String filename = fc.getSelectedFile().getName();
+			String ext = null;
+			int i = filename.lastIndexOf('.');
+			if (i > 0 && i < filename.length() - 1) {
+				ext = filename.substring(i + 1).toLowerCase();
+			} else {
+				FileFilter filter = fc.getFileFilter();
+				if (filter instanceof ImageFileFilter) {
+					ImageFileFilter selectedFilter = (ImageFileFilter) filter;
+					ext = selectedFilter.getExtension();
+					log.info("File extension: " + ext);
+				}
+			}
+			if (ext == null)
+				ext = "jpg";
+			if (imageFilename != null) {
+				save(imageFilename, ext);
+			}	
+		}
+    }
+    
+    private void save(String filename, String ext) {
         ParameterBlock pb = new ParameterBlock();
         pb.add(imageToBeSaved);
         RenderedOp op0 = JAI.create("awtImage", pb);

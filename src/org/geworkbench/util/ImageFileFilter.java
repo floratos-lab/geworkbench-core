@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.geworkbench.builtin.projects;
+package org.geworkbench.util;
 
 import java.io.File;
 
