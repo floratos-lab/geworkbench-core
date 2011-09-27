@@ -1,12 +1,11 @@
 package org.geworkbench.bison.datastructure.complex.panels;
 
+import java.io.Serializable;
+
 import org.geworkbench.bison.datastructure.properties.DSDescribable;
 import org.geworkbench.bison.datastructure.properties.DSIdentifiable;
 import org.geworkbench.bison.datastructure.properties.DSNamed;
 import org.geworkbench.bison.datastructure.properties.DSSequential;
-import org.geworkbench.engine.management.Script;
-
-import java.io.Serializable;
 
 /**
  * Implementing classes are activatable/deactivatable item lists.
@@ -37,7 +36,6 @@ public interface DSPanel <T extends DSNamed> extends DSItemList<T>, DSNamed, DSI
      * Active panels are used by the visual displays. Inactive ones are ignored
      * Sets the active state of this panel
      */
-    @Script
     public void setActive(boolean flag);
 
     /**

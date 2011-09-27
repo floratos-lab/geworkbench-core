@@ -24,7 +24,6 @@ import org.geworkbench.bison.model.analysis.ParamValidationResults;
 import org.geworkbench.bison.model.analysis.ParameterPanel;
 import org.geworkbench.engine.config.PluginRegistry;
 import org.geworkbench.engine.management.ComponentClassLoader;
-import org.geworkbench.engine.management.Script;
 import org.geworkbench.util.FilePathnameUtils;
 
 /**
@@ -533,11 +532,6 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	 * @return
 	 */
 	public abstract int getAnalysisType();
-
-	@Script
-	public void setParameter(String key, String value) {
-
-	};
 
 	/**
 	 *
