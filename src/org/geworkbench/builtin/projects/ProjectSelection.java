@@ -65,7 +65,7 @@ public class ProjectSelection {
     @SuppressWarnings("rawtypes")
 	public DSDataSet getDataSet() {
         if (selectedDataSetNode != null) {
-            return selectedDataSetNode.dataFile;
+            return selectedDataSetNode.getDataset();
         } else {
             return null;
         }
@@ -113,23 +113,23 @@ public class ProjectSelection {
            
             if (node instanceof DataSetNode) {
                 selectedDataSetNode = (DataSetNode) node;
-                AnnotationParser.setCurrentDataSet(selectedDataSetNode.dataFile);
-                GeawConfigObject.getGuiWindow().setVisualizationType(selectedDataSetNode.dataFile);
+                AnnotationParser.setCurrentDataSet(selectedDataSetNode.getDataset());
+                GeawConfigObject.getGuiWindow().setVisualizationType(selectedDataSetNode.getDataset());
                 checkProjectNode();
-                if(selectedDataSetNode.dataFile instanceof CSProteinStructure){
+                if(selectedDataSetNode.getDataset() instanceof CSProteinStructure){
                 	throwEvent(ProjectEvent.CLEARED);
                 }
                 else throwEvent(ProjectEvent.SELECTED);
             } else if (node instanceof DataSetSubNode) {
                 selectedDataSetSubNode = (DataSetSubNode) node;
                 selectedDataSetNode = (DataSetNode) getNodeOfClass(node, DataSetNode.class);
-                AnnotationParser.setCurrentDataSet(selectedDataSetNode.dataFile);//Fix bug 1471
+                AnnotationParser.setCurrentDataSet(selectedDataSetNode.getDataset());//Fix bug 1471
                 GeawConfigObject.getGuiWindow().setVisualizationType(selectedDataSetSubNode._aDataSet);
                 checkProjectNode();
                 throwSubNodeEvent("receiveProjectSelection");
             } else if (node instanceof PendingTreeNode) {
                 selectedDataSetNode = (DataSetNode) getNodeOfClass(node, DataSetNode.class);
-                AnnotationParser.setCurrentDataSet(selectedDataSetNode.dataFile);
+                AnnotationParser.setCurrentDataSet(selectedDataSetNode.getDataset());
                 GeawConfigObject.getGuiWindow().setVisualizationType(null);
                 checkProjectNode();
                 throwEvent(ProjectEvent.SELECTED);
@@ -187,11 +187,10 @@ public class ProjectSelection {
      *
      * @param message
      */
-    @SuppressWarnings("unchecked")
 	private void throwEvent(String message) {
 		if (selectedDataSetNode != null) {
 			ProjectPanel.getInstance().publishProjectEvent(
-					new ProjectEvent(message, selectedDataSetNode.dataFile,
+					new ProjectEvent(message, selectedDataSetNode.getDataset(),
 							selectedDataSetNode));
 		}
 	}

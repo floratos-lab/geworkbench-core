@@ -20,14 +20,10 @@ import java.io.IOException;
 
 public class DataSetNode extends ProjectTreeNode {
 	
-	
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1423608759523479212L;
 	
-	@SuppressWarnings("rawtypes")
-	public final DSDataSet dataFile;
+	private final DSDataSet<? extends DSBioObject> dataFile;
+	public DSDataSet<? extends DSBioObject> getDataset() { return dataFile; }
     
     DataSetNode(final DSDataSet<? extends DSBioObject> df) {
         dataFile = df;

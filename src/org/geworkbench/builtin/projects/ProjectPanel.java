@@ -496,7 +496,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		String dirPropertyKey = "";
 		DSDataSet<? extends DSBioObject> ds = null;
 		if (selectedNode instanceof DataSetNode) {
-			ds = ((DataSetNode) selectedNode).dataFile;
+			ds = ((DataSetNode) selectedNode).getDataset();
 			dirPropertyKey = "datanodeDir";
 		} else if (selectedNode instanceof DataSetSubNode) {
 			ds = ((DataSetSubNode) selectedNode)._aDataSet;
@@ -705,7 +705,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 		DSDataSet<? extends DSBioObject> dNodeFile = null;
 		if ((pnode instanceof DataSetNode)) {
-			dNodeFile = ((DataSetNode) pnode).dataFile;
+			dNodeFile = ((DataSetNode) pnode).getDataset();
 
 		}
 		if ((dNodeFile != null && dNodeFile.hashCode() == parentData.hashCode())) {
@@ -738,9 +738,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		if (parentSet != null) {
 			if (dNode != null) {
 
-				DSDataSet<? extends DSBioObject> dNodeFile = dNode.dataFile;
+				DSDataSet<? extends DSBioObject> dNodeFile = dNode.getDataset();
 				if (dNodeFile.hashCode() == parentSet.hashCode()) {
-					_ancDataSet.setDataSetFile(dNode.dataFile.getFile());
+					_ancDataSet.setDataSetFile(dNode.getDataset().getFile());
 
 				} else {
 					// get the matched node in case the node selected changed.
@@ -759,7 +759,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			return;
 		}
 
-		_ancDataSet.setDataSetFile(dNode.dataFile.getFile());
+		_ancDataSet.setDataSetFile(dNode.getDataset().getFile());
 		// Makes sure that we do not already have an exact instance of this
 		// ancillary file
 		Enumeration<?> children = dNode.children();
@@ -984,8 +984,10 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 																// happen
 		}
 
+		@SuppressWarnings("rawtypes")
+		DSDataSet dataset = ((DataSetNode) parent).getDataset();
 		((CSAncillaryDataSet<? extends DSBioObject>) ancillaryDataSet)
-				.setParent(((DataSetNode) parent).dataFile);
+				.setParent(dataset);
 		DataSetSubNode newNode = new DataSetSubNode(ancillaryDataSet);
 		projectTreeModel.insertNodeInto(newNode, parent, index);
 		eprPendingNodeMap.remove(gridEpr);
@@ -1092,7 +1094,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			if (node instanceof DataSetNode) {
 				try {// Provide fix for bug 666, only merge
 					// Microarraydatasets.
-					sets[i] = (DSMicroarraySet<? extends DSMicroarray>) ((DataSetNode) node).dataFile;
+					sets[i] = (DSMicroarraySet<? extends DSMicroarray>) ((DataSetNode) node).getDataset();
 					if (sibling == null
 							|| sibling.getPathCount() > selections[i]
 									.getPathCount()) {
@@ -1183,7 +1185,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	public void ccmUpdate() {
 		DataSetNode selectedDataSetNode = selection.getSelectedDataSetNode();
 		if (selectedDataSetNode != null) {
-			DSDataSet<?> dataset = selectedDataSetNode.dataFile;
+			DSDataSet<?> dataset = selectedDataSetNode.getDataset();
 			GeawConfigObject.getGuiWindow().setVisualizationType(dataset);
 			publishProjectEvent(new ProjectEvent("CCM update", dataset,
 					selectedDataSetNode));
@@ -1304,7 +1306,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		// clear out unused mark annotation from memory
 		if (node instanceof DataSetNode) {
 			AnnotationParser
-					.cleanUpAnnotatioAfterUnload(((DataSetNode) node).dataFile);
+					.cleanUpAnnotatioAfterUnload(((DataSetNode) node).getDataset());
 
 			if (node.getChildCount() > 0) {
 				for (Enumeration<?> en = node.children(); en.hasMoreElements();) {

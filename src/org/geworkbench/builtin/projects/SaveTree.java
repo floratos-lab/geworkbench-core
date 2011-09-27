@@ -51,7 +51,7 @@ public class SaveTree implements Serializable {
 	static DSDataSet<?> getDSDataSet(ProjectTreeNode treeNode) {
 		if (treeNode instanceof DataSetNode) {
 			DataSetNode childNode = (DataSetNode) treeNode;
-			return childNode.dataFile;
+			return childNode.getDataset();
 		} else if (treeNode instanceof ImageNode) {
 			ImageNode childNode = (ImageNode) treeNode;
 			DSDataSet<?> dataSet = childNode._aDataSet;

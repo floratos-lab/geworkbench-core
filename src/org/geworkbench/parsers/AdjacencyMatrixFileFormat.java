@@ -37,7 +37,6 @@ import org.geworkbench.bison.datastructure.biocollections.AdjacencyMatrixDataSet
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
-import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.builtin.projects.DataSetNode;
 import org.geworkbench.builtin.projects.ProjectNode;
 import org.geworkbench.builtin.projects.ProjectTreeNode;
@@ -97,7 +96,6 @@ public class AdjacencyMatrixFileFormat extends DataSetFileFormat {
 		return null;
 	}
 
-	@SuppressWarnings( { "unchecked" })
 	public DSDataSet<? extends DSBioObject> getMArraySet(File file)
 			throws InputFileFormatException, InterruptedIOException {
 
@@ -162,7 +160,7 @@ public class AdjacencyMatrixFileFormat extends DataSetFileFormat {
 
 		AdjacencyMatrixDataSet adjMatrixDS = null;
 		if ((selectedDataSetNode != null)) {
-			DSDataSet<DSMicroarray> ds = selectedDataSetNode.dataFile;
+			DSDataSet<? extends DSBioObject> ds = selectedDataSetNode.getDataset();
 			if (!(ds instanceof CSMicroarraySet)) {
 				JOptionPane.showMessageDialog(null,
 						"Not a Microarray Set selected", "Unable to Load",

@@ -47,7 +47,7 @@ public class ProjectEvent extends Event {
 			DataSetSubNode subNode = (DataSetSubNode) node;
 			TreeNode parent = subNode.getParent();
 			if (parent instanceof DataSetNode) {
-				return ((DataSetNode) parent).dataFile;
+				return ((DataSetNode) parent).getDataset();
 			}
 		}
 

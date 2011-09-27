@@ -739,7 +739,7 @@ public class AnnotationParser implements Serializable {
 		}
 	}
 
-	public static void cleanUpAnnotatioAfterUnload(DSDataSet<DSBioObject> dataset) {
+	public static void cleanUpAnnotatioAfterUnload(DSDataSet<? extends DSBioObject> dataset) {
 		String annotationName = datasetToChipTypes.get(dataset);
 		datasetToChipTypes.remove(dataset);
 

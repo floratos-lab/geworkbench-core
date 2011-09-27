@@ -55,7 +55,7 @@ public class TreeNodeRenderer extends DefaultTreeCellRenderer {
         	setIcon(Icons.BUSY_STATIC_ICON);
         } else {
             if (value.getClass() == DataSetNode.class) {
-                DSDataSet<? extends DSBioObject> df = ((DataSetNode) value).dataFile;
+                DSDataSet<? extends DSBioObject> df = ((DataSetNode) value).getDataset();
                 ImageIcon icon = getIconForType(df.getClass());
                 if (icon != null) {
                     setIcon(icon);
