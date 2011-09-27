@@ -272,7 +272,7 @@ public class FileOpenHandler {
 		 * (non-Javadoc)
 		 * @see org.geworkbench.util.threading.SwingWorker#doInBackground()
 		 */
-		@SuppressWarnings({ "unchecked", "rawtypes" })
+		@SuppressWarnings({ "unchecked" })
 		@Override
 		protected Void doInBackground() throws Exception {
 			int n = dataSetFiles.length;

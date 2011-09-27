@@ -39,7 +39,6 @@ public class DataSetFileFormatTest extends TestCase {
 	 * @return
 	 * @throws Exception
 	 */
-	@SuppressWarnings("rawtypes")
 	private CSMicroarraySet loadDefaultMicroarraySet() throws Exception {
 		String fileName = DEFAULT_MICROARRAY_SET;
 		DataSetFileFormat fileFormat = new org.geworkbench.parsers.ExpressionFileFormat();
@@ -52,7 +51,6 @@ public class DataSetFileFormatTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
-	@SuppressWarnings("rawtypes")
 	public void testLoadData() throws Exception {
 		CSMicroarraySet dataSet = loadDefaultMicroarraySet();
 		assertNotNull(dataSet);

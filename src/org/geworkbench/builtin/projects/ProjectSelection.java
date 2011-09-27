@@ -105,8 +105,7 @@ public class ProjectSelection {
      * @param pNode
      * @param node
      */
-    @SuppressWarnings("unchecked")
-	public void setNodeSelection(ProjectTreeNode node) {
+    public void setNodeSelection(ProjectTreeNode node) {
         if (selectedNode != node) {
             selectedNode = node;
 
