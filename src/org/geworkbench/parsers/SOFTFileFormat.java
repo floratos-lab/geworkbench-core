@@ -20,7 +20,7 @@ import org.geworkbench.bison.annotation.CSAnnotationContext;
 import org.geworkbench.bison.annotation.CSAnnotationContextManager;
 import org.geworkbench.bison.annotation.DSAnnotationContext;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
@@ -34,6 +34,7 @@ import org.geworkbench.bison.parsers.resources.Resource;
  * @author Nikhil
  * @version $Id$
  */
+@SuppressWarnings( {"rawtypes", "unchecked"} )
 public class SOFTFileFormat extends DataSetFileFormat {
 
 	static Log log = LogFactory.getLog(SOFTFileFormat.class);
@@ -137,7 +138,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 		
 		BufferedReader readIn = null;
 		String lineCh = null; 
-		DSMicroarraySet<DSMicroarray> maSet1 = new CSExprMicroarraySet();
+		DSMicroarraySet<DSMicroarray> maSet1 = new CSMicroarraySet();
 		try {
 			readIn = new BufferedReader(new FileReader(file));
 			try {
@@ -208,7 +209,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 			throw new InputFileFormatException(errorMessage);
 		}
 					
-		CSExprMicroarraySet maSet = new CSExprMicroarraySet();
+		CSMicroarraySet maSet = new CSMicroarraySet();
 		List<String> arrayNames = new ArrayList<String>();
 		int possibleMarkers = 0;
 		BufferedReader in = null;
@@ -335,7 +336,8 @@ public class SOFTFileFormat extends DataSetFileFormat {
 								if(valString == null){
 									Float v = Float.NaN;
 									CSExpressionMarkerValue markerValue = new CSExpressionMarkerValue(v);
-									maSet.get(k).setMarkerValue(maSet.newid[j], markerValue);
+									DSMicroarray microarray = (DSMicroarray)maSet.get(k);
+									microarray.setMarkerValue(maSet.newid[j], markerValue);
 									if (v.isNaN()) {
 										markerValue.setMissing(true);
 									} else {
@@ -352,7 +354,8 @@ public class SOFTFileFormat extends DataSetFileFormat {
 									Float v = value;
 									CSExpressionMarkerValue markerValue = new CSExpressionMarkerValue(
 											v);
-									maSet.get(k).setMarkerValue(maSet.newid[j], markerValue);
+									DSMicroarray microarray = (DSMicroarray)maSet.get(k);
+									microarray.setMarkerValue(maSet.newid[j], markerValue);
 									if (v.isNaN()) {
 										markerValue.setMissing(true);
 									} else {
@@ -380,7 +383,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 	/*
 	 * Method adds data to Array/Phenotype Sets drop down in the selection panel 
 	 */
-	private void labelDisp(File dataFile, CSExprMicroarraySet mArraySet, List<String> arrays)
+	private void labelDisp(File dataFile, CSMicroarraySet mArraySet, List<String> arrays)
 	{ 
 		List<String> arrayNames = arrays;
 		BufferedReader read = null;
@@ -409,7 +412,8 @@ public class SOFTFileFormat extends DataSetFileFormat {
 	                    for(int m=0; m<token.length; m++){
 	                    	for(int n=2; n<arrayNames.size(); n++){
 	                    		if(token[m].contentEquals(arrayNames.get(n))){
-	                    			context.labelItem(mArraySet.get(n-2), phLabel);
+	                    			DSMicroarray microarray = (DSMicroarray)mArraySet.get(n-2);
+	                    			context.labelItem(microarray, phLabel);
 	                    		}
 	                    	}
 	                    }

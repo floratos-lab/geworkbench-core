@@ -16,7 +16,7 @@ import javax.swing.SwingUtilities;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
@@ -29,6 +29,7 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
  * @author Nikhil
  * @version $Id$
  */
+@SuppressWarnings( {"rawtypes", "unchecked"} )
 public class SOFTSeriesParser {
 
 	static Log log = LogFactory.getLog(SOFTFileFormat.class);
@@ -142,7 +143,7 @@ public class SOFTSeriesParser {
 			fileName = fileName.substring(0, dotIndex);
 		}
 
-		CSExprMicroarraySet maSet = new CSExprMicroarraySet();
+		CSMicroarraySet maSet = new CSMicroarraySet();
 		maSet.setLabel(fileName);
 		Map<String, List<CSExpressionMarkerValue>> arrayToMarkers = new HashMap<String, List<CSExpressionMarkerValue>>();
 		List<String> markers = new ArrayList<String>();

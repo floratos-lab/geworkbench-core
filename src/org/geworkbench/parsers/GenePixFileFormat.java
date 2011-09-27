@@ -16,7 +16,7 @@ import javax.swing.filechooser.FileFilter;
 
 import org.geworkbench.bison.datastructure.biocollections.CSMarkerVector;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
@@ -101,6 +101,7 @@ public class GenePixFileFormat extends DataSetFileFormat {
 	 * @throws org.geworkbench.parsers.InputFileFormatException
 	 *             When the input file deviates from the Genepix format.
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private DSDataSet<DSMicroarray> getMArraySet(File file)
 			throws org.geworkbench.parsers.InputFileFormatException, InterruptedIOException {
 		// Check that the file is OK before starting allocating space for it.
@@ -114,7 +115,7 @@ public class GenePixFileFormat extends DataSetFileFormat {
 		
 		DSMicroarraySet<DSMicroarray> microarraySet = null;
 		try {
-			microarraySet = new CSExprMicroarraySet();
+			microarraySet = new CSMicroarraySet();
 			microarraySet.setFile(file);
 			List<String> ctu = new ArrayList<String>();
 			ctu.add("Block");

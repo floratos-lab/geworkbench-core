@@ -12,24 +12,27 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSExpressionMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.parsers.resources.Resource;
 
 /**  
  * @author Nikhil
  */
+@SuppressWarnings( {"rawtypes", "unchecked"} )
 public class MageTabFileFormat extends DataSetFileFormat {
 
 	static Log log = LogFactory.getLog(MageTabFileFormat.class);
@@ -91,7 +94,7 @@ public class MageTabFileFormat extends DataSetFileFormat {
 	public DSDataSet<? extends DSBioObject> getDataFile(File file) throws InputFileFormatException, InterruptedIOException{  
 		// TODO this method is too longer. should be refactored.
 		
-		CSExprMicroarraySet maSet = new CSExprMicroarraySet();
+		CSMicroarraySet maSet = new CSMicroarraySet();
 		BufferedReader in = null;
 		final int extSeperater = '.';
 		String fileName = file.getName();
@@ -268,7 +271,8 @@ public class MageTabFileFormat extends DataSetFileFormat {
 									if(valString == null){
 										Float v = Float.NaN;
 										CSExpressionMarkerValue markerValue = new CSExpressionMarkerValue(v);
-										maSet.get(counter).setMarkerValue(maSet.newid[j], markerValue);
+										DSMicroarray microarray = (DSMicroarray)maSet.get(counter);
+										microarray.setMarkerValue(maSet.newid[j], markerValue);
 										if (v.isNaN()) {
 											markerValue.setMissing(true);
 										} else {
@@ -286,7 +290,8 @@ public class MageTabFileFormat extends DataSetFileFormat {
 										Float v = value;
 										CSExpressionMarkerValue markerValue = new CSExpressionMarkerValue(
 												v);
-										maSet.get(counter).setMarkerValue(maSet.newid[j], markerValue);
+										DSMicroarray microarray = (DSMicroarray)maSet.get(counter);
+										microarray.setMarkerValue(maSet.newid[j], markerValue);
 										if (v.isNaN()) {
 											SwingUtilities.invokeLater(new Runnable() {
 												public void run() {	
@@ -371,7 +376,8 @@ public class MageTabFileFormat extends DataSetFileFormat {
 								if(valString == null){
 									Float v = Float.NaN;
 									CSExpressionMarkerValue markerValue = new CSExpressionMarkerValue(v);
-									maSet.get(k).setMarkerValue(maSet.newid[j], markerValue);
+									DSMicroarray microarray = (DSMicroarray)maSet.get(k);
+									microarray.setMarkerValue(maSet.newid[j], markerValue);
 									if (v.isNaN()) {
 										markerValue.setMissing(true);
 									} else {
@@ -388,7 +394,8 @@ public class MageTabFileFormat extends DataSetFileFormat {
 									Float v = value;
 									CSExpressionMarkerValue markerValue = new CSExpressionMarkerValue(
 											v);
-									maSet.get(k).setMarkerValue(maSet.newid[j], markerValue);
+									DSMicroarray microarray = (DSMicroarray)maSet.get(k);
+									microarray.setMarkerValue(maSet.newid[j], markerValue);
 									if (v.isNaN()) {
 										markerValue.setMissing(true);
 									} else {

@@ -17,7 +17,7 @@ import javax.swing.ProgressMonitorInputStream;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.geworkbench.bison.datastructure.biocollections.microarrays.CSExprMicroarraySet;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
@@ -30,6 +30,7 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
  * @author Nikhil
  * @version $Id$
  */
+@SuppressWarnings( {"rawtypes", "unchecked"} )
 public class GeoSeriesMatrixParser {
 
 	static Log log = LogFactory.getLog(SOFTFileFormat.class);
@@ -40,7 +41,7 @@ public class GeoSeriesMatrixParser {
 
 	private static final String duplicateLabelModificator = "_2";
 
-	CSExprMicroarraySet maSet = new CSExprMicroarraySet();
+	CSMicroarraySet maSet = new CSMicroarraySet();
 	List<String> markArrays = new ArrayList<String>();
 	
 	private int possibleMarkers = 0;
@@ -311,7 +312,8 @@ public class GeoSeriesMatrixParser {
 								// maSet
 								Float v = Float.NaN;
 								CSExpressionMarkerValue markerValue = new CSExpressionMarkerValue(v);
-								maSet.get(i).setMarkerValue(m, markerValue);
+								DSMicroarray microarray = (DSMicroarray)maSet.get(i);
+								microarray.setMarkerValue(m, markerValue);
 								if (v.isNaN()) {
 									markerValue.setMissing(true);
 								} else {
@@ -329,7 +331,8 @@ public class GeoSeriesMatrixParser {
 								CSExpressionMarkerValue markerValue = new CSExpressionMarkerValue(
 										v);
 								try {
-									maSet.get(i).setMarkerValue(m, markerValue);
+									DSMicroarray microarray = (DSMicroarray)maSet.get(i);
+									microarray.setMarkerValue(m, markerValue);
 								} catch (IndexOutOfBoundsException ioobe) {
 									log.error("i=" + i + ", m=" + m);
 								}
