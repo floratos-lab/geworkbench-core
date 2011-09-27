@@ -53,7 +53,7 @@ public class MedusaData implements Serializable {
 	 * 
 	 * @param arraySet
 	 */
-	public void setArraySet(CSMicroarraySet<DSMicroarray> arraySet) {
+	public void setArraySet(CSMicroarraySet arraySet) {
 		this.arraySet = arraySet;
 	}
 

@@ -49,7 +49,7 @@ import org.geworkbench.engine.preferences.GlobalPreferences;
  * @author Adam Margolin
  * @version $Id$
  */
-public class CSMicroarraySet<T extends DSMicroarray> extends CSDataSet<T> implements DSMicroarraySet<T> {
+public class CSMicroarraySet extends CSDataSet<DSMicroarray> implements DSMicroarraySet<DSMicroarray> {
 	private static final long serialVersionUID = -8604116507886706853L;
 
     protected CSMarkerVector markerVector = new CSMarkerVector();
@@ -71,7 +71,7 @@ public class CSMicroarraySet<T extends DSMicroarray> extends CSDataSet<T> implem
         type = DSMicroarraySet.expPvalueType;
 
         addDescription("Microarray experiment");
-        DSAnnotationContext<T> context = CSAnnotationContextManager.getInstance().getCurrentContext(this);
+        DSAnnotationContext<DSMicroarray> context = CSAnnotationContextManager.getInstance().getCurrentContext(this);
         CSAnnotationContext.initializePhenotypeContext(context);
     }
 
@@ -176,8 +176,7 @@ public class CSMicroarraySet<T extends DSMicroarray> extends CSDataSet<T> implem
         return markerVector;
     }
 
-    @SuppressWarnings("unchecked")
-	public void mergeMicroarraySet(DSMicroarraySet<T> newMaSet) {
+	public void mergeMicroarraySet(DSMicroarraySet<DSMicroarray> newMaSet) {
         /**
          * Stores the markers of the microarray set (the same markers that are also
          * found in {@link org.geworkbench.bison.model.microarray.AbstractMicroarraySet#markerInfoVector}).
@@ -186,7 +185,7 @@ public class CSMicroarraySet<T extends DSMicroarray> extends CSDataSet<T> implem
          */
         TreeMap<Integer, Integer> markerInfoIndices = new TreeMap<Integer, Integer>();
         DSItemList<DSGeneMarker> markerInfos = newMaSet.getMarkers();
-        T microarray = null;
+        DSMicroarray microarray = null;
         int oldIndex = 0, newIndex = 0;
         if (markerInfos != null) {
             for (int i = 0; i < markerInfos.size(); i++) {
@@ -230,7 +229,7 @@ public class CSMicroarraySet<T extends DSMicroarray> extends CSDataSet<T> implem
 
         count = newMaSet.size();
         for (int ac = 0; ac < count; ac++) {
-            microarray = (T)newMaSet.get(ac).deepCopy();
+            microarray = (DSMicroarray)newMaSet.get(ac).deepCopy();
             int size = 0;
             DSMutableMarkerValue refValue = null;
             DSMutableMarkerValue missingValue = null;
@@ -290,13 +289,13 @@ public class CSMicroarraySet<T extends DSMicroarray> extends CSDataSet<T> implem
 					.getInstance();
 			int n = manager.getNumberOfContexts(this);
 			for (int i = 0; i < n; i++) {
-				DSAnnotationContext<T> context = manager.getContext(
+				DSAnnotationContext<DSMicroarray> context = manager.getContext(
 						this, i);
 				StringBuilder line = new StringBuilder("Description" + '\t'
 						+ context.getName());
-				for (Iterator<T> iterator = this.iterator(); iterator
+				for (Iterator<DSMicroarray> iterator = this.iterator(); iterator
 						.hasNext();) {
-					T microarray = iterator.next();
+					DSMicroarray microarray = iterator.next();
 					String label = "";
 					String[] labels = context.getLabelsForItem(microarray);
 					// watkin - Unfortunately, the file format only supports one
@@ -349,11 +348,10 @@ public class CSMicroarraySet<T extends DSMicroarray> extends CSDataSet<T> implem
         return markerVector;
     }
 
-    @SuppressWarnings("unchecked")
 	public void initialize(int maNo, int mrkNo) {
         // this is required so that the microarray vector may create arrays of the right size
         for (int microarrayId = 0; microarrayId < maNo; microarrayId++) {
-            add(microarrayId, (T)new CSMicroarray(microarrayId, mrkNo, "Test", null, null, false, type));
+            add(microarrayId, (DSMicroarray)new CSMicroarray(microarrayId, mrkNo, "Test", null, null, false, type));
         }
 
         for (int i = 0; i < mrkNo; i++) {

@@ -483,8 +483,8 @@ public class FileOpenHandler {
 				mergedSet.setLabel("Merged array set");
 				mergedSet.setLabel(desc);
 				mergedSet.addDescription(desc);
-				((CSMicroarraySet<? extends DSMicroarray>)mergedSet).setAnnotationFileName(
-						((CSMicroarraySet<? extends DSMicroarray>)sets[0]).getAnnotationFileName());
+				((CSMicroarraySet)mergedSet).setAnnotationFileName(
+						((CSMicroarraySet)sets[0]).getAnnotationFileName());
 			}
 			// Add color context
 			ProjectPanel.addColorContext(mergedSet);

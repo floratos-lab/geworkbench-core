@@ -140,7 +140,7 @@ public class AnnotationParser implements Serializable {
 		return currentDataSet;
 	}
 
-	public static void setCurrentDataSet(DSDataSet<DSBioObject> currentDataSet) {
+	public static void setCurrentDataSet(DSDataSet<?> currentDataSet) {
 		if(!(currentDataSet instanceof CSMicroarraySet)) {
 			AnnotationParser.currentDataSet = null;
 		}
@@ -165,7 +165,7 @@ public class AnnotationParser implements Serializable {
 	}
 
 	/* this is used to handle annotation file when the real dataset is chosen after annotation. */
-	private static CSMicroarraySet<? extends DSBioObject> dummyMicroarraySet = new CSMicroarraySet<DSMicroarray>();
+	private static CSMicroarraySet dummyMicroarraySet = new CSMicroarraySet();
 	public static String getLastAnnotationFileName () {
 		return dummyMicroarraySet.getAnnotationFileName();
 	}
@@ -288,7 +288,7 @@ public class AnnotationParser implements Serializable {
 					.getAbsolutePath());
 		}
 		if (dataset instanceof CSMicroarraySet) {
-			CSMicroarraySet<?> d = (CSMicroarraySet<?>) dataset;
+			CSMicroarraySet d = (CSMicroarraySet) dataset;
 			d.setAnnotationFileName(annotationData.getAbsolutePath());
 		}
 	}

@@ -168,7 +168,7 @@ public class AdjacencyMatrixFileFormat extends DataSetFileFormat {
 						"Not a Microarray Set selected", "Unable to Load",
 						JOptionPane.ERROR_MESSAGE);
 			} else {
-				CSMicroarraySet<DSMicroarray> mASet = (CSMicroarraySet<DSMicroarray>) ds;
+				CSMicroarraySet mASet = (CSMicroarraySet) ds;
 				String adjMatrixFileStr = file.getPath();
 				String fileName = file.getName();
 

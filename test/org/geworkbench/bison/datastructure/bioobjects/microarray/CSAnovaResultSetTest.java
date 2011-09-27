@@ -71,7 +71,7 @@ public class CSAnovaResultSetTest extends TestCase {
 
 		// generate arrays
 		view = new CSMicroarraySetView<DSGeneMarker, DSMicroarray>();
-		DSMicroarraySet<DSMicroarray> microarraySet = new CSMicroarraySet<DSMicroarray>();
+		DSMicroarraySet<DSMicroarray> microarraySet = new CSMicroarraySet();
 		microarraySet.setLabel(this.getClass().getName());
 
 		for (int i = 0; i < numArrays; i++) {

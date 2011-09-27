@@ -30,7 +30,7 @@ public class MindyData implements Serializable {
 	static Log log = LogFactory.getLog(MindyData.class);
 
     // all arrays,
-	private CSMicroarraySet<DSMicroarray> arraySet;
+	private CSMicroarraySet arraySet;
     // selected arrays
     private ArrayList<DSMicroarray> arrayForMindyRun;
 
@@ -50,7 +50,7 @@ public class MindyData implements Serializable {
     private boolean annotated = false;
 
     /* Constructor used in MindyAnalysis */
-	public MindyData(CSMicroarraySet<DSMicroarray> arraySet, ArrayList<DSMicroarray> arrayForMindyRun, float setFraction, DSGeneMarker transFac) {
+	public MindyData(CSMicroarraySet arraySet, ArrayList<DSMicroarray> arrayForMindyRun, float setFraction, DSGeneMarker transFac) {
 
         this.arraySet = arraySet;
 
@@ -151,7 +151,7 @@ public class MindyData implements Serializable {
     	this.annotated = annotated;
     }
 
-	public CSMicroarraySet<DSMicroarray> getArraySet() {
+	public CSMicroarraySet getArraySet() {
         return arraySet;
     }
 
@@ -357,7 +357,7 @@ public class MindyData implements Serializable {
      * @param data - list of MINDY result rows
      * @param setFraction - Sample per Condition in fraction
      */
-	public MindyData(CSMicroarraySet<DSMicroarray> arraySet, List<MindyResultRow> data, float setFraction) {
+	public MindyData(CSMicroarraySet arraySet, List<MindyResultRow> data, float setFraction) {
         this.arraySet = arraySet;
         this.setFraction = setFraction;
     }

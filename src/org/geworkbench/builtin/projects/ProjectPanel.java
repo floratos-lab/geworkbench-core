@@ -351,7 +351,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		if (!(ds instanceof CSMicroarraySet)) {
 			return;
 		}
-		CSMicroarraySet<? extends DSMicroarray> microarraySet = (CSMicroarraySet<? extends DSMicroarray>) ds;
+		CSMicroarraySet microarraySet = (CSMicroarraySet) ds;
 		String annotationFileName = microarraySet
 				.getAnnotationFileName();
 		if (annotationFileName == null) {
@@ -671,7 +671,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 			// add to history
 			if (_dataSet instanceof CSMicroarraySet) {
-				CSMicroarraySet<? extends DSMicroarray> microarraySet = (CSMicroarraySet<? extends DSMicroarray>) _dataSet;
+				CSMicroarraySet microarraySet = (CSMicroarraySet) _dataSet;
 				String annotationFileName = microarraySet
 						.getAnnotationFileName();
 
