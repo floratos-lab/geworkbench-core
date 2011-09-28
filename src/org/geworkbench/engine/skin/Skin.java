@@ -802,4 +802,16 @@ public class Skin extends GUIFramework {
 
 	private static final String WELCOME_SCREEN_KEY = "Welcome Screen ";
 	public static final String VERSION = System.getProperty("application.version");
+
+    public void undockCommandPanel(String desc){
+    	for(DockableImpl dockable : commandDockables){
+    		if (dockable.getDockableDesc().equals(desc)){
+    			if (dockable.docked)
+    				dockable.undock(commandPanel);
+    			else
+    				dockable.frame.toFront();
+    			break;
+    		}
+    	}
+    }
 }
