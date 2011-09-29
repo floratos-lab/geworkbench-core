@@ -68,8 +68,6 @@ public interface DSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroar
 
 	public double getMeanValue(T marker, int maIndex);
 
-	public double[] getRow(T object);
-
 	public void setMicroarraySet(DSMicroarraySet<Q> ma);
 
 	public DSMicroarraySet<Q> getMicroarraySet();

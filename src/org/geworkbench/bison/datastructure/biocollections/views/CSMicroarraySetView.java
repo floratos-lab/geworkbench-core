@@ -172,13 +172,6 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
 		return rowVals;
 	}
 
-	public double[] getRow(T marker) {
-		DSGeneMarker markerValue = markers().get(marker);
-		if (markerValue != null)
-			return getRow(markerValue.getSerial());
-		return null;
-	}
-
 	/**
 	 * Sets the reference microarray set for this <code>MicroarraySetView</code>
 	 * .
