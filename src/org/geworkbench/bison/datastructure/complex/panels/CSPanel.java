@@ -400,7 +400,4 @@ public class CSPanel <T extends DSNamed> extends CSItemList<T> implements DSPane
         return activePanels;
     }
 
-    public void renameSubPanel(DSPanel<T> child, String newName) {
-        subPanels.rename(child, newName);
-    }
 }

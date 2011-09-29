@@ -94,6 +94,4 @@ public interface DSPanel <T extends DSNamed> extends DSItemList<T>, DSNamed, DSI
      */
     public int getNumberOfProperItems();
 
-    public void renameSubPanel(DSPanel<T> child, String newName);
-
 }
