@@ -94,12 +94,4 @@ public interface DSAnnotationContextManager {
      */
     public <T extends DSNamed> void setCurrentContext(DSItemList<T> itemList, DSAnnotationContext<T> context);
 
-    /**
-     * Copies all context from one item list to another. The results are undefined if the target item list does not
-     * contain all the elements of the source item list. However, the order of the elements need not be the same
-     * between the two lists.
-     * @param from the source item list.
-     * @param to the target item list.
-     */
-    public <T extends DSNamed> void copyContexts(DSItemList<T> from, DSItemList<T> to);
 }
