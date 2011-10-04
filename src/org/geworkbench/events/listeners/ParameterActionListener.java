@@ -13,6 +13,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import org.geworkbench.analysis.AbstractSaveableParameterPanel;
 
@@ -24,7 +26,7 @@ import org.geworkbench.analysis.AbstractSaveableParameterPanel;
  */
 public class ParameterActionListener implements ActionListener,
 		ListDataListener, ChangeListener, PropertyChangeListener,
-		FocusListener, MouseListener {
+		FocusListener, MouseListener , ListSelectionListener{
 
 	private AbstractSaveableParameterPanel aspp = null;
 
@@ -114,7 +116,8 @@ public class ParameterActionListener implements ActionListener,
 	public void mouseClicked(MouseEvent me) {
 		notifyAnalysisPanelIfNeeded();
 	}
-
+	
+	 
 	public void mouseEntered(MouseEvent me) {
 		//do nothing
 	}
@@ -129,6 +132,14 @@ public class ParameterActionListener implements ActionListener,
 
 	public void mouseReleased(MouseEvent me) {
 		//do nothing
+	}
+	
+	public void valueChanged(ListSelectionEvent e) {
+		if (e.getValueIsAdjusting()) {
+			return;
+		}
+		notifyAnalysisPanelIfNeeded();
+		 
 	}
 
 }
