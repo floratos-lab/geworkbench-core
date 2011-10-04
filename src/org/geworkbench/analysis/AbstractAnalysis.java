@@ -124,6 +124,9 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
     public static final int MEDUSA_TYPE = 31;
     
     public static final int FOLD_CHANGE_TYPE=32;
+    
+    public static final int  BLAST_TYPE= 33;
+    
 	/**
 	 * Parameters will be saved as XML files in "savedParams" directory under
 	 * each component directory.
