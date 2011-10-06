@@ -64,15 +64,18 @@
 
 	<plugin id="commentsPanel" name="Dataset Annotation"
 		class="org.geworkbench.builtin.projects.comments.CommentsPanel">
-		<gui-area name="CommandArea" />
 	</plugin>
 	<plugin id="historyPanel" name="Dataset History"
 		class="org.geworkbench.builtin.projects.history.HistoryPanel">
-		<gui-area name="CommandArea" />
 	</plugin>
 	<plugin id="infoPanel" name="Experiment Info"
 		class="org.geworkbench.builtin.projects.experimentinformation.ExperimentInformationPanel">
-		<gui-area name="CommandArea" />
+	</plugin>
+
+	<!-- this must be after the three panels above -->	
+	<plugin id="informationPanel" name="Information Panel"
+		class="org.geworkbench.builtin.projects.InformationPanel">
+		<gui-area name="VisualArea" />
 	</plugin>
 
 </geaw-config>
