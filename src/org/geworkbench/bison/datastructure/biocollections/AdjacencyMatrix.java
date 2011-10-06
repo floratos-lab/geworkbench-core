@@ -144,6 +144,10 @@ public class AdjacencyMatrix implements Serializable {
 			h = 31 * h + intId;
 			return h;
 		}
+		
+		public DSGeneMarker getMarker(){
+			return marker;
+		}
 	}
 
 	private HashMap<Node, HashMap<Node, Set<EdgeInfo>>> geneRows = new HashMap<Node, HashMap<Node, Set<EdgeInfo>>>();
