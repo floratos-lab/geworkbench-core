@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
-import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser.MarkerAnnotation;
 
 /**
  * @author John Watkinson
@@ -16,13 +15,13 @@ public class APSerializable implements Serializable {
 
 	DSDataSet<? extends DSBioObject> currentDataSet = null;
 	Map<DSDataSet<? extends DSBioObject>, String> datasetToChipTypes = null;
-	Map<String, MarkerAnnotation> chipTypeToAnnotation = null;
+	Map<String, Map<String, AnnotationFields>> chipTypeToAnnotation = null;
 
 
 	public APSerializable(
 			DSDataSet<? extends DSBioObject> currentDataSet2,
 			Map<DSDataSet<? extends DSBioObject>, String> datasetToChipTypes,
-			Map<String, MarkerAnnotation> chipTypeToAnnotation) {
+			Map<String, Map<String, AnnotationFields>> chipTypeToAnnotation) {
 
 		this.currentDataSet = currentDataSet2;
 		this.datasetToChipTypes = datasetToChipTypes;

@@ -6,14 +6,10 @@ import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -28,7 +24,6 @@ import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -44,10 +39,9 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.engine.preferences.PreferencesManager;
 import org.geworkbench.engine.properties.PropertiesManager;
+import org.geworkbench.util.BrowserLauncher;
 import org.geworkbench.util.CsvFileFilter;
 
-import com.Ostermiller.util.CSVParser;
-import com.Ostermiller.util.LabeledCSVParser;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 
 /**
@@ -73,8 +67,6 @@ public class AnnotationParser implements Serializable {
 
 	public static final String GENE_SYMBOL = "Gene Symbol";
 
-	public static final String PROBE_SET_ID = "Probe Set ID";
-
 	public static final String MAIN_DELIMITER = "\\s*///\\s*";
 
 	// field names
@@ -82,13 +74,10 @@ public class AnnotationParser implements Serializable {
 
 	public static final String ABREV = GENE_SYMBOL; // title(short name)
 
-	public static final String PATHWAY = "Pathway"; // pathway
-
+	// FIXME this is misleading name. only used by CNKB
 	public static final String GOTERM = GENE_ONTOLOGY_BIOLOGICAL_PROCESS; // Goterms
 
 	public static final String UNIGENE = "UniGene ID"; // Unigene
-
-	public static final String UNIGENE_CLUSTER = "Archival UniGene Cluster";
 
 	public static final String LOCUSLINK = "Entrez Gene"; // LocusLink
 
@@ -96,30 +85,11 @@ public class AnnotationParser implements Serializable {
 
 	public static final String REFSEQ = "RefSeq Transcript ID"; // RefSeq
 
-	public static final String TRANSCRIPT = "Transcript Assignments";
-
-	public static final String SCIENTIFIC_NAME = "Species Scientific Name";
-
-	public static final String GENOME_VERSION = "Genome Version";
-
-	public static final String ALIGNMENT = "Alignments";
-
-	// columns read into geWorkbench
-	// probe id must be first column read in, and the rest of the columns must
-	// follow the same order
-	// as the columns in the annotation file.
-	private static final String[] labels = {
-			PROBE_SET_ID // probe id must be the first item in this list
-			, SCIENTIFIC_NAME, UNIGENE_CLUSTER, UNIGENE, GENOME_VERSION,
-			ALIGNMENT, DESCRIPTION, GENE_SYMBOL, LOCUSLINK, SWISSPROT, REFSEQ,
-			GENE_ONTOLOGY_BIOLOGICAL_PROCESS, GENE_ONTOLOGY_CELLULAR_COMPONENT,
-			GENE_ONTOLOGY_MOLECULAR_FUNCTION, PATHWAY, TRANSCRIPT };
-
 	// TODO all the DSDataSets handled in this class should be DSMicroarraySet
 	// FIELDS
 	private static DSDataSet<? extends DSBioObject> currentDataSet = null;
 	private static Map<DSDataSet<? extends DSBioObject>, String> datasetToChipTypes = new HashMap<DSDataSet<? extends DSBioObject>, String>();
-	private static Map<String, MarkerAnnotation> chipTypeToAnnotation = new TreeMap<String, MarkerAnnotation>();
+	private static Map<String, Map<String, AnnotationFields>> chipTypeToAnnotation = new TreeMap<String, Map<String, AnnotationFields>>();
 	// END FIELDS
 
 	/* The reason that we need APSerializable is that the status fields are designed as static. */
@@ -178,108 +148,12 @@ public class AnnotationParser implements Serializable {
 			return;
 		}
 
-		BufferedInputStream bis = null;
 		String chipType = annotationData.getName();
-		try {
-			bis = new BufferedInputStream(new FileInputStream(annotationData));
 
-			CSVParser cvsParser = new CSVParser(bis);
-
-			cvsParser.setCommentStart("#;!");// Skip all comments line.
-												// XQ. The bug is reported
-												// by Bernd.
-
-			LabeledCSVParser parser = new LabeledCSVParser(cvsParser);
-
-			MarkerAnnotation markerAnnotation = new MarkerAnnotation();
-
-			boolean ignoreAll = false;
-			boolean cancelAnnotationFileProcessing = false;
-			while ((parser.getLine() != null)
-					&& !cancelAnnotationFileProcessing) {
-				String affyId = parser.getValueByLabel(labels[0]);
-				if(affyId==null)
-					continue;
-				affyId = affyId.trim();
-				AnnotationFields fields = new AnnotationFields();
-				for (int i = 1; i < labels.length; i++) {
-					String label = labels[i];
-					String val = parser.getValueByLabel(label);
-					if (label.equals(GENE_ONTOLOGY_BIOLOGICAL_PROCESS)
-							|| label.equals(GENE_ONTOLOGY_CELLULAR_COMPONENT)
-							|| label.equals(GENE_ONTOLOGY_MOLECULAR_FUNCTION)) {
-						// get rid of leading 0's
-						while (val.startsWith("0") && (val.length() > 0)) {
-							val = val.substring(1);
-						}
-					}
-					if (label.equals(GENE_SYMBOL))
-						fields.setGeneSymbol(val);
-					else if (label.equals(LOCUSLINK))
-						fields.setLocusLink(val);
-					else if (label.equals(SWISSPROT))
-						fields.setSwissProt(val);
-					else if (label.equals(DESCRIPTION))
-						fields.setDescription(val);
-					else if (label.equals(GENE_ONTOLOGY_MOLECULAR_FUNCTION))
-						fields.setMolecularFunction(val);
-					else if (label.equals(GENE_ONTOLOGY_CELLULAR_COMPONENT))
-						fields.setCellularComponent(val);
-					else if (label.equals(GENE_ONTOLOGY_BIOLOGICAL_PROCESS))
-						fields.setBiologicalProcess(val);
-					else if (label.equals(UNIGENE))
-						fields.setUniGene(val);
-					else if (label.equals(REFSEQ))
-						fields.setRefSeq(val);
-				}
-
-				if (markerAnnotation.containsMarker(affyId)) {
-					if (!ignoreAll) {
-						String[] options = { "Skip duplicate",
-								"Skip all duplicates", "Cancel", };
-						int code = JOptionPane
-								.showOptionDialog(
-										null,
-										"Duplicate entry. Probe Set ID="
-												+ affyId
-												+ ".\n"
-												+ "Skip duplicate - will ignore this entry\n"
-												+ "Skip all duplicates - will ignore all duplicate entries.\n"
-												+ "Cancel - will cancel the annotation file processing.",
-										"Duplicate entry in annotation file",
-										0, JOptionPane.QUESTION_MESSAGE, null,
-										options, "Proceed");
-						if (code == 1) {
-							ignoreAll = true;
-						}
-						if (code == 2) {
-							cancelAnnotationFileProcessing = true;
-						}
-					}
-				} else {
-					markerAnnotation.addMarker(affyId, fields);
-				}
-			}
-
-			if (!cancelAnnotationFileProcessing) {
-				chipTypeToAnnotation.put(chipType, markerAnnotation);
-			}
-
-			// all fine.
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			return;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return;
-		} finally {
-			try {
-				bis.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-		}
+		AffyAnnotationParser parser = new AffyAnnotationParser(annotationData);
+		Map<String, AnnotationFields> markerAnnotation  = parser.parse(false);
+		if(markerAnnotation!=null)
+			chipTypeToAnnotation.put(chipType, markerAnnotation);
 
 		datasetToChipTypes.put(dataset, chipType);
 		currentDataSet = dataset;
@@ -297,7 +171,7 @@ public class AnnotationParser implements Serializable {
 	public static String getGeneName(String id) {
 		try {
 			String chipType = datasetToChipTypes.get(currentDataSet);
-			return chipTypeToAnnotation.get(chipType).getFields(id).getGeneSymbol();
+			return chipTypeToAnnotation.get(chipType).get(id).getGeneSymbol();
 		} catch (NullPointerException e) {
 			return id;
 		}
@@ -318,7 +192,7 @@ public class AnnotationParser implements Serializable {
 			String chipType = datasetToChipTypes.get(currentDataSet);
 			String field = "";
 
-			AnnotationFields fields = chipTypeToAnnotation.get(chipType).getFields(affyID);
+			AnnotationFields fields = chipTypeToAnnotation.get(chipType).get(affyID);
 			// individual field to be process separately to eventually get rid of the large map
 			if(fieldID.equals(ABREV)) { // same as GENE_SYMBOL
 				field = fields.getGeneSymbol();
@@ -360,7 +234,7 @@ public class AnnotationParser implements Serializable {
 		String chipType = datasetToChipTypes.get(dataset);
 		String field = null;
 
-		AnnotationFields fields = chipTypeToAnnotation.get(chipType).getFields(
+		AnnotationFields fields = chipTypeToAnnotation.get(chipType).get(
 				affyID);
 		// individual field to be process separately to eventually get rid of
 		// the large map
@@ -394,7 +268,7 @@ public class AnnotationParser implements Serializable {
 		String chipType = datasetToChipTypes.get(currentDataSet);
 
 		HashSet<String> set = new HashSet<String>();
-			String[] ids = chipTypeToAnnotation.get(chipType).getFields(markerID).getSwissProt().split("///");
+			String[] ids = chipTypeToAnnotation.get(chipType).get(markerID).getSwissProt().split("///");
 			for (String s : ids) {
 				set.add(s.trim());
 			}
@@ -410,8 +284,8 @@ public class AnnotationParser implements Serializable {
 			return set;
 		}
 
-		MarkerAnnotation annotation = chipTypeToAnnotation.get(chipType);
-		AnnotationFields fields = annotation.getFields(markerID);
+		Map<String, AnnotationFields> annotation = chipTypeToAnnotation.get(chipType);
+		AnnotationFields fields = annotation.get(markerID);
 		if(fields==null) {
 			return set;
 		}
@@ -453,14 +327,13 @@ public class AnnotationParser implements Serializable {
 			}
 		}
 		return map;
-	}	
-	
+	}
 	
 	public static Set<String> getGeneNames(String markerID) {
 		String chipType = datasetToChipTypes.get(currentDataSet);
 
 		HashSet<String> set = new HashSet<String>();
-			String[] ids = chipTypeToAnnotation.get(chipType).getFields(markerID).getGeneSymbol().split("///");
+			String[] ids = chipTypeToAnnotation.get(chipType).get(markerID).getGeneSymbol().split("///");
 			for (String s : ids) {
 				set.add(s.trim());
 			}
@@ -491,10 +364,8 @@ public class AnnotationParser implements Serializable {
 
 				});
 			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			} catch (InvocationTargetException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
@@ -504,14 +375,12 @@ public class AnnotationParser implements Serializable {
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				public void run() {
-					userFile = selectUserDefinedAnnotation(dataset);
+					userFile = selectAnnotationFile();
 				}
 			});
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -539,12 +408,14 @@ public class AnnotationParser implements Serializable {
 		textarea.addHyperlinkListener(new HyperlinkListener() {
 			public void hyperlinkUpdate(HyperlinkEvent e) {
 				if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-					openURL("http://www.affymetrix.com/support/technical/byproduct.affx?cat=arrays");
+					try {
+						BrowserLauncher.openURL("http://www.affymetrix.com/support/technical/byproduct.affx?cat=arrays");
+					} catch (IOException e1) { // ignore it
+						e1.printStackTrace();
+					}
 				}
 			}
 		});
-		// textarea.setLineWrap(true);
-		// textarea.setWrapStyleWord(true);
 		panel.add(textarea, BorderLayout.CENTER);
 		ButtonBarBuilder builder = ButtonBarBuilder.createLeftToRightBuilder();
 		JCheckBox dontShow = new JCheckBox("Don't show this again");
@@ -573,46 +444,14 @@ public class AnnotationParser implements Serializable {
 		return dontShow.isSelected();
 	}
 
-	public static void openURL(String url) {
-		String osName = System.getProperty("os.name");
-		try {
-			if (osName.startsWith("Mac OS")) {
-				Class<?> fileMgr = Class.forName("com.apple.eio.FileManager");
-				Method openURL = fileMgr.getDeclaredMethod("openURL",
-						new Class<?>[] { String.class });
-				openURL.invoke(null, new Object[] { url });
-			} else if (osName.startsWith("Windows")) {
-				Runtime.getRuntime().exec(
-						"rundll32 url.dll,FileProtocolHandler " + url);
-			} else { // assume Unix or Linux
-				String[] browsers = { "firefox", "opera", "konqueror",
-						"epiphany", "mozilla", "netscape" };
-				String browser = null;
-				for (int count = 0; count < browsers.length && browser == null; count++)
-					if (Runtime.getRuntime().exec(
-							new String[] { "which", browsers[count] })
-							.waitFor() == 0)
-						browser = browsers[count];
-				if (browser == null)
-					throw new Exception("Could not find web browser");
-				else
-					Runtime.getRuntime().exec(new String[] { browser, url });
-			}
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Unable to open browser"
-					+ ":\n" + e.getLocalizedMessage());
-		}
-	}
-
-	private static File selectUserDefinedAnnotation(DSDataSet<? extends DSBioObject> dataset) {
+	private static File selectAnnotationFile() {
 		PropertiesManager properties = PropertiesManager.getInstance();
 		String annotationDir = System.getProperty("user.dir"); ;
 		try {
 			annotationDir = properties.getProperty(AnnotationParser.class,
 					ANNOT_DIR, annotationDir);
 		} catch (IOException e) {
-			e.printStackTrace(); // To change body of catch statement use
-									// File | Settings | File Templates.
+			e.printStackTrace();
 		}
 
 		JFileChooser chooser = new JFileChooser(annotationDir);
@@ -630,112 +469,6 @@ public class AnnotationParser implements Serializable {
 			return userAnnotations;
 		} else {
 			return null;
-		}
-	}
-
-	static private class AnnotationFields implements Serializable {
-		private static final long serialVersionUID = -3571880185587329070L;
-
-		String getMolecularFunction() {
-			return molecularFunction;
-		}
-
-		void setMolecularFunction(String molecularFunction) {
-			this.molecularFunction = molecularFunction;
-		}
-
-		String getCellularComponent() {
-			return cellularComponent;
-		}
-
-		void setCellularComponent(String cellularComponent) {
-			this.cellularComponent = cellularComponent;
-		}
-
-		String getBiologicalProcess() {
-			return biologicalProcess;
-		}
-
-		void setBiologicalProcess(String biologicalProcess) {
-			this.biologicalProcess = biologicalProcess;
-		}
-
-		String getUniGene() {
-			return uniGene;
-		}
-
-		void setUniGene(String uniGene) {
-			this.uniGene = uniGene;
-		}
-
-		String getDescription() {
-			return description;
-		}
-
-		void setDescription(String description) {
-			this.description = description;
-		}
-
-		String getGeneSymbol() {
-			return geneSymbol;
-		}
-
-		void setGeneSymbol(String geneSymbol) {
-			this.geneSymbol = geneSymbol;
-		}
-
-		String getLocusLink() {
-			return locusLink;
-		}
-
-		void setLocusLink(String locusLink) {
-			this.locusLink = locusLink;
-		}
-
-		String getSwissProt() {
-			return swissProt;
-		}
-
-		void setSwissProt(String swissProt) {
-			this.swissProt = swissProt;
-		}
-
-		public void setRefSeq(String refSeq) {
-			this.refSeq = refSeq;
-		}
-
-		public String getRefSeq() {
-			return refSeq;
-		}
-
-		private String molecularFunction, cellularComponent, biologicalProcess;
-		private String uniGene, description, geneSymbol, locusLink, swissProt;
-		private String refSeq;
-	}
-
-	static class MarkerAnnotation implements Serializable {
-		private static final long serialVersionUID = 1350873248604803043L;
-
-		private Map<String, AnnotationFields> annotationFields;
-
-		MarkerAnnotation() {
-			annotationFields = new TreeMap<String, AnnotationFields>();
-		}
-
-		void addMarker(String marker, AnnotationFields fields) {
-			annotationFields.put(marker, fields);
-		}
-
-		boolean containsMarker(String marker) {
-			return annotationFields.containsKey(marker);
-		}
-
-		AnnotationFields getFields(String marker) {
-			return annotationFields.get(marker);
-		}
-
-		Set<String> getMarkerSet() {
-			return annotationFields.keySet();
 		}
 	}
 
