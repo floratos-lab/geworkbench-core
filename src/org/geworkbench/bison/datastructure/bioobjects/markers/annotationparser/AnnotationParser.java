@@ -117,14 +117,9 @@ public class AnnotationParser implements Serializable {
 		AnnotationParser.currentDataSet = currentDataSet;
 	}
 
-	public static String getCurrentChipType() {
-		if (currentDataSet != null) {
-			return datasetToChipTypes.get(currentDataSet);
-		} else {
-			return null;
-		}
-	}
-
+	// this method is only used to get the annotation info to be reused for merged dataset,
+	// which may be re-implemented in a better design.
+	// so please do not use this method unless you have a very clear reason
 	public static String getChipType(DSDataSet<? extends DSBioObject> dataset) {
 		return datasetToChipTypes.get(dataset);
 	}
