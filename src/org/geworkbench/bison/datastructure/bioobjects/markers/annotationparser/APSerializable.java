@@ -3,8 +3,8 @@ package org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser;
 import java.io.Serializable;
 import java.util.Map;
 
-import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 
 /**
  * @author John Watkinson
@@ -13,17 +13,17 @@ import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 public class APSerializable implements Serializable {
 	private static final long serialVersionUID = 6455427625940524515L;
 
-	DSDataSet<? extends DSBioObject> currentDataSet = null;
-	Map<DSDataSet<? extends DSBioObject>, String> datasetToChipTypes = null;
+	DSMicroarraySet<? extends DSMicroarray> currentDataSet = null;
+	Map<DSMicroarraySet<? extends DSMicroarray>, String> datasetToChipTypes = null;
 	Map<String, Map<String, AnnotationFields>> chipTypeToAnnotation = null;
 
 
 	public APSerializable(
-			DSDataSet<? extends DSBioObject> currentDataSet2,
-			Map<DSDataSet<? extends DSBioObject>, String> datasetToChipTypes,
+			DSMicroarraySet<? extends DSMicroarray> currentDataSet,
+			Map<DSMicroarraySet<? extends DSMicroarray>, String> datasetToChipTypes,
 			Map<String, Map<String, AnnotationFields>> chipTypeToAnnotation) {
 
-		this.currentDataSet = currentDataSet2;
+		this.currentDataSet = currentDataSet;
 		this.datasetToChipTypes = datasetToChipTypes;
 		this.chipTypeToAnnotation = chipTypeToAnnotation;
 	}

@@ -10,10 +10,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -34,9 +32,7 @@ import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
-import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
-import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.engine.preferences.PreferencesManager;
 import org.geworkbench.engine.properties.PropertiesManager;
 import org.geworkbench.util.BrowserLauncher;
@@ -72,6 +68,7 @@ public class AnnotationParser implements Serializable {
 	// field names
 	public static final String DESCRIPTION = "Gene Title"; // (full name)
 
+	// please stop using this confusing alias, use GENE_SYMBOL instead
 	public static final String ABREV = GENE_SYMBOL; // title(short name)
 
 	// FIXME this is misleading name. only used by CNKB
@@ -85,10 +82,9 @@ public class AnnotationParser implements Serializable {
 
 	public static final String REFSEQ = "RefSeq Transcript ID"; // RefSeq
 
-	// TODO all the DSDataSets handled in this class should be DSMicroarraySet
 	// FIELDS
-	private static DSDataSet<? extends DSBioObject> currentDataSet = null;
-	private static Map<DSDataSet<? extends DSBioObject>, String> datasetToChipTypes = new HashMap<DSDataSet<? extends DSBioObject>, String>();
+	private static DSMicroarraySet<? extends DSMicroarray> currentDataSet = null;
+	private static Map<DSMicroarraySet<? extends DSMicroarray>, String> datasetToChipTypes = new HashMap<DSMicroarraySet<? extends DSMicroarray>, String>();
 	private static Map<String, Map<String, AnnotationFields>> chipTypeToAnnotation = new TreeMap<String, Map<String, AnnotationFields>>();
 	// END FIELDS
 
@@ -106,27 +102,29 @@ public class AnnotationParser implements Serializable {
 
 	private static final String ANNOT_DIR = "annotDir";
 
-	public static DSDataSet<? extends DSBioObject> getCurrentDataSet() {
-		return currentDataSet;
-	}
-
+	@SuppressWarnings("unchecked")
 	public static void setCurrentDataSet(DSDataSet<?> currentDataSet) {
-		if(!(currentDataSet instanceof CSMicroarraySet)) {
+		if(!(currentDataSet instanceof DSMicroarraySet)) {
 			AnnotationParser.currentDataSet = null;
+		} else {
+			AnnotationParser.currentDataSet = (DSMicroarraySet<? extends DSMicroarray>)currentDataSet;
 		}
-		AnnotationParser.currentDataSet = currentDataSet;
 	}
 
 	// this method is only used to get the annotation info to be reused for merged dataset,
 	// which may be re-implemented in a better design.
 	// so please do not use this method unless you have a very clear reason
-	public static String getChipType(DSDataSet<? extends DSBioObject> dataset) {
+	public static String getChipType(DSMicroarraySet<? extends DSMicroarray> dataset) {
 		return datasetToChipTypes.get(dataset);
 	}
 
+	@SuppressWarnings("unchecked")
 	public static void setChipType(DSDataSet<? extends DSBioObject> dataset, String chiptype) {
-		datasetToChipTypes.put(dataset, chiptype);
-		currentDataSet = dataset;
+		if(!(dataset instanceof DSMicroarraySet)) return;
+		
+		DSMicroarraySet<? extends DSMicroarray> d = (DSMicroarraySet<? extends DSMicroarray>)dataset;
+		datasetToChipTypes.put(d, chiptype);
+		currentDataSet = d;
 	}
 
 	/* this is used to handle annotation file when the real dataset is chosen after annotation. */
@@ -137,7 +135,7 @@ public class AnnotationParser implements Serializable {
 
 	/* if the annotation file is given, this method is called directly without GUI involved */
 	private static void loadAnnotationFile(
-			DSDataSet<? extends DSBioObject> dataset, File annotationData) {
+			DSMicroarraySet<? extends DSMicroarray> dataset, File annotationData) {
 		if (!annotationData.exists()) { // data file is found
 			log.error("Annotation file " + annotationData + " does not exist.");
 			return;
@@ -182,8 +180,8 @@ public class AnnotationParser implements Serializable {
 	 * @param fieldID
 	 *
 	 */
-	// this method used to depend on chipTypeToAnnotations, which take unnecessary large memory
-	// the first step is to re-implement this method so it does not use chipTypeToAnnotations
+	// this method depends on currentDataSet, which is dangerous and causes unnecessary dependency. try to avoid.
+	// please use the next version that does not depend on currentDataSet whenever possible
 	static public String[] getInfo(String affyID, String fieldID) {
 		try {
 			String chipType = datasetToChipTypes.get(currentDataSet);
@@ -191,7 +189,7 @@ public class AnnotationParser implements Serializable {
 
 			AnnotationFields fields = chipTypeToAnnotation.get(chipType).get(affyID);
 			// individual field to be process separately to eventually get rid of the large map
-			if(fieldID.equals(ABREV)) { // same as GENE_SYMBOL
+			if(fieldID.equals(GENE_SYMBOL)) { // same as ABREV
 				field = fields.getGeneSymbol();
 			} else if(fieldID.equals(LOCUSLINK)) {
 				field = fields.getLocusLink();
@@ -224,7 +222,7 @@ public class AnnotationParser implements Serializable {
 		}
 	}
 
-	// this method is similar to the previous one except it take dataset instead
+	// this method is similar to the previous one except that it takes dataset instead
 	// of using currentDataSet
 	static public String[] getInfo(DSMicroarraySet<DSMicroarray> dataset,
 			String affyID, String fieldID) {
@@ -235,7 +233,7 @@ public class AnnotationParser implements Serializable {
 				affyID);
 		// individual field to be process separately to eventually get rid of
 		// the large map
-		if (fieldID.equals(ABREV)) { // same as GENE_SYMBOL
+		if (fieldID.equals(GENE_SYMBOL)) { // same as ABREV
 			field = fields.getGeneSymbol();
 		} else if (fieldID.equals(LOCUSLINK)) {
 			field = fields.getLocusLink();
@@ -259,17 +257,6 @@ public class AnnotationParser implements Serializable {
 			return null;
 		}
 		return field.split(MAIN_DELIMITER);
-	}
-
-	public static Set<String> getSwissProtIDs(String markerID) {
-		String chipType = datasetToChipTypes.get(currentDataSet);
-
-		HashSet<String> set = new HashSet<String>();
-			String[] ids = chipTypeToAnnotation.get(chipType).get(markerID).getSwissProt().split("///");
-			for (String s : ids) {
-				set.add(s.trim());
-			}
-		return set;
 	}
 
 	public static Set<String> getGeneIDs(String markerID) {
@@ -297,48 +284,7 @@ public class AnnotationParser implements Serializable {
 		return set;
 	}
 
-	public static Map<String, List<Integer>> getGeneNameToMarkerIDMapping(
-			DSMicroarraySet<? extends DSMicroarray> microarraySet) {
-		Map<String, List<Integer>> map = new HashMap<String, List<Integer>>();
-		DSItemList<DSGeneMarker> markers = microarraySet.getMarkers();
-		int index = 0;
-		for (DSGeneMarker marker : markers) {
-			if (marker != null && marker.getLabel() != null) {			 
-				try {
-					
-					Set<String> geneNames = getGeneNames(marker.getLabel());							
-					for (String s : geneNames) {
-						List<Integer> list = map.get(s);
-						if(list==null) {
-							list = new ArrayList<Integer>();
-							list.add(index);
-							map.put(s, list);
-						} else {
-							list.add(index);
-						}
-					}
-					index++;
-				} catch (Exception e) {					 
-					continue;
-				}
-			}
-		}
-		return map;
-	}
-	
-	public static Set<String> getGeneNames(String markerID) {
-		String chipType = datasetToChipTypes.get(currentDataSet);
-
-		HashSet<String> set = new HashSet<String>();
-			String[] ids = chipTypeToAnnotation.get(chipType).get(markerID).getGeneSymbol().split("///");
-			for (String s : ids) {
-				set.add(s.trim());
-			}
-		return set;
-	}
-
-
-	public static String matchChipType(final DSDataSet<? extends DSBioObject> dataset, String id,
+	public static String matchChipType(final DSMicroarraySet<? extends DSMicroarray> dataset, String id,
 			boolean askIfNotFound) {
 		PreferencesManager preferencesManager = PreferencesManager
 				.getPreferencesManager();
@@ -473,7 +419,7 @@ public class AnnotationParser implements Serializable {
 		String annotationName = datasetToChipTypes.get(dataset);
 		datasetToChipTypes.remove(dataset);
 
-		for(DSDataSet<? extends DSBioObject> dset: datasetToChipTypes.keySet() ) {
+		for(DSMicroarraySet<? extends DSMicroarray> dset: datasetToChipTypes.keySet() ) {
 			if(datasetToChipTypes.get(dset).equals(annotationName)) return;
 		}
 
