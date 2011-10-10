@@ -136,7 +136,7 @@ public class AnnotationParser implements Serializable {
 	}
 
 	/* if the annotation file is given, this method is called directly without GUI involved */
-	public static void loadAnnotationFile(
+	private static void loadAnnotationFile(
 			DSDataSet<? extends DSBioObject> dataset, File annotationData) {
 		if (!annotationData.exists()) { // data file is found
 			log.error("Annotation file " + annotationData + " does not exist.");
@@ -162,7 +162,9 @@ public class AnnotationParser implements Serializable {
 		}
 	}
 
-	/* !!! return value of this method depends on currentDataSet, which could be suprising if not careful */
+	/* !!! return value of this method depends on currentDataSet, which could be surprising if not careful */
+	// this is only used by CSGeneMarker.getShortName(), which has really messed-up behavior
+	// please do not use this method unless you have a very clear reason
 	public static String getGeneName(String id) {
 		try {
 			String chipType = datasetToChipTypes.get(currentDataSet);
