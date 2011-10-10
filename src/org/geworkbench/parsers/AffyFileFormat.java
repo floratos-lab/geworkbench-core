@@ -24,7 +24,6 @@ import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
-import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
@@ -243,7 +242,6 @@ public class AffyFileFormat extends DataSetFileFormat {
 				if (geneNames != null) {
 					markerVector.get(count).setGeneName(geneNames[0]);
 				}
-				markerVector.get(count).setDisPlayType(DSGeneMarker.AFFY_TYPE);
 				markerVector.get(count++).setDescription(acc);
 			}
 			reader.close();

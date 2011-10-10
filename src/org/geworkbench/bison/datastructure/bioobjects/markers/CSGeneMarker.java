@@ -39,7 +39,6 @@ public class CSGeneMarker implements DSGeneMarker, Serializable {
 	protected DSUnigene unigene = new CSUnigene();
 
 	private String geneName = null;
-	private int disPlayType = DSGeneMarker.AFFY_TYPE;
 
 	public Object clone() {
 		try {
@@ -56,15 +55,6 @@ public class CSGeneMarker implements DSGeneMarker, Serializable {
 
 	public CSGeneMarker(String label) {
 		this.label = label;
-	}
-
-	public void setDisPlayType(int disPlayType) {
-		this.disPlayType = disPlayType;
-	}
-
-	// TODO this method is never invoked
-	public int getDisPlayType() {
-		return disPlayType;
 	}
 
 	/**
@@ -213,33 +203,12 @@ public class CSGeneMarker implements DSGeneMarker, Serializable {
 	}
 
 	private String getCanonicalLabel() {
-		String disType = "";
-		if (disPlayType == AFFY_TYPE) {
-			disType = label;
-		} else {
-			if (disPlayType == UNIGENE_TYPE) {
-				int uni = this.getUnigene().getUnigeneId();
-				if (uni > 0) {
-					disType = this.getUnigene().getUnigeneAsString();
-				} else {
-					disType = "NA";
-				}
-			} else if (disPlayType == LOCUSLINK_TYPE) {
-				int lo = this.getGeneId();
-				if (lo != 0) {
-					disType = lo + "";
-				} else {
-					disType = "NA";
-
-				}
-			}
-		}
 		String text0 = "";
 
 		try {
 			String text1 = AnnotationParser.getInfo(label,
 					AnnotationParser.DESCRIPTION)[0];
-			text0 = disType + ": (" + getShortName() + ") " + text1;
+			text0 = label + ": (" + getShortName() + ") " + text1;
 		} catch (Exception ex) {
 			text0 = this.getDescription();
 			if (text0 != null) {
@@ -262,7 +231,7 @@ public class CSGeneMarker implements DSGeneMarker, Serializable {
 		}
 
 		if (text0 == null || text0.length() == 0) {
-			return disType;
+			return label;
 		} else {
 			return text0;
 		}

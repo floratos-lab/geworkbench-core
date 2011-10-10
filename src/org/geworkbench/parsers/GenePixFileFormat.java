@@ -18,7 +18,6 @@ import org.geworkbench.bison.datastructure.biocollections.CSMarkerVector;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
-import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.parsers.GenePixParser;
@@ -156,8 +155,6 @@ public class GenePixFileFormat extends DataSetFileFormat {
 			int count = 0;
 			for (String[] acc : v) {
 				markerVector.setLabel(count, acc[0]);
-				markerVector.get(count).setDisPlayType(
-						DSGeneMarker.GENEPIX_TYPE);
 				markerVector.get(count++).setDescription(acc[1]);
 			}
 			reader.close();

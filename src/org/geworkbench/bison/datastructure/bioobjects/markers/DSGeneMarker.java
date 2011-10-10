@@ -25,11 +25,6 @@ import java.io.Serializable;
 public interface DSGeneMarker extends Comparable<DSGeneMarker>, DSSequential,
 		Cloneable, Serializable {
 
-	static final int AFFY_TYPE = 0;
-	static final int GENEPIX_TYPE = 1;
-	static final int UNIGENE_TYPE = 2;
-	static final int LOCUSLINK_TYPE = 3;
-
 	/**
 	 * Returns the textual description of this Marker
 	 * 
@@ -72,10 +67,6 @@ public interface DSGeneMarker extends Comparable<DSGeneMarker>, DSSequential,
 	DSGeneMarker deepCopy();
 
 	void write(BufferedWriter writer) throws IOException;
-
-	public void setDisPlayType(int disPlayType);
-
-	public int getDisPlayType();
 
 	public void setGeneId(int x);
 
