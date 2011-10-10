@@ -26,7 +26,6 @@ import org.geworkbench.bison.datastructure.biocollections.CSMarkerVector;
 import org.geworkbench.bison.datastructure.biocollections.DSMatrixDataSet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
-import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSAffyMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMarkerValue;
@@ -385,7 +384,7 @@ public class CSMicroarraySet extends CSDataSet<DSMicroarray> implements DSMicroa
 		newid = new int[mrkNo];
 		int i = 0;
 		if (GlobalPreferences.getInstance().getMarkerLoadOptions() == GlobalPreferences.ORIGINAL
-				|| (AnnotationParser.getCurrentChipType() == null && GlobalPreferences
+				|| (this.getAnnotationFileName() == null && GlobalPreferences
 						.getInstance().getMarkerLoadOptions() == GlobalPreferences.SORTED_GENE)) {
 			for (i = 0; i < markerVector.size(); newid[i] = i++);
 		} else {
