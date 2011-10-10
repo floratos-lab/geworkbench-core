@@ -157,10 +157,16 @@ public class CSGeneMarker implements DSGeneMarker, Serializable {
 		return getCanonicalLabel();
 	}
 
+	// The behavior of this method depends on <code>currentDataSet</code> in AnnotationParser. That is bad.
 	public String getShortName() {
-		String name = AnnotationParser.getGeneName(label);
-		if (name == null) {
-			return label;
+		String name = label;
+		try {
+			String[] geneSymbol = AnnotationParser.getInfo(label, AnnotationParser.GENE_SYMBOL);
+			name = geneSymbol[0];
+			for(int i=1; i<geneSymbol.length; i++)
+				name += " /// "+geneSymbol[i];
+		} catch (NullPointerException e) {
+			// do thing. keep label.
 		}
 		return name;
 	}

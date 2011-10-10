@@ -11,9 +11,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 
 import javax.swing.JButton;
@@ -160,18 +158,6 @@ public class AnnotationParser implements Serializable {
 		}
 	}
 
-	/* !!! return value of this method depends on currentDataSet, which could be surprising if not careful */
-	// this is only used by CSGeneMarker.getShortName(), which has really messed-up behavior
-	// please do not use this method unless you have a very clear reason
-	public static String getGeneName(String id) {
-		try {
-			String chipType = datasetToChipTypes.get(currentDataSet);
-			return chipTypeToAnnotation.get(chipType).get(id).getGeneSymbol();
-		} catch (NullPointerException e) {
-			return id;
-		}
-	}
-
 	/**
 	 * This method returns required annotation field for a given affymatrix marker ID .
 	 *
@@ -257,31 +243,6 @@ public class AnnotationParser implements Serializable {
 			return null;
 		}
 		return field.split(MAIN_DELIMITER);
-	}
-
-	public static Set<String> getGeneIDs(String markerID) {
-		HashSet<String> set = new HashSet<String>();
-		String chipType = datasetToChipTypes.get(currentDataSet);
-		
-		// this happens when no annotation or bad annotation is loaded.
-		if(chipType==null) {
-			return set;
-		}
-
-		Map<String, AnnotationFields> annotation = chipTypeToAnnotation.get(chipType);
-		AnnotationFields fields = annotation.get(markerID);
-		if(fields==null) {
-			return set;
-		}
-		String locus = fields.getLocusLink();
-		if(locus==null) {
-			return set;
-		}
-		String[] ids = locus.split("///");
-		for (String s : ids) {
-			set.add(s.trim());
-		}
-		return set;
 	}
 
 	public static String matchChipType(final DSMicroarraySet<? extends DSMicroarray> dataset, String id,
