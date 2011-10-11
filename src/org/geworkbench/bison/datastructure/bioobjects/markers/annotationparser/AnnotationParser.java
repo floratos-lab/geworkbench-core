@@ -123,6 +123,8 @@ public class AnnotationParser implements Serializable {
 	public static void setChipType(DSDataSet<? extends DSBioObject> dataset, String chiptype) {
 		if(!(dataset instanceof DSMicroarraySet)) return;
 		
+		if(chiptype==null) return;
+		
 		DSMicroarraySet<? extends DSMicroarray> dset = (DSMicroarraySet<? extends DSMicroarray>)dataset;
 		for(DSMicroarraySet<? extends DSMicroarray> d: datasetToChipTypes.keySet()) {
 			if(chiptype.equals(datasetToChipTypes.get(d))) { // existing annotation
