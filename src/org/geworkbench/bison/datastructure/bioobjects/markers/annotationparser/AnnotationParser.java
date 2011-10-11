@@ -10,9 +10,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.WeakHashMap;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -80,22 +79,26 @@ public class AnnotationParser implements Serializable {
 
 	public static final String REFSEQ = "RefSeq Transcript ID"; // RefSeq
 
-	// FIELDS
 	private static DSMicroarraySet<? extends DSMicroarray> currentDataSet = null;
-	private static Map<DSMicroarraySet<? extends DSMicroarray>, String> datasetToChipTypes = new HashMap<DSMicroarraySet<? extends DSMicroarray>, String>();
-	private static Map<String, Map<String, AnnotationFields>> chipTypeToAnnotation = new TreeMap<String, Map<String, AnnotationFields>>();
-	// END FIELDS
+	private static WeakHashMap<DSMicroarraySet<? extends DSMicroarray>, String> datasetToChipTypes = new WeakHashMap<DSMicroarraySet<? extends DSMicroarray>, String>();
+	private static WeakHashMap<DSMicroarraySet<? extends DSMicroarray>, Map<String, AnnotationFields>> datasetToAnnotation = new WeakHashMap<DSMicroarraySet<? extends DSMicroarray>, Map<String, AnnotationFields>>();
 
 	/* The reason that we need APSerializable is that the status fields are designed as static. */
 	public static APSerializable getSerializable() {
 		return new APSerializable(currentDataSet, datasetToChipTypes,
-				chipTypeToAnnotation);
+				datasetToAnnotation);
 	}
 
 	public static void setFromSerializable(APSerializable aps) {
 		currentDataSet = aps.currentDataSet;
-		datasetToChipTypes = aps.datasetToChipTypes;
-		chipTypeToAnnotation = aps.chipTypeToAnnotation;
+		for(DSMicroarraySet<? extends DSMicroarray> dataset : aps.datasetToChipTypes.keySet()) {
+			String s = aps.datasetToChipTypes.get(dataset);
+			datasetToChipTypes.put(dataset, s);
+		}
+		for(DSMicroarraySet<? extends DSMicroarray> dataset : aps.datasetToAnnotation.keySet()) {
+			Map<String, AnnotationFields> m = aps.datasetToAnnotation.get(dataset);
+			datasetToAnnotation.put(dataset, m);
+		}
 	}
 
 	private static final String ANNOT_DIR = "annotDir";
@@ -120,9 +123,15 @@ public class AnnotationParser implements Serializable {
 	public static void setChipType(DSDataSet<? extends DSBioObject> dataset, String chiptype) {
 		if(!(dataset instanceof DSMicroarraySet)) return;
 		
-		DSMicroarraySet<? extends DSMicroarray> d = (DSMicroarraySet<? extends DSMicroarray>)dataset;
-		datasetToChipTypes.put(d, chiptype);
-		currentDataSet = d;
+		DSMicroarraySet<? extends DSMicroarray> dset = (DSMicroarraySet<? extends DSMicroarray>)dataset;
+		for(DSMicroarraySet<? extends DSMicroarray> d: datasetToChipTypes.keySet()) {
+			if(chiptype.equals(datasetToChipTypes.get(d))) { // existing annotation
+				datasetToAnnotation.put(dset, datasetToAnnotation.get(d));
+				break;
+			}
+		}
+		datasetToChipTypes.put(dset, chiptype);
+		currentDataSet = dset;
 	}
 
 	/* this is used to handle annotation file when the real dataset is chosen after annotation. */
@@ -140,21 +149,28 @@ public class AnnotationParser implements Serializable {
 		}
 
 		String chipType = annotationData.getName();
+		
+		for(DSMicroarraySet<? extends DSMicroarray> d: datasetToChipTypes.keySet()) {
+			if(chipType.equals(datasetToChipTypes.get(d))) { // existing annotation
+				datasetToAnnotation.put(dataset, datasetToAnnotation.get(d));
+				datasetToChipTypes.put(dataset, chipType);
+				return;
+			}
+		}
 
 		AffyAnnotationParser parser = new AffyAnnotationParser(annotationData);
 		Map<String, AnnotationFields> markerAnnotation  = parser.parse(false);
-		if(markerAnnotation!=null)
-			chipTypeToAnnotation.put(chipType, markerAnnotation);
+		if(markerAnnotation!=null) {
+			datasetToAnnotation.put(dataset, markerAnnotation);
+		}
 
 		datasetToChipTypes.put(dataset, chipType);
 		currentDataSet = dataset;
 		if (dataset == null) {
 			dummyMicroarraySet.setAnnotationFileName(annotationData
 					.getAbsolutePath());
-		}
-		if (dataset instanceof CSMicroarraySet) {
-			CSMicroarraySet d = (CSMicroarraySet) dataset;
-			d.setAnnotationFileName(annotationData.getAbsolutePath());
+		} else {
+			dataset.setAnnotationFileName(annotationData.getAbsolutePath());
 		}
 	}
 
@@ -170,10 +186,9 @@ public class AnnotationParser implements Serializable {
 	// please use the next version that does not depend on currentDataSet whenever possible
 	static public String[] getInfo(String affyID, String fieldID) {
 		try {
-			String chipType = datasetToChipTypes.get(currentDataSet);
 			String field = "";
 
-			AnnotationFields fields = chipTypeToAnnotation.get(chipType).get(affyID);
+			AnnotationFields fields = datasetToAnnotation.get(currentDataSet).get(affyID);
 			// individual field to be process separately to eventually get rid of the large map
 			if(fieldID.equals(GENE_SYMBOL)) { // same as ABREV
 				field = fields.getGeneSymbol();
@@ -212,10 +227,9 @@ public class AnnotationParser implements Serializable {
 	// of using currentDataSet
 	static public String[] getInfo(DSMicroarraySet<DSMicroarray> dataset,
 			String affyID, String fieldID) {
-		String chipType = datasetToChipTypes.get(dataset);
 		String field = null;
 
-		AnnotationFields fields = chipTypeToAnnotation.get(chipType).get(
+		AnnotationFields fields = datasetToAnnotation.get(dataset).get(
 				affyID);
 		// individual field to be process separately to eventually get rid of
 		// the large map
@@ -377,16 +391,7 @@ public class AnnotationParser implements Serializable {
 	}
 
 	public static void cleanUpAnnotatioAfterUnload(DSDataSet<? extends DSBioObject> dataset) {
-		String annotationName = datasetToChipTypes.get(dataset);
-		datasetToChipTypes.remove(dataset);
-
-		for(DSMicroarraySet<? extends DSMicroarray> dset: datasetToChipTypes.keySet() ) {
-			if(datasetToChipTypes.get(dset).equals(annotationName)) return;
-		}
-
-		// if not returned, then it is not used anymore, clean it up
-		if(annotationName!=null)
-			chipTypeToAnnotation.put(annotationName, null);
+		// using weak reference making this manual management unnecessary
 	}
 
 }
