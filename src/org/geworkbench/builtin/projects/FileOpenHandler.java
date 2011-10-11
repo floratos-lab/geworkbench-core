@@ -216,7 +216,7 @@ public class FileOpenHandler {
 		@Override
 		protected void done() {
 
-			if (dataSets.length>0 && dataSets[0] instanceof DSMicroarraySet) {
+			if (dataSets.length>1 && dataSets[0] instanceof DSMicroarraySet) {
 				DSMicroarraySet[] maSets = new DSMicroarraySet[dataSets.length];
 
 				for (int i = 0; i < dataSets.length; i++) {
