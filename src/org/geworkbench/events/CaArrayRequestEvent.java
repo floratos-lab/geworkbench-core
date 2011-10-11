@@ -23,7 +23,7 @@ public class CaArrayRequestEvent extends Event {
 	private String qType;
 	private boolean queryExperiment = false;
 	private boolean useFilterCrit;
-	private boolean merge;
+
 	private String username;
 	private String password;
 
@@ -80,14 +80,6 @@ public class CaArrayRequestEvent extends Event {
 
 	public boolean isSucceed() {
 		return succeed;
-	}
-
-	public boolean isMerge() {
-		return merge;
-	}
-
-	public void setMerge(boolean merge) {
-		this.merge = merge;
 	}
 
 	public String getUrl() {

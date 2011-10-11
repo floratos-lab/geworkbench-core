@@ -37,6 +37,7 @@ import org.geworkbench.bison.util.colorcontext.ColorContext;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.parsers.AdjacencyMatrixFileFormat;
 import org.geworkbench.parsers.DataSetFileFormat;
+import org.geworkbench.parsers.ExpressionFileFormat;
 import org.geworkbench.parsers.FileFormat;
 import org.geworkbench.parsers.InputFileFormatException;
 
@@ -53,7 +54,7 @@ public class FileOpenHandler {
 
 	private final File[] dataSetFiles;
 	private final FileFormat inputFormat;
-	private final boolean mergeFiles;
+
 	private final ProjectPanel projectPanel;
 	private final JProgressBar projectPanelProgressBar;
 	
@@ -66,13 +67,10 @@ public class FileOpenHandler {
 			+ "Exit geWorkbench?";
 	private static final String OUT_OF_MEMORY_MESSAGE_TITLE = "Java total heap memory exception";
 
-	FileOpenHandler(final File[] dataSetFiles, final FileFormat inputFormat,
-			final boolean mergeFiles)
+	FileOpenHandler(final File[] dataSetFiles, final FileFormat inputFormat)
 			throws InputFileFormatException {
 		this.dataSetFiles = dataSetFiles;
 		this.inputFormat = inputFormat;
-
-		this.mergeFiles = mergeFiles;
 
 		projectPanel = ProjectPanel.getInstance();
 		projectPanelProgressBar = projectPanel.getProgressBar();
@@ -218,7 +216,7 @@ public class FileOpenHandler {
 		@Override
 		protected void done() {
 
-			if (mergeFiles && dataSets[0] instanceof DSMicroarraySet) {
+			if (dataSets[0] instanceof DSMicroarraySet) {
 				DSMicroarraySet[] maSets = new DSMicroarraySet[dataSets.length];
 
 				for (int i = 0; i < dataSets.length; i++) {
@@ -328,17 +326,12 @@ public class FileOpenHandler {
 					return null;
 				}
 
-				// watkin - none of the file filters implement the
-				// multiple getDataFile method.
-				// dataSets[0] =
-				// ((DataSetFileFormat)inputFormat).getDataFile(dataSetFiles);
-				// If the data sets are microarray sets, then merge them
-				// if "merge files" is checked
-
 				// invoking AnnotationParser.matchChipType with null dataset is
 				// different from the previous algorithm.
 				// also notice that this will block
-				String chipType = AnnotationParser.matchChipType(null, "", false);; //FileOpenHandler.this.chipType;
+				String chipType = null; // ignored by other format
+				if(dataSetFileFormat instanceof ExpressionFileFormat)
+					chipType = AnnotationParser.matchChipType(null, "", false);; //FileOpenHandler.this.chipType;
 				progressBarDialog.setVisible(true);
 
 				for (int i = 0; i < dataSetFiles.length; i++) {

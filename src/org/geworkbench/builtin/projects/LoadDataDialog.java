@@ -7,8 +7,6 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -21,12 +19,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
 
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -74,9 +70,8 @@ public class LoadDataDialog extends JDialog {
 	private String format = null;
 
 	private CaARRAYPanel caArrayDisplayPanel = null;
-	private JCheckBox mergeCheckBox;
+
 	private JPanel lowerPanel;
-	private JPanel mergePanel;
 	private RemoteResourceDialog remoteResourceDialog;
 
 	private String currentRemoteResourceName;
@@ -105,7 +100,7 @@ public class LoadDataDialog extends JDialog {
 
 	private JButton openRemoteResourceButton = new JButton();
 	private boolean isSynchronized = false;
-	private boolean merge;
+
 	private static final String QUERYTITLE = "Query the caARRAY Server.";
 
 	public LoadDataDialog() {
@@ -151,10 +146,6 @@ public class LoadDataDialog extends JDialog {
 
 	public void setFormat(String format) {
 		this.format = format;
-	}
-
-	public void setMerge(boolean merge) {
-		this.merge = merge;
 	}
 
 	public CaARRAYPanel getCaArrayDisplayPanel() {
@@ -246,30 +237,6 @@ public class LoadDataDialog extends JDialog {
 		});
 		jComboBox1.setPreferredSize(new Dimension(50, 19));
 
-		mergePanel = new JPanel();
-		mergePanel.setLayout(new BoxLayout(mergePanel, BoxLayout.X_AXIS));
-		mergeCheckBox = new JCheckBox("Merge Files", false);
-		mergeCheckBox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				merge = mergeCheckBox.isSelected();
-			}
-		});
-		
-		jFileChooser1.addPropertyChangeListener(JFileChooser.FILE_FILTER_CHANGED_PROPERTY, new PropertyChangeListener()
-           {
-                   public void propertyChange(PropertyChangeEvent e) 
-                   {                	 
-                	   if ( jFileChooser1.getFileFilter() !=  null )                           
-                	   {   
-                		   if (!isMergeSupported()) {
-                			   mergeCheckBox.setSelected(false);
-                		   }
-                			   
-                		   
-                	   }
-                   }
-           });
-
 		jPanel10.add(jComboBox1);
 		jPanel10.add(openRemoteResourceButton);
 		jPanel10.add(queryButton);
@@ -277,13 +244,10 @@ public class LoadDataDialog extends JDialog {
 		jPanel10.add(editButton);
 		jPanel10.add(deleteButton);
 
-		mergePanel.add(mergeCheckBox);
-		mergePanel.add(Box.createGlue());
 		lowerPanel.add(jPanel1);
 
 		this.getContentPane().add(lowerPanel, BorderLayout.SOUTH);
 
-		jPanel1.add(mergePanel);
 		jPanel1.add(jPanel2, null);
 		jPanel2.add(localFileRadioButton, null);
 
@@ -302,9 +266,7 @@ public class LoadDataDialog extends JDialog {
 		localFileRadioButton.setSelected(true);
 		localFileRadioButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (!isMergeSupported()) {
-					mergeCheckBox.setSelected(false);
-				}
+
 				switchToLocalFileDialog();
 			
 			}
@@ -511,11 +473,9 @@ public class LoadDataDialog extends JDialog {
 								.getCanonicalPath();
 						setLastDataInfo(filepath, format);
 
-						final boolean mergeFiles = files.length == 1 ? false : mergeCheckBox
-								.isSelected();
 						if (supportedInputFormats[i] instanceof DataSetFileFormat) {
 							FileOpenHandler handler = new FileOpenHandler(files,
-									supportedInputFormats[i], mergeFiles);
+									supportedInputFormats[i]);
 							handler.openFiles();
 						} else {
 							log
@@ -633,7 +593,6 @@ public class LoadDataDialog extends JDialog {
 	private void addRemotePanel_actionPerformed(ActionEvent e) {
 		addRemotePanel();
 		lowerPanel.add(jPanel10);
-		this.mergeCheckBox.setEnabled(true);
 		this.validate();
 		this.repaint();
 	}
@@ -704,29 +663,6 @@ public class LoadDataDialog extends JDialog {
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
-	}
-
-	public boolean isMerge() {
-		return merge;
-	}
-	
-	public boolean isMergeSupported()
-	{		 
-		if(supportedInputFormats == null)
-		{
-			log.warn("supportedInputFormats is null, but it should not happen. Please check code." );
-			return true;
-		}
-		
-		FileFilter selectedFilter = jFileChooser1.getFileFilter(); 
-		for (int i = 0; i < supportedInputFormats.length; ++i) {
-			if (selectedFilter == supportedInputFormats[i].getFileFilter()) {
-	           return supportedInputFormats[i].isMergeSupported();
-			
-			}
-		}
-		
-		return false;
 	}
 
 	public void processCaAraryQueryResult(boolean succeeded, String message, TreeMap<String, Set<String>> treeMap) {

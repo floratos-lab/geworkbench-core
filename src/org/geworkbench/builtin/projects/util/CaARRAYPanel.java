@@ -113,7 +113,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 	private ProgressBar progressBar = ProgressBar
 			.create(ProgressBar.INDETERMINATE_TYPE);
 	private LoadDataDialog parentPanel;
-	private boolean merge;
+
 	private volatile boolean stillWaitForConnecting = true;
 	private TreeMap<String, CaArray2Experiment> treeMap;
 	private String currentSelectedExperimentName;
@@ -519,7 +519,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 
 
 	private String checkQuantationTypeSelection() {
-		merge = parent.isMerge();
+
 		TreePath[] paths = remoteFileTree.getSelectionPaths();
 		CaArray2Experiment exp = null;
 		if (paths.length > 0 && paths[0].getPath().length > 1) {
@@ -684,7 +684,6 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 			event.setPassword(passwd);
 		}
 		event.setRequestItem(CaArrayRequestEvent.BIOASSAY);
-		event.setMerge(merge);
 		Map<String, String> filterCrit = new HashMap<String, String>();
 		filterCrit.put(CaArrayRequestEvent.EXPERIMENT, currentSelectedExperimentName );
 		SortedMap<String, String> assayNameFilter = new TreeMap<String, String>(currentSelectedBioAssay);
@@ -802,10 +801,6 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 		return experimentsLoaded;
 	}
 
-	public boolean isMerge() {
-		return merge;
-	}
-
 	public void setConnectionSuccess(boolean isConnectionSuccess) {
 		this.connectionSuccess = isConnectionSuccess;
 	}
@@ -838,10 +833,6 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 
 	public void setExperimentsLoaded(boolean experimentsLoaded) {
 		this.experimentsLoaded = experimentsLoaded;
-	}
-
-	public void setMerge(boolean merge) {
-		this.merge = merge;
 	}
 
 	public Component getComponent() {
