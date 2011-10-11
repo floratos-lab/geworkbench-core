@@ -216,7 +216,7 @@ public class FileOpenHandler {
 		@Override
 		protected void done() {
 
-			if (dataSets[0] instanceof DSMicroarraySet) {
+			if (dataSets.length>0 && dataSets[0] instanceof DSMicroarraySet) {
 				DSMicroarraySet[] maSets = new DSMicroarraySet[dataSets.length];
 
 				for (int i = 0; i < dataSets.length; i++) {
@@ -228,31 +228,29 @@ public class FileOpenHandler {
 				}
 			} else {
 				boolean selected = false;
-				for (int i = 0; i < dataSets.length; i++) {
-					DSDataSet set = dataSets[i];
+				DSDataSet set = dataSets[0];
 
-					if (set == null) {
-						log.info("null dataset encountered");
-						continue;
-					}
+				if (set == null) {
+					log.error("null dataset encountered");
+					return;
+				}
 
-					// Do initial color context update if it is a microarray
-					if (set instanceof DSMicroarraySet) {
-						ProjectPanel
-								.addColorContext((DSMicroarraySet<DSMicroarray>) set);
-					}
+				// Do initial color context update if it is a microarray
+				if (set instanceof DSMicroarraySet) {
+					ProjectPanel
+							.addColorContext((DSMicroarraySet<DSMicroarray>) set);
+				}
 
-					if (set instanceof AdjacencyMatrixDataSet) {
-						// adjacency matrix as added as a sub node
-						AdjacencyMatrixDataSet adjMatrixDS = (AdjacencyMatrixDataSet) set;
-						projectPanel.addDataSetSubNode(adjMatrixDS);
+				if (set instanceof AdjacencyMatrixDataSet) {
+					// adjacency matrix as added as a sub node
+					AdjacencyMatrixDataSet adjMatrixDS = (AdjacencyMatrixDataSet) set;
+					projectPanel.addDataSetSubNode(adjMatrixDS);
+				} else {
+					if (!selected) {
+						projectPanel.addDataSetNode(set, true);
+						selected = true;
 					} else {
-						if (!selected) {
-							projectPanel.addDataSetNode(set, true);
-							selected = true;
-						} else {
-							projectPanel.addDataSetNode(set, false);
-						}
+						projectPanel.addDataSetNode(set, false);
 					}
 				}
 			}
