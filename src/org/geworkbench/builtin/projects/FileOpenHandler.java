@@ -413,76 +413,74 @@ public class FileOpenHandler {
 							JOptionPane.INFORMATION_MESSAGE);
 			return null;
 		}
+		if (sets == null)
+			return null;
+		
 		DSMicroarraySet<DSMicroarray> mergedSet = null;
-		int i;
-		DSMicroarraySet<DSMicroarray> set;
-		if (sets != null) {
-			String desc = "Merged DataSet: ";
-			for (i = 0; i < sets.length; i++) {
-				set = (DSMicroarraySet<DSMicroarray>)sets[i];
-				if (mergedSet == null) {
-					try {
-						mergedSet = set.getClass().newInstance();
-						mergedSet.addObject(ColorContext.class, set
-								.getObject(ColorContext.class));
-						// mergedSet.setMarkerNo(set.size());
-						// mergedSet.setMicroarrayNo(set.size());
 
+		String desc = "";
+		if(sets.length>1)desc = "Merged DataSet: ";
+		
+		for (int i = 0; i < sets.length; i++) {
+			DSMicroarraySet<DSMicroarray> set = (DSMicroarraySet<DSMicroarray>) sets[i];
+			if (mergedSet == null) {
+				try {
+					mergedSet = set.getClass().newInstance();
+					mergedSet.addObject(ColorContext.class,
+							set.getObject(ColorContext.class));
+					// mergedSet.setMarkerNo(set.size());
+					// mergedSet.setMicroarrayNo(set.size());
+
+					((DSMicroarraySet<DSMicroarray>) mergedSet)
+							.setCompatibilityLabel(set.getCompatibilityLabel());
+					((DSMicroarraySet<DSMicroarray>) mergedSet).getMarkers()
+							.addAll(set.getMarkers());
+					DSItemList<DSGeneMarker> markerList = set.getMarkers();
+					for (int j = 0; j < markerList.size(); j++) {
+						DSGeneMarker dsGeneMarker = markerList.get(j);
 						((DSMicroarraySet<DSMicroarray>) mergedSet)
-								.setCompatibilityLabel(set
-										.getCompatibilityLabel());
-						((DSMicroarraySet<DSMicroarray>) mergedSet)
-								.getMarkers().addAll(set.getMarkers());
-						DSItemList<DSGeneMarker> markerList = set.getMarkers();
-						for (int j = 0; j < markerList.size(); j++) {
-							DSGeneMarker dsGeneMarker = markerList.get(j);
-							((DSMicroarraySet<DSMicroarray>) mergedSet)
-									.getMarkers().add(dsGeneMarker.deepCopy());
-						}
-						for (int k = 0; k < set.size(); k++) {
-							mergedSet.add(set.get(k).deepCopy());
-						}
-						desc += set.getLabel() + " ";
-						// XQ fix bug 1539, add annotation information to the
-						// merged dataset.
-						String chipType = AnnotationParser.getChipType(set);
-						AnnotationParser.setChipType(mergedSet, chipType);
-					} catch (InstantiationException ie) {
-						ie.printStackTrace();
-					} catch (IllegalAccessException iae) {
-						iae.printStackTrace();
+								.getMarkers().add(dsGeneMarker.deepCopy());
 					}
-				} else {
+					for (int k = 0; k < set.size(); k++) {
+						mergedSet.add(set.get(k).deepCopy());
+					}
 					desc += set.getLabel() + " ";
-					try {
-						mergedSet.mergeMicroarraySet(set);
-					} catch (Exception ex) {
-						ex.printStackTrace();
-						JOptionPane
-								.showMessageDialog(
-										null,
-										"Only microarray sets created"
-												+ " from the same chip set can be merged",
-										"Merge Error",
-										JOptionPane.ERROR_MESSAGE);
-						return null;
-					}
+					// XQ fix bug 1539, add annotation information to the
+					// merged dataset.
+					String chipType = AnnotationParser.getChipType(set);
+					AnnotationParser.setChipType(mergedSet, chipType);
+				} catch (InstantiationException ie) {
+					ie.printStackTrace();
+				} catch (IllegalAccessException iae) {
+					iae.printStackTrace();
+				}
+			} else {
+				desc += set.getLabel() + " ";
+				try {
+					mergedSet.mergeMicroarraySet(set);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+					JOptionPane.showMessageDialog(null,
+							"Only microarray sets created"
+									+ " from the same chip set can be merged",
+							"Merge Error", JOptionPane.ERROR_MESSAGE);
+					return null;
 				}
 			}
-
-			if (mergedSet != null) {
-				mergedSet.setLabel("Merged array set");
-				mergedSet.setLabel(desc);
-				mergedSet.addDescription(desc);
-				((CSMicroarraySet)mergedSet).setAnnotationFileName(
-						((CSMicroarraySet)sets[0]).getAnnotationFileName());
-			}
-			// Add color context
-			ProjectPanel.addColorContext(mergedSet);
-
-			return mergedSet;
 		}
-		return null;
+
+		if (mergedSet != null) {
+			mergedSet.setLabel("Merged array set");
+			mergedSet.setLabel(desc);
+			mergedSet.addDescription(desc);
+			((CSMicroarraySet) mergedSet)
+					.setAnnotationFileName(((CSMicroarraySet) sets[0])
+							.getAnnotationFileName());
+		}
+		// Add color context
+		ProjectPanel.addColorContext(mergedSet);
+
+		return mergedSet;
 	}
 
 	/**

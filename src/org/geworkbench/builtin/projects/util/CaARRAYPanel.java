@@ -370,7 +370,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 	 *
 	 * @param seconds
 	 */
-	public void increaseInternalTimeoutLimitBy(int seconds){
+	private void increaseInternalTimeoutLimitBy(int seconds){
 		log.debug("Due time has been increased from "+internalTimeoutLimit+" seconds to " +(internalTimeoutLimit+seconds)+" seconds.");
 		internalTimeoutLimit += seconds;
 	}
@@ -387,8 +387,8 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 		increaseInternalTimeoutLimitBy(INCREASE_EACHTIME);
 	}
 
-	private int numTotalArrays = 0;
-	private int numCurrentArray = 0;
+	private volatile int numTotalArrays = 0;
+	private volatile int numCurrentArray = 0;
 
 	/**
 	 * Action listener invoked when the user presses the "Open" button after
