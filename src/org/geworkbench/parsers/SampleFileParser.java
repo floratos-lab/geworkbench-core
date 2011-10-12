@@ -141,7 +141,7 @@ public class SampleFileParser {
 		
 		int i = 0;
 		CSMicroarray array = new CSMicroarray(i, possibleMarkers,
-				arrayName, null, null, false,
+				arrayName,
 				DSMicroarraySet.affyTxtType);
 		maSet.add(array);
 		//This buffered reader is used to put insert marker values for one sample at a time from the Series file

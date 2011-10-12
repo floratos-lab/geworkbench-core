@@ -252,7 +252,7 @@ public class GeoSeriesMatrixParser {
 										+ ": "
 										+markAnn1;
 					CSMicroarray array = new CSMicroarray(i, possibleMarkers,
-							arrayName1, null, null, false,
+							arrayName1,
 							DSMicroarraySet.affyTxtType);
 					maSet.add(array);
 					

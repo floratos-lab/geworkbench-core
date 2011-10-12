@@ -336,7 +336,7 @@ public class SOFTSeriesParser {
 		int arrayIndex = 0;
 		for (String arrayName : arrayToMarkers.keySet()) {
 			CSMicroarray array = new CSMicroarray(arrayIndex, markerCount,
-					arrayName, null, null, false, DSMicroarraySet.affyTxtType);
+					arrayName, DSMicroarraySet.affyTxtType);
 			List<CSExpressionMarkerValue> markerList = arrayToMarkers
 					.get(arrayName);
 			for (int markerIndex = 0; markerIndex < markerList.size(); markerIndex++) {

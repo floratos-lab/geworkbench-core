@@ -2,9 +2,10 @@ package org.geworkbench.bison.datastructure.bioobjects.microarray;
 
 import java.io.Serializable;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
-import org.geworkbench.bison.datastructure.properties.CSDescribable;
 import org.geworkbench.bison.datastructure.properties.CSExtendable;
 import org.geworkbench.bison.util.RandomNumberGenerator;
 
@@ -17,20 +18,13 @@ import org.geworkbench.bison.util.RandomNumberGenerator;
 public class CSMicroarray implements DSMicroarray, Serializable {
 
 	private static final long serialVersionUID = -1624438489587615570L;
+	private static Log log = LogFactory.getLog(CSMicroarray.class);
 	
     /**
-     * Microarray type, defined in DSMicroarraySet
-     */
-    protected int type = 0;
-    /**
-     * The relateive position (index) of the microarray within its host
+     * The relative position (index) of the microarray within its host
      * <code>MicroarraySet</code>.
      */
-    protected int serial = -1;
-    /**
-     * Used in the implementation of the <code>Describable</code> interface.
-     */
-    protected CSDescribable descriptions = new CSDescribable();
+    private int serial = -1;
     /**
      * Used in the implementation of the <code>Identifiable</code> interface.
      */
@@ -38,32 +32,31 @@ public class CSMicroarray implements DSMicroarray, Serializable {
     /**
      * Used in the implementation of the <code>Extendable</code> interface.
      */
-    protected CSExtendable extend = new CSExtendable();
+    private CSExtendable extend = new CSExtendable();
 
 
     /**
      * Label of the Microarray
      */
-    protected String label = null;
+    private String label = null;
 
     /**
      * Array of JMarkers containing the actual Microarray data
      */
-    public CSMarkerValue[] markerArray = null;
+    private CSMarkerValue[] markerArray = null;
 
     /**
      * A microarray that is not Enabled will be ignored
      */
-    protected boolean enabled = true;
+    private boolean enabled = true;
 
     public CSMicroarray(int markerNo) {
         markerArray = new CSMarkerValue[markerNo];
     }
 
-    public CSMicroarray(int serial, int markerNo, String description, String[] label, String[] accession, boolean randomize, int type) {
+    public CSMicroarray(int serial, int markerNo, String label, int type) {
         this.serial = serial;
-        this.label = description;
-        this.type = type;
+        this.label = label;
         markerArray = new CSMarkerValue[markerNo];
 
         for (int i = 0; i < markerNo; i++) {
@@ -75,16 +68,6 @@ public class CSMicroarray implements DSMicroarray, Serializable {
                 markerArray[i] = new CSAffyMarkerValue();
             } else {
                 markerArray[i] = new CSExpressionMarkerValue(0);
-                if (randomize) {
-                    double v = Math.random() * 10000;
-                    double s = Math.random();
-                    ((CSExpressionMarkerValue) markerArray[i]).setValue(v);
-                    if (s < 0.9) {
-                        markerArray[i].setPresent();
-                    } else {
-                        markerArray[i].setAbsent();
-                    }
-                }
             }
         }
     }
@@ -148,15 +131,16 @@ public class CSMicroarray implements DSMicroarray, Serializable {
     }
 
     public void addDescription(String desc) {
-        descriptions.addDescription(desc);
+        log.error("CSMicroArray does not support addDescription");
     }
 
     public String[] getDescriptions() {
-        return descriptions.getDescriptions();
+        log.error("CSMicroArray does not support getDescriptions");
+        return null;
     }
 
     public void removeDescription(String desc) {
-        descriptions.removeDescription(desc);
+        log.error("CSMicroArray does not support removeDescription");
     }
 
     public void addNameValuePair(String name, Object value) {
@@ -189,23 +173,13 @@ public class CSMicroarray implements DSMicroarray, Serializable {
     }
 
     public DSMutableMarkerValue getMarkerValue(DSGeneMarker mInfo) {
-        int markerIndex;
-        // If the current microarray belongs to a microarray set, then we
-        // should be able find the requested value fast.
-        //        if ( (mSet = getMicroarraySet()) != null) {
-        // @todo - xiaoqing - for every new CSGeneMarker, the default markerId =0
-        // so it always return the first marker to the query. Need change soon...
-        if (mInfo != null) {
-            if (((markerIndex = mInfo.getSerial()) >= 0) 
-            		&& (markerIndex < markerArray.length)){
-                return markerArray[markerIndex];
-            } else{
-            return null;
-        }
-
-
-        }
-        return null;
+    	if(mInfo==null) return null;
+    	
+        int markerIndex = mInfo.getSerial();
+    	if(markerIndex<0 || markerIndex>=markerArray.length)
+    		return null;
+    	else
+    		return markerArray[markerIndex];
     }
 
     public DSMutableMarkerValue getMarkerValue(int i) {
@@ -219,7 +193,7 @@ public class CSMicroarray implements DSMicroarray, Serializable {
     }
 
     public DSMicroarray deepCopy() {
-        CSMicroarray copy = new CSMicroarray(serial, markerArray.length, label, null, null, false, type);
+        CSMicroarray copy = new CSMicroarray(serial, markerArray.length, label, 0); // type does not matter because markerArray's are replaced
         for (int i = 0; i < this.getMarkerNo(); i++) {
             copy.markerArray[i] = (CSMarkerValue) markerArray[i].deepCopy();
         }

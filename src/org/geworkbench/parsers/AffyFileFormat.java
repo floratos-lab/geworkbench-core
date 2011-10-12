@@ -254,7 +254,7 @@ public class AffyFileFormat extends DataSetFileFormat {
 					fileIn);
 			reader = new BufferedReader(new InputStreamReader(progressIn));
 			CSMicroarray microarray = new CSMicroarray(0, v.size(),
-					file.getName(), null, null, true,
+					file.getName(),
 					DSMicroarraySet.affyTxtType);
 			microarray.setLabel(file.getName());
 			parser.reset();

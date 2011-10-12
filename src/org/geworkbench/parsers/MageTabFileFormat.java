@@ -227,7 +227,7 @@ public class MageTabFileFormat extends DataSetFileFormat {
 		for (int i = 0; i < arrayNames.size(); i++) {
 			String arrayName = arrayNames.get(i);
 			CSMicroarray array = new CSMicroarray(i, possibleMarkers,
-					arrayName, null, null, false,
+					arrayName,
 					DSMicroarraySet.affyTxtType);
 			maSet.add(array);	
 		}

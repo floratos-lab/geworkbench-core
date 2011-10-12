@@ -164,7 +164,7 @@ public class GenePixFileFormat extends DataSetFileFormat {
 			reader = new BufferedReader(new InputStreamReader(progressIn));
 
 			CSMicroarray microarray = new CSMicroarray(0, v.size(), file
-					.getName(), null, null, true,
+					.getName(),
 					DSMicroarraySet.genepixGPRType);
 			parser.reset();
 			parser.setMicroarray(microarray);

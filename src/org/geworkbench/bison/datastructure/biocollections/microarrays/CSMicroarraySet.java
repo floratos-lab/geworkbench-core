@@ -350,7 +350,7 @@ public class CSMicroarraySet extends CSDataSet<DSMicroarray> implements DSMicroa
 	public void initialize(int maNo, int mrkNo) {
         // this is required so that the microarray vector may create arrays of the right size
         for (int microarrayId = 0; microarrayId < maNo; microarrayId++) {
-            add(microarrayId, (DSMicroarray)new CSMicroarray(microarrayId, mrkNo, "Test", null, null, false, type));
+            add(microarrayId, (DSMicroarray)new CSMicroarray(microarrayId, mrkNo, "Test", type));
         }
 
         for (int i = 0; i < mrkNo; i++) {
