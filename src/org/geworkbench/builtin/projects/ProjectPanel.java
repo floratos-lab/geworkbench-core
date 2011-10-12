@@ -966,7 +966,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			return;
 		}
 
-		String history = node.getDescription();
+		String history = node.getDSDataSet().getDescriptions()[0];
 		boolean pendingNodeFocused = false;
 
 		TreePath pathNow = projectTree.getSelectionPath();
