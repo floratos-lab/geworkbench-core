@@ -802,6 +802,7 @@ public class Skin extends GUIFramework {
 
 	private static final String WELCOME_SCREEN_KEY = "Welcome Screen ";
 	public static final String VERSION = System.getProperty("application.version");
+	private static final int MinWidth = 850;
 
     public void undockCommandPanel(String desc){
     	for(DockableImpl dockable : commandDockables){
@@ -810,6 +811,8 @@ public class Skin extends GUIFramework {
     				dockable.undock(commandPanel);
     			else
     				dockable.frame.toFront();
+    			dockable.frame.setMinimumSize(new Dimension(MinWidth, 0));
+    			dockable.frame.setLocationRelativeTo(null);
     			break;
     		}
     	}

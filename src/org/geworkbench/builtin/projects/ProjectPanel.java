@@ -23,6 +23,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -30,6 +31,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.MenuElement;
 import javax.swing.SwingConstants;
 import javax.swing.ToolTipManager;
 import javax.swing.border.EmptyBorder;
@@ -902,8 +904,10 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				} else if (mNode instanceof ProjectNode) {
 					jProjectMenu.show(projectTree, e.getX(), e.getY());
 				} else if (mNode instanceof DataSetNode) {
+					refreshDataSetMenu(((DataSetNode)mNode).getDataset().getClass());
 					dataSetMenu.show(projectTree, e.getX(), e.getY());
 				} else if (mNode instanceof DataSetSubNode) {
+					refreshDataSetMenu(null);
 					dataSetMenu.show(projectTree, e.getX(), e.getY());
 				} else if (mNode instanceof PendingTreeNode) {
 					pendingMenu.show(projectTree, e.getX(), e.getY());
@@ -1970,4 +1974,63 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	}
 	
 	JProgressBar getProgressBar() { return progressBar; }
+
+	private Class<?> lastDataType = null;
+	private static final String commandMenu = "Commands";
+	private static final String analysisMenu = "Analysis";
+	private static final String filteringMenu = "Filtering";
+	private static final String normalizationMenu = "Normalization";
+	private void setMenuItems(){
+		HashMap<String, JMenu> menus = new HashMap<String, JMenu>();
+		JMenu menu = null;
+		for (MenuElement element: GeawConfigObject.getMenuBar().getSubElements()) {
+			menu = (JMenu) element;
+			if (menu.getText().equals(commandMenu)) {
+				for (MenuElement subelement : menu.getPopupMenu().getSubElements()) {
+					if (subelement instanceof JMenu){
+						JMenu submenu = (JMenu)subelement;
+						String subtext = submenu.getText();
+						if (subtext.equals(analysisMenu) || subtext.equals(filteringMenu)
+								|| subtext.equals(normalizationMenu)){
+							JMenu menuclone = new JMenu(subtext);
+							for (MenuElement elem : submenu.getPopupMenu().getSubElements()){
+								JMenuItem item = (JMenuItem)elem;
+								JMenuItem itemclone = new JMenuItem(item.getText());
+								for (ActionListener al : item.getActionListeners())
+									itemclone.addActionListener(al);
+								menuclone.add(itemclone);
+							}
+							menus.put(subtext, menuclone);
+						}
+					}
+				}
+			}
+		}
+		// reorder these menu items
+		if ((menu = menus.get(analysisMenu)) != null)  dataSetMenu.add(menu);
+		if ((menu = menus.get(filteringMenu)) != null)  dataSetMenu.add(menu);
+		if ((menu = menus.get(normalizationMenu)) != null)  dataSetMenu.add(menu);
+	}
+
+	private void clearMenuItems(){
+    	for (MenuElement subelement: dataSetMenu.getSubElements()){
+    		if (subelement instanceof JMenu){
+    			JMenu submenu = (JMenu)subelement;
+    			String subtext = submenu.getText();
+    			if (subtext.equals(analysisMenu) || subtext.equals(filteringMenu)
+    					|| subtext.equals(normalizationMenu)){
+    				dataSetMenu.remove(submenu);
+    			}
+			}
+		}
+    }
+	
+	private void refreshDataSetMenu(Class currentDataType){
+		if (currentDataType != lastDataType){
+			clearMenuItems();
+			if (currentDataType != null)
+				setMenuItems();
+			lastDataType = currentDataType;
+		}
+	}
 }
