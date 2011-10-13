@@ -38,6 +38,7 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -570,6 +571,8 @@ public class Skin extends GUIFramework {
         public void redock(DefaultDockingPort port) {
             if (frame != null) {
                 log.debug("Redocking " + plugin);
+                JComboBox jcb = cb.get(description);
+                if (jcb != null)  jcb.setEnabled(true);
                 docker.setIcon(undock_grey);
                 docker.setRolloverIcon(undock);
                 docker.setPressedIcon(undock_active);
@@ -803,14 +806,18 @@ public class Skin extends GUIFramework {
 	private static final String WELCOME_SCREEN_KEY = "Welcome Screen ";
 	public static final String VERSION = System.getProperty("application.version");
 	private static final int MinWidth = 850;
+	private HashMap<String, JComboBox> cb = new HashMap<String, JComboBox>();
 
-    public void undockCommandPanel(String desc){
+    public void undockCommandPanel(String desc, String title, JComboBox jcb){
+    	if (cb.get(desc) == null)  cb.put(desc, jcb);
     	for(DockableImpl dockable : commandDockables){
     		if (dockable.getDockableDesc().equals(desc)){
     			if (dockable.docked)
     				dockable.undock(commandPanel);
     			else
     				dockable.frame.toFront();
+		    	jcb.setEnabled(false);
+    			if (title != null)  dockable.frame.setTitle(title);
     			dockable.frame.setMinimumSize(new Dimension(MinWidth, 0));
     			dockable.frame.setLocationRelativeTo(null);
     			break;

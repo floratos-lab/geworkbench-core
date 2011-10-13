@@ -40,7 +40,7 @@ public class CommandBase implements MenuListener{
 				public void actionPerformed(ActionEvent e){
 					pluginComboBox.setSelectedItem(e.getActionCommand());
 					Skin skin = (Skin) GeawConfigObject.getGuiWindow();
-					skin.undockCommandPanel(popMenuItem);
+					skin.undockCommandPanel(popMenuItem, e.getActionCommand(), pluginComboBox);
 				}
 			});
 		PluginDescriptor pluginDesc = ComponentRegistry.getRegistry().getDescriptorForPlugin(this);
