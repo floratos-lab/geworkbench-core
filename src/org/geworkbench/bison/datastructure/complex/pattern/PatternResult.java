@@ -18,6 +18,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeqPattern;
 import org.geworkbench.bison.util.RandomNumberGenerator;
@@ -42,11 +43,13 @@ public class PatternResult extends CSAncillaryDataSet<DSSequence> implements
 	private final PatternDiscoveryParameters parameters;
 	private List<DSMatchedSeqPattern> patterns = new ArrayList<DSMatchedSeqPattern>();
 	private File dataSetFile;
+	public DSSequenceSet<? extends DSSequence> sequenceDB;
 
 	@SuppressWarnings("unchecked")
 	public PatternResult(final PatternDiscoveryParameters parameters,
 			String name, DSDataSet<? extends DSSequence> parent) {
 		super((DSDataSet<DSSequence>) parent, name);
+		sequenceDB = (DSSequenceSet<? extends DSSequence>) parent;
 		this.parameters = parameters;
 		String idString = RandomNumberGenerator.getID();
 		setID(idString);
@@ -199,6 +202,10 @@ public class PatternResult extends CSAncillaryDataSet<DSSequence> implements
     	// not implemented
     	// does it matter consider this not implemented both PatternDB and SoapParmsDataSet
     	log.warn("writeToFile not implemented for PatternResult");
+    }
+    
+    public DSSequenceSet<? extends DSSequence> getActiveDataSet() {
+    	return this.sequenceDB;
     }
 
 }
