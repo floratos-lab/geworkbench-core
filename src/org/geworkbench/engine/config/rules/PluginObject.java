@@ -353,6 +353,8 @@ public class PluginObject {
             topMenu = mainMenuItems[i];
         return addMenuItem(descriptor, tokens, topMenu, icon, accelerator);
     }
+    
+    final public static String escapedMenuItemDelimiter = "\\dot";
 
     /**
      * Recursively navigates the existing menu structure until it finds the
@@ -376,7 +378,7 @@ public class PluginObject {
         JMenuItem theMenuItem;
         int len;
         int i;
-        menuText = tokens.nextToken();
+        menuText = tokens.nextToken().replace(escapedMenuItemDelimiter, GeawConfigObject.menuItemDelimiter);
         // Initialize 'parentMenuItems' with the menu items of the 'parentMenu'.
         MenuElement[] temp = parentMenu.getPopupMenu().getSubElements();
         parentMenuItems = new JMenuItem[temp.length];

@@ -38,7 +38,6 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -98,8 +97,7 @@ public class Skin extends GUIFramework {
     private BorderLayout borderLayout1 = new BorderLayout();
     private JSplitPane jSplitPane1 = new JSplitPane();
     private DefaultDockingPort visualPanel = new DefaultDockingPort();
-    private DefaultDockingPort commandPanel = new DefaultDockingPort();
-    private JSplitPane jSplitPane2 = new JSplitPane();
+
     private JSplitPane jSplitPane3 = new JSplitPane();
     private DefaultDockingPort selectionPanel = new DefaultDockingPort();
     private JToolBar jToolBar = new JToolBar();
@@ -113,7 +111,7 @@ public class Skin extends GUIFramework {
     private ReferenceMap<DSDataSet<? extends DSBioObject>, String> commandLastSelected = new ReferenceMap<DSDataSet<? extends DSBioObject>, String>();
     private ReferenceMap<DSDataSet<? extends DSBioObject>, String> selectionLastSelected = new ReferenceMap<DSDataSet<? extends DSBioObject>, String>();
     private ArrayList<DockableImpl> visualDockables = new ArrayList<DockableImpl>();
-    private ArrayList<DockableImpl> commandDockables = new ArrayList<DockableImpl>();
+
     private ArrayList<DockableImpl> selectorDockables = new ArrayList<DockableImpl>();
     private DSDataSet<? extends DSBioObject> currentDataSet;
     private boolean tabSwappingMode = false;
@@ -240,13 +238,7 @@ public class Skin extends GUIFramework {
         jSplitPane1.setDividerSize(8);
         jSplitPane1.setOneTouchExpandable(true);
         jSplitPane1.setResizeWeight(0);
-        jSplitPane2.setOrientation(JSplitPane.VERTICAL_SPLIT);
-        jSplitPane2.setDoubleBuffered(true);
-        jSplitPane2.setContinuousLayout(true);
-        jSplitPane2.setDividerSize(8);
-        jSplitPane2.setOneTouchExpandable(true);
-        jSplitPane2.setResizeWeight(0.9);
-        jSplitPane2.setMinimumSize(new Dimension(0, 0));
+
         jSplitPane3.setOrientation(JSplitPane.VERTICAL_SPLIT);
         jSplitPane3.setBorder(BorderFactory.createLineBorder(Color.black));
         jSplitPane3.setDoubleBuffered(true);
@@ -260,18 +252,17 @@ public class Skin extends GUIFramework {
         statusBarPanel.add(statusBar, BorderLayout.EAST);
         contentPane.add(statusBarPanel, BorderLayout.SOUTH);
         contentPane.add(jSplitPane1, BorderLayout.CENTER);
-        jSplitPane1.add(jSplitPane2, JSplitPane.RIGHT);
-        jSplitPane2.add(commandPanel, JSplitPane.BOTTOM);
-        jSplitPane2.add(visualPanel, JSplitPane.TOP);
+        jSplitPane1.add(visualPanel, JSplitPane.RIGHT);
+
         jSplitPane1.add(jSplitPane3, JSplitPane.LEFT);
         jSplitPane3.add(selectionPanel, JSplitPane.BOTTOM);
         jSplitPane3.add(projectPanel, JSplitPane.LEFT);
         contentPane.add(jToolBar, BorderLayout.NORTH);
         jSplitPane1.setDividerLocation(230);
-        jSplitPane2.setDividerLocation((int) (guiHeight * 0.60));
+
         jSplitPane3.setDividerLocation((int) (guiHeight * 0.35));
         visualPanel.setComponentProvider(new ComponentProvider(VISUAL_AREA));
-        commandPanel.setComponentProvider(new ComponentProvider(COMMAND_AREA));
+
         selectionPanel.setComponentProvider(new ComponentProvider(SELECTION_AREA));
         projectPanel.setComponentProvider(new ComponentProvider(PROJECT_AREA));
         final String CANCEL_DIALOG = "cancel-dialog";
@@ -419,9 +410,7 @@ public class Skin extends GUIFramework {
      * Associates Visual Areas with Component Holders
      */
     protected void registerAreas() {
-        // areas.put(TOOL_AREA, jToolBar); // this is not used any more
         areas.put(VISUAL_AREA, visualPanel);
-        areas.put(COMMAND_AREA, commandPanel);
         areas.put(SELECTION_AREA, selectionPanel);
         areas.put(PROJECT_AREA, projectPanel);
     }
@@ -455,7 +444,7 @@ public class Skin extends GUIFramework {
         visualPlugin.setName(pluginName);
         DockableImpl wrapper = new DockableImpl(visualPlugin, pluginName);
         DockingManager.registerDockable(wrapper);
-        if (!areaName.equals(GUIFramework.VISUAL_AREA) && !areaName.equals(GUIFramework.COMMAND_AREA)) {
+        if ( !areaName.equals(GUIFramework.VISUAL_AREA) ) {
             DefaultDockingPort port = (DefaultDockingPort) areas.get(areaName);
             port.dock(wrapper, DockingPort.CENTER_REGION);
         } else {
@@ -571,8 +560,6 @@ public class Skin extends GUIFramework {
         public void redock(DefaultDockingPort port) {
             if (frame != null) {
                 log.debug("Redocking " + plugin);
-                JComboBox jcb = cb.get(description);
-                if (jcb != null)  jcb.setEnabled(true);
                 docker.setIcon(undock_grey);
                 docker.setRolloverIcon(undock);
                 docker.setPressedIcon(undock_active);
@@ -629,8 +616,6 @@ public class Skin extends GUIFramework {
             final JTabbedPane pane = new JTabbedPane();
             if (area.equals(VISUAL_AREA)) {
                 pane.addChangeListener(new TabChangeListener(pane, visualLastSelected));
-            } else if (area.equals(COMMAND_AREA)) {
-                pane.addChangeListener(new TabChangeListener(pane, commandLastSelected));
             } else if (area.equals(SELECTION_AREA)) {
                 pane.addChangeListener(new TabChangeListener(pane, selectionLastSelected));
             }
@@ -676,8 +661,6 @@ public class Skin extends GUIFramework {
         tabSwappingMode = true;
         addAppropriateComponents(acceptors, GUIFramework.VISUAL_AREA, visualDockables);
         selectLastComponent(GUIFramework.VISUAL_AREA, visualLastSelected.get(type));
-        addAppropriateComponents(acceptors, GUIFramework.COMMAND_AREA, commandDockables);
-        selectLastComponent(GUIFramework.COMMAND_AREA, commandLastSelected.get(type));
         selectLastComponent(GUIFramework.SELECTION_AREA, selectionLastSelected.get(type));
         addAppropriateComponents(acceptors, GUIFramework.SELECTION_AREA, selectorDockables);
         tabSwappingMode = false;
@@ -805,23 +788,4 @@ public class Skin extends GUIFramework {
 
 	private static final String WELCOME_SCREEN_KEY = "Welcome Screen ";
 	public static final String VERSION = System.getProperty("application.version");
-	private static final int MinWidth = 850;
-	private HashMap<String, JComboBox> cb = new HashMap<String, JComboBox>();
-
-    public void undockCommandPanel(String desc, String title, JComboBox jcb){
-    	if (cb.get(desc) == null)  cb.put(desc, jcb);
-    	for(DockableImpl dockable : commandDockables){
-    		if (dockable.getDockableDesc().equals(desc)){
-    			if (dockable.docked)
-    				dockable.undock(commandPanel);
-    			else
-    				dockable.frame.toFront();
-		    	jcb.setEnabled(false);
-    			if (title != null)  dockable.frame.setTitle(title);
-    			dockable.frame.setMinimumSize(new Dimension(MinWidth, 0));
-    			dockable.frame.setLocationRelativeTo(null);
-    			break;
-    		}
-    	}
-    }
 }

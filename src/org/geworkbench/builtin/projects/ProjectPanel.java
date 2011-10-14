@@ -1193,6 +1193,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			GeawConfigObject.getGuiWindow().setVisualizationType(dataset);
 			publishProjectEvent(new ProjectEvent("CCM update", dataset,
 					selectedDataSetNode));
+			clearMenuItems();
+			setMenuItems();
 		}
 	}
 
@@ -2025,7 +2027,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
     }
 	
-	private void refreshDataSetMenu(Class currentDataType){
+	private void refreshDataSetMenu(Class<?> currentDataType){
 		if (currentDataType != lastDataType){
 			clearMenuItems();
 			if (currentDataType != null)
