@@ -290,7 +290,6 @@ public class FileOpenHandler {
 					}
 
 					dataSets[0] = dataSetFileFormat.getDataFile(dataSetFiles[0]);
-					dataSets[0].setAbsPath(dataSetFiles[0].getAbsolutePath());
 				} catch (OutOfMemoryError er) {
 					log.warn("Loading a single file memory error: " + er);
 					int response = JOptionPane.showConfirmDialog(null,
@@ -341,7 +340,6 @@ public class FileOpenHandler {
 						try {
 							dataSets[i] = dataSetFileFormat.getDataFile(dataSetFile, chipType);
 							AnnotationParser.setChipType(dataSets[i], chipType);
-							dataSets[i].setAbsPath(dataSetFiles[i].getAbsolutePath());
 							if(dataSets[i] instanceof CSMicroarraySet) {
 								((CSMicroarraySet)dataSets[i]).setAnnotationFileName(AnnotationParser.getLastAnnotationFileName());
 							}

@@ -52,4 +52,13 @@ public class MedusaDataSet extends CSAncillaryDataSet<DSMicroarray> implements
 		this.data = data;
 	}
 
+	private String outputPath;
+	public String getOutputPath() {
+		return outputPath;
+	}
+
+	public void setOuputPath(String outputPath) {
+		this.outputPath = outputPath;
+	}
+
 }

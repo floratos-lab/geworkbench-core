@@ -21,7 +21,6 @@ public class CSDataSet <T extends DSBioObject> extends CSSequentialItemList<T> i
 	protected boolean dirty = true;
     protected File file = null;
     protected String label = new String("Unnamed Data Set");
-    protected String absPath = null;
     protected String compatibilityLabel = null; //default
 
     /**
@@ -133,16 +132,6 @@ public class CSDataSet <T extends DSBioObject> extends CSSequentialItemList<T> i
     }
 
     /**
-     * Gets the path to the file associated with this data set.
-     *
-     * @return the path as a String.
-     * @todo - watkin - This should be phased out and replaced with the resource-management methods.
-     */
-    public String getPath() {
-        return absPath;
-    }
-
-    /**
      * The underlying file associated with this data set.
      *
      * @return the file for this data set.
@@ -182,17 +171,6 @@ public class CSDataSet <T extends DSBioObject> extends CSSequentialItemList<T> i
     public void setDirty(boolean flag) {
         dirty = flag;
     }
-
-    /**
-     * Sets the path to the absolute path given.
-     *
-     * @param absPath the absolute (non-relative) path.
-     * @todo - watkin - This should be phased out and replaced with the resource-management methods.
-     */
-    public void setAbsPath(String absPath) {
-        this.absPath = absPath;
-    }
-
 
     public String getID() {
         return arraySetId;

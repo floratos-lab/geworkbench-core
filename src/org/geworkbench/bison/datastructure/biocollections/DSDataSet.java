@@ -73,22 +73,6 @@ public interface DSDataSet <T extends DSBioObject> extends DSDescribable, DSName
     public String getCompatibilityLabel();
 
     /**
-     * Gets the path to the file associated with this data set.
-     *
-     * @return the path as a String.
-     * @todo - watkin - This should be phased out and replaced with the resource-management methods.
-     */
-    public String getPath();
-
-    /**
-     * Sets the path to the absolute path given.
-     *
-     * @param absPath the absolute (non-relative) path.
-     * @todo - watkin - This should be phased out and replaced with the resource-management methods.
-     */
-    public void setAbsPath(String absPath);
-
-    /**
      * Returns the experiment information associated with the data set.
      * What constitutes "experiment information" varies, depending on the
      * input source where the data set came from. E.g., for Affy input

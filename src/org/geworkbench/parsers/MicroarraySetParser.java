@@ -53,7 +53,6 @@ public class MicroarraySetParser {
 
 		miroarraySet = m;
 		miroarraySet.setLabel(file.getName());
-		miroarraySet.setAbsPath(file.getAbsolutePath());
 
 		if (!readAndParse(ParseType.STRUCTURE,
 				"Getting structure information from " + file.getName()))

@@ -271,7 +271,6 @@ public class CSMicroarraySet extends CSDataSet<DSMicroarray> implements DSMicroa
 
 	public void writeToFile(String fileName) {
 		File file = new File(fileName);
-		this.absPath = file.getAbsolutePath();
 
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
