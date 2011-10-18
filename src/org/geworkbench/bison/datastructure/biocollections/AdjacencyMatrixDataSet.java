@@ -200,16 +200,12 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet<DSMicroarray> {
 				} // end of the token loop for one line
 			} // end of reading while loop
 		} catch (NumberFormatException ex) {
-			ex.printStackTrace();
 			throw new InputFileFormatException(ex.getMessage());
 		} catch (FileNotFoundException ex3) {
-			ex3.printStackTrace();
 			throw new InputFileFormatException(ex3.getMessage());
 		} catch (IOException ex) {
-			ex.printStackTrace();
 			throw new InputFileFormatException(ex.getMessage());
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new InputFileFormatException(e.getMessage());
 		}
 
