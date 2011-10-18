@@ -237,11 +237,7 @@ public class TabDelimitedDataMatrixFileFormat extends DataSetFileFormat {
 			throw ie;
 		}
 		CSMicroarraySet maSet = new CSMicroarraySet();
-		String fileName = file.getName();
-		int dotIndex = fileName.lastIndexOf(extSeperater);
-		if (dotIndex != -1) {
-			fileName = fileName.substring(0, dotIndex);
-		}
+		String fileName = file.getName();		
 		maSet.setLabel(fileName);
 		BufferedReader in = null;
 		try {
