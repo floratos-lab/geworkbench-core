@@ -148,6 +148,12 @@ public class AdjacencyMatrix implements Serializable {
 		public DSGeneMarker getMarker(){
 			return marker;
 		}
+		public NodeType getNodeType(){
+			return type;
+		}
+		public String getStringId(){
+			return stringId;
+		}
 	}
 
 	private HashMap<Node, HashMap<Node, Set<EdgeInfo>>> geneRows = new HashMap<Node, HashMap<Node, Set<EdgeInfo>>>();
