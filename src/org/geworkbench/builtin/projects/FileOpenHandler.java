@@ -10,6 +10,7 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.InterruptedIOException;
 import java.util.HashSet;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -215,6 +216,38 @@ public class FileOpenHandler {
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		@Override
 		protected void done() {
+			try {
+				get();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+				return;
+			} catch (ExecutionException e) {
+				Throwable cause = e.getCause();
+				if(cause instanceof InputFileFormatException) {
+					// Let the user know that there was a problem
+					// parsing the file.
+					JOptionPane
+							.showMessageDialog(
+									null,
+									"The input file does not comply with the designated format: "+((InputFileFormatException)cause).getMessage(),
+									"Parsing Error",
+									JOptionPane.ERROR_MESSAGE);
+					projectPanelProgressBar.setString("");
+					projectPanelProgressBar.setIndeterminate(false);
+					projectPanel.getComponent().setCursor(Cursor
+							.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+				} else if (cause instanceof InterruptedIOException) {
+					 projectPanelProgressBar.setString("");
+					 projectPanelProgressBar.setIndeterminate(false);
+					 projectPanel.getComponent().setCursor(Cursor
+							.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			       if ( !cause.getMessage().equals("progress"))
+			    	   cause.printStackTrace();
+				} else {
+					e.printStackTrace();
+				}
+				return;
+			}
 
 			if (dataSets.length>1 && dataSets[0] instanceof DSMicroarraySet) {
 				DSMicroarraySet[] maSets = new DSMicroarraySet[dataSets.length];
@@ -293,22 +326,6 @@ public class FileOpenHandler {
 					if (response == JOptionPane.YES_OPTION) {
 						System.exit(1);
 					}
-				} catch (InputFileFormatException iffe) {
-					// Let the user know that there was a problem
-					// parsing the file.
-					JOptionPane.showMessageDialog(null, iffe.getMessage(),
-							"Parsing Error", JOptionPane.ERROR_MESSAGE);
-				}
-				 catch (InterruptedIOException ie) {
-					 projectPanelProgressBar.setString("");
-					 projectPanelProgressBar.setIndeterminate(false);
-					 projectPanel.getComponent().setCursor(Cursor
-							.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-				       if ( ie.getMessage().equals("progress"))
-					        return null;
-				       else
-				    	   ie.printStackTrace();
-
 				 }
 			} else {
 				// multiple file selection is not supported for adjacency matrix
@@ -330,53 +347,31 @@ public class FileOpenHandler {
 						return null;
 					}
 					File dataSetFile = dataSetFiles[i];
-					try {
-						try {
-							dataSets[i] = dataSetFileFormat.getDataFile(dataSetFile, chipType);
-							AnnotationParser.setChipType(dataSets[i], chipType);
-							if(dataSets[i] instanceof CSMicroarraySet) {
-								((CSMicroarraySet)dataSets[i]).setAnnotationFileName(AnnotationParser.getLastAnnotationFileName());
-							}
-						} catch (OutOfMemoryError er) {
-							log.warn("Loading multiple files memory error: " + er);
-							int response = JOptionPane.showConfirmDialog(null,
-									OUT_OF_MEMORY_MESSAGE, OUT_OF_MEMORY_MESSAGE_TITLE,
-									JOptionPane.YES_NO_OPTION,
-									JOptionPane.ERROR_MESSAGE);
-							if (response == JOptionPane.YES_OPTION) {
-								System.exit(1);
-							}
-						} catch (UnsupportedOperationException e) {
-							log.warn("This data type doesn't support chip type overrides, will have to ask user again.");
-							dataSets[i] = ((DataSetFileFormat) inputFormat)
-									.getDataFile(dataSetFile);
-						}
-					} catch (InputFileFormatException iffe) {
-						// Let the user know that there was a problem
-						// parsing the file.
-						JOptionPane
-								.showMessageDialog(
-										null,
-										"The input file does not comply with the designated format.",
-										"Parsing Error",
-										JOptionPane.ERROR_MESSAGE);
-						projectPanelProgressBar.setString("");
-						projectPanelProgressBar.setIndeterminate(false);
-						projectPanel.getComponent().setCursor(Cursor
-								.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-						return null;
-					} // end of for loop
-				    catch (InterruptedIOException ie) {
-				    	projectPanelProgressBar.setString("");
-				    	projectPanelProgressBar.setIndeterminate(false);
-				    	projectPanel.getComponent().setCursor(Cursor
-							.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-				       if ( ie.getMessage().equals("progress"))
-					        return null;
-				       else
-				    	   ie.printStackTrace();
 
-				     }
+					try {
+						dataSets[i] = dataSetFileFormat.getDataFile(
+								dataSetFile, chipType);
+						AnnotationParser.setChipType(dataSets[i], chipType);
+						if (dataSets[i] instanceof CSMicroarraySet) {
+							((CSMicroarraySet) dataSets[i])
+									.setAnnotationFileName(AnnotationParser
+											.getLastAnnotationFileName());
+						}
+					} catch (OutOfMemoryError er) {
+						log.warn("Loading multiple files memory error: " + er);
+						int response = JOptionPane.showConfirmDialog(null,
+								OUT_OF_MEMORY_MESSAGE,
+								OUT_OF_MEMORY_MESSAGE_TITLE,
+								JOptionPane.YES_NO_OPTION,
+								JOptionPane.ERROR_MESSAGE);
+						if (response == JOptionPane.YES_OPTION) {
+							System.exit(1);
+						}
+					} catch (UnsupportedOperationException e) {
+						log.warn("This data type doesn't support chip type overrides, will have to ask user again.");
+						dataSets[i] = ((DataSetFileFormat) inputFormat)
+								.getDataFile(dataSetFile);
+					}
 
 					setProgress(i + 1);
 				}
