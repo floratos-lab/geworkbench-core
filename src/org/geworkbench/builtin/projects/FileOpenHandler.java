@@ -227,7 +227,6 @@ public class FileOpenHandler {
 					projectPanel.addDataSetNode(mergedSet, true);
 				}
 			} else {
-				boolean selected = false;
 				DSDataSet set = dataSets[0];
 
 				if (set == null) {
@@ -246,12 +245,7 @@ public class FileOpenHandler {
 					AdjacencyMatrixDataSet adjMatrixDS = (AdjacencyMatrixDataSet) set;
 					projectPanel.addDataSetSubNode(adjMatrixDS);
 				} else {
-					if (!selected) {
-						projectPanel.addDataSetNode(set, true);
-						selected = true;
-					} else {
-						projectPanel.addDataSetNode(set, false);
-					}
+					projectPanel.addDataSetNode(set, true);
 				}
 			}
 
