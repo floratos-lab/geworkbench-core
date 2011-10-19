@@ -8,7 +8,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.TreeMap;
 import java.util.Vector;
@@ -47,15 +46,12 @@ import org.geworkbench.engine.preferences.GlobalPreferences;
  * @author Adam Margolin
  * @version $Id$
  */
-public class CSMicroarraySet extends CSDataSet<DSMicroarray> implements DSMicroarraySet {
+final public class CSMicroarraySet extends CSDataSet<DSMicroarray> implements DSMicroarraySet {
 	private static final long serialVersionUID = -8604116507886706853L;
 
-    protected CSMarkerVector markerVector = new CSMarkerVector();
+    private CSMarkerVector markerVector = new CSMarkerVector();
 
-    protected Date timeStamp = new java.util.Date();
-
-    protected int maskedSpots = 0;
-    protected int type = -1;
+    private int type = -1;
 
     public CSMicroarraySet(String id, String name) {
         setID(id);
@@ -316,10 +312,6 @@ public class CSMicroarraySet extends CSDataSet<DSMicroarray> implements DSMicroa
 		}
 	}
 
-    public CSMarkerVector getMarkerVector() {
-        return markerVector;
-    }
-
 	public void initialize(int maNo, int mrkNo) {
         // this is required so that the microarray vector may create arrays of the right size
         for (int microarrayId = 0; microarrayId < maNo; microarrayId++) {
@@ -349,7 +341,7 @@ public class CSMicroarraySet extends CSDataSet<DSMicroarray> implements DSMicroa
 		this.annotationFileName = annotationFileName;
 	}
     
-    public int[] newid;
+    private int[] newid;
     public int[] getNewMarkerOrder(){
     	return newid;
     }
@@ -400,8 +392,4 @@ public class CSMicroarraySet extends CSDataSet<DSMicroarray> implements DSMicroa
     	markerOrder = order;
     }
 
-    // used only by MicroarraySetParser
-    public void increaseMaskedSpots() {
-		maskedSpots++;
-	}
 }

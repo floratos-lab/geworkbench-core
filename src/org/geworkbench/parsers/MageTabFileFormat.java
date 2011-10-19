@@ -149,7 +149,7 @@ public class MageTabFileFormat extends DataSetFileFormat {
 							String markerName = new String(markerNames[markLength].trim());
 							CSExpressionMarker marker = new CSExpressionMarker(m);
 							marker.setLabel(markerName);
-							maSet.getMarkerVector().add(m, marker);
+							maSet.getMarkers().add(m, marker);
 							m++;
 						}
 						if(tokens[0].contentEquals("Reporter REF") || tokens[0].contentEquals("Composite Element REF")){
@@ -271,7 +271,7 @@ public class MageTabFileFormat extends DataSetFileFormat {
 										Float v = Float.NaN;
 										CSExpressionMarkerValue markerValue = new CSExpressionMarkerValue(v);
 										DSMicroarray microarray = (DSMicroarray)maSet.get(counter);
-										microarray.setMarkerValue(maSet.newid[j], markerValue);
+										microarray.setMarkerValue(maSet.getNewMarkerOrder()[j], markerValue);
 										if (v.isNaN()) {
 											markerValue.setMissing(true);
 										} else {
@@ -290,7 +290,7 @@ public class MageTabFileFormat extends DataSetFileFormat {
 										CSExpressionMarkerValue markerValue = new CSExpressionMarkerValue(
 												v);
 										DSMicroarray microarray = (DSMicroarray)maSet.get(counter);
-										microarray.setMarkerValue(maSet.newid[j], markerValue);
+										microarray.setMarkerValue(maSet.getNewMarkerOrder()[j], markerValue);
 										if (v.isNaN()) {
 											SwingUtilities.invokeLater(new Runnable() {
 												public void run() {	
@@ -376,7 +376,7 @@ public class MageTabFileFormat extends DataSetFileFormat {
 									Float v = Float.NaN;
 									CSExpressionMarkerValue markerValue = new CSExpressionMarkerValue(v);
 									DSMicroarray microarray = (DSMicroarray)maSet.get(k);
-									microarray.setMarkerValue(maSet.newid[j], markerValue);
+									microarray.setMarkerValue(maSet.getNewMarkerOrder()[j], markerValue);
 									if (v.isNaN()) {
 										markerValue.setMissing(true);
 									} else {
@@ -394,7 +394,7 @@ public class MageTabFileFormat extends DataSetFileFormat {
 									CSExpressionMarkerValue markerValue = new CSExpressionMarkerValue(
 											v);
 									DSMicroarray microarray = (DSMicroarray)maSet.get(k);
-									microarray.setMarkerValue(maSet.newid[j], markerValue);
+									microarray.setMarkerValue(maSet.getNewMarkerOrder()[j], markerValue);
 									if (v.isNaN()) {
 										markerValue.setMissing(true);
 									} else {

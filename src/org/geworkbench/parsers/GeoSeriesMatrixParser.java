@@ -299,7 +299,7 @@ public class GeoSeriesMatrixParser {
 					String markerName = new String(tokens[0].trim());
 					CSExpressionMarker marker = new CSExpressionMarker(m);
 					marker.setLabel(markerName);
-					maSet.getMarkerVector().add(m, marker);		
+					maSet.getMarkers().add(m, marker);		
 					 
 					for (int i = 0; i < n; i++) {
 							String valString = "";
@@ -351,7 +351,7 @@ public class GeoSeriesMatrixParser {
 				String result = null;
 				for (int i = 0; i < m; i++) {
 					result = AnnotationParser.matchChipType(maSet, maSet
-							.getMarkerVector().get(i).getLabel(), false);
+							.getMarkers().get(i).getLabel(), false);
 					if (result != null) {
 						break;
 					}
@@ -361,7 +361,7 @@ public class GeoSeriesMatrixParser {
 				} else {
 					maSet.setCompatibilityLabel(result);
 				}
-				for (DSGeneMarker marker : maSet.getMarkerVector()) {
+				for (DSGeneMarker marker : maSet.getMarkers()) {
 					String token = marker.getLabel();
 					String[] locusResult = AnnotationParser.getInfo(token,
 							AnnotationParser.LOCUSLINK);

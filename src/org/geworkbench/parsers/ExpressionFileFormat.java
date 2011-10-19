@@ -6,7 +6,7 @@ import java.util.Arrays;
 import javax.swing.filechooser.FileFilter;
 
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 
 /**
@@ -38,12 +38,12 @@ public class ExpressionFileFormat extends DataSetFileFormat {
     }
 
 	public DSDataSet<DSMicroarray> getDataFile(File file, String compatibilityLabel) throws InputFileFormatException {
-        CSMicroarraySet maSet = new MicroarraySetParser().parseCSMicroarraySet(file, compatibilityLabel);
+        DSMicroarraySet maSet = new MicroarraySetParser().parseCSMicroarraySet(file, compatibilityLabel);
         return maSet;
     }
 
 	public DSDataSet<DSMicroarray> getDataFile(File file) {
-        CSMicroarraySet maSet = new MicroarraySetParser().parseCSMicroarraySet(file);
+        DSMicroarraySet maSet = new MicroarraySetParser().parseCSMicroarraySet(file);
         return maSet;
     }
 

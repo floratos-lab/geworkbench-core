@@ -124,7 +124,7 @@ public class SampleFileParser {
 								String markerName = new String(mark[0].trim());
 								CSExpressionMarker marker = new CSExpressionMarker(m);
 								marker.setLabel(markerName);
-								maSet.getMarkerVector().add(m, marker);
+								maSet.getMarkers().add(m, marker);
 								m++;	
 							}
 						}
@@ -269,7 +269,7 @@ public class SampleFileParser {
 				String result = null;
 				for (int n = 0; n < possibleMarkers; n++) {
 					result = AnnotationParser.matchChipType(maSet, maSet
-							.getMarkerVector().get(i).getLabel(), false);
+							.getMarkers().get(i).getLabel(), false);
 					if (result != null) {
 						break;
 					}
@@ -279,7 +279,7 @@ public class SampleFileParser {
 				} else {
 					maSet.setCompatibilityLabel(result);
 				}
-				for (DSGeneMarker marker : maSet.getMarkerVector()) {
+				for (DSGeneMarker marker : maSet.getMarkers()) {
 					String token = marker.getLabel();
 					String[] locusResult = AnnotationParser.getInfo(token,
 							AnnotationParser.LOCUSLINK);

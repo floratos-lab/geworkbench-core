@@ -251,7 +251,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 								String markerName = new String(mark[0].trim());
 								CSExpressionMarker marker = new CSExpressionMarker(m);
 								marker.setLabel(markerName);
-								maSet.getMarkerVector().add(m, marker);
+								maSet.getMarkers().add(m, marker);
 								m++;
 							}
 						}
@@ -269,7 +269,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 		String result = null;
 		for (int i = 0; i < possibleMarkers; i++) {
 			result = AnnotationParser.matchChipType(maSet, maSet
-					.getMarkerVector().get(i).getLabel(), false);
+					.getMarkers().get(i).getLabel(), false);
 			if (result != null) {
 				break;
 			}
@@ -279,7 +279,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 		} else {
 			maSet.setCompatibilityLabel(result);
 		}
-		for (DSGeneMarker marker : maSet.getMarkerVector()) {
+		for (DSGeneMarker marker : maSet.getMarkers()) {
 			String token = marker.getLabel();
 			String[] locusResult = AnnotationParser.getInfo(token,
 					AnnotationParser.LOCUSLINK);
@@ -336,7 +336,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 									Float v = Float.NaN;
 									CSExpressionMarkerValue markerValue = new CSExpressionMarkerValue(v);
 									DSMicroarray microarray = (DSMicroarray)maSet.get(k);
-									microarray.setMarkerValue(maSet.newid[j], markerValue);
+									microarray.setMarkerValue(maSet.getNewMarkerOrder()[j], markerValue);
 									if (v.isNaN()) {
 										markerValue.setMissing(true);
 									} else {
@@ -354,7 +354,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 									CSExpressionMarkerValue markerValue = new CSExpressionMarkerValue(
 											v);
 									DSMicroarray microarray = (DSMicroarray)maSet.get(k);
-									microarray.setMarkerValue(maSet.newid[j], markerValue);
+									microarray.setMarkerValue(maSet.getNewMarkerOrder()[j], markerValue);
 									if (v.isNaN()) {
 										markerValue.setMissing(true);
 									} else {

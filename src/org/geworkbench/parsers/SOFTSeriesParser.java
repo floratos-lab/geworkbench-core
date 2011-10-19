@@ -260,7 +260,7 @@ public class SOFTSeriesParser {
 						String markerName = new String(markerToken[0].trim());
 						CSExpressionMarker marker = new CSExpressionMarker(m);
 						marker.setLabel(markerName);
-						maSet.getMarkerVector().add(m, marker);
+						maSet.getMarkers().add(m, marker);
 						m++;
 					}
 
@@ -351,7 +351,7 @@ public class SOFTSeriesParser {
 				false);
 		maSet.setCompatibilityLabel(annotationFilename);
 
-		for (DSGeneMarker marker : maSet.getMarkerVector()) {
+		for (DSGeneMarker marker : maSet.getMarkers()) {
 			String token = marker.getLabel();
 			String[] locusResult = AnnotationParser.getInfo(token,
 					AnnotationParser.LOCUSLINK);
