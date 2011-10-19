@@ -47,6 +47,9 @@
 	<plugin id="adjMatrixFilter" name="Addjacency Matrix File Format"
 		class="org.geworkbench.parsers.AdjacencyMatrixFileFormat" />
 
+	<plugin id="patFilter" name="Pattern File Format"
+		class="org.geworkbench.parsers.PatternFileFormat" />
+		
 	<plugin id="sequenceFileFilter" name="FASTA Format"
 		class="org.geworkbench.parsers.sequences.SequenceFileFormat" />
 
