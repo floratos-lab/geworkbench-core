@@ -204,6 +204,13 @@ public class FileOpenHandler {
 			}
 		}
 	} // end of class ProgressBarDialog
+	
+	private void clearProjectPanelProgressBar() {
+		projectPanelProgressBar.setString("");
+		projectPanelProgressBar.setIndeterminate(false);
+		projectPanel.getComponent().setCursor(Cursor
+				.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+	}
 
 	private class OpenMultipleFileTask extends SwingWorker<Void, Void> {
 		ProgressBarDialog progressBarDialog;
@@ -231,16 +238,10 @@ public class FileOpenHandler {
 									"The input file does not comply with the designated format: "+((InputFileFormatException)cause).getMessage(),
 									"Parsing Error",
 									JOptionPane.ERROR_MESSAGE);
-					projectPanelProgressBar.setString("");
-					projectPanelProgressBar.setIndeterminate(false);
-					projectPanel.getComponent().setCursor(Cursor
-							.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+					clearProjectPanelProgressBar();
 				} else if (cause instanceof InterruptedIOException) {
-					 projectPanelProgressBar.setString("");
-					 projectPanelProgressBar.setIndeterminate(false);
-					 projectPanel.getComponent().setCursor(Cursor
-							.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-			       if ( !cause.getMessage().equals("progress"))
+					clearProjectPanelProgressBar();
+					if ( !cause.getMessage().equals("progress"))
 			    	   cause.printStackTrace();
 				} else {
 					e.printStackTrace();
@@ -262,7 +263,8 @@ public class FileOpenHandler {
 				DSDataSet set = dataSets[0];
 
 				if (set == null) {
-					log.error("null dataset encountered");
+					clearProjectPanelProgressBar();
+					log.info("null dataset encountered");
 					return;
 				}
 
