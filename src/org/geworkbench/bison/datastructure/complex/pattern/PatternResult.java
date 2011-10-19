@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
@@ -59,6 +61,7 @@ public class PatternResult extends CSAncillaryDataSet<DSSequence> implements
 	// another constructor originally as PatternDB
 	public PatternResult(File _seqFile, DSDataSet<DSSequence> parent) {
 		super(parent, "PatternResult");
+		this.sequenceDB = (DSSequenceSet<? extends DSSequence>) parent;
 		parameters = null;
 		dataSetFile = _seqFile; // this is only used to get track file name
 		String idString = RandomNumberGenerator.getID();
@@ -91,7 +94,9 @@ public class PatternResult extends CSAncillaryDataSet<DSSequence> implements
 			if (s.startsWith("File:")) {
 				File newFile = new File(s.substring(5));
 				if (!dataSetFile.getName().equalsIgnoreCase(newFile.getName())) {
-					log.error("dataSetFile has a different name from new name");
+					JOptionPane.showMessageDialog(null,
+							"The sequence dataset selected and the sequence filename in the pattern file doesn't match",
+							"Pattern Discovery", JOptionPane.WARNING_MESSAGE);
 					return false;
 				}
 				s = reader.readLine();
@@ -199,9 +204,7 @@ public class PatternResult extends CSAncillaryDataSet<DSSequence> implements
      */
     @Override
     public void writeToFile(String fileName) {
-    	// not implemented
-    	// does it matter consider this not implemented both PatternDB and SoapParmsDataSet
-    	log.warn("writeToFile not implemented for PatternResult");
+
     }
     
     public DSSequenceSet<? extends DSSequence> getActiveDataSet() {
