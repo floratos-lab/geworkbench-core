@@ -23,7 +23,6 @@ import org.geworkbench.bison.annotation.DSAnnotationContext;
 import org.geworkbench.bison.annotation.DSAnnotationContextManager;
 import org.geworkbench.bison.datastructure.biocollections.CSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.CSMarkerVector;
-import org.geworkbench.bison.datastructure.biocollections.DSMatrixDataSet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSAffyMarkerValue;
@@ -119,34 +118,9 @@ public class CSMicroarraySet extends CSDataSet<DSMicroarray> implements DSMicroa
         return values;
     }
 
-    /**
-     * @param markerIndex
-     * @param maIndex
-     * @return
-     * @todo - watkin - This seems to violate the contract for {@link DSMatrixDataSet#getValue(int, int)}. This
-     * method passes markerIndex and microarray index, whereas the interface refers to a row and a column. Confusing.
-     * Same thing.... this is the implementation of the method. You can change markerIndex and maIndex to row/column
-     * if you want but it's just makes it more clear if people can know what the row and column refer to.
-     * The getExpressionProfile can be changed to getRow(int markerIndex) which should also be in the DSMatrixDataSet
-     * interface. This is all legacy from before DSMatrixDataSet existed. Likewise, DSMatrixDataSet can have
-     * double getValue(T row, int column) and double[] getRow(T row) methods. -- AM
-     */
     public double getValue(int markerIndex, int maIndex) {
         double value = get(maIndex).getMarkerValue(markerIndex).getValue();
         return value;
-    }
-
-    /**
-     * Note-- changes to the returned row will not have any effect on the underlying MicroarraySet.
-     * @param markerIndex
-     * @return
-     */
-    public double[] getRow(int markerIndex) {
-        double[] expressionProfile = new double[size()];
-        for (int i = 0; i < expressionProfile.length; i++) {
-            expressionProfile[i] = getValue(markerIndex, i);
-        }
-        return expressionProfile;
     }
 
     public double[] getRow(DSGeneMarker marker) {
