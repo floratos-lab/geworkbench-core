@@ -39,11 +39,10 @@ public class MicroarraySetParser {
 	DSMicroarraySet parseCSMicroarraySet(File file,
 			String compatibilityLabel) {
 
-		DSMicroarraySet m = new CSMicroarraySet();
+		miroarraySet = new CSMicroarraySet();
 		if(compatibilityLabel!=null)
-			m.setCompatibilityLabel(compatibilityLabel);
-		
-		miroarraySet = m;
+			miroarraySet.setCompatibilityLabel(compatibilityLabel);
+
 		maskedSpots = 0;
 		miroarraySet.setLabel(file.getName());
 
