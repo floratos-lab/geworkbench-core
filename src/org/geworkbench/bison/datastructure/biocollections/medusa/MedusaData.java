@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
-import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 
 /**
@@ -17,7 +16,7 @@ public class MedusaData implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private DSMicroarraySet<DSMicroarray> arraySet;
+	private DSMicroarraySet arraySet;
 
 	// private List<RulesBean> rulesBeans = null; TODO - get from Medusa team
 
@@ -33,7 +32,7 @@ public class MedusaData implements Serializable {
 	 * @param regulators
 	 * @param targets
 	 */
-	public MedusaData(DSMicroarraySet<DSMicroarray> arraySet, ArrayList<DSGeneMarker> regulators,
+	public MedusaData(DSMicroarraySet arraySet, ArrayList<DSGeneMarker> regulators,
 			ArrayList<DSGeneMarker> targets, MedusaCommand medusaCommand) {
 		this.arraySet = arraySet;
 		this.regulators = regulators;
@@ -45,7 +44,7 @@ public class MedusaData implements Serializable {
 	 * 
 	 * @return {@link DSMicroarraySet}
 	 */
-	public DSMicroarraySet<DSMicroarray> getArraySet() {
+	public DSMicroarraySet getArraySet() {
 		return arraySet;
 	}
 

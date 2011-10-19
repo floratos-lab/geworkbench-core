@@ -13,7 +13,6 @@ import java.util.Set;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
-import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 
 /**
@@ -27,7 +26,7 @@ import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 public class AffyAnnotationUtil {
 
 	public static List<DSGeneMarker> getMarkersForGivenGeneId(
-			DSMicroarraySet<DSMicroarray> microarraySet, String gene) {
+			DSMicroarraySet microarraySet, String gene) {
 
 		List<DSGeneMarker> list = new ArrayList<DSGeneMarker>();
 
@@ -44,7 +43,7 @@ public class AffyAnnotationUtil {
 	}
 
 	public static Map<String, List<Integer>> getGeneNameToMarkerIDMapping(
-			DSMicroarraySet<? extends DSMicroarray> microarraySet) {
+			DSMicroarraySet microarraySet) {
 		Map<String, List<Integer>> map = new HashMap<String, List<Integer>>();
 		DSItemList<DSGeneMarker> markers = microarraySet.getMarkers();
 		int index = 0;

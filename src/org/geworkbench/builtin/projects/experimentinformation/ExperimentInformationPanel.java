@@ -9,7 +9,6 @@ import javax.swing.JTextArea;
 
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
-import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.engine.config.VisualPlugin;
 import org.geworkbench.engine.management.AcceptTypes;
 import org.geworkbench.engine.management.Subscribe;
@@ -37,7 +36,7 @@ public class ExperimentInformationPanel implements VisualPlugin {
     /**
      * The currently selected microarray set.
      */
-    private DSMicroarraySet<DSMicroarray> maSet = null;
+    private DSMicroarraySet maSet = null;
 
     private JTextArea experimentTextArea = new JTextArea(DEFAULT_MESSAGE);
 
@@ -77,15 +76,14 @@ public class ExperimentInformationPanel implements VisualPlugin {
      *
      * @param e
      */
-    @SuppressWarnings("unchecked")
-	@Subscribe public void receive(ProjectEvent e, Object source) {
+    @Subscribe public void receive(ProjectEvent e, Object source) {
         DSDataSet<?> dataSet = e.getDataSet();
         if (dataSet instanceof DSMicroarraySet) {
         	String experimentInfo = DEFAULT_MESSAGE;
             if (e.getMessage().equals(ProjectEvent.CLEARED)) {
                 maSet = null;
             } else {
-                maSet = (DSMicroarraySet<DSMicroarray>) dataSet;
+                maSet = (DSMicroarraySet) dataSet;
                 String[] descriptions = maSet.getDescriptions();
                 if (descriptions != null && descriptions.length > 0)
                     experimentInfo = "";

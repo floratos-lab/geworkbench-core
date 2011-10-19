@@ -45,7 +45,7 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 	/**
 	 * The reference microarray set.
 	 */
-	protected DSMicroarraySet<DSMicroarray> refMASet = null;
+	protected DSMicroarraySet refMASet = null;
 	protected DSMicroarraySetView<DSGeneMarker, DSMicroarray> maSetView = null;
 
 	protected JCheckBox chkAllMarkers = new JCheckBox("All Markers", false);
@@ -90,7 +90,6 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 	 *            ProjectEvent
 	 */
 	@Subscribe
-	@SuppressWarnings("unchecked")
 	public void receive(org.geworkbench.events.ProjectEvent e, Object source) {
 
 		log.debug("Source object " + source);
@@ -102,7 +101,7 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 			DSDataSet<?> dataSet = e.getDataSet();
 			if (dataSet instanceof DSMicroarraySet) {
 				if (refMASet != dataSet) {
-					this.refMASet = (DSMicroarraySet<DSMicroarray>) dataSet;					
+					this.refMASet = (DSMicroarraySet) dataSet;					
 				}
 			}
 			refreshMaSetView();

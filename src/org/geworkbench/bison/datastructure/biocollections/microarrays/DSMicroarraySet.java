@@ -14,7 +14,7 @@ import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
  * 
  * @version $Id$
  */
-public interface DSMicroarraySet <T extends DSMicroarray> extends DSDataSet<T> {
+public interface DSMicroarraySet extends DSDataSet<DSMicroarray> {
 
     public final static int geneExpType = 0; // Probably needs to be removed
 
@@ -36,7 +36,7 @@ public interface DSMicroarraySet <T extends DSMicroarray> extends DSDataSet<T> {
      *
      * @param newMaSet MicroarraySet
      */
-    void mergeMicroarraySet(DSMicroarraySet<T> newMaSet) throws Exception;
+    void mergeMicroarraySet(DSMicroarraySet newMaSet) throws Exception;
 
     /**
      * get the marker list

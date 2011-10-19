@@ -1,15 +1,14 @@
 package org.geworkbench.builtin.projects;
 
-import org.geworkbench.bison.annotation.CSAnnotationContextManager;
-import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
-import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
-import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.geworkbench.bison.annotation.CSAnnotationContextManager;
+import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
+import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 
 /**
  * A representation of a node for saving to disk.
@@ -31,8 +30,7 @@ public class DataSetSaveNode implements Serializable {
     private String selectionSelected;
     private ArrayList<DataSetSaveNode> children;
 
-    @SuppressWarnings("unchecked")
-	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
         // Include the criteria info if there is any
         if (dataSet != null) {
@@ -40,21 +38,20 @@ public class DataSetSaveNode implements Serializable {
             CSAnnotationContextManager.SerializableContexts contexts = manager.getContextsForSerialization(dataSet);
             out.writeObject(contexts);
             if (dataSet instanceof DSMicroarraySet) {
-                DSMicroarraySet<DSMicroarray> set = (DSMicroarraySet<DSMicroarray>) dataSet;
+                DSMicroarraySet set = (DSMicroarraySet) dataSet;
                 CSAnnotationContextManager.SerializableContexts markerContexts = manager.getContextsForSerialization(set.getMarkers());
                 out.writeObject(markerContexts);
             }
         }
     }
 
-    @SuppressWarnings("unchecked")
-	private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         if (dataSet != null) {
             CSAnnotationContextManager manager = CSAnnotationContextManager.getInstance();
             manager.setContextsFromSerializedObject(dataSet, (CSAnnotationContextManager.SerializableContexts) in.readObject());
             if (dataSet instanceof DSMicroarraySet) {
-                DSMicroarraySet<DSMicroarray> set = (DSMicroarraySet<DSMicroarray>) dataSet;
+                DSMicroarraySet set = (DSMicroarraySet) dataSet;
                 manager.setContextsFromSerializedObject(set.getMarkers(), (CSAnnotationContextManager.SerializableContexts) in.readObject());
             }
         }

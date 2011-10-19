@@ -10,7 +10,7 @@ public class CSMasterRegulatorTableResultSet extends CSAncillaryDataSet<DSMicroa
 	private static final long serialVersionUID = 4079428629682719155L;
 	private Object[][] data = null;
 
-	public CSMasterRegulatorTableResultSet(DSMicroarraySet<DSMicroarray> parent, String label) {
+	public CSMasterRegulatorTableResultSet(DSMicroarraySet parent, String label) {
 		super(parent, label);
 	}
 

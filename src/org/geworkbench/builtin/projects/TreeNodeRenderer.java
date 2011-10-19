@@ -11,7 +11,6 @@ import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
-import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.properties.DSNamed;
 import org.geworkbench.engine.management.TypeMap;
 
@@ -64,7 +63,7 @@ public class TreeNodeRenderer extends DefaultTreeCellRenderer {
                 }
                 String[] descriptions = df.getDescriptions();
                 if (df != null && (df instanceof DSMicroarraySet)){
-                	DSMicroarraySet<? extends DSMicroarray> microarraySet = (DSMicroarraySet<? extends DSMicroarray>)df;
+                	DSMicroarraySet microarraySet = (DSMicroarraySet)df;
                     setToolTipText("# of microarrays: " +
                             microarraySet.size() + ",   " +
                             "# of markers: " +

@@ -6,7 +6,6 @@ import org.apache.commons.lang.StringUtils;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
-import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 
 public class ValidationUtils {
@@ -16,7 +15,6 @@ public class ValidationUtils {
 
 	private static String errorMsg = "";
 
-	@SuppressWarnings("unchecked")
 	public static boolean validateMicroarrayMarkers(DSDataSet<?> dataSet,
 			String loadedMarkers) {
 		// Init
@@ -31,7 +29,7 @@ public class ValidationUtils {
 
 		// Check for proper data type
 		if (dataSet instanceof DSMicroarraySet) {
-			return validateMarkers(((DSMicroarraySet<DSMicroarray>) dataSet).getMarkers(),
+			return validateMarkers(((DSMicroarraySet) dataSet).getMarkers(),
 					loadedMarkers);
 		} else {
 			errorMsg = "Data is not a microarray data set.";

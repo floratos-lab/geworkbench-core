@@ -26,7 +26,6 @@ import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarr
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
-import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.parsers.AffymetrixParser;
 import org.geworkbench.bison.parsers.resources.AffyResource;
 import org.geworkbench.bison.parsers.resources.Resource;
@@ -55,7 +54,7 @@ public class AffyFileFormat extends DataSetFileFormat {
 	 */
 	private String[] affyExtensions = { "txt" };
 	private AffyResource resource = new AffyResource();
-	private DSMicroarraySet<DSMicroarray> microarraySet = null;
+	private DSMicroarraySet microarraySet = null;
 	/**
 	 * <code>FileFilter</code> for gating Affy files, based on their extension.
 	 */
@@ -298,7 +297,7 @@ public class AffyFileFormat extends DataSetFileFormat {
 		return getMArraySet(file);
 	}
 
-	public DSMicroarraySet<? extends DSBioObject> getMArraySet(File file)
+	public DSMicroarraySet getMArraySet(File file)
 			throws InputFileFormatException, InterruptedIOException {
 		CSMicroarraySet maSet = new CSMicroarraySet();
 		getMArraySet(file, maSet);

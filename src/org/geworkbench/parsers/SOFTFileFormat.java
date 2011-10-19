@@ -137,7 +137,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 		
 		BufferedReader readIn = null;
 		String lineCh = null; 
-		DSMicroarraySet<DSMicroarray> maSet1 = new CSMicroarraySet();
+		DSMicroarraySet maSet1 = new CSMicroarraySet();
 		try {
 			readIn = new BufferedReader(new FileReader(file));
 			try {
@@ -197,7 +197,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 		return null;
 	}
 	 
-	private DSMicroarraySet<DSMicroarray> parseFile(File file)
+	private DSMicroarraySet parseFile(File file)
 		throws InputFileFormatException, InterruptedIOException {
 		
 		if (!checkFormat(file)) {

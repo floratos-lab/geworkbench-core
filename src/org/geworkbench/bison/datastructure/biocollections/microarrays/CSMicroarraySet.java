@@ -47,7 +47,7 @@ import org.geworkbench.engine.preferences.GlobalPreferences;
  * @author Adam Margolin
  * @version $Id$
  */
-public class CSMicroarraySet extends CSDataSet<DSMicroarray> implements DSMicroarraySet<DSMicroarray> {
+public class CSMicroarraySet extends CSDataSet<DSMicroarray> implements DSMicroarraySet {
 	private static final long serialVersionUID = -8604116507886706853L;
 
     protected CSMarkerVector markerVector = new CSMarkerVector();
@@ -149,7 +149,7 @@ public class CSMicroarraySet extends CSDataSet<DSMicroarray> implements DSMicroa
         return markerVector;
     }
 
-	public void mergeMicroarraySet(DSMicroarraySet<DSMicroarray> newMaSet) {
+	public void mergeMicroarraySet(DSMicroarraySet newMaSet) {
         /**
          * Stores the markers of the microarray set (the same markers that are also
          * found in {@link org.geworkbench.bison.model.microarray.AbstractMicroarraySet#markerInfoVector}).

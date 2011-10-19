@@ -23,7 +23,6 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSExpressionMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
-import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 
 /**
  * @author Nikhil
@@ -126,7 +125,7 @@ public class SOFTSeriesParser {
 	 * @see
 	 * org.geworkbench.components.parsers.FileFormat#getMArraySet(java.io.File)
 	 */
-	public DSMicroarraySet<DSMicroarray> parseSOFTSeriesFile(File file)
+	public DSMicroarraySet parseSOFTSeriesFile(File file)
 			throws InputFileFormatException, InterruptedIOException {
 
 		String platformChosen = choosePlatform(file);

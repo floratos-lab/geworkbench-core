@@ -11,9 +11,9 @@ import org.geworkbench.util.CsvFileFilter;
 
 public class CSTTestResultSet <T extends DSGeneMarker> extends CSSignificanceResultSet<T> implements DSTTestResultSet<T>{
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -6724936547706753609L;
 
-	public CSTTestResultSet(DSMicroarraySet<DSMicroarray> parent, String label,
+	public CSTTestResultSet(DSMicroarraySet parent, String label,
 			String[] caseLabels, String[] controlLabels, double alpha) {
 		super(parent, label, caseLabels, controlLabels, alpha);
 		// TODO Auto-generated constructor stub	

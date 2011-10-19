@@ -14,7 +14,7 @@ public class FoldChangeResult extends CSAncillaryDataSet<DSMicroarray> {
 
 	private static final long serialVersionUID = -4049899027384245969L;
 
-	public FoldChangeResult(final DSMicroarraySet<DSMicroarray> maSet, String string) {
+	public FoldChangeResult(final DSMicroarraySet maSet, String string) {
 		super(maSet, string);		
 	}
 

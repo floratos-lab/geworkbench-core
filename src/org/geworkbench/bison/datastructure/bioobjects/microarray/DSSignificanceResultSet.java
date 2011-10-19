@@ -35,7 +35,7 @@ public interface DSSignificanceResultSet <T extends DSGeneMarker> extends DSAnci
 
     public String[] getLabels(int index);
 
-    public DSMicroarraySet<DSMicroarray> getParentDataSet();
+    public DSMicroarraySet getParentDataSet();
 
     public void sortMarkersBySignificance();
   

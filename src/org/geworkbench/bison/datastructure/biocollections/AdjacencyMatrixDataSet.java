@@ -43,11 +43,10 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet<DSMicroarray> {
 	private final double threshold;
 	private String networkName;
 
-	@SuppressWarnings("unchecked")
 	public AdjacencyMatrixDataSet(final AdjacencyMatrix matrix,
 			final double threshold, final String name,
 			final String networkName,
-			final DSMicroarraySet<? extends DSMicroarray> parent) {
+			final DSMicroarraySet parent) {
 		super((DSDataSet<DSMicroarray>) parent, name);
 		setID(RandomNumberGenerator.getID());
 		this.matrix = matrix;
@@ -109,7 +108,7 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet<DSMicroarray> {
 	 */
 	public AdjacencyMatrixDataSet(final double threshold, final String name,
 			final String networkName,
-			final DSMicroarraySet<DSMicroarray> parent, String fileName)
+			final DSMicroarraySet parent, String fileName)
 			throws InputFileFormatException {
 
 		super((DSDataSet<DSMicroarray>) parent, name);
@@ -123,7 +122,7 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet<DSMicroarray> {
 	}
 
 	private static AdjacencyMatrix.Node token2node(String token,
-			final String selectedRepresentedBy, final boolean isRestrict, final DSMicroarraySet<DSMicroarray> maSet) {
+			final String selectedRepresentedBy, final boolean isRestrict, final DSMicroarraySet maSet) {
 		DSGeneMarker m = null;
 		if (selectedRepresentedBy.equals(PROBESET_ID)
 				|| selectedRepresentedBy.equals(GENE_NAME)
@@ -153,7 +152,7 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet<DSMicroarray> {
 	}
 
 	public static AdjacencyMatrix parseAdjacencyMatrix(String fileName,
-			final DSMicroarraySet<DSMicroarray> maSet,
+			final DSMicroarraySet maSet,
 			Map<String, String> interactionTypeSifMap, String format,
 			String selectedRepresentedBy, boolean isRestrict)
 			throws InputFileFormatException {

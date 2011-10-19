@@ -179,7 +179,7 @@ public class GeoSeriesMatrixParser {
 	 * 
 	 * @see org.geworkbench.components.parsers.FileFormat#getMArraySet(java.io.File)
 	 */
-	public DSMicroarraySet<DSMicroarray> getMArraySet(File file)
+	public DSMicroarraySet getMArraySet(File file)
 			throws InputFileFormatException, InterruptedIOException {
 
 		final int extSeperater = '.';

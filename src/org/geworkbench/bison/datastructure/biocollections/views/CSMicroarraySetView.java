@@ -37,12 +37,12 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
 	 */
 	private static final long serialVersionUID = 1452815738190971373L;
 
-	private DSMicroarraySet<Q> dataSet;
+	private DSMicroarraySet dataSet;
 
 	/**
 	 * Contains the active microarrays, organized as a DSPanel.
 	 */
-	private DSPanel<Q> itemPanel = new CSPanel<Q>("");
+	private DSPanel<DSMicroarray> itemPanel = new CSPanel<DSMicroarray>("");
 
 	/**
 	 * Designates if the microarray subselection imposed by the activated
@@ -66,7 +66,7 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
 	public CSMicroarraySetView() {
 	}
 
-	public CSMicroarraySetView(DSMicroarraySet<Q> dataSet) {
+	public CSMicroarraySetView(DSMicroarraySet dataSet) {
 		this.dataSet = dataSet;
 	}
 
@@ -180,7 +180,7 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
 	 *            The new reference microarray set.
 	 */
 	@SuppressWarnings("unchecked")
-	public void setMicroarraySet(DSMicroarraySet<Q> ma) {
+	public void setMicroarraySet(DSMicroarraySet ma) {
 		if (ma != null) {
 			dataSet = ma;
 			{
@@ -192,9 +192,9 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
 				}
 			}
 			{
-				DSAnnotationContext<Q> context = CSAnnotationContextManager
+				DSAnnotationContext<DSMicroarray> context = CSAnnotationContextManager
 						.getInstance().getCurrentContext(dataSet);
-				DSPanel<Q> mp = context.getActiveItems();
+				DSPanel<DSMicroarray> mp = context.getActiveItems();
 				if (mp != null) {
 					itemPanel = mp;
 				}
@@ -202,8 +202,8 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
 		}
 	}
 
-	public DSMicroarraySet<Q> getMicroarraySet() {
-		return (DSMicroarraySet<Q>) getDataSet();
+	public DSMicroarraySet getMicroarraySet() {
+		return (DSMicroarraySet) getDataSet();
 	}
 
 	// the following 9 methods used to be in CSDataSetView
@@ -216,13 +216,14 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
 	 *         <code>index</code> is non-negative and no more than the total
 	 *         number of microarrays in the set. <code>null</code> otherwise.
 	 */
+	@SuppressWarnings("unchecked")
 	public DSItemList<Q> items() {
 		if ((useItemPanel && (itemPanel != null) && (itemPanel.size() > 0))
 				|| dataSet == null) {
-			return itemPanel;
+			return (DSItemList<Q>) itemPanel;
 		} else {
 			// to change
-			return dataSet;
+			return (DSItemList<Q>) dataSet;
 		}
 	}
 
@@ -244,20 +245,23 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
 		return useItemPanel;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void setItemPanel(DSPanel<Q> mArrayPanel) {
-		this.itemPanel = mArrayPanel;
+		this.itemPanel = (DSPanel<DSMicroarray>) mArrayPanel;
 	}
 
+	@SuppressWarnings("unchecked")
 	public DSPanel<Q> getItemPanel() {
-		return itemPanel;
+		return (DSPanel<Q>) itemPanel;
 	}
 
 	public void setDataSet(DSDataSet<Q> qs) {
-		dataSet = (DSMicroarraySet<Q>) qs;
+		dataSet = (DSMicroarraySet) qs;
 	}
 
+	@SuppressWarnings("unchecked")
 	public DSDataSet<Q> getDataSet() {
-		return dataSet;
+		return (DSDataSet<Q>) dataSet;
 	}
 
 	public Q get(int index) {

@@ -20,7 +20,7 @@ public class KMeansResultMarkers extends KMeansResult implements DSSOMClusterDat
     private SOMCluster[][] clusters;
     private DSMicroarraySetView<? extends DSGeneMarker, ? extends DSMicroarray> parentSet;
 	
-	public KMeansResultMarkers(DSMicroarraySet<DSMicroarray> maSet,
+	public KMeansResultMarkers(DSMicroarraySet maSet,
 			String name, DSMicroarraySetView<? extends DSGeneMarker, ? extends DSMicroarray> dataSetView,
 			SOMCluster[][] clusters, int clusterBy,
 			ArrayList<List<String[]>> resultList) {

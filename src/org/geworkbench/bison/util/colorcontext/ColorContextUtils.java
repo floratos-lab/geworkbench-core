@@ -14,7 +14,7 @@ import org.geworkbench.bison.util.Range;
 public class ColorContextUtils {
 
     public static void computeRange(DSMicroarraySetView<DSGeneMarker, DSMicroarray> view) {
-        DSMicroarraySet<DSMicroarray> microarraySet = view.getMicroarraySet();
+        DSMicroarraySet microarraySet = view.getMicroarraySet();
         // DSCriteria criteria = CSCriterionManager.getCriteria(microarraySet);
         // view.setItemPanel(criteria.getSelectedCriterion());
         // view.useItemPanel(true);

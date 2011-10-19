@@ -21,7 +21,7 @@ public class IdeaResultDataSet extends CSAncillaryDataSet<DSMicroarray> {
 	private List<IdeaModule> moduleList=null;
 	private double pvalue=0.05;
 
-	public IdeaResultDataSet(final DSMicroarraySet<DSMicroarray> maSet, String string,
+	public IdeaResultDataSet(final DSMicroarraySet maSet, String string,
 			List<IdeaGLoc> locList, List<IdeaGLoc> gocList, List<IdeaNode> nodeList, List<IdeaModule> moduleList,double pvalue) {
 		super(maSet, string);
 		

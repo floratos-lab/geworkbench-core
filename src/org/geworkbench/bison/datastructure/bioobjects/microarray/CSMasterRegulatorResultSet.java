@@ -17,18 +17,18 @@ public class CSMasterRegulatorResultSet <T extends DSGeneMarker> extends CSAncil
 	private HashMap<DSGeneMarker,DSItemList<DSGeneMarker>> TF2GenesInTargetList = new HashMap<DSGeneMarker,DSItemList<DSGeneMarker>>();
 	private HashMap<DSGeneMarker,Double> TF2PValue = new HashMap<DSGeneMarker,Double>();
 
-	private final DSMicroarraySet<DSMicroarray> maSet;
+	private final DSMicroarraySet maSet;
 	private int markerCount = 0;
 
 	private Map<DSGeneMarker, Double> tValues;
 
-	public CSMasterRegulatorResultSet(final DSMicroarraySet<DSMicroarray> parent, String label, int markerCount) {
+	public CSMasterRegulatorResultSet(final DSMicroarraySet parent, String label, int markerCount) {
 		super(parent, label);
 		this.maSet = parent;
 		this.markerCount = markerCount;
 	}
 	
-	public DSMicroarraySet<DSMicroarray> getMicroarraySet(){
+	public DSMicroarraySet getMicroarraySet(){
 		return maSet;
 	}
 	

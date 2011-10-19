@@ -23,7 +23,7 @@ public abstract class FilteringAnalysis extends AbstractAnalysis {
 
 	private static final long serialVersionUID = -7232110290771712959L;
 
-	protected DSMicroarraySet<DSMicroarray> maSet = null;
+	protected DSMicroarraySet maSet = null;
 
 	protected enum CriterionOption {
 		COUNT, PERCENT
@@ -40,12 +40,11 @@ public abstract class FilteringAnalysis extends AbstractAnalysis {
 		return AbstractAnalysis.IGNORE_TYPE;
 	}
 
-	@SuppressWarnings("unchecked")
 	public AlgorithmExecutionResults execute(Object input) {
 		if (input == null || !(input instanceof DSMicroarraySet))
 			return new AlgorithmExecutionResults(false, "Invalid input.", null);
 
-		maSet = (DSMicroarraySet<DSMicroarray>) input;
+		maSet = (DSMicroarraySet) input;
 
 		if (!expectedType()) {
 			return new AlgorithmExecutionResults(false,
@@ -109,10 +108,9 @@ public abstract class FilteringAnalysis extends AbstractAnalysis {
 
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<Integer> getMarkersToBeRemoved(DSMicroarraySet<?> input) {
+	public List<Integer> getMarkersToBeRemoved(DSMicroarraySet input) {
 
-		maSet = (DSMicroarraySet<DSMicroarray>) input;
+		maSet = (DSMicroarraySet) input;
 
 		getParametersFromPanel();
 

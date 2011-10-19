@@ -14,7 +14,7 @@ public interface DSMasterRagulatorResultSet <T extends DSGeneMarker> extends DSA
  * @version $Id$
  */
 
-	public DSMicroarraySet<DSMicroarray> getMicroarraySet();
+	public DSMicroarraySet getMicroarraySet();
     public void setGenesInRegulon(DSGeneMarker TF, DSItemList<DSGeneMarker> markers);
     public void setGenesInTargetList(DSGeneMarker TF, DSItemList<DSGeneMarker> markers);
     public DSItemList<DSGeneMarker> getGenesInRegulon(DSGeneMarker TF);

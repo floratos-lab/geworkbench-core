@@ -32,7 +32,6 @@ import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarr
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
-import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.util.colorcontext.ColorContext;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
@@ -255,7 +254,7 @@ public class FileOpenHandler {
 				for (int i = 0; i < dataSets.length; i++) {
 					maSets[i] = (DSMicroarraySet) dataSets[i];
 				}
-				DSMicroarraySet<DSMicroarray> mergedSet = doMergeSets(maSets);
+				DSMicroarraySet mergedSet = doMergeSets(maSets);
 				if(mergedSet!=null) {
 					projectPanel.addDataSetNode(mergedSet, true);
 				}
@@ -270,7 +269,7 @@ public class FileOpenHandler {
 				// Do initial color context update if it is a microarray
 				if (set instanceof DSMicroarraySet) {
 					ProjectPanel
-							.addColorContext((DSMicroarraySet<DSMicroarray>) set);
+							.addColorContext((DSMicroarraySet) set);
 				}
 
 				if (set instanceof AdjacencyMatrixDataSet) {
@@ -389,8 +388,7 @@ public class FileOpenHandler {
 	 *
 	 * @param sets
 	 */
-	@SuppressWarnings("unchecked")
-	public static DSMicroarraySet<DSMicroarray> doMergeSets(DSMicroarraySet<? extends DSMicroarray>[] sets) {
+	public static DSMicroarraySet doMergeSets(DSMicroarraySet[] sets) {
 		if (!isSameMarkerSets(sets)) {
 			JOptionPane
 					.showMessageDialog(
@@ -403,13 +401,13 @@ public class FileOpenHandler {
 		if (sets == null)
 			return null;
 		
-		DSMicroarraySet<DSMicroarray> mergedSet = null;
+		DSMicroarraySet mergedSet = null;
 
 		String desc = "";
 		if(sets.length>1)desc = "Merged DataSet: ";
 		
 		for (int i = 0; i < sets.length; i++) {
-			DSMicroarraySet<DSMicroarray> set = (DSMicroarraySet<DSMicroarray>) sets[i];
+			DSMicroarraySet set = (DSMicroarraySet) sets[i];
 			if (mergedSet == null) {
 				try {
 					mergedSet = set.getClass().newInstance();
@@ -418,14 +416,14 @@ public class FileOpenHandler {
 					// mergedSet.setMarkerNo(set.size());
 					// mergedSet.setMicroarrayNo(set.size());
 
-					((DSMicroarraySet<DSMicroarray>) mergedSet)
+					((DSMicroarraySet) mergedSet)
 							.setCompatibilityLabel(set.getCompatibilityLabel());
-					((DSMicroarraySet<DSMicroarray>) mergedSet).getMarkers()
+					((DSMicroarraySet) mergedSet).getMarkers()
 							.addAll(set.getMarkers());
 					DSItemList<DSGeneMarker> markerList = set.getMarkers();
 					for (int j = 0; j < markerList.size(); j++) {
 						DSGeneMarker dsGeneMarker = markerList.get(j);
-						((DSMicroarraySet<DSMicroarray>) mergedSet)
+						((DSMicroarraySet) mergedSet)
 								.getMarkers().add(dsGeneMarker.deepCopy());
 					}
 					for (int k = 0; k < set.size(); k++) {
@@ -478,7 +476,7 @@ public class FileOpenHandler {
 	 * @param sets
 	 * @return
 	 */
-	private static boolean isSameMarkerSets(DSMicroarraySet<? extends DSMicroarray>[] sets) {
+	private static boolean isSameMarkerSets(DSMicroarraySet[] sets) {
 		if (sets == null || sets.length <= 1)
 			return true;
 

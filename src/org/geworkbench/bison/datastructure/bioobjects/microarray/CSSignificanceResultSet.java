@@ -52,7 +52,6 @@ public class CSSignificanceResultSet <T extends DSGeneMarker> extends CSAncillar
     private String[][] labels = new String[2][];
     private DSPanel<T> panel;
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
 	public CSSignificanceResultSet(DSMicroarraySet parent, String label, String[] caseLabels, String[] controlLabels, double alpha) {
         super(parent, label);
         this.alpha = alpha;
@@ -159,10 +158,10 @@ public class CSSignificanceResultSet <T extends DSGeneMarker> extends CSAncillar
         
     }
 
-    public DSMicroarraySet<DSMicroarray> getParentDataSet() {
+    public DSMicroarraySet getParentDataSet() {
     	DSDataSet<DSMicroarray> parentDataSet = super.getParentDataSet();
     	if(parentDataSet instanceof DSMicroarraySet) {
-    		return (DSMicroarraySet<DSMicroarray>) super.getParentDataSet();
+    		return (DSMicroarraySet) super.getParentDataSet();
     	} else {
 			log.error("parentDataSet is not an instance DSMicroarraySet");
     		return null;

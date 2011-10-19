@@ -20,7 +20,6 @@ import org.geworkbench.bison.annotation.CSAnnotationContextManager;
 import org.geworkbench.bison.annotation.DSAnnotationContext;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
-import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSExpressionMarkerValue;
@@ -124,7 +123,7 @@ public class MicroarraySetParser {
 	private transient Vector<String> phenotypes = new Vector<String>();
 	private transient int phenotypeNo = 0;
 
-	private void executeLine(String line, DSMicroarraySet<DSMicroarray> mArraySet) {
+	private void executeLine(String line, DSMicroarraySet mArraySet) {
 		CSAnnotationContextManager manager = CSAnnotationContextManager
 				.getInstance();
 		if (line.charAt(0) == '#') {
@@ -305,7 +304,7 @@ public class MicroarraySetParser {
 		}
 	}
 
-	void parseLine(String line, DSMicroarraySet<? extends DSBioObject> mArraySet) {
+	void parseLine(String line, DSMicroarraySet mArraySet) {
 
 		if (line.charAt(0) == '#') {
 			return;

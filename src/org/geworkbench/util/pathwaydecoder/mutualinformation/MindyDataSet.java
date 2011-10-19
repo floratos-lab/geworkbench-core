@@ -18,7 +18,7 @@ public class MindyDataSet extends CSAncillaryDataSet<DSMicroarray> {
     private String filename;
 
 
-	public MindyDataSet(DSMicroarraySet<DSMicroarray> parent, String label, MindyData data, String filename) {
+	public MindyDataSet(DSMicroarraySet parent, String label, MindyData data, String filename) {
         super(parent, label);
         this.data = data;
         this.filename = filename;

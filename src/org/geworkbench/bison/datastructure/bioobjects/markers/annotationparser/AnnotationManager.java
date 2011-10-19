@@ -10,7 +10,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
-import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 
 // this class is created to support the go term detail information from annotation
 // this pattern is superior to AnnotationParser
@@ -19,11 +18,11 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 public class AnnotationManager {
 	static Log log = LogFactory.getLog(AnnotationManager.class);
 
-	static private WeakHashMap<DSMicroarraySet<DSMicroarray>, HashMap<Integer, Set<String>>> goTerm2GeneMap = new WeakHashMap<DSMicroarraySet<DSMicroarray>, HashMap<Integer, Set<String>>>();
-	static private WeakHashMap<DSMicroarraySet<DSMicroarray>, Map<String, GeneDetails>> geneDetailMap = new WeakHashMap<DSMicroarraySet<DSMicroarray>, Map<String, GeneDetails>>();
+	static private WeakHashMap<DSMicroarraySet, HashMap<Integer, Set<String>>> goTerm2GeneMap = new WeakHashMap<DSMicroarraySet, HashMap<Integer, Set<String>>>();
+	static private WeakHashMap<DSMicroarraySet, Map<String, GeneDetails>> geneDetailMap = new WeakHashMap<DSMicroarraySet, Map<String, GeneDetails>>();
 
 	static public HashMap<Integer, Set<String>> getGoTermToGene(
-			final DSMicroarraySet<DSMicroarray> dataset) {
+			final DSMicroarraySet dataset) {
 		HashMap<Integer, Set<String>> goTermToGene = goTerm2GeneMap
 				.get(dataset);
 		if (goTermToGene != null) {
@@ -55,7 +54,7 @@ public class AnnotationManager {
 	}
 
 	static public Map<String, GeneDetails> getGeneDetail(
-			final DSMicroarraySet<DSMicroarray> dataset) {
+			final DSMicroarraySet dataset) {
 		Map<String, GeneDetails> detail = geneDetailMap.get(dataset);
 		if (detail != null) {
 			return detail;
@@ -104,7 +103,7 @@ public class AnnotationManager {
 	}
 
 	private static void parseOneGoTermField(HashMap<Integer, Set<String>> map,
-			DSMicroarraySet<DSMicroarray> dataset, String fieldName,
+			DSMicroarraySet dataset, String fieldName,
 			String markerLabel, String[] geneSymbols) {
 		String[] goTerms = AnnotationParser.getInfo(dataset, markerLabel,
 				fieldName);
@@ -131,11 +130,11 @@ public class AnnotationManager {
 	}
 
 	public static Set<String> getAnnotatedGenes(
-			DSMicroarraySet<DSMicroarray> dataset, int goTermId) {
+			DSMicroarraySet dataset, int goTermId) {
 		return getGoTermToGene(dataset).get(goTermId);
 	}
 
-	public static String getGeneDetail(DSMicroarraySet<DSMicroarray> dataset,
+	public static String getGeneDetail(DSMicroarraySet dataset,
 			String gene) {
 		GeneDetails detail = getGeneDetail(dataset).get(gene);
 		if (detail == null)
@@ -143,7 +142,7 @@ public class AnnotationManager {
 		return detail.toString();
 	}
 
-	public static int getEntrezId(DSMicroarraySet<DSMicroarray> dataset,
+	public static int getEntrezId(DSMicroarraySet dataset,
 			String gene) {
 		return getGeneDetail(dataset).get(gene).getEntrezId();
 	}

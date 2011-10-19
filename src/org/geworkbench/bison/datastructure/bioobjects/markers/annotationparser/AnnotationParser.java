@@ -29,7 +29,6 @@ import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
-import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.engine.preferences.PreferencesManager;
 import org.geworkbench.engine.properties.PropertiesManager;
 import org.geworkbench.util.BrowserLauncher;
@@ -79,9 +78,9 @@ public class AnnotationParser implements Serializable {
 
 	public static final String REFSEQ = "RefSeq Transcript ID"; // RefSeq
 
-	private static DSMicroarraySet<? extends DSMicroarray> currentDataSet = null;
-	private static WeakHashMap<DSMicroarraySet<? extends DSMicroarray>, String> datasetToChipTypes = new WeakHashMap<DSMicroarraySet<? extends DSMicroarray>, String>();
-	private static WeakHashMap<DSMicroarraySet<? extends DSMicroarray>, Map<String, AnnotationFields>> datasetToAnnotation = new WeakHashMap<DSMicroarraySet<? extends DSMicroarray>, Map<String, AnnotationFields>>();
+	private static DSMicroarraySet currentDataSet = null;
+	private static WeakHashMap<DSMicroarraySet, String> datasetToChipTypes = new WeakHashMap<DSMicroarraySet, String>();
+	private static WeakHashMap<DSMicroarraySet, Map<String, AnnotationFields>> datasetToAnnotation = new WeakHashMap<DSMicroarraySet, Map<String, AnnotationFields>>();
 
 	/* The reason that we need APSerializable is that the status fields are designed as static. */
 	public static APSerializable getSerializable() {
@@ -91,11 +90,11 @@ public class AnnotationParser implements Serializable {
 
 	public static void setFromSerializable(APSerializable aps) {
 		currentDataSet = aps.currentDataSet;
-		for(DSMicroarraySet<? extends DSMicroarray> dataset : aps.datasetToChipTypes.keySet()) {
+		for(DSMicroarraySet dataset : aps.datasetToChipTypes.keySet()) {
 			String s = aps.datasetToChipTypes.get(dataset);
 			datasetToChipTypes.put(dataset, s);
 		}
-		for(DSMicroarraySet<? extends DSMicroarray> dataset : aps.datasetToAnnotation.keySet()) {
+		for(DSMicroarraySet dataset : aps.datasetToAnnotation.keySet()) {
 			Map<String, AnnotationFields> m = aps.datasetToAnnotation.get(dataset);
 			datasetToAnnotation.put(dataset, m);
 		}
@@ -103,30 +102,28 @@ public class AnnotationParser implements Serializable {
 
 	private static final String ANNOT_DIR = "annotDir";
 
-	@SuppressWarnings("unchecked")
 	public static void setCurrentDataSet(DSDataSet<?> currentDataSet) {
 		if(!(currentDataSet instanceof DSMicroarraySet)) {
 			AnnotationParser.currentDataSet = null;
 		} else {
-			AnnotationParser.currentDataSet = (DSMicroarraySet<? extends DSMicroarray>)currentDataSet;
+			AnnotationParser.currentDataSet = (DSMicroarraySet)currentDataSet;
 		}
 	}
 
 	// this method is only used to get the annotation info to be reused for merged dataset,
 	// which may be re-implemented in a better design.
 	// so please do not use this method unless you have a very clear reason
-	public static String getChipType(DSMicroarraySet<? extends DSMicroarray> dataset) {
+	public static String getChipType(DSMicroarraySet dataset) {
 		return datasetToChipTypes.get(dataset);
 	}
 
-	@SuppressWarnings("unchecked")
 	public static void setChipType(DSDataSet<? extends DSBioObject> dataset, String chiptype) {
 		if(!(dataset instanceof DSMicroarraySet)) return;
 		
 		if(chiptype==null) return;
 		
-		DSMicroarraySet<? extends DSMicroarray> dset = (DSMicroarraySet<? extends DSMicroarray>)dataset;
-		for(DSMicroarraySet<? extends DSMicroarray> d: datasetToChipTypes.keySet()) {
+		DSMicroarraySet dset = (DSMicroarraySet)dataset;
+		for(DSMicroarraySet d: datasetToChipTypes.keySet()) {
 			if(chiptype.equals(datasetToChipTypes.get(d))) { // existing annotation
 				datasetToAnnotation.put(dset, datasetToAnnotation.get(d));
 				break;
@@ -144,7 +141,7 @@ public class AnnotationParser implements Serializable {
 
 	/* if the annotation file is given, this method is called directly without GUI involved */
 	private static void loadAnnotationFile(
-			DSMicroarraySet<? extends DSMicroarray> dataset, File annotationData) {
+			DSMicroarraySet dataset, File annotationData) {
 		if (!annotationData.exists()) { // data file is found
 			log.error("Annotation file " + annotationData + " does not exist.");
 			return;
@@ -152,7 +149,7 @@ public class AnnotationParser implements Serializable {
 
 		String chipType = annotationData.getName();
 		
-		for(DSMicroarraySet<? extends DSMicroarray> d: datasetToChipTypes.keySet()) {
+		for(DSMicroarraySet d: datasetToChipTypes.keySet()) {
 			if(chipType.equals(datasetToChipTypes.get(d))) { // existing annotation
 				datasetToAnnotation.put(dataset, datasetToAnnotation.get(d));
 				datasetToChipTypes.put(dataset, chipType);
@@ -227,7 +224,7 @@ public class AnnotationParser implements Serializable {
 
 	// this method is similar to the previous one except that it takes dataset instead
 	// of using currentDataSet
-	static public String[] getInfo(DSMicroarraySet<DSMicroarray> dataset,
+	static public String[] getInfo(DSMicroarraySet dataset,
 			String affyID, String fieldID) {
 		String field = null;
 
@@ -261,7 +258,7 @@ public class AnnotationParser implements Serializable {
 		return field.split(MAIN_DELIMITER);
 	}
 
-	public static String matchChipType(final DSMicroarraySet<? extends DSMicroarray> dataset, String id,
+	public static String matchChipType(final DSMicroarraySet dataset, String id,
 			boolean askIfNotFound) {
 		PreferencesManager preferencesManager = PreferencesManager
 				.getPreferencesManager();

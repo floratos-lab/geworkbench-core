@@ -219,9 +219,6 @@ public class TabDelimitedDataMatrixFileFormat extends DataSetFileFormat {
 	private CSMicroarraySet getMArraySet(File file)
 			throws InputFileFormatException, InterruptedIOException {
 
-		/* the sign between file name and extesion, ex: file.ext */
-		final int extSeperater = '.';
-
 		try
 		{
 		 if (!checkFormat(file)) {

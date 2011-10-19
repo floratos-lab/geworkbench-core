@@ -12,7 +12,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
-import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 
 /**
  * AdjacencyMatrix.
@@ -158,7 +157,7 @@ public class AdjacencyMatrix implements Serializable {
 
 	private HashMap<Node, HashMap<Node, Set<EdgeInfo>>> geneRows = new HashMap<Node, HashMap<Node, Set<EdgeInfo>>>();
 
-	private final DSMicroarraySet<DSMicroarray> maSet;	
+	private final DSMicroarraySet maSet;	
 
 	private final String name;
 
@@ -168,7 +167,7 @@ public class AdjacencyMatrix implements Serializable {
     
 
 	public AdjacencyMatrix(String name,
-			final DSMicroarraySet<DSMicroarray> microarraySet) {
+			final DSMicroarraySet microarraySet) {
 		this.name = name;
 		maSet = microarraySet;
 		interactionTypeSifMap = null;
@@ -177,7 +176,7 @@ public class AdjacencyMatrix implements Serializable {
 	}
 
 	public AdjacencyMatrix(String name,
-			final DSMicroarraySet<DSMicroarray> microarraySet,
+			final DSMicroarraySet microarraySet,
 			Map<String, String> interactionTypeSifMap) {
 		this.name = name;
 		maSet = microarraySet;
@@ -291,7 +290,7 @@ public class AdjacencyMatrix implements Serializable {
 		return nodeSet.size();
 	}
 
-	public DSMicroarraySet<DSMicroarray> getMicroarraySet() {
+	public DSMicroarraySet getMicroarraySet() {
 		return maSet;
 	}
 

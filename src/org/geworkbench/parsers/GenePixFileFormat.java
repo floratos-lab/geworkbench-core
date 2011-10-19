@@ -111,7 +111,7 @@ public class GenePixFileFormat extends DataSetFileFormat {
 		
 		ProgressMonitorInputStream progressIn = null;
 		
-		DSMicroarraySet<DSMicroarray> microarraySet = null;
+		DSMicroarraySet microarraySet = null;
 		try {
 			microarraySet = new CSMicroarraySet();
 			microarraySet.setFile(file);

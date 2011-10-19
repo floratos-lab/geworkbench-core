@@ -947,7 +947,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	public void addProjectNode(DSDataSet<? extends DSBioObject> dataSet,
 			DSAncillaryDataSet<? extends DSBioObject> ancillaryDataSet) {
 		if (dataSet instanceof DSMicroarraySet) {
-			addColorContext((DSMicroarraySet<DSMicroarray>) dataSet);
+			addColorContext((DSMicroarraySet) dataSet);
 		}
 		if (dataSet != null) {
 			addDataSetNode(dataSet, true);
@@ -1086,7 +1086,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		int i;
 		// Obtain the selected project tree nodes.
 		selections = projectTree.getSelectionPaths();
-		DSMicroarraySet<? extends DSMicroarray>[] sets = new DSMicroarraySet[count];
+		DSMicroarraySet[] sets = new DSMicroarraySet[count];
 		// Check that the user has designated only microarray set nodes and that
 		// all microarray sets are from the same project.
 		// Also, identify the node that will become the parent of the new,
@@ -1098,7 +1098,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			if (node instanceof DataSetNode) {
 				try {// Provide fix for bug 666, only merge
 					// Microarraydatasets.
-					sets[i] = (DSMicroarraySet<? extends DSMicroarray>) ((DataSetNode) node).getDataset();
+					sets[i] = (DSMicroarraySet) ((DataSetNode) node).getDataset();
 					if (sibling == null
 							|| sibling.getPathCount() > selections[i]
 									.getPathCount()) {
@@ -1142,13 +1142,13 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				return;
 			}
 		}
-		DSMicroarraySet<DSMicroarray> mergedSet = FileOpenHandler.doMergeSets(sets);
+		DSMicroarraySet mergedSet = FileOpenHandler.doMergeSets(sets);
 		if(mergedSet!=null) {
 			addDataSetNode(mergedSet, true);
 		}
 	}
 
-	static void addColorContext(DSMicroarraySet<DSMicroarray> maSet) {
+	static void addColorContext(DSMicroarraySet maSet) {
 		GlobalPreferences prefs = GlobalPreferences.getInstance();
 		Class<? extends ColorContext> type = prefs.getColorContextClass();
 		try {
@@ -1479,7 +1479,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		return event;
 	}
 
-	private static void updateColorContext(DSMicroarraySet<DSMicroarray> maSet) {
+	private static void updateColorContext(DSMicroarraySet maSet) {
 		ColorContext colorContext = (ColorContext) maSet
 				.getObject(ColorContext.class);
 		if (colorContext != null) {
@@ -1529,7 +1529,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			return;
 		}
 
-		DSMicroarraySet<DSMicroarray> microarraySet = (DSMicroarraySet<DSMicroarray>) e
+		DSMicroarraySet microarraySet = (DSMicroarraySet) e
 				.getDataSet();
 		ColorContext colorContext = (ColorContext) microarraySet
 				.getObject(ColorContext.class);
@@ -1555,7 +1555,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * process the results of applying a normalizer to a microarray set.
 	 *
 	 */
-	public void processNormalization(DSMicroarraySet<?> sourceMA, DSMicroarraySet<DSMicroarray> resultMA, String information) {
+	public void processNormalization(DSMicroarraySet sourceMA, DSMicroarraySet resultMA, String information) {
 
 		updateColorContext(resultMA);
 		// Set up the "history" information for the new dataset.
@@ -1578,7 +1578,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		DSDataSet<? extends DSBioObject> currentDS = (selection != null ? selection.getDataSet()
 				: null);
 		if (currentDS != null && currentDS instanceof DSMicroarraySet
-				&& (DSMicroarraySet<DSMicroarray>) currentDS == sourceMA) {
+				&& (DSMicroarraySet) currentDS == sourceMA) {
 			publishProjectEvent(new ProjectEvent(ProjectEvent.SELECTED,
 					sourceMA, selectedNode));
 		}
@@ -1594,7 +1594,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		if (fe == null) {
 			return;
 		}
-		DSMicroarraySet<DSMicroarray> sourceMA = fe.getOriginalMASet();
+		DSMicroarraySet sourceMA = fe.getOriginalMASet();
 		if (sourceMA == null) {
 			return;
 		}
@@ -1614,7 +1614,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				: null);
 
 		if (currentDS != null && currentDS instanceof DSMicroarraySet
-				&& (DSMicroarraySet<DSMicroarray>) currentDS == sourceMA) {
+				&& (DSMicroarraySet) currentDS == sourceMA) {
 			publishProjectEvent(new ProjectEvent(ProjectEvent.SELECTED,
 					sourceMA, selectedNode));
 		}

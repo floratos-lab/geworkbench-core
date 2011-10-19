@@ -125,7 +125,7 @@ public class MindyData implements Serializable {
 	}
 
 	public static ArrayList<DSMicroarray> createArrayForMindyRun(
-			DSMicroarraySet<DSMicroarray> inSet, DSPanel<DSMicroarray> arraySet) {
+			DSMicroarraySet inSet, DSPanel<DSMicroarray> arraySet) {
 		ArrayList<DSMicroarray> arrayListForMindyRun = new ArrayList<DSMicroarray>();
 
 		if ((arraySet != null) && (arraySet.size() > 0)) {

@@ -68,9 +68,9 @@ public interface DSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroar
 
 	public double getMeanValue(T marker, int maIndex);
 
-	public void setMicroarraySet(DSMicroarraySet<Q> ma);
+	public void setMicroarraySet(DSMicroarraySet ma);
 
-	public DSMicroarraySet<Q> getMicroarraySet();
+	public DSMicroarraySet getMicroarraySet();
 
 	/**
 	 * @return A DSItemList containing all the <code>T</code> type objects
