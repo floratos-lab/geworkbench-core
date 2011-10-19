@@ -185,7 +185,7 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet<DSMicroarray> {
 
 					String strGeneId2 = tr.nextToken();
 					AdjacencyMatrix.Node node2 = token2node(strGeneId2, selectedRepresentedBy, isRestrict, maSet);
-					if(node==null) continue; // skip it when we don't have it
+					if(node2==null) continue; // skip it when we don't have it
 
 					float mi = 0.8f;
 					if (format.equals(ADJ_FORMART)) {
