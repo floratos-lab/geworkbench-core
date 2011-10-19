@@ -127,7 +127,7 @@ public class PatternFileFormat extends DataSetFileFormat {
 				});
 
 				isCancel = false;
-				loadDialog.setTitle("Load Interaction Network");
+				loadDialog.setTitle("Load Pattern");
 				SelectParentDataSet loadPanel = new SelectParentDataSet(
 						loadDialog, dataSets);
 
