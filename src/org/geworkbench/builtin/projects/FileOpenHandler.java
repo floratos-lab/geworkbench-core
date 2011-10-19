@@ -33,6 +33,7 @@ import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarr
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
+import org.geworkbench.bison.datastructure.complex.pattern.PatternResult;
 import org.geworkbench.bison.util.colorcontext.ColorContext;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.parsers.AdjacencyMatrixFileFormat;
@@ -40,6 +41,7 @@ import org.geworkbench.parsers.DataSetFileFormat;
 import org.geworkbench.parsers.ExpressionFileFormat;
 import org.geworkbench.parsers.FileFormat;
 import org.geworkbench.parsers.InputFileFormatException;
+import org.geworkbench.parsers.PatternFileFormat;
 
 /**
  * This class is refactored out of ProjectPanel to handle the file open action,
@@ -265,6 +267,11 @@ public class FileOpenHandler {
 				if (set == null) {
 					clearProjectPanelProgressBar();
 					log.info("null dataset encountered");
+					progressBarDialog.dispose();
+					projectPanelProgressBar.setString("");
+					projectPanelProgressBar.setIndeterminate(false);
+					projectPanel.getComponent().setCursor(Cursor
+							.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 					return;
 				}
 
@@ -279,7 +286,13 @@ public class FileOpenHandler {
 					AdjacencyMatrixDataSet adjMatrixDS = (AdjacencyMatrixDataSet) set;
 					projectPanel.addDataSetSubNode(adjMatrixDS);
 				} else {
-					projectPanel.addDataSetNode(set, true);
+					if(set instanceof PatternResult) {
+						// Pattern Result added as a sub node
+						PatternResult patternResult = (PatternResult) set;
+						projectPanel.addDataSetSubNode(patternResult);
+					}else {
+						projectPanel.addDataSetNode(set, true);
+					}
 				}
 			}
 
@@ -317,6 +330,19 @@ public class FileOpenHandler {
 						}
 					}
 
+					// pattern file format need access to project node
+					if (dataSetFileFormat instanceof PatternFileFormat) {
+			
+						ProjectTreeNode selectedNode = ProjectPanel.getInstance()
+								.getSelection().getSelectedNode();
+						// it has to be a project node
+						if (selectedNode instanceof ProjectNode) {
+							ProjectNode projectNode = (ProjectNode) selectedNode;
+							((PatternFileFormat) dataSetFileFormat)
+									.setProjectNode(projectNode);
+						}
+					}
+					
 					dataSets[0] = dataSetFileFormat.getDataFile(dataSetFiles[0]);
 				} catch (OutOfMemoryError er) {
 					log.warn("Loading a single file memory error: " + er);
