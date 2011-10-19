@@ -36,33 +36,25 @@ public class MicroarraySetParser {
 
 	private transient int currGeneId = 0;
 
-	private transient File file;
+	DSMicroarraySet parseCSMicroarraySet(File file,
+			String compatibilityLabel) {
 
-	// this method returns a parsed CSExprMicroarraySet. It could return null in
-	// case parsing fails.
-	DSMicroarraySet parseCSMicroarraySet(File file) {
-		CSMicroarraySet m = new CSMicroarraySet();
-		return parseCSMicroarraySet(file, m);
-	}
-
-	// this extra layer is only to provide the chance to set compatibilityLabel
-	// (annotation file) before parsing
-	private DSMicroarraySet parseCSMicroarraySet(File file,
-			DSMicroarraySet m) {
-		this.file = file;
-
+		DSMicroarraySet m = new CSMicroarraySet();
+		if(compatibilityLabel!=null)
+			m.setCompatibilityLabel(compatibilityLabel);
+		
 		miroarraySet = m;
 		maskedSpots = 0;
 		miroarraySet.setLabel(file.getName());
 
-		if (!readAndParse(ParseType.STRUCTURE,
+		if (!readAndParse(file, ParseType.STRUCTURE,
 				"Getting structure information from " + file.getName()))
 			return null;
-		if (!readAndParse(ParseType.MARKER,
+		if (!readAndParse(file, ParseType.MARKER,
 				"Loading Marker Data from " + file.getName()))
 			return null;
 		miroarraySet.sortMarkers(markerNo);
-		readAndParse(ParseType.VALUE,
+		readAndParse(file, ParseType.VALUE,
 				"Loading Marker Value from " + file.getName());
 
 		return miroarraySet;
@@ -72,7 +64,7 @@ public class MicroarraySetParser {
 		STRUCTURE, MARKER, VALUE
 	};
 
-	private boolean readAndParse(ParseType type, String message) {
+	private boolean readAndParse(File file, ParseType type, String message) {
 		currGeneId = 0;
 		ReaderMonitor rm = null;
 		try {
@@ -439,13 +431,6 @@ public class MicroarraySetParser {
 		retValue.pm = progressIn.getProgressMonitor();
 		retValue.reader = new BufferedReader(new InputStreamReader(progressIn));
 		return retValue;
-	}
-
-	DSMicroarraySet parseCSMicroarraySet(File file2,
-			String compatibilityLabel) {
-		DSMicroarraySet m = new CSMicroarraySet();
-		m.setCompatibilityLabel(compatibilityLabel);
-		return parseCSMicroarraySet(file2, m);
 	}
 
 }

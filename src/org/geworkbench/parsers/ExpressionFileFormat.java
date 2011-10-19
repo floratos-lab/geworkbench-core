@@ -43,7 +43,7 @@ public class ExpressionFileFormat extends DataSetFileFormat {
     }
 
 	public DSDataSet<DSMicroarray> getDataFile(File file) {
-        DSMicroarraySet maSet = new MicroarraySetParser().parseCSMicroarraySet(file);
+        DSMicroarraySet maSet = new MicroarraySetParser().parseCSMicroarraySet(file, null);
         return maSet;
     }
 
