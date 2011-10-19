@@ -19,7 +19,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.bioobjects.markers.goterms.GOTerm;
 import org.geworkbench.bison.datastructure.bioobjects.markers.goterms.GeneOntologyTree;
-import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 
 /**
  * Go Terms Analysis Result.
@@ -30,7 +30,7 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
  * @author zji
  * @version $Id$
  */
-public class GoAnalysisResult extends CSAncillaryDataSet<CSMicroarray> {
+public class GoAnalysisResult extends CSAncillaryDataSet<DSMicroarray> {
 	private static final long serialVersionUID = -337000604982427702L;
 	static Log log = LogFactory.getLog(GoAnalysisResult.class);
 	
@@ -80,7 +80,7 @@ public class GoAnalysisResult extends CSAncillaryDataSet<CSMicroarray> {
 	 * @param parent
 	 * @param label
 	 */
-	public GoAnalysisResult(DSDataSet<CSMicroarray> parent, String label) {
+	public GoAnalysisResult(DSDataSet<DSMicroarray> parent, String label) {
 		super(parent, label);
 		referenceGenes = new HashSet<String>();
 		changedGenes = new HashSet<String>();
