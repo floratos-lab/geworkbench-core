@@ -12,8 +12,6 @@ import javax.swing.*;
  */
 public interface DSPositionSpecificAffintyMatrix extends DSBioObject, DSPValued {
 
-    ImageIcon getPsamImage();
-
     String getExperiment();
     
     String getExperimentID();
@@ -31,8 +29,6 @@ public interface DSPositionSpecificAffintyMatrix extends DSBioObject, DSPValued 
     double[][] getScores();
 
     boolean isTrailingStrand();
-
-    void setPsamImage(ImageIcon image);
 
     void setExperiment(String experiment);
     

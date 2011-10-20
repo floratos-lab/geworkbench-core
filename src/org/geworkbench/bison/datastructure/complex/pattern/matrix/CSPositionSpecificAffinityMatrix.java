@@ -1,7 +1,5 @@
 package org.geworkbench.bison.datastructure.complex.pattern.matrix;
 
-import javax.swing.ImageIcon;
-
 /**
  * @author John Watkinson
  * @version $Id$
@@ -10,7 +8,6 @@ public class CSPositionSpecificAffinityMatrix implements DSPositionSpecificAffin
 
 	private static final long serialVersionUID = 6336253934311295851L;
 	
-	private ImageIcon psamImage;
     private String psamId;
     private String experimentName;
     private String experimentId;
@@ -53,9 +50,6 @@ public class CSPositionSpecificAffinityMatrix implements DSPositionSpecificAffin
     	this.coeff = F;
     }
 
-    public ImageIcon getPsamImage() {
-        return psamImage;
-    }
 
     public String getExperiment() {
         return experimentName;
@@ -71,10 +65,6 @@ public class CSPositionSpecificAffinityMatrix implements DSPositionSpecificAffin
 
     public String getConsensusSequence() {
         return consensusSequence;
-    }
-
-    public void setPsamImage(ImageIcon image) {
-        this.psamImage = image;
     }
 
     public void setExperiment(String experiment) {
