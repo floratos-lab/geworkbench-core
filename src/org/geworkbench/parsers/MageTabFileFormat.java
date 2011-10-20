@@ -23,11 +23,11 @@ import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarr
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
-import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSExpressionMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.parsers.resources.Resource;
+import org.geworkbench.util.AffyAnnotationUtil;
 
 /**  
  * @author Nikhil
@@ -137,7 +137,7 @@ public class MageTabFileFormat extends DataSetFileFormat {
 						if(!tokens[0].contentEquals("Scan REF") && !tokens[0].contentEquals("Reporter REF") && !tokens[0].contentEquals("Composite Element REF")){
 							// trigger annotation request
 							if (maSet.getCompatibilityLabel() == null) {
-                                String chiptype = AnnotationParser.matchChipType(maSet, tokens[0], false);
+                                String chiptype = AffyAnnotationUtil.matchAffyAnnotationFile(maSet);
                                 if (chiptype != null) {
                                 	maSet.setCompatibilityLabel(chiptype);
                                 }

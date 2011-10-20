@@ -29,6 +29,7 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
 import org.geworkbench.bison.parsers.AffymetrixParser;
 import org.geworkbench.bison.parsers.resources.AffyResource;
 import org.geworkbench.bison.parsers.resources.Resource;
+import org.geworkbench.util.AffyAnnotationUtil;
 
 /**
  * <p>
@@ -225,8 +226,7 @@ public class AffyFileFormat extends DataSetFileFormat {
 			microarraySet.setLabel(file.getName());
 			if (microarraySet.getCompatibilityLabel() == null
 					|| microarraySet.getCompatibilityLabel().equals("")) {
-				microarraySet.setCompatibilityLabel(AnnotationParser
-						.matchChipType(maSet, "", false));
+				microarraySet.setCompatibilityLabel(AffyAnnotationUtil.matchAffyAnnotationFile(maSet));
 			}
 
 			microarraySet.initialize(1, v.size());

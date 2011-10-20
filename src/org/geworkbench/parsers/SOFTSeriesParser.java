@@ -23,6 +23,7 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSExpressionMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
+import org.geworkbench.util.AffyAnnotationUtil;
 
 /**
  * @author Nikhil
@@ -347,8 +348,7 @@ public class SOFTSeriesParser {
 
 		// both the second and the third arguments of matchChipType are in
 		// fact ignored
-		String annotationFilename = AnnotationParser.matchChipType(maSet, null,
-				false);
+		String annotationFilename = AffyAnnotationUtil.matchAffyAnnotationFile(maSet);
 		maSet.setCompatibilityLabel(annotationFilename);
 
 		for (DSGeneMarker marker : maSet.getMarkers()) {

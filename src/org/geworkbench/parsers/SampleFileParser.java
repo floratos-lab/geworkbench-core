@@ -19,6 +19,7 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.A
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSExpressionMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
+import org.geworkbench.util.AffyAnnotationUtil;
 
 /**  
  * @author Nikhil
@@ -268,14 +269,13 @@ public class SampleFileParser {
 				}
 				String result = null;
 				for (int n = 0; n < possibleMarkers; n++) {
-					result = AnnotationParser.matchChipType(maSet, maSet
-							.getMarkers().get(i).getLabel(), false);
+					result = AffyAnnotationUtil.matchAffyAnnotationFile(maSet);
 					if (result != null) {
 						break;
 					}
 				}
 				if (result == null) {
-					AnnotationParser.matchChipType(maSet, "Unknown", true);
+					AffyAnnotationUtil.matchAffyAnnotationFile(maSet);
 				} else {
 					maSet.setCompatibilityLabel(result);
 				}

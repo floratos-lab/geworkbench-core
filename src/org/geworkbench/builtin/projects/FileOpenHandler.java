@@ -42,6 +42,7 @@ import org.geworkbench.parsers.ExpressionFileFormat;
 import org.geworkbench.parsers.FileFormat;
 import org.geworkbench.parsers.InputFileFormatException;
 import org.geworkbench.parsers.PatternFileFormat;
+import org.geworkbench.util.AffyAnnotationUtil;
 
 /**
  * This class is refactored out of ProjectPanel to handle the file open action,
@@ -366,7 +367,7 @@ public class FileOpenHandler {
 				// also notice that this will block
 				String chipType = null; // ignored by other format
 				if(dataSetFileFormat instanceof ExpressionFileFormat)
-					chipType = AnnotationParser.matchChipType(null, "", false);; //FileOpenHandler.this.chipType;
+					chipType = AffyAnnotationUtil.matchAffyAnnotationFile(null);
 				progressBarDialog.setVisible(true);
 
 				for (int i = 0; i < dataSetFiles.length; i++) {

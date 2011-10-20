@@ -27,6 +27,7 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMutableMarkerValue;
 import org.geworkbench.bison.util.Range;
+import org.geworkbench.util.AffyAnnotationUtil;
 
 public class MicroarraySetParser {
 	private static Log log = LogFactory.getLog(MicroarraySetParser.class);
@@ -323,10 +324,9 @@ public class MicroarraySetParser {
 					// countMicroarrayNo(st);
 				} else if (line.charAt(0) != '\t') {
 					if (mArraySet.getCompatibilityLabel() == null) {
-						String token = line.substring(0, startindx);
 						if (mArraySet.getCompatibilityLabel() == null) {
-							String chiptype = AnnotationParser.matchChipType(
-									mArraySet, token, false);
+							String chiptype = AffyAnnotationUtil.matchAffyAnnotationFile(
+									mArraySet);
 							if (chiptype != null) {
 								mArraySet.setCompatibilityLabel(chiptype);
 							}

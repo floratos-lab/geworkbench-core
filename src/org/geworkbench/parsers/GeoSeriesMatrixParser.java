@@ -25,6 +25,7 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.A
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSExpressionMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
+import org.geworkbench.util.AffyAnnotationUtil;
 
 /**  
  * @author Nikhil
@@ -350,14 +351,13 @@ public class GeoSeriesMatrixParser {
 				// Set chip-type
 				String result = null;
 				for (int i = 0; i < m; i++) {
-					result = AnnotationParser.matchChipType(maSet, maSet
-							.getMarkers().get(i).getLabel(), false);
+					result = AffyAnnotationUtil.matchAffyAnnotationFile(maSet);
 					if (result != null) {
 						break;
 					}
 				}
 				if (result == null) {
-					AnnotationParser.matchChipType(maSet, "Unknown", true);
+					AffyAnnotationUtil.matchAffyAnnotationFile(maSet);
 				} else {
 					maSet.setCompatibilityLabel(result);
 				}

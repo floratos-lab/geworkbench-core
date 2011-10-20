@@ -29,6 +29,7 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.CSExpressionMar
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.parsers.resources.Resource;
+import org.geworkbench.util.AffyAnnotationUtil;
 
 /**
  * Sequence and Pattern Plugin
@@ -383,14 +384,13 @@ public class TabDelimitedDataMatrixFileFormat extends DataSetFileFormat {
 				// Set chip-type
 				String result = null;
 				for (int i = 0; i < m; i++) {
-					result = AnnotationParser.matchChipType(maSet, maSet
-							.getMarkers().get(i).getLabel(), false);
+					result = AffyAnnotationUtil.matchAffyAnnotationFile(maSet);
 					if (result != null) {
 						break;
 					}
 				}
 				if (result == null) {
-					AnnotationParser.matchChipType(maSet, "Unknown", true);
+					AffyAnnotationUtil.matchAffyAnnotationFile(maSet);
 				} else {
 					maSet.setCompatibilityLabel(result);
 				}
