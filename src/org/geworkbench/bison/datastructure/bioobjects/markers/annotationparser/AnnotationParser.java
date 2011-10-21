@@ -121,6 +121,13 @@ public class AnnotationParser implements Serializable {
 			return;
 		}
 
+		if (dataset == null) {
+			dummyMicroarraySet.setAnnotationFileName(annotationData
+					.getAbsolutePath());
+		} else {
+			dataset.setAnnotationFileName(annotationData.getAbsolutePath());
+		}
+		
 		String chipType = annotationData.getName();
 		
 		for(DSMicroarraySet d: datasetToChipTypes.keySet()) {
@@ -139,12 +146,6 @@ public class AnnotationParser implements Serializable {
 
 		datasetToChipTypes.put(dataset, chipType);
 		currentDataSet = dataset;
-		if (dataset == null) {
-			dummyMicroarraySet.setAnnotationFileName(annotationData
-					.getAbsolutePath());
-		} else {
-			dataset.setAnnotationFileName(annotationData.getAbsolutePath());
-		}
 	}
 
 	/**
