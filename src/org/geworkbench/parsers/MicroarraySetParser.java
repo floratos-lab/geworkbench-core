@@ -6,9 +6,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.InterruptedIOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
-import java.util.Vector;
 
 import javax.swing.ProgressMonitor;
 import javax.swing.ProgressMonitorInputStream;
@@ -20,416 +22,316 @@ import org.geworkbench.bison.annotation.CSAnnotationContextManager;
 import org.geworkbench.bison.annotation.DSAnnotationContext;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
+import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
+import org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSExpressionMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMarkerValue;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMutableMarkerValue;
 import org.geworkbench.bison.util.Range;
 import org.geworkbench.util.AffyAnnotationUtil;
 
+/**
+ * 
+ * Parser of .exp file.
+ * 
+ * @author zji
+ * 
+ */
 public class MicroarraySetParser {
 	private static Log log = LogFactory.getLog(MicroarraySetParser.class);
 
-	private transient DSMicroarraySet miroarraySet;
-	private transient int maskedSpots = 0;
+	DSMicroarraySet parseCSMicroarraySet(File file, String compatibilityLabel) {
 
-	private transient int currGeneId = 0;
+		DSMicroarraySet microarraySet = new CSMicroarraySet();
+		if (compatibilityLabel != null) {
+			microarraySet.setCompatibilityLabel(compatibilityLabel);
+		} else {
+			String chiptype = AffyAnnotationUtil
+					.matchAffyAnnotationFile(microarraySet);
+			if (chiptype == null) { // this is never null
+				log.error("annotation returned as null");
+			}
+			microarraySet.setCompatibilityLabel(chiptype);
+		}
 
-	DSMicroarraySet parseCSMicroarraySet(File file,
-			String compatibilityLabel) {
+		microarraySet.setLabel(file.getName());
 
-		miroarraySet = new CSMicroarraySet();
-		if(compatibilityLabel!=null)
-			miroarraySet.setCompatibilityLabel(compatibilityLabel);
-
-		maskedSpots = 0;
-		miroarraySet.setLabel(file.getName());
-
-		if (!readAndParse(file, ParseType.STRUCTURE,
-				"Getting structure information from " + file.getName()))
+		if (!readFile(file))
 			return null;
-		if (!readAndParse(file, ParseType.MARKER,
-				"Loading Marker Data from " + file.getName()))
-			return null;
-		miroarraySet.sortMarkers(markerNo);
-		readAndParse(file, ParseType.VALUE,
-				"Loading Marker Value from " + file.getName());
 
-		return miroarraySet;
+		populateDataset(microarraySet);
+
+		return microarraySet;
 	}
 
-	private enum ParseType {
-		STRUCTURE, MARKER, VALUE
-	};
-
-	private boolean readAndParse(File file, ParseType type, String message) {
-		currGeneId = 0;
-		ReaderMonitor rm = null;
+	private boolean readFile(File file) {
+		markerNumber = 0;
 		try {
-			rm = createProgressReader(message, file);
+			createProgressReader("Reading from " + file.getName(), file);
 		} catch (FileNotFoundException fnf) {
 			fnf.printStackTrace();
 			return false;
 		}
-		if (type == ParseType.MARKER)
-			miroarraySet.initialize(microarrayNo, markerNo);
+
 		String line = null;
 		try {
-			while ((line = rm.reader.readLine()) != null) {
+			markerValues = new ArrayList<DSMarkerValue[]>();
+			while ((line = reader.readLine()) != null) {
 				if (!line.trim().equalsIgnoreCase("")) {
-					if (type == ParseType.STRUCTURE)
-						parseLine(line.trim(), miroarraySet);
-					else if (type == ParseType.MARKER)
-						executeLine(line.trim(), miroarraySet);
-					else if (type == ParseType.VALUE)
-						parseValue(line.trim());
-					if (rm.pm != null && rm.pm.isCanceled()) {
-						rm.reader.close();
+
+					parseLine(line.trim());
+
+					if (pm != null && pm.isCanceled()) {
+						reader.close();
 						return false;
 					}
 				}
 			}
-		} catch (InterruptedIOException iioe) {
-			return false;
-		} catch (Exception ioe) {
+		} catch (IOException ioe) {
 			log.error("Error while parsing line: " + line);
 			ioe.printStackTrace();
 			return false;
 		} finally {
 			try {
-				rm.reader.close();
+				reader.close();
 			} catch (IOException e) {
-				e.printStackTrace();
 				// nothing further necessary
 			}
-
 		}
 		return true;
 	}
 
-	// total number of microarray
-	private transient int microarrayNo = 0;
-	private transient int markerNo = 0;
+	private void populateDataset(DSMicroarraySet microarraySet) {
+		// just to make it is clear it is final here
+		final int markerCount = markerNumber;
+		microarraySet.initialize(0, markerCount); // only way to set marker
+													// count
+		for (int i = 0; i < arrayNames.size(); i++) {
+			microarraySet.add(i, (DSMicroarray) new CSMicroarray(i,
+					markerCount, arrayNames.get(i),
+					DSMicroarraySet.expPvalueType));
+		}
 
-	// total number of properties
-	private transient Vector<String> phenotypes = new Vector<String>();
-	private transient int phenotypeNo = 0;
-
-	private void executeLine(String line, DSMicroarraySet mArraySet) {
 		CSAnnotationContextManager manager = CSAnnotationContextManager
 				.getInstance();
-		if (line.charAt(0) == '#') {
-			return; //
-		}
-		// Ask Manjunath why the tokenizer was replaced with a split
-		// Sun advices that: "StringTokenizer is a legacy class that is retained
-		// for compatibility reasons although its use is discouraged in new
-		// code."
-		// http://java.sun.com/j2se/1.4.2/docs/api/java/bisonparsers/StringTokenizer.html
-		// - Manju
-		// watkin - I changed it back to a StringTokenizer, as it will ignore
-		// redundant delimiters (tabs)
-		// while String.split will not.
-		StringTokenizer tokenizer = new StringTokenizer(line, "\t", false);
-		int n = tokenizer.countTokens();
-		String[] st = new String[n];
-		for (int i = 0; i < n; i++) {
-			st[i] = tokenizer.nextToken();
-			if (i == 1 && !st[0].equalsIgnoreCase("PDFModel")
-					&& !st[0].equalsIgnoreCase("AffyID")
-					&& !st[0].equalsIgnoreCase("Description")
-					&& line.charAt(0) != '\t')
-				break;
-		}
-
-		if (st.length > 0) {
-			String token = st[0];
-			/**
-			 * This handles the first line, which contains the microarray labels
-			 * separated by tabs.
-			 */
-			if (token.equalsIgnoreCase("PDFModel")) {
-			} else if (token.equalsIgnoreCase("AffyID")) {
-				boolean isAccession = true; // phLabel.equalsIgnoreCase("Annotation");
-				int i = 0;
-				// read the first line and put label of the arrays in.
-				for (int j = 2; j < st.length; j++) {
-					if (isAccession) {
-						String maLabel = new String(st[j]);
-						DSMicroarray microarray = (DSMicroarray)miroarraySet.get(i++); 
-						microarray.setLabel(maLabel);
+		for (String phLabel : arrayInfo.keySet()) {
+			DSAnnotationContext<DSMicroarray> context = manager.getContext(
+					microarraySet, phLabel);
+			CSAnnotationContext.initializePhenotypeContext(context);
+			String[] labels = arrayInfo.get(phLabel);
+			for (int arrayIndex = 0; arrayIndex < labels.length; arrayIndex++) {
+				if (labels[arrayIndex].indexOf("|") > -1) {
+					for (String tok : labels[arrayIndex].split("\\|")) {
+						context.labelItem(microarraySet.get(arrayIndex), tok);
 					}
+				} else {
+					context.labelItem(microarraySet.get(arrayIndex),
+							labels[arrayIndex]);
 				}
-			} else if (token.equalsIgnoreCase("Description")) {
-				// This handles all the phenotype definition lines
-				String phLabel = new String(st[1]);
-				DSAnnotationContext<DSMicroarray> context = manager.getContext(
-						mArraySet, phLabel);
-				CSAnnotationContext.initializePhenotypeContext(context);
-				for (int j = 2; j < st.length; j++) {
-					String valueLabel = new String(st[j]);
-					if ((valueLabel != null)
-							&& (!valueLabel.equalsIgnoreCase(""))) {
-						if (valueLabel.indexOf("|") > -1) {
-							for (String tok : valueLabel.split("\\|"))
-								context.labelItem(mArraySet.get(j - 2), tok);
-						} else
-							context.labelItem(mArraySet.get(j - 2), valueLabel);
-					}
-				}
-			} else if (line.charAt(0) != '\t') {
-				// This handles individual gene lines with (value, pvalue) pairs
-				// separated by tabs
-				DSGeneMarker mi = (DSGeneMarker) mArraySet.getMarkers().get(
-						currGeneId);
-				if (this.miroarraySet.getMarkers().size() > currGeneId) {
-					mi = this.miroarraySet.getMarkers().get(
-							currGeneId);
-				}
-				((org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker) mi)
-						.reset(currGeneId, microarrayNo, microarrayNo);
-				// set the affyid field of current marker.
-				mi.setLabel(token);
-				String label = new String(st[1]);
-				// set the annotation field of current marker
-				mi.setDescription(label);
-
-				this.miroarraySet.getMarkers().add(currGeneId, mi);
-				try {
-					String[] result = AnnotationParser.getInfo(token,
-							AnnotationParser.LOCUSLINK);
-					String locus = " ";
-					if ((result != null) && (!result[0].equals(""))) {
-
-						locus = result[0];
-
-					}
-					this.miroarraySet.getMarkers().get(currGeneId)
-							.getUnigene().set(token);
-
-					if (locus.compareTo(" ") != 0) {
-						try {
-							this.miroarraySet.getMarkers()
-									.get(currGeneId)
-									.setGeneId(Integer.parseInt(locus.trim()));
-						} catch (NumberFormatException e) {
-							log.debug("Invalid locus link for gene "
-									+ currGeneId);
-						}
-					}
-
-					String[] geneNames = AnnotationParser.getInfo(token,
-							AnnotationParser.ABREV);
-					if (geneNames != null) {
-						this.miroarraySet.getMarkers()
-								.get(currGeneId)
-								.setGeneName(geneNames[0].trim());
-					}
-				} catch (Exception e) {
-					System.out.println("error parsing " + token);
-					e.printStackTrace();
-				}
-				currGeneId++;
 			}
 		}
-	} // end of executeLine()
 
-	void parseValue(String line) {
-		if (line.charAt(0) == '#') {
-			return; //
+		for (int markerIndex = 0; markerIndex < markerCount; markerIndex++) {
+			microarraySet.getMarkers().set(markerIndex,
+					markers.get(markerIndex));
 		}
+		microarraySet.sortMarkers(markerCount);
 
-		StringTokenizer tokenizer = new StringTokenizer(line, "\t", false);
-		int n = tokenizer.countTokens();
-		String[] st = new String[n];
-		for (int i = 0; i < n; i++) {
-			st[i] = tokenizer.nextToken();
-		}
-
-		if (st.length > 0) {
-			String token = st[0];
-			if (!token.equalsIgnoreCase("PDFModel")
-					&& !token.equalsIgnoreCase("AffyID")
-					&& !token.equalsIgnoreCase("Description")
-					&& line.charAt(0) != '\t') {
-				// This handles individual gene lines with (value, pvalue) pairs
-				// separated by tabs
-				int i = 0;
-				boolean pValueExists = ((st.length - 2) > microarrayNo);
-				for (int j = 2; j < st.length; j++) {
-					DSMicroarray microarray = (DSMicroarray)miroarraySet.get(i);
-					CSMarkerValue marker = (CSMarkerValue) microarray.getMarkerValue(
-									this.miroarraySet.getNewMarkerOrder()[currGeneId]);
-					String value = st[j];
-					if ((value == null) || (value.equalsIgnoreCase(""))) { // skip
-																			// the
-																			// extra
-																			// '/t'
-						value = st[++j];
-					}
-					String pValue;
-					// if
-					// (Boolean.parseBoolean(System.getProperty("expressionMA.usePValue"))
-					// || pValueExists) {
-					if (pValueExists) {
-						j++;
-						pValue = st[j];
-					} else {
-						// If no p-value is present, assume that the detection
-						// call is "Present"
-						pValue = 0.000001 + "";
-					}
-
-					parse(marker, value, pValue);
-					((org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker) this.miroarraySet
-							.getMarkers().get(
-									this.miroarraySet.getNewMarkerOrder()[currGeneId]))
-							.check(marker, false);
-					if (marker.isMasked() || marker.isMissing()) {
-						maskedSpots++;
-					}
-					// getIMicroarray(i).setIMarker(i, marker);
-					i++;
-				}
-				currGeneId++;
+		int markerIndex = 0;
+		for (DSMarkerValue[] markerValue : markerValues) {
+			for (int arrayIndex = 0; arrayIndex < arrayNames.size(); arrayIndex++) {
+				microarraySet.get(arrayIndex).setMarkerValue(
+						microarraySet.getNewMarkerOrder()[markerIndex],
+						markerValue[arrayIndex]);
 			}
+			markerIndex++;
 		}
 	}
 
-	void parseLine(String line, DSMicroarraySet mArraySet) {
+	private transient int markerNumber = 0;
+
+	private transient List<String> arrayNames = new ArrayList<String>();
+	// use LinkedHashMap so to maintain the order
+	private transient Map<String, String[]> arrayInfo = new LinkedHashMap<String, String[]>();
+	private transient List<DSGeneMarker> markers = new ArrayList<DSGeneMarker>();
+	private transient List<DSMarkerValue[]> markerValues = null;
+
+	// this method is called after the first two fields are taken
+	private DSMarkerValue[] parseValue(StringTokenizer tokenizer) {
+
+		// This handles individual gene lines with (value, pvalue) pairs
+		// separated by tabs
+		boolean pValueExists = (tokenizer.countTokens() > arrayNames.size());
+		DSMarkerValue[] values = new DSMarkerValue[arrayNames.size()];
+		int arrayIndex = 0;
+		while (tokenizer.hasMoreTokens()) {
+
+			String value = tokenizer.nextToken();
+			String status; // p-value or letter status
+			if (pValueExists) {
+				status = tokenizer.nextToken();
+			} else {
+				// If no p-value is present, assume that the detection
+				// call is "Present"
+				status = 0.000001 + "";
+			}
+
+			DSMutableMarkerValue markerValue = createMarkerValue(value, status);
+			// markerValue does not really need to be mutable. it is
+			// DSRangeMarker's mistake
+			((DSRangeMarker) markers.get(markerNumber)).check(markerValue,
+					false);
+			values[arrayIndex++] = markerValue;
+		}
+		return values;
+	}
+
+	/*
+	 * StringTokenizer instead of String.split() is used because of the
+	 * assumption that we need to support the file that has redundant delimiters
+	 * (tabs).
+	 */
+	/**
+	 * initialize microarrays; initializer markers (probe sets); prompt for affy
+	 * annotation.
+	 */
+	private void parseLine(String line) {
 
 		if (line.charAt(0) == '#') {
 			return;
 		}
 
 		int startindx = line.indexOf('\t');
-		if (startindx > 0) {
+		if (startindx <= 0)
+			return;
 
-			if (line.startsWith("PDFModel")) {
-			} else if (line.substring(0, 6).equalsIgnoreCase("AffyID")) {
-				String[] st = line.split("\t");
-				for (int j = 2; j < st.length; j++) {
-					if ((st[j] != null) && (!st[j].equalsIgnoreCase(""))) {
-						microarrayNo++;
-					}
-				}
-			} else {
-				if (line.substring(0, 11).equalsIgnoreCase("Description")) {
-					String[] st = line.split("\t");
-					String phenoLabel = new String(st[1]);
-					phenotypes.add(phenotypeNo, phenoLabel);
-					phenotypeNo++;
-					// countMicroarrayNo(st);
-				} else if (line.charAt(0) != '\t') {
-					if (mArraySet.getCompatibilityLabel() == null) {
-						if (mArraySet.getCompatibilityLabel() == null) {
-							String chiptype = AffyAnnotationUtil.matchAffyAnnotationFile(
-									mArraySet);
-							if (chiptype != null) {
-								mArraySet.setCompatibilityLabel(chiptype);
-							}
-						}
-					}
-					markerNo++;
+		StringTokenizer tokenizer = new StringTokenizer(line, "\t", false);
+		String firstField = tokenizer.nextToken();
+		String secondField = tokenizer.nextToken();
+
+		if (line.substring(0, 6).equalsIgnoreCase("AffyID")) {
+			while (tokenizer.hasMoreTokens()) {
+				arrayNames.add(tokenizer.nextToken());
+			}
+		} else if (line.substring(0, 11).equalsIgnoreCase("Description")) {
+			// This handles all the phenotype definition lines
+			String phLabel = new String(secondField);
+			String[] labels = new String[arrayNames.size()];
+			arrayInfo.put(phLabel, labels);
+			int i = 0;
+			while (tokenizer.hasMoreTokens()) {
+				String valueLabel = new String(tokenizer.nextToken());
+				if ((valueLabel != null) && (!valueLabel.equalsIgnoreCase(""))) {
+					labels[i++] = valueLabel;
 				}
 			}
-		} // end of parseline()
-	} // end of inner class parser
+		} else if (line.charAt(0) != '\t') {
 
-	void parse(CSMarkerValue marker, String value, String status) {
+			CSExpressionMarker marker = new CSExpressionMarker(markerNumber);
+			marker.setLabel(firstField);
+			// set the annotation field of current marker
+			marker.setDescription(secondField);
+			marker.getUnigene().set(firstField);
+
+			String[] entrezIds = AnnotationParser.getInfo(firstField,
+					AnnotationParser.LOCUSLINK);
+			if ((entrezIds != null) && (!entrezIds[0].trim().equals(""))) {
+				try {
+					marker.setGeneId(Integer.parseInt(entrezIds[0].trim()));
+				} catch (NumberFormatException e) {
+					log.debug("Invalid locus link for gene " + markerNumber);
+				}
+			}
+
+			String[] geneNames = AnnotationParser.getInfo(firstField,
+					AnnotationParser.ABREV);
+			if (geneNames != null) {
+				marker.setGeneName(geneNames[0].trim());
+			}
+
+			markers.add(marker);
+
+			markerValues.add(parseValue(tokenizer));
+
+			markerNumber++;
+		}
+	}
+
+	private DSMutableMarkerValue createMarkerValue(String value, String status) {
+		CSMarkerValue markerValue = new CSExpressionMarkerValue(0);
+
+		// support status a in letter and extra text before the actual value
 		if (Character.isLetter(status.charAt(0))) {
+			String[] parseableValue = value.split(":");
+			value = parseableValue[parseableValue.length - 1];
+		}
+
+		try {
+			double v = Double.parseDouble(value);
+			Range range = ((DSRangeMarker) markers.get(markerNumber))
+					.getRange();
+
+			markerValue.setValue(v);
+			range.max = Math.max(range.max, v);
+			range.min = Math.min(range.min, v);
+		} catch (NumberFormatException e) {
+			markerValue.setValue(0.0);
+			markerValue.setMissing(true);
+			return markerValue;
+		}
+
+		char c = status.charAt(0);
+		if (Character.isLetter(c)) {
 			try {
-				char c = status.charAt(0);
 				if (Character.isLowerCase(c)) {
-					marker.mask();
+					markerValue.mask();
 				}
 				switch (Character.toUpperCase(c)) {
 				case 'P':
-					marker.setPresent();
+					markerValue.setPresent();
 					break;
 				case 'A':
-					marker.setAbsent();
+					markerValue.setAbsent();
 					break;
 				case 'M':
-					marker.setMarginal();
+					markerValue.setMarginal();
 					break;
 				default:
-					marker.setMissing(true);
+					markerValue.setMissing(true);
 					break;
 				}
-				parse(marker, value);
 			} catch (NumberFormatException e) {
-				marker.setValue(0.0);
-				marker.setMissing(true);
+				markerValue.setValue(0.0);
+				markerValue.setMissing(true);
 			}
 		} else {
 			try {
-				double v = Double.parseDouble(value);
-				Range range = ((org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker) miroarraySet
-						.getMarkers().get(currGeneId)).getRange();
-
-				marker.setValue(v);
-				range.max = Math.max(range.max, v);
-				range.min = Math.min(range.min, v);
-
 				double p = Double.parseDouble(status);
-				marker.setConfidence(p);
+				markerValue.setConfidence(p);
 			} catch (NumberFormatException e) {
-				marker.setValue(0.0);
-				marker.setMissing(true);
+				markerValue.setValue(0.0);
+				markerValue.setMissing(true);
 			}
 		}
+		return markerValue;
 	}
 
-	private void parse(DSMutableMarkerValue marker, String value) {
-		if (marker instanceof CSExpressionMarkerValue) {
-			String[] parseableValue = value.split(":");
-			String expression = parseableValue[parseableValue.length - 1];
-			try {
-				double v = Double.parseDouble(expression);
-				org.geworkbench.bison.util.Range range = ((org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker) miroarraySet
-						.getMarkers().get(currGeneId)).getRange();
+	private transient BufferedReader reader = null;
+	private transient ProgressMonitor pm = null;
 
-				marker.setValue(v);
-				range.max = Math.max(range.max, v);
-				range.min = Math.min(range.min, v);
-
-			} catch (NumberFormatException e) {
-				marker.setValue(0.0);
-				marker.setMissing(true);
-			}
-		} else {
-			String[] parseableValue = value.split(":");
-			String expression = parseableValue[parseableValue.length - 1];
-			try {
-				double v = Double.parseDouble(expression);
-				marker.setValue(v);
-			} catch (NumberFormatException e) {
-				marker.setValue(0.0);
-				marker.setMissing(true);
-			}
-		}
-	}
-
-	// Convenience class - used as the return value of method
-	// <code>createProgressReader()</code>.
-	private class ReaderMonitor {
-		BufferedReader reader = null;
-		ProgressMonitor pm = null;
-	}
-
-	private ReaderMonitor createProgressReader(String display, File file)
+	private void createProgressReader(String display, File file)
 			throws FileNotFoundException {
 		FileInputStream fileIn = new FileInputStream(file);
 		ProgressMonitorInputStream progressIn = new ProgressMonitorInputStream(
 				null, display, fileIn);
-		ReaderMonitor retValue = new ReaderMonitor();
 
-		retValue.pm = progressIn.getProgressMonitor();
-		retValue.reader = new BufferedReader(new InputStreamReader(progressIn));
-		return retValue;
+		pm = progressIn.getProgressMonitor();
+		reader = new BufferedReader(new InputStreamReader(progressIn));
 	}
 
 }
