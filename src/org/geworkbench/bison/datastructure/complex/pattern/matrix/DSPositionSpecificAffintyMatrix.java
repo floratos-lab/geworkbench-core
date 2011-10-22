@@ -3,8 +3,6 @@ package org.geworkbench.bison.datastructure.complex.pattern.matrix;
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.datastructure.bioobjects.DSPValued;
 
-import javax.swing.*;
-
 /**
  * Stores a position-specific affinity matrix (for example-- as produced by MatrixREDUCE).
  *
