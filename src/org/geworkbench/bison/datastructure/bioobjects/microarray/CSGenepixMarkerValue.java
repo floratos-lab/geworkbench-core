@@ -323,37 +323,6 @@ public class CSGenepixMarkerValue extends CSMarkerValue implements
     }
 
     /**
-     * @return
-     */
-    public void adjustForHousekeepingGenes(double newRatio) {
-        ch1f *= newRatio;
-        ch1b *= newRatio;
-        computeSignal();
-
-
-    }
-
-    /**
-     * @param csgArray CSGenepixMarkerValue[]
-     */
-    public void adjustForHousekeepingGenes(CSGenepixMarkerValue[] csgArray) {
-        double newch1f = 0d;
-        double newch2f = 0d;
-        double newch1b = 0d;
-        double newch2b = 0d;
-
-        for (CSGenepixMarkerValue csgMarkerValue : csgArray) {
-            newch1f += csgMarkerValue.ch1f;
-            newch2f += csgMarkerValue.ch2f;
-            newch1b += csgMarkerValue.ch1b;
-            newch2b += csgMarkerValue.ch2b;
-        }
-
-
-    }
-
-
-    /**
      * This method returns the dimensionality of the marker. E.g., Genotype markers are 2-dimensional
      * while Allele/Haplotype markers are 1-dimensional
      *
