@@ -53,7 +53,7 @@ public interface DSMicroarray extends DSBioObject {
     /**
      * @return an array of microarray features.
      */
-    DSMutableMarkerValue[] getMarkerValues();
+    DSMarkerValue[] getMarkerValues();
 
     /**
      * @param markerInfo A marker whose value is requested.
