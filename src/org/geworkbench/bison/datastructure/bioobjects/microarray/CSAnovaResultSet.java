@@ -112,14 +112,13 @@ public class CSAnovaResultSet<T extends DSGeneMarker> extends
 	public void saveToFile(String filename) {
 		try {
 			PrintWriter out = new PrintWriter(new FileOutputStream(filename));
-			int i = 0;
+
 			for (T o : panel) {
 				out.println(new StringBuilder().append(
 						((CSExpressionMarker) o).getLabel() + "\t").append(
 						Double.toString(result2DArray[0][microarraySetView
 								.getMicroarraySet().getMarkers().indexOf(
 										(CSExpressionMarker) o)])).toString());
-				i++;
 			}
 			out.flush();
 			out.close();
