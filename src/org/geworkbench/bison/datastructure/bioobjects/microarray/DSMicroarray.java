@@ -61,7 +61,7 @@ public interface DSMicroarray extends DSBioObject {
      *         within this microarray, if the marker exists in the
      *         microarray. Null, otherwise.
      */
-    DSMutableMarkerValue getMarkerValue(DSGeneMarker markerInfo);
+    DSMarkerValue getMarkerValue(DSGeneMarker markerInfo);
 
     /**
      * @param index The relative position (index) of a marker within the microarray.
