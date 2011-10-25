@@ -122,7 +122,7 @@ final public class CSMicroarraySet extends CSDataSet<DSMicroarray> implements DS
     public double[] getRow(DSGeneMarker marker) {
         double[] expressionProfile = new double[size()];
         for (int i = 0; i < expressionProfile.length; i++) {
-            expressionProfile[i] = getValue(marker, i);
+            expressionProfile[i] = get(i).getMarkerValue(marker.getSerial()).getValue();
         }
         return expressionProfile;
     }
