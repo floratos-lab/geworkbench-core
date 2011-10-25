@@ -69,7 +69,7 @@ public interface DSMicroarray extends DSBioObject {
      *         <code>index</code> is non-negative and no larger than the
      *         microarray size. <code>null</code>, otherwise.
      */
-    DSMutableMarkerValue getMarkerValue(int index);
+    DSMarkerValue getMarkerValue(int index);
 
     /**
      * @return A deep copy of the microarray.
