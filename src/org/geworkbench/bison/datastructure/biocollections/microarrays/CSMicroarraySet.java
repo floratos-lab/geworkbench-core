@@ -320,7 +320,7 @@ final public class CSMicroarraySet extends CSDataSet<DSMicroarray> implements DS
 
         for (int i = 0; i < mrkNo; i++) {
             CSExpressionMarker mi = new CSExpressionMarker();
-            mi.reset(i, maNo, mrkNo);
+            mi.reset(i);
             markerVector.add(i, mi);
         }
     }

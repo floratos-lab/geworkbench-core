@@ -6,7 +6,7 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
-import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMutableMarkerValue;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMarkerValue;
 import org.geworkbench.bison.util.Range;
 
 /**
@@ -47,7 +47,7 @@ public class CSExpressionMarker extends CSGeneMarker implements
 	 * @param marker
 	 * @param isCase
 	 */
-	public void check(DSMutableMarkerValue marker, boolean isCase) {
+	public void updateRange(DSMarkerValue marker) {
 		range.min = Math.min(range.min, marker.getValue());
 		range.max = Math.max(range.max, marker.getValue());
 		range.norm.add(marker.getValue());
@@ -58,7 +58,7 @@ public class CSExpressionMarker extends CSGeneMarker implements
 	 * @param casesNum
 	 * @param controlsNum
 	 */
-	public void reset(int id, int casesNum, int controlsNum) {
+	public void reset(int id) {
 		// ready = false;
 		range.max = -999999;
 		range.min = +999999;

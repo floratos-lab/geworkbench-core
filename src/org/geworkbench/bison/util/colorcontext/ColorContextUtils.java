@@ -21,7 +21,7 @@ public class ColorContextUtils {
         if (!microarraySet.getMarkers().isEmpty()) {
             if (microarraySet.getMarkers().get(0) instanceof DSRangeMarker) {
                 for (DSGeneMarker marker : microarraySet.getMarkers()) {
-                    ((DSRangeMarker) marker).reset(marker.getSerial(), 0, 0);
+                    ((DSRangeMarker) marker).reset(marker.getSerial());
                 }
                 if (view.items().size() == 1) {
                     // @todo - watkin - move this range calculation in to a different ColorContext, maybe?
@@ -44,7 +44,7 @@ public class ColorContextUtils {
                     for (DSGeneMarker marker : microarraySet.getMarkers()) {
                         for (DSMicroarray ma : view.items()) {
                             DSMutableMarkerValue mValue = (DSMutableMarkerValue) ma.getMarkerValue(marker.getSerial());
-                            ((DSRangeMarker) marker).check(mValue, false);
+                            ((DSRangeMarker) marker).updateRange(mValue);
                         }
                     }
                 }

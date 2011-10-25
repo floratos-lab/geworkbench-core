@@ -1,6 +1,6 @@
 package org.geworkbench.bison.datastructure.bioobjects.markers;
 
-import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMutableMarkerValue;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMarkerValue;
 import org.geworkbench.bison.util.Range;
 
 /**
@@ -10,19 +10,14 @@ import org.geworkbench.bison.util.Range;
  * <p>Company: First Genetic Trust Inc.</p>
  *
  * @author Manjunath Kustagi
- * @version 1.0
+ * @version $Id$
  */
 
 public interface DSRangeMarker {
 
     Range getRange();
 
-    /**
-     * Checks if the designated IMarker belongs to a microarray that is
-     * part of the "Cases" criteria.
-     */
-    void check(DSMutableMarkerValue marker, boolean isCase);
+    void updateRange(DSMarkerValue marker);
 
-    // Resets the number of Cases (phNo) and Controls (bkNo).
-    void reset(int id, int phNo, int bkNo);
+    void reset(int id);
 }

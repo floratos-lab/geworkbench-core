@@ -184,8 +184,7 @@ public class MicroarraySetParser {
 			DSMutableMarkerValue markerValue = createMarkerValue(value, status);
 			// markerValue does not really need to be mutable. it is
 			// DSRangeMarker's mistake
-			((DSRangeMarker) markers.get(markerNumber)).check(markerValue,
-					false);
+			((DSRangeMarker) markers.get(markerNumber)).updateRange(markerValue);
 			values[arrayIndex++] = markerValue;
 		}
 		return values;
