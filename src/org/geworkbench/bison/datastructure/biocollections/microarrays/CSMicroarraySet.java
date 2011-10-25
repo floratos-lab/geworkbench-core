@@ -51,18 +51,9 @@ final public class CSMicroarraySet extends CSDataSet<DSMicroarray> implements DS
 
     private CSMarkerVector markerVector = new CSMarkerVector();
 
-    private int type = -1;
-
-    public CSMicroarraySet(String id, String name) {
-        setID(id);
-        setLabel(name);
-    }
-
     public CSMicroarraySet() {
         setID(RandomNumberGenerator.getID());
         setLabel("");
-
-        type = DSMicroarraySet.expPvalueType;
 
         addDescription("Microarray experiment");
         DSAnnotationContext<DSMicroarray> context = CSAnnotationContextManager.getInstance().getCurrentContext(this);
@@ -315,7 +306,7 @@ final public class CSMicroarraySet extends CSDataSet<DSMicroarray> implements DS
 	public void initialize(int maNo, int mrkNo) {
         // this is required so that the microarray vector may create arrays of the right size
         for (int microarrayId = 0; microarrayId < maNo; microarrayId++) {
-            add(microarrayId, (DSMicroarray)new CSMicroarray(microarrayId, mrkNo, "Test", type));
+            add(microarrayId, (DSMicroarray)new CSMicroarray(microarrayId, mrkNo, "Test", DSMicroarraySet.expPvalueType));
         }
 
         for (int i = 0; i < mrkNo; i++) {
