@@ -109,7 +109,7 @@ public class MicroarraySetParser {
 	private void populateDataset(DSMicroarraySet microarraySet) {
 		// just to make it is clear it is final here
 		final int markerCount = markerNumber;
-		microarraySet.initialize(0, markerCount); // only way to set marker
+		microarraySet.initializeMarkerVector(markerCount); // only way to set marker
 													// count
 		for (int i = 0; i < arrayNames.size(); i++) {
 			microarraySet.add(i, (DSMicroarray) new CSMicroarray(i,

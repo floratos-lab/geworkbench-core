@@ -149,7 +149,7 @@ public class GenePixFileFormat extends DataSetFileFormat {
 			Vector<String[]> v = parser.getAccessions();
 			microarraySet.setLabel(file.getName());
 			microarraySet.setCompatibilityLabel("Genepix");
-			microarraySet.initialize(1, v.size());
+			microarraySet.initializeMarkerVector(v.size());
 			CSMarkerVector markerVector = (CSMarkerVector) microarraySet
 					.getMarkers();
 			int count = 0;

@@ -46,8 +46,7 @@ public interface DSMicroarraySet extends DSDataSet<DSMicroarray> {
 
     void setCompatibilityLabel(String compatibilityLabel);
 
-    // It is defined in the classes. In CSMicroarraySet (AC)
-    public void initialize(int maNo, int mrkNo);
+    public void initializeMarkerVector(int markerCount);
     
     public String getAnnotationFileName();
     public void setAnnotationFileName(String annotationFileName);

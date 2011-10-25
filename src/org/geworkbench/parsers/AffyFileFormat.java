@@ -229,7 +229,7 @@ public class AffyFileFormat extends DataSetFileFormat {
 				microarraySet.setCompatibilityLabel(AffyAnnotationUtil.matchAffyAnnotationFile(maSet));
 			}
 
-			microarraySet.initialize(1, v.size());
+			microarraySet.initializeMarkerVector(v.size());
 
 			CSMarkerVector markerVector = (CSMarkerVector) microarraySet
 					.getMarkers();
