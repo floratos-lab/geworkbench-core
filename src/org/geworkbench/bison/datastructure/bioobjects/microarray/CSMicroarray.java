@@ -168,11 +168,11 @@ public class CSMicroarray implements DSMicroarray, Serializable {
     }
 
 
-    public DSMutableMarkerValue[] getMarkerValues() {
+    public DSMarkerValue[] getMarkerValues() {
         return markerArray;
     }
 
-    public DSMutableMarkerValue getMarkerValue(DSGeneMarker mInfo) {
+    public DSMarkerValue getMarkerValue(DSGeneMarker mInfo) {
     	if(mInfo==null) return null;
     	
         int markerIndex = mInfo.getSerial();
@@ -182,7 +182,7 @@ public class CSMicroarray implements DSMicroarray, Serializable {
     		return markerArray[markerIndex];
     }
 
-    public DSMutableMarkerValue getMarkerValue(int i) {
+    public DSMarkerValue getMarkerValue(int i) {
         try{
             return markerArray[i];
         }catch(ArrayIndexOutOfBoundsException e){
@@ -206,7 +206,7 @@ public class CSMicroarray implements DSMicroarray, Serializable {
     }
 
     public float[] getRawMarkerData() {
-        DSMutableMarkerValue[] values = getMarkerValues();
+        DSMarkerValue[] values = getMarkerValues();
         float[] data = new float[values.length];
         for (int j = 0; j < values.length; j++) {
             data[j] = (float) values[j].getValue();
