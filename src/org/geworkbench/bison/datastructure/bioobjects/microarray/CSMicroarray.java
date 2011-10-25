@@ -59,17 +59,21 @@ public class CSMicroarray implements DSMicroarray, Serializable {
         this.label = label;
         markerArray = new CSMarkerValue[markerNo];
 
-        for (int i = 0; i < markerNo; i++) {
-            if (type == DSMicroarraySet.expPvalueType) {
-                markerArray[i] = new CSExpressionMarkerValue(0);
-            } else if (type == DSMicroarraySet.genepixGPRType) {
-                markerArray[i] = new CSGenepixMarkerValue(0);
-            } else if (type == DSMicroarraySet.affyTxtType){
-                markerArray[i] = new CSAffyMarkerValue();
-            } else {
-                markerArray[i] = new CSExpressionMarkerValue(0);
-            }
-        }
+		if (type == DSMicroarraySet.expPvalueType) {
+			for (int i = 0; i < markerNo; i++)
+				markerArray[i] = new CSExpressionMarkerValue(0);
+		} else if (type == DSMicroarraySet.genepixGPRType) {
+			for (int i = 0; i < markerNo; i++)
+				markerArray[i] = new CSGenepixMarkerValue(0);
+		} else if (type == DSMicroarraySet.affyTxtType) {
+			for (int i = 0; i < markerNo; i++)
+				markerArray[i] = new CSAffyMarkerValue();
+		} else if (type == DSMicroarraySet.DO_NOT_CREATE_VALUE_OBJECT) {
+			// do not create marker value objects;
+		} else {
+			// should never happen
+			log.error("unknown type in constructor");
+		}
     }
 
     public boolean isMarkerValid(int i) {
@@ -193,7 +197,7 @@ public class CSMicroarray implements DSMicroarray, Serializable {
     }
 
     public DSMicroarray deepCopy() {
-        CSMicroarray copy = new CSMicroarray(serial, markerArray.length, label, 0); // type does not matter because markerArray's are replaced
+        CSMicroarray copy = new CSMicroarray(serial, markerArray.length, label, DSMicroarraySet.DO_NOT_CREATE_VALUE_OBJECT);
         for (int i = 0; i < this.getMarkerNo(); i++) {
             copy.markerArray[i] = (CSMarkerValue) markerArray[i].deepCopy();
         }

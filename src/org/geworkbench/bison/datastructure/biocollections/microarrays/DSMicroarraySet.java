@@ -16,10 +16,9 @@ import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
  */
 public interface DSMicroarraySet extends DSDataSet<DSMicroarray> {
 
-    public final static int geneExpType = 0; // Probably needs to be removed
-
+	// type of marker value objects
+    public final static int DO_NOT_CREATE_VALUE_OBJECT = 0;
     public final static int expPvalueType = 3; // added by xuegong
-    public final static int chipChipType = 4; // added by xuegong
     public final static int genepixGPRType = 5;
     public final static int affyTxtType = 6; // Txt MAS 4.0/5.0 file type
 
