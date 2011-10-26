@@ -140,6 +140,9 @@ public class MicroarraySetParser {
 			microarraySet.getMarkers().set(markerIndex,
 					markers.get(markerIndex));
 		}
+		if(microarraySet instanceof CSMicroarraySet) {
+			((CSMicroarraySet)microarraySet).getMarkers().correctMaps();
+		}
 		microarraySet.sortMarkers(markerCount);
 
 		int markerIndex = 0;

@@ -243,4 +243,39 @@ public class CSMarkerVector extends CSSequentialItemList<DSGeneMarker> {
 		item.setLabel(label);
 		objectMap.put(label, item);
 	}
+
+	/* this method is necessary in the case when the parser adds empty markers first before populating
+	 * real data, which causes the two maps miss the chance to be populated properly. */
+	public void correctMaps() {
+		geneIdMap.clear();
+		geneNameMap.clear();
+		for (DSGeneMarker item : this) {
+
+			if (item.getGeneIds() != null && item.getGeneIds().length > 0) {
+				int[] ids = item.getGeneIds();
+				for (int i = 0; i < ids.length; i++) {
+					Integer geneId = new Integer(ids[i]);
+					if (geneId != null && geneId.intValue() > 0) {
+						addItem(geneIdMap, geneId, item);
+					}
+				}
+			}
+
+			if (item.getShortNames() != null && item.getShortNames().length > 0) {
+				String[] geneNames = item.getShortNames();
+				String label = item.getLabel();
+				for (int i = 0; i < geneNames.length; i++) {
+					String geneName = geneNames[i];
+					if (geneName != null && (!"---".equals(geneName.trim()))) {
+						if (label != null && geneName.equals("")) {
+							addItem(geneNameMap, label, item);
+						} else {
+							addItem(geneNameMap, geneName.trim(), item);
+						}
+					}
+				}
+			}
+
+		}
+	}
 }
