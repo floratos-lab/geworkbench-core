@@ -230,6 +230,17 @@ public class CSMarkerVector extends CSSequentialItemList<DSGeneMarker> {
 		geneIdMap.clear();
 	}
 
+	@Override
+	public
+	DSGeneMarker set(int index, DSGeneMarker element) {
+		DSGeneMarker old = super.set(index, element);
+		if (element.getLabel() != null) {
+            objectMap.put(element.getLabel(), element);
+        }
+		return old;
+	}
+
+
 	/* used in AffyFileFormat and GenPixFileFormat */
 	public void setLabel(int index, String label) {
 		DSGeneMarker item = get(index);
