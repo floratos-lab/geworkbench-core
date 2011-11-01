@@ -80,7 +80,6 @@ public class SaveTree implements Serializable {
 			DSDataSet<?> dataSet = getDSDataSet(treeNode);
 
 			DataSetSaveNode childSave = new DataSetSaveNode(dataSet);
-			childSave.setCommandSelected(skin.getCommandLastSelected(dataSet));
 			childSave.setSelectionSelected(skin
 					.getSelectionLastSelected(dataSet));
 			childSave.setVisualSelected(skin.getVisualLastSelected(dataSet));

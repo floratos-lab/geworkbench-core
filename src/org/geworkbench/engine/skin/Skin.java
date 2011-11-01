@@ -108,7 +108,6 @@ public class Skin extends GUIFramework {
 	private Set<Class<?>> acceptors;
     private HashMap<Component, Class<?>> mainComponentClass = new HashMap<Component, Class<?>>();
     private ReferenceMap<DSDataSet<? extends DSBioObject>, String> visualLastSelected = new ReferenceMap<DSDataSet<? extends DSBioObject>, String>();
-    private ReferenceMap<DSDataSet<? extends DSBioObject>, String> commandLastSelected = new ReferenceMap<DSDataSet<? extends DSBioObject>, String>();
     private ReferenceMap<DSDataSet<? extends DSBioObject>, String> selectionLastSelected = new ReferenceMap<DSDataSet<? extends DSBioObject>, String>();
     private ArrayList<DockableImpl> visualDockables = new ArrayList<DockableImpl>();
 
@@ -121,10 +120,6 @@ public class Skin extends GUIFramework {
         return visualLastSelected.get(dataSet);
     }
 
-    public String getCommandLastSelected(DSDataSet<? extends DSBioObject> dataSet) {
-        return commandLastSelected.get(dataSet);
-    }
-
     public String getSelectionLastSelected(DSDataSet<? extends DSBioObject> dataSet) {
         return selectionLastSelected.get(dataSet);
     }
@@ -132,12 +127,6 @@ public class Skin extends GUIFramework {
     public void setVisualLastSelected(DSDataSet<? extends DSBioObject> dataSet, String component) {
         if (component != null) {
             visualLastSelected.put(dataSet, component);
-        }
-    }
-
-    public void setCommandLastSelected(DSDataSet<? extends DSBioObject> dataSet, String component) {
-        if (component != null) {
-            commandLastSelected.put(dataSet, component);
         }
     }
 

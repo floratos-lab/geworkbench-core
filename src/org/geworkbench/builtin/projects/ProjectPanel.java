@@ -464,8 +464,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		Skin skin = (Skin) GeawConfigObject.getGuiWindow();
 		skin.setVisualLastSelected(saveNode.getDataSet(), saveNode
 				.getVisualSelected());
-		skin.setCommandLastSelected(saveNode.getDataSet(), saveNode
-				.getCommandSelected());
 		skin.setSelectionLastSelected(saveNode.getDataSet(), saveNode
 				.getSelectionSelected());
 	}

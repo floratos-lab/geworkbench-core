@@ -26,7 +26,6 @@ public class DataSetSaveNode implements Serializable {
     private String description = "";
     private DSDataSet<? extends DSBioObject> dataSet;
     private String visualSelected;
-    private String commandSelected;
     private String selectionSelected;
     private ArrayList<DataSetSaveNode> children;
 
@@ -91,14 +90,6 @@ public class DataSetSaveNode implements Serializable {
 
     public void setVisualSelected(String visualSelected) {
         this.visualSelected = visualSelected;
-    }
-
-    public String getCommandSelected() {
-        return commandSelected;
-    }
-
-    public void setCommandSelected(String commandSelected) {
-        this.commandSelected = commandSelected;
     }
 
     public String getSelectionSelected() {
