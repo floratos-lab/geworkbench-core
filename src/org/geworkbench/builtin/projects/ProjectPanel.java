@@ -825,11 +825,10 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		TreePath path = projectTree.getSelectionPath();
 		if (path != null) {
 			path.getLastPathComponent();
-			selectedNode = selection.getSelectedNode();
 			ProjectTreeNode clickedNode = (ProjectTreeNode) path
 					.getLastPathComponent();
 			// Take action only if a new node is selected.
-			if (path != null && selectedNode != clickedNode) {
+			if (path != null && selection.getSelectedNode() != clickedNode) {
 				setNodeSelection(clickedNode);
 			}
 		}
@@ -1460,8 +1459,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		return selection;
 	}
 
-	private ProjectTreeNode selectedNode = null;
-
 	@Publish
 	public ProjectEvent publishProjectEvent(ProjectEvent event) {
 		return event;
@@ -1580,7 +1577,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		if (currentDS != null && currentDS instanceof DSMicroarraySet
 				&& (DSMicroarraySet) currentDS == sourceMA) {
 			publishProjectEvent(new ProjectEvent(ProjectEvent.SELECTED,
-					sourceMA, selectedNode));
+					sourceMA, selection.getSelectedNode()));
 		}
 	}
 
@@ -1616,7 +1613,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		if (currentDS != null && currentDS instanceof DSMicroarraySet
 				&& (DSMicroarraySet) currentDS == sourceMA) {
 			publishProjectEvent(new ProjectEvent(ProjectEvent.SELECTED,
-					sourceMA, selectedNode));
+					sourceMA, selection.getSelectedNode()));
 		}
 	}
 
@@ -1628,7 +1625,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		if (root != null) {
 			root.removeAllChildren();
 			projectTreeModel.reload(root);
-			selectedNode = null;
 		}
 
 		publishProjectEvent(new ProjectEvent(ProjectEvent.CLEARED, null, null));
