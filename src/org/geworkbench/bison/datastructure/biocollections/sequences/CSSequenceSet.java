@@ -144,12 +144,11 @@ public class CSSequenceSet<T extends DSSequence> extends CSDataSet<T> implements
 			T sequence = null;
 			String data = new String();
 			String s = reader.readLine();
-			int num = 0;
+
 			while (reader.ready()) {
 				if (s.trim().length() == 0) {
 
 				} else if (s.startsWith(">")) {
-					num++;
 					if (sequence != null) {
 						sequence.setSequence(data);
 						addASequence(sequence);
