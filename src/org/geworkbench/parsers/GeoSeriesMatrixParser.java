@@ -242,7 +242,6 @@ public class GeoSeriesMatrixParser {
 
 				/* Skip first token */
 				headerTokenizer.nextToken();
-				int duplicateLabels = 0;
 
 				for (int i = 0; i < n; i++) {
 					
@@ -262,7 +261,6 @@ public class GeoSeriesMatrixParser {
 						array.setLabel(array.getLabel()
 								+ duplicateLabelModificator);
 						maSet.add(array);
-						duplicateLabels++;
 					}
 				}
 				while ((line != null) 

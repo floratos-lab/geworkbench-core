@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -23,7 +24,6 @@ import javax.swing.filechooser.FileFilter;
 
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
-import org.geworkbench.bison.datastructure.bioobjects.sequence.CSSequence;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import org.geworkbench.bison.datastructure.complex.pattern.PatternResult;
 import org.geworkbench.bison.parsers.resources.Resource;
@@ -36,7 +36,7 @@ import org.geworkbench.util.Util;
 public class PatternFileFormat extends DataSetFileFormat {
 	
 	private static final String[] patExtensions = { "pat"};
-	private String fileName;
+
 	private PatternResult patternResult = null;
 	private ProjectNode projectNode;
 	private boolean isCancel = false;
@@ -98,11 +98,9 @@ public class PatternFileFormat extends DataSetFileFormat {
 	@SuppressWarnings("unchecked")
 	private DSDataSet<?> getPatternResultSet(File file) 
 		throws InputFileFormatException, InterruptedIOException {{
-			// TODO Auto-generated method stub
 
 			// get list of data sets that a selected adjacency matrix could be
 			// attached to
-			this.fileName = file.getName();
 			ArrayList<DataSetNode> dataSetstmp = new ArrayList<DataSetNode>();
 			for (Enumeration<?> en = projectNode.children(); en.hasMoreElements();) {
 				ProjectTreeNode node = (ProjectTreeNode) en.nextElement();
