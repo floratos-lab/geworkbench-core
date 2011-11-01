@@ -107,8 +107,10 @@ public class Skin extends GUIFramework {
 
 	private Set<Class<?>> acceptors;
     private HashMap<Component, Class<?>> mainComponentClass = new HashMap<Component, Class<?>>();
-    private ReferenceMap<DSDataSet<? extends DSBioObject>, String> visualLastSelected = new ReferenceMap<DSDataSet<? extends DSBioObject>, String>();
-    private ReferenceMap<DSDataSet<? extends DSBioObject>, String> selectionLastSelected = new ReferenceMap<DSDataSet<? extends DSBioObject>, String>();
+	private ReferenceMap<DSDataSet<? extends DSBioObject>, String> visualLastSelected = new ReferenceMap<DSDataSet<? extends DSBioObject>, String>(
+			ReferenceMap.SOFT, ReferenceMap.SOFT);
+	private ReferenceMap<DSDataSet<? extends DSBioObject>, String> selectionLastSelected = new ReferenceMap<DSDataSet<? extends DSBioObject>, String>(
+			ReferenceMap.SOFT, ReferenceMap.SOFT);
     private ArrayList<DockableImpl> visualDockables = new ArrayList<DockableImpl>();
 
     private ArrayList<DockableImpl> selectorDockables = new ArrayList<DockableImpl>();
