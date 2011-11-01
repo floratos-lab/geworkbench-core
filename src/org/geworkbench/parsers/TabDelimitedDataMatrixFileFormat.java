@@ -276,7 +276,6 @@ public class TabDelimitedDataMatrixFileFormat extends DataSetFileFormat {
 
 				/* Skip first token */
 				headerTokenizer.nextToken();
-				int duplicateLabels = 0;
 
 				for (int i = 0; i < n; i++) {
 					String arrayName = headerTokenizer.nextToken();
@@ -293,7 +292,6 @@ public class TabDelimitedDataMatrixFileFormat extends DataSetFileFormat {
 						array.setLabel(array.getLabel()
 								+ duplicateLabelModificator);
 						maSet.add(array);
-						duplicateLabels++;
 					}
 				}
 				while ((line != null) // modified for mantis issue: 1349
