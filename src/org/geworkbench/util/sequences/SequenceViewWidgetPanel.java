@@ -46,7 +46,6 @@ public class SequenceViewWidgetPanel extends JPanel {
 	private double scale = 1.0;
 	private int selected = 0;
 	private int maxSeqLen = 1;
-	private String displayInfo = "";
 
 	protected DSSequenceSet<? extends DSSequence> sequenceDB = null;
 	private HashMap<CSSequence, PatternSequenceDisplayUtil> sequencePatternmatches;
@@ -803,22 +802,10 @@ public class SequenceViewWidgetPanel extends JPanel {
 		} else {
 			mouseSelectedSequence = null;
 		}
-		if (mouseSelectedSequence != null) {
-			displayInfo = "For sequence " + mouseSelectedSequence.getLabel()
-					+ ", total length: " + mouseSelectedSequence.length();
-			if (sequencePatternmatches != null) {
-				PatternSequenceDisplayUtil psu = sequencePatternmatches
-						.get(mouseSelectedSequence);
-				if (psu != null && psu.getTreeSet() != null) {
-					displayInfo += ", pattern number: "
-							+ psu.getTreeSet().size();
-				}
-			}
-			if ((mouseMovePoint <= mouseSelectedSequence.length())
+		if (mouseSelectedSequence != null &&
+			(mouseMovePoint <= mouseSelectedSequence.length())
 					&& (mouseMovePoint > 0)) {
 				this.setToolTipText("" + mouseMovePoint);
-				displayInfo += ". Current location: " + mouseMovePoint;
-			}
 		}
 		{
 			this.setToolTipText(null);
@@ -860,22 +847,10 @@ public class SequenceViewWidgetPanel extends JPanel {
 		} else {
 			selectedSequence = null;
 		}
-		if (selectedSequence != null) {
-			displayInfo = "For sequence " + selectedSequence.getLabel()
-					+ ", total length: " + selectedSequence.length();
-			if (sequencePatternmatches != null) {
-				PatternSequenceDisplayUtil psu = sequencePatternmatches
-						.get(selectedSequence);
-				if (psu != null && psu.getTreeSet() != null) {
-					displayInfo += ", pattern number: "
-							+ psu.getTreeSet().size();
-				}
-			}
-			if ((seqXclickPoint <= selectedSequence.length())
+		if (selectedSequence != null 
+			&&(seqXclickPoint <= selectedSequence.length())
 					&& (seqXclickPoint > 0)) {
 				this.setToolTipText("" + seqXclickPoint);
-				displayInfo += ". Current location: " + seqXclickPoint;
-			}
 		}
 
 		this.setToolTipText(null);
@@ -982,8 +957,7 @@ public class SequenceViewWidgetPanel extends JPanel {
 			}
 			DSSequence sequence = sequenceDB.getSequence(selected);
 			String asc = sequence.getSequence();
-			displayInfo = "Length of " + sequence.getLabel() + ": "
-					+ sequence.length();
+
 			Rectangle2D r2d = fm.getStringBounds(asc, g);
 			double xscale = (r2d.getWidth() + 3) / (double) (asc.length());
 			double yscale = 1.3 * r2d.getHeight();
@@ -1001,7 +975,6 @@ public class SequenceViewWidgetPanel extends JPanel {
 
 					// this.setToolTipText("" + dis);
 				}
-				displayInfo += ". Current location: " + dis;
 			}
 		}
 	}
