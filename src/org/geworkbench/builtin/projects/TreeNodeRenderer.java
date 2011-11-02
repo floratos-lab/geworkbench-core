@@ -61,7 +61,7 @@ public class TreeNodeRenderer extends DefaultTreeCellRenderer {
                 } else {
                     setIcon(Icons.MICROARRAYS_ICON);
                 }
-                String[] descriptions = df.getDescriptions();
+                String description = df.getDescription();
                 if (df != null && (df instanceof DSMicroarraySet)){
                 	DSMicroarraySet microarraySet = (DSMicroarraySet)df;
                     setToolTipText("# of microarrays: " +
@@ -69,8 +69,8 @@ public class TreeNodeRenderer extends DefaultTreeCellRenderer {
                             "# of markers: " +
                             microarraySet.getMarkers().size() + "\n");
                 }
-                else if (descriptions.length > 0) {
-                    setToolTipText(descriptions[0]);
+                else if (description!=null) {
+                    setToolTipText(description);
                 } else {
                     setToolTipText("This is an undefined Data set");
                 }
@@ -82,10 +82,10 @@ public class TreeNodeRenderer extends DefaultTreeCellRenderer {
                 } else {
                     setIcon(Icons.DATASUBSET_ICON);
                 }
-                String[] descriptions = adf.getDescriptions();
+                String description = adf.getDescription();
                 
-                if (descriptions.length > 0) {
-                    setToolTipText("This is a Ancillary Data set: " + descriptions[0]);
+                if (description!=null) {
+                    setToolTipText("This is a Ancillary Data set: " + description);
                 } else {                	
 	                if (adf instanceof AdjacencyMatrixDataSet){
 	                	AdjacencyMatrixDataSet adjSet = (AdjacencyMatrixDataSet) adf;                

@@ -18,7 +18,6 @@ import java.util.Vector;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.geworkbench.bison.datastructure.properties.CSDescribable;
 import org.geworkbench.bison.model.analysis.Analysis;
 import org.geworkbench.bison.model.analysis.ParamValidationResults;
 import org.geworkbench.bison.model.analysis.ParameterPanel;
@@ -162,7 +161,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	/**
 	 * Used in the implementation of the <code>Describable</code> interface.
 	 */
-	private CSDescribable descriptions = new CSDescribable();
+	private String description = null;
 
 	/**
 	 * Set <code>stopAlgorithm</code> to true to stop the Algorithm, in the
@@ -478,8 +477,8 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	 *
 	 * @see org.geworkbench.bison.datastructure.properties.DSDescribable#addDescription(java.lang.String)
 	 */
-	public void addDescription(String desc) {
-		descriptions.addDescription(desc);
+	public void setDescription(String desc) {
+		description = desc;
 	}
 
 	/*
@@ -487,17 +486,8 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	 *
 	 * @see org.geworkbench.bison.datastructure.properties.DSDescribable#getDescriptions()
 	 */
-	public String[] getDescriptions() {
-		return descriptions.getDescriptions();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.geworkbench.bison.datastructure.properties.DSDescribable#removeDescription(java.lang.String)
-	 */
-	public void removeDescription(String desc) {
-		descriptions.removeDescription(desc);
+	public String getDescription() {
+		return description;
 	}
 
 	private String label = null;

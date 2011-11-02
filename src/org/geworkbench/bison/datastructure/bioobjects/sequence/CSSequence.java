@@ -1,10 +1,9 @@
 package org.geworkbench.bison.datastructure.bioobjects.sequence;
 
-import org.geworkbench.bison.datastructure.properties.CSDescribable;
-import org.geworkbench.bison.datastructure.properties.CSExtendable;
-
 import java.io.Serializable;
 import java.util.regex.Matcher;
+
+import org.geworkbench.bison.datastructure.properties.CSExtendable;
 
 /**
  * <p>Title: </p>
@@ -13,20 +12,12 @@ import java.util.regex.Matcher;
  * <p>Company: </p>
  *
  * @author not attributable
- * @version 1.0
+ * @version $Id$
  */
 
 public class CSSequence implements DSSequence, Serializable {
 
-    /**
-	 * 
-	 */
-	// This class is changed so a new ID is given.
 	private static final long serialVersionUID = 7157849532235539033L;
-	/**
-     *
-     */
-    //private static final long serialVersionUID = -8710506841571301285L;
 
     static final String[] repeats = {"(at){5,}", "a{7,}", "c{7,}", "g{7,}",
                                     "t{7,}"};
@@ -45,7 +36,7 @@ public class CSSequence implements DSSequence, Serializable {
     /**
      * Used in the implementation of the <code>Describable</code> interface.
      */
-    protected CSDescribable descriptions = new CSDescribable();
+    protected String description = null;
 
     public CSSequence() {
     }
@@ -137,16 +128,12 @@ public class CSSequence implements DSSequence, Serializable {
         return extend.isUniqueValue(name);
     }
 
-    public void addDescription(String desc) {
-        descriptions.addDescription(desc);
+    public void setDescription(String desc) {
+        description = desc;
     }
 
-    public String[] getDescriptions() {
-        return descriptions.getDescriptions();
-    }
-
-    public void removeDescription(String desc) {
-        descriptions.removeDescription(desc);
+    public String getDescription() {
+        return description;
     }
 
     public void addNameValuePair(String name, Object value) {

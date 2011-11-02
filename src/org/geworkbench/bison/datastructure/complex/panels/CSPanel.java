@@ -1,6 +1,5 @@
 package org.geworkbench.bison.datastructure.complex.panels;
 
-import org.geworkbench.bison.datastructure.properties.CSDescribable;
 import org.geworkbench.bison.datastructure.properties.DSNamed;
 
 /**
@@ -24,7 +23,7 @@ public class CSPanel <T extends DSNamed> extends CSItemList<T> implements DSPane
     /**
      * Used in the implementation of the <code>Describable</code> interface.
      */
-    private CSDescribable descriptions = new CSDescribable();
+    private String description = null;
     /**
      * <code>PanelEntry</code> comprising this <code>Panel</code>
      */
@@ -340,8 +339,8 @@ public class CSPanel <T extends DSNamed> extends CSItemList<T> implements DSPane
      *
      * @param description the new description to add.
      */
-    public void addDescription(String description) {
-        descriptions.addDescription(description);
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     /**
@@ -349,17 +348,8 @@ public class CSPanel <T extends DSNamed> extends CSItemList<T> implements DSPane
      *
      * @return the array of descriptions.
      */
-    public String[] getDescriptions() {
-        return descriptions.getDescriptions();
-    }
-
-    /**
-     * Removes a description from the panel.
-     *
-     * @param description the full text of the description to remove.
-     */
-    public void removeDescription(String description) {
-        descriptions.removeDescription(description);
+    public String getDescription() {
+        return description;
     }
 
     /**

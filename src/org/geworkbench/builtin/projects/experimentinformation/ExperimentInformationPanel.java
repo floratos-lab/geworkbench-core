@@ -84,12 +84,10 @@ public class ExperimentInformationPanel implements VisualPlugin {
                 maSet = null;
             } else {
                 maSet = (DSMicroarraySet) dataSet;
-                String[] descriptions = maSet.getDescriptions();
-                if (descriptions != null && descriptions.length > 0)
-                    experimentInfo = "";
-                for (int i = 0; i < descriptions.length; i++)
-                    experimentInfo += descriptions[i] + "\n";
-                if (experimentInfo == null || experimentInfo.trim().equals(""))
+                String description = maSet.getDescription();
+                if (description != null && description.length() > 0)
+                    experimentInfo += description + "\n";
+                else
                     experimentInfo = DEFAULT_MESSAGE;
             }
             experimentTextArea.setText(experimentInfo);

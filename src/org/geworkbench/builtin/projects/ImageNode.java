@@ -34,7 +34,7 @@ public class ImageNode extends  DataSetSubNode {
         super.setUserObject(image.getDescription());
         ImageData node = new ImageData(null);
         node.setImageIcon(image);
-        node.addDescription(image.getDescription());
+        node.setDescription(image.getDescription());
         _aDataSet = node;
 
 

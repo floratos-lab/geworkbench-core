@@ -89,14 +89,11 @@ public class CSMatrixReduceExperiment implements DSMatrixReduceExperiment {
 	public void clearName(String name) {
 	}
 
-	public void addDescription(String description) {
+	public void setDescription(String description) {
 	}
 
-	public String[] getDescriptions() {
-		return new String[0];
-	}
-
-	public void removeDescription(String description) {
+	public String getDescription() {
+		return "";
 	}
 
 	public String getID() {

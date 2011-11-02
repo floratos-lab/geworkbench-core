@@ -28,7 +28,7 @@ public class PendingTreeNode extends ProjectTreeNode implements Serializable {
 			GridEndpointReferenceType gridEpr) {
 		DSDataSet<?> dataset = new PendingNode();
 		dataset.setLabel(label);
-		dataset.addDescription(history);
+		dataset.setDescription(history);
 		dataset.addObject(GridEndpointReferenceType.class, gridEpr);
 		super.setUserObject(dataset);
 	}

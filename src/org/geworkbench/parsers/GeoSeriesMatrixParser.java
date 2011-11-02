@@ -77,7 +77,7 @@ public class GeoSeriesMatrixParser {
 				if (line.startsWith(commentSign1) || line.startsWith(commentSign2)) {
 					//Ignoring the lines that has '!series_matrix_table_begin' and '!series_matrix_table_end'
 					if(!line.equalsIgnoreCase("!series_matrix_table_begin") && !line.equalsIgnoreCase("!series_matrix_table_end")) {
-						maSet.addDescription(line.substring(1));
+						maSet.setDescription(line.substring(1));
 					}
 				}
 				String[] mark = line.split("\t");

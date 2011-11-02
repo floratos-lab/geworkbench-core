@@ -54,7 +54,7 @@ final public class CSMicroarraySet extends CSDataSet<DSMicroarray> implements DS
         setID(RandomNumberGenerator.getID());
         setLabel("");
 
-        addDescription("Microarray experiment");
+        setDescription("Microarray experiment");
         DSAnnotationContext<DSMicroarray> context = CSAnnotationContextManager.getInstance().getCurrentContext(this);
         CSAnnotationContext.initializePhenotypeContext(context);
     }

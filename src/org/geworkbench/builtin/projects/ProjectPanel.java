@@ -386,7 +386,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			final Collection<GridEndpointReferenceType> pendingGridEprs) {
 		GridEndpointReferenceType pendingGridEpr = (GridEndpointReferenceType) dataset
 				.getObject(GridEndpointReferenceType.class);
-		String history = dataset.getDescriptions()[0];
+		String history = dataset.getDescription();
 		addPendingNode(pendingGridEpr,
 				dataset.getLabel(), history, true);
 		pendingGridEprs.add(pendingGridEpr);
@@ -967,7 +967,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			return;
 		}
 
-		String history = node.getDSDataSet().getDescriptions()[0];
+		String history = node.getDSDataSet().getDescription();
 		boolean pendingNodeFocused = false;
 
 		TreePath pathNow = projectTree.getSelectionPath();

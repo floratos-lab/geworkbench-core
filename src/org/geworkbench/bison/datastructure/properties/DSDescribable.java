@@ -5,33 +5,22 @@ package org.geworkbench.bison.datastructure.properties;
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: First Genetic Trust Inc.</p>
  * @author First Genetic Trust Inc.
- * @version 1.0
+ * @version $Id$
  */
 
-/**
- * Allows the association of arbitrary descriptions with an oject. Concept
- * borrowed from MAGE-OM interface <code>Describable</code>
- */
 public interface DSDescribable {
 
     /**
-     * Append a new description to the list of existing descriptions.
+     * Set new description.
      *
-     * @param description The new description to be added.
+     * @param description The new description.
      */
-    void addDescription(String description);
+    void setDescription(String description);
 
     /**
-     * Get all available descriptions in the form of an array of strings.
+     * Get the description..
      *
-     * @return An array containing all descriptions.
+     * @return A description.
      */
-    String[] getDescriptions();
-
-    /**
-     * Remove the designated description.
-     *
-     * @param description The description to be removed.
-     */
-    void removeDescription(String description);
+    String getDescription();
 }

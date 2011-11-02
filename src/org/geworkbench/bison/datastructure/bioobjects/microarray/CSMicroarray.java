@@ -134,17 +134,13 @@ public class CSMicroarray implements DSMicroarray, Serializable {
         return getLabel();
     }
 
-    public void addDescription(String desc) {
+    public void setDescription(String desc) {
         log.error("CSMicroArray does not support addDescription");
     }
 
-    public String[] getDescriptions() {
+    public String getDescription() {
         log.error("CSMicroArray does not support getDescriptions");
         return null;
-    }
-
-    public void removeDescription(String desc) {
-        log.error("CSMicroArray does not support removeDescription");
     }
 
     public void addNameValuePair(String name, Object value) {

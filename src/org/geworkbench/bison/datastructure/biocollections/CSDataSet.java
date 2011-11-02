@@ -6,7 +6,6 @@ import java.util.HashMap;
 
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.datastructure.complex.panels.CSSequentialItemList;
-import org.geworkbench.bison.datastructure.properties.CSDescribable;
 import org.geworkbench.bison.datastructure.properties.CSExtendable;
 
 /**
@@ -31,7 +30,7 @@ public class CSDataSet <T extends DSBioObject> extends CSSequentialItemList<T> i
     /**
      * Used in the implementation of the <code>Describable</code> interface.
      */
-    protected CSDescribable descriptions = new CSDescribable();
+    protected String description = null;
 
     /**
      * Used in the implementation of the <code>Extendable</code> interface.
@@ -185,8 +184,8 @@ public class CSDataSet <T extends DSBioObject> extends CSSequentialItemList<T> i
      *
      * @param description the new description to be added.
      */
-    public void addDescription(String description) {
-        descriptions.addDescription(description);
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     /**
@@ -194,17 +193,8 @@ public class CSDataSet <T extends DSBioObject> extends CSSequentialItemList<T> i
      *
      * @return an array containing all descriptions.
      */
-    public String[] getDescriptions() {
-        return descriptions.getDescriptions();
-    }
-
-    /**
-     * Remove the designated description.
-     *
-     * @param description The description to be removed.
-     */
-    public void removeDescription(String description) {
-        descriptions.removeDescription(description);
+    public String getDescription() {
+        return description;
     }
 
     /**

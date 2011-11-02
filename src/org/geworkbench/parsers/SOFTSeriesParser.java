@@ -178,7 +178,7 @@ public class SOFTSeriesParser {
 							&& !line.equalsIgnoreCase("!platform_table_begin")
 							&& !line.equalsIgnoreCase("!sample_table_begin")
 							&& !line.equalsIgnoreCase("!sample_table_end")) {
-						maSet.addDescription(line.substring(1));
+						maSet.setDescription(line.substring(1));
 					}
 				}
 
