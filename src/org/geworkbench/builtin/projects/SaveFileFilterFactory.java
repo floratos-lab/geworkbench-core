@@ -21,8 +21,8 @@ import org.geworkbench.bison.datastructure.bioobjects.structure.CSProteinStructu
  * @author zji
  * 
  */
-public class SaveFileFilterFactory {
-
+public class SaveFileFilterFactory {	
+	
 	static CustomFileFilter createFilter(
 			DSDataSet<? extends DSBioObject> dataset) {
 		if (dataset instanceof CSMicroarraySet) {
@@ -37,6 +37,13 @@ public class SaveFileFilterFactory {
 			return new DefaultFileFilter();
 		}
 	}
+	
+	static public TabDelimitedFileFilter getTabDelimitedFileFilter()
+	{
+		return new TabDelimitedFileFilter();
+	}
+
+	
 
 	static private enum ImageType {
 		Bitmap, JPEG, PNG, TIFF
@@ -138,6 +145,30 @@ public class SaveFileFilterFactory {
 		}
 
 	}
+	
+	
+
+	static private class TabDelimitedFileFilter extends CustomFileFilter {
+		public String getDescription() {
+			return "tab-delimited file (*.txt)";
+		}
+
+		public boolean accept(File f) {
+			String name = f.getName();
+			boolean tabFile = name.endsWith("txt") || name.endsWith("TXT");
+			if (f.isDirectory() || tabFile) {
+				return true;
+			}
+
+			return false;
+		}
+
+		public String getExtension() {
+			return "txt";
+		}
+
+	}
+	
 
 	static private class SequenceFileFilter extends CustomFileFilter {
 		public String getDescription() {
@@ -273,5 +304,7 @@ public class SaveFileFilterFactory {
 			return "tif";
 		}
 
-	}
+	}	
+	 
+	
 }
