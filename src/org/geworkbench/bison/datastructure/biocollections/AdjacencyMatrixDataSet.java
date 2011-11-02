@@ -42,6 +42,15 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet<DSMicroarray> {
 
 	private final double threshold;
 	private String networkName;
+	
+	@Override
+	public String getDescription() {
+		if (description == null) {
+			description = "Network. # of nodes: " + matrix.getNodeNumber()
+					+ ", # of edges: " + matrix.getConnectionNo();
+		}
+		return description;
+	}
 
 	public AdjacencyMatrixDataSet(final AdjacencyMatrix matrix,
 			final double threshold, final String name,

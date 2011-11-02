@@ -46,6 +46,8 @@ import org.geworkbench.engine.preferences.GlobalPreferences;
  * @version $Id$
  */
 final public class CSMicroarraySet extends CSDataSet<DSMicroarray> implements DSMicroarraySet {
+	private static final String DEFAULT_DESCRIPTION = "Microarray experiment";
+
 	private static final long serialVersionUID = -8604116507886706853L;
 
     private CSMarkerVector markerVector = new CSMarkerVector();
@@ -54,11 +56,20 @@ final public class CSMicroarraySet extends CSDataSet<DSMicroarray> implements DS
         setID(RandomNumberGenerator.getID());
         setLabel("");
 
-        setDescription("Microarray experiment");
+        setDescription(DEFAULT_DESCRIPTION);
         DSAnnotationContext<DSMicroarray> context = CSAnnotationContextManager.getInstance().getCurrentContext(this);
         CSAnnotationContext.initializePhenotypeContext(context);
     }
 
+	@Override
+	public String getDescription() {
+		if (description.equals(DEFAULT_DESCRIPTION)) {
+			description += ". # of microarrays: " + this.size() + ",   "
+					+ "# of markers: " + this.getMarkers().size();
+		}
+		return description;
+	}
+    
     public double getValue(DSGeneMarker marker, int maIndex) {
         //If we get a marker that is on this array -- i.e. it has a unique identifier, then
         //just return the value for that marker and don't waste time searching by other identifiers

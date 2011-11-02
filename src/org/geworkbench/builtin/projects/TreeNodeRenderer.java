@@ -6,10 +6,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-import org.geworkbench.bison.datastructure.biocollections.AdjacencyMatrixDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.datastructure.properties.DSNamed;
 import org.geworkbench.engine.management.TypeMap;
@@ -44,6 +42,7 @@ public class TreeNodeRenderer extends DefaultTreeCellRenderer {
     public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
         super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
 
+        String description = null;
         if (value == tree.getModel().getRoot()) {
             setIcon(Icons.WORKSPACE_ICON);
             setToolTipText("This is the workspace.");
@@ -61,19 +60,7 @@ public class TreeNodeRenderer extends DefaultTreeCellRenderer {
                 } else {
                     setIcon(Icons.MICROARRAYS_ICON);
                 }
-                String description = df.getDescription();
-                if (df != null && (df instanceof DSMicroarraySet)){
-                	DSMicroarraySet microarraySet = (DSMicroarraySet)df;
-                    setToolTipText("# of microarrays: " +
-                            microarraySet.size() + ",   " +
-                            "# of markers: " +
-                            microarraySet.getMarkers().size() + "\n");
-                }
-                else if (description!=null) {
-                    setToolTipText(description);
-                } else {
-                    setToolTipText("This is an undefined Data set");
-                }
+                description = df.getDescription();
             } else if (value.getClass() == DataSetSubNode.class) {
                 DSAncillaryDataSet<? extends DSBioObject> adf = ((DataSetSubNode) value)._aDataSet;               
                 ImageIcon icon = getIconForType(adf.getClass());
@@ -82,24 +69,12 @@ public class TreeNodeRenderer extends DefaultTreeCellRenderer {
                 } else {
                     setIcon(Icons.DATASUBSET_ICON);
                 }
-                String description = adf.getDescription();
-                
-                if (description!=null) {
-                    setToolTipText("This is a Ancillary Data set: " + description);
-                } else {                	
-	                if (adf instanceof AdjacencyMatrixDataSet){
-	                	AdjacencyMatrixDataSet adjSet = (AdjacencyMatrixDataSet) adf;                
-		                int nodeNumber = adjSet.getMatrix().getNodeNumber();
-		                int edgeNumber = adjSet.getMatrix().getConnectionNo();
-		                //edgeNumber/=2;                
-		                setToolTipText("# of nodes: "+nodeNumber+ ", # of edges: "+ edgeNumber);
-	                }
-	                else {
-	                	setToolTipText("This is an undefined Ancillary Data set");
-	                }
-                }  
+                description = adf.getDescription();
             } else if (value.getClass() == ImageNode.class) {
                 setIcon(Icons.IMAGE_ICON);
+            }
+            if (description!=null) {
+                setToolTipText(description);
             }
         }
 
