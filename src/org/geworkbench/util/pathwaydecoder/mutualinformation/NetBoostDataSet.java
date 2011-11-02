@@ -1,7 +1,5 @@
 package org.geworkbench.util.pathwaydecoder.mutualinformation;
 
-import java.io.File;
-
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
@@ -18,16 +16,6 @@ public class NetBoostDataSet extends CSAncillaryDataSet<DSBioObject> {
         this.filename = filename;
     }
 
-	public File getDataSetFile() {
-		// no-op
-		return null;
-	}
-
-	public void setDataSetFile(File file) {
-		// no-op
-
-	}
-	
 	public NetBoostData getData() {
         return data;
     }

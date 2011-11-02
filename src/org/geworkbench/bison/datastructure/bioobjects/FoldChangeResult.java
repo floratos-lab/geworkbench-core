@@ -1,6 +1,5 @@
 package org.geworkbench.bison.datastructure.bioobjects;
 
-import java.io.File;
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
@@ -18,12 +17,4 @@ public class FoldChangeResult extends CSAncillaryDataSet<DSMicroarray> {
 		super(maSet, string);		
 	}
 
-	public File getDataSetFile() {
-		// no-op
-		return null;
-	}
-
-	public void setDataSetFile(File file) {
-		// no-op
-	}	
 }

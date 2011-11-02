@@ -26,15 +26,6 @@ public class EdgeListDataSet extends CSAncillaryDataSet<DSBioObject> {
         this.filename = filename;
     }
 
-    public File getDataSetFile() {
-        // no-op
-        return null;
-    }
-
-    public void setDataSetFile(File file) {
-        // no-op
-    }
-
     public EdgeList getData() {
         return data;
     }

@@ -61,35 +61,6 @@ public class CSPCADataSet extends CSAncillaryDataSet<DSBioObject> implements DSP
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet#getDataSetFile()
-	 */
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.geworkbench.bison.datastructure.biocollections.pca.DSPCADataSet#getDataSetFile()
-	 */
-	public File getDataSetFile() {
-		// no-op
-		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet#setDataSetFile(java.io.File)
-	 */
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.geworkbench.bison.datastructure.biocollections.pca.DSPCADataSet#setDataSetFile(java.io.File)
-	 */
-	public void setDataSetFile(File file) {
-		// no-op
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see org.geworkbench.bison.datastructure.biocollections.pca.DSPCADataSet#getNumPCs()
 	 */
 	public int getNumPCs() {

@@ -3,7 +3,6 @@
  */
 package org.geworkbench.bison.datastructure.biocollections;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -90,15 +89,6 @@ public class GoAnalysisResult extends CSAncillaryDataSet<DSMicroarray> {
 
 	void addResultRow(int goId, ResultRow row) {
 		result.put(goId, row);
-	}
-	
-	public File getDataSetFile() {
-		// no use. required by the interface
-		return null;
-	}
-
-	public void setDataSetFile(File file) {
-		// no use. required by the interface
 	}
 	
 	/**

@@ -1,6 +1,5 @@
 package org.geworkbench.bison.datastructure.bioobjects;
 
-import java.io.File;
 import java.util.List;
 
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
@@ -30,15 +29,6 @@ public class IdeaResultDataSet extends CSAncillaryDataSet<DSMicroarray> {
 		this.nodeList = nodeList;
 		this.moduleList=moduleList;
 		this.pvalue=pvalue;
-	}
-
-	public File getDataSetFile() {
-		// no-op
-		return null;
-	}
-
-	public void setDataSetFile(File file) {
-		// no-op
 	}
 
 	public List<IdeaGLoc> getLocList() {

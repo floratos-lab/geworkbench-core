@@ -738,11 +738,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		if (parentSet != null) {
 			if (dNode != null) {
 
-				DSDataSet<? extends DSBioObject> dNodeFile = dNode.getDataset();
-				if (dNodeFile.hashCode() == parentSet.hashCode()) {
-					_ancDataSet.setDataSetFile(dNode.getDataset().getFile());
-
-				} else {
+				if (dNode.getDataset() != parentSet) {
 					// get the matched node in case the node selected changed.
 					matchedDNode = getMatchNode(root, parentSet);
 				}
@@ -759,7 +755,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			return;
 		}
 
-		_ancDataSet.setDataSetFile(dNode.getDataset().getFile());
 		// Makes sure that we do not already have an exact instance of this
 		// ancillary file
 		Enumeration<?> children = dNode.children();

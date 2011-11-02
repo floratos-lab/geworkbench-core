@@ -3,8 +3,6 @@ package org.geworkbench.bison.model.clusters;
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.views.DSDataSetView;
 
-import java.io.File;
-
 /**
  * @author John Watkinson
  */
@@ -65,11 +63,4 @@ public class CSSOMClusterDataSet extends CSAncillaryDataSet implements DSSOMClus
         return rows * columns;
     }
 
-    public File getDataSetFile() {
-        return null;
-    }
-
-    public void setDataSetFile(File file) {
-        // no-op
-    }
 }

@@ -1,7 +1,5 @@
 package org.geworkbench.bison.datastructure.bioobjects.microarray;
 
-import java.io.File;
-
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 
@@ -12,13 +10,6 @@ public class CSMasterRegulatorTableResultSet extends CSAncillaryDataSet<DSMicroa
 
 	public CSMasterRegulatorTableResultSet(DSMicroarraySet parent, String label) {
 		super(parent, label);
-	}
-
-	public File getDataSetFile() {
-		return null;
-	}
-
-	public void setDataSetFile(File file) {	
 	}
 
 	public Object[][] getData() {

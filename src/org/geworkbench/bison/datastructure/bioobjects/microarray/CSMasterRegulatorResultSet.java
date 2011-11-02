@@ -1,6 +1,5 @@
 package org.geworkbench.bison.datastructure.bioobjects.microarray;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,15 +31,6 @@ public class CSMasterRegulatorResultSet <T extends DSGeneMarker> extends CSAncil
 		return maSet;
 	}
 	
-	public File getDataSetFile() {
-		// ignored method
-		return null;
-	}
-
-	public void setDataSetFile(File file) {
-		// no op
-	}
-
 	public void setGenesInRegulon(DSGeneMarker TF, DSItemList<DSGeneMarker> markers) {
 		TF2GenesInRegulon.put(TF, markers);
 	}

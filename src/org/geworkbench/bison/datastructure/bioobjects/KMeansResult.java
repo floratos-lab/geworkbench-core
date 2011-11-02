@@ -1,6 +1,5 @@
 package org.geworkbench.bison.datastructure.bioobjects;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,11 +41,4 @@ public class KMeansResult extends CSAncillaryDataSet {
 		return resultList;
 	}
 	
-	public File getDataSetFile() {
-		return null;
-	}
-
-	public void setDataSetFile(File file) {
-		// no-op
-	}	
 }

@@ -256,7 +256,7 @@ public class CSAnovaResultSetTest extends TestCase {
 		DSAnovaResultSet<DSGeneMarker> anovaResultSet = new CSAnovaResultSet<DSGeneMarker>(
 				view, "Anova Analysis Result Set", groupNames, markerNames,
 				result2DArray);
-		assertSame(null, anovaResultSet.getDataSetFile());
+		assertSame(null, anovaResultSet.getFile());
 		assertEquals("Anova Analysis Result Set", anovaResultSet.getLabel());
 		assertSame(groupNames, anovaResultSet.getLabels(0));
 		assertSame(markerNames, anovaResultSet.significantMarkerNamesGetter());

@@ -1,7 +1,5 @@
 package org.geworkbench.bison.algorithm.classification;
 
-import java.io.File;
-
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 
@@ -37,20 +35,6 @@ public abstract class CSClassifier extends CSAncillaryDataSet {
      */
     public String[] getClassifications() {
         return classifications;
-    }
-
-    /**
-     * Not used.
-     */
-    public File getDataSetFile() {
-        return null;
-    }
-
-    /**
-     * Not used.
-     */
-    public void setDataSetFile(File file) {
-        // no-op
     }
 
 }

@@ -33,30 +33,6 @@ public class CSGSEAResultDataSet extends CSAncillaryDataSet<DSBioObject> impleme
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet#getDataSetFile()
-	 */
-	public File getDataSetFile() {
-		// no-op
-		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet#setDataSetFile(java.io.File)
-	 */
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.geworkbench.bison.datastructure.biocollections.gsea.DSGSEAResultDataSet#setDataSetFile(java.io.File)
-	 */
-	public void setDataSetFile(File file) {
-		// no-op
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
 	 * @see org.geworkbench.bison.datastructure.biocollections.gsea.DSGSEAResultDataSet#getReportFile()
 	 */
 	public String getReportFile()

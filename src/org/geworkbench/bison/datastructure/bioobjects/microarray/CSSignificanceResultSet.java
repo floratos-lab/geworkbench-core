@@ -1,6 +1,5 @@
 package org.geworkbench.bison.datastructure.bioobjects.microarray;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -61,15 +60,6 @@ public class CSSignificanceResultSet <T extends DSGeneMarker> extends CSAncillar
         labels[0] = caseLabels;
         labels[1] = controlLabels;
         panel = new CSPanel<T>(label);
-    }
-
-    public File getDataSetFile() {
-        // not needed
-        return null;
-    }
-
-    public void setDataSetFile(File file) {
-        // no-op
     }
 
     public Double getSignificance(T marker) {

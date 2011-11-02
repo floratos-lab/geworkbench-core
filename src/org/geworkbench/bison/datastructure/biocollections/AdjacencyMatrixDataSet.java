@@ -219,15 +219,6 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet<DSMicroarray> {
 		return threshold;
 	}
 
-	public File getDataSetFile() {
-		// no-op
-		return null;
-	}
-
-	public void setDataSetFile(File file) {
-		// no-op
-	}
-
 	public String getNetworkName() {
 		return networkName;
 	}

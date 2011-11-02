@@ -1,6 +1,5 @@
 package org.geworkbench.bison.datastructure.complex.pattern.matrix;
 
-import java.io.File;
 import java.util.List;
 
 import org.apache.commons.collections15.map.ListOrderedMap;
@@ -28,13 +27,6 @@ public class CSMatrixReduceSet extends
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public CSMatrixReduceSet(DSDataSet parent, String label) {
 		super(parent, label);
-	}
-
-	public File getDataSetFile() {
-		return null;
-	}
-
-	public void setDataSetFile(File file) {
 	}
 
 	public ListOrderedMap<String, String> getSequences() {

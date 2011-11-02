@@ -1,6 +1,5 @@
 package org.geworkbench.bison.model.clusters;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -68,14 +67,6 @@ public class CSHierClusterDataSet extends CSAncillaryDataSet implements DSHierCl
         return clusters.length;
     }
 
-    public File getDataSetFile() {
-        return null;
-    }
-
-    public void setDataSetFile(File file) {
-        // no-op
-    }
-    
 	/**
 	 * Customized serialization to avoid recursive call that may cause stack
 	 * overflow.
