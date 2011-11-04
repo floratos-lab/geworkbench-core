@@ -137,6 +137,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	private JMenuItem jViewAnnotations = new JMenuItem("View Annotations");
 
 	private JMenuItem jSaveMenuItem = new JMenuItem("Save");
+	
+	private JMenuItem jExportToTabDelimMenuItem = new JMenuItem("Export to tab-delim");
 
 	private JMenuItem jRenameMenuItem = new JMenuItem("Rename");
 
@@ -212,9 +214,18 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		// dataset menu
 		jSaveMenuItem.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				saveNodeAsFile();
+				saveNodeAsFile(e);
 			}
 		});
+		
+		
+		
+		jExportToTabDelimMenuItem.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				saveNodeAsFile(e);
+			}
+		});
+		jExportToTabDelimMenuItem.setVisible(false);
 
 		jRenameMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -246,10 +257,11 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 		dataSetMenu.add(jSaveMenuItem);
 		dataSetMenu.addSeparator();
+		dataSetMenu.add(jExportToTabDelimMenuItem);		
 		dataSetMenu.add(jRenameMenuItem);
 		dataSetMenu.add(jRemoveDatasetItem);
 		dataSetMenu.add(jEditItem);
-		dataSetMenu.add(jViewAnnotations);
+		dataSetMenu.add(jViewAnnotations);		
 
 		// dataset sub menu
 		jRenameSubItem.addActionListener(new ActionListener() {
@@ -467,8 +479,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		skin.setSelectionLastSelected(saveNode.getDataSet(), saveNode
 				.getSelectionSelected());
 	}
-
-	private void saveNodeAsFile() {
+	
+	private void saveNodeAsFile(ActionEvent event) {
 		ProjectTreeNode selectedNode = selection.getSelectedNode();
 		if (selectedNode == null) {
 			return;
@@ -489,7 +501,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				CSTTestResultSet<? extends DSGeneMarker> tTestResultSet = (CSTTestResultSet<? extends DSGeneMarker>) dataSetSubNode._aDataSet;
 				tTestResultSet.saveDataToCSVFile();
 				return;
-			}
+			}			
+			
 		}
 
 		// other cases
@@ -525,11 +538,16 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			}
 		}
 
-		CustomFileFilter filter = SaveFileFilterFactory.createFilter(ds);
+		CustomFileFilter filter = null;
+		if (event.getSource() == this.jExportToTabDelimMenuItem)
+			filter = SaveFileFilterFactory.getTabDelimitedFileFilter();
+		else  
+			filter = SaveFileFilterFactory.createFilter(ds);
+		
 		jFileChooser1.setFileFilter(filter);
 
 		if (JFileChooser.APPROVE_OPTION == jFileChooser1
-				.showSaveDialog(jSaveMenuItem)) {
+				.showSaveDialog((Component)event.getSource())) {
 			String newFileName = jFileChooser1.getSelectedFile()
 					.getAbsolutePath();
 
@@ -556,7 +574,10 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			}
 
 			try {
-				ds.writeToFile(newFileName);
+				if ((event.getSource() == this.jExportToTabDelimMenuItem) && ds instanceof DSMicroarraySet )
+					((DSMicroarraySet)ds).writeToTabDelimFile(newFileName);
+				else
+					ds.writeToFile(newFileName);
 			} catch (RuntimeException e) {
 				JOptionPane.showMessageDialog(null, e.getMessage() + " "
 						+ ds.getClass().getName(), "Save Error",
@@ -866,6 +887,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				if (paths != null && paths.length > 1) {
 					this.jNewProjectItem.setEnabled(false);
 					this.jSaveMenuItem.setEnabled(false);
+					this.jExportToTabDelimMenuItem.setVisible(false);
 					this.jOpenRemotePDBItem.setEnabled(false);
 					this.jLoadMArrayItem.setEnabled(false);
 					this.jRenameMenuItem.setEnabled(false);
@@ -883,7 +905,11 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 					this.jRenameSubItem.setEnabled(true);
 					this.jEditItem.setEnabled(true);
 					this.jViewAnnotations.setEnabled(true);
-
+					if ((mNode instanceof DataSetNode && getSelection().getDataSet() instanceof DSMicroarraySet))
+						this.jExportToTabDelimMenuItem.setVisible(true);
+					else
+						this.jExportToTabDelimMenuItem.setVisible(false);
+					
 					if ((RWspHandler.wspId > 0 && RWspHandler.dirty == false)
 					|| (RWspHandler.wspId == 0 && mNode == root && mNode.getChildCount() == 0))
 						jUploadWspItem.setEnabled(false);
@@ -1841,7 +1867,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 		listeners.put("File.Export", new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				saveNodeAsFile();
+				saveNodeAsFile(e);
 			}
 		});
 	}
