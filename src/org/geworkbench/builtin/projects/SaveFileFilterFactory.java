@@ -149,7 +149,7 @@ public class SaveFileFilterFactory {
 	
 	
 
-	static private class TabDelimitedFileFilter extends CustomFileFilter {
+	static public class TabDelimitedFileFilter extends CustomFileFilter {
 		public String getDescription() {
 			return "tab-delimited file (*.txt)";
 		}
