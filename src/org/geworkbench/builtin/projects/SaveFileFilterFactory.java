@@ -19,6 +19,7 @@ import org.geworkbench.bison.datastructure.bioobjects.structure.CSProteinStructu
  * savaAsFile method.
  * 
  * @author zji
+ * @version $Id$
  * 
  */
 public class SaveFileFilterFactory {	
@@ -193,7 +194,7 @@ public class SaveFileFilterFactory {
 	}
 
 	private static class AdjFileFilter extends CustomFileFilter {
-		private static final String fileExt = ".adj";
+		private static final String fileExt = "adj";
 
 		public String getExtension() {
 			return fileExt;
