@@ -58,4 +58,5 @@ public interface DSMicroarraySet extends DSDataSet<DSMicroarray> {
     // marker order in marker selector panel: gene, probe, original
     public String getSelectorMarkerOrder();
     public void setSelectorMarkerOrder(String order);
+    public void writeToTabDelimFile(String fileName);
 }

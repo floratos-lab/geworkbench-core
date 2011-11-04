@@ -1,11 +1,11 @@
 package org.geworkbench.bison.datastructure.biocollections.microarrays;
 
 import java.io.BufferedWriter;
-import java.io.File;
+import java.io.File; 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.ObjectOutputStream; 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -21,7 +21,7 @@ import org.geworkbench.bison.annotation.CSAnnotationContextManager;
 import org.geworkbench.bison.annotation.DSAnnotationContext;
 import org.geworkbench.bison.annotation.DSAnnotationContextManager;
 import org.geworkbench.bison.datastructure.biocollections.CSDataSet;
-import org.geworkbench.bison.datastructure.biocollections.CSMarkerVector;
+import org.geworkbench.bison.datastructure.biocollections.CSMarkerVector; 
 import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSAffyMarkerValue;
@@ -312,6 +312,50 @@ final public class CSMicroarraySet extends CSDataSet<DSMicroarray> implements DS
 
 		}
 	}
+	
+	public void writeToTabDelimFile(String fileName)
+	{
+		File file = new File(fileName);	 
+		
+		try {
+			BufferedWriter pw = new BufferedWriter(new FileWriter(file));
+			pw.write("ID");
+			for(int i=0; i< size(); i++) {
+				pw.write("\t"+ get(i));
+			}
+			pw.newLine();
+			ProgressMonitor pm = new ProgressMonitor(null, "Total "
+					+ markerVector.size(), "exporting ", 0, markerVector.size());
+			// Proceed to write one marker at a time
+			for (int i = 0; i < markerVector.size(); ++i) {
+				pm.setProgress(i);
+				pm.setNote("exporting " + i);
+				pw.write(markerVector.get(i).getLabel());			 
+				for (int j = 0; j < size(); ++j) {
+					DSMarkerValue mv = get(j).getMarkerValue(i);
+					if (!mv.isMissing())
+						pw.write("\t" + (float) mv.getValue());
+						 
+					else
+						pw.write("\t" + "n/a" ); 
+				}
+				pw.newLine();
+				 
+			}
+			pm.close();
+			pw.flush();
+			pw.close();
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null, "File " + fileName
+					+ " is not saved due to IOException " + e.getMessage(),
+					"File Saving Failed", JOptionPane.ERROR_MESSAGE);
+
+		}
+	}
+		
+	 
+	
+	
 
 	public void initializeMarkerVector(int markerCount) {
         for (int i = 0; i < markerCount; i++) {
