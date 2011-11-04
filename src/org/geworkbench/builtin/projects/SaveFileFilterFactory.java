@@ -201,7 +201,7 @@ public class SaveFileFilterFactory {
 		}
 
 		public String getDescription() {
-			return "Adjacency Matrix Files";
+			return "Adjacency Matrix Files (.adj)";
 		}
 
 		public boolean accept(File f) {
