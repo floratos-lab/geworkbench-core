@@ -77,7 +77,8 @@ public class SampleFileParser {
 					 	*/
 						if (header.startsWith(commentSign1) || header.startsWith(commentSign2)) {
 							if(!header.equalsIgnoreCase("!sample_table_end") && !header.equalsIgnoreCase("!sample_table_begin")){
-								maSet.setDescription(header.substring(1));
+								// to be consistent, this detailed information should be used else where instead of as "description" field
+								// maSet.setDescription(header.substring(1));
 							}
 						}	
 						String[] temp = null;

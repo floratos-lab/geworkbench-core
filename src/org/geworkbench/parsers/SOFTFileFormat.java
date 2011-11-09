@@ -235,7 +235,8 @@ public class SOFTFileFormat extends DataSetFileFormat {
 					 	*/
 						if (header.startsWith(commentSign1) || header.startsWith(commentSign2)) {
 							if(!header.equalsIgnoreCase("!dataset_table_begin") && !header.equalsIgnoreCase("!dataset_table_end")) {
-								maSet.setDescription(header.substring(1));
+								// to be consistent, this detailed information should be used else where instead of as "description" field
+								//maSet.setDescription(header.substring(1));
 							}
 						}	
 						String[] tokens = null;

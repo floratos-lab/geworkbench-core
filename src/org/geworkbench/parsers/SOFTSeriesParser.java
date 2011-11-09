@@ -178,7 +178,8 @@ public class SOFTSeriesParser {
 							&& !line.equalsIgnoreCase("!platform_table_begin")
 							&& !line.equalsIgnoreCase("!sample_table_begin")
 							&& !line.equalsIgnoreCase("!sample_table_end")) {
-						maSet.setDescription(line.substring(1));
+						// to be consistent, this detailed information should be used else where instead of as "description" field
+						// maSet.setDescription(line.substring(1));
 					}
 				}
 
