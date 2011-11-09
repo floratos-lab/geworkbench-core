@@ -148,6 +148,9 @@ public class MicroarraySetParser {
 		int markerIndex = 0;
 		for (DSMarkerValue[] markerValue : markerValues) {
 			for (int arrayIndex = 0; arrayIndex < arrayNames.size(); arrayIndex++) {
+				// missing data should not be set as null
+				if(markerValue[arrayIndex]==null) continue;
+				
 				microarraySet.get(arrayIndex).setMarkerValue(
 						microarraySet.getNewMarkerOrder()[markerIndex],
 						markerValue[arrayIndex]);
