@@ -55,6 +55,10 @@ public abstract class FilteringAnalysis extends AbstractAnalysis {
 		getParametersFromPanel();
 		remove(getMarkersToBeRemoved(maSet));
 		log.debug("finished with fitering");
+		
+		String description = "Microarray experiment. # of microarrays: " + maSet.size() + ",   "
+				+ "# of markers: " + maSet.getMarkers().size();
+		maSet.setDescription(description);
 
 		return new AlgorithmExecutionResults(true, "No errors", input);
 	}
