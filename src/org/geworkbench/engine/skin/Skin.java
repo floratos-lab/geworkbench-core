@@ -406,15 +406,6 @@ public class Skin extends GUIFramework {
         areas.put(PROJECT_AREA, projectPanel);
     }
 
-    // Is this used?
-    public void addToContainer(String areaName, Component visualPlugin) {
-        DockableImpl wrapper = new DockableImpl(visualPlugin, visualPlugin.getName());
-        DockingManager.registerDockable(wrapper);
-        DefaultDockingPort port = (DefaultDockingPort) areas.get(areaName);
-        port.dock(wrapper, DockingPort.CENTER_REGION);
-        visualRegistry.put(visualPlugin, areaName);
-    }
-
     /**
      * Removes the designated <code>visualPlugin</code> from the GUI.
      *

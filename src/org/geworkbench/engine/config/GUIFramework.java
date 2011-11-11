@@ -38,15 +38,6 @@ public abstract class GUIFramework extends JFrame {
 
     /**
      * Adds the <code>visualPlugin</code> to the container identified by the name
-     * <code>areaName</code>.
-     *
-     * @param areaName
-     * @param visualPlugin
-     */
-    public abstract void addToContainer(String areaName, Component visualPlugin);
-
-    /**
-     * Adds the <code>visualPlugin</code> to the container identified by the name
      * <code>areaName</code>. The visual plugin will be displayed using the name
      * <code>pluginName</code>
      *
