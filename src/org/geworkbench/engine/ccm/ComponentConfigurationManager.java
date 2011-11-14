@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -137,6 +138,7 @@ public class ComponentConfigurationManager {
 				e.printStackTrace();
 			}
         }
+        Collections.sort(cwbFile);
         log.info(cwbFile.size()+" cwb files found under all resource directories");
 	}
 	

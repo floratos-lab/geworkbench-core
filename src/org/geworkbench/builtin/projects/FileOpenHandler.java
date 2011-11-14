@@ -260,7 +260,7 @@ public class FileOpenHandler {
 				}
 				DSMicroarraySet mergedSet = doMergeSets(maSets);
 				if(mergedSet!=null) {
-					projectPanel.addDataSetNode(mergedSet, true);
+					projectPanel.addDataSetNode(mergedSet);
 				}
 			} else {
 				DSDataSet set = dataSets[0];
@@ -292,7 +292,7 @@ public class FileOpenHandler {
 						PatternResult patternResult = (PatternResult) set;
 						projectPanel.addDataSetSubNode(patternResult);
 					}else {
-						projectPanel.addDataSetNode(set, true);
+						projectPanel.addDataSetNode(set);
 					}
 				}
 			}

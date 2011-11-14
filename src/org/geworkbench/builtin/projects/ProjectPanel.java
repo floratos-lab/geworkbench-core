@@ -423,7 +423,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				if (dataSet instanceof PendingTreeNode.PendingNode) {
 					restorePendingNode(dataSet, pendingGridEprs);
 				} else { /* real node */
-					addDataSetNode(dataSet, true);
+					addDataSetNode(dataSet);
 				}
 				if (dataSet == saveTree.getSelected()) {
 					selectedNode = selection.getSelectedNode();
@@ -601,65 +601,62 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 *
 	 * @param _dataSet
 	 */
-	public void addDataSetNode(DSDataSet<? extends DSBioObject> _dataSet, boolean select) {
+	public void addDataSetNode(DSDataSet<? extends DSBioObject> _dataSet) {
 		// Retrieve the project node for this node
 		ProjectNode pNode = selection.getSelectedProjectNode();
 
-		if (pNode != null) {
-			// Inserts the new node and sets the menuNode and other variables to
-			// point to it
-			DataSetNode node = new DataSetNode(_dataSet);
-			node.setDescription(_dataSet.getExperimentInformation());
-			projectTreeModel.insertNodeInto(node, pNode, pNode.getChildCount());
-			HistoryEvent event = new HistoryEvent(_dataSet);
-
-			// add to history
-			if (_dataSet instanceof CSMicroarraySet) {
-				CSMicroarraySet microarraySet = (CSMicroarraySet) _dataSet;
-				String annotationFileName = microarraySet
-						.getAnnotationFileName();
-
-				String annotationFileNameString = "";
-				if (annotationFileName != null) {
-					int i = annotationFileName
-							.lastIndexOf(FilePathnameUtils.FILE_SEPARATOR);
-					if (i >= 0) {
-						annotationFileName = annotationFileName
-								.substring(i + 1);
-					}
-					annotationFileNameString = "Loaded annotation file:  " + annotationFileName + "\n";
-				} else{
-					annotationFileNameString = "Loaded annotation file:  None" + "\n";
-				}
-				
-				String oboInfo = "obo file location: "
-						+ OboSourcePreference.getInstance().getSourceLocation()
-						+ "\n";
-				GeneOntologyTree g = GeneOntologyTree.getInstance();
-				if (g != null) {
-					oboInfo += "obo version " + g.getVersion() + "; obo date "
-							+ g.getDate() + "\n";
-				}
-
-				String setName = _dataSet.getDataSetName();
-				String dataSetString = "Data file:  " + setName + "\n" ;
-
-				String datasetHistory = dataSetString + annotationFileNameString + oboInfo 
-					+ "_____________________" + "\n";
-				HistoryPanel.addToHistory(_dataSet, datasetHistory);
-			}
-			publishHistoryEvent(event);
-
-			if (select) {
-				// Make sure the user can see the lovely new node.
-				projectTree.scrollPathToVisible(new TreePath(node));
-				// serialize("default.ws");
-				projectTree.setSelectionPath(new TreePath(node.getPath()));
-				selection.setNodeSelection(node);
-			}
+		if (pNode == null) {
+			return;
 		}
-		Skin skin = (Skin) GeawConfigObject.getGuiWindow();
-		skin.resetSelectorTabOrder();
+
+		// Inserts the new node and sets the menuNode and other variables to
+		// point to it
+		DataSetNode node = new DataSetNode(_dataSet);
+		node.setDescription(_dataSet.getExperimentInformation());
+		projectTreeModel.insertNodeInto(node, pNode, pNode.getChildCount());
+		HistoryEvent event = new HistoryEvent(_dataSet);
+
+		// add to history
+		if (_dataSet instanceof CSMicroarraySet) {
+			CSMicroarraySet microarraySet = (CSMicroarraySet) _dataSet;
+			String annotationFileName = microarraySet.getAnnotationFileName();
+
+			String annotationFileNameString = "";
+			if (annotationFileName != null) {
+				int i = annotationFileName
+						.lastIndexOf(FilePathnameUtils.FILE_SEPARATOR);
+				if (i >= 0) {
+					annotationFileName = annotationFileName.substring(i + 1);
+				}
+				annotationFileNameString = "Loaded annotation file:  "
+						+ annotationFileName + "\n";
+			} else {
+				annotationFileNameString = "Loaded annotation file:  None"
+						+ "\n";
+			}
+
+			String oboInfo = "obo file location: "
+					+ OboSourcePreference.getInstance().getSourceLocation()
+					+ "\n";
+			GeneOntologyTree g = GeneOntologyTree.getInstance();
+			if (g != null) {
+				oboInfo += "obo version " + g.getVersion() + "; obo date "
+						+ g.getDate() + "\n";
+			}
+
+			String setName = _dataSet.getDataSetName();
+			String dataSetString = "Data file:  " + setName + "\n";
+
+			String datasetHistory = dataSetString + annotationFileNameString
+					+ oboInfo + "_____________________" + "\n";
+			HistoryPanel.addToHistory(_dataSet, datasetHistory);
+		}
+		publishHistoryEvent(event);
+
+		// Make sure the user can see the lovely new node.
+		projectTree.scrollPathToVisible(new TreePath(node));
+		projectTree.setSelectionPath(new TreePath(node.getPath()));
+		selection.setNodeSelection(node);
 	}
 
 	/**
@@ -870,71 +867,72 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	private void jProjectTree_mouseReleased(MouseEvent e) {
 		TreePath path = projectTree.getPathForLocation(e.getX(), e.getY());
 		TreePath[] paths = projectTree.getSelectionPaths();
-		if (path != null) {
-			ProjectTreeNode mNode = (ProjectTreeNode) path
-					.getLastPathComponent();
+		if (path == null)
+			return;
 
-			if (e.isMetaDown() || e.getClickCount() >= 2) {
+		ProjectTreeNode mNode = (ProjectTreeNode) path.getLastPathComponent();
 
-				if (!isPathSelected(path)) {
-					// Force selection of this path
-					projectTree.setSelectionPath(path);
-					setSelection();
+		if (e.isMetaDown() || e.getClickCount() >= 2) {
 
-				}
-				// Make the jPopupMenu visible relative to the current mouse
-				// position in the container.
-				if (paths != null && paths.length > 1) {
-					this.jNewProjectItem.setEnabled(false);
-					this.jSaveMenuItem.setEnabled(false);
-					this.jExportToTabDelimMenuItem.setVisible(false);
-					this.jOpenRemotePDBItem.setEnabled(false);
-					this.jLoadMArrayItem.setEnabled(false);
-					this.jRenameMenuItem.setEnabled(false);
-					this.jRenameProjectItem.setEnabled(false);
-					this.jRenameSubItem.setEnabled(false);
-					this.jEditItem.setEnabled(false);
-					this.jViewAnnotations.setEnabled(false);
-				} else {
-					this.jNewProjectItem.setEnabled(true);
-					this.jSaveMenuItem.setEnabled(true);
-					this.jOpenRemotePDBItem.setEnabled(true);
-					this.jLoadMArrayItem.setEnabled(true);
-					this.jRenameMenuItem.setEnabled(true);
-					this.jRenameProjectItem.setEnabled(true);
-					this.jRenameSubItem.setEnabled(true);
-					this.jEditItem.setEnabled(true);
-					this.jViewAnnotations.setEnabled(true);
-					if ((mNode instanceof DataSetNode && getSelection().getDataSet() instanceof DSMicroarraySet))
-						this.jExportToTabDelimMenuItem.setVisible(true);
-					else
-						this.jExportToTabDelimMenuItem.setVisible(false);
-					
-					if ((RWspHandler.wspId > 0 && RWspHandler.dirty == false)
-					|| (RWspHandler.wspId == 0 && mNode == root && mNode.getChildCount() == 0))
-						jUploadWspItem.setEnabled(false);
-					else
-						jUploadWspItem.setEnabled(true);
-				}
-
-				if ((mNode == null) || (mNode == root)) {
-					jRootMenu.show(projectTree, e.getX(), e.getY());
-				} else if (mNode instanceof ProjectNode) {
-					jProjectMenu.show(projectTree, e.getX(), e.getY());
-				} else if (mNode instanceof DataSetNode) {
-					refreshDataSetMenu(((DataSetNode)mNode).getDataset().getClass());
-					dataSetMenu.show(projectTree, e.getX(), e.getY());
-				} else if (mNode instanceof DataSetSubNode) {
-					refreshDataSetMenu(null);
-					dataSetMenu.show(projectTree, e.getX(), e.getY());
-				} else if (mNode instanceof PendingTreeNode) {
-					pendingMenu.show(projectTree, e.getX(), e.getY());
-				}
-			} else
+			if (!isPathSelected(path)) {
+				// Force selection of this path
+				projectTree.setSelectionPath(path);
 				setSelection();
 
-			Skin skin = (Skin) GeawConfigObject.getGuiWindow();
-			skin.resetSelectorTabOrder();
+			}
+			// Make the jPopupMenu visible relative to the current mouse
+			// position in the container.
+			if (paths != null && paths.length > 1) {
+				this.jNewProjectItem.setEnabled(false);
+				this.jSaveMenuItem.setEnabled(false);
+				this.jExportToTabDelimMenuItem.setVisible(false);
+				this.jOpenRemotePDBItem.setEnabled(false);
+				this.jLoadMArrayItem.setEnabled(false);
+				this.jRenameMenuItem.setEnabled(false);
+				this.jRenameProjectItem.setEnabled(false);
+				this.jRenameSubItem.setEnabled(false);
+				this.jEditItem.setEnabled(false);
+				this.jViewAnnotations.setEnabled(false);
+			} else {
+				this.jNewProjectItem.setEnabled(true);
+				this.jSaveMenuItem.setEnabled(true);
+				this.jOpenRemotePDBItem.setEnabled(true);
+				this.jLoadMArrayItem.setEnabled(true);
+				this.jRenameMenuItem.setEnabled(true);
+				this.jRenameProjectItem.setEnabled(true);
+				this.jRenameSubItem.setEnabled(true);
+				this.jEditItem.setEnabled(true);
+				this.jViewAnnotations.setEnabled(true);
+				if ((mNode instanceof DataSetNode && getSelection()
+						.getDataSet() instanceof DSMicroarraySet))
+					this.jExportToTabDelimMenuItem.setVisible(true);
+				else
+					this.jExportToTabDelimMenuItem.setVisible(false);
+
+				if ((RWspHandler.wspId > 0 && RWspHandler.dirty == false)
+						|| (RWspHandler.wspId == 0 && mNode == root && mNode
+								.getChildCount() == 0))
+					jUploadWspItem.setEnabled(false);
+				else
+					jUploadWspItem.setEnabled(true);
+			}
+
+			if ((mNode == null) || (mNode == root)) {
+				jRootMenu.show(projectTree, e.getX(), e.getY());
+			} else if (mNode instanceof ProjectNode) {
+				jProjectMenu.show(projectTree, e.getX(), e.getY());
+			} else if (mNode instanceof DataSetNode) {
+				refreshDataSetMenu(((DataSetNode) mNode).getDataset()
+						.getClass());
+				dataSetMenu.show(projectTree, e.getX(), e.getY());
+			} else if (mNode instanceof DataSetSubNode) {
+				refreshDataSetMenu(null);
+				dataSetMenu.show(projectTree, e.getX(), e.getY());
+			} else if (mNode instanceof PendingTreeNode) {
+				pendingMenu.show(projectTree, e.getX(), e.getY());
+			}
+		} else {
+			setSelection();
 		}
 	}
 
@@ -968,7 +966,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			addColorContext((DSMicroarraySet) dataSet);
 		}
 		if (dataSet != null) {
-			addDataSetNode(dataSet, true);
+			addDataSetNode(dataSet);
 		} else if (ancillaryDataSet != null) {
 			addDataSetSubNode(ancillaryDataSet);
 		}
@@ -1162,7 +1160,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 		DSMicroarraySet mergedSet = FileOpenHandler.doMergeSets(sets);
 		if(mergedSet!=null) {
-			addDataSetNode(mergedSet, true);
+			addDataSetNode(mergedSet);
 		}
 	}
 

@@ -643,8 +643,8 @@ public class Skin extends GUIFramework {
         tabSwappingMode = true;
         addAppropriateComponents(acceptors, GUIFramework.VISUAL_AREA, visualDockables);
         selectLastComponent(GUIFramework.VISUAL_AREA, visualLastSelected.get(type));
-        selectLastComponent(GUIFramework.SELECTION_AREA, selectionLastSelected.get(type));
         addAppropriateComponents(acceptors, GUIFramework.SELECTION_AREA, selectorDockables);
+        selectLastComponent(GUIFramework.SELECTION_AREA, selectionLastSelected.get(type));
         tabSwappingMode = false;
         contentPane.revalidate();
         contentPane.repaint();
@@ -693,17 +693,27 @@ public class Skin extends GUIFramework {
                 for (int i = 0; i < n; i++) {
                     if (selected.equals(pane.getTitleAt(i))) {
                         pane.setSelectedIndex(i);
-                        break;
+                        return;
                     }
                 }
             }
         }
+        
+        // if no match found
+        selectFirstTab(screenRegion);
     }
 
-	public void resetSelectorTabOrder() {
-		selectLastComponent(GUIFramework.SELECTION_AREA, "Markers");
-	}
+	// select the first tab
+	private void selectFirstTab(String screenRegion) {
+		DefaultDockingPort port = (DefaultDockingPort) areas.get(screenRegion);
 
+		Component docked = port.getDockedComponent();
+		if (docked instanceof JTabbedPane) { // this is always true
+			JTabbedPane pane = (JTabbedPane) docked;
+			pane.setSelectedIndex(0);
+		}
+	}
+	
 	public void initWelcomeScreen() {
 		PropertiesManager pm = PropertiesManager.getInstance();
 		try {
