@@ -226,14 +226,15 @@ public class MicroarraySetParser {
 		} else if (line.substring(0, 11).equalsIgnoreCase("Description")) {
 			// This handles all the phenotype definition lines
 			String phLabel = new String(secondField);
-			String[] labels = new String[arrayNames.size()];
-			arrayInfo.put(phLabel, labels);
-			int i = 0;
+			List<String> labels = new ArrayList<String>();
 			while (tokenizer.hasMoreTokens()) {
 				String valueLabel = new String(tokenizer.nextToken());
 				if ((valueLabel != null) && (!valueLabel.equalsIgnoreCase(""))) {
-					labels[i++] = valueLabel;
+					labels.add( valueLabel );
 				}
+			}
+			if(labels.size()==arrayNames.size()) {
+				arrayInfo.put(phLabel, labels.toArray(new String[0]));
 			}
 		} else if (line.charAt(0) != '\t') {
 

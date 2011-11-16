@@ -6,9 +6,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream; 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.TreeMap;
 import java.util.Vector;
 
@@ -257,27 +259,33 @@ final public class CSMicroarraySet extends CSDataSet<DSMicroarray> implements DS
 			DSAnnotationContextManager manager = CSAnnotationContextManager
 					.getInstance();
 			int n = manager.getNumberOfContexts(this);
+			List<String> arrayContext = new ArrayList<String>();
 			for (int i = 0; i < n; i++) {
 				DSAnnotationContext<DSMicroarray> context = manager.getContext(
 						this, i);
 				StringBuilder line = new StringBuilder("Description" + '\t'
 						+ context.getName());
+				int setCount = 0;
 				for (Iterator<DSMicroarray> iterator = this.iterator(); iterator
 						.hasNext();) {
 					DSMicroarray microarray = iterator.next();
-					String label = "";
 					String[] labels = context.getLabelsForItem(microarray);
-					// watkin - Unfortunately, the file format only supports one
-					// label per context.
 					if (labels.length > 0) {
-						label = labels[0];
-						if (labels.length > 1)
+						String label = labels[0];
+						if (labels.length > 1) { // multiple labels
 							for (int j = 1; j < labels.length; j++)
 								label += "|" + labels[j];
+						}
+						line.append('\t' + label);
+						setCount++;
 					}
-					line.append('\t' + label);
 				}
-				writer.write(line.toString());
+				if(setCount==this.size()) {
+					arrayContext.add(line.toString());
+				}
+			}
+			for(String line : arrayContext) {
+				writer.write(line);
 				writer.newLine();
 			}
 
