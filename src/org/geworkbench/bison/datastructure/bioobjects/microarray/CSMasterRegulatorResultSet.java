@@ -19,7 +19,7 @@ public class CSMasterRegulatorResultSet <T extends DSGeneMarker> extends CSAncil
 	private final DSMicroarraySet maSet;
 	private int markerCount = 0;
 
-	private Map<DSGeneMarker, Double> tValues;
+	private Map<DSGeneMarker, Double> values;
 
 	public CSMasterRegulatorResultSet(final DSMicroarraySet parent, String label, int markerCount) {
 		super(parent, label);
@@ -66,14 +66,14 @@ public class CSMasterRegulatorResultSet <T extends DSGeneMarker> extends CSAncil
 		return markerCount;
 	}
 
-	public void setTValues(Map<DSGeneMarker, Double> tValues){
-		this.tValues = tValues;
+	public void setValues(Map<DSGeneMarker, Double> values){
+		this.values = values;
 	}
 
-	public double getTValue(DSGeneMarker key) {
-		if(tValues==null) return Double.NaN;
+	public double getValue(DSGeneMarker key) {
+		if(values==null) return Double.NaN;
 		
-		Double v =  tValues.get(key);
+		Double v =  values.get(key);
 		if(v==null) v = Double.NaN;
 		return v;
 	}
