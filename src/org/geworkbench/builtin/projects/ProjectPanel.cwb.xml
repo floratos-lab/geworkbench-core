@@ -8,10 +8,10 @@
         <online-help helpSet="org/geworkbench/builtin/projects/help/projectPanelHelpSet.hs"/>
         <menu-item path="File.Open.File" mode="always" var="File.Open.File"/>
         <menu-item path="File.Save.Workspace" mode="always" var="File.Save.Workspace"/>
+        <menu-item path="File.Save.Dataset" mode="always" var="File.Save.Dataset"/>
         <menu-item path="File.Open.Workspace" mode="always" var="File.Open.Workspace"/>
         <menu-item path="File.New.Workspace" mode="always" var="File.New.Workspace"/>
-        <menu-item path="File.New.Project" mode="always" var="File.New.Project"/>
-        <menu-item path="File.Export" mode="always" var="File.Export"/>
+        <menu-item path="File.New.Project" mode="always" var="File.New.Project"/>       
         <menu-item path="File.Merge Datasets" mode="always" var="File.Merge Datasets"/>  
         <menu-item path="File.Open.Remote Workspace" mode="always" var="File.Open.Remote Workspace"/>   
         <menu-item path="File.Remove" mode="always" var="File.Remove"/>

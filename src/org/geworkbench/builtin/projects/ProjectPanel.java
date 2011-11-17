@@ -1820,6 +1820,14 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				saveWorkspace_actionPerformed(false);
 			}
 		});
+		
+		listeners.put("File.Save.Dataset", new ActionListener() {			
+			public void actionPerformed(ActionEvent e) {
+				saveNodeAsFile(e);
+			}
+		 
+		});
+		
 
 		listeners.put("File.Open.Workspace", new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -1862,12 +1870,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				remove_actionPerformed();
 			}
 		});
-
-		listeners.put("File.Export", new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				saveNodeAsFile(e);
-			}
-		});
+ 
 	}
 	
 	private void initializeWorkspaceBehavior() {
