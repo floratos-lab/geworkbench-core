@@ -115,7 +115,7 @@ public abstract class CommandBase implements MenuListener, VisualPlugin {
     			for (MenuElement subelement: subelements){
     				JMenuItem submenu = (JMenuItem)subelement.getComponent();
     				if (submenu.getText().equals(popMenuItem)){
-    					popMenu.remove(submenu);
+    					submenu.removeAll();
     				}
     			}
     			break;

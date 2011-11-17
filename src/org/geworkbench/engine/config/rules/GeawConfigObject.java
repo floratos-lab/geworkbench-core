@@ -81,7 +81,7 @@ public class GeawConfigObject {
      * The titles of the default top level menus. Menus will appear in the
      * order listed in this array.
      */
-    static String[] topMenus = {"File", "Edit", "Commands", "Tools", "Help"};
+    final private static String[] topMenus = {"File", "Edit", "Commands", "Tools", "Help"};
     /**
      * The character that delimits the menu items within the 'path' attribute
      * of the <code>&lt;menu-item&gt;</code> element in the application
@@ -303,17 +303,21 @@ public class GeawConfigObject {
      */
     private static JMenuBar newMenuBar() {
         JMenuBar appMenuBar = new JMenuBar();
-        JMenu menuItem;
-        // appMenuBar.setFont(menuItemFont);
-        // appMenuBar.setBorder(BorderFactory.createLineBorder(Color.black));
+
         // Initialize the top-level menus
         for (int i = 0; i < topMenus.length; ++i) {
-            menuItem = new JMenu();
+        	JMenu menuItem = new JMenu();
             // menuItem.setFont(menuItemFont);
             menuItem.setText(topMenus[i]);
             appMenuBar.add(menuItem);
-            if (topMenus[i].compareTo("Help") == 0)
+            if (topMenus[i].compareTo("Help") == 0) {
                 helpMenu = menuItem;
+            }
+            if(topMenus[i].equals("Commands") ) {
+            	menuItem.add(new JMenu("Analysis"));
+            	menuItem.add(new JMenu("Filtering"));
+            	menuItem.add(new JMenu("Normalization"));
+            }
         }
 
         return appMenuBar;
