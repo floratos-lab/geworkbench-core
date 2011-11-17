@@ -204,7 +204,9 @@ public class PatternResult extends CSAncillaryDataSet<DSSequence> implements
      */
     @Override
     public void writeToFile(String fileName) {
-
+    	throw new RuntimeException(
+    			"Please right click on the result table and click on" +
+    			"\n" + "\"Save All Patterns\" to save the result dataset");
     }
     
     public DSSequenceSet<? extends DSSequence> getActiveDataSet() {
