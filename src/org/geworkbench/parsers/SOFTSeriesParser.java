@@ -341,7 +341,7 @@ public class SOFTSeriesParser {
 			List<CSExpressionMarkerValue> markerList = arrayToMarkers
 					.get(arrayName);			
 			if (markerList.size()>array.getMarkerValues().length){
-				errorMessage = "Number of markers differs from samples!";
+				errorMessage = "Inconsistent number of markers between two samples: " + markerList.size() + " vs " + array.getMarkerValues().length;
 				throw new InputFileFormatException(errorMessage);
 			}
 			for (int markerIndex = 0; markerIndex < markerList.size(); markerIndex++) {				
