@@ -339,9 +339,13 @@ public class SOFTSeriesParser {
 			CSMicroarray array = new CSMicroarray(arrayIndex, markerCount,
 					arrayName, DSMicroarraySet.affyTxtType);
 			List<CSExpressionMarkerValue> markerList = arrayToMarkers
-					.get(arrayName);
-			for (int markerIndex = 0; markerIndex < markerList.size(); markerIndex++) {
-				array.setMarkerValue(markerIndex, markerList.get(markerIndex));
+					.get(arrayName);			
+			if (markerList.size()>array.getMarkerValues().length){
+				errorMessage = "Number of markers differs from samples!";
+				throw new InputFileFormatException(errorMessage);
+			}
+			for (int markerIndex = 0; markerIndex < markerList.size(); markerIndex++) {				
+					array.setMarkerValue(markerIndex, markerList.get(markerIndex));
 			}
 
 			maSet.add(array);
