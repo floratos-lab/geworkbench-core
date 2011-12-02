@@ -102,10 +102,11 @@ public class SOFTSeriesParser {
 				return null;
 			}
 			platformChoice = chooser.choice;
-
-			if (platformChoice == null)
-				errorMessage = "No choice was made.";
-
+			
+			String Cancel = "cancel";
+			if (platformChoice == null) {
+				return Cancel;
+			}
 			return platformChoice;
 		}
 	}
@@ -132,6 +133,9 @@ public class SOFTSeriesParser {
 		String platformChosen = choosePlatform(file);
 		if (platformChosen == null) {
 			throw new InputFileFormatException(errorMessage);
+		}
+		if (platformChosen == "cancel") {
+			return null;
 		}
 
 		BufferedReader in = null;
