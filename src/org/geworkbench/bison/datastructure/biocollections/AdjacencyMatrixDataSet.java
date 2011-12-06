@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -42,7 +43,7 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet<DSMicroarray> {
 
 	private final double threshold;
 	private String networkName;
-	
+
 	@Override
 	public String getDescription() {
 		if (description == null) {
@@ -54,8 +55,7 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet<DSMicroarray> {
 
 	public AdjacencyMatrixDataSet(final AdjacencyMatrix matrix,
 			final double threshold, final String name,
-			final String networkName,
-			final DSMicroarraySet parent) {
+			final String networkName, final DSMicroarraySet parent) {
 		super((DSDataSet<DSMicroarray>) parent, name);
 		setID(RandomNumberGenerator.getID());
 		this.matrix = matrix;
@@ -116,9 +116,8 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet<DSMicroarray> {
 	 * @param fileName
 	 */
 	public AdjacencyMatrixDataSet(final double threshold, final String name,
-			final String networkName,
-			final DSMicroarraySet parent, String fileName)
-			throws InputFileFormatException {
+			final String networkName, final DSMicroarraySet parent,
+			String fileName) throws InputFileFormatException {
 
 		super((DSDataSet<DSMicroarray>) parent, name);
 		setID(RandomNumberGenerator.getID());
@@ -131,7 +130,8 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet<DSMicroarray> {
 	}
 
 	private static AdjacencyMatrix.Node token2node(String token,
-			final String selectedRepresentedBy, final boolean isRestrict, final DSMicroarraySet maSet) {
+			final String selectedRepresentedBy, final boolean isRestrict,
+			final DSMicroarraySet maSet) {
 		DSGeneMarker m = null;
 		if (selectedRepresentedBy.equals(PROBESET_ID)
 				|| selectedRepresentedBy.equals(GENE_NAME)
@@ -146,8 +146,7 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet<DSMicroarray> {
 			return null;
 		} else if (m == null && !isRestrict) {
 			if (selectedRepresentedBy.equals(GENE_NAME))
-				node = new AdjacencyMatrix.Node(NodeType.GENE_SYMBOL,
-						token);
+				node = new AdjacencyMatrix.Node(NodeType.GENE_SYMBOL, token);
 			else
 				node = new AdjacencyMatrix.Node(NodeType.STRING, token);
 		} else {
@@ -181,10 +180,12 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet<DSMicroarray> {
 						|| line.startsWith("-"))
 					continue;
 
-				StringTokenizer tr = new StringTokenizer(line, "\t: :");
+				StringTokenizer tr = new StringTokenizer(line, "\t");
 
-				AdjacencyMatrix.Node node = token2node(tr.nextToken(), selectedRepresentedBy, isRestrict, maSet);
-				if(node==null) continue; // skip it when we don't have it
+				AdjacencyMatrix.Node node = token2node(tr.nextToken(),
+						selectedRepresentedBy, isRestrict, maSet);
+				if (node == null)
+					continue; // skip it when we don't have it
 
 				String interactionType = null;
 				if (format.equals(SIF_FORMART) && tr.hasMoreTokens())
@@ -193,8 +194,10 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet<DSMicroarray> {
 				while (tr.hasMoreTokens()) {
 
 					String strGeneId2 = tr.nextToken();
-					AdjacencyMatrix.Node node2 = token2node(strGeneId2, selectedRepresentedBy, isRestrict, maSet);
-					if(node2==null) continue; // skip it when we don't have it
+					AdjacencyMatrix.Node node2 = token2node(strGeneId2,
+							selectedRepresentedBy, isRestrict, maSet);
+					if (node2 == null)
+						continue; // skip it when we don't have it
 
 					float mi = 0.8f;
 					if (format.equals(ADJ_FORMART)) {
@@ -212,6 +215,68 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet<DSMicroarray> {
 		} catch (FileNotFoundException ex3) {
 			throw new InputFileFormatException(ex3.getMessage());
 		} catch (IOException ex) {
+			throw new InputFileFormatException(ex.getMessage());
+		} catch (Exception e) {
+			throw new InputFileFormatException(e.getMessage());
+		}
+
+		return matrix;
+	}
+
+	public static AdjacencyMatrix parseAdjacencyMatrix(AdjacencyMatrix matrix, List<String> lines,
+			final DSMicroarraySet maSet,
+			Map<String, String> interactionTypeSifMap, String format,
+			String selectedRepresentedBy, boolean isRestrict)
+			throws InputFileFormatException {
+
+		
+		if (matrix == null)
+		      matrix = new AdjacencyMatrix(null, maSet,
+				interactionTypeSifMap);
+
+		try {
+			for (String line : lines) {
+				// skip comments
+				if (line == null || line.trim().equals(""))
+					continue;
+
+				StringTokenizer tr = new StringTokenizer(line, "\t");
+
+				AdjacencyMatrix.Node node = token2node(tr.nextToken(),
+						selectedRepresentedBy, isRestrict, maSet);
+				if (node == null)
+					continue; // skip it when we don't have it
+
+				String interactionType = null;
+				if (format.equals(SIF_FORMART) && tr.hasMoreTokens())
+					interactionType = tr.nextToken().toLowerCase();
+
+				while (tr.hasMoreTokens()) {
+
+					String strGeneId2 = tr.nextToken();
+					AdjacencyMatrix.Node node2 = token2node(strGeneId2,
+							selectedRepresentedBy, isRestrict, maSet);
+					if (node2 == null)
+						continue; // skip it when we don't have it
+
+					float mi = 0.8f;
+					if (format.equals(ADJ_FORMART)) {
+						if (!tr.hasMoreTokens())
+							throw new InputFileFormatException(
+									"invalid format around " + strGeneId2);
+						String miStr = tr.nextToken();
+						try{
+						mi = Float.parseFloat(miStr);
+						}catch(NumberFormatException ex)
+						{
+							throw new InputFileFormatException(ex.getMessage());
+						}
+					}
+
+					matrix.add(node, node2, mi, interactionType);
+				} // end of the token loop for one line
+			} // end of reading for loop
+		} catch (NumberFormatException ex) {
 			throw new InputFileFormatException(ex.getMessage());
 		} catch (Exception e) {
 			throw new InputFileFormatException(e.getMessage());
