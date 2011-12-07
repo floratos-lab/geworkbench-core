@@ -82,6 +82,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 	public boolean checkFormat(File file) throws InterruptedIOException {
 
 		int arrayNumber = 0;
+		int headerLength = 0;
 		BufferedReader br = null;
 		
 		try {
@@ -97,17 +98,25 @@ public class SOFTFileFormat extends DataSetFileFormat {
 						&& !line.startsWith(commentSign3)) {
 					String[] checkLine = null;
 					checkLine = line.split("\t");
+
 					if (checkLine[0].equals("ID_REF")) {
-						if(checkLine[0].contains("GSM")) {
-							arrayNumber = arrayNumber + 1;
+						//Header length s
+						headerLength = checkLine.length - 2;
+						for(int n = 2; n<checkLine.length; n++){
+							if(checkLine[n].contains("GSM")) {
+								arrayNumber = arrayNumber + 1;		
+							}
 						}
-					}
-					if (!checkLine[0].equals("ID_REF")) {
-						if (checkLine.length != arrayNumber) {
-							errorMessage = "Number of Arrays for the markers are not consistent:"
-									+ checkLine[0];
-							return false;
+					} else {
+						//Skip this check for GEO SOFT GDS Full data set
+						if(headerLength == arrayNumber) {
+							if ((checkLine.length-2) != arrayNumber) {
+								errorMessage = "Number of Arrays for the markers are not consistent:"
+										+ checkLine[0];
+								return false;
+							}
 						}
+						
 					}
 				}
 				line = br.readLine();
