@@ -98,11 +98,13 @@ public class SOFTFileFormat extends DataSetFileFormat {
 					String[] checkLine = null;
 					checkLine = line.split("\t");
 					if (checkLine[0].equals("ID_REF")) {
-						arrayNumber = checkLine.length;
+						if(checkLine[0].contains("GSM")) {
+							arrayNumber = arrayNumber + 1;
+						}
 					}
 					if (!checkLine[0].equals("ID_REF")) {
 						if (checkLine.length != arrayNumber) {
-							errorMessage = "Number of Arrays and number of marker values are not equal for the marker: "
+							errorMessage = "Number of Arrays for the markers are not consistent:"
 									+ checkLine[0];
 							return false;
 						}
@@ -244,7 +246,9 @@ public class SOFTFileFormat extends DataSetFileFormat {
 							if(header.subSequence(0, 6).equals("ID_REF")){
 								tokens = header.split("\t");
 								for(int n = 2; n<tokens.length; n++){
-									arrayNames.add(tokens[n]);
+									if(tokens[n].contains("GSM")) {
+										arrayNames.add(tokens[n]);
+									}
 								}
 							}
 							if(!header.subSequence(0, 6).equals("ID_REF")){
