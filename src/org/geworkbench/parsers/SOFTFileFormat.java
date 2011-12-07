@@ -102,17 +102,19 @@ public class SOFTFileFormat extends DataSetFileFormat {
 					if (checkLine[0].equals("ID_REF")) {
 						//Header length s
 						headerLength = checkLine.length - 2;
-						for(int n = 2; n<checkLine.length; n++){
+						for(int n = 2; n < checkLine.length; n++){
 							if(checkLine[n].contains("GSM")) {
 								arrayNumber = arrayNumber + 1;		
 							}
 						}
 					} else {
-						//Skip this check for GEO SOFT GDS Full data set
+						// Foor each marker, check number of arrays is correct.  
+						// But - Skip this check for GEO SOFT GDS Full data set, which adds annotation at end of each data line,
+						// making it not possible to tell if we have the correct number of arrays.
 						if(headerLength == arrayNumber) {
-							if ((checkLine.length-2) != arrayNumber) {
-								errorMessage = "Number of Arrays for the markers are not consistent:"
-										+ checkLine[0];
+							if ((checkLine.length - 2) != arrayNumber) {
+								errorMessage = "\nUnexpected number of arrays for marker " + checkLine[0] + 
+									":\nExpected  " + arrayNumber + ", found  " + (checkLine.length - 2) + ".";
 								return false;
 							}
 						}
