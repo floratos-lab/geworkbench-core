@@ -51,6 +51,7 @@ public class TreeNodeRenderer extends DefaultTreeCellRenderer {
             setToolTipText("This is a project folder.");
         } else if(value.getClass() == PendingTreeNode.class){
         	setIcon(Icons.BUSY_STATIC_ICON);
+        	setToolTipText(null);
         } else {
             if (value.getClass() == DataSetNode.class) {
                 DSDataSet<? extends DSBioObject> df = ((DataSetNode) value).getDataset();
@@ -75,7 +76,7 @@ public class TreeNodeRenderer extends DefaultTreeCellRenderer {
             }
             if (description!=null) {
                 setToolTipText(description);
-            }
+            } else setToolTipText(null);
         }
 
         return this;

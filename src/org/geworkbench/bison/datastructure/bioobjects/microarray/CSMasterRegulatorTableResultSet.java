@@ -18,5 +18,7 @@ public class CSMasterRegulatorTableResultSet extends CSAncillaryDataSet<DSMicroa
 
 	public void setData(Object[][] data) {
 		this.data = data;
+		if (data != null)
+			setDescription("# of master regulators (MARINa): " + data.length);
 	}
 }
