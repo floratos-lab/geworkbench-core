@@ -30,6 +30,7 @@ import org.geworkbench.bison.datastructure.complex.panels.CSPanel;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.engine.config.VisualPlugin;
+import org.geworkbench.engine.management.Asynchronous;
 import org.geworkbench.engine.management.Subscribe;
 import org.geworkbench.events.GeneSelectorEvent;
 
@@ -89,7 +90,7 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 	 * @param e
 	 *            ProjectEvent
 	 */
-	@Subscribe
+	@Subscribe(Asynchronous.class)
 	public void receive(org.geworkbench.events.ProjectEvent e, Object source) {
 
 		log.debug("Source object " + source);
@@ -114,7 +115,7 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 	 * @param e
 	 *            GeneSelectorEvent
 	 */
-	@Subscribe
+	@Subscribe(Asynchronous.class)
 	public void receive(GeneSelectorEvent e, Object source) {
 
 		log.debug("Source object " + source);
@@ -153,7 +154,7 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 	 *            PhenotypeSelectorEvent
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@Subscribe
+	@Subscribe(Asynchronous.class)
 	public void receive(org.geworkbench.events.PhenotypeSelectorEvent e,
 			Object source) {
 
@@ -167,11 +168,17 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 
 	}
 
+	volatile boolean beingRefreshed = false;
 	/**
 	 * Refreshes the chart view.
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	final protected void refreshMaSetView() {
+		if(beingRefreshed) {
+			return;
+		}
+		
+		beingRefreshed = true;
 		maSetView = new CSMicroarraySetView(this.refMASet);
 		if (activatedMarkers != null && activatedMarkers.panels().size() > 0)
 			maSetView.setMarkerPanel(activatedMarkers);
@@ -183,12 +190,13 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 		uniqueMarkers = maSetView.getUniqueMarkers();
 
 		fireModelChangedEvent();
+		beingRefreshed = false;
 	}
 
 	/**
 	 * @param event
 	 */
-	protected void fireModelChangedEvent() {
+	protected synchronized void fireModelChangedEvent() {
 		// no-op
 	}
 
