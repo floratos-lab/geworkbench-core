@@ -3,11 +3,14 @@ package org.geworkbench.bison.util.colorcontext;
 import java.awt.Color;
 import java.io.Serializable;
 
+import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.views.DSMicroarraySetView;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMutableMarkerValue;
+import org.geworkbench.bison.util.Range;
 
 public class ExpressionPValueColorContext implements ColorContext, Serializable {
 
@@ -16,6 +19,8 @@ public class ExpressionPValueColorContext implements ColorContext, Serializable 
 	public ExpressionPValueColorContext() {
     }
 	
+	private Object lock = new Object();
+
     /**
      * @param mv        The <code>MarkerValue</code> that needs to be drawn.
      * @param intensity color intensity to be used
@@ -26,28 +31,71 @@ public class ExpressionPValueColorContext implements ColorContext, Serializable 
 //        intensity *= 2;
         intensity = 2 / intensity; 
         double value = mv.getValue();
-        org.geworkbench.bison.util.Range range = ((DSRangeMarker) mInfo).getRange();
-        double mean = range.norm.getMean(); //(range.max + range.min) / 2.0;
-        double foldChange = (value - mean) / (range.norm.getSigma() + 0.00001); //Math.log(change) / Math.log(2.0);
-        if (foldChange < -intensity) {
-            foldChange = -intensity;
+        synchronized (lock) {
+        	org.geworkbench.bison.util.Range range = ((DSRangeMarker) mInfo).getRange();
+	        double mean = range.norm.getMean(); //(range.max + range.min) / 2.0;
+	        double foldChange = (value - mean) / (range.norm.getSigma() + 0.00001); //Math.log(change) / Math.log(2.0);
+	        if (foldChange < -intensity) {
+	            foldChange = -intensity;
+	        }
+	        if (foldChange > intensity) {
+	            foldChange = intensity;
+	        }
+	
+	        double colVal = foldChange / intensity;
+	        if (foldChange > 0) {
+	            return new Color(1.0F, (float) (1 - colVal), (float) (1 - colVal));
+	        } else {
+	            return new Color((float) (1 + colVal), (float) (1 + colVal), 1.0F);
+	        }
         }
-        if (foldChange > intensity) {
-            foldChange = intensity;
-        }
-
-        double colVal = foldChange / intensity;
-        if (foldChange > 0) {
-            return new Color(1.0F, (float) (1 - colVal), (float) (1 - colVal));
-        } else {
-            return new Color((float) (1 + colVal), (float) (1 + colVal), 1.0F);
-        }
-        
+       
     }
 
-    public void updateContext(DSMicroarraySetView<DSGeneMarker, DSMicroarray> view) {
-        ColorContextUtils.computeRange(view);
-    }
+    // TODO: this needs to be reviewed: 
+    // considering the range is each DSRangeMarker's property, why does it need to be updated here? 
+	public void updateContext(
+			DSMicroarraySetView<DSGeneMarker, DSMicroarray> view) {
+		DSMicroarraySet microarraySet = view.getMicroarraySet();
+
+		if (!microarraySet.getMarkers().isEmpty()) {
+
+			if (microarraySet.getMarkers().get(0) instanceof DSRangeMarker) {
+				synchronized (lock) {
+					for (DSGeneMarker marker : microarraySet.getMarkers()) {
+						((DSRangeMarker) marker).reset(marker.getSerial());
+					}
+					if (view.items().size() == 1) {
+						DSMicroarray ma = view.items().get(0);
+						Range range = new org.geworkbench.bison.util.Range();
+						for (DSGeneMarker marker : microarraySet.getMarkers()) {
+							DSMutableMarkerValue mValue = (DSMutableMarkerValue) ma
+									.getMarkerValue(marker.getSerial());
+							double value = mValue.getValue();
+							range.min = Math.min(range.min, value);
+							range.max = Math.max(range.max, value);
+							range.norm.add(value);
+						}
+						for (DSGeneMarker marker : microarraySet.getMarkers()) {
+							Range markerRange = ((DSRangeMarker) marker)
+									.getRange();
+							markerRange.min = range.min;
+							markerRange.max = range.max;
+							markerRange.norm = range.norm;
+						}
+					} else {
+						for (DSGeneMarker marker : microarraySet.getMarkers()) {
+							for (DSMicroarray ma : view.items()) {
+								DSMutableMarkerValue mValue = (DSMutableMarkerValue) ma
+										.getMarkerValue(marker.getSerial());
+								((DSRangeMarker) marker).updateRange(mValue);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 
     public Color getMaxColorValue(float intensity) {
         return Color.red;

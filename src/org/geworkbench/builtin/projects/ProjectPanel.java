@@ -69,6 +69,7 @@ import org.geworkbench.engine.config.MenuListener;
 import org.geworkbench.engine.config.UILauncher;
 import org.geworkbench.engine.config.VisualPlugin;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
+import org.geworkbench.engine.management.Asynchronous;
 import org.geworkbench.engine.management.Publish;
 import org.geworkbench.engine.management.Subscribe;
 import org.geworkbench.engine.preferences.GlobalPreferences;
@@ -1534,7 +1535,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 	}
 
-	@Subscribe
+	@Subscribe(Asynchronous.class)
 	public void receive(
 			org.geworkbench.events.PhenotypeSelectorEvent<DSMicroarray> e,
 			Object source) {
