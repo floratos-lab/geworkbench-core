@@ -19,7 +19,7 @@ public class ExpressionPValueColorContext implements ColorContext, Serializable 
 	public ExpressionPValueColorContext() {
     }
 	
-	private Object lock = new Object();
+	private transient Object lock = new Object();
 
     /**
      * @param mv        The <code>MarkerValue</code> that needs to be drawn.
