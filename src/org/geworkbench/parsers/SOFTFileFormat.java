@@ -226,12 +226,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 		List<String> arrayNames = new ArrayList<String>();
 		int possibleMarkers = 0;
 		BufferedReader in = null;
-		final int extSeperater = '.';
 		String fileName = file.getName();
-		int dotIndex = fileName.lastIndexOf(extSeperater);
-		if (dotIndex != -1) {
-			fileName = fileName.substring(0, dotIndex);
-		}
 		maSet.setLabel(fileName);
 		
 		List<String> markers = new ArrayList<String>();
