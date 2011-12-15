@@ -184,8 +184,6 @@ public class GeoSeriesMatrixParser {
 	public DSMicroarraySet getMArraySet(File file)
 			throws InputFileFormatException, InterruptedIOException {
 
-		final int extSeperater = '.';
-
 		if (!checkFormat(file)) {
 			log
 					.info("SOFTFileFormat::getMArraySet - "
