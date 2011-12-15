@@ -195,10 +195,6 @@ public class GeoSeriesMatrixParser {
 		 }
 
 		String fileName = file.getName();
-		int dotIndex = fileName.lastIndexOf(extSeperater);
-		if (dotIndex != -1) {
-			fileName = fileName.substring(0, dotIndex);
-		}
 		maSet.setLabel(fileName);
 		BufferedReader in = null;
 		try {
