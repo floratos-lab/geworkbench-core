@@ -49,12 +49,7 @@ public class SampleFileParser {
 			throws InputFileFormatException, InterruptedIOException {   
 		
 		BufferedReader in = null;
-		final int extSeperater = '.';
 		String fileName = file.getName();
-		int dotIndex = fileName.lastIndexOf(extSeperater);
-		if (dotIndex != -1) {
-			fileName = fileName.substring(0, dotIndex);
-		}
 		maSet.setLabel(fileName);
 		String arrayName = null;
 		int m = 0;
