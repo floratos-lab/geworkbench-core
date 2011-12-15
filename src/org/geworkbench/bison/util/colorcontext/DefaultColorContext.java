@@ -31,7 +31,7 @@ public class DefaultColorContext implements ColorContext {
     public DefaultColorContext() {
     }
 
-    private Object lock = new Object();
+    private transient Object lock = new Object();
 
     public Color getMarkerValueColor(DSMarkerValue mv, DSGeneMarker mInfo, float intensity) {
         if (mv == null || mv.isMissing())
