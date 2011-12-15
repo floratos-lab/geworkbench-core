@@ -139,12 +139,7 @@ public class SOFTSeriesParser {
 		}
 
 		BufferedReader in = null;
-		final int extSeperater = '.';
 		String fileName = file.getName();
-		int dotIndex = fileName.lastIndexOf(extSeperater);
-		if (dotIndex != -1) {
-			fileName = fileName.substring(0, dotIndex);
-		}
 
 		CSMicroarraySet maSet = new CSMicroarraySet();
 		maSet.setLabel(fileName);
