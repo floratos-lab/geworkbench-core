@@ -48,10 +48,6 @@ public class CELFileFormat extends DataSetFileFormat {
 
     public DSDataSet<? extends DSBioObject> getDataFile(File file) {
         String name = file.getName();
-        int index = name.lastIndexOf('.');
-        if (index != -1) {
-            name = name.substring(0, index);
-        }
         CSProbeIntensityArray dataSet = new CSProbeIntensityArray(null, name);
         dataSet.setFile(file);
         dataSet.setDataSetFile(file);
