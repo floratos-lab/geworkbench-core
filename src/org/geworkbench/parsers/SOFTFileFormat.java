@@ -387,6 +387,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 			e.printStackTrace();
 		}
 		labelDisp(file, maSet, arrayNames);
+		maSet.getMarkers().correctMaps();
 		return maSet;
 	}
 	

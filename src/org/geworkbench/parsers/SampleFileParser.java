@@ -307,7 +307,7 @@ public class SampleFileParser {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		maSet.getMarkers().correctMaps();
 		return maSet;
 	}
 }

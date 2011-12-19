@@ -394,6 +394,7 @@ public class GeoSeriesMatrixParser {
 				
 			}
 		}
+		maSet.getMarkers().correctMaps();
 		return maSet;
 	}
 

@@ -431,6 +431,7 @@ public class TabDelimitedDataMatrixFileFormat extends DataSetFileFormat {
 				e.printStackTrace();
 			}
 		}
+		maSet.getMarkers().correctMaps();
 		return maSet;
 	}
 

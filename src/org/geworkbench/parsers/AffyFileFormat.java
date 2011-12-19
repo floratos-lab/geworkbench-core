@@ -267,7 +267,7 @@ public class AffyFileFormat extends DataSetFileFormat {
 			reader.close();
 			parser.getMicroarray().setLabel(file.getName());
 			microarraySet.add(0, parser.getMicroarray());
-			microarraySet.setFile(file);
+			microarraySet.setFile(file);			 
 		} catch (java.io.InterruptedIOException ie) {
 			if (progressIn.getProgressMonitor().isCanceled()) {
 				throw ie;
@@ -301,6 +301,7 @@ public class AffyFileFormat extends DataSetFileFormat {
 			throws InputFileFormatException, InterruptedIOException {
 		CSMicroarraySet maSet = new CSMicroarraySet();
 		getMArraySet(file, maSet);
+		maSet.getMarkers().correctMaps();
 		return maSet;
 	}
 

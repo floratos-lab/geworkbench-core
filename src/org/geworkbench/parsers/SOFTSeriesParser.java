@@ -380,6 +380,7 @@ public class SOFTSeriesParser {
 			marker.getUnigene().set(token);
 		}
 
+		maSet.getMarkers().correctMaps();
 		return maSet;
 	}
 }
