@@ -42,44 +42,56 @@ public class PatternResult extends CSAncillaryDataSet<DSSequence> implements
     public static final String DISCOVER = "discovery";
     public static final String EXHAUSTIVE = "exhaustive";
     
-	private final PatternDiscoveryParameters parameters;
 	private List<DSMatchedSeqPattern> patterns = new ArrayList<DSMatchedSeqPattern>();
 	private File dataSetFile;
 	public DSSequenceSet<? extends DSSequence> sequenceDB;
 
 	@SuppressWarnings("unchecked")
-	public PatternResult(final PatternDiscoveryParameters parameters,
-			String name, DSDataSet<? extends DSSequence> parent) {
+	public PatternResult(
+			String name, final DSDataSet<? extends DSSequence> parent,
+			int minSupport, int minTokens, int minWTokens, int window) {
 		super((DSDataSet<DSSequence>) parent, name);
 		sequenceDB = (DSSequenceSet<? extends DSSequence>) parent;
-		this.parameters = parameters;
+
 		String idString = RandomNumberGenerator.getID();
 		setID(idString);
 		setLabel(name);
+		
+		this.minSupport = minSupport;
+		this.minTokens = minTokens;
+		this.minWTokens = minWTokens;
+		this.window = window;
 	}
 
 	// another constructor originally as PatternDB
 	public PatternResult(File _seqFile, DSDataSet<DSSequence> parent) {
 		super(parent, "PatternResult");
 		this.sequenceDB = (DSSequenceSet<? extends DSSequence>) parent;
-		parameters = null;
+
 		dataSetFile = _seqFile; // this is only used to get track file name
 		String idString = RandomNumberGenerator.getID();
 		setID(idString);
+
+		this.minSupport = -1;
+		this.minTokens = -1;
+		this.minWTokens = -1;
+		this.window = -1;
 	}
 
-	public PatternDiscoveryParameters getParameters() {
-		return parameters;
-	}
-
+	// TODO review the necessity of these (used only in getDataSetName)
+	final private int minSupport;
+	final private int minTokens;
+	final private int minWTokens;
+	final private int window;
+	
 	@Override
 	public String getDataSetName() {
-		if(parameters==null)
+		if(minSupport<0)
 			return "";
 		
-		return "Parms S:" + parameters.getMinSupport() + ", T:"
-				+ parameters.getMinTokens() + ", W["
-				+ parameters.getMinWTokens() + "," + parameters.getWindow()
+		return "Parms S:" + minSupport + ", T:"
+				+ minTokens + ", W["
+				+ minWTokens + "," + window
 				+ "]";
 	}
 
