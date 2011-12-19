@@ -50,6 +50,7 @@ public abstract class CommandBase implements MenuListener, VisualPlugin {
 		if (dialog == null) { // first time
 			dialog = new JDialog();
 			dialog.add(getComponent());
+			dialog.pack();
 			dialog.setLocationRelativeTo(null);
 		}
 		dialog.pack();
