@@ -25,7 +25,6 @@ import org.geworkbench.util.BinaryEncodeDecode;
 public final class CSMatchedSeqPattern extends
 		CSMatchedPattern<DSSequence, CSSeqRegistration> implements
 		DSMatchedSeqPattern, 
-		org.geworkbench.bison.datastructure.complex.pattern.DSPattern<DSSequence, CSSeqRegistration>,
 		Serializable {
 	private static final long serialVersionUID = -8809856414947634034L;
 
@@ -60,7 +59,6 @@ public final class CSMatchedSeqPattern extends
 
 	public CSMatchedSeqPattern(final DSSequenceSet<DSSequence> seqDB) {
 		this.seqDB = seqDB;
-        pattern = this;
 		rand_hash = new java.util.Random().nextInt();
 	}
 
@@ -98,7 +96,6 @@ public final class CSMatchedSeqPattern extends
 	}
 
 	public CSMatchedSeqPattern(String s) {
-        pattern = this;
 		Matcher m0 = CSMatchedSeqPattern.headerPattern.matcher(s);
 		rand_hash = new java.util.Random().nextInt();
 		if (m0.find()) {
@@ -251,39 +248,6 @@ public final class CSMatchedSeqPattern extends
 	public int hashCode() {
 		return rand_hash;
 	}
-
-    public List<DSPatternMatch<DSSequence, CSSeqRegistration>> match(DSSequence object, double p) {
-        List<DSPatternMatch<DSSequence,
-                CSSeqRegistration>>
-                matchResults = new ArrayList<DSPatternMatch<DSSequence,
-                               CSSeqRegistration>>();
-        for (DSPatternMatch<DSSequence, CSSeqRegistration> match : matches) {
-            if (match.getObject().equals(object) &&
-                match.getRegistration().getPValue() > p) {
-                matchResults.add(match);
-            }
-        }
-        return matchResults;
-    }
-
-    public CSSeqRegistration match(DSSequence object) {
-        for (DSPatternMatch<DSSequence,
-             ? extends CSSeqRegistration> match : matches) {
-            if (match.getObject().equals(object)) {
-                match.getRegistration().setPValue(0.0);
-                return match.getRegistration();
-            }
-        }
-        return null;
-    }
-
-    public String toString(DSSequence object, CSSeqRegistration registration) {
-        if (ascii != null) {
-            return ascii;
-        } else {
-            return null;
-        }
-    }
 
     private DSSequence getObject(int i)  {
 

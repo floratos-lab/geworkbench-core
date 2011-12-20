@@ -10,10 +10,10 @@ import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeq
  * <p>Company: </p>
  *
  * @author not attributable
- * @version 1.0
+ * @version $Id$
  */
 
-public interface SequentialPatternSource extends org.geworkbench.util.patterns.DataSource {
+public interface SequentialPatternSource {
 
     /**
      * Get the number of patterns in this source.
