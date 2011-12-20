@@ -135,7 +135,7 @@ public class PatternResult extends CSAncillaryDataSet<DSSequence> implements
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
 			int i = 0;
 			Iterator<DSMatchedSeqPattern> it = patterns.iterator();
-			String path = this.getDataSetFile().getCanonicalPath();
+			String path = dataSetFile.getCanonicalPath();
 			writer.write(DISCOVER);
 			writer.newLine();
 			writer.write("File:" + path);
@@ -153,18 +153,11 @@ public class PatternResult extends CSAncillaryDataSet<DSSequence> implements
 	}
 
 	public int getPatternNo() {
-		if (patterns == null) {
-			patterns = new ArrayList<DSMatchedSeqPattern>();
-			read(file);
-		}
 		return patterns.size();
 	}
 
 	public DSMatchedSeqPattern getPattern(int i) {
-		if ((patterns.size() == 0) && (file != null)) {
-			read(file);
-		}
-		if (i < patterns.size()) {
+		if (i>=0 && i < patterns.size()) {
 			return (DSMatchedSeqPattern) patterns.get(i);
 		}
 		return null;
@@ -202,14 +195,6 @@ public class PatternResult extends CSAncillaryDataSet<DSSequence> implements
 		return 0;
 	}
 
-	public File getDataSetFile() {
-		return dataSetFile;
-	}
-
-	public void setDataSetFile(File _file) {
-		dataSetFile = _file;
-	}
-	
     /**
      * writeToFile
      *
@@ -222,7 +207,7 @@ public class PatternResult extends CSAncillaryDataSet<DSSequence> implements
     			"\n" + "\"Save All Patterns\" to save the result dataset");
     }
     
-    public DSSequenceSet<? extends DSSequence> getActiveDataSet() {
+    public DSSequenceSet<? extends DSSequence> getParentSequenceSet() {
     	return this.sequenceDB;
     }
 
