@@ -125,6 +125,7 @@ public class PatternResult extends CSAncillaryDataSet<DSSequence> implements
 			return false;
 		}
 
+		setDescription("Number of Patterns found:" + patterns.size());
 		return true;
 	}
 
