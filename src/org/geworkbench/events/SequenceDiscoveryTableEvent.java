@@ -17,7 +17,7 @@ import org.geworkbench.engine.config.events.Event;
  * @author Saroja Hanasoge
  * @version $Id$
  */
-
+@Deprecated // no one publishes this event anymore
 public class SequenceDiscoveryTableEvent extends Event {
 
     public SequenceDiscoveryTableEvent(List<DSMatchedPattern<DSSequence, CSSeqRegistration>> patternMatches) {
