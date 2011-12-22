@@ -259,8 +259,15 @@ public class SequenceViewWidget extends JPanel {
 		}
 	}
 
+	@Deprecated
 	public void patternSelectionHasChanged(SequenceDiscoveryTableEvent e) {
 		setPatterns(e.getPatternMatchCollection());
+		refreshMaSetView();
+	}
+	
+	// do the same thing as the above version, but do not go through SequenceDiscoveryTableEvent
+	public void patternSelectionHasChanged(List<DSMatchedPattern<DSSequence, CSSeqRegistration>> patterns) {
+		setPatterns(patterns);
 		refreshMaSetView();
 	}
 
