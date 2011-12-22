@@ -529,7 +529,6 @@
 	<!-- ====================================================================== -->
 	<target name="createDist" depends="compile, jar" description="Creating a new folder for depositing...">
 		<java classname="org.geworkbench.components.versioninfo.VersionInfoDialog" failonerror="true" >
-			<arg value="2.2.1"/>
 			<arg value="./components/versioninfo/classes/org/geworkbench/components/versioninfo/" />
 			<classpath>
 				<path refid="classpath" />
