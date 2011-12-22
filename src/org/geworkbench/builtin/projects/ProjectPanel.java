@@ -12,7 +12,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.lang.NumberFormatException;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -90,19 +92,19 @@ import org.geworkbench.util.ProgressDialog;
 import org.geworkbench.util.ProgressItem;
 import org.geworkbench.util.SaveImage;
 import org.geworkbench.util.Util;
+import org.ginkgo.labs.util.FileTools;
 import org.ginkgo.labs.ws.GridEndpointReferenceType;
 
 /**
- *
- * Description: Project Panel of geWorkbench is a key controlling element.
- * </p>
+ * 
+ * Description: Project Panel of geWorkbench is a key controlling element. </p>
  * <p>
  * Copyright: Copyright (c) 2002
  * </p>
  * <p>
  * Company: First Genetic Trust Inc.
  * </p>
- *
+ * 
  * @author First Genetic Trust
  * @version $Id$
  */
@@ -138,8 +140,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	private JMenuItem jViewAnnotations = new JMenuItem("View Annotations");
 
 	private JMenuItem jSaveMenuItem = new JMenuItem("Save");
-	
-	private JMenuItem jExportToTabDelimMenuItem = new JMenuItem("Export to tab-delim");
+
+	private JMenuItem jExportToTabDelimMenuItem = new JMenuItem(
+			"Export to tab-delim");
 
 	private JMenuItem jRenameMenuItem = new JMenuItem("Rename");
 
@@ -163,7 +166,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/**
 	 * Constructor. Initialize GUI and selection variables
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	public ProjectPanel() throws Exception {
@@ -183,13 +186,19 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		File defaultWS = new File("./default.wsp");
 		if (defaultWS.exists()) {
 			WorkspaceHandler ws = new WorkspaceHandler();
-			ProgressDialog pdnonmodal = ProgressDialog.create(ProgressDialog.NONMODAL_TYPE);
-			OpenTask openTask = ws.new OpenTask(ProgressItem.INDETERMINATE_TYPE, "Workspace is being loaded.", defaultWS.getName());
+			ProgressDialog pdnonmodal = ProgressDialog
+					.create(ProgressDialog.NONMODAL_TYPE);
+			OpenTask openTask = ws.new OpenTask(
+					ProgressItem.INDETERMINATE_TYPE,
+					"Workspace is being loaded.", defaultWS.getName());
 			pdnonmodal.executeTask(openTask);
 			GUIFramework.getFrame().setTitle(
-					((Skin)GeawConfigObject.getGuiWindow()).getApplicationTitle() + " ["
-							+ defaultWS.getName() + "]");
-			
+					((Skin) GeawConfigObject.getGuiWindow())
+							.getApplicationTitle()
+							+ " ["
+							+ defaultWS.getName()
+							+ "]");
+
 			Enumeration<?> children = root.children();
 			while (children.hasMoreElements()) {
 				TreeNode node = (TreeNode) children.nextElement();
@@ -198,7 +207,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 
 		initializeWorkspaceBehavior();
-		
+
 		INSTANCE = this;
 	}
 
@@ -211,21 +220,20 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			}
 
 		});
-		
+
 		// dataset menu
 		jSaveMenuItem.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveNodeAsFile(e);
 			}
 		});
-		
-		
-		
-		jExportToTabDelimMenuItem.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				saveNodeAsFile(e);
-			}
-		});
+
+		jExportToTabDelimMenuItem
+				.addActionListener(new java.awt.event.ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						saveNodeAsFile(e);
+					}
+				});
 		jExportToTabDelimMenuItem.setVisible(false);
 
 		jRenameMenuItem.addActionListener(new ActionListener() {
@@ -258,11 +266,11 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 		dataSetMenu.add(jSaveMenuItem);
 		dataSetMenu.addSeparator();
-		dataSetMenu.add(jExportToTabDelimMenuItem);		
+		dataSetMenu.add(jExportToTabDelimMenuItem);
 		dataSetMenu.add(jRenameMenuItem);
 		dataSetMenu.add(jRemoveDatasetItem);
 		dataSetMenu.add(jEditItem);
-		dataSetMenu.add(jViewAnnotations);		
+		dataSetMenu.add(jViewAnnotations);
 
 		// dataset sub menu
 		jRenameSubItem.addActionListener(new ActionListener() {
@@ -308,72 +316,59 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		String editor = prefs.getTextEditor();
 		if (editor == null) {
 			log.info("No editor configured.");
-			JOptionPane
-			.showMessageDialog(
-					null,
-					"No editor configured.",
-					"Unable to Edit",
-					JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, "No editor configured.",
+					"Unable to Edit", JOptionPane.INFORMATION_MESSAGE);
 		} else {
 			if (ds.getFile() == null) {
-				JOptionPane
-						.showMessageDialog(
-								null,
-								"There is no local file for this data set.",
-								"Unable to Edit",
-								JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null,
+						"There is no local file for this data set.",
+						"Unable to Edit", JOptionPane.INFORMATION_MESSAGE);
 			} else {
 				if (Util.isRunningOnAMac()) {
 					editor = "Open";
 				}
 
-				String[] args = { editor,
-						ds.getFile().getAbsolutePath() };
+				String[] args = { editor, ds.getFile().getAbsolutePath() };
 				try {
 					Runtime.getRuntime().exec(args);
 				} catch (IOException e1) {
 					log.info("Error opening editor:");
 					JOptionPane
-					.showMessageDialog(
-							null,
-							"IOException in opening editor: "+e1.getMessage(),
-							"Unable to Edit",
-							JOptionPane.INFORMATION_MESSAGE);
+							.showMessageDialog(
+									null,
+									"IOException in opening editor: "
+											+ e1.getMessage(),
+									"Unable to Edit",
+									JOptionPane.INFORMATION_MESSAGE);
 					e1.printStackTrace();
 				} catch (SecurityException se) {
-					JOptionPane
-					.showMessageDialog(
+					JOptionPane.showMessageDialog(
 							null,
-							"SecurityException in opening editor: "+se.getMessage(),
-							"Unable to Edit",
+							"SecurityException in opening editor: "
+									+ se.getMessage(), "Unable to Edit",
 							JOptionPane.INFORMATION_MESSAGE);
 				} catch (Exception ee) {
-					JOptionPane
-					.showMessageDialog(
+					JOptionPane.showMessageDialog(
 							null,
-							"Other Exception in opening editor: "+ee.getMessage(),
-							"Unable to Edit",
+							"Other Exception in opening editor: "
+									+ ee.getMessage(), "Unable to Edit",
 							JOptionPane.INFORMATION_MESSAGE);
 				}
 			}
 		}
 	}
-	
+
 	private void viewAnnotationInExternalEditor() {
 		DSDataSet<? extends DSBioObject> ds = selection.getDataSet();
 		if (!(ds instanceof CSMicroarraySet)) {
 			return;
 		}
 		CSMicroarraySet microarraySet = (CSMicroarraySet) ds;
-		String annotationFileName = microarraySet
-				.getAnnotationFileName();
+		String annotationFileName = microarraySet.getAnnotationFileName();
 		if (annotationFileName == null) {
-			JOptionPane
-					.showMessageDialog(
-							null,
-							"There are no annotations loaded for this dataset.",
-							"Unable to View",
-							JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null,
+					"There are no annotations loaded for this dataset.",
+					"Unable to View", JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
 
@@ -394,17 +389,16 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			}
 		}
 	}
-	
+
 	private void restorePendingNode(DSDataSet<?> dataset,
 			final Collection<GridEndpointReferenceType> pendingGridEprs) {
 		GridEndpointReferenceType pendingGridEpr = (GridEndpointReferenceType) dataset
 				.getObject(GridEndpointReferenceType.class);
 		String history = dataset.getDescription();
-		addPendingNode(pendingGridEpr,
-				dataset.getLabel(), history, true);
+		addPendingNode(pendingGridEpr, dataset.getLabel(), history, true);
 		pendingGridEprs.add(pendingGridEpr);
 	}
-	
+
 	void populateFromSaveTree(SaveTree saveTree) {
 		java.util.List<DataSetSaveNode> projects = saveTree.getNodes();
 		ProjectTreeNode selectedNode = null;
@@ -418,7 +412,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			java.util.List<DataSetSaveNode> dataSets = project.getChildren();
 			for (DataSetSaveNode dataNode : dataSets) {
 				setComponents(dataNode);
-				DSDataSet<? extends DSBioObject> dataSet = dataNode.getDataSet();
+				DSDataSet<? extends DSBioObject> dataSet = dataNode
+						.getDataSet();
 				dataSet.setExperimentInformation(dataNode.getDescription());
 				/* pending node */
 				if (dataSet instanceof PendingTreeNode.PendingNode) {
@@ -437,15 +432,16 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 					/* pending node */
 					if (ancNode.getDataSet() instanceof PendingTreeNode.PendingNode) {
-						restorePendingNode(ancNode
-								.getDataSet(), pendingGridEprs);
+						restorePendingNode(ancNode.getDataSet(),
+								pendingGridEprs);
 					} else {
 						DSAncillaryDataSet<? extends DSBioObject> ancSet = null;
 
 						if (ancNode.getDataSet() instanceof ImageData) {
 							ancSet = (ImageData) ancNode.getDataSet();
 						} else {
-							ancSet = (DSAncillaryDataSet<? extends DSBioObject>) ancNode.getDataSet();
+							ancSet = (DSAncillaryDataSet<? extends DSBioObject>) ancNode
+									.getDataSet();
 						}
 
 						ancSet.setExperimentInformation(ancNode
@@ -475,12 +471,12 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	private void setComponents(DataSetSaveNode saveNode) {
 		Skin skin = (Skin) GeawConfigObject.getGuiWindow();
-		skin.setVisualLastSelected(saveNode.getDataSet(), saveNode
-				.getVisualSelected());
-		skin.setSelectionLastSelected(saveNode.getDataSet(), saveNode
-				.getSelectionSelected());
+		skin.setVisualLastSelected(saveNode.getDataSet(),
+				saveNode.getVisualSelected());
+		skin.setSelectionLastSelected(saveNode.getDataSet(),
+				saveNode.getSelectionSelected());
 	}
-	
+
 	private void saveNodeAsFile(ActionEvent event) {
 		ProjectTreeNode selectedNode = selection.getSelectedNode();
 		if (selectedNode == null) {
@@ -502,8 +498,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				CSTTestResultSet<? extends DSGeneMarker> tTestResultSet = (CSTTestResultSet<? extends DSGeneMarker>) dataSetSubNode._aDataSet;
 				tTestResultSet.saveDataToCSVFile();
 				return;
-			}			
-			
+			}
+
 		}
 
 		// other cases
@@ -542,13 +538,13 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		CustomFileFilter filter = null;
 		if (event.getSource() == this.jExportToTabDelimMenuItem)
 			filter = SaveFileFilterFactory.getTabDelimitedFileFilter();
-		else  
+		else
 			filter = SaveFileFilterFactory.createFilter(ds);
-		
+
 		jFileChooser1.setFileFilter(filter);
 
 		if (JFileChooser.APPROVE_OPTION == jFileChooser1
-				.showSaveDialog((Component)event.getSource())) {
+				.showSaveDialog((Component) event.getSource())) {
 			String newFileName = jFileChooser1.getSelectedFile()
 					.getAbsolutePath();
 
@@ -575,8 +571,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			}
 
 			try {
-				if ((event.getSource() == this.jExportToTabDelimMenuItem) && ds instanceof DSMicroarraySet )
-					((DSMicroarraySet)ds).writeToTabDelimFile(newFileName);
+				if ((event.getSource() == this.jExportToTabDelimMenuItem)
+						&& ds instanceof DSMicroarraySet)
+					((DSMicroarraySet) ds).writeToTabDelimFile(newFileName);
 				else
 					ds.writeToFile(newFileName);
 			} catch (RuntimeException e) {
@@ -589,7 +586,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/**
 	 * Change the comment text
-	 *
+	 * 
 	 */
 	public void setCommentText(String newComments) {
 		ProjectTreeNode selectedNode = selection.getSelectedNode();
@@ -599,7 +596,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	/**
 	 * Inserts a new data set as a new node in the project tree. The node is a
 	 * child of the currently selected project
-	 *
+	 * 
 	 * @param _dataSet
 	 */
 	public void addDataSetNode(DSDataSet<? extends DSBioObject> _dataSet) {
@@ -662,7 +659,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/**
 	 * This method is used to trigger HistoryPanel to refresh.
-	 *
+	 * 
 	 * @param event
 	 * @return
 	 */
@@ -672,13 +669,13 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	}
 
 	/**
-	 * Inserts a new pending node in the project tree. The node is a
-	 * child of the currently selected project
-	 *
+	 * Inserts a new pending node in the project tree. The node is a child of
+	 * the currently selected project
+	 * 
 	 * @param _dataSet
 	 */
-	public void addPendingNode(GridEndpointReferenceType gridEpr,
-			String label, String history, boolean startNewThread) {
+	public void addPendingNode(GridEndpointReferenceType gridEpr, String label,
+			String history, boolean startNewThread) {
 		// get the parent node for this node
 		ProjectTreeNode pNode = selection.getSelectedNode();
 		if (pNode == null) {
@@ -691,8 +688,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		 * Inserts the new node and sets the menuNode and other variables to
 		 * point to it.
 		 */
-		PendingTreeNode node = new PendingTreeNode(label, history,
-				gridEpr);
+		PendingTreeNode node = new PendingTreeNode(label, history, gridEpr);
 		projectTreeModel.insertNodeInto(node, pNode, pNode.getChildCount());
 		// Make sure the user can see the lovely new node.
 		projectTree.scrollPathToVisible(new TreePath(node));
@@ -715,12 +711,13 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	}
 
 	/**
-	 *
+	 * 
 	 * @param pnode
 	 * @param parentData
 	 * @return
 	 */
-	private DataSetNode getMatchNode(ProjectTreeNode pnode, DSDataSet<? extends DSBioObject> parentData) {
+	private DataSetNode getMatchNode(ProjectTreeNode pnode,
+			DSDataSet<? extends DSBioObject> parentData) {
 
 		DSDataSet<? extends DSBioObject> dNodeFile = null;
 		if ((pnode instanceof DataSetNode)) {
@@ -747,13 +744,15 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	/**
 	 * Inserts a new ancillary data set as a new node in the project tree. The
 	 * node is a child of the currently selected data set
-	 *
+	 * 
 	 * @param _ancDataSet
 	 */
-	public void addDataSetSubNode(DSAncillaryDataSet<? extends DSBioObject> _ancDataSet) {
+	public void addDataSetSubNode(
+			DSAncillaryDataSet<? extends DSBioObject> _ancDataSet) {
 		DataSetNode dNode = selection.getSelectedDataSetNode();
 		DataSetNode matchedDNode = null;
-		DSDataSet<? extends DSBioObject> parentSet = _ancDataSet.getParentDataSet();
+		DSDataSet<? extends DSBioObject> parentSet = _ancDataSet
+				.getParentDataSet();
 		if (parentSet != null) {
 			if (dNode != null) {
 
@@ -862,7 +861,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/**
 	 * Mouse release event. Used to popup menus
-	 *
+	 * 
 	 * @param e
 	 */
 	private void jProjectTree_mouseReleased(MouseEvent e) {
@@ -939,7 +938,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/**
 	 * key release event.
-	 *
+	 * 
 	 * @param e
 	 */
 	private void jProjectTree_keyReleased(KeyEvent e) {
@@ -952,15 +951,19 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 	}
 
-	/* Publishers of ProjectNodeAddedEvent are recommended to directly call addProjectNode(...) */
+	/*
+	 * Publishers of ProjectNodeAddedEvent are recommended to directly call
+	 * addProjectNode(...)
+	 */
 	@Subscribe
 	public void receive(org.geworkbench.events.ProjectNodeAddedEvent pnae,
 			Object source) {
 		DSDataSet<? extends DSBioObject> dataSet = pnae.getDataSet();
-		DSAncillaryDataSet<? extends DSBioObject> ancillaryDataSet = pnae.getAncillaryDataSet();
+		DSAncillaryDataSet<? extends DSBioObject> ancillaryDataSet = pnae
+				.getAncillaryDataSet();
 		addProjectNode(dataSet, ancillaryDataSet);
 	}
-	
+
 	public void addProjectNode(DSDataSet<? extends DSBioObject> dataSet,
 			DSAncillaryDataSet<? extends DSBioObject> ancillaryDataSet) {
 		if (dataSet instanceof DSMicroarraySet) {
@@ -988,6 +991,25 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 
 		String history = node.getDSDataSet().getDescription();
+
+		try {
+			Date endDate = new Date();
+			long endTime = endDate.getTime();
+			history += "\nGrid service finished at: "
+					+ Util.formatDateStandard(endDate)+ ", milliseconds=" + endTime + FileTools.NEWLINE;
+			String firstLine = history.split("\n")[0];
+			String startTime = firstLine.split("=")[1].trim();
+			long elspedTime = endTime - (new Long(startTime));
+			history += "\nTotal elsped time: "
+					+ Util.convertLongToTimeStr(elspedTime);
+		} catch(NumberFormatException ne)
+		{
+			history += "\nError processing elspedTime: " + ne.getMessage();
+		} catch (Exception e) {
+			history += "\nError processing elspedTime: " + e.getMessage();
+			log.error("Error processing elspedTime: " + e.getMessage());			 
+		}
+
 		boolean pendingNodeFocused = false;
 
 		TreePath pathNow = projectTree.getSelectionPath();
@@ -1039,7 +1061,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	/**
 	 * Action listener handling user requests for opening a file containing
 	 * microarray set data.
-	 *
+	 * 
 	 * @param e
 	 */
 	private void jLoadMArrayItem_actionPerformed(ActionEvent e) {
@@ -1069,7 +1091,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	/**
 	 * Action listener handling user requests for opening a pdb file from RCSB
 	 * Protein Data Bank.
-	 *
+	 * 
 	 * @param e
 	 */
 	private void jOpenRemotePDBItem_actionPerformed(ActionEvent e) {
@@ -1089,7 +1111,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	/**
 	 * Action listener handling user requests to merge 2 or more microarray sets
 	 * into 1.
-	 *
+	 * 
 	 * @param e
 	 *            <code>ActionEvent</code>
 	 */
@@ -1114,8 +1136,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			node = (MutableTreeNode) selections[i].getLastPathComponent();
 			if (node instanceof DataSetNode) {
 				try {// Provide fix for bug 666, only merge
-					// Microarraydatasets.
-					sets[i] = (DSMicroarraySet) ((DataSetNode) node).getDataset();
+						// Microarraydatasets.
+					sets[i] = (DSMicroarraySet) ((DataSetNode) node)
+							.getDataset();
 					if (sibling == null
 							|| sibling.getPathCount() > selections[i]
 									.getPathCount()) {
@@ -1160,7 +1183,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			}
 		}
 		DSMicroarraySet mergedSet = FileOpenHandler.doMergeSets(sets);
-		if(mergedSet!=null) {
+		if (mergedSet != null) {
 			addDataSetNode(mergedSet);
 		}
 	}
@@ -1181,7 +1204,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/**
 	 * Action listener handling user requests for renaming a project.
-	 *
+	 * 
 	 * @param e
 	 */
 	private void jRenameProjectItem_actionPerformed(ActionEvent e) {
@@ -1218,9 +1241,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	/*
 	 * This method will remove an added subnode. If the current selected node is
 	 * not the added subNode, then do nothing.
-	 *
 	 */
-	public void removeAddedSubNode(DSAncillaryDataSet<? extends DSBioObject> aDataSet) {
+	public void removeAddedSubNode(
+			DSAncillaryDataSet<? extends DSBioObject> aDataSet) {
 
 		if (selection.getSelectedNode() instanceof DataSetSubNode) {
 			if (((DataSetSubNode) (selection.getSelectedNode()))._aDataSet != aDataSet) {
@@ -1242,15 +1265,14 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	}
 
 	private void remove_actionPerformed() {
-		if (projectTree == null || selection == null ) {
+		if (projectTree == null || selection == null) {
 			JOptionPane.showMessageDialog(null, "Please make a selection.",
 					"Delete Error", JOptionPane.ERROR_MESSAGE);
 			return;
-		}
-		else if (selection.getSelectedNode().isRoot())
-		{
-			JOptionPane.showMessageDialog(null, "Please don't select a ROOT node.",
-					"Delete Error", JOptionPane.ERROR_MESSAGE);
+		} else if (selection.getSelectedNode().isRoot()) {
+			JOptionPane.showMessageDialog(null,
+					"Please don't select a ROOT node.", "Delete Error",
+					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
@@ -1322,14 +1344,14 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/**
 	 * Action listener handling user requests for removing a dataset.
-	 *
+	 * 
 	 * @param e
 	 */
 	private void fileRemove_actionPerformed(ProjectTreeNode node) {
 		// clear out unused mark annotation from memory
 		if (node instanceof DataSetNode) {
-			AnnotationParser
-					.cleanUpAnnotatioAfterUnload(((DataSetNode) node).getDataset());
+			AnnotationParser.cleanUpAnnotatioAfterUnload(((DataSetNode) node)
+					.getDataset());
 
 			if (node.getChildCount() > 0) {
 				for (Enumeration<?> en = node.children(); en.hasMoreElements();) {
@@ -1348,8 +1370,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			}
 		}
 
-		// if it's a pending node, we fire a PendingNodeCancelledEvent.		
-		if (node instanceof PendingTreeNode) { 
+		// if it's a pending node, we fire a PendingNodeCancelledEvent.
+		if (node instanceof PendingTreeNode) {
 			publishPendingNodeCancelledEvent(new PendingNodeCancelledEvent(
 					((PendingTreeNode) node).getGridEpr()));
 		}
@@ -1370,14 +1392,13 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/**
 	 * Action listener handling user requests for removing a project.
-	 *
+	 * 
 	 * @param e
 	 */
 	private void projectRemove_actionPerformed(ProjectNode node) {
 		if (node.getChildCount() > 0) {
 			for (Enumeration<?> en = node.children(); en.hasMoreElements();) {
-				ProjectTreeNode childNode = (ProjectTreeNode) en
-						.nextElement();
+				ProjectTreeNode childNode = (ProjectTreeNode) en.nextElement();
 				if (childNode instanceof DataSetNode)
 					fileRemove_actionPerformed(childNode);
 			}
@@ -1388,7 +1409,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/**
 	 * Action listener handling user requests for renaming a dataset.
-	 *
+	 * 
 	 * @param e
 	 */
 	private void jRenameDataset_actionPerformed(ActionEvent e) {
@@ -1427,7 +1448,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	/**
 	 * Action listener handling user requests for the creation of new projects
 	 * in the workspace.
-	 *
+	 * 
 	 * @param e
 	 */
 	private void jNewProjectItem_actionPerformed(ActionEvent e) {
@@ -1437,7 +1458,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/**
 	 * Used to add a new node to a project tree
-	 *
+	 * 
 	 * @param child
 	 *            The node to be added
 	 * @param shouldBeVisible
@@ -1459,7 +1480,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/**
 	 * Sets the currently selected node within the project tree.
-	 *
+	 * 
 	 * @param node
 	 *            The project tree node to show up as selected.
 	 */
@@ -1498,13 +1519,16 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		ColorContext colorContext = (ColorContext) maSet
 				.getObject(ColorContext.class);
 		if (colorContext != null) {
-			CSMicroarraySetView<DSGeneMarker, DSMicroarray> view 
-				= new CSMicroarraySetView<DSGeneMarker, DSMicroarray>(maSet);
+			CSMicroarraySetView<DSGeneMarker, DSMicroarray> view = new CSMicroarraySetView<DSGeneMarker, DSMicroarray>(
+					maSet);
 			colorContext.updateContext(view);
 		}
 	}
 
-	/* Publishers of ImageSnapshotEvent are recommended to directly call addImageNode(ImageIcon) */
+	/*
+	 * Publishers of ImageSnapshotEvent are recommended to directly call
+	 * addImageNode(ImageIcon)
+	 */
 	@Subscribe
 	public void receive(ImageSnapshotEvent event, Object source) {
 		if (event.getAction() == ImageSnapshotEvent.Action.SAVE) {
@@ -1522,14 +1546,14 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			ProjectTreeNode node = (ProjectTreeNode) path
 					.getLastPathComponent();
 			if (node instanceof DataSetNode) {
-				projectTreeModel.insertNodeInto(imageNode, node, node
-						.getChildCount());
+				projectTreeModel.insertNodeInto(imageNode, node,
+						node.getChildCount());
 			} else if (node instanceof DataSetSubNode) {
 				DataSetSubNode subNode = (DataSetSubNode) node;
 				node = (ProjectTreeNode) subNode.getParent();
 				if (node instanceof DataSetNode) {
-					projectTreeModel.insertNodeInto(imageNode, node, node
-							.getChildCount());
+					projectTreeModel.insertNodeInto(imageNode, node,
+							node.getChildCount());
 				}
 			}
 		}
@@ -1544,8 +1568,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			return;
 		}
 
-		DSMicroarraySet microarraySet = (DSMicroarraySet) e
-				.getDataSet();
+		DSMicroarraySet microarraySet = (DSMicroarraySet) e.getDataSet();
 		ColorContext colorContext = (ColorContext) microarraySet
 				.getObject(ColorContext.class);
 		if (colorContext != null) {
@@ -1562,36 +1585,40 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 	}
 
-	public void processCaArrayResult(boolean succeeded, String message, TreeMap<String, Set<String>> treeMap) {
+	public void processCaArrayResult(boolean succeeded, String message,
+			TreeMap<String, Set<String>> treeMap) {
 		loadData.processCaAraryQueryResult(succeeded, message, treeMap);
 	}
 
 	/**
 	 * process the results of applying a normalizer to a microarray set.
-	 *
+	 * 
 	 */
-	public void processNormalization(DSMicroarraySet sourceMA, DSMicroarraySet resultMA, String information) {
+	public void processNormalization(DSMicroarraySet sourceMA,
+			DSMicroarraySet resultMA, String information) {
 
 		updateColorContext(resultMA);
 		// Set up the "history" information for the new dataset.
 		Object[] prevHistory = sourceMA.getValuesForName(HistoryPanel.HISTORY);
 
-		Object[] historyDetail = sourceMA.getValuesForName(HistoryPanel.HISTORYDETAIL);
+		Object[] historyDetail = sourceMA
+				.getValuesForName(HistoryPanel.HISTORYDETAIL);
 		String detail = (historyDetail == null ? "" : (String) historyDetail[0]);
 		sourceMA.clearName(HistoryPanel.HISTORYDETAIL);
 
 		if (prevHistory != null) {
 			sourceMA.clearName(HistoryPanel.HISTORY);
 		}
-		sourceMA.addNameValuePair(HistoryPanel.HISTORY, (prevHistory == null ? ""
-				: (String) prevHistory[0])
-				+ "Normalized with " + information + "\n" + detail + "\n");
+		sourceMA.addNameValuePair(HistoryPanel.HISTORY,
+				(prevHistory == null ? "" : (String) prevHistory[0])
+						+ "Normalized with " + information + "\n" + detail
+						+ "\n");
 
 		// Notify interested components that the selected dataset has changed
 		// The event is thrown only if the normalized dataset is the one
 		// currently selected in the project panel.
-		DSDataSet<? extends DSBioObject> currentDS = (selection != null ? selection.getDataSet()
-				: null);
+		DSDataSet<? extends DSBioObject> currentDS = (selection != null ? selection
+				.getDataSet() : null);
 		if (currentDS != null && currentDS instanceof DSMicroarraySet
 				&& (DSMicroarraySet) currentDS == sourceMA) {
 			publishProjectEvent(new ProjectEvent(ProjectEvent.SELECTED,
@@ -1601,7 +1628,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/**
 	 * For receiving the results of applying a filter to a microarray set.
-	 *
+	 * 
 	 * @param fe
 	 */
 	@Subscribe
@@ -1619,14 +1646,14 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		if (prevHistory != null) {
 			sourceMA.clearName(HistoryPanel.HISTORY);
 		}
-		sourceMA.addNameValuePair(HistoryPanel.HISTORY, (prevHistory == null ? ""
-				: (String) prevHistory[0])
-				+ "Filtered with " + fe.getInformation() + "\n");
+		sourceMA.addNameValuePair(HistoryPanel.HISTORY,
+				(prevHistory == null ? "" : (String) prevHistory[0])
+						+ "Filtered with " + fe.getInformation() + "\n");
 		// Notify interested components that the selected dataset has changed
 		// The event is thrown only if the dataset filtered is the one
 		// currently selected in the project panel.
-		DSDataSet<? extends DSBioObject> currentDS = (selection != null ? selection.getDataSet()
-				: null);
+		DSDataSet<? extends DSBioObject> currentDS = (selection != null ? selection
+				.getDataSet() : null);
 
 		if (currentDS != null && currentDS instanceof DSMicroarraySet
 				&& (DSMicroarraySet) currentDS == sourceMA) {
@@ -1651,10 +1678,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/**
 	 * Interface <code>MenuListener</code> method that returns the appropriate
-	 * <code>ActionListener</code> to handle <code>MenuEvent</code>
-	 * generated by <code>MenuItem</code> referenced by <code>menuKey</code>
-	 * attribute
-	 *
+	 * <code>ActionListener</code> to handle <code>MenuEvent</code> generated by
+	 * <code>MenuItem</code> referenced by <code>menuKey</code> attribute
+	 * 
 	 * @param menuKey
 	 *            refers to <code>MenuItem</code>
 	 * @return <ActionListener> to handle <code>MenuEvent</code> generated by
@@ -1668,7 +1694,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * Interface <code>VisualPlugin</code> method that returns a
 	 * <code>Component</code> which is the visual representation of the this
 	 * plugin.
-	 *
+	 * 
 	 * @return <code>Component</code> visual representation of
 	 *         <code>ProjectPane</code>
 	 */
@@ -1702,7 +1728,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	private JMenuItem jLoadMArrayItem = new JMenuItem("Open File(s)");
 
-	private JMenuItem jOpenRemotePDBItem = new JMenuItem("Open PDB File from RCSB Protein Data Bank");
+	private JMenuItem jOpenRemotePDBItem = new JMenuItem(
+			"Open PDB File from RCSB Protein Data Bank");
 
 	private JMenuItem jRenameProjectItem = new JMenuItem("Rename Project");
 
@@ -1712,8 +1739,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/**
 	 * PlaceHolder for <code>JComponent</code> listeners to be added to the
-	 * application's <code>JMenuBar</code> through the application
-	 * configuration functionality
+	 * application's <code>JMenuBar</code> through the application configuration
+	 * functionality
 	 */
 	private HashMap<String, ActionListener> listeners = new HashMap<String, ActionListener>();
 
@@ -1761,11 +1788,12 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	}
 
 	/**
-	 * Add the action listeners that respond to the various menu selections
-	 * and popup selections.
+	 * Add the action listeners that respond to the various menu selections and
+	 * popup selections.
 	 */
 	private void initializeMenuListeners() {
-		// the following section is those invoked by both main frame menus AND the context menu (right-clicked invoked)
+		// the following section is those invoked by both main frame menus AND
+		// the context menu (right-clicked invoked)
 		ActionListener listener = null; // reused just for simplicity
 
 		listener = new java.awt.event.ActionListener() {
@@ -1776,7 +1804,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		};
 		listeners.put("Edit.Rename.Project", listener);
 		jRenameProjectItem.addActionListener(listener);
-		
+
 		listener = new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				jNewProjectItem_actionPerformed(e);
@@ -1785,7 +1813,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		};
 		listeners.put("File.New.Project", listener);
 		jNewProjectItem.addActionListener(listener);
-		
+
 		listener = new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				jLoadMArrayItem_actionPerformed(e);
@@ -1794,7 +1822,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		};
 		listeners.put("File.Open.File", listener);
 		jLoadMArrayItem.addActionListener(listener);
-		
+
 		listener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				jOpenRemotePDBItem_actionPerformed(e);
@@ -1802,33 +1830,32 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		};
 		listeners.put("File.OpenRemotePDB.File", listener);
 		jOpenRemotePDBItem.addActionListener(listener);
-		
+
 		// the following section is those only invoked by main frame menus
 		listeners.put("Edit.Rename.File", new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				jRenameDataset_actionPerformed(e);
 			}
 		});
-		
+
 		listeners.put("File.Merge Datasets", new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				jMergeDatasets_actionPerformed(e);
 			}
 		});
-		
+
 		listeners.put("File.Save.Workspace", new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveWorkspace_actionPerformed(false);
 			}
 		});
-		
-		listeners.put("File.Save.Dataset", new ActionListener() {			
+
+		listeners.put("File.Save.Dataset", new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveNodeAsFile(e);
 			}
-		 
+
 		});
-		
 
 		listeners.put("File.Open.Workspace", new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -1836,13 +1863,14 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			}
 		});
 
-		listeners.put("File.Open.Remote Workspace", new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				RWspHandler ws = new RWspHandler();
-				ws.listWsp(true);
-			}
-		});
-		
+		listeners.put("File.Open.Remote Workspace",
+				new java.awt.event.ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						RWspHandler ws = new RWspHandler();
+						ws.listWsp(true);
+					}
+				});
+
 		listeners.put("Tools.Choose OBO Source", new ActionListener() {
 
 			@Override
@@ -1852,7 +1880,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				dlg.setVisible(true);
 			}
 		});
-		
+
 		listeners.put("Tools.My Account", new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				RWspHandler ws = new RWspHandler();
@@ -1871,9 +1899,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				remove_actionPerformed();
 			}
 		});
- 
+
 	}
-	
+
 	private void initializeWorkspaceBehavior() {
 		// Let the main frame listen to window-closing event
 		GeawConfigObject.getGuiWindow().addWindowListener(new WindowAdapter() {
@@ -1899,31 +1927,36 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			}
 		});
 
-		projectTreeModel.addTreeModelListener(new TreeModelListener(){
+		projectTreeModel.addTreeModelListener(new TreeModelListener() {
 			public void treeNodesChanged(TreeModelEvent arg0) {
 				RWspHandler.treeModified();
 			}
+
 			public void treeNodesInserted(TreeModelEvent arg0) {
 				RWspHandler.treeModified();
 			}
+
 			public void treeNodesRemoved(TreeModelEvent arg0) {
 				RWspHandler.treeModified();
 			}
+
 			public void treeStructureChanged(TreeModelEvent arg0) {
 				RWspHandler.treeModified();
-			}			
+			}
 		});
 	}
 
 	private void saveWorkspace_actionPerformed(boolean terminating) {
 		if (RWspHandler.wspId > 0)
 			RWspHandler.saveLocalwsp(terminating);
-		else {		
+		else {
 			WorkspaceHandler ws = new WorkspaceHandler();
 			ws.save(WORKSPACE_DIR, terminating);
 			if (!StringUtils.isEmpty(ws.getWorkspacePath()))
 				GUIFramework.getFrame().setTitle(
-						((Skin)GeawConfigObject.getGuiWindow()).getApplicationTitle() + " ["
+						((Skin) GeawConfigObject.getGuiWindow())
+								.getApplicationTitle()
+								+ " ["
 								+ ws.getWorkspacePath() + "]");
 		}
 	}
@@ -1938,12 +1971,14 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		ws.open(WORKSPACE_DIR);
 		if (!StringUtils.isEmpty(ws.getWorkspacePath()))
 			GUIFramework.getFrame().setTitle(
-					((Skin)GeawConfigObject.getGuiWindow()).getApplicationTitle() + " ["
+					((Skin) GeawConfigObject.getGuiWindow())
+							.getApplicationTitle()
+							+ " ["
 							+ ws.getWorkspacePath() + "]");
 	}
 
 	/**
-	 *
+	 * 
 	 * @param pendingEvent
 	 * @return
 	 */
@@ -1963,7 +1998,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 		clear();
 		GUIFramework.getFrame().setTitle(
-				((Skin)GeawConfigObject.getGuiWindow()).getApplicationTitle());
+				((Skin) GeawConfigObject.getGuiWindow()).getApplicationTitle());
 	}
 
 	public DSDataSet<? extends DSBioObject> getDataSet() {
@@ -1987,35 +2022,44 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			ProjectNodeRenamedEvent event) {
 		return event;
 	}
-	
+
 	public ProjectTreeNode getRoot() {
 		return (ProjectTreeNode) projectTreeModel.getRoot();
 	}
-	
-	JProgressBar getProgressBar() { return progressBar; }
+
+	JProgressBar getProgressBar() {
+		return progressBar;
+	}
 
 	private Class<?> lastDataType = null;
 	private static final String commandMenu = "Commands";
 	private static final String analysisMenu = "Analysis";
 	private static final String filteringMenu = "Filtering";
 	private static final String normalizationMenu = "Normalization";
-	private void setMenuItems(){
+
+	private void setMenuItems() {
 		HashMap<String, JMenu> menus = new HashMap<String, JMenu>();
 		JMenu menu = null;
-		for (MenuElement element: GeawConfigObject.getMenuBar().getSubElements()) {
+		for (MenuElement element : GeawConfigObject.getMenuBar()
+				.getSubElements()) {
 			menu = (JMenu) element;
 			if (menu.getText().equals(commandMenu)) {
-				for (MenuElement subelement : menu.getPopupMenu().getSubElements()) {
-					if (subelement instanceof JMenu){
-						JMenu submenu = (JMenu)subelement;
+				for (MenuElement subelement : menu.getPopupMenu()
+						.getSubElements()) {
+					if (subelement instanceof JMenu) {
+						JMenu submenu = (JMenu) subelement;
 						String subtext = submenu.getText();
-						if (subtext.equals(analysisMenu) || subtext.equals(filteringMenu)
-								|| subtext.equals(normalizationMenu)){
+						if (subtext.equals(analysisMenu)
+								|| subtext.equals(filteringMenu)
+								|| subtext.equals(normalizationMenu)) {
 							JMenu menuclone = new JMenu(subtext);
-							for (MenuElement elem : submenu.getPopupMenu().getSubElements()){
-								JMenuItem item = (JMenuItem)elem;
-								JMenuItem itemclone = new JMenuItem(item.getText());
-								for (ActionListener al : item.getActionListeners())
+							for (MenuElement elem : submenu.getPopupMenu()
+									.getSubElements()) {
+								JMenuItem item = (JMenuItem) elem;
+								JMenuItem itemclone = new JMenuItem(
+										item.getText());
+								for (ActionListener al : item
+										.getActionListeners())
 									itemclone.addActionListener(al);
 								menuclone.add(itemclone);
 							}
@@ -2026,26 +2070,30 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			}
 		}
 		// reorder these menu items
-		if ((menu = menus.get(analysisMenu)) != null)  dataSetMenu.add(menu);
-		if ((menu = menus.get(filteringMenu)) != null)  dataSetMenu.add(menu);
-		if ((menu = menus.get(normalizationMenu)) != null)  dataSetMenu.add(menu);
+		if ((menu = menus.get(analysisMenu)) != null)
+			dataSetMenu.add(menu);
+		if ((menu = menus.get(filteringMenu)) != null)
+			dataSetMenu.add(menu);
+		if ((menu = menus.get(normalizationMenu)) != null)
+			dataSetMenu.add(menu);
 	}
 
-	private void clearMenuItems(){
-    	for (MenuElement subelement: dataSetMenu.getSubElements()){
-    		if (subelement instanceof JMenu){
-    			JMenu submenu = (JMenu)subelement;
-    			String subtext = submenu.getText();
-    			if (subtext.equals(analysisMenu) || subtext.equals(filteringMenu)
-    					|| subtext.equals(normalizationMenu)){
-    				dataSetMenu.remove(submenu);
-    			}
+	private void clearMenuItems() {
+		for (MenuElement subelement : dataSetMenu.getSubElements()) {
+			if (subelement instanceof JMenu) {
+				JMenu submenu = (JMenu) subelement;
+				String subtext = submenu.getText();
+				if (subtext.equals(analysisMenu)
+						|| subtext.equals(filteringMenu)
+						|| subtext.equals(normalizationMenu)) {
+					dataSetMenu.remove(submenu);
+				}
 			}
 		}
-    }
-	
-	private void refreshDataSetMenu(Class<?> currentDataType){
-		if (currentDataType != lastDataType){
+	}
+
+	private void refreshDataSetMenu(Class<?> currentDataType) {
+		if (currentDataType != lastDataType) {
 			clearMenuItems();
 			if (currentDataType != null)
 				setMenuItems();

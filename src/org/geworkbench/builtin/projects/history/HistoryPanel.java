@@ -137,5 +137,19 @@ import org.geworkbench.engine.management.Subscribe;
 				: (String) prevHistory[0])
 				+ newHistory + "\n");
 	}
+	
+	public static void addBeforeToHistory(DSExtendable objectWithHistory,
+			String newHistory) {
+
+		Object[] prevHistory = objectWithHistory.getValuesForName(HISTORY);
+		if (prevHistory != null) {
+			objectWithHistory.clearName(HISTORY);
+		}
+		objectWithHistory.addNameValuePair(HISTORY, newHistory + "\n" + (prevHistory == null ? ""
+				: (String) prevHistory[0]));
+	}
+	
+	
+	
 }
 
