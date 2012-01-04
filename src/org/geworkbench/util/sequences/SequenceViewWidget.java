@@ -41,7 +41,6 @@ import org.geworkbench.bison.datastructure.complex.pattern.DSMatchedPattern;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.CSSeqRegistration;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.DSMatchedSeqPattern;
 import org.geworkbench.events.GeneSelectorEvent;
-import org.geworkbench.events.SequenceDiscoveryTableEvent;
 import org.geworkbench.util.Util;
 import org.geworkbench.util.patterns.CSMatchedSeqPattern;
 import org.geworkbench.util.patterns.PatternLocations;
@@ -259,13 +258,7 @@ public class SequenceViewWidget extends JPanel {
 		}
 	}
 
-	@Deprecated
-	public void patternSelectionHasChanged(SequenceDiscoveryTableEvent e) {
-		setPatterns(e.getPatternMatchCollection());
-		refreshMaSetView();
-	}
-	
-	// do the same thing as the above version, but do not go through SequenceDiscoveryTableEvent
+	/* show the patterns over sequence viewer */
 	public void patternSelectionHasChanged(List<DSMatchedPattern<DSSequence, CSSeqRegistration>> patterns) {
 		setPatterns(patterns);
 		refreshMaSetView();
