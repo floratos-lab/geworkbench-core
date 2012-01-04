@@ -144,7 +144,9 @@ public class AnnotationManager {
 
 	public static int getEntrezId(DSMicroarraySet dataset,
 			String gene) {
-		return getGeneDetail(dataset).get(gene).getEntrezId();
+		GeneDetails detail = getGeneDetail(dataset).get(gene);
+		if(detail==null) return -1;
+		else return detail.getEntrezId();
 	}
 
 	// this is necessary because there may be need to include more details
