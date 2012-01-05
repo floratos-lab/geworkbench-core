@@ -61,6 +61,10 @@ public class ExpressionPValueColorContext implements ColorContext, Serializable 
 		if (!microarraySet.getMarkers().isEmpty()) {
 
 			if (microarraySet.getMarkers().get(0) instanceof DSRangeMarker) {
+				if(lock==null) {
+					lock = new Object();
+				}
+				
 				synchronized (lock) {
 					for (DSGeneMarker marker : microarraySet.getMarkers()) {
 						((DSRangeMarker) marker).reset(marker.getSerial());

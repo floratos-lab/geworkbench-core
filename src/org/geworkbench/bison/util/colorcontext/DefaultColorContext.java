@@ -57,6 +57,9 @@ public class DefaultColorContext implements ColorContext {
     public void updateContext(DSMicroarraySetView<DSGeneMarker, DSMicroarray> view) {
         // Use entire set
         DSMicroarraySet set = view.getMicroarraySet();
+		if(lock==null) {
+			lock = new Object();
+		}
         synchronized (lock) {
         	magnitude = 0.0;
 	        for (int i = 0; i < set.size(); i++) {
