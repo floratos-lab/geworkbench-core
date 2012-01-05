@@ -996,7 +996,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			Date endDate = new Date();
 			long endTime = endDate.getTime();
 			history += "\nGrid service finished at: "
-					+ Util.formatDateStandard(endDate)+ ", milliseconds=" + endTime + FileTools.NEWLINE;
+					+ Util.formatDateStandard(endDate)+ FileTools.NEWLINE;
 			String firstLine = history.split("\n")[0];
 			String startTime = firstLine.split("=")[1].trim();
 			long elspedTime = endTime - (new Long(startTime));
