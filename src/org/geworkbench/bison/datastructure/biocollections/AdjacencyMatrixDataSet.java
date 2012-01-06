@@ -152,9 +152,18 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet<DSMicroarray> {
 		} else {
 			if (selectedRepresentedBy.equals(PROBESET_ID))
 				node = new AdjacencyMatrix.Node(m);
-			else
-				node = new AdjacencyMatrix.Node(NodeType.GENE_SYMBOL,
-						m.getGeneName());
+			else {
+				String geneName = m.getGeneName();
+				String[] geneNameList = m.getShortNames();
+				for (int i = 0; i < geneNameList.length; i++) {
+					if (geneNameList[i].equals(token)) {
+						geneName = token;
+						break;
+					}
+
+				}
+				node = new AdjacencyMatrix.Node(NodeType.GENE_SYMBOL, geneName);
+			}
 		}
 		return node;
 	}
@@ -167,7 +176,7 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet<DSMicroarray> {
 
 		AdjacencyMatrix matrix = new AdjacencyMatrix(fileName, maSet,
 				interactionTypeSifMap);
-
+		 
 		try {
 
 			BufferedReader br = new BufferedReader(new FileReader(fileName));
@@ -186,11 +195,10 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet<DSMicroarray> {
 						selectedRepresentedBy, isRestrict, maSet);
 				if (node == null)
 					continue; // skip it when we don't have it
-
+			 
 				String interactionType = null;
 				if (format.equals(SIF_FORMART) && tr.hasMoreTokens())
-					interactionType = tr.nextToken().toLowerCase();
-
+					interactionType = tr.nextToken().toLowerCase();			 
 				while (tr.hasMoreTokens()) {
 
 					String strGeneId2 = tr.nextToken();
@@ -206,9 +214,9 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet<DSMicroarray> {
 									"invalid format around " + strGeneId2);
 						mi = Float.parseFloat(tr.nextToken());
 					}
-
+				 
 					matrix.add(node, node2, mi, interactionType);
-				} // end of the token loop for one line
+				} // end of the token loop for one line			 
 			} // end of reading while loop
 		} catch (NumberFormatException ex) {
 			throw new InputFileFormatException(ex.getMessage());
@@ -223,16 +231,14 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet<DSMicroarray> {
 		return matrix;
 	}
 
-	public static AdjacencyMatrix parseAdjacencyMatrix(AdjacencyMatrix matrix, List<String> lines,
-			final DSMicroarraySet maSet,
+	public static AdjacencyMatrix parseAdjacencyMatrix(AdjacencyMatrix matrix,
+			List<String> lines, final DSMicroarraySet maSet,
 			Map<String, String> interactionTypeSifMap, String format,
 			String selectedRepresentedBy, boolean isRestrict)
 			throws InputFileFormatException {
 
-		
 		if (matrix == null)
-		      matrix = new AdjacencyMatrix(null, maSet,
-				interactionTypeSifMap);
+			matrix = new AdjacencyMatrix(null, maSet, interactionTypeSifMap);
 
 		try {
 			for (String line : lines) {
@@ -265,10 +271,9 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet<DSMicroarray> {
 							throw new InputFileFormatException(
 									"invalid format around " + strGeneId2);
 						String miStr = tr.nextToken();
-						try{
-						mi = Float.parseFloat(miStr);
-						}catch(NumberFormatException ex)
-						{
+						try {
+							mi = Float.parseFloat(miStr);
+						} catch (NumberFormatException ex) {
 							throw new InputFileFormatException(ex.getMessage());
 						}
 					}
