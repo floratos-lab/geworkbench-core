@@ -64,6 +64,7 @@ public class GeoSeriesMatrixParser {
 			 
 			String line = null;
 			int totalColumns = 0;
+			boolean initiateParser = false;
 			List<String> markers = new ArrayList<String>();
 			List<String> arrays = new ArrayList<String>();
 			int lineIndex = 0;
@@ -71,26 +72,22 @@ public class GeoSeriesMatrixParser {
 			
 			while ((line = reader.readLine()) != null) { // for each line
 				
-				/*
-				 * Adding comments that start with '!' and '#' from the GEO SOFT file to the Experiment Information tab 
-				 */
-				if (line.startsWith(commentSign1) || line.startsWith(commentSign2)) {
-					//Ignoring the lines that has '!series_matrix_table_begin' and '!series_matrix_table_end'
-					if(!line.equalsIgnoreCase("!series_matrix_table_begin") && !line.equalsIgnoreCase("!series_matrix_table_end")) {
-						// to be consistent, this detailed information should be used else where instead of as "description" field
-						// maSet.setDescription(line.substring(1));
-					}
-				}
+				
 				String[] mark = line.split("\t");
 			    if(mark[0].equals("!Sample_title")){
 			    	for (int i=1;i<mark.length;i++){
 			    		markArrays.add(mark[i]);
 			    	}	
 			    }
+			    
+			    if(mark[0].equals("!series_matrix_table_begin")){
+			    	initiateParser = true;
+			    }
 				if ((line.indexOf(commentSign1) < 0)
 						&& (line.indexOf(commentSign2) != 0)
 						&& (line.indexOf(commentSign3) != 0)
-						&& (line.length() > 0)) {// we'll skip comments and
+						&& (line.length() > 0)
+						&& (initiateParser == true)) {// we'll skip comments and
 					// anything before header
 					if (headerLineIndex == 0) {
 						// no header detected yet, then
@@ -194,6 +191,7 @@ public class GeoSeriesMatrixParser {
 
 		String fileName = file.getName();
 		maSet.setLabel(fileName);
+		
 		BufferedReader in = null;
 		try {
 			in = new BufferedReader(new FileReader(file));
@@ -202,22 +200,14 @@ public class GeoSeriesMatrixParser {
 				if (header == null) {
 					throw new InputFileFormatException("File is empty.");
 				}
+				
 				while (header != null
 						&& (header.startsWith(commentSign1) || header
 								.startsWith(commentSign2) || header
 								.startsWith(commentSign3))
-						|| StringUtils.isEmpty(header)) {
+						|| StringUtils.isEmpty(header) || !(header.startsWith("\"ID_REF\""))) {
 					header = in.readLine();
 				}
-				
-				if (header == null) {
-					throw new InputFileFormatException(
-							"File is empty or consists of only comments.\n"
-									+ "SOFT File Format expected");
-				}
-				
-				
-
 				
 				header = StringUtils.replace(header, "\"", "");
 
