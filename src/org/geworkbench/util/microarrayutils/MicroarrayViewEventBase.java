@@ -96,8 +96,14 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 		log.debug("Source object " + source);
 
 		if (e.getMessage().equals(org.geworkbench.events.ProjectEvent.CLEARED)) {
+			if(beingRefreshed) {
+				return;
+			}
+
+			beingRefreshed = true;
 			refMASet = null;
 			fireModelChangedEvent();
+			beingRefreshed = false;
 		} else {
 			DSDataSet<?> dataSet = e.getDataSet();
 			if (dataSet instanceof DSMicroarraySet) {
@@ -168,7 +174,7 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 
 	}
 
-	volatile boolean beingRefreshed = false;
+	private volatile boolean beingRefreshed = false;
 	/**
 	 * Refreshes the chart view.
 	 */
