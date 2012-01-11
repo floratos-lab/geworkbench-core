@@ -72,7 +72,21 @@ public class SequenceFileFormat extends DataSetFileFormat {
             BufferedReader rd = new BufferedReader(new FileReader(file));
             try {
                 String str = null;
-
+                
+                //check If the description line is missing
+                while ((str = rd.readLine()) != null){
+                    String trim = str.trim();
+                    if (trim.length() == 0){
+                        continue;
+                    }
+                    if (trim.charAt(0) != '>')
+                    	return false;
+                    else
+                    	break;
+                    
+                }
+                
+                // check FASTA format 
                 while ((str = rd.readLine()) != null){
                     String trim = str.trim();
 
