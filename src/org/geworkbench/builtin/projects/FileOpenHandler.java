@@ -263,36 +263,38 @@ public class FileOpenHandler {
 					projectPanel.addDataSetNode(mergedSet);
 				}
 			} else {
-				DSDataSet set = dataSets[0];
-
-				if (set == null) {
-					clearProjectPanelProgressBar();
-					log.info("null dataset encountered");
-					progressBarDialog.dispose();
-					projectPanelProgressBar.setString("");
-					projectPanelProgressBar.setIndeterminate(false);
-					projectPanel.getComponent().setCursor(Cursor
-							.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-					return;
-				}
-
-				// Do initial color context update if it is a microarray
-				if (set instanceof DSMicroarraySet) {
-					ProjectPanel
-							.addColorContext((DSMicroarraySet) set);
-				}
-
-				if (set instanceof AdjacencyMatrixDataSet) {
-					// adjacency matrix as added as a sub node
-					AdjacencyMatrixDataSet adjMatrixDS = (AdjacencyMatrixDataSet) set;
-					projectPanel.addDataSetSubNode(adjMatrixDS);
-				} else {
-					if(set instanceof PatternResult) {
-						// Pattern Result added as a sub node
-						PatternResult patternResult = (PatternResult) set;
-						projectPanel.addDataSetSubNode(patternResult);
-					}else {
-						projectPanel.addDataSetNode(set);
+				for (int i = 0; i < dataSets.length; i++) {
+					DSDataSet set = dataSets[i];
+	
+					if (set == null) {
+						clearProjectPanelProgressBar();
+						log.info("null dataset encountered");
+						progressBarDialog.dispose();
+						projectPanelProgressBar.setString("");
+						projectPanelProgressBar.setIndeterminate(false);
+						projectPanel.getComponent().setCursor(Cursor
+								.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+						return;
+					}
+	
+					// Do initial color context update if it is a microarray
+					if (set instanceof DSMicroarraySet) {
+						ProjectPanel
+								.addColorContext((DSMicroarraySet) set);
+					}
+	
+					if (set instanceof AdjacencyMatrixDataSet) {
+						// adjacency matrix as added as a sub node
+						AdjacencyMatrixDataSet adjMatrixDS = (AdjacencyMatrixDataSet) set;
+						projectPanel.addDataSetSubNode(adjMatrixDS);
+					} else {
+						if(set instanceof PatternResult) {
+							// Pattern Result added as a sub node
+							PatternResult patternResult = (PatternResult) set;
+							projectPanel.addDataSetSubNode(patternResult);
+						}else {
+							projectPanel.addDataSetNode(set);
+						}
 					}
 				}
 			}
@@ -377,13 +379,18 @@ public class FileOpenHandler {
 					File dataSetFile = dataSetFiles[i];
 
 					try {
-						dataSets[i] = dataSetFileFormat.getDataFile(
-								dataSetFile, chipType);
-						AnnotationParser.setChipType(dataSets[i], chipType);
-						if (dataSets[i] instanceof CSMicroarraySet) {
-							((CSMicroarraySet) dataSets[i])
-									.setAnnotationFileName(AnnotationParser
-											.getLastAnnotationFileName());
+						if(chipType==null) {
+							dataSets[i] = dataSetFileFormat.getDataFile(
+									dataSetFile);
+						} else {
+							dataSets[i] = dataSetFileFormat.getDataFile(
+									dataSetFile, chipType);
+							AnnotationParser.setChipType(dataSets[i], chipType);
+							if (dataSets[i] instanceof CSMicroarraySet) {
+								((CSMicroarraySet) dataSets[i])
+										.setAnnotationFileName(AnnotationParser
+												.getLastAnnotationFileName());
+							}
 						}
 					} catch (OutOfMemoryError er) {
 						log.warn("Loading multiple files memory error: " + er);
