@@ -669,7 +669,11 @@ public class Skin extends GUIFramework {
                 if (acceptors.contains(mainclass)) {
                     log.trace("Found component in "+screenRegion+" to show: " + mainclass.toString());
                     PluginDescriptor desc = ComponentRegistry.getRegistry().getDescriptorForPluginClass(mainclass);
-                    tabsToAdd.put(desc.getPreferredOrder(), component);
+                    int order = desc.getPreferredOrder();
+                    if(desc.getID().equals("informationPanel")) {
+                    	order = 100; // force information panel to behind
+                    }
+                    tabsToAdd.put(order, component);
                 }
             }
         }
