@@ -31,6 +31,8 @@ public class ExpressionPValueColorContext implements ColorContext, Serializable 
 //        intensity *= 2;
         intensity = 2 / intensity; 
         double value = mv.getValue();
+        if (lock == null)
+        	lock = new Object();
         synchronized (lock) {
         	org.geworkbench.bison.util.Range range = ((DSRangeMarker) mInfo).getRange();
 	        double mean = range.norm.getMean(); //(range.max + range.min) / 2.0;
