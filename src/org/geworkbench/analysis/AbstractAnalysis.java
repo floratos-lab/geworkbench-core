@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -18,12 +19,22 @@ import java.util.Vector;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
+import org.geworkbench.bison.datastructure.biocollections.views.DSMicroarraySetView;
+import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
+import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
+import org.geworkbench.bison.datastructure.complex.panels.CSPanel;
+import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
+import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.model.analysis.Analysis;
 import org.geworkbench.bison.model.analysis.ParamValidationResults;
 import org.geworkbench.bison.model.analysis.ParameterPanel;
 import org.geworkbench.engine.config.PluginRegistry;
 import org.geworkbench.engine.management.ComponentClassLoader;
 import org.geworkbench.util.FilePathnameUtils;
+import org.ginkgo.labs.util.FileTools;
 
 /**
  * <p>
@@ -32,12 +43,13 @@ import org.geworkbench.util.FilePathnameUtils;
  * <p>
  * Company: First Genetic Trust Inc.
  * </p>
- * <p/> Implementation of <code>Analysis</code> customized for use within the
+ * <p/>
+ * Implementation of <code>Analysis</code> customized for use within the
  * applications. It handles the saving of all named parameters sets (from within
  * the saveParametersUnderName method). It also provides a default
  * implementation for the validateParameters method by calling the corresponding
  * method in the <code>AbstractSaveableParameterPanel</code>.
- *
+ * 
  * @author First Genetic Trust Inc.
  * @author keshav
  * @author yc2480
@@ -48,11 +60,12 @@ import org.geworkbench.util.FilePathnameUtils;
 public abstract class AbstractAnalysis implements Analysis, Serializable,
 		java.util.Observer {
 	private static final long serialVersionUID = 7028809841554763107L;
-	
+
 	private static final String XML = "xml";
 	private static final String FILE_EXTENSION_SEPARATOR = ".";
 
-	private static final String ERR_TXT = FilePathnameUtils.getUserSettingDirectoryPath() + "err.txt";
+	private static final String ERR_TXT = FilePathnameUtils
+			.getUserSettingDirectoryPath() + "err.txt";
 
 	private Log log = LogFactory.getLog(this.getClass());
 
@@ -118,14 +131,14 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 
 	public static final int SKYBASE_TYPE = 29;
 
-    public static final int PUDGE_TYPE = 30;
-    
-    public static final int MEDUSA_TYPE = 31;
-    
-    public static final int FOLD_CHANGE_TYPE=32;
-    
-    public static final int  BLAST_TYPE= 33;
-    
+	public static final int PUDGE_TYPE = 30;
+
+	public static final int MEDUSA_TYPE = 31;
+
+	public static final int FOLD_CHANGE_TYPE = 32;
+
+	public static final int BLAST_TYPE = 33;
+
 	/**
 	 * Parameters will be saved as XML files in "savedParams" directory under
 	 * each component directory.
@@ -137,6 +150,9 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	 * collect the analysis parameters from the user.
 	 */
 	protected AbstractSaveableParameterPanel aspp = null;
+	
+	private boolean useMarkersFromSelector = true;
+
 
 	/**
 	 * Contains indices that are used in order to recover the set of named
@@ -173,7 +189,8 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	 *
 	 */
 	public AbstractAnalysis() {
-		parameterHash = Collections.synchronizedMap(new LinkedHashMap<ParameterKey, Map<Serializable, Serializable>>());
+		parameterHash = Collections
+				.synchronizedMap(new LinkedHashMap<ParameterKey, Map<Serializable, Serializable>>());
 		className = this.getClass().getSuperclass().getName();
 		String pluginName = PluginRegistry.getNameMap(className);
 		setLabel(pluginName);
@@ -205,7 +222,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 		if (listOfFiles.length > 0) {
 			java.util.Arrays.sort(listOfFiles, new Comparator<File>() {
 				public int compare(File a, File b) {
-					return (int) ( a.lastModified() - b.lastModified());
+					return (int) (a.lastModified() - b.lastModified());
 				}
 			});
 			lastParameterSetName = unscrubFilename(listOfFiles[listOfFiles.length - 1]
@@ -217,16 +234,19 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 						String setName = unscrubFilename(files);
 						Map<Serializable, Serializable> parameters = deserializeNamedParameterSet(setName);
 						ParameterKey key = new ParameterKey(getIndex(), setName);
-						log.debug("Try loading saved parameter file "+files);
-						log.debug("We are looking for "+key.toString());
-						log.debug("This one looks like it's for "+parameters.get(ParameterKey.class.getSimpleName()));
+						log.debug("Try loading saved parameter file " + files);
+						log.debug("We are looking for " + key.toString());
+						log.debug("This one looks like it's for "
+								+ parameters.get(ParameterKey.class
+										.getSimpleName()));
 						/*
 						 * Since one package can contain multiple components
 						 * which have different panels, we need to make sure we
 						 * got the right one.
 						 */
 						if (parameters != null)
-							if (parameters.get(ParameterKey.class.getSimpleName()).equals(
+							if (parameters.get(
+									ParameterKey.class.getSimpleName()).equals(
 									key.toString())) {
 								log.debug("put it in to parameterHash");
 								parameterHash.put(key, parameters);
@@ -239,7 +259,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	}
 
 	/**
-	 *
+	 * 
 	 * @return Return the name of last saved parameter set.
 	 */
 	public String getLastSavedParameterSetName() {
@@ -248,16 +268,27 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 		// parameter set from this launch.
 		return lastParameterSetName;
 	}
+	
+	
+	 
+	public void useMarkersFromSelector(boolean status) {
+		useMarkersFromSelector = status;
+	}
+
+	 
+	public boolean useMarkersFromSelector() {
+		return useMarkersFromSelector;
+	}
+	
 
 	/*
 	 * Translate filename back to set name
 	 */
 	private String unscrubFilename(String filename) {
 		if (StringUtils.contains(filename, File.separatorChar))
-			filename = StringUtils.substringAfterLast(filename, System
-					.getProperty("file.separator"));
-		if (StringUtils.contains(filename, FILE_EXTENSION_SEPARATOR
-				+ XML))
+			filename = StringUtils.substringAfterLast(filename,
+					System.getProperty("file.separator"));
+		if (StringUtils.contains(filename, FILE_EXTENSION_SEPARATOR + XML))
 			filename = StringUtils.substringBeforeLast(filename,
 					FILE_EXTENSION_SEPARATOR + XML);
 		return filename;
@@ -265,9 +296,9 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 
 	/**
 	 * Deletes a saved setting based on the saved parameter name.
-	 *
-	 * @param name -
-	 *            name of the saved parameter
+	 * 
+	 * @param name
+	 *            - name of the saved parameter
 	 */
 	public void removeNamedParameter(String name) {
 		// remove from memory
@@ -280,7 +311,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	 * Returns the names of the parameter sets that were saved through a call to
 	 * saveParameters(String filename). Names can be removed using
 	 * <code>removeNamedParameter()</code>
-	 *
+	 * 
 	 * @return Names of parameterSets as an array of Strings.
 	 */
 	public String[] getNamesOfStoredParameterSets() {
@@ -299,7 +330,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	/**
 	 * Similar to getNamedParameterSetPanel, but instead of return the panel, it
 	 * directly set (reuse) the current panel.
-	 *
+	 * 
 	 * @param name
 	 */
 	public void setNamedParameterSetPanel(String name) {
@@ -312,7 +343,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	/**
 	 * Returns the parameter values that were stored (in parameterHash in
 	 * memory) under the designated name.
-	 *
+	 * 
 	 * @param name
 	 * @return Return a Map<Serializable, Serializable>, which use parameter
 	 *         name as the key and parameter value as the value.
@@ -326,7 +357,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	/**
 	 * Returns the parameters panel populated with the parameter values that
 	 * where stored under the designated 'name'.
-	 *
+	 * 
 	 * @param name
 	 * @return
 	 */
@@ -339,7 +370,8 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 					this.getClass().getClassLoader()); // to avoid java bug
 			// #6329581
 			// newaspp = (AbstractSaveableParameterPanel) ois.readObject();
-			HashMap<Serializable, Serializable> parameters = (HashMap<Serializable, Serializable>) ois.readObject();
+			HashMap<Serializable, Serializable> parameters = (HashMap<Serializable, Serializable>) ois
+					.readObject();
 			this.setParameters(parameters);
 		} catch (Exception e) {
 			log.error(e, e);
@@ -351,7 +383,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	/**
 	 * Returns the parameters panel populated with the parameter values that
 	 * where stored under the designated 'name'.
-	 *
+	 * 
 	 * @param name
 	 * @return
 	 */
@@ -375,7 +407,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 
 	/**
 	 * Check if the inputed parameterSet already exist in memory or not.
-	 *
+	 * 
 	 * @param parameterSet
 	 * @return
 	 */
@@ -385,8 +417,9 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 		if (parameterSet.get(ParameterKey.class.getSimpleName()) != null)
 			result = parameterHash.values().contains(parameterSet);
 		else {// I'll need to loop through all the records. disregard the
-			// ParameterKey and compare others.
-			for (Map<Serializable, Serializable> property : parameterHash.values()) {
+				// ParameterKey and compare others.
+			for (Map<Serializable, Serializable> property : parameterHash
+					.values()) {
 				Map<Serializable, Serializable> pureParameter = new HashMap<Serializable, Serializable>();
 				pureParameter.putAll(property);
 				pureParameter.remove(ParameterKey.class.getSimpleName());
@@ -399,9 +432,9 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 
 	/**
 	 * Convenience method - returns a string which should be unique for each
-	 * subclass of <code>AbstractAnalysis</code>. This string is used as part
-	 * of the hash that is used to store/recover named parameter sets.
-	 *
+	 * subclass of <code>AbstractAnalysis</code>. This string is used as part of
+	 * the hash that is used to store/recover named parameter sets.
+	 * 
 	 * @return String Unique "tagging" string for an Analysis type.
 	 */
 	private String getIndex() {
@@ -415,7 +448,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	 * Set the panel for this analysis to the specific component's 'panel'. This
 	 * method also set the tmpDir to the tmpDir under that parameter panel's
 	 * directory, and load all saved parameter files under that directory.
-	 *
+	 * 
 	 * @param panel
 	 */
 	public void setDefaultPanel(AbstractSaveableParameterPanel panel) {
@@ -429,7 +462,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	/**
 	 * Set the path to the parameter's temporary directory for the component. If
 	 * the directory does not exist, create it.
-	 *
+	 * 
 	 * @param aspp
 	 */
 	private void setParameterFilesPath(AbstractSaveableParameterPanel aspp) {
@@ -452,7 +485,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.geworkbench.bison.model.analysis.Analysis#getParameterPanel()
 	 */
 	public ParameterPanel getParameterPanel() {
@@ -461,7 +494,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.geworkbench.bison.model.analysis.Analysis#validateParameters()
 	 */
 	public ParamValidationResults validateParameters() {
@@ -474,8 +507,10 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 
 	/*
 	 * (non-Javadoc)
-	 *
-	 * @see org.geworkbench.bison.datastructure.properties.DSDescribable#addDescription(java.lang.String)
+	 * 
+	 * @see
+	 * org.geworkbench.bison.datastructure.properties.DSDescribable#addDescription
+	 * (java.lang.String)
 	 */
 	public void setDescription(String desc) {
 		description = desc;
@@ -483,16 +518,19 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 
 	/*
 	 * (non-Javadoc)
-	 *
-	 * @see org.geworkbench.bison.datastructure.properties.DSDescribable#getDescriptions()
+	 * 
+	 * @see
+	 * org.geworkbench.bison.datastructure.properties.DSDescribable#getDescriptions
+	 * ()
 	 */
 	public String getDescription() {
 		return description;
 	}
 
 	private String label = null;
+
 	/**
-	 *
+	 * 
 	 * @return
 	 */
 	public String getLabel() {
@@ -500,7 +538,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	}
 
 	/**
-	 *
+	 * 
 	 * @param name
 	 */
 	public void setLabel(String label) {
@@ -509,7 +547,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	public void update(java.util.Observable ob, Object o) {
@@ -521,13 +559,13 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 
 	/**
 	 * Return a code identifying the type of the analysis.
-	 *
+	 * 
 	 * @return
 	 */
 	public abstract int getAnalysisType();
 
 	/**
-	 *
+	 * 
 	 * @return
 	 */
 	public String createHistory() {
@@ -536,7 +574,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.geworkbench.bison.model.analysis.Analysis#getParameters()
 	 */
 	public Map<Serializable, Serializable> getParameters() {
@@ -545,8 +583,10 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 
 	/*
 	 * (non-Javadoc)
-	 *
-	 * @see org.geworkbench.bison.model.analysis.Analysis#setParameters(java.util.Map)
+	 * 
+	 * @see
+	 * org.geworkbench.bison.model.analysis.Analysis#setParameters(java.util
+	 * .Map)
 	 */
 	public void setParameters(Map<Serializable, Serializable> parameters) {
 		this.aspp.fillDefaultValues(parameters);
@@ -555,9 +595,11 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 
 	/*
 	 * (non-Javadoc)
-	 *
-	 * @see org.geworkbench.bison.model.analysis.Analysis#saveParameters(java.lang.String)
-	 *
+	 * 
+	 * @see
+	 * org.geworkbench.bison.model.analysis.Analysis#saveParameters(java.lang
+	 * .String)
+	 * 
 	 * Current parameters will be saved in both memory and files under given
 	 * name.
 	 */
@@ -569,15 +611,13 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 		 */
 		ParameterKey key = new ParameterKey(getIndex(), setName);
 
-	    parameterHash.put(key, aspp.getParameters());
-
+		parameterHash.put(key, aspp.getParameters());
 
 		writeParametersAsXml(setName);
 	}
 
 	/**
-	 * Saves current parameters this analysis using the
-	 * {@link XMLEncoder}.
+	 * Saves current parameters this analysis using the {@link XMLEncoder}.
 	 */
 	private void writeParametersAsXml(String name) {
 		FileOutputStream fos = null;
@@ -592,7 +632,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 			 * Swap the loader to the loader that loads the actual panel, and
 			 * redirect the System.err printed by XMLEncoder when writing the
 			 * xml object.
-			 *
+			 * 
 			 * See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6329581.
 			 */
 			currentClassLoader = Thread.currentThread().getContextClassLoader();
@@ -622,9 +662,11 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 
 	/*
 	 * (non-Javadoc)
-	 *
-	 * @see org.geworkbench.bison.model.analysis.Analysis#deleteParameters(java.lang.String)
-	 *
+	 * 
+	 * @see
+	 * org.geworkbench.bison.model.analysis.Analysis#deleteParameters(java.lang
+	 * .String)
+	 * 
 	 * We generate the filename from the set's name, and delete the file
 	 */
 	public void deleteParameters(String name) {
@@ -640,12 +682,111 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 		if (!StringUtils.startsWith(filename, tmpDir)) {
 			filename = tmpDir + filename;
 		}
-		if (!StringUtils.endsWith(filename, FILE_EXTENSION_SEPARATOR
-				+ XML)) {
-			filename = filename + FILE_EXTENSION_SEPARATOR
-					+ XML;
+		if (!StringUtils.endsWith(filename, FILE_EXTENSION_SEPARATOR + XML)) {
+			filename = filename + FILE_EXTENSION_SEPARATOR + XML;
 		}
 		return filename;
+	}
+
+	/**
+	 * 
+	 * @param maSetView
+	 * @return
+	 */
+	public String generateHistoryForMaSetView(
+			DSMicroarraySetView<DSGeneMarker, DSMicroarray> maSetView, boolean useMarkersFromSelector) {
+		StringBuilder ans = new StringBuilder(
+				"=The MicroarraySetView used for analysis: ");
+		/* Generate text for microarrays/groups */
+		ans.append(FileTools.NEWLINE);
+		try {
+			log.debug("We got a " + maSetView.items().getClass().toString());
+			if (maSetView.items().getClass() == CSPanel.class) {
+				log.debug("situation 1: microarraySets selected");
+				DSItemList<DSPanel<DSMicroarray>> paneltest = ((DSPanel<DSMicroarray>) maSetView
+						.items()).panels();
+
+				ans.append("==Used Microarray Sets [")
+						.append(paneltest.size() + "]==")
+						.append(FileTools.NEWLINE);
+				for (DSPanel<DSMicroarray> temp : paneltest) {
+					ans.append(FileTools.TAB + temp.toString()).append(
+							FileTools.NEWLINE);
+					for (DSMicroarray temp2 : temp) {
+						ans.append(FileTools.TAB).append(FileTools.TAB)
+								.append(temp2.toString())
+								.append(FileTools.NEWLINE);
+					}
+				}
+			} else if (maSetView.items().getClass() == CSMicroarraySet.class) {
+				log.debug("situation 2: microarraySets not selected");
+				CSMicroarraySet exprSet = (CSMicroarraySet) maSetView.items();
+				ans.append("==Used Microarrays [").append(exprSet.size())
+						.append("]==").append(FileTools.NEWLINE);
+				for (Iterator<DSMicroarray> iterator = exprSet.iterator(); iterator
+						.hasNext();) {
+					DSMicroarray array = iterator.next();
+					ans.append(FileTools.TAB).append(array.getLabel())
+							.append(FileTools.NEWLINE);
+				}
+			}
+			ans.append("==End of Microarray Sets==").append(FileTools.NEWLINE);
+			/* Generate text for markers */
+
+			if (useMarkersFromSelector) {
+				DSPanel<DSGeneMarker> paneltest = maSetView.getMarkerPanel();
+				if (maSetView.useMarkerPanel()) {
+					if ((paneltest!=null) && (paneltest.size()>0)){
+						log.debug("situation 3: markers selected");
+
+						ans .append( "==Used Markers [" ).append( paneltest.size() ).append( "]==\n" );
+						for (Object obj : paneltest) {
+							CSExpressionMarker temp = (CSExpressionMarker) obj;
+							ans .append( "\t" ).append( temp.getLabel() ).append( "\n" );
+						}
+					}else{
+						log.debug("situation 4: no markers selected.");
+						DSItemList<DSGeneMarker> markers = maSetView.markers();
+						ans .append( "==Used Markers [" ).append( markers.size() ).append( "]==\n" );
+						for (DSGeneMarker marker : markers) {
+							ans .append( "\t" ).append( marker.getLabel() ).append( "\n" );
+						}
+					}
+				} else {
+					log.debug("situation 5: All Markers selected.");
+					DSItemList<DSGeneMarker> markers = maSetView.allMarkers();
+					ans .append( "==Used Markers [" ).append( markers.size() ).append( "]==" )
+							.append( FileTools.NEWLINE );
+					for (DSGeneMarker marker : markers) {
+						ans .append( FileTools.TAB ).append( marker.getLabel()
+						).append( FileTools.NEWLINE );
+					}
+				}
+
+
+				ans.append("==End of Used Markers==").append(FileTools.NEWLINE);
+			}
+		} catch (ClassCastException cce) {
+			/* it's not a DSPanel, we generate nothing for panel part */
+			log.error(cce);
+		}
+		ans.append("=End of MicroarraySetView data=");
+		return ans.toString();
+	}
+
+	@SuppressWarnings("rawtypes")
+	public String generateHistoryStringForGeneralDataSet(DSDataSet dataset) {
+		if (dataset == null) {
+			return "No information on the data set." + FileTools.NEWLINE;
+		} else {
+			StringBuilder sb = new StringBuilder();
+			sb.append("The data set used for analysis is [ ");
+			sb.append(dataset.getDataSetName());
+			sb.append(" ] from file [ ");
+			sb.append(dataset.getFile());
+			sb.append(" ]." + FileTools.NEWLINE);
+			return sb.toString();
+		}
 	}
 
 }
