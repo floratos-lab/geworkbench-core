@@ -449,6 +449,7 @@ public class GeneOntologyTree {
 				pw.close();
 				BufferedReader in2 = new BufferedReader(new FileReader(OBO_FILENAME));
 				parseOBOFile(in2);
+				actualUsedOboSource = null;
 			} else {
 				log.warn("error in reading remote obo from "+url);
 			}
@@ -478,7 +479,8 @@ public class GeneOntologyTree {
 				}
 				
 			});
-			BufferedReader in = new BufferedReader(new FileReader(OboSourcePreference.DEFAULT_OBO_FILE));
+			actualUsedOboSource = OboSourcePreference.DEFAULT_OBO_FILE;
+			BufferedReader in = new BufferedReader(new FileReader(actualUsedOboSource));
 			parseOBOFile(in);
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
@@ -497,5 +499,17 @@ public class GeneOntologyTree {
 
 	public String getDate() {
 		return date;
+	}
+
+
+	private String actualUsedOboSource = null;
+	public String getActualSource() {
+		OboSourcePreference pref = OboSourcePreference.getInstance();
+		if (pref.getSourceType() == OboSourcePreference.Source.REMOTE
+				&& actualUsedOboSource!=null) {
+			return actualUsedOboSource;
+		} else {
+			return pref.getSourceLocation();
+		}
 	}
 }
