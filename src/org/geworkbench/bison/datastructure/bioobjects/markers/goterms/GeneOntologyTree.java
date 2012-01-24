@@ -200,8 +200,14 @@ public class GeneOntologyTree {
 		try {
 			BufferedReader in = new BufferedReader(new FileReader(oboFileName));
 			parseOBOFile(in);
+		} catch (FileNotFoundException e) {
+			JOptionPane
+					.showMessageDialog(
+							null,
+							oboFileName
+									+ ", which is part of geworkbench istallation, is missing. Gene Ontology related funactionality will not work correctly unless you choose to use remote obo source.",
+							".obo fil missing", JOptionPane.ERROR_MESSAGE);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
