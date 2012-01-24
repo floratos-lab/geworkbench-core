@@ -59,7 +59,7 @@ public class GeneOntologyTree {
 			}.start();
 			System.out.println(new java.util.Date());
 		} else {
-			instance = new GeneOntologyTree(OboSourcePreference.DEFAULT_OBO_FILE);
+			instance = new GeneOntologyTree(OboSourcePreference.getInstance().getSourceLocation()); //OboSourcePreference.DEFAULT_OBO_FILE);
 		}
 	}
 	
