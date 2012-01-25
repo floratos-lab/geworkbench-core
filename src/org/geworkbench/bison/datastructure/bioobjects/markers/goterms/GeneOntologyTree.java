@@ -512,4 +512,17 @@ public class GeneOntologyTree {
 			return pref.getSourceLocation();
 		}
 	}
+
+	public String getActualFile() {
+		OboSourcePreference pref = OboSourcePreference.getInstance();
+		if (pref.getSourceType() == OboSourcePreference.Source.REMOTE) {
+			if(actualUsedOboSource==null) {
+				return GeneOntologyTree.OBO_FILENAME;
+			} else {
+				return actualUsedOboSource;
+			}
+		} else {
+			return pref.getSourceLocation();
+		}
+	}
 }
