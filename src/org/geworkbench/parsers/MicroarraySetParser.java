@@ -125,6 +125,10 @@ public class MicroarraySetParser {
 			CSAnnotationContext.initializePhenotypeContext(context);
 			String[] labels = arrayInfo.get(phLabel);
 			for (int arrayIndex = 0; arrayIndex < labels.length; arrayIndex++) {
+				if (labels[arrayIndex] == null
+						|| labels[arrayIndex].length() == 0)
+					continue;
+				
 				if (labels[arrayIndex].indexOf("|") > -1) {
 					for (String tok : labels[arrayIndex].split("\\|")) {
 						context.labelItem(microarraySet.get(arrayIndex), tok);
@@ -225,17 +229,13 @@ public class MicroarraySetParser {
 			}
 		} else if (line.substring(0, 11).equalsIgnoreCase("Description")) {
 			// This handles all the phenotype definition lines
-			String phLabel = new String(secondField);
-			List<String> labels = new ArrayList<String>();
-			while (tokenizer.hasMoreTokens()) {
-				String valueLabel = new String(tokenizer.nextToken());
-				if ((valueLabel != null) && (!valueLabel.equalsIgnoreCase(""))) {
-					labels.add( valueLabel );
-				}
+			String[] f = line.split("\t", -1);
+			String[] labels = new String[(arrayNames.size())];
+			for(int i=0; i<Math.min(labels.length, f.length-2); i++) {
+				labels[i] = f[i+2];
 			}
-			if(labels.size()==arrayNames.size()) {
-				arrayInfo.put(phLabel, labels.toArray(new String[0]));
-			}
+			String phLabel = new String(f[1]);
+			arrayInfo.put(phLabel, labels);
 		} else if (line.charAt(0) != '\t') {
 
 			CSExpressionMarker marker = new CSExpressionMarker(markerNumber);

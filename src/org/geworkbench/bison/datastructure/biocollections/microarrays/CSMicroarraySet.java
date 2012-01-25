@@ -1,16 +1,14 @@
 package org.geworkbench.bison.datastructure.biocollections.microarrays;
 
 import java.io.BufferedWriter;
-import java.io.File; 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream; 
-import java.util.ArrayList;
+import java.io.ObjectOutputStream;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.List;
 import java.util.TreeMap;
 import java.util.Vector;
 
@@ -23,7 +21,7 @@ import org.geworkbench.bison.annotation.CSAnnotationContextManager;
 import org.geworkbench.bison.annotation.DSAnnotationContext;
 import org.geworkbench.bison.annotation.DSAnnotationContextManager;
 import org.geworkbench.bison.datastructure.biocollections.CSDataSet;
-import org.geworkbench.bison.datastructure.biocollections.CSMarkerVector; 
+import org.geworkbench.bison.datastructure.biocollections.CSMarkerVector;
 import org.geworkbench.bison.datastructure.bioobjects.markers.CSExpressionMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSAffyMarkerValue;
@@ -259,33 +257,26 @@ final public class CSMicroarraySet extends CSDataSet<DSMicroarray> implements DS
 			DSAnnotationContextManager manager = CSAnnotationContextManager
 					.getInstance();
 			int n = manager.getNumberOfContexts(this);
-			List<String> arrayContext = new ArrayList<String>();
 			for (int i = 0; i < n; i++) {
 				DSAnnotationContext<DSMicroarray> context = manager.getContext(
 						this, i);
 				StringBuilder line = new StringBuilder("Description" + '\t'
 						+ context.getName());
-				int setCount = 0;
 				for (Iterator<DSMicroarray> iterator = this.iterator(); iterator
 						.hasNext();) {
 					DSMicroarray microarray = iterator.next();
+					String label = "";
 					String[] labels = context.getLabelsForItem(microarray);
 					if (labels.length > 0) {
-						String label = labels[0];
+						label = labels[0];
 						if (labels.length > 1) { // multiple labels
 							for (int j = 1; j < labels.length; j++)
 								label += "|" + labels[j];
 						}
-						line.append('\t' + label);
-						setCount++;
 					}
+					line.append('\t' + label);
 				}
-				if(setCount==this.size()) {
-					arrayContext.add(line.toString());
-				}
-			}
-			for(String line : arrayContext) {
-				writer.write(line);
+				writer.write(line.toString());
 				writer.newLine();
 			}
 
