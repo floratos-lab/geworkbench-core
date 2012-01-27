@@ -458,4 +458,8 @@ public class MageTabFileFormat extends DataSetFileFormat {
 			return returnVal;
 		}
 	}
+
+	@Override
+	public boolean isMergeSupported() {return false;}
+	
 }

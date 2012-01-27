@@ -494,4 +494,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 			return returnVal;
 		}
 	}
+
+	public boolean isMergeSupported() {return false;}
+	
 }
