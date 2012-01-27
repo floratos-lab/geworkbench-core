@@ -118,7 +118,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 	private TreeMap<String, CaArray2Experiment> treeMap;
 	private String currentSelectedExperimentName;
 	private Map<String, String> currentSelectedBioAssay;
-	private CaArray2Experiment[] currentLoadedExps;
+
 	private String currentQuantitationType;
 	private static final int INTERNALTIMEOUTLIMIT = 600;
 	private static final int INCREASE_EACHTIME = 300;
@@ -168,7 +168,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 		}
 
 		if (ce.getInfoType().equalsIgnoreCase(CaArrayEvent.EXPERIMENT)) {
-			currentLoadedExps = ce.getExperiments();
+			CaArray2Experiment[] currentLoadedExps = ce.getExperiments();
 			treeMap = new TreeMap<String, CaArray2Experiment>();
 			root = new DefaultMutableTreeNode("caARRAY experiments");
 			remoteTreeModel.setRoot(root);
@@ -177,9 +177,10 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 			}
 
 			for (int i = 0; i < currentLoadedExps.length; ++i) {
+				String experimentName = currentLoadedExps[i].getName();
 				DefaultMutableTreeNode node = new DefaultMutableTreeNode(
-						currentLoadedExps[i].getName());
-				treeMap.put(currentLoadedExps[i].getName(),
+						experimentName);
+				treeMap.put(experimentName,
 						currentLoadedExps[i]);
 				remoteTreeModel
 						.insertNodeInto(node, root, root.getChildCount());
@@ -188,11 +189,11 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 			experimentsLoaded = true;
 			previousResourceName = currentResourceName;
 			connectionSuccess = true;
-			if (currentLoadedExps != null) {
-				displayLabel.setText("Total Experiments: "
-						+ currentLoadedExps.length);
-				caArrayTreePanel.add(displayLabel, BorderLayout.SOUTH);
-			}
+
+			displayLabel.setText("Total Experiments: "
+					+ currentLoadedExps.length);
+			caArrayTreePanel.add(displayLabel, BorderLayout.SOUTH);
+				
 			revalidate();
 		} else {
 			dispose();// make itself disappear.
