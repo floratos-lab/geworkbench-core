@@ -38,7 +38,6 @@ import org.geworkbench.bison.util.colorcontext.ColorContext;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.parsers.AdjacencyMatrixFileFormat;
 import org.geworkbench.parsers.DataSetFileFormat;
-import org.geworkbench.parsers.ExpressionFileFormat;
 import org.geworkbench.parsers.FileFormat;
 import org.geworkbench.parsers.InputFileFormatException;
 import org.geworkbench.parsers.PatternFileFormat;
@@ -368,7 +367,7 @@ public class FileOpenHandler {
 				// different from the previous algorithm.
 				// also notice that this will block
 				String chipType = null; // ignored by other format
-				if(dataSetFileFormat instanceof ExpressionFileFormat)
+				if(dataSetFileFormat.isMergeSupported())
 					chipType = AffyAnnotationUtil.matchAffyAnnotationFile(null);
 				progressBarDialog.setVisible(true);
 
