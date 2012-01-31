@@ -12,10 +12,12 @@ import org.geworkbench.util.CsvFileFilter;
 public class CSTTestResultSet <T extends DSGeneMarker> extends CSSignificanceResultSet<T> implements DSTTestResultSet<T>{
 
 	private static final long serialVersionUID = -6724936547706753609L;
+	private boolean isLogNormalized=false;
 
 	public CSTTestResultSet(DSMicroarraySet parent, String label,
-			String[] caseLabels, String[] controlLabels, double alpha) {
+			String[] caseLabels, String[] controlLabels, double alpha, boolean isLogNormalized) {
 		super(parent, label, caseLabels, controlLabels, alpha);
+		this.isLogNormalized=isLogNormalized;
 		// TODO Auto-generated constructor stub	
 	}
 	
@@ -45,5 +47,10 @@ public class CSTTestResultSet <T extends DSGeneMarker> extends CSSignificanceRes
 
 	        }
     }
+
+	public boolean getIsLogNormalized() {
+		// TODO Auto-generated method stub
+		return isLogNormalized;
+	}
 	
 }

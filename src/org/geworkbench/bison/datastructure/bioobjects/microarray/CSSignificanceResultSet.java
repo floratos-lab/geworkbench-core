@@ -159,4 +159,10 @@ public class CSSignificanceResultSet <T extends DSGeneMarker> extends CSAncillar
     }
 
     public void saveDataToCSVFile(){}
+
+	@Override
+	public boolean getIsLogNormalized() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

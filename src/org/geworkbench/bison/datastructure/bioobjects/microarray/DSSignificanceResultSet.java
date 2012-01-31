@@ -44,4 +44,6 @@ public interface DSSignificanceResultSet <T extends DSGeneMarker> extends DSAnci
     public void addSigGenToPanel(T marker);   
 
     public void saveDataToCSVFile();
+    
+    public boolean getIsLogNormalized();
 }
