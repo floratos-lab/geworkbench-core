@@ -61,6 +61,8 @@ public class MicroarraySetParser {
 
 		microarraySet.setLabel(file.getName());
 
+		AnnotationParser.setCurrentDataSet(microarraySet);
+
 		if (!readFile(file))
 			return null;
 
