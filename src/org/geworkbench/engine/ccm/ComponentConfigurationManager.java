@@ -466,7 +466,7 @@ public class ComponentConfigurationManager {
 					String pluginName = null;
 					String pluginId = null;
 					String resource = null;
-					PluginComponent.Category category = null;
+					String[] category = new String[0];
 					List<String> required = new ArrayList<String>();
 					List<String> related = new ArrayList<String>();
 
@@ -516,16 +516,13 @@ public class ComponentConfigurationManager {
 							}
 
 							str = element.getAttributeValue("category");
-							if(str!=null)
-								category = PluginComponent.categoryMap.get(str);
+							if(str!=null) {
+								category = str.trim().split(",");
+								for(int i=0; i<category.length; i++) {
+									category[i] = category[i].trim().toLowerCase();
+								}
+							}
 							
-							// TODO include the old attributes for now
-							str = element.getAttributeValue("analysis");
-							if(str!=null && str.equalsIgnoreCase("true"))
-								category = PluginComponent.Category.ANALYSIS;
-							str = element.getAttributeValue("visualizer");
-							if(str!=null && str.equalsIgnoreCase("true"))
-								category = PluginComponent.Category.VISUALIZER;					
 						}
 
 						if (element.getName().equals("plugin")) {

@@ -1,8 +1,7 @@
 package org.geworkbench.engine.ccm;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * A java bean to hold the contents of a .cwb.xml file. This is only used for
@@ -13,6 +12,7 @@ import java.util.TreeMap;
  * 
  */
 public class PluginComponent {
+	public static List<String> categoryList = new ArrayList<String>();
 	private String clazz = null;
 	private String name = null;
 	private String version = null;
@@ -34,24 +34,14 @@ public class PluginComponent {
 	private List<String> required = null;
 	private List<String> related = null;
 
-	private Category category = null;
+	private String[] category = null;
 	
-	static enum Category {ANALYSIS, VISUALIZER, NORMALIZER, FILTER};
-	
-	static Map<String, Category> categoryMap = new TreeMap<String, Category>();
-	static {
-		categoryMap.put("analysis", Category.ANALYSIS);
-		categoryMap.put("visualizer", Category.VISUALIZER);
-		categoryMap.put("filter", Category.FILTER);
-		categoryMap.put("normalizer", Category.NORMALIZER);
-	}
-
 	public PluginComponent(String name, String clazz, String version,
 			String author, String authorUrl, String tutorialUrl,
 			String toolUrl, String description, String license,
 			boolean mustAccept, String documentation, boolean loadByDefault,
 			boolean isHidden, String pluginName, String pluginId,
-			String resource, Category category,
+			String resource, String[] category,
 			List<String> required, List<String> related) {
 		this.name = name;
 		this.clazz = clazz;
@@ -70,6 +60,13 @@ public class PluginComponent {
 		this.pluginId = pluginId;
 		this.resource = resource;
 		this.category = category;
+		if(category.length>0) {
+			for(String c : category) {
+				if(!categoryList.contains(c)) {
+					categoryList.add(c);
+				}
+			}
+		}
 		
 		this.required = required;
 		this.related = related;
@@ -143,7 +140,7 @@ public class PluginComponent {
 		return resource;
 	}
 
-	Category getCategory() {
+	String[] getCategory() {
 		return category;
 	}
 
@@ -164,5 +161,9 @@ public class PluginComponent {
 	
 	public int hashCode() {
 		return name.hashCode();
+	}
+
+	public static void clearCategoryList() {
+		categoryList.clear();
 	}
 }

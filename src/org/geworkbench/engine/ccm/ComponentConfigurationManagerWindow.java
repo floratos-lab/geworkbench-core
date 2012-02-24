@@ -18,7 +18,7 @@ import java.awt.font.TextAttribute;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +48,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.builtin.projects.ProjectPanel;
-import org.geworkbench.engine.ccm.PluginComponent.Category;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.util.BrowserLauncher;
@@ -142,13 +141,11 @@ public class ComponentConfigurationManagerWindow {
 		String[] displayChoices = { DISPLAY_FILTER_ALL, DISPLAY_ONLY_LOADED, DISPLAY_ONLY_UNLOADED };
 		displayComboBox = new JComboBox(displayChoices);
 		showByTypeLabel = new JLabel();
-		String[] showByTypeChoices = new String[PluginComponent.categoryMap.size()+2];
+		String[] showByTypeChoices = new String[PluginComponent.categoryList.size()+2];
 		showByTypeChoices[0] = SHOW_BY_TYPE_ALL;
 		int index = 1;
-		for(String s: PluginComponent.categoryMap.keySet()){
-			showByTypeChoices[index] =  s.substring(0, 1).toUpperCase()+s.substring(1);
-			if(!s.endsWith("s"))showByTypeChoices[index] += "s";
-			typeMap.put(showByTypeChoices[index], PluginComponent.categoryMap.get(s));
+		for(String s: PluginComponent.categoryList){
+			showByTypeChoices[index] =  s.substring(0, 1).toUpperCase()+s.substring(1).toLowerCase();
 			index++;
 		};
 		showByTypeChoices[index] = SHOW_BY_TYPE_OTHERS; 
@@ -438,7 +435,6 @@ public class ComponentConfigurationManagerWindow {
 		}
 	};
 
-	private Map<String, Category> typeMap = new HashMap<String, Category>();
 	/**
 	 * type filter: analysis or visualization
 	 */
@@ -454,12 +450,12 @@ public class ComponentConfigurationManagerWindow {
 							.equals(ComponentConfigurationManagerWindow.SHOW_BY_TYPE_ALL))
 				return true;
 
-			PluginComponent.Category category = (PluginComponent.Category) model.getModelValueAt(entry
+			String[] category = (String[]) model.getModelValueAt(entry
 					.getIdentifier(), CCMTableModel.CATEGORY_INDEX);
-			if (category == typeMap.get(typeFilterValue))
+			if (Arrays.asList( category ).contains(typeFilterValue.toLowerCase()) )
 				return true;
 			
-			if (category == null
+			if ( category.length==0
 					&& typeFilterValue
 							.equals(ComponentConfigurationManagerWindow.SHOW_BY_TYPE_OTHERS))
 				return true;

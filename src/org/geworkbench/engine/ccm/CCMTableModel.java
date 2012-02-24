@@ -68,6 +68,7 @@ class CCMTableModel extends AbstractTableModel {
 		super();
 
 		this.manager = manager;
+		PluginComponent.clearCategoryList();
 		for(File file: manager.cwbFile)
 			loadGuiModelFromFiles(file);
 		Collections.sort(rows, new TableNameComparator());
@@ -200,7 +201,7 @@ class CCMTableModel extends AbstractTableModel {
 		case DOCUMENTATION_INDEX:
 			return (String) record.getDocumentation();
 		case CATEGORY_INDEX:
-			return (PluginComponent.Category) record.getCategory();
+			return (String[]) record.getCategory();
 		case HIDDEN_INDEX:
 			return (Boolean) record.isHidden();
 		default:

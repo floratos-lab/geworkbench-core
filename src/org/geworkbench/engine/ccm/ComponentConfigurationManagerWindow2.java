@@ -18,7 +18,7 @@ import java.awt.font.TextAttribute;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +55,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.builtin.projects.ProjectPanel;
-import org.geworkbench.engine.ccm.PluginComponent.Category;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.engine.preferences.GlobalPreferences;
@@ -66,10 +65,14 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 /**
- * This is the main menu for the Component Configuration Manager.
+ * This is a shadow class for ComponentConfigurationManagerWindow to support the component upgrade feature.
+ * TODO This class lacks adequate test and has fell behind since it was introduced
+ * considering the entire system has evolved in many ways;
+ * it also has much duplicate code. It should eventually be merged with ComponentConfigurationManagerWindow,
+ * or re-implemented, or dropped.
  * 
  * @author tg2321
- * @version $Id: ComponentConfigurationManagerWindow.java,v 1.17 2009-11-20 14:37:27 jiz Exp $
+ * @version $Id$
  */
 public class ComponentConfigurationManagerWindow2 {
 
@@ -162,7 +165,6 @@ public class ComponentConfigurationManagerWindow2 {
 	}
 	
 	private TableRowSorter<CCMTableModel2> sorter = null;
-	private Map<String, Category> typeMap = new HashMap<String, Category>();
 
 	/**
 	 * Set up the GUI
@@ -178,13 +180,11 @@ public class ComponentConfigurationManagerWindow2 {
 		String[] displayChoices = { DISPLAY_FILTER_ALL, DISPLAY_ONLY_LOADED, DISPLAY_ONLY_UNLOADED };
 		displayComboBox = new JComboBox(displayChoices);
 		showByTypeLabel = new JLabel();
-		String[] showByTypeChoices = new String[PluginComponent.categoryMap.size()+2];
+		String[] showByTypeChoices = new String[PluginComponent.categoryList.size()+2];
 		showByTypeChoices[0] = SHOW_BY_TYPE_ALL;
 		int index = 1;
-		for(String s: PluginComponent.categoryMap.keySet()){
-			showByTypeChoices[index] =  s.substring(0, 1).toUpperCase()+s.substring(1);
-			if(!s.endsWith("s"))showByTypeChoices[index] += "s";
-			typeMap.put(showByTypeChoices[index], PluginComponent.categoryMap.get(s));
+		for(String s: PluginComponent.categoryList){
+			showByTypeChoices[index] =  s.substring(0, 1).toUpperCase()+s.substring(1).toLowerCase();
 			index++;
 		};
 		showByTypeChoices[index] = SHOW_BY_TYPE_OTHERS; 
@@ -508,12 +508,12 @@ public class ComponentConfigurationManagerWindow2 {
 							.equals(SHOW_BY_TYPE_ALL))
 				return true;
 
-			PluginComponent.Category category = (PluginComponent.Category) model.getModelValueAt(entry
-					.getIdentifier(), CCMTableModel2.CATEGORY_INDEX);
-			if (category == typeMap.get(typeFilterValue))
+			String[] category = (String[]) model.getModelValueAt(entry
+					.getIdentifier(), CCMTableModel.CATEGORY_INDEX);
+			if (Arrays.asList( category ).contains(typeFilterValue.toLowerCase()) )
 				return true;
 			
-			if (category == null
+			if ( category.length==0
 					&& typeFilterValue
 							.equals(SHOW_BY_TYPE_OTHERS))
 				return true;
