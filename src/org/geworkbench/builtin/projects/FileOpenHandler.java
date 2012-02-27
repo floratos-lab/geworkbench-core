@@ -359,7 +359,7 @@ public class FileOpenHandler {
 			} else {
 				// multiple file selection is not supported for adjacency matrix
 				if (dataSetFileFormat instanceof AdjacencyMatrixFileFormat) {
-					JOptionPane.showMessageDialog(null, "multiple file selection is not supported for adjacency matrix");
+					JOptionPane.showMessageDialog(null, "Multiple file selection is not supported for network files.");
 					return null;
 				}
 

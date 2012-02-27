@@ -115,11 +115,8 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 	private LoadDataDialog parentPanel;
 
 	private volatile boolean stillWaitForConnecting = true;
-	private TreeMap<String, CaArray2Experiment> treeMap;
-	private String currentSelectedExperimentName;
-	private Map<String, String> currentSelectedBioAssay;
 
-	private String currentQuantitationType;
+	private transient String lastChosenQuantitationType;
 	private static final int INTERNALTIMEOUTLIMIT = 600;
 	private static final int INCREASE_EACHTIME = 300;
 	private int internalTimeoutLimit = INTERNALTIMEOUTLIMIT;
@@ -169,7 +166,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 
 		if (ce.getInfoType().equalsIgnoreCase(CaArrayEvent.EXPERIMENT)) {
 			CaArray2Experiment[] currentLoadedExps = ce.getExperiments();
-			treeMap = new TreeMap<String, CaArray2Experiment>();
+
 			root = new DefaultMutableTreeNode("caARRAY experiments");
 			remoteTreeModel.setRoot(root);
 			if (currentLoadedExps == null) {
@@ -177,10 +174,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 			}
 
 			for (int i = 0; i < currentLoadedExps.length; ++i) {
-				String experimentName = currentLoadedExps[i].getName();
 				DefaultMutableTreeNode node = new DefaultMutableTreeNode(
-						experimentName);
-				treeMap.put(experimentName,
 						currentLoadedExps[i]);
 				remoteTreeModel
 						.insertNodeInto(node, root, root.getChildCount());
@@ -315,7 +309,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 				jRemoteFileTree_mouseReleased(e);
 			}
 		});
-		jGetRemoteDataMenu.setText("Get bioassays");
+		jGetRemoteDataMenu.setText("Show arrays");
 		ActionListener listener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				extendBioassays_action(e);
@@ -399,9 +393,15 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 	 * @param e
 	 */
 	private void openRemoteFile_action(ActionEvent e) {
+		TreePath[] paths = remoteFileTree.getSelectionPaths();
+		if (paths.length <= 0 || paths[0].getPath().length <= 1) {
+			JOptionPane.showMessageDialog(null,
+					"Please select at least one Bioassay to retrieve.");
+			return;
+		}
+		
 		// If there are multiple parents in the paths, it means user tries
 		// to select arrays from different experiments, it's not allowed.
-		TreePath[] paths = remoteFileTree.getSelectionPaths();
 		HashSet<TreePath> set = new HashSet<TreePath>();
 		for (TreePath treePath : paths) {
 			set.add(treePath.getParentPath());
@@ -415,31 +415,49 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 							JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
+		
 		// If there is only one parent, we continue.
-		String qType = checkQuantationTypeSelection();
-
-		if (qType != null) {
-			numCurrentArray = 0;
-			numTotalArrays = 0;
-			stillWaitForConnecting = true;
-			progressBar
-					.setMessage(LOADING_SELECTED_BIOASSAYS_ELAPSED_TIME);
-			updateProgressBar(LOADING_SELECTED_BIOASSAYS_ELAPSED_TIME);
-			progressBar.addObserver(this);
-			progressBar.setTitle(CAARRAY_TITLE);
-			progressBar.start();
-
-			Runnable dataLoader = new Runnable() {
-				public void run() {
-					getBioAssay();
-				}
-			};
-			Thread t = new Thread(dataLoader);
-			t.setPriority(Thread.MAX_PRIORITY);
-			t.start();
-			// only one request at a time
-			setOpenButtonEnabled(false);
+		CaArray2Experiment exp = (CaArray2Experiment) ((DefaultMutableTreeNode) paths[0]
+					.getPath()[1]).getUserObject();
+		final String currentSelectedExperimentName = exp.getName();
+		
+		Map<String, String> hyb = exp.getHybridizations();
+		if(hyb==null || paths[0].getPath().length<=2 ) { // hyb==null means 'before experiment expansion'; length<=2 means not 'a hybridization'
+			return;
 		}
+		final Map<String, String> currentSelectedBioAssay = new HashMap<String, String>();
+		for (int i = 0; i < paths.length; i++) {
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode) paths[i]
+					.getLastPathComponent();
+			String hybName = (String) node.getUserObject();
+			currentSelectedBioAssay.put(hybName, hyb.get(hybName));
+		}
+		final String qType = checkQuantationTypeSelection(exp);
+
+		if (qType == null) {
+			return;
+		}
+
+		numCurrentArray = 0;
+		numTotalArrays = 0;
+		stillWaitForConnecting = true;
+		progressBar.setMessage(LOADING_SELECTED_BIOASSAYS_ELAPSED_TIME);
+		updateProgressBar(LOADING_SELECTED_BIOASSAYS_ELAPSED_TIME);
+		progressBar.addObserver(this);
+		progressBar.setTitle(CAARRAY_TITLE);
+		progressBar.start();
+
+		Runnable dataLoader = new Runnable() {
+			public void run() {
+				getBioAssay(currentSelectedExperimentName,
+						currentSelectedBioAssay, qType);
+			}
+		};
+		Thread t = new Thread(dataLoader);
+		t.setPriority(Thread.MAX_PRIORITY);
+		t.start();
+		// only one request at a time
+		setOpenButtonEnabled(false);
 
 	}
 
@@ -464,22 +482,16 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 	 * @param e
 	 */
 	private void extendBioassays_action(ActionEvent e) {
-		if (treeMap == null || treeMap.size() == 0) {
-			JOptionPane.showMessageDialog(null, "No Experiment to display");
-			return;
-		}
+
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) remoteFileTree
 				.getLastSelectedPathComponent();
 		if (node != null && node != root) {
-			if (treeMap.containsKey(node.getUserObject())) { // this is always true. why check?
-				if (node.getChildCount() == 0) {
-					CaArray2Experiment caArray2Experiment = treeMap.get(node
-							.getUserObject());
-					if (caArray2Experiment.getHybridizations() == null)
-						publishCaArrayRequestHybridizationListEvent(new CaArrayRequestHybridizationListEvent(
-								url, portnumber, user, passwd,
-								caArray2Experiment));
-				}
+			if (node.getChildCount() == 0) {
+				CaArray2Experiment caArray2Experiment = (CaArray2Experiment)(node
+						.getUserObject());
+				if (caArray2Experiment.getHybridizations() == null)
+					publishCaArrayRequestHybridizationListEvent(new CaArrayRequestHybridizationListEvent(
+							url, portnumber, user, passwd, caArray2Experiment));
 			}
 		}
 
@@ -493,13 +505,12 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 	@Subscribe
 	public void receive(CaArrayReturnHybridizationListEvent event, Object source) {
 		CaArray2Experiment caArray2Experiment = event.getCaArray2Experiment();
-		treeMap.put(caArray2Experiment.getName(), caArray2Experiment);
 
 		Object root = remoteTreeModel.getRoot();
 		DefaultMutableTreeNode experimentNode = null;
 		for(int i=0; i<remoteTreeModel.getChildCount(root); i++) {
 			experimentNode = (DefaultMutableTreeNode)remoteTreeModel.getChild(root, i);
-			if( ((String)experimentNode.getUserObject()).equals(caArray2Experiment.getName())) {
+			if( ((CaArray2Experiment)experimentNode.getUserObject()).equals(caArray2Experiment)) {
 				break; // found the right experiment node. done
 			}
 		}
@@ -518,66 +529,28 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 		updateTextArea();
 	}
 
+	private String checkQuantationTypeSelection(CaArray2Experiment exp) {
 
-	private String checkQuantationTypeSelection() {
-
-		TreePath[] paths = remoteFileTree.getSelectionPaths();
-		CaArray2Experiment exp = null;
-		if (paths.length > 0 && paths[0].getPath().length > 1) {
-			currentSelectedExperimentName = (String) ((DefaultMutableTreeNode) paths[0]
-					.getPath()[1]).getUserObject();
-			exp = treeMap.get(currentSelectedExperimentName);
-			Map<String, String> hyb = exp.getHybridizations();
-			if(hyb==null || paths[0].getPath().length<=2 ) { // hyb==null means 'before experiment expansion'; length<=2 means not 'a hybridization'
-				return null;
-			}
-			currentSelectedBioAssay = new HashMap<String, String>();
-			for (int i = 0; i < paths.length; i++) {
-				DefaultMutableTreeNode node = (DefaultMutableTreeNode) paths[i]
-						.getLastPathComponent();
-				String hybName = (String) node.getUserObject();
-				currentSelectedBioAssay.put(hybName, hyb.get(hybName));
-			}
-			String[] qTypes = exp.getQuantitationTypes();
-			if (qTypes != null && qTypes.length > 0) {
-				boolean findMatchedQType = false;
-				if (currentQuantitationType != null) {
-					for (String candidateQType : qTypes) {
-						if (currentQuantitationType
-								.equalsIgnoreCase(candidateQType)) {
-							findMatchedQType = true;
-							break;
-						}
-					}
-				}
-				String s = null;
-				if (findMatchedQType) {
-					s = (String) JOptionPane.showInputDialog(null,
-							"Please select the quantitation type to query:\n",
-							"Selection Dialog", JOptionPane.PLAIN_MESSAGE,
-							null, qTypes, currentQuantitationType);
-				} else {
-					s = (String) JOptionPane.showInputDialog(null,
-							"Please select the quantitation type to query:\n",
-							"Selection Dialog", JOptionPane.PLAIN_MESSAGE,
-							null, qTypes, qTypes[0]);
-				}
-				// If a string was returned, say so.
-				if ((s != null) && (s.length() > 0)) {
-					currentQuantitationType = s;
-					return currentQuantitationType;
-				}
-
-			} else {
-				JOptionPane.showMessageDialog(null,
-						"There is no data associated with experiment: " + exp.getName() );
-			}
-
-		} else {
-			JOptionPane.showMessageDialog(null,
-					"Please select at least one Bioassay to retrieve.");
+		String[] qTypes = exp.getQuantitationTypes();
+		if (qTypes == null || qTypes.length <= 0) {
+			JOptionPane.showMessageDialog(
+					null,
+					"There is no data associated with experiment: "
+							+ exp.getName());
+			return null;
 		}
-		return null;
+
+		String chosenType = (String) JOptionPane.showInputDialog(null,
+					"Please select the quantitation type to query:\n",
+					"Selection Dialog", JOptionPane.PLAIN_MESSAGE, null,
+					qTypes, lastChosenQuantitationType);
+		// If a string is returned, remember it.
+		if ((chosenType != null) && (chosenType.length() > 0)) {
+			lastChosenQuantitationType = chosenType;
+		}
+
+		// assume s is never empty String "".
+		return chosenType;
 
 	}
 
@@ -621,8 +594,8 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 			DefaultMutableTreeNode selectedNode = ((DefaultMutableTreeNode) path
 					.getLastPathComponent());
 			Object nodeObj = selectedNode.getUserObject();
-
-			if (e.isMetaDown() && (treeMap.containsKey(nodeObj))) {
+			
+			if (e.isMetaDown() && nodeObj instanceof CaArray2Experiment) {
 				jRemoteDataPopup.show(remoteFileTree, e.getX(), e.getY());
 				if (selectedNode.getChildCount() > 0) {
 					jGetRemoteDataMenu.setEnabled(false);
@@ -654,17 +627,16 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) remoteFileTree
 				.getLastSelectedPathComponent();
 
-		if (node == null || node == root || treeMap == null
-				|| treeMap.size() == 0) {
+		if (node == null || node == root) {
 			experimentInfoArea.setText("");
 			measuredField.setText("");
 			derivedField.setText("");
 		} else {
 			// get the parent experiment.
-			String exp = (String) ((DefaultMutableTreeNode) node.getPath()[1])
+			CaArray2Experiment exp = (CaArray2Experiment) ((DefaultMutableTreeNode) node.getPath()[1])
 					.getUserObject();
-			experimentInfoArea.setText(treeMap.get(exp).getDescription());
-			Map<String, String> hybridization = treeMap.get(exp).getHybridizations();
+			experimentInfoArea.setText(exp.getDescription());
+			Map<String, String> hybridization = exp.getHybridizations();
 			if (hybridization != null) {
 				measuredField.setText(String.valueOf(hybridization.size()));
 				derivedField.setText(String.valueOf(hybridization.size()));
@@ -676,7 +648,8 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 		experimentInfoArea.setCaretPosition(0); // For long text.
 	}
 
-	private void getBioAssay() {
+	private void getBioAssay(String currentSelectedExperimentName, Map<String, String> currentSelectedBioAssay,
+			String quantitationType) {
 		CaArrayRequestEvent event = new CaArrayRequestEvent(url, portnumber);
 		if (user == null || user.trim().length() == 0) {
 			event.setUsername(null);
@@ -686,11 +659,11 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 		}
 		event.setRequestItem(CaArrayRequestEvent.BIOASSAY);
 		Map<String, String> filterCrit = new HashMap<String, String>();
-		filterCrit.put(CaArrayRequestEvent.EXPERIMENT, currentSelectedExperimentName );
+		filterCrit.put(CaArrayRequestEvent.EXPERIMENT, currentSelectedExperimentName  );
 		SortedMap<String, String> assayNameFilter = new TreeMap<String, String>(currentSelectedBioAssay);
 		event.setFilterCrit(filterCrit);
 		event.setAssayNameFilter(assayNameFilter);
-		event.setQType(currentQuantitationType);
+		event.setQType(quantitationType);
 		log.info("publish CaArrayEvent at CaArrayPanel");
 		publishCaArrayRequestEvent(event);
 	}

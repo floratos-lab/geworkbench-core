@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import org.geworkbench.bison.datastructure.complex.pattern.PatternResult;
@@ -142,10 +143,11 @@ public class PatternFileFormat extends DataSetFileFormat {
 			
 			if ((selectedDataSetNode != null)) {
 				DSDataSet<? extends DSBioObject> ds = selectedDataSetNode.getDataset();
-				if(ds instanceof DSSequence) {	
+				if(!(ds instanceof DSSequenceSet)) {	
 					JOptionPane.showMessageDialog(null,
 							"Not a Sequence Set selected", "Unable to Load",
 							JOptionPane.ERROR_MESSAGE);
+					return null;
 				} else {
 					patternResult = new PatternResult(ds.getFile(), (DSDataSet<DSSequence>) ds);
 					if(!patternResult.read(file)) {
@@ -153,7 +155,7 @@ public class PatternFileFormat extends DataSetFileFormat {
 					}
 				}
 			} else {
-				JOptionPane.showMessageDialog(null, "No Microarray Set selected",
+				JOptionPane.showMessageDialog(null, "No Sequence Set selected",
 						"Unable to Load", JOptionPane.ERROR_MESSAGE);
 			}
 		}

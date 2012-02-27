@@ -3,6 +3,11 @@ package org.geworkbench.builtin.projects.remoteresources.carraydata;
 import java.io.Serializable;
 import java.util.Map;
 
+/**
+ * 
+ * @author zji
+ * @version $Id$
+ */
 public class CaArray2Experiment implements Comparable<CaArray2Experiment>,
 		Serializable {
 	private static final long serialVersionUID = 6474502004023481576L;
@@ -58,5 +63,10 @@ public class CaArray2Experiment implements Comparable<CaArray2Experiment>,
 	 */
 	public String getExperimentReferenceId() {
 		return experimentReferenceId;
+	}
+	
+	@Override
+	public String toString() {
+		return name;
 	}
 }
