@@ -525,7 +525,7 @@ public class SequenceViewWidgetPanel extends JPanel {
 			double xscale, double yscale, int yBase, int cols, Color color,
 			PatternLocations pl) {
 
-		int length = pl.getAscii().length();
+		int length = pl.getAsciiLength();
 		String hitSeqStr = hitSeq.getSequence().substring(offset,
 				offset + length);
 		

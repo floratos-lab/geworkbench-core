@@ -10,7 +10,7 @@ import org.geworkbench.bison.datastructure.complex.pattern.DSPattern;
  * @version $Id$
  */
 public class PatternLocations implements Comparable<PatternLocations> {
-	private String ascii;
+	private final String ascii;
 
 	private CSSeqRegistration registration;
 	private int idForDisplay;
@@ -38,6 +38,10 @@ public class PatternLocations implements Comparable<PatternLocations> {
 
 	public String getAscii() {
 		return ascii;
+	}
+
+	public int getAsciiLength() {
+		return ascii.replaceAll("\\[.+?\\]", " ").length();
 	}
 
 	public String getPatternType() {
