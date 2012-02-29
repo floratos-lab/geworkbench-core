@@ -529,8 +529,6 @@ public class SequenceViewWidgetPanel extends JPanel {
 		String hitSeqStr = hitSeq.getSequence().substring(offset,
 				offset + length);
 		
-		String highlight = hitSeqStr;
-
 		int x = (int) ((6 + offset % cols) * xscale);
 		double y = ((yBase + 2 + (offset / cols)) * yscale);
 		int xb = (int) (length * xscale);
@@ -539,11 +537,8 @@ public class SequenceViewWidgetPanel extends JPanel {
 
 		if (offset % cols + length <= cols) {
 			g.clearRect(x, (int) y - height / 2, xb, height);
-			g.setColor(SEQUENCEBACKGROUDCOLOR);
-			g.drawString(hitSeqStr.toUpperCase(), x, (int) (y - 1 * yscale
-					+ yOff + 3));
 			g.setColor(color);
-			g.drawString(highlight.toUpperCase(), x, (int) (y - 1 * yscale
+			g.drawString(hitSeqStr.toUpperCase(), x, (int) (y - 1 * yscale
 					+ yOff + 3));
 			g.draw3DRect(x, (int) y - height / 2, xb, height, false);
 
@@ -553,28 +548,21 @@ public class SequenceViewWidgetPanel extends JPanel {
 			int endx = (int) ((cols + 6) * xscale);
 			int k = (offset + length) / cols - offset / cols;
 			g.clearRect(x, (int) y - height / 2, endx - x, height);
-			g.setColor(SEQUENCEBACKGROUDCOLOR);
-			g.drawString(hitSeqStr.substring(0, cols - offset % cols)
-					.toUpperCase(), x, (int) (y - 1 * yscale + yOff + 3));
 			g.setColor(color);
-			g.drawString(highlight.substring(0, cols - offset % cols)
+			g.drawString(hitSeqStr.substring(0, cols - offset % cols)
 					.toUpperCase(), x, (int) (y - 1 * yscale + yOff + 3));
 			g.draw3DRect(x, (int) y - height / 2, endx - x, height, true);
 			int endP = 0;
 			for (int i = 1; i < k; i++) {
 				g.clearRect(startx, (int) (y - height / 2 + (i * yscale)), endx
 						- startx, height);
-				g.setColor(SEQUENCEBACKGROUDCOLOR);
 				int startPoint = cols - offset % cols + (i - 1) * cols;
 				endP = cols - offset % cols + i * cols;
 				if (endP >= length) {
 					endP = length;
 				}
-				g.drawString(hitSeqStr.substring(startPoint, endP)
-						.toUpperCase(), startx, (int) (y + (i - 1) * yscale
-						+ yOff + 3));
 				g.setColor(color);
-				g.drawString(highlight.substring(startPoint, endP)
+				g.drawString(hitSeqStr.substring(startPoint, endP)
 						.toUpperCase(), startx, (int) (y + (i - 1) * yscale
 						+ yOff + 3));
 				g.draw3DRect(startx, (int) (y - height / 2 + (i * yscale)),
@@ -582,11 +570,9 @@ public class SequenceViewWidgetPanel extends JPanel {
 			}
 			g.clearRect(startx, (int) (y - height / 2 + (k * yscale)),
 					(int) (((offset + length) % cols) * xscale), height);
-			g.setColor(SEQUENCEBACKGROUDCOLOR);
-			g.drawString(hitSeqStr.substring(endP).toUpperCase(), startx,
-					(int) (y + (k - 1) * yscale + yOff + 3));
 			g.setColor(color);
-			g.drawString(highlight.substring(endP).toUpperCase(), startx,
+			int startPoint = cols - offset % cols + (k - 1) * cols;
+			g.drawString(hitSeqStr.substring(startPoint).toUpperCase(), startx,
 					(int) (y + (k - 1) * yscale + yOff + 3));
 			g.draw3DRect(startx, (int) (y - height / 2 + (k * yscale)),
 					(int) (((offset + length) % cols) * xscale), height, true);
