@@ -15,28 +15,14 @@ import java.util.List;
  * <p>Company: Columbia University</p>
  *
  * @author not attributable
- * @version 1.0
+ * @version $Id$
  */
 public class CSMatchedPattern <T extends DSSequential, R> implements DSMatchedPattern<T, R> {
     protected List<DSPatternMatch<T, R>> matches = new ArrayList<DSPatternMatch<T, R>>();
-    protected DSPattern<T, R> pattern = null;
     protected double zScore;
-
-    public CSMatchedPattern(DSPattern<T, R> _pattern) {
-        pattern = _pattern;
-        zScore = 1.0;
-    }
 
     public CSMatchedPattern() {
         zScore = 1.0;
-    }
-
-    public DSPattern<T, R> getPattern() {
-        return pattern;
-    }
-
-    public boolean add(DSPatternMatch<T, R> match) {
-        return matches.add(match);
     }
 
     public List<DSPatternMatch<T, R>> matches() {
@@ -95,12 +81,6 @@ public class CSMatchedPattern <T extends DSSequential, R> implements DSMatchedPa
 
     public DSPatternMatch<T, R> get(int i) {
         return matches.get(i);
-    }
-
-    public void addAll(DSMatchedPattern<T, R> matches) {
-        for (DSPatternMatch<T, R> match : matches.matches()) {
-            add(match);
-        }
     }
 
     public void setLabel(String label) {

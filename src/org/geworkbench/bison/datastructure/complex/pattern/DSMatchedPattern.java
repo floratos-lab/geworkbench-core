@@ -15,11 +15,9 @@ import java.util.List;
  * <p>Company: Columbia University</p>
  *
  * @author not attributable
- * @version 1.0
+ * @version $Id$
  */
 public interface DSMatchedPattern <T,R> extends DSPValue, DSNamed {
-    public DSPattern<T, R> getPattern();
-
     public int getSupport();
 
     public int getUniqueSupport();
@@ -28,7 +26,4 @@ public interface DSMatchedPattern <T,R> extends DSPValue, DSNamed {
 
     public List<DSPatternMatch<T, R>> matches();
 
-    public void addAll(DSMatchedPattern<T, R> matches);
-
-    public boolean add(DSPatternMatch<T, R> match);
 }

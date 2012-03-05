@@ -1,8 +1,6 @@
 package org.geworkbench.util.patterns;
 
-import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import org.geworkbench.bison.datastructure.complex.pattern.sequence.CSSeqRegistration;
-import org.geworkbench.bison.datastructure.complex.pattern.DSPattern;
 
 /**
  * 
@@ -19,17 +17,15 @@ public class PatternLocations implements Comparable<PatternLocations> {
 	public static final String DEFAULTTYPE = "splash";
 	public static final String TFTYPE = "TFBS";
 
-	public PatternLocations(DSPattern<DSSequence, CSSeqRegistration> tf,
-			CSSeqRegistration _registration) {
-
-		registration = _registration;
-		ascii = tf.toString();
-	}
-
 	public PatternLocations(String _ascii, CSSeqRegistration _registration) {
 		ascii = _ascii;
 		registration = _registration;
 		patternType = DEFAULTTYPE;
+	}
+
+	public PatternLocations(String string, CSSeqRegistration reg, String tftype2) {
+		this(string, reg);
+		patternType = tftype2;
 	}
 
 	public int getIdForDisplay() {
