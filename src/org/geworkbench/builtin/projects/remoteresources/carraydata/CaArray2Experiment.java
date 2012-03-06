@@ -18,10 +18,13 @@ public class CaArray2Experiment implements Comparable<CaArray2Experiment>,
 	private String[] QuantitationTypes;
 	private String experimentReferenceId;
 
-	public CaArray2Experiment(String experimentReferenceId, String name, String description) {
+	private String publicIdentifier;
+
+	public CaArray2Experiment(String experimentReferenceId, String name, String description, String publicIdentifier) {
 		this.experimentReferenceId = experimentReferenceId;
 		this.name = name;
 		this.description = description;
+		this.publicIdentifier = publicIdentifier;
 	}
 
 	public String getName() {
@@ -69,4 +72,12 @@ public class CaArray2Experiment implements Comparable<CaArray2Experiment>,
 	public String toString() {
 		return name;
 	}
+
+	/**
+	 * @return the publicIdentifier
+	 */
+	public String getPublicIdentifier() {
+		return publicIdentifier;
+	}
+
 }

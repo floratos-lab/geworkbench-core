@@ -278,6 +278,8 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 		caArrayTreePanel.setLayout(borderLayout4);
 		caArrayDetailPanel.setLayout(borderLayout7);
 		jPanel10.setLayout(new BoxLayout(jPanel10, BoxLayout.Y_AXIS));
+		jPanel10.add(experimentIdLabel);
+		jPanel10.add(Box.createRigidArea(new Dimension(0, 10)));
 		jPanel10.add(jLabel4, null);
 		jPanel10.add(Box.createRigidArea(new Dimension(0, 10)));
 		jPanel10.add(jScrollPane2, null);
@@ -384,6 +386,8 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 
 	private volatile int numTotalArrays = 0;
 	private volatile int numCurrentArray = 0;
+
+	private JLabel experimentIdLabel = new JLabel();
 
 	/**
 	 * Action listener invoked when the user presses the "Open" button after
@@ -628,6 +632,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 				.getLastSelectedPathComponent();
 
 		if (node == null || node == root) {
+			experimentIdLabel.setText("");
 			experimentInfoArea.setText("");
 			measuredField.setText("");
 			derivedField.setText("");
@@ -635,6 +640,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 			// get the parent experiment.
 			CaArray2Experiment exp = (CaArray2Experiment) ((DefaultMutableTreeNode) node.getPath()[1])
 					.getUserObject();
+			experimentIdLabel.setText("<html>Experiment ID: <b>"+exp.getPublicIdentifier()+"</b></html>");
 			experimentInfoArea.setText(exp.getDescription());
 			Map<String, String> hybridization = exp.getHybridizations();
 			if (hybridization != null) {
