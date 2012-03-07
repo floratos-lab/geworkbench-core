@@ -453,9 +453,10 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	 */
 	public void setDefaultPanel(AbstractSaveableParameterPanel panel) {
 		aspp = panel;
-		if (aspp != null)
+		if (aspp != null) {
 			aspp.setVisible(true);
-		setParameterFilesPath(aspp);
+			setParameterFilesPath(aspp);
+		}
 		loadSavedParameterSets();
 	}
 
@@ -556,13 +557,6 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 
 		stopAlgorithm = true;
 	}
-
-	/**
-	 * Return a code identifying the type of the analysis.
-	 * 
-	 * @return
-	 */
-	public abstract int getAnalysisType();
 
 	/**
 	 * 
