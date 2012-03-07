@@ -117,9 +117,6 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 	private volatile boolean stillWaitForConnecting = true;
 
 	private transient String lastChosenQuantitationType;
-	private static final int INTERNALTIMEOUTLIMIT = 600;
-	private static final int INCREASE_EACHTIME = 300;
-	private int internalTimeoutLimit = INTERNALTIMEOUTLIMIT;
 
 	public CaARRAYPanel() {
 		try {
@@ -338,7 +335,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 			protected Void doInBackground() throws Exception {
 				if (text.startsWith("Loading")) {
 					int i = 0;
-					internalTimeoutLimit = INTERNALTIMEOUTLIMIT;
+
 					do {
 						Thread.sleep(250);
 						i++;
@@ -365,27 +362,17 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 
 	/**
 	 *
-	 * @param seconds
-	 */
-	private void increaseInternalTimeoutLimitBy(int seconds){
-		log.debug("Due time has been increased from "+internalTimeoutLimit+" seconds to " +(internalTimeoutLimit+seconds)+" seconds.");
-		internalTimeoutLimit += seconds;
-	}
-
-	/**
-	 *
 	 * @param ce
 	 * @param source
 	 */
 	@Subscribe
-	public void receive(CaArraySuccessEvent ce, Object source) {
-		this.numCurrentArray = numCurrentArray+1;
-		this.numTotalArrays = ce.getTotalArrays();
-		increaseInternalTimeoutLimitBy(INCREASE_EACHTIME);
+	public synchronized void receive(CaArraySuccessEvent ce, Object source) {
+		numCurrentArray++;
+		numTotalArrays = ce.getTotalArrays();
 	}
 
 	private volatile int numTotalArrays = 0;
-	private volatile int numCurrentArray = 0;
+	private int numCurrentArray = 0;
 
 	private JLabel experimentIdLabel = new JLabel();
 
