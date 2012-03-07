@@ -438,9 +438,8 @@ public final class CaArrayFilteringDialog extends JDialog {
 			}
 
 			final CaArrayRequestEvent event = new CaArrayRequestEvent(url,
-					portnumber);
+					portnumber, CaArrayRequestEvent.EXPERIMENT);
 			event.setQueryExperiment(true);
-			event.setRequestItem(CaArrayRequestEvent.EXPERIMENT);
 			event.setFilterCrit(filterCrit);
 			event.setUseFilterCrit(true);
 			if (username != null && username.trim().length() > 0) {

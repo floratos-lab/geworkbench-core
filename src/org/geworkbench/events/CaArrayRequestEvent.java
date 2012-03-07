@@ -27,10 +27,11 @@ public class CaArrayRequestEvent extends Event {
 	private String username;
 	private String password;
 
-	public CaArrayRequestEvent(String _url, int _port) {
+	public CaArrayRequestEvent(String _url, int _port, String type) {
 		super(null);
 		url = _url;
 		port = _port;
+		requestItem = type;
 	}
 
 	public String getQType() {
@@ -60,10 +61,6 @@ public class CaArrayRequestEvent extends Event {
 
 	public String getRequestItem() {
 		return requestItem;
-	}
-
-	public void setRequestItem(String requestItem) {
-		this.requestItem = requestItem;
 	}
 
 	public boolean isPopulated() {

@@ -656,14 +656,13 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 
 	private void getBioAssay(String currentSelectedExperimentName, Map<String, String> currentSelectedBioAssay,
 			String quantitationType) {
-		CaArrayRequestEvent event = new CaArrayRequestEvent(url, portnumber);
+		CaArrayRequestEvent event = new CaArrayRequestEvent(url, portnumber, CaArrayRequestEvent.BIOASSAY);
 		if (user == null || user.trim().length() == 0) {
 			event.setUsername(null);
 		} else {
 			event.setUsername(user);
 			event.setPassword(passwd);
 		}
-		event.setRequestItem(CaArrayRequestEvent.BIOASSAY);
 		Map<String, String> filterCrit = new HashMap<String, String>();
 		filterCrit.put(CaArrayRequestEvent.EXPERIMENT, currentSelectedExperimentName  );
 		SortedMap<String, String> assayNameFilter = new TreeMap<String, String>(currentSelectedBioAssay);
@@ -701,7 +700,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 			stillWaitForConnecting = true;
 			progressBar
 					.setMessage("Connecting with the server... The initial step may take a few minutes.");
-			CaArrayRequestEvent event = new CaArrayRequestEvent(url, portnumber);
+			CaArrayRequestEvent event = new CaArrayRequestEvent(url, portnumber, CaArrayRequestEvent.EXPERIMENT);
 			if (user == null || user.trim().length() == 0) {
 				event.setUsername(null);
 			} else {
@@ -709,7 +708,6 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 				event.setPassword(passwd);
 
 			}
-			event.setRequestItem(CaArrayRequestEvent.EXPERIMENT);
 			Thread thread = new PubilshThread(event);
 			thread.start();
 		} catch (Exception e) {
@@ -739,7 +737,11 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 		progressBar.dispose();
 
 		CaARRAYPanel.cancelledConnectionInfo = CaARRAYPanel.createConnectonInfo( url, portnumber, user, passwd);
-		CaARRAYPanel.isCancelled = true;
+
+		final CaArrayRequestEvent event = new CaArrayRequestEvent(url,
+				portnumber, CaArrayRequestEvent.CANCEL);
+		publishCaArrayRequestEvent(event);
+		
 		// user can get next array now
 		setOpenButtonEnabled(true);
 
@@ -822,7 +824,6 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 	// refactored, static vars for now, as only one event could be canceled,
 	// eventually will be in some utility class
 	public static volatile String cancelledConnectionInfo = null;
-	public static volatile boolean isCancelled = false;
 
 	// refactored, not sure if needed at all
 	public static String createConnectonInfo(String url, int port, String username,
