@@ -537,7 +537,7 @@ public class SequenceViewWidget extends JPanel {
 				double scale = (r.getWidth() + 3)
 						/ (double) (seqAscii.length());
 				CSSeqRegistration seqReg = (CSSeqRegistration) registration;
-				int patLength = pl.getAscii().length();
+				int patLength = pl.getAsciiLength();
 				int dx = seqReg.x1;
 				double x1 = (dx - startPoint) * scale + 10;
 				double x2 = ((double) patLength) * scale;
@@ -552,7 +552,7 @@ public class SequenceViewWidget extends JPanel {
 						(int) (GAP / 2 + yscale));
 				g.drawString(new Integer(dx + 1).toString(), (int) x1,
 						(int) (GAP / 2 + 2 * yscale));
-				g.drawString(new Integer(dx + seqReg.length()).toString(),
+				g.drawString(new Integer(dx + patLength).toString(),
 						(int) (x1 + x2 - scale), (int) (GAP / 2 + 2 * yscale));
 				if (pl.getPatternType().equals(PatternLocations.TFTYPE)) {
 
