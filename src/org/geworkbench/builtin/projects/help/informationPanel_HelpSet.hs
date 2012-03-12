@@ -4,13 +4,13 @@
 
          "http://java.sun.com/products/javahelp/helpset_1_0.dtd">
 
-<?TestTarget The help set file for the Comments Panel component.?>
+<?TestTarget The help set file for the Information Panel component.?>
 
 <helpset version="1.0">
 
 	<!-- title -->
 
-	<title>Comments Panel</title>
+	<title>Information Panel</title>
 
 	<!-- maps -->
 
@@ -18,7 +18,7 @@
 
 		<homeID>overview</homeID>
 
-		<mapref location="annotationPanelMap.jhm"/>
+		<mapref location="informationPanel_Map.jhm"/>
 
 	</maps>
 
@@ -28,11 +28,11 @@
 
 		<name>TOC</name>
 
-		<label>Merging HelpSets</label>
+		<label>Information Panel</label>
 
 		<type>javax.help.TOCView</type>
 
-		<data>annotationPaneltoc.xml</data>
+		<data>informationPanel_toc.xml</data>
 
 	</view>
 
