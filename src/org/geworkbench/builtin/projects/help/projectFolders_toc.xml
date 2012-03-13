@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<toc version="1.0">
+
+	<tocitem text="Project Folders">
+
+	 <tocitem target="Project_Folders_Area" text="Project Folders Area"/>
+	 <tocitem target="Workspace" text="Workspace"/>
+	 <tocitem target="Projects" text="Projects"/>
+	 <tocitem target="Creating_a_New_Project" text="Creating a New Project"/>
+	 <tocitem target="Project_Menu_Options" text="Project Menu Options"/>
+	 <tocitem target="Open_Files" text="    Open Files"/>
+	 <tocitem target="Open_PDB_File" text="    Open PDB File from RCSB Protein Data Bank"/>
+	 <tocitem target="Rename" text="    Rename"/>
+	 <tocitem target="Remove" text="    Remove"/>
+	 <tocitem target="Project_Data_Node_Menu_Options" text="Project Data Node Menu Options"/>
+	 <tocitem target="Save" text="    Save"/>
+	 <tocitem target="Export_to_tab-delim" text="    Export to tab-delim"/>
+	 <tocitem target="Rename" text="    Rename"/>
+	 <tocitem target="Remove" text="    Remove"/>
+	 <tocitem target="Workspaces" text="Workspaces"/>
+	 <tocitem target="Saving_a_Workspace" text="    Saving a Workspace"/>
+	 <tocitem target="Opening_a_Saved_Workspace" text="    Opening a Saved Workspace"/>
+	 <tocitem target="Creating_a_New_Workspace" text="    Creating a New Workspace"/>
+
+
+	</tocitem>
+
+</toc>
+
+
+
+
+

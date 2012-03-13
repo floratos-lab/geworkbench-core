@@ -1,0 +1,445 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html dir="ltr" lang="en"><head>
+<title>Local Data Files - Workbench</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="generator" content="MediaWiki 1.16.0">
+<meta name="robots" content="noindex,follow">
+
+</head>
+<body class="mediawiki ltr ns-0 ns-subject page-Local_Data_Files skin-monobook">
+<div id="globalWrapper">
+<div id="column-content"><div id="content">
+	<a id="top"></a>
+	
+	<h1 id="firstHeading" class="firstHeading">Local Data Files</h1>
+	<div id="bodyContent">
+		<!-- start content -->
+<p><br>
+</p>
+<a name="Overview"></a><h2> <span class="mw-headline" id="Overview">Overview</span></h2>
+<p>This chapter covers:
+</p>
+<ul><li> Data file formats supported by geWorkbench
+</li><li> Loading microarray data from local files, while merging the data into one data set.
+</li><li> Merging data from several previously loaded microarray experiments.
+</li></ul>
+<a name="Open_File_Dialog"></a><h2> <span class="mw-headline" id="Open_File_Dialog">Open File Dialog</span></h2>
+<p>The Open File dialog can be reached in two ways:
+</p>
+<ul><li> Right-click on a Project and select "Open File(s)".
+</li></ul>
+<p><img alt="Project Open Files.png" src="localDataFiles_files/Project_Open_Files.png" height="156" width="327">
+</p><p><br>
+</p>
+<ul><li> From the top-level menu bar, select  File-&gt;Open-&gt;File.
+</li></ul>
+<p><br>
+<img alt="File Open File.png" src="localDataFiles_files/File_Open_File.png" height="143" width="239">
+</p><p><br>
+In either case, the File Open dialog will appear.
+</p><p><br>
+<img alt="File Open Selector.png" src="localDataFiles_files/File_Open_Selector.png" height="375" width="570">
+</p><p><br>
+</p>
+<a name="File_Browser_Controls"></a><h3> <span class="mw-headline" id="File_Browser_Controls">File Browser Controls</span></h3>
+<p>The file browser offers standard options
+</p>
+<ul><li> <b>Select Directory</b> - A pulldown of directories available 
+at the current directory level. The contents of the directory are listed
+ below when a directory is selected.
+</li><li> <b>Up One Level</b> - Move up one directory level.
+</li><li> <b>Desktop</b> - Go to the user's desktop or home directory.
+</li><li> <b>Create New Folder</b> - create a new directory in the current one.
+</li><li> <b>List</b> - Display only the names of files and directories contained in the current directory.
+</li><li> <b>Details</b> - Display name, size, type and date of items in the directory.
+</li></ul>
+<p><img alt="File Open Selector Controls.png" src="localDataFiles_files/File_Open_Selector_Controls.png" height="145" width="650">
+</p><p><br>
+</p>
+<a name="Other_File_Open_Controls"></a><h3> <span class="mw-headline" id="Other_File_Open_Controls">Other File Open Controls</span></h3>
+<p>The selector lists the available file types that geWorkbench can 
+load.  Once a file type is chosen, only files matching the indicated 
+file extension, e.g. (*.exp, *.fasta etc.) will be displayed in the 
+available file list.
+</p>
+<ul><li> <b>File Name</b> - the file name of the file selected is shown in this field.
+</li></ul>
+<ul><li> <b>Files of Type</b> - This pulldown menu lists all available 
+file types that geWorkbench can read in.  Available types are listed 
+below.  Each item is also followed by its file extension(s).  Only files
+ matching the appropriate extension will be displayed in the file list 
+box.
+</li></ul>
+<ul><li> <b>Open</b> - Open the selected file.
+</li></ul>
+<ul><li> <b>Cancel</b> - Quit the File Open dialog without opening a file.
+</li></ul>
+<p><br>
+</p>
+<a name="Merging_Microarray_Files"></a><h4> <span class="mw-headline" id="Merging_Microarray_Files">Merging Microarray Files</span></h4>
+<p>If multiple microarray gene expression files are read in at one time, they will be merged into a single dataset.  
+</p><p>Merging is not supported for other file types such as PDB, Fasta etc.
+</p><p>When working with microarray data in geWorkbench, all data to be 
+analyzed must be present within one data node in a project.  If the data
+ exists as multiple files each containing results e.g. from single 
+arrays, the data must be merged into a single node before it can be 
+used.  geWorkbench can perform this merging step either at the time data
+ is read in, or later in a separate step.  Once merged, such a dataset 
+can be saved to disk; it will be saved in the geWorkbench matrix file 
+format.
+</p><p>An example with individual MAS5 format files is illustrated below.
+</p>
+<a name="Local_File_vs_Remote"></a><h4> <span class="mw-headline" id="Local_File_vs_Remote">Local File vs Remote</span></h4>
+<p>These two radio buttons control whether the Open dialog is for local 
+data or remote data.  This chapter is concerned with opening local data 
+files from disk.  See the chapter <a href="http://wiki.c2b2.columbia.edu/workbench/index.php/Remote_Data_Sources" title="Remote Data Sources"> Remote Data Sources</a> for information on loading remote data from caArray.
+</p><p><br>
+</p>
+<a name="Supported_data_formats"></a><h3> <span class="mw-headline" id="Supported_data_formats">Supported data formats</span></h3>
+<p><img alt="File Open Selector types.png" src="localDataFiles_files/File_Open_Selector_types.png" height="446" width="571">
+</p><p><br>
+</p>
+<ul><li> <b>Affy .CEL (*.cel)</b> - Affymetrix CEL files (probe level data) can be viewed graphically in geWorkbench but not used directly for analysis.
+</li><li> <b>Affymetrix File Matrix (*.exp)</b> - a geWorkbench 
+spreadsheet-type multi-experiment format; this is the native file type 
+created by geWorkbench from merged datasets.  It can contain the data 
+from any number of arrays in a spreadsheet-like "matrix" format.  It 
+also allows for the grouping of arrays into named subsets based on 
+phenotypic criteria.  Multiple such groups can be defined, each 
+containing a different division of the arrays among named sets.  
+geWorkbench can create files in this format from data read in in other 
+formats.
+</li><li> <b>Affymetrix MAS5/GCOS (.txt)</b> - produced by Affymetrix data analysis programs.
+</li><li> <b>FASTA (*.fasta, *.fa, *.txt)</b> - DNA or amino-acid sequence files in FASTA format.
+</li><li> <b>Genepix (*.gpr)</b> - Produced by a popular analysis program for two-color microarrays.
+</li><li> <b>GEO Soft and GEO Series formats (*.soft, *.txt)</b> 
+<ul><li> <b>GSM (*.txt)</b> - individual sample files.
+</li><li> <b>GSE (*.soft)</b> - series files representing an entire experiment, e.g. GSE2189_family.soft.
+</li><li> <b>GDS (*.soft)</b> - curated data matrix, e.g. GDS507_sample.soft.
+</li><li> <b>Series matrix (*.txt)</b> - matrix format of submitted, uncurated data, e.g. GSE2189_series_matrix.txt.
+</li></ul>
+</li><li> <b>MAGE-TAB data matrix (*.txt)</b> - this is an auxiliary MAGE-TAB data file type that can be used to contain summarized data from multiple arrays.
+</li><li> <b>Networks (*.txt, *.adj, *.sift)</b> - network interaction 
+files in adjacency (.adj) or Cytoscape (.sif) format.  Files ending in 
+.txt are also accepted in adjacency matrix format.
+</li><li> <b>PDB Structure File (*.pdb)</b> - Molecular 3-D structure in Protein Data Bank format; can be viewed in the JMol Viewer in geWorkbench..
+</li><li> <b>Tab-Delimited Data Matrix(*.tsv, *.txt)</b> (e.g. files exported by RMAExpress or other programs)  - Microarray expression data in a simple columnar file format.
+</li></ul>
+<a name="Detailed_descriptions_of_expression_file_formats"></a><h2> <span class="mw-headline" id="Detailed_descriptions_of_expression_file_formats">Detailed descriptions of expression file formats</span></h2>
+<p>See <a href="http://wiki.c2b2.columbia.edu/workbench/index.php/File_Formats" title="File Formats"> File Formats</a> for detailed descriptions of some of the file formats used.
+</p><p><br>
+</p>
+<a name="Data_Node_Naming_in_Project_Folders"></a><h2> <span class="mw-headline" id="Data_Node_Naming_in_Project_Folders">Data Node Naming in Project Folders</span></h2>
+<p>When a file is read in, its file name, including any file type suffix, is given to the newly created data node.
+</p><p><br>
+<img alt="Project Folders Opened Files.png" src="localDataFiles_files/Project_Folders_Opened_Files.png" height="140" width="271">
+</p><p><br>
+The only exceptions to this are for files merged on read-in, and files 
+downloaded from caArray (remote data source).
+When multiple expression files are merged on read-in, the node name 
+contains the name of each file merged.
+However, when files are downloaded from caArray, the node name is always
+ just the name of the experiment, not the individual files.
+</p>
+<a name="GEO_Soft_files"></a><h2> <span class="mw-headline" id="GEO_Soft_files">GEO Soft files</span></h2>
+<a name="Multiple_Platforms_per_GEO_Soft_file"></a><h3> <span class="mw-headline" id="Multiple_Platforms_per_GEO_Soft_file">Multiple Platforms per GEO Soft file</span></h3>
+<p>A GEO series file can contain samples from more than one platform 
+(chip type). If geworkbench detects that there is more than one platform
+ represented in the file, it will pop up a dialog box asking the user 
+for which platform to load data.  Data from only a single platform type 
+ can be loaded into any given microarray data node in geWorkbench.
+</p><p><br>
+<img alt="GEO Soft platform chooser.png" src="localDataFiles_files/GEO_Soft_platform_chooser.png" height="176" width="285">
+</p><p><br>
+</p>
+<a name="multiple_platform_format_example"></a><h4> <span class="mw-headline" id="multiple_platform_format_example">multiple platform format example</span></h4>
+<p>The series file GSE6532_family.soft contains data obtained on three different Affymetrix platforms:
+</p><p>!Series_platform_id = GPL96
+!Series_platform_id = GPL97
+!Series_platform_id = GPL570
+</p><p>The data for individual samples is found in sections beginning with a SAMPLE tag, e.g.:
+</p><p>^SAMPLE = GSM65316
+</p><p>The platform used for the individual sample is given in the sample header by:
+</p><p>!Sample_platform_id = GPL96
+</p><p>geWorkbench will skip samples that are not from the selected platform.
+</p><p><br>
+</p>
+<a name="Multiple_data_types_in_one_Soft_file"></a><h3> <span class="mw-headline" id="Multiple_data_types_in_one_Soft_file">Multiple data types in one Soft file</span></h3>
+<p>A GEO series file may contain not only individual sample results, but
+ also a sample table summarizing the expression from all arrays.  An 
+example is GSE15139_family.soft.  In such a case, where the file has 
+been detected to be a series table (multiple individual sample entries),
+ a sample table will be ignored.  The individual sample entries may 
+contain additional data beyond that available in the sample table (e.g. 
+p-values, descriptive sample titles).
+</p>
+<a name="Array_Names_from_GEO_files"></a><h3> <span class="mw-headline" id="Array_Names_from_GEO_files">Array Names from GEO files</span></h3>
+<p>For most microarray dataset types, the array name will either be 
+assigned in the file (e.g. Affy File Matrix) or will be taken from the 
+name of the file (e.g. individual MAS5/GCOS files).    However, for GEO 
+Soft format series and series matrix files, we create array names by 
+concatenating the GEO Sample identifier for the particular array with 
+the corresponding sample title.  For example, in the file 
+GSE2189_family.soft, sample GSM39801 has the following title line:
+</p><p>!Sample_title = 4_Hr_+MGd_1
+</p><p>The array name in geWorkbench is then GSM39801:4_Hr_+MGd_1.
+</p><p>The below figure shows the sample titles appended to the GEO sample identifiers in the Arrays component (5th line):
+</p><p><br>
+<img alt="GEO Soft array names.png" src="localDataFiles_files/GEO_Soft_array_names.png" height="356" width="297">
+</p><p><br>
+</p>
+<a name="GEO_Platform_Annotations_Not_Read"></a><h3> <span class="mw-headline" id="GEO_Platform_Annotations_Not_Read">GEO Platform Annotations Not Read</span></h3>
+<p>GEO Soft files can contain marker annotation entries.  However, there
+ is not a fixed format for all platforms, so geWorkbench does not 
+attempt to parse this information.
+</p>
+<a name="GEO_Comments_skipped"></a><h3> <span class="mw-headline" id="GEO_Comments_skipped">GEO Comments skipped</span></h3>
+<p>GEO files can contain comment lines.  The comments section is skipped
+ by geWorkbench, and its format is not checked (as of release 2.3.0 of 
+geWorkbench).  This allows geWorkbench to read in files even if they 
+have some formatting errors.
+</p>
+<a name="Network_Interaction_Files"></a><h2> <span class="mw-headline" id="Network_Interaction_Files">Network Interaction Files</span></h2>
+<a name="Overview_2"></a><h3> <span class="mw-headline" id="Overview_2">Overview</span></h3>
+<p>geWorkbench can read in files that represent a network of 
+interactions between molecules.  Some typical interaction types are 
+protein-dna, protein-protein, TF-modulator, and miRNA-mRNA.  The genes, 
+proteins or molecules are referred to as nodes in a network graph, and 
+the interactions as edges.
+</p><p>geWorkbench can currently read in the two types of network files:
+</p>
+<ol><li> <a href="http://wiki.c2b2.columbia.edu/workbench/index.php/File_Formats#Adjacency_matrix_.28ADJ.29_format" title="File Formats">adjacency matrix</a> - the format generated by ARACNe and the <a href="http://wiki.c2b2.columbia.edu/workbench/index.php/Cellular_Networks_KnowledgeBase" title="Cellular Networks KnowledgeBase"> CNKB component</a>.
+</li><li> <a href="http://wiki.c2b2.columbia.edu/workbench/index.php/File_Formats#SIF_format" title="File Formats"> SIF</a> - A simple format which includes the interaction type, e.g. protein-dna (pd).
+</li></ol>
+<p>The network file formats are described in the <a href="http://wiki.c2b2.columbia.edu/workbench/index.php/File_Formats#Network_Formats" title="File Formats"> File Formats</a>
+ chapter.  The adjacency matrix includes a numeric value for each edge, 
+which can be used to represent e.g. some measure of strength for the 
+interaction or the confidence that it is real.  The SIF format includes 
+an interaction type for each edge.
+</p><p>A network file must be loaded as the child of a microarray 
+dataset.  This allows a mapping of network nodes to microarray dataset 
+markers (probesets).  A marker set defined in the Markers component can 
+be projected onto a network displayed in Cytoscape, and a selection of 
+nodes in Cytoscape is returned automatically to the Markers component.  
+Many other operations are available.  
+</p><p>Adjacency matrices are loaded by first selecting a Project node, 
+and then using either the menu-bar or right-click File-&gt;Open dialog. 
+  A microarray dataset chooser allows the user to select to which 
+dataset to add the network.
+</p>
+<a name="Representation_of_networks_in_geWorbench"></a><h3> <span class="mw-headline" id="Representation_of_networks_in_geWorbench">Representation of networks in geWorbench</span></h3>
+<p>A network, when read in, is represented in geWorkbench at the level 
+found in the input file.  That is, gene-level networks will be 
+represented at the gene level, and marker (probeset)-level networks will
+ be represented at the probeset level.   Markers mapping to a given gene
+ (as given in the array annotation file, if loaded) will be determined 
+on demand for use in particular components, e.g. Cytoscape or MRA.
+</p>
+<a name="Loading_a_Network_File"></a><h3> <span class="mw-headline" id="Loading_a_Network_File">Loading a Network File</span></h3>
+<a name="Prerequisites"></a><h4> <span class="mw-headline" id="Prerequisites">Prerequisites</span></h4>
+<ul><li> A microarray dataset compatible with the network must be loaded first.
+</li></ul>
+<a name="Network_File_Details"></a><h4> <span class="mw-headline" id="Network_File_Details">Network File Details</span></h4>
+<ul><li> The network can be represented in terms of markers (probesets),
+ gene symbols, Entrez IDs, or some other string.  Only one convention 
+should be used within one file.  
+<ul><li> For geWorkbench 2.3.0 and above, networks can only be represented as tab-delimted files.  Previously, spaces were allowed.
+</li><li> If marker names are used, they should match the marker names used in the microarray dataset to allow mapping between the two.
+</li><li> Similarly, if gene symbols or Entrez IDs are used, mapping 
+between the network and microarray dataset will be provided if an 
+appropriate annotation file was loaded with the microarray dataset.
+</li></ul>
+</li></ul>
+<a name="Example"></a><h4> <span class="mw-headline" id="Example">Example</span></h4>
+<p>Two microarray datasets have already been loaded.
+</p><p><img alt="Network Project Folder.png" src="localDataFiles_files/Network_Project_Folder.png" height="189" width="302">
+</p><p><br>
+</p>
+<ul><li> Select the project and then right-click.  The Open File dialog will appear.
+</li></ul>
+<p><br>
+<img alt="File Open Networks.png" src="localDataFiles_files/File_Open_Networks.png" height="375" width="570">
+</p><p><br>
+</p>
+<ul><li> Select the file type "Networks".  (Files with a suffix ".txt", ".adj", and ".sif" are shown).
+</li><li> Browse to and select the desired network file, and click "Open".
+</li></ul>
+<p><br>
+<img alt="File Open Network Options.png" src="localDataFiles_files/File_Open_Network_Options.png" height="206" width="415">
+</p><p><br>
+</p>
+<ul><li> After the network has been chosen, a second dialog will appear.  In this dialog, you will choose
+</li></ul>
+<ol><li> File Format (ADJ or SIF).  The ADJ or SIF format will be preselected if the file ends with one of those extensions.
+</li><li> Node represented by (identifier type).  Choices are
+<ol><li> probeset id
+</li><li> gene name (i.e. the gene symbol)
+</li><li> Entrez ID
+</li><li> other
+</li></ol>
+</li><li> Microarray dataset 
+<ol><li> here, you must choose to which parent microarray dataset this 
+network will be attached.  This will allow direct, two-way mapping of 
+probesets/genes between the dataset and the network.
+</li><li> if a non-microarray parent node is accidentally chosen, a 
+warning pop-up will appear, asking the user to select a parent node of 
+the correct type.
+</li></ol>
+</li></ol>
+<p>The figure above shows one of two available microarray datasets being chosen.  Here we use the Bcell-100 dataset.
+</p><p>The network is shown below loaded as a child of the chosen dataset in the Project Folders component.
+</p><p><br>
+<img alt="Network Loaded.png" src="localDataFiles_files/Network_Loaded.png" height="161" width="231">
+</p>
+<a name="Network_Size_Limitation_for_Viewing"></a><h4> <span class="mw-headline" id="Network_Size_Limitation_for_Viewing">Network Size Limitation for Viewing</span></h4>
+<p>If the <a href="http://wiki.c2b2.columbia.edu/workbench/index.php/Cytoscape_Network_Viewer" title="Cytoscape Network Viewer"> Cytoscape</a> component has been loaded  (see the <a href="http://wiki.c2b2.columbia.edu/workbench/index.php/Component_Configuration_Manager" title="Component Configuration Manager"> CCM</a>),
+ the network will appear there.  However, be aware that there are limits
+ as to how large a network can be loaded into Cytoscape.
+</p>
+<a name="Microarray_Data_Annotation_Files"></a><h2> <span class="mw-headline" id="Microarray_Data_Annotation_Files">Microarray Data Annotation Files</span></h2>
+<p>If a microarray data file is being loaded, the dialog will give the 
+user the option of also loading an annotation file.  These files 
+associate the individual markers, e.g. probesets, with information such 
+as gene name, Entrez ID, GO Terms etc.
+</p><p>Currently geWorkbench only accepts Affymetrix format annotation files, in CSV format. See <a href="http://wiki.c2b2.columbia.edu/workbench/index.php/File_Formats#Annotation_Files" title="File Formats"> File Formats</a> for further details.
+</p><p><br>
+<img alt="File Open Annotation Information Popup.png" src="localDataFiles_files/File_Open_Annotation_Information_Popup.png" height="450" width="500">
+</p><p><br>
+The file browser is used to locate an annotation file.
+</p><p><br>
+<img alt="File Open Annotation File Browser.png" src="localDataFiles_files/File_Open_Annotation_File_Browser.png" height="347" width="639">
+</p>
+<a name="Pattern_Files"></a><h2> <span class="mw-headline" id="Pattern_Files">Pattern Files</span></h2>
+<p>In the Pattern Discovery component, individual or multiple patterns 
+can be saved to a text file.  This file also contains the name of the 
+sequence file from which they were generated (parent data set).
+</p><p>Before loading a pattern file, a matching sequence file must already be present in the Project Folders component.
+</p><p>In the "File Open" dialog, Pattern Files (*.pat) can be opened 
+and reassociated with their parent sequence file.  As with loading 
+network files, when loading a pattern file, the user will be prompted to
+ select a parent data node.
+</p><p>If the selected parent sequence node does not match the name 
+stored in the pattern file when the patterns were created, a warning 
+dialog will appear and the pattern will not be loaded.
+</p><p><br>
+</p><p><img alt="File Open Patterns Start.png" src="localDataFiles_files/File_Open_Patterns_Start.png" height="165" width="229">
+</p><p><br>
+The following steps show how to add a saved pattern file to this sequence node.
+</p><p>1. From the File Open dialog, select file type "Pattern".
+</p><p>2. Browse to the desired pattern file and push "Open".
+</p><p><br>
+<img alt="File Open Patterns Select.png" src="localDataFiles_files/File_Open_Patterns_Select.png" height="375" width="570">
+</p><p><br>
+</p><p>3. A second dialog will appear, in which one can select the 
+correct parent sequence node.  The pattern file will be added as a child
+ of this node.
+</p><p><br>
+<img alt="File Open Patterns Select Parent.png" src="localDataFiles_files/File_Open_Patterns_Select_Parent.png" height="170" width="250">
+</p><p><br>
+4. After selecting the desired parent node, hit "Continue".
+</p><p>The pattern file will be added as a child of the selected parent node.
+</p><p><b>Note</b> - If the selected parent sequence node does not match
+ the name stored in the pattern file when the patterns were created, a 
+warning dialog will appear and the pattern will not be loaded.
+</p><p><br>
+</p><p><img alt="File Open Patterns Added.png" src="localDataFiles_files/File_Open_Patterns_Added.png" height="199" width="230">
+</p>
+<a name="FASTA_files"></a><h2> <span class="mw-headline" id="FASTA_files">FASTA files</span></h2>
+<p>FASTA format files must contain an identifier line followed by one or
+ more lines of sequence, either amino-acid or nucleotide.  The first 
+line must begin with a "&gt;" character.  If it does not, geWorkbench 
+will pop-up a warning box and not load the file.  The identifier is 
+required to refer to the sequence within geWorkbench.
+</p><p>An example of a valid FASTA format file is:
+</p>
+<pre>&gt;1e09
+GVFTYESEFTSEIPPPRLFKAFVLDADNLVPKIAPQAIKHSEILEGDGGPGTIKKITFGEGSQYGYVKHK
+IDSIDKENYSYSYTLIEGDALGDTLEKISYETKLVASPSGGSIIKSTSHYHTKGNVEIKEEHVKAGKEK
+ASNLFKLIETYLKGHPDAYN
+</pre>
+<a name="Example:_Loading_microarray_data_files_-_local"></a><h2> <span class="mw-headline" id="Example:_Loading_microarray_data_files_-_local">Example: Loading microarray data files - local</span></h2>
+<p>In this example, we will load 10 individual Affymetrix MAS5 format 
+files, and merge them into a single dataset.  The origin of these file 
+is described in the section <a href="http://wiki.c2b2.columbia.edu/workbench/index.php/Tutorial_-_Data" title="Tutorial - Data" class="mw-redirect"> Tutorial Data</a>.
+</p><p>Note that no Affymetrix annotation files are included in the 
+geWorkbench distribution.  The annotation file for the HG-U95Av2 array 
+used in this example can be obtained from the Affymetrix website.  See 
+the instructions in the <a href="http://wiki.c2b2.columbia.edu/workbench/index.php/FAQ#Q._Where_can_I_obtain_the_latest_annotation_files_for_my_microarray_platform.3F" title="FAQ"> FAQ entry on this topic</a>.
+</p><p>1. Right-click on the default Workspace entry in the Project Folders component.
+</p><p><img alt="T ProjectFolders NewProj.png" src="localDataFiles_files/T_ProjectFolders_NewProj.png" height="160" width="238">
+</p><p><br>
+2. Next, right-click on the new <b>Project</b> entry and select <b>Open Files</b>.
+</p><p><img alt="T ProjectFolders OpenFiles.png" src="localDataFiles_files/T_ProjectFolders_OpenFiles.png" height="277" width="393">
+</p><p><br>
+</p><p>A file browser will appear with which you can select the files 
+you wish to open.  The default is to browse for local files, that is on 
+your own computer.  geWorkbench can also access data from caArray 
+databases (the Remote option).  
+</p><p><img alt="File Open Affymetrix MAS5.png" src="localDataFiles_files/File_Open_Affymetrix_MAS5.png" height="375" width="570">
+</p><p><br>
+3. Here, we select the file type <b>Affymetrix GCOS/MAS5</b> as shown.
+</p><p>4. We will select 10 MAS5 format text files from the directory 
+data/cardiogenomics.med.harvard.edu, which is included within the 
+geWorkbench installation.
+</p><p>5. Click <b>Open</b>.
+</p><p>Microarray gene expression files opened at the same time are 
+automatically merged into a single dataset (as of geWorkbench 2.3.0). 
+</p><p>A message will appear giving information about associating an annotation file with the dataset.
+</p><p><br>
+<img alt="File Open Annotation Information Popup.png" src="localDataFiles_files/File_Open_Annotation_Information_Popup.png" height="450" width="500">
+</p><p><br>
+7. A file browser will then open with which you can, if you wish, select
+ an annotation file matching your dataset.  This is needed if you intend
+ to use features of geWorkbench such as the Sequence Retriever or  GO 
+Terms component (Gene Ontology).
+</p><p><br>
+<img alt="File Open Annotation.png" src="localDataFiles_files/File_Open_Annotation.png" height="347" width="570">
+</p><p><br>
+A status bar will display as the data is loaded:
+</p><p><br>
+<img alt="File Open Loading Status.png" src="localDataFiles_files/File_Open_Loading_Status.png" height="146" width="374">
+</p><p><br>
+8. The merged data set is listed in the Project folder. The individual arrays are shown below in the Arrays component.
+</p><p><br>
+<img alt="File Open Cardio Loaded.png" src="localDataFiles_files/File_Open_Cardio_Loaded.png" height="677" width="228">
+</p><p><br>
+</p><p>Note - if you have created a custom Affymetrix-format annotation 
+file which has more than one entry for a probeset, an error dialog will 
+be shown.
+</p><p><img alt="Annotation Parser Handle Duplicates.png" src="localDataFiles_files/Annotation_Parser_Handle_Duplicates.png" height="185" width="388">
+</p><p>See <a href="http://wiki.c2b2.columbia.edu/workbench/index.php/File_Formats#Affymetrix_Annotation_Files" title="File Formats">File_Formats#Affymetrix_Annotation_Files</a> for further details.
+</p>
+<a name="Example:_Merging_microarray_data_files_after_they_have_already_been_loaded"></a><h2> <span class="mw-headline" id="Example:_Merging_microarray_data_files_after_they_have_already_been_loaded">Example: Merging microarray data files after they have already been loaded</span></h2>
+<p>If data files are read in singly, they can also be merged later, as long as they are from the same chip type.
+</p><p><br>
+<b>1.</b> In the Project Folders component, select the read-in data files that you want to merge.
+</p><p><b>2.</b> Click on <b>File</b> in the menu bar, and choose <b>Merge Datasets</b>.
+</p><p><img alt="File Merge Datasets.png" src="localDataFiles_files/File_Merge_Datasets.png" height="144" width="148">
+</p><p><br>
+<b>3.</b> The result is a new data node containing the merged data.  The original data nodes are still present.
+</p><p><img alt="T ProjectFolders MergedData.png" src="localDataFiles_files/T_ProjectFolders_MergedData.png" height="305" width="231">
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 118/1000000
+Post-expand include size: 1925/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key workbench:pcache:idhash:1809-0!1!0!!en!2!printable=1 and timestamp 20120312205828 -->
+<div class="printfooter">
+Retrieved from "<a href="http://wiki.c2b2.columbia.edu/workbench/index.php/Local_Data_Files">http://wiki.c2b2.columbia.edu/workbench/index.php/Local_Data_Files</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden"></div>		<!-- end content -->
+				<div class="visualClear"></div>
+	</div>
+</div></div>
+<div class="visualClear"></div>
+<div id="footer">
+	<div id="f-poweredbyico"><img src="localDataFiles_files/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" height="31" width="88"></div>
+	<ul id="f-list">
+		<li id="lastmod"> This page was last modified on 22 February 2012, at 15:21.</li>
+	</ul>
+</div>
+</div>
+

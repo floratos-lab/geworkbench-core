@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE map PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 1.0//EN"
+
+         "http://java.sun.com/products/javahelp/map_1_0.dtd">
+
+<map version="1.0">
+	
+	 <mapID target="Project_Folders_Area" url="projectFolders.htm"/>
+	 <mapID target="Workspace" url="projectFolders.htm#Workspace"/>
+	 <mapID target="Projects" url="projectFolders.htm#Projects"/>
+	 <mapID target="Creating_a_New_Project" url="projectFolders.htm#Creating_a_New_Project"/>
+	 
+	 <mapID target="Project_Menu_Options" url="projectFolders.htm#Project_Menu_Options"/>
+	 <mapID target="Open_Files" url="projectFolders.htm#Open_Files"/>
+	 <mapID target="Open_PDB_File" url="projectFolders.htm#Open_PDB_File_from_RCSB_Protein_Data_Bank"/>
+	 <mapID target="Rename" url="projectFolders.htm#Rename"/>
+	 <mapID target="Remove" url="projectFolders.htm#Remove"/>
+	 <mapID target="Project_Data_Node_Menu_Options" url="projectFolders.htm#Project_Data_Node_Menu_Options"/>
+	 <mapID target="Save" url="projectFolders.htm#Save"/>
+	 <mapID target="Export_to_tab-delim" url="projectFolders.htm#Export_to_tab-delim"/>
+	 <mapID target="Rename" url="projectFolders.htm#Rename"/>
+	 <mapID target="Remove" url="projectFolders.htm#Remove"/>
+	 <mapID target="Workspaces" url="projectFolders.htm#Workspaces"/>
+	 <mapID target="Saving_a_Workspace" url="projectFolders.htm#Saving_a_Workspace"/>
+	 <mapID target="Opening_a_Saved_Workspace" url="projectFolders.htm#Opening_a_Saved_Workspace"/>
+	 <mapID target="Creating_a_New_Workspace" url="projectFolders.htm#Creating_a_New_Workspace"/>
+
+
+</map>

@@ -4,7 +4,10 @@
 
 	<tocitem text="Information Panel">
 
-		<tocitem target="experiment.info" text="Information Panel"/>
+		<tocitem target="information.panel" text="Overview"/>
+		<tocitem target="Dataset_History" text="Dataset History"/>
+		<tocitem target="Dataset_Annotation" text="Dataset Annotation (User_Comments)"/>
+		<tocitem target="Experiment_Info" text="Experiment Info"/>
 
 	</tocitem>
 

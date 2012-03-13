@@ -6,18 +6,18 @@
 <?TestTarget The help set file for the project tree component.?>
 <helpset version="1.0">
 	<!-- title -->
-	<title>Project Panel</title>
+	<title>Project Folders</title>
 	<!-- maps -->
 	<maps>
-		<homeID>overview</homeID>
-		<mapref location="projectPanel.jhm"/>
+		<homeID>Project_Folders_Area</homeID>
+		<mapref location="projectFolders_Map.jhm"/>
 	</maps>
 	<!-- views -->
 	<view>
 		<name>TOC</name>
-		<label>Project Panel</label>
+		<label>Project Folders</label>
 		<type>javax.help.TOCView</type>
-		<data>projectPaneltoc.xml</data>
+		<data>projectFolders_toc.xml</data>
 	</view>
 </helpset>
 

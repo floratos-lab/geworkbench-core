@@ -6,7 +6,10 @@
 
 <map version="1.0">
 
-	<mapID target="experiment.info" url="informationPanel.htm"/>
+	<mapID target="information.panel" url="informationPanel.htm#Dataset_History.2C_Dataset_Annotation_and_Experiment_Information"/>
+	<mapID target="Dataset_History" url="informationPanel.htm#Dataset_History"/>
+	<mapID target="Dataset_Annotation" url="informationPanel.htm#Dataset_Annotation_.28User_Comments.29"/>
+	<mapID target="Experiment_Info" url="informationPanel.htm#Experiment_Info"/>
 
 </map>
 
