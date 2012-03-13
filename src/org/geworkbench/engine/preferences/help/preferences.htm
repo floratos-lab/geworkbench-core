@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html dir="ltr" lang="en"><head>
+<title>Preferences - Workbench</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="generator" content="MediaWiki 1.16.0">
+<meta name="robots" content="noindex,follow">
+
+</head>
+<body class="mediawiki ltr ns-0 ns-subject page-Preferences skin-monobook">
+<div id="globalWrapper">
+<div id="column-content"><div id="content">
+	<a id="top"></a>
+	
+	<h1 id="firstHeading" class="firstHeading">Preferences</h1>
+	<div id="bodyContent">
+		<!-- start content -->
+<p><br>
+</p>
+<a name="Introduction"></a><h2> <span class="mw-headline" id="Introduction">Introduction</span></h2>
+<p>The Preferences item in the menu bar allows a number of features of geWorkbench to be configured.
+</p><p><img alt="Preferences.png" src="preferences_files/Preferences.png" height="316" width="788">
+</p><p><br>
+</p>
+<a name="When_do_changes_take_effect.3F"></a><h2> <span class="mw-headline" id="When_do_changes_take_effect.3F">When do changes take effect?</span></h2>
+<p>Changes to items in the preferences menu do not affect any already 
+present primary data nodes, e.g. microarray data sets.  The changes will
+ be in force for any new data nodes loaded after a setting is changed.  
+They will also take effect if geWorkbench is restarted.
+</p>
+<a name="Text_Editor"></a><h2> <span class="mw-headline" id="Text_Editor">Text Editor</span></h2>
+<p>The user can change the default text editor used to view data files. 
+ For example, when you right-click on a data node in the Project Folders
+ component, "View in Editor" is one of the options offered.
+</p><p><br>
+</p>
+<a name="Visualization"></a><h2> <span class="mw-headline" id="Visualization">Visualization</span></h2>
+<p>Heat maps, e.g. in the Color Mosaic component, can be displayed using either a relative or an absolute color scheme.  
+</p><p>A change in this setting only takes effect the next time a new 
+microarray data node is loaded.  It does not affect the visualization of
+ any node already loaded.
+</p><p><b>Note</b> - Changing the relative/absolute preference will not take effect until the next time a data set is loaded.
+</p>
+<ul><li> <b>Absolute</b>
+<ul><li> Red represents positive expression values, and green represents
+ negative expression values.  Black represents a value of zero.  The 
+shade represents the expression magnitude as follows:
+</li><li> Formal spec:  Let M = max{|min|, |max|} over all expression 
+measurements, across all arrays. If expression value x &gt; 0, assign it
+ the red spectrum x / M * 256. If expression value x is negative, assign
+ it to the green spectrum -x / M * 256.
+</li></ul>
+</li><li> <b>Relative</b> (default)
+<ul><li> <b>Relative</b> is similar to the setting for Absolute, but 
+each marker is mean-variance normalized first.  A Red-Blue color scheme 
+is used, with red representing the highest values and blue the lowest.  
+White represents the marker average.
+</li><li> <b>Note</b> - <b>Relative</b> will give odd-looking results if only a small number of arrays are loaded.
+</li></ul>
+</li></ul>
+<a name="GenePix_Value_Computation"></a><h2> <span class="mw-headline" id="GenePix_Value_Computation">GenePix Value Computation</span></h2>
+<p>Four methods for calculating a composite expression measurement for 
+each marker in a GenePix file are offered.  They combine the foreground 
+and background and mean or median measurements from each channel in 
+different ways.
+</p>
+<ol><li> ( F635 Mean - B635 Mean) / (F532 Mean - B532 Mean).
+</li><li> ( F635 Median - B635 Median) / (F532 Median - B532 Median).
+</li><li> ( F532 Mean - B532 Mean) / (F635 Mean - B635 Mean).
+</li><li> ( F532 Median - B532 Median) / (F635 Median - B635 Median). 
+</li></ol>
+<p>See the entry <a href="http://wiki.c2b2.columbia.edu/workbench/index.php/File_Formats#GenePix_Format" title="File Formats"> GenePix Format</a> in the GenePix tutorial chapter for further details of processing GenePix data on input.
+</p>
+<a name="Remote_Components_URL"></a><h2> <span class="mw-headline" id="Remote_Components_URL">Remote Components URL</span></h2>
+<p>geWorkbench can download certain components from a network 
+repository.  This specifies the location of the network component 
+repository.
+</p>
+<a name="Marker_Load_Options"></a><h2> <span class="mw-headline" id="Marker_Load_Options">Marker Load Options</span></h2>
+<p>When a microarray dataset is loaded, along with its annotation file, 
+it is possible to re-sort the markers at the global level - the new 
+order will then be seen in all geWorkbench components.  There are three 
+options:
+</p>
+<ul><li> Load markers in the original order
+</li><li> Load markers ordered by gene name
+</li><li> Load markers ordered by probeset id
+</li></ul>
+<p>If no annotation file is loaded, sorting by probeset id can still be done.
+</p><p>If the Marker Load option is changed, it will take effect the next time a dataset is loaded.
+</p><p>In addition to this global sorting, markers can also be sorted by
+ the same three methods in the Markers component (right-click on the 
+marker list).
+</p>
+<a name="Remote_Workspaces_URL"></a><h2> <span class="mw-headline" id="Remote_Workspaces_URL">Remote Workspaces URL</span></h2>
+<p>Development versions of geWorkbench have a feature which allows a 
+workspace to be saved to a remote server for later retrieval or sharing.
+</p><p><br>
+</p>
+<a name="Soft_Limit_on_Cytoscape_Networks_Objects"></a><h2> <span class="mw-headline" id="Soft_Limit_on_Cytoscape_Networks_Objects">Soft Limit on Cytoscape Networks Objects</span></h2>
+<p>There is a limit to the size of networks that Cytoscape can be used 
+to visualize in geWorkbench. This limit will depend on the amount of 
+memory allocated to geWorkbench. Viewing too large a network can cause 
+geWorkbench to run out of memory and stop responding.
+</p><p>As of release 2.2.1, if the user attempts to view a large network
+ in Cytocape, he or she will be offered the option to instead view the 
+network using a built-in text viewer.
+</p><p>This "Soft Limit" preference setting controls the size of a 
+network, calculated at the sum of the node (genes) and edges 
+(interactions), that will trigger display of the dialog allowing the 
+user to choose the text viewer.  The user can experiment with attempting
+ to view larger networks.
+</p><p>See the <a href="http://wiki.c2b2.columbia.edu/workbench/index.php/Cytoscape_Network_Viewer" title="Cytoscape Network Viewer"> Cytoscape Network Viewer</a> chapter for further details.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 38/1000000
+Post-expand include size: 1847/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key workbench:pcache:idhash:2507-0!1!0!!en!2!printable=1 and timestamp 20120313231413 -->
+<div class="printfooter">
+Retrieved from "<a href="http://wiki.c2b2.columbia.edu/workbench/index.php/Preferences">http://wiki.c2b2.columbia.edu/workbench/index.php/Preferences</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden"></div>		<!-- end content -->
+				<div class="visualClear"></div>
+	</div>
+</div></div>
+<div class="visualClear"></div>
+<div id="footer">
+	<div id="f-poweredbyico"><img src="preferences_files/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" height="31" width="88"></div>
+	<ul id="f-list">
+		<li id="lastmod"> This page was last modified on 22 July 2011, at 15:43.</li>
+	</ul>
+</div>
+</div>
+
