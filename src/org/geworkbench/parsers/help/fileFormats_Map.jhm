@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE map PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 1.0//EN"
+
+         "http://java.sun.com/products/javahelp/map_1_0.dtd">
+
+<map version="1.0">
+	
+		<mapID target="Affymetrix_MAS5.2FGCOS_Format" url="fileFormats.htm#Affymetrix_MAS5.2FGCOS_Format"/>
+		<mapID target="Affymetrix_File_Matrix_Format" url="fileFormats.htm#Affymetrix_File_Matrix_Format_.28geWorkbench_.22.exp.22_format.29"/>
+		<mapID target="Notes" url="fileFormats.htm#Notes"/>
+		<mapID target="Tab-delimited_format" url="fileFormats.htm#Tab-delimited_format"/>
+		<mapID target="Notes_2" url="fileFormats.htm#Notes_2"/>
+		<mapID target="GenePix_Format" url="fileFormats.htm#GenePix_Format"/>
+		<mapID target="Annotation_Files" url="fileFormats.htm#Annotation_Files"/>
+		<mapID target="geWorkbench_expression_file_parser_support_for_Affymetrix_annotation_files" url="fileFormats.htm#geWorkbench_expression_file_parser_support_for_Affymetrix_annotation_files"/>
+		<mapID target="Creating_a_custom_annotation_file" url="fileFormats.htm#Creating_a_custom_annotation_file"/>
+		<mapID target="Recognized_Column_Headers" url="fileFormats.htm#Recognized_Column_Headers"/>
+		<mapID target="Parsing_Errors" url="fileFormats.htm#Parsing_Errors"/>
+		<mapID target="Network_Formats" url="fileFormats.htm#Network_Formats"/>
+		<mapID target="SIF_format" url="fileFormats.htm#SIF_format"/>
+		<mapID target="Adjacency_matrix_format" url="fileFormats.htm#Adjacency_matrix_.28ADJ.29_format"/>
+		<mapID target="Misc._Formats" url="fileFormats.htm#Misc._Formats"/>
+		<mapID target="MRA_Export_format" url="fileFormats.htm#MRA_Export_format"/>
+		<mapID target="Pattern_Discovery_Export_Format" url="fileFormats.htm#Pattern_Discovery_Export_Format"/>	
+
+</map>
+

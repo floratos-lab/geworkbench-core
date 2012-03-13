@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<toc version="1.0">
+
+	<tocitem text="File Formats">
+
+		<tocitem target="Affymetrix_MAS5.2FGCOS_Format" text="Affymetrix_MAS5/GCOS_Format"/>
+		<tocitem target="Affymetrix_File_Matrix_Format" text="Affymetrix File Matrix Format (geWorkbench .exp format)"/>
+		<tocitem target="Notes" text="    Notes"/>
+		<tocitem target="Tab-delimited_format" text="Tab-delimited format"/>
+		<tocitem target="Notes_2" text="    Notes"/>
+		<tocitem target="GenePix_Format" text="GenePix Format"/>
+		<tocitem target="Annotation_Files" text="Annotation Files"/>
+		<tocitem target="geWorkbench_expression_file_parser_support_for_Affymetrix_annotation_files" text="    geWorkbench expression file parser support for Affymetrix annotation files"/>
+		<tocitem target="Creating_a_custom_annotation_file" text="    Creating a custom annotation file"/>
+		<tocitem target="Recognized_Column_Headers" text="    Recognized Column Headers"/>
+		<tocitem target="Parsing_Errors" text="    Parsing Errors"/>
+		<tocitem target="Network_Formats" text="Network Formats"/>
+		<tocitem target="SIF_format" text="    SIF format"/>
+		<tocitem target="Adjacency_matrix_format" text="    Adjacency matrix (ADJ) format"/>
+		<tocitem target="Misc._Formats" text="Misc. Formats"/>
+		<tocitem target="MRA_Export_format" text="    MRA Export format"/>
+		<tocitem target="Pattern_Discovery_Export_Format" text="    Pattern Discovery Export Format"/>
+
+	</tocitem>
+
+</toc>
+

@@ -1,0 +1,408 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html dir="ltr" lang="en"><head>
+<title>File Formats - Workbench</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="generator" content="MediaWiki 1.16.0">
+<meta name="robots" content="noindex,follow">
+
+</head>
+<body class="mediawiki ltr ns-0 ns-subject page-File_Formats skin-monobook">
+<div id="globalWrapper">
+<div id="column-content"><div id="content">
+	<a id="top"></a>
+	
+	<h1 id="firstHeading" class="firstHeading">File Formats</h1>
+	<div id="bodyContent">
+		<!-- start content -->
+<p><br>
+</p><p><br>
+</p>
+<a name="Affymetrix_MAS5.2FGCOS_Format"></a><h2> <span class="mw-headline" id="Affymetrix_MAS5.2FGCOS_Format">Affymetrix MAS5/GCOS Format</span></h2>
+<p>These are text files (specifically, text versions of .CHP files) 
+produced by the MAS software from Affymetrix. The image below provides 
+an example of an input file that the application will accept as a 
+correctly formatted "Affymetrix MAS5/GCOS" file type (only the first 18 
+lines of the file are shown):
+</p><p><br>
+<img alt="AffyMas5GcosFormat.png" src="fileFormats_files/AffyMas5GcosFormat.png" height="295" width="832">
+</p><p><br> 
+Any number of lines can precede the actual array data (in the example 
+above the first 11 lines are non-data lines). All such lines will be 
+ignored when the file is parsed. The beginning of the actual data is 
+marked by a row containing tab-separated column names. Any number of 
+columns may be present; however, only the following columns will be 
+acted upon (column names must be spelled exactly as listed below and 
+cannot contain tabs):
+</p>
+<ul><li> <b>Probe Set Name</b>: This column is mandatory; the file will 
+fail to be parsed unless this column is present. Its contents are 
+strings that provide the marker names associated with a microarray set 
+(AFFX-BioB-5_at, AFFX-MurIL10_at, etc).
+</li><li> <b>Signal Log Ratio</b>: This column is optional. If present, 
+its contents must be real numbers and will be used as the expression 
+measurements for the corresponding markers.
+</li><li> <b>Signal</b>: Same as column "Signal Log Ratio" above. If 
+both columns are present, only "Signal Log Ratio" is used ("Signal" will
+ be ignored)
+</li><li> <b>Avg Diff</b>: Same as columns "Signal Log Ratio" and 
+"Signal". If either "Signal Log Ratio" or "Signal" is present then "Avg 
+Diff" is ignored and the contents of those columns are used instead 
+(with "Signal Log Ratio" taking priority over "Signal"). At least one of
+ these 3 columns ("Signal Log Ratio", "Signal", "Avg Diff") must be 
+present for the file to parsed in a meaningful way. if this is not the 
+case, the file will still be read in but all markers will be tagged as 
+having missing values.
+</li><li> <b>Detection</b>: This column is optional. Its value is a 
+single character (P, M, or A) and if present it is used to determine the
+ absolute call for a measurement (A -&gt; absent, M -&gt; marginal, P 
+-&gt; present).
+</li><li> <b>Abs Call</b>: Exactly the same as column "Detection" (for compatibility with text files produced by older versions of the MAS software).
+</li><li> <b>Detection p-value</b>: This column is optional. Its values 
+are real numbers between 0 and 1. It provides a measure of confidence in
+ the quality of the measurement reading (the smallest the p-value the 
+higher the confidence). Further, if both "Detection" and "Abs Call" 
+columns are missing, the "Detection p-value" is used as an alternative 
+method to determine the absolute calls for marker measurements:
+<ul><li> If p-value &lt; 0.04, then the absolute call is "present"
+</li><li> If 0.04 &lt;= p-value &lt; 0.06, then the absolute call is "marginal".
+</li><li> If p-value &gt;= 0.06, then the absolute call is "missing".
+</li></ul>
+</li></ul>
+<p>The p-value thresholds used above are chosen to be the same as the 
+default thresholds used for the same purpose by the MAS software (see 
+the manual "GeneChip Expression Analysis: Data Analysis Fundamentals" 
+from Affymetrix, <a href="http://www.affymetrix.com/support/downloads/manuals/data_analysis_fundamentals_manual.pdf" class="external free" rel="nofollow">http://www.affymetrix.com/support/downloads/manuals/data_analysis_fundamentals_manual.pdf</a>).
+</p><p>The marker data follow the column names. Each row correspond to one marker. Values within a row are tab-separated.
+</p><p><br>
+</p>
+<a name="Affymetrix_File_Matrix_Format_.28geWorkbench_.22.exp.22_format.29"></a><h2> <span class="mw-headline" id="Affymetrix_File_Matrix_Format_.28geWorkbench_.22.exp.22_format.29">Affymetrix File Matrix Format (geWorkbench ".exp" format)</span></h2>
+<p>The "EXP" format file is the geWorkbench native format for saving 
+microarray data.  It allows not only the data matrix for a group of 
+arrays to be saved, but also various set labels grouping these arrays, 
+e.g. by phenotype.  The data is saved in a tab-delimited spreadsheet 
+format.
+</p><p><br>
+Below are the first few lines of a "Affymetrix File Matrix " file type:
+</p><p><br>
+<img alt="AffyFileMatrix.png" src="fileFormats_files/AffyFileMatrix.png" height="147" width="921">
+</p><p><br> 
+This example shows data from 3 microarrays named CB26-2, CB511 and CB512). 
+</p><p>Any number of comment lines, each one starting with a #, can 
+precede the actual array data (however, no empty lines are allowed 
+before, after or between comment lines). All comment lines will be 
+ignored during file parsing. 
+</p><p>The beginning of the actual data is marked by the first row that 
+does not begin with a # character. This row is expected to have N+2 
+tab-separated column names, where N is the number of microarrays. The 
+first column name must read "AffyId"; the second column name must read 
+"Annotation". The subsequent N entries are assumed to be the labels of 
+the N microarrays whose data are contained in the file. Any string can 
+be used as a microarray label as long as it does not contain tab 
+characters.
+</p><p>There can then follow zero or more "Description" lines. 
+Description lines can be used to group microarrays into array sets - see
+ the tutorial <a href="http://wiki.c2b2.columbia.edu/workbench/index.php/Data_Subsets_-_Arrays" title="Data Subsets - Arrays"> Data Subsets - Arrays</a>".
+ Each line describes one list of array sets and comprises N+2 tab 
+separated entries. The first entry must be the word "Description". The 
+second entry is the label that will be used in the application to 
+identify this list of array sets (users can select which list to work 
+with from the "Array/Phenotype Sets" drop-down menu within the 
+Arrays/Phenotypes application component). The following N columns are 
+array set labels that map one-to-one to the N arrays listed in the 
+"AffyID" line; their relative order in the description line determines 
+how the arrays are grouped into sets. E.g., in the example above the 
+first description line defines a list containing 2 array sets: the first
+ set is called "Cord blood" and contains the arrays CB26-2 and CB511. 
+The second set is called "pFL" and contains the array CB512. The list 
+with these two array sets is itself named  "short designation".
+</p><p>Within a particular array list, an array can belong to more than 
+one set.  In the cell of the tab-delimited file for such an array, each 
+set that the array is a member of is separated by the "|" pipe 
+character.  For example, "a|b|c" would assign the array to sets a, b and
+ c.
+</p><p>The last part of the file contains the actual expression 
+measurements. There is one line per marker on the chip (there are 4 such
+ lines in the example). Each line starts with the name of the marker. 
+The name is followed by a string that provides a human readable 
+annotation of the marker (this entry must contain a non-empty string; if
+ there is no meaningful annotation to be associated with a marker then 
+the marker name may replicated here or a series of one or more space 
+characters can be used). The measurement values follow the annotation 
+string. This portion of a data line can assume one of two possible 
+forms:
+</p>
+<ul><li> <b>Measurements and p-values</b>: there are 2N tab separated 
+decimal values present (the example above has this form). These values 
+are parsed in consecutive pairs. The i-th pair provides data for the 
+value of the marker on the i-th array and comprises (a) the expression 
+measurement for the marker on the array and (2) a p-value (between 0 and
+ 1) indicating the strength of the call. The p-value is used by the 
+application to infer the detection call for the corresponding 
+measurement. The algorithm used for this purpose is the same as the one 
+used in the Affymetrix MAS5/CCOS Format to infer detection calls from 
+the value of the "Detection p-value" column.
+</li><li> <b>Measurements only</b>: there are N tab separated decimal 
+values present. The i-th values provides the expression measurement for 
+the marker at the i-th microarray. All measurements are treated as 
+having a detection call of "Present".
+</li></ul>
+<p><br>
+</p>
+<a name="Notes"></a><h3> <span class="mw-headline" id="Notes">Notes</span></h3>
+<ol><li> In the case where there are two data values per array, e.g. 
+signal and p-value, the format is difficult to create by hand because 
+the header columns do not directly label or line up with the data 
+columns. 
+</li><li> <a href="http://wiki.c2b2.columbia.edu/workbench/images/a/a9/Bcell.head.txt" class="internal" title="Bcell.head.txt"> <b>Example file:</b></a> An example of the first 14 lines of the file Bcell-100.exp (used in many examples in these tutorials) is available <a href="http://wiki.c2b2.columbia.edu/workbench/images/a/a9/Bcell.head.txt" class="internal" title="Bcell.head.txt"> here</a>.
+</li></ol>
+<a name="Tab-delimited_format"></a><h2> <span class="mw-headline" id="Tab-delimited_format">Tab-delimited format</span></h2>
+<p>This is an example of a file that the application will accept as a 
+correctly formatted "Tab-delimited " file type (only the first 20 lines 
+of the file are shown), as output by the program RMAExpress:
+</p><p><br>
+<img alt="Tab-delimited Format.png" src="fileFormats_files/Tab-delimited_Format.png" height="331" width="934">
+</p><p><br> 
+Any number of comment lines, each one starting with a # or a&nbsp;!, can
+ precede the actual array data (however, no empty lines are allowed 
+before, after or between comment lines). All comment lines will be 
+ignored during file parsing. The beginning of the actual data is marked 
+by the first row that does not begin with a # or a&nbsp;! character. 
+This row is expected to have N+1 tab-separated column names. The first 
+column name can be any character (in the example above it has the value 
+"ID"). The first column name cannot be left blank or be occupied with a 
+white space (for example, a header cannot start with "\t").&nbsp; The 
+remaining N entries are assumed to be the names of the microarrays 
+comprising the microarray set (in the example above the microarray names
+ are "alpha_factor_release sample013", "alpha_factor_release_sample014" 
+and "alpha_factor_release_sample015").
+</p><p>Subsequent lines contain the actual data. Each line corresponds 
+to a single marker and consits of N+1 tab-separated entries. The first 
+entry is the marker name (a string). The remaining N entries are real 
+numbers providing the expression level of the marker at each of the 
+microarrays in the set. A missing value or a non-real value results at a
+ measurement being marked as "missing".
+</p><p><br>
+</p>
+<a name="Notes_2"></a><h3> <span class="mw-headline" id="Notes_2">Notes</span></h3>
+<ol><li> This simple tab-delimited format just contains array and marker
+ names and the expression data.  It does not contain any annotation, nor
+ does it support any groupings of arrays.  
+</li><li> This format only supports a single value per marker per array.  A second, confidence value is not supported.
+</li><li> Some microarray platforms can include multiple 
+markers/probesets for some or many of the genes represented.  If a data 
+file contains e.g. gene symbols rather than individual marker names in 
+the first column, any resulting duplicate appearance of such a label 
+will prevent the file from being read in to geWorkbench.
+</li></ol>
+<a name="GenePix_Format"></a><h2> <span class="mw-headline" id="GenePix_Format">GenePix Format</span></h2>
+<p>Each GenePix file contains data for a differential expression 
+experiment involving a single microarray. A detailed description of the <a href="http://www.moleculardevices.com/pages/software/gn_genepix_file_formats.html#gpr" class="external text" rel="nofollow">GenePix .gpr format</a> can be found at the manufacturer's site.
+</p><p>The top portion of the file (the GPR Header) contains information
+ about image acquisition and analysis. This part is ignored during 
+parsing. From the actaul data portion of the file only the following 
+data columkns are parsed:
+</p>
+<ul><li> ID: The contents of this column are used as the marker names.
+</li><li> F635 Median, F635 Mean, B635 Median, B635 Mean, F532 Median, 
+F532 Mean, B532 Median, B532 Mean: The values of these columns are used 
+for calculating the composite expression measurement for a marker. There
+ are 4 possible options for performing this calculation (the 
+Tools-&gt;Preferences menu can be used to specify which of the 4 to 
+use):
+</li></ul>
+<ol><li> ( F635 Mean - B635 Mean) / (F532 Mean - B532 Mean).
+</li><li> ( F635 Median - B635 Median) / (F532 Median - B532 Median).
+</li><li> ( F532 Mean - B532 Mean) / (F635 Mean - B635 Mean).
+</li><li> ( F532 Median - B532 Median) / (F635 Median - B635 Median).
+</li></ol>
+<ul><li> Flags: Parsed as an arbitrary string. The Flags value 
+associated with a marker can be used to filter out the marker when using
+ the "Genepix Flags" filter (for details see the online help section on 
+Filters).
+</li></ul>
+<p><br>
+</p>
+<a name="Annotation_Files"></a><h2> <span class="mw-headline" id="Annotation_Files">Annotation Files</span></h2>
+<p>Currently geWorkbench only supports the Affymetrix annotation file 
+format.  This is a CSV (comma separated value) format.  Rows are 
+individual probesets, and each column contains a different annotation 
+type.
+</p><p>Affymetrix annotation files for their platforms can be obtained 
+directly from the Affymetrix support website (registration required).  
+These files are updated quarterly.
+</p>
+<a name="geWorkbench_expression_file_parser_support_for_Affymetrix_annotation_files"></a><h3> <span class="mw-headline" id="geWorkbench_expression_file_parser_support_for_Affymetrix_annotation_files">geWorkbench expression file parser support for Affymetrix annotation files</span></h3>
+<p>These geWorkbench file parsers will accept an Affymetrix-format annotation file during the data loading process:
+</p>
+<ul><li> Affymetrix file matrix (geWorkbench native format)
+</li><li> MAS5/GCOS (Affymetrix)
+</li><li> GEO SOFT 
+<ul><li> GSM - sample
+</li><li> GSE - series, a series of samples representing an experiment
+</li><li> GDS - data set, a curated data matrix
+</li></ul>
+</li><li> GEO Series Matrix
+</li><li> MAGE-TAB data matrix
+</li><li> Tab-delimited (e.g. RMAExpress, etc).
+</li></ul>
+<p>The geWorkbench GenePix file parser does not support a separate annotation file.
+</p>
+<a name="Creating_a_custom_annotation_file"></a><h3> <span class="mw-headline" id="Creating_a_custom_annotation_file">Creating a custom annotation file</span></h3>
+<p>For a non-Affymetrix platform, you can create your own custom 
+annotation file using only the annotation columns needed for the 
+analyses you intend to perform in geWorkbench.
+</p><p>The geWorkbench annotation file parser recognizes the column 
+headers shown in the next section.  All columns are optional, however, 
+if "probeset id" is not present, none of the annotation records will 
+link to the expression file.  
+</p>
+<a name="Recognized_Column_Headers"></a><h3> <span class="mw-headline" id="Recognized_Column_Headers">Recognized Column Headers</span></h3>
+<ul><li> "Probe Set ID"
+</li><li> "Species Scientific Name"
+</li><li> "Archival UniGene Cluster"
+</li><li> "UniGene ID"
+</li><li> "Genome Version"
+</li><li> "Alignments"
+</li><li> "Gene Title"  (e.g. Epidermal growth factor receptor)
+</li><li> "Gene Symbol" (e.g. EGFR)
+</li><li> "Entrez Gene"
+</li><li> "SwissProt"
+</li><li> "RefSeq Transcript ID"
+</li><li> "Gene Ontology Biological Process"
+</li><li> "Gene Ontology Cellular Component"
+</li><li> "Gene Ontology Molecular Function"
+</li><li> "Pathway"
+</li><li> "Transcript Assignments"
+</li></ul>
+<p>For fields that contain multiple values, the delimiter between the values is "///".
+</p>
+<a name="Parsing_Errors"></a><h3> <span class="mw-headline" id="Parsing_Errors">Parsing Errors</span></h3>
+<p>The geWorkbench parser will check for whether a given probeset occurs
+ more than one time in the annotation file.  If it does, an error dialog
+ will appear, offering three choices:
+</p>
+<ul><li> Skip this duplicate annotation entry.
+</li><li> Skip all duplicate annotation entries.
+</li><li> Cancel - do not load the annotation file.
+</li></ul>
+<p>This dialog is shown in the following image:
+</p><p><img alt="Annotation Parser Handle Duplicates.png" src="fileFormats_files/Annotation_Parser_Handle_Duplicates.png" height="185" width="388">
+</p><p><br>
+</p>
+<a name="Network_Formats"></a><h2> <span class="mw-headline" id="Network_Formats">Network Formats</span></h2>
+<p>Tools such as ARACNe, the CNKB, and Master Regulator Analysis (MRA) 
+make use of network interaction files.  ARACNe creates "adjacency 
+matrix" (ADJ) format files, and MRA reads them.  The CNKB can export 
+complete sets of interactions in either the ADJ or SIF format.
+</p>
+<a name="SIF_format"></a><h3> <span class="mw-headline" id="SIF_format">SIF format</span></h3>
+<p>The Simple Interaction Format (SIF) was developed for Cytoscape.
+</p><p>For a full definition see the <a href="http://www.cytoscape.org/" class="external text" rel="nofollow">Cytoscape</a> manual, for example <a href="http://cytoscape.org/manual/Cytoscape2_8Manual.html#SIF%20Format" class="external text" rel="nofollow">Ctyoscape manual v2.8</a>
+</p><p>Each line contains interactions of a particular type for the first node with one or more target nodes:
+</p>
+<ul><li> node1 interaction-type-code node2 node3 node4 etc.
+</li></ul>
+<p>Some interaction-type-codes used in the CNKB are
+</p>
+<ul><li> pp protein-protein
+</li><li> pd protein-DNA
+</li><li> tm modulator-TF
+</li></ul>
+<a name="Adjacency_matrix_.28ADJ.29_format"></a><h3> <span class="mw-headline" id="Adjacency_matrix_.28ADJ.29_format">Adjacency matrix  (ADJ) format</span></h3>
+<p>The is is format used by ARACNe.
+</p><p>The first entry on a line is a marker used as a "hub" in the ARACNe calculation, e.g. node1 in the example below.
+</p><p>For each of the interactions in which hub1 takes part, target 
+markers (e.g. target1 , target2) and a weight for each such interaction 
+(e.g. value1, value2) are listed.
+</p>
+<pre>hub1 target1 value1 target2 value2 target3 value3 etc....
+hub2 target4 value4 target5 value5 target6 value6 etc....
+</pre>
+<p>The weight, <i>valueN</i> can be for example the mutual information, a
+ confidence value etc.  When generated by ARACNe, the value is the 
+mutual information between the hub and the target.  The adjacency matrix
+ generated by ARACNe only contains hub-target interactions that exceed a
+ threshold level.
+</p>
+<a name="Misc._Formats"></a><h2> <span class="mw-headline" id="Misc._Formats">Misc. Formats</span></h2>
+<a name="MRA_Export_format"></a><h3> <span class="mw-headline" id="MRA_Export_format">MRA Export format</span></h3>
+<p>The data is saved in blocks of comma separate values, one block per "master regulator".
+The first line of each block is the marker id and the gene name of the master regulator.
+Subsequent lines contain, in addition, a zero, and then the t-value for that markers.
+The position with zero previously contained a p-value which is no longer calculated.
+</p>
+<pre>220462_at, CSRNP3
+200660_at, S100A11, 0.0, 8.681083
+201474_s_at, ITGA3, 0.0, 6.0778093
+202910_s_at, CD97, 0.0, 7.482091
+203370_s_at, PDLIM7, 0.0, 7.235049
+205479_s_at, PLAU, 0.0, 9.105933
+208540_x_at, S100A11, 0.0, 8.539139
+208690_s_at, PDLIM1, 0.0, 7.2551293
+210735_s_at, CA12, 0.0, 6.954225
+211924_s_at, PLAUR, 0.0, 6.1465526
+214853_s_at, SHC1, 0.0, 9.554302
+</pre>
+<pre>202614_at, SLC30A9
+160020_at, MMP14, 0.0, 4.3422446
+200808_s_at, ZYX, 0.0, 6.7016177
+200859_x_at, FLNA, 0.0, 6.5627837
+201315_x_at, IFITM2, 0.0, 6.2328486
+201389_at, ITGA5, 0.0, 6.451033
+201883_s_at, B4GALT1, 0.0, 3.3089304
+202888_s_at, ANPEP, 0.0, 4.060898
+203149_at, PVRL2, 0.0, 4.0649285
+203370_s_at, PDLIM7, 0.0, 7.235049
+205936_s_at, HK3, 0.0, 3.5691133
+207667_s_at, MAP2K3, 0.0, 5.186854
+208690_s_at, PDLIM1, 0.0, 7.2551293
+209359_x_at, RUNX1, 0.0, 6.7081113
+211924_s_at, PLAUR, 0.0, 6.1465526
+211966_at, COL4A2, 0.0, 7.394549
+214752_x_at, FLNA, 0.0, 7.3759694
+214866_at, PLAUR, 0.0, 6.628238
+215498_s_at, MAP2K3, 0.0, 7.774499
+215706_x_at, ZYX, 0.0, 6.2943435
+217691_x_at, SLC16A3, 0.0, 5.4462223
+221807_s_at, TRABD, 0.0, 3.2993512
+35626_at, SGSH, 0.0, 6.4077697
+</pre>
+<a name="Pattern_Discovery_Export_Format"></a><h3> <span class="mw-headline" id="Pattern_Discovery_Export_Format">Pattern Discovery Export Format</span></h3>
+<ol><li> pattern number
+</li><li> pattern
+</li><li> [parameters]
+</li><li> [sequence number, starting hit position in sequence]  (both numbers are zero-based)
+</li></ol>
+<pre>discovery
+File:C:\Users\ksmith\Desktop\geWB_data\fasta\H1H5_HistoneDB_NHGRI.fasta
+[0]	LKER.GSS	[4,4,7,209.92124911313488]	[0,57][1,67][2,68][4,59]
+[1]	L.QTKG.GASGSFKLS	[3,3,14,604829.8848207161]	[0,100][3,94][4,102]
+[2]	A.AKKP.AK	[4,4,7,172.99810658850754]	[0,239][1,225][2,225][4,245]
+[3]	AT.KKP.AK	[4,4,7,172.99810658850754]	[0,239][1,132][2,133][4,245]
+[4]	KKP.AKKA	[3,3,7,11.941700055286251]	[1,228][2,228][4,165]
+[5]	AA.KKA.AAA	[3,3,8,54.52686758911383]	[1,193][2,194][3,61]
+</pre>
+<!-- 
+NewPP limit report
+Preprocessor node count: 70/1000000
+Post-expand include size: 1925/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key workbench:pcache:idhash:2177-0!1!0!!en!2!printable=1 and timestamp 20120312205915 -->
+<div class="printfooter">
+Retrieved from "<a href="http://wiki.c2b2.columbia.edu/workbench/index.php/File_Formats">http://wiki.c2b2.columbia.edu/workbench/index.php/File_Formats</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden"></div>		<!-- end content -->
+				<div class="visualClear"></div>
+	</div>
+</div></div>
+<div class="visualClear"></div>
+<div id="footer">
+	<div id="f-poweredbyico"><img src="fileFormats_files/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" height="31" width="88"></div>
+	<ul id="f-list">
+		<li id="lastmod"> This page was last modified on 28 February 2012, at 11:29.</li>
+	</ul>
+</div>
+</div>
+

@@ -1,39 +1,12 @@
 package org.geworkbench.builtin.projects;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSplitPane;
-
-import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.builtin.projects.comments.CommentsPanel;
-import org.geworkbench.builtin.projects.experimentinformation.ExperimentInformationPanel;
-import org.geworkbench.builtin.projects.history.HistoryPanel;
-import org.geworkbench.engine.config.VisualPlugin;
-import org.geworkbench.engine.management.AcceptTypes;
-import org.geworkbench.engine.management.ComponentRegistry;
 
 /**
  * 
+ * This is a dummy class only for the purpose to facilitate a help topic.
  * 
- * @author zji
- * @version $Id: InformationPanel.java 8369 2011-10-06 15:38:33Z zji $
+ * @version $Id: LocalDataFilesHelp.java 9150 2012-03-13 20:48:17Z zji $
  * 
  */
-@AcceptTypes({ DSDataSet.class })
-public class LocalDataFilesHelp extends JPanel implements VisualPlugin {
-
-	private static final long serialVersionUID = -4544518025307954674L;
-
-	public LocalDataFilesHelp() {
-
-	
-	}
-
-	public Component getComponent() {
-		return this;
-	}
-
+public class LocalDataFilesHelp {
 }
