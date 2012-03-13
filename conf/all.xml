@@ -4,7 +4,11 @@
 
 	<gui-window name="Main GUI" class="org.geworkbench.engine.skin.Skin" />
 
-    <plugin id="SoftFileFilter" name="soft. Format"
+	<!-- FileFormat is only loaded here so that its help file appears. -->
+	<plugin id="fileFormat" name="for File Format Help"
+		class="org.geworkbench.parsers.FileFormat" />	
+ 
+ <plugin id="SoftFileFilter" name="soft. Format"
 		class="org.geworkbench.parsers.SOFTFileFormat" />
 
 	<plugin id="MageTabFileFilter" name="MAGE-TAB. Format"
