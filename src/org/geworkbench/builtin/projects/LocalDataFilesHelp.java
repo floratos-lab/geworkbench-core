@@ -23,11 +23,11 @@ import org.geworkbench.engine.management.ComponentRegistry;
  * 
  */
 @AcceptTypes({ DSDataSet.class })
-public class LocalDataFiles extends JPanel implements VisualPlugin {
+public class LocalDataFilesHelp extends JPanel implements VisualPlugin {
 
 	private static final long serialVersionUID = -4544518025307954674L;
 
-	public LocalDataFiles() {
+	public LocalDataFilesHelp() {
 
 	
 	}

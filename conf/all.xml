@@ -4,13 +4,14 @@
 
 	<gui-window name="Main GUI" class="org.geworkbench.engine.skin.Skin" />
 
-	<!-- FileFormat is only loaded here so that its help file appears. -->
-	<plugin id="fileFormat" name="for File Format Help"
-		class="org.geworkbench.parsers.FileFormat" />	
- 
-	<!-- LocalDataFiles is a dummy class used only to load the help file-->		
-	<plugin id="localDataFiles" name="for Local Data File Help"
-		class="org.geworkbench.builtin.projects.LocalDataFiles" />	
+<!-- FileFormat is only loaded here so that its help file appears. -->
+<!--
+	<plugin id="fileFormatHelp" name="for File Format Help"
+		class="org.geworkbench.parsers.FileFormatHelp" />	
+-->
+<!-- LocalDataFiles is a dummy class used only to load the help file-->		
+	<plugin id="localDataFilesHelp" name="for Local Data File Help"
+		class="org.geworkbench.builtin.projects.LocalDataFilesHelp" />	
 
 	<plugin id="SoftFileFilter" name="soft. Format"
 		class="org.geworkbench.parsers.SOFTFileFormat" />
