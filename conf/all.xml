@@ -8,7 +8,11 @@
 	<plugin id="fileFormat" name="for File Format Help"
 		class="org.geworkbench.parsers.FileFormat" />	
  
- <plugin id="SoftFileFilter" name="soft. Format"
+	<!-- LocalDataFiles is a dummy class used only to load the help file-->		
+	<plugin id="localDataFiles" name="for Local Data File Help"
+		class="org.geworkbench.builtin.projects.LocalDataFiles" />	
+
+	<plugin id="SoftFileFilter" name="soft. Format"
 		class="org.geworkbench.parsers.SOFTFileFormat" />
 
 	<plugin id="MageTabFileFilter" name="MAGE-TAB. Format"

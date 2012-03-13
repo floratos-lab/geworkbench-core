@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<toc version="1.0">
+
+	<tocitem text="Local Data Files">
+
+		<tocitem target="Overview" text="Overview"/>
+		<tocitem target="Open_File_Dialog" text="Open File Dialog"/>
+		<tocitem target="Data_Node_Naming" text="Data Node Naming in Project Folders"/>
+		<tocitem target="GEO_Soft_files" text="GEO Soft files"/>
+		<tocitem target="Network_Interaction_Files" text="Network Interaction Files"/>
+		<tocitem target="Pattern_Files" text="Pattern Files"/>
+		<tocitem target="FASTA_files" text="FASTA files"/>
+		<tocitem target="Example_Loading" text="Example: Loading microarray data files - local"/>
+		<tocitem target="Example_Merging" text="Example: Merging microarray data files after they have already been loaded"/>
+		
+	</tocitem>
+
+</toc>
+

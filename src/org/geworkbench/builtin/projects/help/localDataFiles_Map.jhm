@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE map PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 1.0//EN"
+
+         "http://java.sun.com/products/javahelp/map_1_0.dtd">
+
+<map version="1.0">
+		<mapID target="Overview" url="localDataFiles.htm#Overview"/>
+		<mapID target="Open_File_Dialog" url="localDataFiles.htm#Open_File_Dialog"/>
+		<mapID target="Data_Node_Naming" url="localDataFiles.htm#Data_Node_Naming_in_Project_Folders"/>
+		<mapID target="GEO_Soft_files" url="localDataFiles.htm#GEO_Soft_files"/>
+		<mapID target="Network_Interaction_Files" url="localDataFiles.htm#Network_Interaction_Files"/>
+		<mapID target="Pattern_Files" url="localDataFiles.htm#Pattern_Files"/>
+		<mapID target="FASTA_files" url="localDataFiles.htm#FASTA_files"/>
+		<mapID target="Example_Loading" url="localDataFiles.htm#Example:_Loading_microarray_data_files_-_local"/>
+		<mapID target="Example_Merging" url="localDataFiles.htm#Example:_Merging_microarray_data_files_after_they_have_already_been_loaded"/>	
+	
+
+</map>
+
