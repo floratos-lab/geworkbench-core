@@ -107,7 +107,7 @@ public class PatternResult extends CSAncillaryDataSet<DSSequence> implements
 				File newFile = new File(s.substring(5));
 				if (!dataSetFile.getName().equalsIgnoreCase(newFile.getName())) {
 					JOptionPane.showMessageDialog(null,
-							"The sequence dataset selected and the sequence filename in the pattern file doesn't match",
+							"The sequence dataset selected and the sequence filename in the pattern file do not match.",
 							"Pattern Discovery", JOptionPane.WARNING_MESSAGE);
 					return false;
 				}
