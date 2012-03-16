@@ -2,7 +2,7 @@
     
                               geWorkbench V2.3.0
                
-                               March 14th, 2012
+                               March 16th, 2012
 
             Joint Centers for Systems Biology, Columbia University
                               New York, NY  10032
@@ -104,8 +104,8 @@
        MacOSX operating system.
 
        Double-click geWorkbench_v2.3.0_MacOSX_installer.zip to begin
-       installation.  This will unpack a file called "Installer".  
-       Double-click on the Installer file to install geWorkbench.
+       installation.  This will unpack a file called "install".  
+       Double-click on the "install" file to install geWorkbench.
 
        Notes
           - Requires Mac OS X 10.5 (with updates) or higher.
@@ -128,15 +128,30 @@
 
        To begin the installation, type the command: 
 
-         "sh ./geWorkbench_v2.3.0_Linux_installer_with_JRE6.bin".
+              sh ./geWorkbench_v2.3.0_Linux_installer_with_JRE6.bin 
 
           This will extract geWorkbench into a new directory called
           geWorkbench_2.3.0. 
+  
+          If you requested that a desktop link be created, it will be called
+          rungeWorkbench_2.3.0.
+  
+          Note - if you made changes to the default installation directory
+          name, the shortcut link may just be called "geWorkbench_2.3.0"
+          rather than "rungeWorkbench_2.3.0".
 
        To run geWorkbench, and assuming you are using the Linux bash shell,
-          issue the command:  
+          and that you created a shortcut link during installation,
+          issue one of the following commands from your home directory:  
           
-          "./rungeWorkbench_2.3.0" 
+              ./rungeWorkbench_2.3.0 
+              or
+              sh rungeWorkbench_2.3.0.
+          
+          Alternatively, in the directory in which geWorkbench was installed,
+          you can start geWorkbench with the command:
+          
+              sh launch_geWorkbench.sh
 
 
     4. Generic -   A non-installer-based version of
@@ -188,7 +203,7 @@
     3.0 Release History: New Features and Updates
 =============================================================================== 
 
- geWorkbench 2.3.0 (2012-02-10)
+ geWorkbench 2.3.0 (2012-03-16)
     ==============================
     --- Summary ---
     geWorkbench v2.3.0 is a major release.  It includes significant
