@@ -1344,8 +1344,7 @@
 ===============================================================================
      
  
-    The geWorkbench team maintains a Wiki containing extensive documentation,
-    a User Manual, tutorials and training slides.  It is available at:
-        http://www.geworkbench.org
+    The geWorkbench team maintains a Wiki containing extensive documentation.
+    It is available at:  http://www.geworkbench.org
 
  
