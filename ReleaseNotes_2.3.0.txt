@@ -3,6 +3,7 @@
                               geWorkbench V2.3.0
                
                                March 16th, 2012
+                           (updated March 19, 2012)   
 
             Joint Centers for Systems Biology, Columbia University
                               New York, NY  10032
@@ -30,18 +31,19 @@
     System Requirements:
         Java:    
             The Java 6 JRE is required.  On Windows and Linux it can be 
-            installed separately or together with geWorkbench.  On MacOSX,
-            the Java 6 JRE is included with MacOSX versions 10.5 (with updates)
-            and 10.6.
+            installed separately, or together with geWorkbench.  On MacOSX,
+            the Java 6 JRE is included with MacOSX versions 10.5
+            (with updates), 10.6 and 10.7.
 
-            Please note that Java 6 is, in places, referred to by Sun as
+            Please note that Java 6 is also referred to as
             Java 1.6.  32-bit and 64-bit versions of Java can be used on
             appropriate platforms.
                  
-            See http://java.sun.com/javase/downloads/index.jsp.
+            See http://www.oracle.com/technetwork/java/javase/downloads.
             
-            geWorkbench 2.3.0 has not been tested with Java 7 and there may be
-            incompatibilties.
+            geWorkbench will run using Java 7, but has not been tested
+            extensively in that environment. At least one graphics
+            incompatibility has been seen under Java 7. 
             
         Memory:  
              At least 2 GB is recommended.  geWorkbench by
@@ -64,8 +66,8 @@
     Linux, and Macintosh) provide an installation wizard
     (generated using InstallAnywhere).
     
-    A generic version of geWorkbench, which does not use any installer,
-    is also available.
+    A generic version of geWorkbench, which does not use any installer, is also
+    available, and should run on any machine which supports Java 6. 
 
     Additional installation details are provided below, and at
     www.geworkbench.org.  All user documentation is maintained 
@@ -117,6 +119,14 @@
 
             Includes the 32-bit Sun Java 6 JRE.
        
+       File: geWorkbench_v2.3.0_Linux_installer_noJRE.bin
+            No JRE is included, you must make sure that an appropriate Java 6
+            JRE is installed on your system before installing geWorkbench.
+            You may need to configure the JRE. See the "Java_Environment
+            Configuration" section of the geWorkbench Download and Installation
+            page of www.geworkench.org.
+   
+   
        The Linux version of geWorkbench relies on X-Windows being installed
        and running. If you are running Linux on a server and e.g. Windows
        on your desktop, you will also need to run an X-windows server on
@@ -125,6 +135,8 @@
 
        After downloading, cd (if needed) to the directory to which you
        downloaded the installer.
+
+       The following uses the example of the installer file with the JRE6.
 
        To begin the installation, type the command: 
 
