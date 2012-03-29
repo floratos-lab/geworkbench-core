@@ -46,6 +46,7 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DurationFormatUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
@@ -1001,7 +1002,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			String startTime = firstLine.split("=")[1].trim();
 			long elspedTime = endTime - (new Long(startTime));
 			history += "\nTotal elsped time: "
-					+ Util.convertLongToTimeStr(elspedTime);
+					+ DurationFormatUtils.formatDurationHMS(elspedTime);
 		} catch(NumberFormatException ne)
 		{
 			history += "\nError processing elspedTime: " + ne.getMessage();

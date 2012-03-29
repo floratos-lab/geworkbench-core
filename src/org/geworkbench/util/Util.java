@@ -178,34 +178,11 @@ public class Util {
         }
         return sb.toString();
     }
-    
-    
+
     public static String formatDateStandard(Date date) {
         if (date == null) return "";
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return df.format(date);
     }
 
-    
-    public static String convertLongToTimeStr(long milliSeconds)
-    {
-    	long seconds = milliSeconds/1000;
-    	long minutes = milliSeconds/60000;
-    	long hours = milliSeconds/360000;
-    	
-    	String timeStr = "Elapsed Time: ";
-    	if (seconds == 0)
-    		timeStr = "00:00:00."+ milliSeconds;
-    	else if (minutes == 0)
-    		timeStr ="00:00:" + seconds + "." +  milliSeconds%1000;
-    	else if (hours == 0)
-    		timeStr ="00:" + minutes + ":" + seconds % 60 + "." +  milliSeconds%1000;
-    	else
-    		timeStr = hours + ":" + minutes % 60 + ":" + seconds % 60 + "." +  milliSeconds%1000;
-      
-    	return timeStr;
-    	 
-    }
-    
-    
 }
