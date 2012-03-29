@@ -129,6 +129,23 @@ public class IdeaEdge implements Serializable, Comparable<IdeaEdge> {
 		else if (d>0) return 1;
 		else return 0;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		IdeaEdge o=(IdeaEdge) obj;
+		String m1=this.getMarker1().getLabel();
+		String m2=this.getMarker2().getLabel();
+		String o1=o.getMarker1().getLabel();
+		String o2=o.getMarker2().getLabel();
+
+		if((m1.equals(o1)&&m2.equals(o2))||((m1.equals(o2))&&(m2.equals(o1))))
+			return true;
+		else
+			return false;
+		
+		
+	}
+	
 
 	public void setzDeltaCorr(double zDeltaCorr) {
 		this.zDeltaCorr = zDeltaCorr;
