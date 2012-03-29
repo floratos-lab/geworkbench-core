@@ -141,11 +141,13 @@ public class IdeaEdge implements Serializable, Comparable<IdeaEdge> {
 		if((m1.equals(o1)&&m2.equals(o2))||((m1.equals(o2))&&(m2.equals(o1))))
 			return true;
 		else
-			return false;
-		
-		
+			return false;		
 	}
 	
+	@Override
+	public int hashCode(){
+		return this.getMarker1().getLabel().hashCode()*this.getMarker2().getLabel().hashCode();
+	}
 
 	public void setzDeltaCorr(double zDeltaCorr) {
 		this.zDeltaCorr = zDeltaCorr;
