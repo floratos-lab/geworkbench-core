@@ -34,7 +34,6 @@ import org.geworkbench.bison.model.analysis.ParameterPanel;
 import org.geworkbench.engine.config.PluginRegistry;
 import org.geworkbench.engine.management.ComponentClassLoader;
 import org.geworkbench.util.FilePathnameUtils;
-import org.ginkgo.labs.util.FileTools;
 
 /**
  * <p>
@@ -63,6 +62,8 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 
 	private static final String XML = "xml";
 	private static final String FILE_EXTENSION_SEPARATOR = ".";
+	private static final String NEWLINE = "\n";
+	private static final String TAB = "\t";
 
 	private static final String ERR_TXT = FilePathnameUtils
 			.getUserSettingDirectoryPath() + "err.txt";
@@ -692,7 +693,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 		StringBuilder ans = new StringBuilder(
 				"=The MicroarraySetView used for analysis: ");
 		/* Generate text for microarrays/groups */
-		ans.append(FileTools.NEWLINE);
+		ans.append(NEWLINE);
 		try {
 			log.debug("We got a " + maSetView.items().getClass().toString());
 			if (maSetView.items().getClass() == CSPanel.class) {
@@ -702,29 +703,29 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 
 				ans.append("==Used Microarray Sets [")
 						.append(paneltest.size() + "]==")
-						.append(FileTools.NEWLINE);
+						.append(NEWLINE);
 				for (DSPanel<DSMicroarray> temp : paneltest) {
-					ans.append(FileTools.TAB + temp.toString()).append(
-							FileTools.NEWLINE);
+					ans.append(TAB + temp.toString()).append(
+							NEWLINE);
 					for (DSMicroarray temp2 : temp) {
-						ans.append(FileTools.TAB).append(FileTools.TAB)
+						ans.append(TAB).append(TAB)
 								.append(temp2.toString())
-								.append(FileTools.NEWLINE);
+								.append(NEWLINE);
 					}
 				}
 			} else if (maSetView.items().getClass() == CSMicroarraySet.class) {
 				log.debug("situation 2: microarraySets not selected");
 				CSMicroarraySet exprSet = (CSMicroarraySet) maSetView.items();
 				ans.append("==Used Microarrays [").append(exprSet.size())
-						.append("]==").append(FileTools.NEWLINE);
+						.append("]==").append(NEWLINE);
 				for (Iterator<DSMicroarray> iterator = exprSet.iterator(); iterator
 						.hasNext();) {
 					DSMicroarray array = iterator.next();
-					ans.append(FileTools.TAB).append(array.getLabel())
-							.append(FileTools.NEWLINE);
+					ans.append(TAB).append(array.getLabel())
+							.append(NEWLINE);
 				}
 			}
-			ans.append("==End of Microarray Sets==").append(FileTools.NEWLINE);
+			ans.append("==End of Microarray Sets==").append(NEWLINE);
 			/* Generate text for markers */
 
 			if (useMarkersFromSelector) {
@@ -750,15 +751,15 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 					log.debug("situation 5: All Markers selected.");
 					DSItemList<DSGeneMarker> markers = maSetView.allMarkers();
 					ans .append( "==Used Markers [" ).append( markers.size() ).append( "]==" )
-							.append( FileTools.NEWLINE );
+							.append( NEWLINE );
 					for (DSGeneMarker marker : markers) {
-						ans .append( FileTools.TAB ).append( marker.getLabel()
-						).append( FileTools.NEWLINE );
+						ans .append( TAB ).append( marker.getLabel()
+						).append( NEWLINE );
 					}
 				}
 
 
-				ans.append("==End of Used Markers==").append(FileTools.NEWLINE);
+				ans.append("==End of Used Markers==").append(NEWLINE);
 			}
 		} catch (ClassCastException cce) {
 			/* it's not a DSPanel, we generate nothing for panel part */
@@ -771,14 +772,14 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	@SuppressWarnings("rawtypes")
 	public String generateHistoryStringForGeneralDataSet(DSDataSet dataset) {
 		if (dataset == null) {
-			return "No information on the data set." + FileTools.NEWLINE;
+			return "No information on the data set." + NEWLINE;
 		} else {
 			StringBuilder sb = new StringBuilder();
 			sb.append("The data set used for analysis is [ ");
 			sb.append(dataset.getDataSetName());
 			sb.append(" ] from file [ ");
 			sb.append(dataset.getFile());
-			sb.append(" ]." + FileTools.NEWLINE);
+			sb.append(" ]." + NEWLINE);
 			return sb.toString();
 		}
 	}
