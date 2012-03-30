@@ -93,7 +93,6 @@ import org.geworkbench.util.ProgressDialog;
 import org.geworkbench.util.ProgressItem;
 import org.geworkbench.util.SaveImage;
 import org.geworkbench.util.Util;
-import org.ginkgo.labs.util.FileTools;
 import org.ginkgo.labs.ws.GridEndpointReferenceType;
 
 /**
@@ -997,7 +996,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			Date endDate = new Date();
 			long endTime = endDate.getTime();
 			history += "\nGrid service finished at: "
-					+ Util.formatDateStandard(endDate)+ FileTools.NEWLINE;
+					+ Util.formatDateStandard(endDate)+ "\n";
 			String firstLine = history.split("\n")[0];
 			String startTime = firstLine.split("=")[1].trim();
 			long elspedTime = endTime - (new Long(startTime));
