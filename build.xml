@@ -118,6 +118,7 @@
 				<include name="gpmodule_v3_0" />
 				<include name="hierarchicalclustering" />
 				<include name="idea" />
+				<include name="sam" />
 				<include name="interactions" />
 				<include name="jmol" />
 				<include name="markus" />
@@ -572,6 +573,7 @@
 				<include name="${components}/gpmodule_v3_0/**/*" />
 				<include name="${components}/hierarchicalclustering/**/*" />
 				<include name="${components}/idea/**/*" />
+				<include name="${components}/sam/**/*" />
 				<include name="${components}/interactions/**/*" />
 				<include name="${components}/jmol/**/*" />
 				<include name="${components}/masterregulator/**/*" />
