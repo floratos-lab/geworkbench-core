@@ -12,41 +12,39 @@ import java.net.URL;
 import java.util.Properties;
 import java.util.TreeMap;
 
- 
 /**
  * @author oleg shteynbuk
  * 
- * tmp class that sends sql query over HTTP for execution see interactionsweb
- * component
+ *         tmp class that sends sql query over HTTP for execution see
+ *         interactionsweb component
  * 
- * some functionality is similar to functionality provided by classes:
- * DriverManager, Statement, Connection and ResultSet from java.sql
+ *         some functionality is similar to functionality provided by classes:
+ *         DriverManager, Statement, Connection and ResultSet from java.sql
  * 
- * result set is returned as a text. data could be retrieved by column name or
- * by column number. supported data types: String, BigDecimal, double. nulls are
- * supported. "|" and end of line should not be part of the data as they are
- * used as delimiters.
+ *         result set is returned as a text. data could be retrieved by column
+ *         name or by column number. supported data types: String, BigDecimal,
+ *         double. nulls are supported. "|" and end of line should not be part
+ *         of the data as they are used as delimiters.
  * 
- * if server couldn't process request, including SQLException, client will get
- * IOException. not sure that custom exception class is needed at this time.
+ *         if server couldn't process request, including SQLException, client
+ *         will get IOException. not sure that custom exception class is needed
+ *         at this time.
  * 
- * for an example of usage and testing see function main.
+ *         for an example of usage and testing see function main.
  * 
  */
 public class ResultSetlUtil {
 
-	 
-   public static final String DEL = "|";
-	
-	public static final String REGEX_DEL = "\\|";	
-	
-	
-	public static final int SPLIT_ALL = -2;	 
+	public static final String DEL = "|";
+
+	public static final String REGEX_DEL = "\\|";
+
+	public static final int SPLIT_ALL = -2;
 	public static final String NULL_STR = "null";
 	public static final BigDecimal NULL_BIGDECIMAL = new BigDecimal(0);
 
 	private static String INTERACTIONS_SERVLET_URL = null;
-	
+
 	private static int urlConnectionTimeout = 0;
 
 	private TreeMap<String, Integer> metaMap;
@@ -67,15 +65,14 @@ public class ResultSetlUtil {
 	public static void setUrl(String aUrl) {
 		INTERACTIONS_SERVLET_URL = aUrl;
 	}
+
 	public static String getUrl() {
-		return INTERACTIONS_SERVLET_URL ;
+		return INTERACTIONS_SERVLET_URL;
 	}
-	
-	
+
 	public static void setTimeout(int timeout) {
 		urlConnectionTimeout = timeout;
 	}
-
 
 	// reconstruct metadata
 	public void processMetadata() {
@@ -88,8 +85,11 @@ public class ResultSetlUtil {
 	}
 
 	public int getColumNum(String name) {
-		int ret = metaMap.get(name).intValue();
-		return ret;
+		Integer ret = metaMap.get(name);
+		if (ret != null)
+			return ret.intValue();
+		else
+			return -1;
 	}
 
 	public double getDouble(String colmName) {
@@ -128,6 +128,8 @@ public class ResultSetlUtil {
 
 	public String getString(String colmName) {
 		int coluNum = getColumNum(colmName);
+		if (coluNum == -1)
+			return null;
 		return getString(coluNum);
 	}
 
@@ -139,10 +141,10 @@ public class ResultSetlUtil {
 	public boolean next() throws IOException {
 		boolean ret = false;
 		decodedString = in.readLine();
-		 
-		if (decodedString != null ) {
 
-			//System.out.println( decodedString);
+		if (decodedString != null) {
+
+			// System.out.println( decodedString);
 
 			row = decodedString.split(REGEX_DEL, SPLIT_ALL);
 			ret = true;
@@ -165,13 +167,13 @@ public class ResultSetlUtil {
 		return aConnection;
 	}
 
-	public static ResultSetlUtil executeQuery(String methodAndParams, 
+	public static ResultSetlUtil executeQuery(String methodAndParams,
 			String urlStr) throws IOException, UnAuthenticatedException {
 
-		HttpURLConnection aConnection = getConnection(urlStr);	 
+		HttpURLConnection aConnection = getConnection(urlStr);
 
-		OutputStreamWriter out = new OutputStreamWriter(aConnection
-				.getOutputStream());
+		OutputStreamWriter out = new OutputStreamWriter(
+				aConnection.getOutputStream());
 
 		out.write(methodAndParams);
 		out.close();
@@ -180,7 +182,7 @@ public class ResultSetlUtil {
 
 		int respCode = aConnection.getResponseCode();
 
-		if (respCode == HttpURLConnection.HTTP_UNAUTHORIZED )
+		if (respCode == HttpURLConnection.HTTP_UNAUTHORIZED)
 			throw new UnAuthenticatedException("server response code = "
 					+ respCode);
 
@@ -193,7 +195,6 @@ public class ResultSetlUtil {
 		BufferedReader in = new BufferedReader(new InputStreamReader(
 				aConnection.getInputStream()));
 
-		
 		ResultSetlUtil rs = new ResultSetlUtil(in);
 
 		return rs;
@@ -212,19 +213,17 @@ public class ResultSetlUtil {
 			ResultSetlUtil.setUrl(interactionsServletUrl);
 			// java.net.URLConnection.setDefaultAllowUserInteraction(true);
 			Authenticator.setDefault(new BasicAuthenticator());
-            
-			String aSQL = "getPairWiseInteraction" + DEL + "165"
-					+ DEL + "BCi" + DEL + "1.0";
-			 int i = 165;
-			 
-				 
-				aSQL = "getPairWiseInteraction" + DEL + i
-					+ DEL + "BCi" + DEL + "1.0";
-			    
-				rs = ResultSetlUtil.executeQuery(aSQL,  
-					INTERACTIONS_SERVLET_URL);
-			 
-			 while (rs.next()) {
+
+			String aSQL = "getPairWiseInteraction" + DEL + "165" + DEL + "BCi"
+					+ DEL + "1.0";
+			int i = 165;
+
+			aSQL = "getPairWiseInteraction" + DEL + i + DEL + "BCi" + DEL
+					+ "1.0";
+
+			rs = ResultSetlUtil.executeQuery(aSQL, INTERACTIONS_SERVLET_URL);
+
+			while (rs.next()) {
 
 				BigDecimal msid1 = rs.getBigDecimal("ms_id1");
 				System.out.println("msid1 = " + msid1);
@@ -237,12 +236,9 @@ public class ResultSetlUtil {
 				// double confidenceValue = rs.getDouble("confidence_value");
 				System.out.println("confidence_value = " + confidenceValue);
 
-				 
-
 				String interactionType = rs.getString("interaction_type");
 				System.out.println("name = " + interactionType);
-			} 
-			 
+			}
 
 		} catch (IOException ie) {
 			// TODO Auto-generated catch block
@@ -264,5 +260,3 @@ public class ResultSetlUtil {
 	}
 
 }
-
- 
