@@ -30,10 +30,18 @@ public class AdjacencyMatrix implements Serializable {
 		private static final long serialVersionUID = 8884626375173162244L;
 		public float value;
 		public String type;
+		public Short evidenceId;
 
 		EdgeInfo(float value, String type) {
 			this.value = value;
 			this.type = type;
+			this.evidenceId = 0;
+		}
+		
+		EdgeInfo(float value, String type, Short evidenceId) {
+			this.value = value;
+			this.type = type;
+			this.evidenceId = evidenceId;
 		}
 		
 		@Override
@@ -46,9 +54,9 @@ public class AdjacencyMatrix implements Serializable {
 			if (type == null || edgeInfo.type == null)
 				return true;
 			
-			if (edgeInfo.type.equals(this.type)	)				 
+			if (edgeInfo.type.equals(this.type))				 
 				return true;
-		    else
+		    else 
 				return false;
 		}
 
@@ -162,6 +170,7 @@ public class AdjacencyMatrix implements Serializable {
 	private final String name;
 
 	private final Map<String, String> interactionTypeSifMap; // TODO check ?
+	private final Map<String, String> interactionEvidenceMap; 
 
     private Set<Node> nodeSet = new HashSet<Node>();
     
@@ -171,6 +180,7 @@ public class AdjacencyMatrix implements Serializable {
 		this.name = name;
 		maSet = microarraySet;
 		interactionTypeSifMap = null;
+		interactionEvidenceMap = null;
 		log.debug("AdjacencyMatrix created with label " + name
 				+ " and microarray set " + maSet.getDataSetName());
 	}
@@ -181,11 +191,25 @@ public class AdjacencyMatrix implements Serializable {
 		this.name = name;
 		maSet = microarraySet;
 		this.interactionTypeSifMap = interactionTypeSifMap;
+		interactionEvidenceMap = null;
+		log.debug("AdjacencyMatrix created with label " + name
+				+ " and microarray set " + maSet.getDataSetName()
+				+ ", with interaction type map");
+	} 
+
+	public AdjacencyMatrix(String name,
+			final DSMicroarraySet microarraySet,
+			Map<String, String> interactionTypeSifMap, Map<String, String> interactionEvidenceMap) {
+		this.name = name;
+		maSet = microarraySet;
+		this.interactionTypeSifMap = interactionTypeSifMap;
+		this.interactionEvidenceMap = interactionEvidenceMap;
 		log.debug("AdjacencyMatrix created with label " + name
 				+ " and microarray set " + maSet.getDataSetName()
 				+ ", with interaction type map");
 	}
 
+	
 	/**
 	 * Returns a map with all the edges to geneId. This is only used by
 	 * master regulator analysis.
@@ -230,6 +254,34 @@ public class AdjacencyMatrix implements Serializable {
 	public String getLabel() {
 		return name;
 	}
+	
+	/**
+	 * Adds and edge between geneId1 and geneId2.
+	 * 
+	 */
+	public void add(Node node1, Node node2, float edge, String interaction, Short evidenceId) {
+		 
+		HashMap<Node, Set<EdgeInfo>> row = geneRows.get(node1);
+		if (row == null) {
+			row = new HashMap<Node, Set<EdgeInfo>>();
+			geneRows.put(node1, row);
+			nodeSet.add(node1);
+		}
+
+		Set<EdgeInfo> edgeSet = row.get(node2);
+		if (edgeSet == null)
+		{
+			edgeSet = new HashSet<EdgeInfo>();
+			nodeSet.add(node2);
+		}
+
+	    edgeSet.add(new EdgeInfo(edge, interaction, evidenceId));
+		 
+
+		row.put(node2, edgeSet);
+		
+	}
+	
 
 	/**
 	 * Adds and edge between geneId1 and geneId2.
@@ -298,6 +350,10 @@ public class AdjacencyMatrix implements Serializable {
 		return interactionTypeSifMap;
 	}
 
+	public Map<String, String> getInteractionEvidenceMap() {
+		return interactionEvidenceMap;
+	}
+	
 	public static class Edge {
 		public Node node1;
 		public Node node2;
