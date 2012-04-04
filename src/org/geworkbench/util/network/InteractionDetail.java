@@ -26,7 +26,20 @@ public class InteractionDetail implements Serializable{
     private double confidence;
     private String interactionType;
     private String interactionId;
+    private Short  evidenceId;
    
+    public InteractionDetail(String dSGeneMarker1, String dSGeneMarker2, String dSGeneName1, String dSGeneName2, String dbSource1, String dbSource2, double confidence, String interactionType, String interactionId, Short evidenceId) {
+        this.dSGeneMarker1 = dSGeneMarker1;
+        this.dSGeneMarker2 = dSGeneMarker2;
+        this.dSGeneName1 = dSGeneName1;
+        this.dSGeneName2 = dSGeneName2;
+        this.dbSource1 = dbSource1;
+        this.dbSource2 = dbSource2;
+        this.confidence = confidence;
+        this.interactionType = interactionType;
+        this.evidenceId = evidenceId;
+    }
+         
     public InteractionDetail(String dSGeneMarker1, String dSGeneMarker2, String dSGeneName1, String dSGeneName2, String dbSource1, String dbSource2, double confidence, String interactionType, String interactionId) {
         this.dSGeneMarker1 = dSGeneMarker1;
         this.dSGeneMarker2 = dSGeneMarker2;
@@ -36,9 +49,8 @@ public class InteractionDetail implements Serializable{
         this.dbSource2 = dbSource2;
         this.confidence = confidence;
         this.interactionType = interactionType;
+         
     }
-
-    
     public String getdSGeneMarker1() {
         return dSGeneMarker1;
     }
@@ -128,6 +140,11 @@ public class InteractionDetail implements Serializable{
         return this.interactionId;
     }
 
+    public Short getEvidenceId() {
+        return this.evidenceId;
+    }
+
+    
     public void setInteractionId(String interactionId) {
         this.interactionId = interactionId;
     }
