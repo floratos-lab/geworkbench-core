@@ -59,6 +59,14 @@ public class SaveFileFilterFactory {
 		return createImageFileFilter(ImageType.Bitmap);
 	}
 	
+	static public AdjFileFilter createAdjFileFilter() {
+		return new AdjFileFilter();
+	}
+	
+	static public SifFileFilter createSifFileFilter() {
+		return new SifFileFilter();
+	}
+	
 	static ImageFileFilter createImageFileFilter(ImageType imageType) {
 		switch (imageType) {
 		case Bitmap:
@@ -80,7 +88,7 @@ public class SaveFileFilterFactory {
 	 * @author zji
 	 * 
 	 */
-	static abstract class CustomFileFilter extends FileFilter {
+	static public abstract class CustomFileFilter extends FileFilter {
 		abstract public String getExtension();
 	}
 
@@ -211,6 +219,27 @@ public class SaveFileFilterFactory {
 			return false;
 		}
 	}
+	
+	private static class SifFileFilter extends CustomFileFilter {
+		private static final String fileExt = "sif";
+
+		public String getExtension() {
+			return fileExt;
+		}
+
+		public String getDescription() {
+			return "Simple Interaction Format Files (.sif)";
+		}
+
+		public boolean accept(File f) {
+			if (f.isDirectory() || f.getName().endsWith(fileExt)) {
+				return true;
+			}
+			return false;
+		}
+	}
+	
+	
 
 	/**
 	 * ImageFileFilter is for saving image file.
