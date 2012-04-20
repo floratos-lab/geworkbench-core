@@ -1715,6 +1715,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	private ProjectTreeNode root = new ProjectTreeNode("Workspace");
 
 	private DefaultTreeModel projectTreeModel = new DefaultTreeModel(root);
+	public DefaultTreeModel getTreeModel(){
+		return projectTreeModel;
+	}
 
 	private JTree projectTree = new JTree(projectTreeModel);
 
