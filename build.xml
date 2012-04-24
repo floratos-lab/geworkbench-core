@@ -516,15 +516,17 @@
 		</jar>
 
 		<!-- jar components -->
+		<!--
 		<subant target="jar" genericantfile="build-component.xml">
 			<dirset dir="components">
 				<include name="analysis" />
 				<include name="ttest" />
 				<include name="hierarchicalclustering" />
-				<!-- exclude the dead projets -->
+
 				<exclude name="skylinecontour" />
 			</dirset>
 		</subant>
+		-->
 	</target>
 	<!-- ====================================================================== -->
 	<!-- CREATE   DISTRIBUTION-->
@@ -647,5 +649,37 @@
 			</fileset>
 		</copy>
 		<copy file="build_runDirect.xml" tofile="${cleanFolder}/build.xml" />
+	</target>
+	<!-- ====================================================================== -->
+	<!-- CREATE DISTRIBUTABLE JARS, e.g. for Web version -->
+	<!-- ====================================================================== -->
+	<target name="jarForWeb" depends="compile" description="Creating geWorkbench jars">
+		<property name="jarForWeb" value="../jarForWeb" />
+		<!-- one jar for core -->
+		<jar destfile="geworkbench-core.jar" basedir="${classes}" includes="org/geworkbench/**">
+			<manifest>
+				<attribute name="Built-By" value="${user.name}" />
+			</manifest>
+		</jar>
+
+		<!-- components jars -->
+		<subant target="jar" genericantfile="build-component.xml">
+			<dirset dir="components">
+				<include name="analysis" />
+				<include name="ttest" />
+				<include name="hierarchicalclustering" />
+				<include name="aracne-java" />
+				<include name="interactions" />
+			</dirset>
+		</subant>
+		<mkdir dir="${jarForWeb}" />
+		<!-- geworkbenh core jar -->
+		<move todir="${jarForWeb}" file="geworkbench-core.jar" />
+		<!-- component jars -->
+		<move todir="${jarForWeb}" file="components/analysis/analysis.jar" />
+		<move todir="${jarForWeb}" file="components/aracne-java/aracne-java.jar" />
+		<move todir="${jarForWeb}" file="components/hierarchicalclustering/hierarchicalclustering.jar" />
+		<move todir="${jarForWeb}" file="components/interactions/interactions.jar" />
+		<move todir="${jarForWeb}" file="components/ttest/ttest.jar" />
 	</target>
 </project>
