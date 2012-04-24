@@ -45,19 +45,10 @@ import org.geworkbench.util.AffyAnnotationUtil;
 public class MicroarraySetParser {
 	private static Log log = LogFactory.getLog(MicroarraySetParser.class);
 
-	DSMicroarraySet parseCSMicroarraySet(File file, String compatibilityLabel) {
+	/** Parse without associate to annotation file. */
+	public DSMicroarraySet parseCSMicroarraySet(File file) {
 
 		DSMicroarraySet microarraySet = new CSMicroarraySet();
-		if (compatibilityLabel != null) {
-			microarraySet.setCompatibilityLabel(compatibilityLabel);
-		} else {
-			String chiptype = AffyAnnotationUtil
-					.matchAffyAnnotationFile(microarraySet);
-			if (chiptype == null) { // this is never null
-				log.error("annotation returned as null");
-			}
-			microarraySet.setCompatibilityLabel(chiptype);
-		}
 
 		microarraySet.setFile( file ); // this seems only used by "View in Editor"
 		microarraySet.setLabel(file.getName());
@@ -68,6 +59,25 @@ public class MicroarraySetParser {
 			return null;
 
 		populateDataset(microarraySet);
+
+		return microarraySet;
+	}
+	
+	/** Parse when invoked from ExpressionFileFormat. */
+	DSMicroarraySet parseCSMicroarraySet(File file, String compatibilityLabel) {
+		DSMicroarraySet microarraySet = parseCSMicroarraySet(file);
+		if(microarraySet==null) return null; // reading failed
+		
+		if (compatibilityLabel != null) {
+			microarraySet.setCompatibilityLabel(compatibilityLabel);
+		} else {
+			String chiptype = AffyAnnotationUtil
+					.matchAffyAnnotationFile(microarraySet);
+			if (chiptype == null) { // this is never null
+				log.error("annotation returned as null");
+			}
+			microarraySet.setCompatibilityLabel(chiptype);
+		}
 
 		return microarraySet;
 	}
