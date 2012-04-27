@@ -103,7 +103,7 @@ public class JAutoList extends JPanel {
     protected void handleMouseEvent(MouseEvent event) {
         int index = list.locationToIndex(event.getPoint());
         if (index != -1) {
-            if (event.isMetaDown()) {
+            if (event.getButton() == MouseEvent.BUTTON3) {
                 elementRightClicked(index, event);
             } else if (event.getButton() == MouseEvent.BUTTON1) {
                 if (event.getClickCount() > 1) {
