@@ -205,8 +205,8 @@ public class GeneOntologyTree {
 					.showMessageDialog(
 							null,
 							oboFileName
-									+ ", which is part of geworkbench istallation, is missing. Gene Ontology related funactionality will not work correctly unless you choose to use remote obo source.",
-							".obo fil missing", JOptionPane.ERROR_MESSAGE);
+									+ ", which is part of geworkbench installation, is missing.\nGene Ontology related functionality will not work correctly unless you choose to use remote obo source.",
+							".obo file missing", JOptionPane.ERROR_MESSAGE);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
