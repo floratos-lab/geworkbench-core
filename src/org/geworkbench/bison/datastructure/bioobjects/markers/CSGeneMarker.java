@@ -206,8 +206,12 @@ public class CSGeneMarker implements DSGeneMarker, Serializable {
 		String text0 = "";
 
 		try {
-			String text1 = AnnotationParser.getInfo(label,
-					AnnotationParser.DESCRIPTION)[0];
+			String[] descriptions = AnnotationParser.getInfo(label,
+					AnnotationParser.DESCRIPTION);
+			String text1 = "";
+			if (descriptions != null && descriptions.length > 0) {
+				text1 = descriptions[0];
+			}
 			text0 = label + ": (" + getShortName() + ") " + text1;
 		} catch (Exception ex) {
 			text0 = this.getDescription();

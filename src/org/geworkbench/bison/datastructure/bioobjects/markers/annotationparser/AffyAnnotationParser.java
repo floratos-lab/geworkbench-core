@@ -134,7 +134,7 @@ public class AffyAnnotationParser {
 					|| label.equals(AnnotationParser.GENE_ONTOLOGY_CELLULAR_COMPONENT)
 					|| label.equals(AnnotationParser.GENE_ONTOLOGY_MOLECULAR_FUNCTION)) {
 				// get rid of leading 0's
-				while (val.startsWith("0") && (val.length() > 0)) {
+				while (val!=null && val.startsWith("0") && (val.length() > 0)) {
 					val = val.substring(1);
 				}
 			}
