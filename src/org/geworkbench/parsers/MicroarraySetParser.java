@@ -65,9 +65,7 @@ public class MicroarraySetParser {
 	
 	/** Parse when invoked from ExpressionFileFormat. */
 	DSMicroarraySet parseCSMicroarraySet(File file, String compatibilityLabel) {
-		DSMicroarraySet microarraySet = parseCSMicroarraySet(file);
-		if(microarraySet==null) return null; // reading failed
-		
+		DSMicroarraySet microarraySet = new CSMicroarraySet();
 		if (compatibilityLabel != null) {
 			microarraySet.setCompatibilityLabel(compatibilityLabel);
 		} else {
@@ -78,6 +76,16 @@ public class MicroarraySetParser {
 			}
 			microarraySet.setCompatibilityLabel(chiptype);
 		}
+
+		microarraySet.setFile( file ); // this seems only used by "View in Editor"
+		microarraySet.setLabel(file.getName());
+
+		AnnotationParser.setCurrentDataSet(microarraySet);
+
+		if (!readFile(file))
+			return null;
+
+		populateDataset(microarraySet);
 
 		return microarraySet;
 	}
