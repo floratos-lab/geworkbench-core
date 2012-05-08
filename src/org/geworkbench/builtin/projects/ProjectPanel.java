@@ -999,15 +999,15 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 					+ Util.formatDateStandard(endDate)+ "\n";
 			String firstLine = history.split("\n")[0];
 			String startTime = firstLine.split("=")[1].trim();
-			long elspedTime = endTime - (new Long(startTime));
-			history += "\nTotal elsped time: "
-					+ DurationFormatUtils.formatDurationHMS(elspedTime);
+			long elapsedTime = endTime - (new Long(startTime));
+			history += "\nTotal elapsed time: "
+					+ DurationFormatUtils.formatDurationHMS(elapsedTime);
 		} catch(NumberFormatException ne)
 		{
-			history += "\nError processing elspedTime: " + ne.getMessage();
+			history += "\nError processing elapsed time: " + ne.getMessage();
 		} catch (Exception e) {
-			history += "\nError processing elspedTime: " + e.getMessage();
-			log.error("Error processing elspedTime: " + e.getMessage());			 
+			history += "\nError processing elapsed tim: " + e.getMessage();
+			log.error("Error processing elapsed time: " + e.getMessage());			 
 		}
 
 		boolean pendingNodeFocused = false;
