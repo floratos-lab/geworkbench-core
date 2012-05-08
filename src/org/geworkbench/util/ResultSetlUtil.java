@@ -131,6 +131,7 @@ public class ResultSetlUtil {
 		if (coluNum == -1)
 			return null;
 		return getString(coluNum);
+		 
 	}
 
 	public String getString(int colmNum) {
@@ -142,10 +143,7 @@ public class ResultSetlUtil {
 		boolean ret = false;
 		decodedString = in.readLine();
 
-		if (decodedString != null) {
-
-			// System.out.println( decodedString);
-
+		if (decodedString != null && !decodedString.trim().equals("")) { 
 			row = decodedString.split(REGEX_DEL, SPLIT_ALL);
 			ret = true;
 		}
