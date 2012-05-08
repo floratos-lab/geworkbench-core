@@ -1,6 +1,9 @@
 package org.geworkbench.util.network;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.ArrayList;
+
 
 /**
  * Created by IntelliJ IDEA.
@@ -13,152 +16,134 @@ import java.io.Serializable;
 /**
  * The deatil of one interaction.
  */
-public class InteractionDetail implements Serializable{
-    
+public class InteractionDetail implements Serializable {
+
 	private static final long serialVersionUID = -4163326138016520667L;
-	private static final String ENTREZ_GENE = "Entrez Gene";
-	private String dSGeneMarker1;    //One node name
-    private String dSGeneMarker2;
-    private String dSGeneName1;    //One node name
-    private String dSGeneName2;
-    private String dbSource1;
-    private String dbSource2;   
-    private double confidence;
-    private String interactionType;
-    private String interactionId;
-    private Short  evidenceId;
-   
-    public InteractionDetail(String dSGeneMarker1, String dSGeneMarker2, String dSGeneName1, String dSGeneName2, String dbSource1, String dbSource2, double confidence, String interactionType, String interactionId, Short evidenceId) {
-        this.dSGeneMarker1 = dSGeneMarker1;
-        this.dSGeneMarker2 = dSGeneMarker2;
-        this.dSGeneName1 = dSGeneName1;
-        this.dSGeneName2 = dSGeneName2;
-        this.dbSource1 = dbSource1;
-        this.dbSource2 = dbSource2;
-        this.confidence = confidence;
-        this.interactionType = interactionType;
-        this.evidenceId = evidenceId;
-    }
-         
-    public InteractionDetail(String dSGeneMarker1, String dSGeneMarker2, String dSGeneName1, String dSGeneName2, String dbSource1, String dbSource2, double confidence, String interactionType, String interactionId) {
-        this.dSGeneMarker1 = dSGeneMarker1;
-        this.dSGeneMarker2 = dSGeneMarker2;
-        this.dSGeneName1 = dSGeneName1;
-        this.dSGeneName2 = dSGeneName2;
-        this.dbSource1 = dbSource1;
-        this.dbSource2 = dbSource2;
-        this.confidence = confidence;
-        this.interactionType = interactionType;
-         
-    }
-    public String getdSGeneMarker1() {
-        return dSGeneMarker1;
-    }
+	public static final String ENTREZ_GENE = "Entrez Gene";
 
-    public void setdSGeneMarker1(String dSGeneMarker1) {
-        this.dSGeneMarker1 = dSGeneMarker1;
-    }
+	private String dSGeneId;
+	private String dSGeneName;
+	private String dbSource;	 
+	private String interactionType;
+	private Short evidenceId;
+	private List<Confidence> confidenceList;
+	
 
-    public String getdSGeneMarker2() {
-        return dSGeneMarker2;
-    }
+	public InteractionDetail(String dSGeneId, String dSGeneName,
+			String dbSource, String interactionType,
+			String interactionId, Short evidenceId) {
 
-    public Integer getInteractionGeneId(Integer geneId)
-    {
-    	Integer interactionGeneId = null;
-        if (dSGeneMarker1 != null && isGene1EntrezId() && !dSGeneMarker1.equals(geneId.toString()) )    	
-        	interactionGeneId = new Integer(dSGeneMarker1);
-        else if (dSGeneMarker2 != null && isGene2EntrezId() && !dSGeneMarker2.equals(geneId.toString()) )    	
-        	interactionGeneId = new Integer(dSGeneMarker2);
-       
-        return interactionGeneId;
-    }
-    
-    public void setdSGeneMarker2(String dSGeneMarker2) {
-        this.dSGeneMarker2 = dSGeneMarker2;
-    }
-    
-    public String getdSGeneName1() {
-        return dSGeneName1;
-    }
+		this.dSGeneId = dSGeneId;
+		this.dSGeneName = dSGeneName;
+		this.dbSource = dbSource;		 
+		this.interactionType = interactionType;
+		this.evidenceId = evidenceId;
+	}
 
-    public void setdSGeneName1(String dSGeneName1) {
-        this.dSGeneName1 = dSGeneName1;
-    }
+	public String getdSGeneId() {
+		return dSGeneId;
+	}
 
-    public String getdSGeneName2() {
-        return dSGeneName2;
-    }
+	public String getInteractionGene() {
+		 
+		if (dbSource.equalsIgnoreCase(ENTREZ_GENE))
+			return dSGeneId;
+		else
+		    return dSGeneName;
+	}
 
-    public void setdSGeneName2(String dSGeneName2) {
-        this.dSGeneName2 = dSGeneName2;
-    }   
-    
-    public String getDbSource1() {
-        return this.dbSource1;
-    }
+	public void setdSGeneId(String dSGeneId) {
+		this.dSGeneId = dSGeneId;
+	}
 
-    public void setDbSource1(String dbSource1) {
-        this.dbSource1 = dbSource1;
-    }
+	public String getdSGeneName() {
+		return dSGeneName;
+	}
 
-    public String getDbSource2() {
-        return this.dbSource2;
-    }
+	public void setdSGeneName(String dSGeneName) {
+		this.dSGeneName = dSGeneName;
+	}
 
-    public void setDbSource2(String dbSource2) {
-        this.dbSource2 = dbSource2;
-    }
-    
-    
-    public boolean isGene1EntrezId() {
-        return this.dbSource1.equalsIgnoreCase(ENTREZ_GENE);
-    }
+	public String getDbSource() {
+		return this.dbSource;
+	}
 
-    public boolean isGene2EntrezId() {
-        return this.dbSource2.equalsIgnoreCase(ENTREZ_GENE);
-    }
-    
-    
-    public double getConfidence() {
-        return confidence;
-    }
+	public void setDbSource(String dbSource) {
+		this.dbSource = dbSource;
+	}
 
-    public void setConfidence(double confidence) {
-        this.confidence = confidence;
-    }
+	public boolean isGeneEntrezId() {
+		return this.dbSource.equalsIgnoreCase(ENTREZ_GENE);
+	}
 
-    public String getInteractionType() {
-        return this.interactionType;
-    }
+	public double getConfidenceValue(int usedConfidenceType) {
+		for (int i=0; i<confidenceList.size(); i++)
+			if (confidenceList.get(i).getType() == usedConfidenceType)
+				return confidenceList.get(i).getScore();
+		//if usedConfidenceType is not found, return 0.
+		return 0;
+	}
+	
+	
+	public List<Short> getConfidenceTypes() {
+		List<Short> types = new ArrayList<Short>();
+		for (int i=0; i<confidenceList.size(); i++)
+			types.add(confidenceList.get(i).getType());
+		return types;
+	}
+	 
+	public void addConfidence(double score, short type) {
+		if (confidenceList == null)
+			confidenceList = new ArrayList<Confidence>();
+		confidenceList.add(new Confidence(score, type));
+	}
 
-    public void setInteraactionType(String interactionType) {
-    	this.interactionType = interactionType;
-    }
-    
-    public String getInteractionId() {
-        return this.interactionId;
-    }
+	public String getInteractionType() {
+		return this.interactionType;
+	}
 
-    public Short getEvidenceId() {
-        return this.evidenceId;
-    }
+	public void setInteraactionType(String interactionType) {
+		this.interactionType = interactionType;
+	}
 
-    
-    public void setInteractionId(String interactionId) {
-        this.interactionId = interactionId;
-    }
+	public Short getEvidenceId() {
+		return this.evidenceId;
+	}
+	
+ 
+	public boolean equals(Object obj) {
+		if (obj instanceof InteractionDetail) {
+			InteractionDetail mInfo = (InteractionDetail) obj;
+			return dSGeneId.toString()
+					.equals(mInfo.dSGeneId.toString());
+		}
+		return false;
+	}	
+	
+	private class Confidence implements Serializable
+	{
+		 
+		private static final long serialVersionUID = 4151510293677929250L;
+		private double score;
+		private short type;
+		
+		Confidence(double score, short type)
+		{
+			this.score = score;
+			this.type = type;
+		}
+		
+		public double getScore()
+		{
+			return score;
+		}
+		
+		public short getType()
+		{
+			return type;
+		}
+		
+	}
 
-    public boolean equals(Object obj) {
-        if (obj instanceof InteractionDetail) {
-            InteractionDetail mInfo = (InteractionDetail) obj;
-            return (dSGeneMarker1.toString().equals(mInfo.dSGeneMarker1.toString()) && dSGeneMarker2.toString().equals(mInfo.dSGeneMarker2.toString())) || (dSGeneMarker1.toString().equals(mInfo.dSGeneMarker2.toString()) && dSGeneMarker2.toString().equals(mInfo.dSGeneMarker1.toString()));
-        }
-        return false;
-    }
 
-    public String toString() {
-        return dSGeneMarker1 + "-" + dSGeneMarker2 + ":" + confidence;
-
-    }
 }

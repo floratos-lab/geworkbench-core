@@ -1,10 +1,11 @@
 package org.geworkbench.util.network;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.List; 
+import java.util.Set; 
 import java.util.TreeMap;
 
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
@@ -29,6 +30,8 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.goterms.GeneOntolo
 public class CellularNetWorkElementInformation implements java.io.Serializable {
 
 	private static final long serialVersionUID = -4163326138016520667L;
+  
+	
 	private HashMap<String, Integer> interactionNumMap = new HashMap<String, Integer>();
 
 	private static Set<String> allInteractionTypes = new HashSet<String>();
@@ -38,13 +41,19 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 	private String geneType;
 	private InteractionDetail[] interactionDetails;
 	private double threshold;
-	private static double smallestIncrement;
-	private static Double defaultSmallestIncrement = 0.01;
-	private static int binNumber;
 	private boolean isDirty;
+	
+	private static double smallestIncrement = 0.01; 
+	private static int binNumber = 101;	 
+	private static long maxX = 1;
+	
+	private static Short usedConfidenceType = 0;
+	private static List<Short> confidenceTypeList = new ArrayList<Short>();
+	private static Map<Short, Double> maxConfidenceValueMap = new HashMap<Short, Double>();
+	
 
 	public CellularNetWorkElementInformation(
-			HashMap<String, Integer> interactionNumMap,
+		    HashMap<String, Integer> interactionNumMap,
 			DSGeneMarker dSGeneMarker, String goInfoStr, String geneType) {
 		this.interactionNumMap = interactionNumMap;
 		this.dSGeneMarker = dSGeneMarker;
@@ -54,8 +63,7 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 	}
 
 	public CellularNetWorkElementInformation(DSGeneMarker dSGeneMarker) {
-		this.dSGeneMarker = dSGeneMarker;
-		smallestIncrement = defaultSmallestIncrement;
+		this.dSGeneMarker = dSGeneMarker;	 
 		isDirty = true;
 		if(GeneOntologyTree.getInstance()==null) {
 			geneType = "pending";
@@ -140,18 +148,9 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 				interactionNumMap.put(interactionType, 0);
 			}
 		}
-		binNumber = (int) (1 / smallestIncrement) + 1;
+		binNumber = getBinNumber();
 
-	}
-
-	public void resetToUnknown() {
-
-		for (String interactionType : allInteractionTypes) {
-			interactionNumMap.put(interactionType, -1);
-		}
-		binNumber = (int) (1 / smallestIncrement) + 1;
-
-	}
+	}	 
 
 	public ArrayList<InteractionDetail> getSelectedInteractions(
 			List<String> interactionIncludedList) {
@@ -160,7 +159,7 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 			for (int i = 0; i < interactionDetails.length; i++) {
 				InteractionDetail interactionDetail = interactionDetails[i];
 				if (interactionDetail != null
-						&& interactionDetail.getConfidence() >= threshold) {
+						&& interactionDetail.getConfidenceValue(usedConfidenceType) >= threshold) {
 					if (interactionIncludedList.contains(interactionDetail
 							.getInteractionType())) {
 						arrayList.add(interactionDetail);
@@ -179,7 +178,7 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 			for (int i = 0; i < interactionDetails.length; i++) {
 				InteractionDetail interactionDetail = interactionDetails[i];
 				if (interactionDetail != null
-						&& interactionDetail.getConfidence() >= threshold) {
+						&& interactionDetail.getConfidenceValue(usedConfidenceType) >= threshold) {
 					if (interactionType.equals(interactionDetail
 							.getInteractionType())) {
 						arrayList.add(interactionDetail);
@@ -191,17 +190,47 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 		return arrayList;
 	}
 
-	public static double getSmallestIncrement() {
-		if (smallestIncrement <= 0)
-			smallestIncrement = defaultSmallestIncrement;
+	public static double getSmallestIncrement() {		 
 		return smallestIncrement;
 	}
+	
+	
+	public static List<Short> getConfidenceTypeList()
+	{
+		return confidenceTypeList;
+	}
 
-	public void setSmallestIncrement(double smallestIncrementNumber) {
+	static public void setSmallestIncrement(double smallestIncrementNumber) {
 		smallestIncrement = smallestIncrementNumber;
 	}
 
+ 
+	
+	static public void setMaxX(long maxValue) {
+		maxX = maxValue;
+	}
+	
+	static public short getUsedConfidenceType()
+	{
+		return usedConfidenceType;
+	}
+	
+	
+	static public void clearConfidenceTypes()
+	{
+		usedConfidenceType = 0;
+		if (confidenceTypeList != null)
+			confidenceTypeList.clear();
+		maxConfidenceValueMap.clear();
+	}
+	
+	static public void setUsedConfidenceType(Short type )
+	{
+		usedConfidenceType = type;
+	}
+	
 	public int[] getDistribution(List<String> displaySelectedInteractionTypes) {
+		 
 		int[] distribution = new int[binNumber];
 		for (int i = 0; i < binNumber; i++)
 			distribution[i] = 0;
@@ -211,8 +240,11 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 			if (interactionDetail != null
 					&& displaySelectedInteractionTypes
 							.contains(interactionDetail.getInteractionType())) {
-				int confidence = (int) (interactionDetail.getConfidence() * 100);
-				if (confidence < distribution.length && confidence >= 0) {
+				int confidence = (int) (interactionDetail.getConfidenceValue(usedConfidenceType) / smallestIncrement);
+				if (confidence >= 0) {
+					if (confidence >= distribution.length)
+						confidence = distribution.length-1;
+				 
 					for (int i = 0; i <= confidence; i++)
 						distribution[i]++;
 
@@ -220,15 +252,28 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 
 			}
 		}
+	 
 		return distribution;
 	}
 
-	public static int getBinNumber() {
-		if (binNumber <= 0)
-			binNumber = (int) (1 / defaultSmallestIncrement) + 1;
+	public static int getBinNumber() {	 
 		return binNumber;
 	}
-
+	
+	public static long getMaxX() { 
+		 
+		return maxX;
+	}
+	
+	public static double getMaxConfidenceValue() { 
+		 
+		if (maxConfidenceValueMap.get(usedConfidenceType) != null)
+			return maxConfidenceValueMap.get(usedConfidenceType);
+		else
+			return 0;
+		
+	}
+ 
 	public boolean isDirty() {
 		return isDirty;
 	}
@@ -247,6 +292,8 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 	public static void setBinNumber(int binNumber) {
 		CellularNetWorkElementInformation.binNumber = binNumber;
 	}
+	
+	 
 
 	public CellularNetWorkElementInformation(
 			HashMap<String, Integer> interactionNumMap,
@@ -289,15 +336,43 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 	 */
 	public void setInteractionDetails(List<InteractionDetail> arrayList) {
 
+		if (confidenceTypeList == null)			 
+			confidenceTypeList = new ArrayList<Short>();
+		
 		if (arrayList != null && arrayList.size() > 0) {
 			interactionDetails = new InteractionDetail[arrayList.size()];
-			this.interactionDetails = arrayList.toArray(interactionDetails);
+			
+			for(int i=0; i<arrayList.size(); i++)
+			{
+				interactionDetails[i] = arrayList.get(i);
+				List<Short> typeIdList = interactionDetails[i].getConfidenceTypes();
+				for (int j=0; j<typeIdList.size(); j++)
+				{  
+					Short typeId = typeIdList.get(j);
+					Double maxConfidenceValue = maxConfidenceValueMap.get(typeId);
+					double confidenceValue = interactionDetails[i].getConfidenceValue(typeId);
+					if (maxConfidenceValue == null)
+						maxConfidenceValueMap.put(typeId, new Double(confidenceValue));
+					else
+					{
+						if (maxConfidenceValue < confidenceValue)
+						{	 
+						    maxConfidenceValueMap.put(typeId, new Double(confidenceValue));
+						}
+					}
+					if (!confidenceTypeList.contains(typeId))
+					  confidenceTypeList.add(typeId);
+				}
+				 
+			}
 		} else {
 			interactionDetails = null;
 			reset();
 		}
 
 		if (interactionDetails != null) {
+			if (usedConfidenceType == null)
+			   usedConfidenceType = confidenceTypeList.get(0); //use first one as default value.
 			update();
 		}
 
@@ -317,9 +392,9 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 
 		for (InteractionDetail interactionDetail : interactionDetails) {
 			if (interactionDetail != null) {
-				int confidence = (int) (interactionDetail.getConfidence() * 100);
+				double confidence = interactionDetail.getConfidenceValue(usedConfidenceType);
 				String interactionType = interactionDetail.getInteractionType();
-				if (confidence >= 100 * threshold) {
+				if (confidence >= threshold) {
 					if (this.interactionNumMap.containsKey(interactionType)) {
 						int num = interactionNumMap.get(interactionType) + 1;
 						interactionNumMap.put(interactionType, num);
@@ -335,7 +410,8 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 
 	}
 
-	public int[] getInteractionDistribution(String interactionType) {
+	public int[] getInteractionDistribution(String interactionType) {	
+	 
 		int[] interactionDistribution = new int[binNumber];
 		for (int i = 0; i < binNumber; i++)
 			interactionDistribution[i] = 0;
@@ -343,11 +419,13 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 			return interactionDistribution;
 
 		for (InteractionDetail interactionDetail : interactionDetails) {
-			int confidence = (int) (interactionDetail.getConfidence() * 100);
-			if (confidence < interactionDistribution.length && confidence >= 0) {
+			int confidence = (int) (interactionDetail.getConfidenceValue(usedConfidenceType) / smallestIncrement);
+			if (confidence >= 0) {
 
 				if (interactionDetail.getInteractionType().equals(
 						interactionType)) {
+					if (confidence >= interactionDistribution.length)
+						confidence = interactionDistribution.length-1;				 
 					for (int i = 0; i <= confidence; i++)
 						interactionDistribution[i]++;
 
@@ -355,7 +433,7 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 			}
 
 		}
-
+	 
 		return interactionDistribution;
 	}
 
