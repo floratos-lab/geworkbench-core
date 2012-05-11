@@ -558,6 +558,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			}
 
 			if (!filter.accept(new File(newFileName))) {
+				newFileName = newFileName.substring(0, newFileName.lastIndexOf("."));
 				newFileName += "." + filter.getExtension();
 			}
 

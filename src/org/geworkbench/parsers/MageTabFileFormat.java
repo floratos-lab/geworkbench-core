@@ -97,6 +97,7 @@ public class MageTabFileFormat extends DataSetFileFormat {
 		BufferedReader in = null;
 		String fileName = file.getName();
 		maSet.setLabel(fileName);
+		maSet.setFile(file);
 		List<String> markers = new ArrayList<String>();
 		List<String> arrayNames = new ArrayList<String>();
 		int n = 0;
