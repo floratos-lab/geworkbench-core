@@ -70,7 +70,6 @@ public class CSAnovaResultSetTest extends TestCase {
 		}
 
 		// generate arrays
-		view = new CSMicroarraySetView<DSGeneMarker, DSMicroarray>();
 		DSMicroarraySet microarraySet = new CSMicroarraySet();
 		microarraySet.setLabel(this.getClass().getName());
 
@@ -99,7 +98,7 @@ public class CSAnovaResultSetTest extends TestCase {
 		}
 
 		/* order here is important for marker labels */
-		view.setMicroarraySet(microarraySet);
+		view = new CSMicroarraySetView<DSGeneMarker, DSMicroarray>(microarraySet);
 		view.useMarkerPanel(true);
 		view.setMarkerPanel(markerPanel);
 
