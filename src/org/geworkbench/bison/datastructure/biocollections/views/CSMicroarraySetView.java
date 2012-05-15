@@ -3,8 +3,6 @@ package org.geworkbench.bison.datastructure.biocollections.views;
 import java.io.Serializable;
 
 import org.apache.commons.collections15.set.ListOrderedSet;
-import org.geworkbench.bison.annotation.CSAnnotationContextManager;
-import org.geworkbench.bison.annotation.DSAnnotationContext;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
@@ -32,12 +30,9 @@ import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
 		implements DSMicroarraySetView<T, Q>, Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1452815738190971373L;
 
-	private DSMicroarraySet dataSet;
+	final private DSMicroarraySet dataSet;
 
 	/**
 	 * Contains the active microarrays, organized as a DSPanel.
@@ -61,16 +56,12 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
 	 */
 	private boolean useMarkerPanel = false;
 
-	// This was original considered a bad idea, but too many usages are already
-	// in geWrokbench.
-	public CSMicroarraySetView() {
-	}
-
 	public CSMicroarraySetView(DSMicroarraySet dataSet) {
 		this.dataSet = dataSet;
 	}
 
 	@SuppressWarnings("unchecked")
+	@Override
 	public DSItemList<T> markers() {
 		if(dataSet==null)
 			return markerPanel;
@@ -88,6 +79,7 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
 	}
 
 	@SuppressWarnings("unchecked")
+	@Override
 	public DSItemList<T> getUniqueMarkers() {
 		if (useMarkerPanel && markerPanel.size() > 0) {
 			ListOrderedSet<T> orderedSet = new ListOrderedSet<T>();
@@ -115,6 +107,7 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
 	 * 
 	 * @param status
 	 */
+	@Override
 	public void useMarkerPanel(boolean status) {
 		useMarkerPanel = status;
 	}
@@ -124,19 +117,23 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
 	 * 
 	 * @return the status of marker activation
 	 */
+	@Override
 	public boolean useMarkerPanel() {
 		return useMarkerPanel;
 	}
 
+	@Override
 	public void setMarkerPanel(DSPanel<T> markerPanel) {
 		this.markerPanel = markerPanel;
 	}
 
+	@Override
 	public DSPanel<T> getMarkerPanel() {
 		return markerPanel;
 	}
 
 	@SuppressWarnings("unchecked")
+	@Override
 	public DSItemList<T> allMarkers() {
 		if (dataSet instanceof DSMicroarraySet) {
 			return (DSItemList<T>) dataSet.getMarkers();
@@ -145,18 +142,20 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
 		}
 	}
 
+	@Override
 	public double getValue(int markerIndex, int arrayIndex) {
 		DSMicroarray ma = get(arrayIndex);
 		DSGeneMarker marker = markers().get(markerIndex);
 		return ma.getMarkerValue(marker).getValue();
 	}
 
+	@Override
 	public double getValue(T marker, int arrayIndex) {
 		DSMicroarray ma = get(arrayIndex);
-		// DSGeneMarker markerValue = markers().get(marker);
 		return ma.getMarkerValue(marker.getSerial()).getValue();
 	}
 
+	@Override
 	public double getMeanValue(T marker, int arrayIndex) {
 		DSMicroarray ma = get(arrayIndex);
 		// This is a bit incorrect because it does not limit to only the
@@ -164,6 +163,7 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
 		return getMicroarraySet().getMeanValue(marker, ma.getSerial());
 	}
 
+	@Override
 	public double[] getRow(int index) {
 		double[] rowVals = new double[this.size()];
 		for (int itemCtr = 0; itemCtr < rowVals.length; itemCtr++) {
@@ -172,41 +172,12 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
 		return rowVals;
 	}
 
-	/**
-	 * Sets the reference microarray set for this <code>MicroarraySetView</code>
-	 * .
-	 * 
-	 * @param ma
-	 *            The new reference microarray set.
-	 */
-	@SuppressWarnings("unchecked")
-	public void setMicroarraySet(DSMicroarraySet ma) {
-		if (ma != null) {
-			dataSet = ma;
-			{
-				DSAnnotationContext<DSGeneMarker> context = CSAnnotationContextManager
-						.getInstance().getCurrentContext(ma.getMarkers());
-				DSPanel<DSGeneMarker> mp = context.getActiveItems();
-				if (mp != null) {
-					markerPanel = (DSPanel<T>) mp;
-				}
-			}
-			{
-				DSAnnotationContext<DSMicroarray> context = CSAnnotationContextManager
-						.getInstance().getCurrentContext(dataSet);
-				DSPanel<DSMicroarray> mp = context.getActiveItems();
-				if (mp != null) {
-					itemPanel = mp;
-				}
-			}
-		}
-	}
-
+	@Override
 	public DSMicroarraySet getMicroarraySet() {
 		return (DSMicroarraySet) getDataSet();
 	}
 
-	// the following 9 methods used to be in CSDataSetView
+	@Override
 	public int size() {
 		return items().size();
 	}
@@ -217,6 +188,7 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
 	 *         number of microarrays in the set. <code>null</code> otherwise.
 	 */
 	@SuppressWarnings("unchecked")
+	@Override
 	public DSItemList<Q> items() {
 		if ((useItemPanel && (itemPanel != null) && (itemPanel.size() > 0))
 				|| dataSet == null) {
@@ -232,6 +204,7 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
 	 * 
 	 * @param status
 	 */
+	@Override
 	public void useItemPanel(boolean status) {
 		useItemPanel = status;
 	}
@@ -241,29 +214,30 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
 	 * 
 	 * @return
 	 */
+	@Override
 	public boolean useItemPanel() {
 		return useItemPanel;
 	}
 
 	@SuppressWarnings("unchecked")
+	@Override
 	public void setItemPanel(DSPanel<Q> mArrayPanel) {
 		this.itemPanel = (DSPanel<DSMicroarray>) mArrayPanel;
 	}
 
 	@SuppressWarnings("unchecked")
+	@Override
 	public DSPanel<Q> getItemPanel() {
 		return (DSPanel<Q>) itemPanel;
 	}
 
-	public void setDataSet(DSDataSet<Q> qs) {
-		dataSet = (DSMicroarraySet) qs;
-	}
-
 	@SuppressWarnings("unchecked")
+	@Override
 	public DSDataSet<Q> getDataSet() {
 		return (DSDataSet<Q>) dataSet;
 	}
 
+	@Override
 	public Q get(int index) {
 		return items().get(index);
 	}

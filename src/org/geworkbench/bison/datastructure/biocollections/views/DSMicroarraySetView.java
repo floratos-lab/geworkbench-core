@@ -1,6 +1,5 @@
 package org.geworkbench.bison.datastructure.biocollections.views;
 
-import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
@@ -21,14 +20,23 @@ import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 public interface DSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
 		extends DSDataSetView<Q> {
 	
-	// the following 7 methods used to be in DSDataSetView
+	/**
+	 * Return the number of items.
+	 * 
+	 * This interface accesses two inter collections: a collection of (gene) markers and a collection of microarrays/items.
+	 * This method return the size of the latter. It should always return items().size, thus redundant.
+	 * 
+	 * @return
+	 */
 	public int size();
+	
 	/**
 	 * @return A DSItemList containing all the <code>Q</code> type objects
 	 *         (generally microarrays) associated with this
 	 *         <code>DSDataView</code>.
 	 */
 	public DSItemList<Q> items();
+	
 	/**
 	 * Set/reset item subselection based on activated panels.
 	 */
@@ -50,16 +58,8 @@ public interface DSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroar
 	public DSPanel<Q> getItemPanel();
 
 	/**
-	 * Sets the reference {@link DSDataSet} for this <code>DSDataSetView</code>.
-	 * 
-	 * @param dataSet
-	 *            The new reference dataset.
-	 */
-	//only used by AracneNalysis
-	public void setDataSet(DSDataSet<Q> dataSet);
-
-
-	// the following two methods used to be in DSMatrixDataSetView
+	 * Return the numeric value of a given row, namely the (gene) marker of a given index.
+	 */ 
     public double[] getRow(int index);
 
     public double getValue(int markerIndex, int arrayIndex);
@@ -67,8 +67,6 @@ public interface DSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroar
 	public double getValue(T object, int arrayIndex);
 
 	public double getMeanValue(T marker, int maIndex);
-
-	public void setMicroarraySet(DSMicroarraySet ma);
 
 	public DSMicroarraySet getMicroarraySet();
 
