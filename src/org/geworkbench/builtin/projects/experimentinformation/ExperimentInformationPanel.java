@@ -8,7 +8,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.engine.config.VisualPlugin;
 import org.geworkbench.engine.management.AcceptTypes;
 import org.geworkbench.engine.management.Subscribe;
@@ -32,11 +31,6 @@ public class ExperimentInformationPanel implements VisualPlugin {
      * Text to display when there are no user comments entered.
      */
     private final String DEFAULT_MESSAGE = "";
-
-    /**
-     * The currently selected microarray set.
-     */
-    private DSMicroarraySet maSet = null;
 
     private JTextArea experimentTextArea = new JTextArea(DEFAULT_MESSAGE);
 
@@ -78,13 +72,10 @@ public class ExperimentInformationPanel implements VisualPlugin {
      */
     @Subscribe public void receive(ProjectEvent e, Object source) {
         DSDataSet<?> dataSet = e.getDataSet();
-        if (dataSet instanceof DSMicroarraySet) {
+        if (dataSet != null) {
         	String experimentInfo = DEFAULT_MESSAGE;
-            if (e.getMessage().equals(ProjectEvent.CLEARED)) {
-                maSet = null;
-            } else {
-                maSet = (DSMicroarraySet) dataSet;
-                String description = maSet.getDescription();
+            if (!e.getMessage().equals(ProjectEvent.CLEARED)) {
+                String description = dataSet.getDescription();
                 if (description != null && description.length() > 0)
                     experimentInfo += description + "\n";
                 else
