@@ -165,8 +165,6 @@ public class AdjacencyMatrix implements Serializable {
 
 	private HashMap<Node, HashMap<Node, Set<EdgeInfo>>> geneRows = new HashMap<Node, HashMap<Node, Set<EdgeInfo>>>();
 
-	private final DSMicroarraySet maSet;	
-
 	private final String name;
 
 	private final Map<String, String> interactionTypeSifMap; // TODO check ?
@@ -175,37 +173,28 @@ public class AdjacencyMatrix implements Serializable {
     private Set<Node> nodeSet = new HashSet<Node>();
     
 
-	public AdjacencyMatrix(String name,
-			final DSMicroarraySet microarraySet) {
+	public AdjacencyMatrix(String name) {
 		this.name = name;
-		maSet = microarraySet;
 		interactionTypeSifMap = null;
 		interactionEvidenceMap = null;
-		log.debug("AdjacencyMatrix created with label " + name
-				+ " and microarray set " + maSet.getDataSetName());
+		log.debug("AdjacencyMatrix created with label " + name);
 	}
 
 	public AdjacencyMatrix(String name,
-			final DSMicroarraySet microarraySet,
 			Map<String, String> interactionTypeSifMap) {
 		this.name = name;
-		maSet = microarraySet;
 		this.interactionTypeSifMap = interactionTypeSifMap;
 		interactionEvidenceMap = null;
 		log.debug("AdjacencyMatrix created with label " + name
-				+ " and microarray set " + maSet.getDataSetName()
 				+ ", with interaction type map");
 	} 
 
 	public AdjacencyMatrix(String name,
-			final DSMicroarraySet microarraySet,
 			Map<String, String> interactionTypeSifMap, Map<String, String> interactionEvidenceMap) {
 		this.name = name;
-		maSet = microarraySet;
 		this.interactionTypeSifMap = interactionTypeSifMap;
 		this.interactionEvidenceMap = interactionEvidenceMap;
 		log.debug("AdjacencyMatrix created with label " + name
-				+ " and microarray set " + maSet.getDataSetName()
 				+ ", with interaction type map");
 	}
 
@@ -215,7 +204,7 @@ public class AdjacencyMatrix implements Serializable {
 	 * master regulator analysis.
 	 * 
 	 */
-	public Set<DSGeneMarker> get(DSGeneMarker marker) {
+	public Set<DSGeneMarker> get(DSGeneMarker marker, DSMicroarraySet microarraySet) {
 		Set<DSGeneMarker> set = new HashSet<DSGeneMarker>();
 		HashMap<Node, Set<EdgeInfo>> row = geneRows.get(new Node(marker));
 		if (row == null) {
@@ -228,7 +217,7 @@ public class AdjacencyMatrix implements Serializable {
 			if (id.type == NodeType.MARKER)
 				set.add(id.marker);
 			else if (id.type == NodeType.GENE_SYMBOL) {
-				DSGeneMarker m = maSet.getMarkers().get(id.stringId);
+				DSGeneMarker m = microarraySet.getMarkers().get(id.stringId);
 				if (m != null)
 					set.add(m);
 			}
@@ -340,10 +329,6 @@ public class AdjacencyMatrix implements Serializable {
 
 	public int getNodeNumber() {
 		return nodeSet.size();
-	}
-
-	public DSMicroarraySet getMicroarraySet() {
-		return maSet;
 	}
 
 	public Map<String, String> getInteractionTypeSifMap() {

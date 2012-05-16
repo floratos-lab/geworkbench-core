@@ -174,7 +174,7 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet<DSMicroarray> {
 			String selectedRepresentedBy, boolean isRestrict)
 			throws InputFileFormatException {
 
-		AdjacencyMatrix matrix = new AdjacencyMatrix(fileName, maSet,
+		AdjacencyMatrix matrix = new AdjacencyMatrix(fileName,
 				interactionTypeSifMap);
 		 
 		try {
@@ -238,7 +238,7 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet<DSMicroarray> {
 			throws InputFileFormatException {
 
 		if (matrix == null)
-			matrix = new AdjacencyMatrix(null, maSet, interactionTypeSifMap);
+			matrix = new AdjacencyMatrix(null, interactionTypeSifMap);
 
 		try {
 			for (String line : lines) {
