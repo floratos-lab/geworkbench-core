@@ -2,18 +2,13 @@ package org.geworkbench.parsers;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
-
-import javax.swing.ProgressMonitor;
-import javax.swing.ProgressMonitorInputStream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -92,25 +87,17 @@ public class MicroarraySetParser {
 
 	private boolean readFile(File file) {
 		markerNumber = 0;
-		try {
-			createProgressReader("Reading from " + file.getName(), file);
-		} catch (FileNotFoundException fnf) {
-			fnf.printStackTrace();
-			return false;
-		}
 
 		String line = null;
+		BufferedReader reader = null;
 		try {
+			reader = new BufferedReader(new FileReader(file));
 			markerValues = new ArrayList<DSMarkerValue[]>();
 			while ((line = reader.readLine()) != null) {
 				if (!line.trim().equalsIgnoreCase("")) {
 
 					parseLine(line.trim());
 
-					if (pm != null && pm.isCanceled()) {
-						reader.close();
-						return false;
-					}
 				}
 			}
 		} catch (IOException ioe) {
@@ -119,7 +106,8 @@ public class MicroarraySetParser {
 			return false;
 		} finally {
 			try {
-				reader.close();
+				if(reader!=null)
+					reader.close();
 			} catch (IOException e) {
 				// nothing further necessary
 			}
@@ -346,19 +334,6 @@ public class MicroarraySetParser {
 			}
 		}
 		return markerValue;
-	}
-
-	private transient BufferedReader reader = null;
-	private transient ProgressMonitor pm = null;
-
-	private void createProgressReader(String display, File file)
-			throws FileNotFoundException {
-		FileInputStream fileIn = new FileInputStream(file);
-		ProgressMonitorInputStream progressIn = new ProgressMonitorInputStream(
-				null, display, fileIn);
-
-		pm = progressIn.getProgressMonitor();
-		reader = new BufferedReader(new InputStreamReader(progressIn));
 	}
 
 }
