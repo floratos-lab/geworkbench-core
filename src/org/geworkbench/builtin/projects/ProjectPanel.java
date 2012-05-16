@@ -541,6 +541,13 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		else
 			filter = SaveFileFilterFactory.createFilter(ds);
 
+		if (!filter.accept(f)){
+			String newFileName = f.getAbsolutePath();
+			newFileName = newFileName.substring(0, newFileName.lastIndexOf("."));
+			newFileName += "." + filter.getExtension();
+			jFileChooser1.setSelectedFile(new File(newFileName));
+		}
+
 		jFileChooser1.setFileFilter(filter);
 
 		if (JFileChooser.APPROVE_OPTION == jFileChooser1
@@ -555,11 +562,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				} catch (IOException ioe) {
 					ioe.printStackTrace();
 				}
-			}
-
-			if (!filter.accept(new File(newFileName))) {
-				newFileName = newFileName.substring(0, newFileName.lastIndexOf("."));
-				newFileName += "." + filter.getExtension();
 			}
 
 			if (new File(newFileName).exists()) {
