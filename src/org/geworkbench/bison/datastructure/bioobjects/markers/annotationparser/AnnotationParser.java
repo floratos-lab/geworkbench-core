@@ -1,16 +1,33 @@
 package org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser;
-
+ 
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.Serializable;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.WeakHashMap;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
-import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
+import org.geworkbench.bison.datastructure.bioobjects.DSBioObject; 
+import org.geworkbench.util.Util;
 
 /**
  *
@@ -25,8 +42,8 @@ import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 public class AnnotationParser implements Serializable {
 	private static final long serialVersionUID = -117234619759135916L;
 
-	static Log log = LogFactory.getLog(AnnotationParser.class);
-
+	static Log log = LogFactory.getLog(AnnotationParser.class);	
+ 
 	public static final String GENE_ONTOLOGY_BIOLOGICAL_PROCESS = "Gene Ontology Biological Process";
 
 	public static final String GENE_ONTOLOGY_CELLULAR_COMPONENT = "Gene Ontology Cellular Component";
@@ -53,11 +70,32 @@ public class AnnotationParser implements Serializable {
 	public static final String SWISSPROT = "SwissProt"; // swissprot
 
 	public static final String REFSEQ = "RefSeq Transcript ID"; // RefSeq
-
+	
+	public static final String PLEASE_SELECT  = "Please Select";
+	
+	public static final String AFFYMETRIX_3_EXPRESSION  = "Affymetrix 3' Expression";
+	
+	public static final String AFFY_GENE_EXON_10_ST = "Affymetrix Gene/Exon 1.0 ST";
+	
+	
+	private static List<AffyAnnotationParser> annotationParsers;
 	private static DSMicroarraySet currentDataSet = null;
 	private static WeakHashMap<DSMicroarraySet, String> datasetToChipTypes = new WeakHashMap<DSMicroarraySet, String>();
 	private static WeakHashMap<DSMicroarraySet, Map<String, AnnotationFields>> datasetToAnnotation = new WeakHashMap<DSMicroarraySet, Map<String, AnnotationFields>>();
 
+	private static boolean isCanceled = false;
+	private static String selectedFileType = null;
+	
+	
+	static  
+	{		 
+			annotationParsers = new ArrayList<AffyAnnotationParser>();
+			annotationParsers.add(new Affy3ExpressionAnnotationParser());
+			annotationParsers.add(new AffyGeneExonStAnnotationParser());
+		 
+	}
+	
+	
 	/* The reason that we need APSerializable is that the status fields are designed as static. */
 	public static APSerializable getSerializable() {
 		return new APSerializable(currentDataSet, datasetToChipTypes,
@@ -116,6 +154,8 @@ public class AnnotationParser implements Serializable {
 	/* if the annotation file is given, this method is called directly without GUI involved */
 	public static void loadAnnotationFile(
 			DSMicroarraySet dataset, File annotationData) {
+		
+		 
 		if (!annotationData.exists()) { // data file is found
 			log.error("Annotation file " + annotationData + " does not exist.");
 			return;
@@ -137,14 +177,30 @@ public class AnnotationParser implements Serializable {
 				return;
 			}
 		}
+		
+		
+		
+		JDialog loadDialog = new JDialog();		 
+		loadDialog.setTitle("Select Annotation File Type");
+		AnnotationFileTypePanel loadPanel = new AnnotationFileTypePanel(loadDialog);
 
-		AffyAnnotationParser parser = new AffyAnnotationParser(annotationData);
-		Map<String, AnnotationFields> markerAnnotation  = parser.parse(false);
+		loadDialog.add(loadPanel);
+		loadDialog.setModal(true);
+		loadDialog.pack();
+		Util.centerWindow(loadDialog);
+		loadDialog.setVisible(true);
+
+		if (isCanceled)
+			return;	
+
+		AffyAnnotationParser parser = getAnnotationParsers();
+		Map<String, AnnotationFields> markerAnnotation  = parser.parse(annotationData, false);
 		if(markerAnnotation!=null) {
 			datasetToAnnotation.put(dataset, markerAnnotation);
+			datasetToChipTypes.put(dataset, chipType);
+		
 		}
-
-		datasetToChipTypes.put(dataset, chipType);
+		
 		currentDataSet = dataset;
 	}
 
@@ -236,5 +292,112 @@ public class AnnotationParser implements Serializable {
 	public static void cleanUpAnnotatioAfterUnload(DSDataSet<? extends DSBioObject> dataset) {
 		// using weak reference making this manual management unnecessary
 	}
+	
+	
+
+	
+	private static AffyAnnotationParser getAnnotationParsers()
+	{
+		AffyAnnotationParser affyAnnotationParser = null;
+		for(AffyAnnotationParser parser: annotationParsers)
+		{
+			if (parser.getAnnotationFileType().equalsIgnoreCase(selectedFileType))
+			{
+				affyAnnotationParser = parser;
+				break;
+			}
+		}
+		return affyAnnotationParser;
+		
+	}
+	
+	private static class AnnotationFileTypePanel extends JPanel {
+		 
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -6651285046254401480L;
+		
+		final JDialog parent;
+	 
+		private JComboBox annotationFileTypeJcb;
+	 
+		 
+		public AnnotationFileTypePanel(JDialog parent) {
+
+			setLayout(new BorderLayout());
+			this.parent = parent;
+		 
+			init();
+
+		}
+
+		private void init() {
+
+			JPanel panel1 = new JPanel();
+			 
+			JPanel panel3 = new JPanel(new GridLayout(0, 3));
+			JLabel label1 = new JLabel("Annotation file type:   ");
+
+			annotationFileTypeJcb = new JComboBox();
+			annotationFileTypeJcb.addItem(PLEASE_SELECT);
+			annotationFileTypeJcb.addItem(AnnotationParser.AFFYMETRIX_3_EXPRESSION);
+			annotationFileTypeJcb.addItem(AnnotationParser.AFFY_GENE_EXON_10_ST);
+		 
+			annotationFileTypeJcb.addItemListener(new ItemListener() {
+				public void itemStateChanged(ItemEvent evt) {
+					 
+				}
+			});		
+			
+
+			JButton continueButton = new JButton("Continue");
+			JButton cancelButton = new JButton("Cancel");
+
+			parent.addWindowListener(new WindowAdapter() {
+
+				public void windowClosing(WindowEvent e) {
+					isCanceled = true;
+					selectedFileType = null; 
+				}
+			});
+			
+			continueButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {				 
+					selectedFileType = annotationFileTypeJcb.getSelectedItem().toString();
+					if (selectedFileType.trim().equals(PLEASE_SELECT))
+						return;
+					
+					parent.dispose();					
+					isCanceled = false;
+				}
+			});
+			cancelButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					parent.dispose();
+					selectedFileType = null;
+					isCanceled = true;
+				}
+			}); 
+
+			panel1.add(label1);
+			panel1.add(annotationFileTypeJcb);
+			 
+
+			panel3.add(continueButton);
+			panel3.add(new JLabel("  "));
+			panel3.add(cancelButton);
+
+			this.add(panel1, BorderLayout.NORTH);
+			 
+			this.add(panel3, BorderLayout.SOUTH);
+
+		}
+ 
+	 
+	}
+
+	
+	
 
 }
