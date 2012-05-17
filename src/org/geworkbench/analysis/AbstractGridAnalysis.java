@@ -7,8 +7,10 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.views.DSMicroarraySetView;
+import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.model.analysis.ParamValidationResults;
@@ -102,5 +104,13 @@ public abstract class AbstractGridAnalysis extends AbstractAnalysis {
 	 */
 	public boolean isAuthorizationRequired() {
 		return true;
+	}
+	
+	// this has to be non-static method so to be able to override
+	@SuppressWarnings("unchecked")
+	public DSAncillaryDataSet<? extends DSBioObject> postProcessResult(Object object) {
+		// default assuming DSAncillaryDataSet
+		if(!(object instanceof DSAncillaryDataSet)) return null;
+		return (DSAncillaryDataSet<? extends DSBioObject>) object;
 	}
 }
