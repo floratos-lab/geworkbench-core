@@ -112,7 +112,7 @@ public class AffyGeneExonStAnnotationParser extends AffyAnnotationParser {
 
 				if (subStrs[i].split("GO:").length < 2
 						|| subStrs[i].contains("WARNING: THIS FIELD TRUNCATED"))
-					System.out.println("This string is skipped: " +  subStrs[i]);
+					log.info("This string is skipped: " +  subStrs[i]);
 				else
 					sb.append(MAIN_DELIMITER
 							+ subStrs[i].split("GO:")[1].trim());
