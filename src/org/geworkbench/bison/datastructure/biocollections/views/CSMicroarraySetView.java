@@ -1,8 +1,9 @@
 package org.geworkbench.bison.datastructure.biocollections.views;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
-import org.apache.commons.collections15.set.ListOrderedSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
@@ -82,13 +83,10 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
 	@Override
 	public DSItemList<T> getUniqueMarkers() {
 		if (useMarkerPanel && markerPanel.size() > 0) {
-			ListOrderedSet<T> orderedSet = new ListOrderedSet<T>();
-			for (T t : markerPanel) {
-				orderedSet.add(t);
-			}
+			Set<T> set = new HashSet<T>(markerPanel);
 
 			CSItemList<T> itemList = new CSItemList<T>();
-			for (T item : orderedSet) {
+			for (T item : set) {
 				itemList.add(item);
 			}
 
