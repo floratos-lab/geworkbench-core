@@ -16,20 +16,30 @@ public class PendingTreeNode extends ProjectTreeNode implements Serializable {
 
 	private static final long serialVersionUID = 6783438582542203187L;
 
-	// this is necessary only because when the underlying DSDataSet is serialized, it looses it identity as pending node
 	static class PendingNode extends CSDataSet<DSBioObject> {
 		private static final long serialVersionUID = -3552145129303064083L;
+
+		final GridEndpointReferenceType gridEpr;
+		final String analysisClassName;
+		
+		public PendingNode(String label, String history,
+				GridEndpointReferenceType gridEpr, String analysisClassName) {
+			setLabel(label);
+			setDescription(history);
+			this.gridEpr = gridEpr;
+			this.analysisClassName = analysisClassName;
+		}
 	}
 	
 	/**
 	 * Constructor.
 	 */
 	public PendingTreeNode(String label, String history,
-			GridEndpointReferenceType gridEpr) {
-		DSDataSet<?> dataset = new PendingNode();
-		dataset.setLabel(label);
-		dataset.setDescription(history);
-		dataset.addObject(GridEndpointReferenceType.class, gridEpr);
+			GridEndpointReferenceType gridEpr, String analysisClassName) {
+
+		DSDataSet<?> dataset = new PendingNode(label, history, gridEpr,
+				analysisClassName);
+
 		super.setUserObject(dataset);
 	}
 
@@ -42,6 +52,6 @@ public class PendingTreeNode extends ProjectTreeNode implements Serializable {
 	 */
 	public GridEndpointReferenceType getGridEpr() {
 		DSDataSet<?> dataset = getDSDataSet();
-		return (GridEndpointReferenceType)dataset.getObject(GridEndpointReferenceType.class);
+		return ((PendingNode)dataset).gridEpr;
 	}
 }

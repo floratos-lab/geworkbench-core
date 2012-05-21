@@ -1,7 +1,8 @@
 package org.geworkbench.events;
 
-import java.util.Collection;
+import java.util.Map;
 
+import org.geworkbench.analysis.AbstractGridAnalysis;
 import org.geworkbench.engine.config.events.Event;
 import org.ginkgo.labs.ws.GridEndpointReferenceType;
 
@@ -12,15 +13,15 @@ import org.ginkgo.labs.ws.GridEndpointReferenceType;
  */
 public class PendingNodeLoadedFromWorkspaceEvent extends Event {
 
-	private Collection<GridEndpointReferenceType> gridEprs = null;
+	private final Map<GridEndpointReferenceType, AbstractGridAnalysis> gridEprs;
 
 	public PendingNodeLoadedFromWorkspaceEvent(
-			Collection<GridEndpointReferenceType> gridEprs) {
+			final Map<GridEndpointReferenceType, AbstractGridAnalysis> gridEprs) {
 		super(null);
 		this.gridEprs = gridEprs;
 	}
 
-	public Collection<GridEndpointReferenceType> getGridEprs() {
+	public Map<GridEndpointReferenceType, AbstractGridAnalysis> getGridEprs() {
 		return gridEprs;
 	}
 

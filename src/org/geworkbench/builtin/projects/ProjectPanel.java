@@ -12,12 +12,11 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
-import java.lang.NumberFormatException;
-import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -49,6 +48,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DurationFormatUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.geworkbench.analysis.AbstractGridAnalysis;
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
@@ -73,6 +73,7 @@ import org.geworkbench.engine.config.UILauncher;
 import org.geworkbench.engine.config.VisualPlugin;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.management.Asynchronous;
+import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.engine.management.Publish;
 import org.geworkbench.engine.management.Subscribe;
 import org.geworkbench.engine.preferences.GlobalPreferences;
@@ -390,19 +391,49 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 	}
 
-	private void restorePendingNode(DSDataSet<?> dataset,
-			final Collection<GridEndpointReferenceType> pendingGridEprs) {
-		GridEndpointReferenceType pendingGridEpr = (GridEndpointReferenceType) dataset
-				.getObject(GridEndpointReferenceType.class);
+	private void restorePendingNode(
+			PendingTreeNode.PendingNode dataset,
+			final Map<GridEndpointReferenceType, AbstractGridAnalysis> pendingGridEprs) {
 		String history = dataset.getDescription();
-		addPendingNode(pendingGridEpr, dataset.getLabel(), history, true);
-		pendingGridEprs.add(pendingGridEpr);
+		GridEndpointReferenceType pendingGridEpr = dataset.gridEpr;
+		String analysisClassName = dataset.analysisClassName;
+		/*
+		 * We store class name instead of the actual AbstractGridAnalysis
+		 * instance because the instance, e.g. AracnceAnalysis, cannot be
+		 * serialized without major change of many classes in spite of that fact
+		 * it is marked as Serializable.
+		 */
+		AbstractGridAnalysis analysis = null;
+		try {
+			List<Object> list = ComponentRegistry.getRegistry()
+					.getComponentsList();
+			boolean found = false;
+			for (Object obj : list) {
+				if (obj.getClass().getName().startsWith(analysisClassName)) {
+					analysis = (AbstractGridAnalysis) obj;
+					found = true;
+					break;
+				}
+			}
+			if (!found)
+				throw new Exception("class of this component not loaded: "
+						+ analysisClassName);
+			addPendingNode(pendingGridEpr, dataset.getLabel(), history, true,
+					analysis);
+			pendingGridEprs.put(pendingGridEpr, analysis);
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	void populateFromSaveTree(SaveTree saveTree) {
 		java.util.List<DataSetSaveNode> projects = saveTree.getNodes();
 		ProjectTreeNode selectedNode = null;
-		Collection<GridEndpointReferenceType> pendingGridEprs = new HashSet<GridEndpointReferenceType>();
+		Map<GridEndpointReferenceType, AbstractGridAnalysis> pendingGridEprs = new HashMap<GridEndpointReferenceType, AbstractGridAnalysis>();
 		for (DataSetSaveNode project : projects) {
 			ProjectNode projectNode = new ProjectNode(project.getName());
 			projectNode.setDescription(project.getDescription());
@@ -417,7 +448,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				dataSet.setExperimentInformation(dataNode.getDescription());
 				/* pending node */
 				if (dataSet instanceof PendingTreeNode.PendingNode) {
-					restorePendingNode(dataSet, pendingGridEprs);
+					restorePendingNode((PendingTreeNode.PendingNode)dataSet, pendingGridEprs);
 				} else { /* real node */
 					addDataSetNode(dataSet);
 				}
@@ -432,7 +463,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 					/* pending node */
 					if (ancNode.getDataSet() instanceof PendingTreeNode.PendingNode) {
-						restorePendingNode(ancNode.getDataSet(),
+						restorePendingNode((PendingTreeNode.PendingNode)ancNode.getDataSet(),
 								pendingGridEprs);
 					} else {
 						DSAncillaryDataSet<? extends DSBioObject> ancSet = null;
@@ -675,11 +706,12 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	/**
 	 * Inserts a new pending node in the project tree. The node is a child of
 	 * the currently selected project
+	 * @param selectedGridAnalysis 
 	 * 
 	 * @param _dataSet
 	 */
 	public void addPendingNode(GridEndpointReferenceType gridEpr, String label,
-			String history, boolean startNewThread) {
+			String history, boolean startNewThread, AbstractGridAnalysis selectedGridAnalysis) {
 		// get the parent node for this node
 		ProjectTreeNode pNode = selection.getSelectedNode();
 		if (pNode == null) {
@@ -692,7 +724,13 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		 * Inserts the new node and sets the menuNode and other variables to
 		 * point to it.
 		 */
-		PendingTreeNode node = new PendingTreeNode(label, history, gridEpr);
+		String analysisClassName = selectedGridAnalysis.getClass().getName();
+		int i = analysisClassName.indexOf("$$");
+		if (i > 0) { // enhanced by cglib
+			analysisClassName = analysisClassName.substring(0, i);
+		}
+
+		PendingTreeNode node = new PendingTreeNode(label, history, gridEpr, analysisClassName);
 		projectTreeModel.insertNodeInto(node, pNode, pNode.getChildCount());
 		// Make sure the user can see the lovely new node.
 		projectTree.scrollPathToVisible(new TreePath(node));
