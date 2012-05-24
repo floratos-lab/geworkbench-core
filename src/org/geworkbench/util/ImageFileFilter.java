@@ -12,7 +12,7 @@ abstract class ImageFileFilter extends FileFilter {
 	
 	static class BitmapFileFilter extends ImageFileFilter {
 		public String getDescription() {
-			return "Bitmap Files";
+			return "Bitmap Files (*.bmp)";
 		}
 
 		public boolean accept(File f) {
@@ -33,7 +33,7 @@ abstract class ImageFileFilter extends FileFilter {
 
 	static class JPEGFileFilter extends ImageFileFilter {
 		public String getDescription() {
-			return "Joint Photographic Experts Group Files";
+			return "Joint Photographic Experts Group Files (*.jpg)";
 		}
 
 		public boolean accept(File f) {
@@ -54,7 +54,7 @@ abstract class ImageFileFilter extends FileFilter {
 
 	static class PNGFileFilter extends ImageFileFilter {
 		public String getDescription() {
-			return "Portable Network Graphics Files";
+			return "Portable Network Graphics Files (*.png)";
 		}
 
 		public boolean accept(File f) {
@@ -75,7 +75,7 @@ abstract class ImageFileFilter extends FileFilter {
 
 	static class TIFFFileFilter extends ImageFileFilter {
 		public String getDescription() {
-			return "Tag(ged) Image File Format";
+			return "Tag(ged) Image File Format (*.tif)";
 		}
 
 		public boolean accept(File f) {

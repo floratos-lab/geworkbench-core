@@ -46,10 +46,10 @@ public class SaveImage {
 		FileFilter jpegFilter = new ImageFileFilter.JPEGFileFilter();
 		FileFilter pngFilter = new ImageFileFilter.PNGFileFilter();
 		FileFilter tiffFilter = new ImageFileFilter.TIFFFileFilter();
-		fc.setFileFilter(tiffFilter);
-		fc.setFileFilter(pngFilter);
+		fc.setFileFilter(tiffFilter);		
 		fc.setFileFilter(jpegFilter);
 		fc.setFileFilter(bitmapFilter);
+		fc.setFileFilter(pngFilter);
 
 		int choice = fc.showSaveDialog(null);
 		if (choice == JFileChooser.APPROVE_OPTION) {
