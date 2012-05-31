@@ -261,6 +261,8 @@ public class AnnotationParser implements Serializable {
 
 		AnnotationFields fields = datasetToAnnotation.get(dataset).get(
 				affyID);
+		if(fields==null) return new String[0];
+		
 		// individual field to be process separately to eventually get rid of
 		// the large map
 		if (fieldID.equals(GENE_SYMBOL)) { // same as ABREV
