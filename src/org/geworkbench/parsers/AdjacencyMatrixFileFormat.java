@@ -58,7 +58,7 @@ public class AdjacencyMatrixFileFormat extends DataSetFileFormat {
 	public static final String INTERACTIONS_SERVLET_URL = "interactions_servlet_url";
 	public static final String PROPERTIES_FILE = "conf/application.properties";
 	public static final String INTERACTIONS_SERVLET_CONNECTION_TIMEOUT = "interactions_servlet_connection_timeout";
-	
+
 	String[] adjMatrixExtensions = { "txt", "adj", "sif" };
 	String[] representedByList;
 	AdjacencyMatrixFileFilter adjMatrixFilter = null;
@@ -105,7 +105,8 @@ public class AdjacencyMatrixFileFormat extends DataSetFileFormat {
 		ArrayList<DataSetNode> dataSetstmp = new ArrayList<DataSetNode>();
 		for (Enumeration<?> en = projectNode.children(); en.hasMoreElements();) {
 			ProjectTreeNode node = (ProjectTreeNode) en.nextElement();
-			if (node instanceof DataSetNode) {
+			if (node instanceof DataSetNode
+					&& (((DataSetNode) node).getDataset() instanceof CSMicroarraySet)) {
 				dataSetstmp.add((DataSetNode) node);
 			}
 		}
@@ -115,9 +116,9 @@ public class AdjacencyMatrixFileFormat extends DataSetFileFormat {
 					"No Microarray Set is available");
 			return null;
 		} else {
-			DataSetNode[] dataSets = dataSetstmp.toArray(new DataSetNode[1]);
+			DataSetNode[] dataSets = dataSetstmp
+					.toArray(new DataSetNode[dataSetstmp.size()]);
 			JDialog loadDialog = new JDialog();
-
 			loadDialog.addWindowListener(new WindowAdapter() {
 
 				public void windowClosing(WindowEvent e) {
@@ -147,44 +148,39 @@ public class AdjacencyMatrixFileFormat extends DataSetFileFormat {
 				|| (fileName.toLowerCase().endsWith(".sif") && !selectedFormart
 						.equalsIgnoreCase(AdjacencyMatrixDataSet.SIF_FORMART))) {
 			String theMessage = "The network format selected may not match that of the file.  \nClick \"Cancel\" to terminate this process.";
-			Object[] optionChoices = { "Continue", "Cancel"};
-			int result = JOptionPane.showOptionDialog(
-				(Component) null, theMessage, "Warning",
-				JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
-				null, optionChoices, optionChoices[1]);
+			Object[] optionChoices = { "Continue", "Cancel" };
+			int result = JOptionPane.showOptionDialog((Component) null,
+					theMessage, "Warning", JOptionPane.DEFAULT_OPTION,
+					JOptionPane.WARNING_MESSAGE, null, optionChoices,
+					optionChoices[1]);
 			if (result == JOptionPane.NO_OPTION)
 				return null;
-	
 
 		}
 
 		AdjacencyMatrixDataSet adjMatrixDS = null;
 		if ((selectedDataSetNode != null)) {
-			DSDataSet<? extends DSBioObject> ds = selectedDataSetNode.getDataset();
-			if (!(ds instanceof CSMicroarraySet)) {
-				JOptionPane.showMessageDialog(null,
-						"Not a Microarray Set selected", "Unable to Load",
-						JOptionPane.ERROR_MESSAGE);
-			} else {
-				CSMicroarraySet mASet = (CSMicroarraySet) ds;
-				String adjMatrixFileStr = file.getPath();
-				String fileName = file.getName();
+			DSDataSet<? extends DSBioObject> ds = selectedDataSetNode
+					.getDataset();
 
-				HashMap<String, String> interactionTypeMap = null;
+			CSMicroarraySet mASet = (CSMicroarraySet) ds;
+			String adjMatrixFileStr = file.getPath();
+			String fileName = file.getName();
 
-				if (selectedFormart
-						.equalsIgnoreCase(AdjacencyMatrixDataSet.SIF_FORMART)) {
-					interactionTypeMap = getInteractionTypeMap();
-				}
-				AdjacencyMatrix matrix = AdjacencyMatrixDataSet
-						.parseAdjacencyMatrix(adjMatrixFileStr, mASet,
-								interactionTypeMap, selectedFormart,
-								selectedRepresentedBy, isRestrict);
+			HashMap<String, String> interactionTypeMap = null;
 
-				adjMatrixDS = new AdjacencyMatrixDataSet(matrix, 0, fileName,
-						"network loaded", mASet);
-
+			if (selectedFormart
+					.equalsIgnoreCase(AdjacencyMatrixDataSet.SIF_FORMART)) {
+				interactionTypeMap = getInteractionTypeMap();
 			}
+			AdjacencyMatrix matrix = AdjacencyMatrixDataSet
+					.parseAdjacencyMatrix(adjMatrixFileStr, mASet,
+							interactionTypeMap, selectedFormart,
+							selectedRepresentedBy, isRestrict);
+
+			adjMatrixDS = new AdjacencyMatrixDataSet(matrix, 0, fileName,
+					"network loaded", mASet);
+
 		} else {
 			JOptionPane.showMessageDialog(null, "No Microarray Set selected",
 					"Unable to Load", JOptionPane.ERROR_MESSAGE);
@@ -220,8 +216,9 @@ public class AdjacencyMatrixFileFormat extends DataSetFileFormat {
 
 		try {
 
-			if (ResultSetlUtil.getUrl() == null || !ResultSetlUtil.getUrl().trim().equals(""))
-				ResultSetlUtil.setUrl(getURLProperty())	;
+			if (ResultSetlUtil.getUrl() == null
+					|| !ResultSetlUtil.getUrl().trim().equals(""))
+				ResultSetlUtil.setUrl(getURLProperty());
 			String methodAndParams = "getInteractionTypes";
 			rs = ResultSetlUtil.executeQuery(methodAndParams,
 					ResultSetlUtil.getUrl());
@@ -253,38 +250,31 @@ public class AdjacencyMatrixFileFormat extends DataSetFileFormat {
 
 		} catch (Exception se) {
 			if (log.isErrorEnabled()) {
-				log
-						.error("getInteractionTypes() - ResultSetlUtil: " + se.getMessage()); //$NON-NLS-1$
+				log.error("getInteractionTypes() - ResultSetlUtil: " + se.getMessage()); //$NON-NLS-1$
 			}
 
 		}
 		return map;
 	}
-	
-	public String getURLProperty() throws Exception{
-		 
-		String urlStr = PropertiesManager.getInstance().getProperty(this.getClass(),
-					"url", "");
+
+	public String getURLProperty() throws Exception {
+
+		String urlStr = PropertiesManager.getInstance().getProperty(
+				this.getClass(), "url", "");
 		Properties iteractionsProp = new Properties();
-		iteractionsProp.load(new FileInputStream(PROPERTIES_FILE));		
-		if (urlStr == null
-					|| urlStr.trim().equals("")) {
-		
-			urlStr = iteractionsProp
-						.getProperty(INTERACTIONS_SERVLET_URL);			
+		iteractionsProp.load(new FileInputStream(PROPERTIES_FILE));
+		if (urlStr == null || urlStr.trim().equals("")) {
+
+			urlStr = iteractionsProp.getProperty(INTERACTIONS_SERVLET_URL);
 		}
-		
+
 		Integer timeout = new Integer(
 				iteractionsProp
 						.getProperty(INTERACTIONS_SERVLET_CONNECTION_TIMEOUT));
 		ResultSetlUtil.setTimeout(timeout);
-			 
+
 		return urlStr;
 	}
-
-	
-	
-	
 
 	class AdjacencyMatrixFileFilter extends FileFilter {
 		public String getDescription() {
@@ -295,8 +285,8 @@ public class AdjacencyMatrixFileFormat extends DataSetFileFormat {
 			boolean returnVal = false;
 			for (int i = 0; i < adjMatrixExtensions.length; ++i)
 				if (f.isDirectory()
-						|| f.getName().toLowerCase().endsWith(
-								adjMatrixExtensions[i])) {
+						|| f.getName().toLowerCase()
+								.endsWith(adjMatrixExtensions[i])) {
 					return true;
 				}
 			return returnVal;
@@ -361,8 +351,8 @@ public class AdjacencyMatrixFileFormat extends DataSetFileFormat {
 
 			formatJcb.addItemListener(new ItemListener() {
 				public void itemStateChanged(ItemEvent evt) {
-					if (formatJcb.getSelectedItem().toString().equals(
-							AdjacencyMatrixDataSet.ADJ_FORMART)) {
+					if (formatJcb.getSelectedItem().toString()
+							.equals(AdjacencyMatrixDataSet.ADJ_FORMART)) {
 						representedByList = new String[4];
 						representedByList[0] = AdjacencyMatrixDataSet.PROBESET_ID;
 						representedByList[1] = AdjacencyMatrixDataSet.GENE_NAME;

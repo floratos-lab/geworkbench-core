@@ -22,7 +22,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
-import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
+import org.geworkbench.bison.datastructure.biocollections.DSDataSet; 
 import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
@@ -105,7 +105,7 @@ public class PatternFileFormat extends DataSetFileFormat {
 			ArrayList<DataSetNode> dataSetstmp = new ArrayList<DataSetNode>();
 			for (Enumeration<?> en = projectNode.children(); en.hasMoreElements();) {
 				ProjectTreeNode node = (ProjectTreeNode) en.nextElement();
-				if (node instanceof DataSetNode) {
+				if (node instanceof DataSetNode && (((DataSetNode)node).getDataset() instanceof DSSequenceSet)) {
 					dataSetstmp.add((DataSetNode) node);
 				}
 			}
@@ -143,17 +143,12 @@ public class PatternFileFormat extends DataSetFileFormat {
 			
 			if ((selectedDataSetNode != null)) {
 				DSDataSet<? extends DSBioObject> ds = selectedDataSetNode.getDataset();
-				if(!(ds instanceof DSSequenceSet)) {	
-					JOptionPane.showMessageDialog(null,
-							"Not a Sequence Set selected", "Unable to Load",
-							JOptionPane.ERROR_MESSAGE);
-					return null;
-				} else {
+				 
 					patternResult = new PatternResult(ds.getFile(), (DSDataSet<DSSequence>) ds);
 					if(!patternResult.read(file)) {
 						return null;
 					}
-				}
+				 
 			} else {
 				JOptionPane.showMessageDialog(null, "No Sequence Set selected",
 						"Unable to Load", JOptionPane.ERROR_MESSAGE);
