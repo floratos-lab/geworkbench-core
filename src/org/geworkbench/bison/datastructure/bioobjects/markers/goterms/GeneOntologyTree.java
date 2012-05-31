@@ -473,7 +473,7 @@ public class GeneOntologyTree {
 				public void run() {
 					JOptionPane.showMessageDialog(null,
 						    "Remote obo file was not loaded succesfully due to connection problem:\n>> "+e.getMessage()
-						    +"\nAttempting to open local copy.",
+						    +"\nAttempting to load local copy.",
 						    "Obo file warning",
 						    JOptionPane.WARNING_MESSAGE);
 				}
