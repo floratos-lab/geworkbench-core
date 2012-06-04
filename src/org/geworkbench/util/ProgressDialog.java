@@ -78,6 +78,19 @@ public class ProgressDialog extends JDialog {
 		}    	
     }
 
+    private int maxWidth = 0;
+
+    // call this method to resize dialog if published msg is longer than maxWidth
+    public void updateWidth(String msg){
+    	if (msg.length() > maxWidth){
+    		maxWidth = msg.length();
+    		pack();
+    	}
+    }
+    public void resetWidth(){
+    	maxWidth = 0;
+    	pack();
+    }
 	/*
 	 * add progress bar to progress dialog
 	 * execute SwingWorker task
@@ -111,6 +124,7 @@ public class ProgressDialog extends JDialog {
 
 		if (tasks.contains(task)) tasks.remove(task);
 		if (tasks.size() == 0) stop();
+		resetWidth();
 	}
 
     public void setTitle(String title) {
