@@ -148,8 +148,10 @@ public class ComponentConfigurationManagerWindow {
 			showByTypeChoices[index] =  s.substring(0, 1).toUpperCase()+s.substring(1).toLowerCase();
 			index++;
 		};
-		showByTypeChoices[index] = SHOW_BY_TYPE_OTHERS; 
+		showByTypeChoices[index] = SHOW_BY_TYPE_OTHERS;
+		Arrays.sort(showByTypeChoices);
 		showByTypeComboBox = new JComboBox(showByTypeChoices);
+		showByTypeComboBox.setMaximumRowCount(showByTypeChoices.length);
 		keywordSearchLabel = new JLabel("Keyword search:");
 		keywordSearchField = new JTextField("Enter Text");
 		splitPane = new JSplitPane();
