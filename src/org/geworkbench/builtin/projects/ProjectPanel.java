@@ -572,7 +572,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		else
 			filter = SaveFileFilterFactory.createFilter(ds);
 
-		if (!filter.accept(f)){
+		if (f != null && !filter.accept(f)){
 			String newFileName = f.getAbsolutePath();
 			newFileName = newFileName.substring(0, newFileName.lastIndexOf("."));
 			newFileName += "." + filter.getExtension();
