@@ -9,6 +9,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
 import java.util.TreeSet;
@@ -47,11 +48,11 @@ public class SequenceViewWidgetPanel extends JPanel {
 	private int selected = 0;
 	private int maxSeqLen = 1;
 
-	protected DSSequenceSet<? extends DSSequence> sequenceDB = null;
+	private DSSequenceSet<? extends DSSequence> sequenceDB = null;
 	private HashMap<CSSequence, PatternSequenceDisplayUtil> sequencePatternmatches;
 
-	protected boolean lineView;
-	protected boolean singleSequenceView;
+	private boolean lineView;
+	private boolean singleSequenceView;
 	private final static Color SEQUENCEBACKGROUDCOLOR = Color.BLACK;
 	private final static Color DRECTIONCOLOR = Color.RED;
 	private double yBasescale;
@@ -69,6 +70,13 @@ public class SequenceViewWidgetPanel extends JPanel {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		
+		this.addMouseMotionListener(new MouseMotionAdapter() {
+			public void mouseMoved(MouseEvent e) {
+				setMouseMoveParameters(e);
+			}
+		});
+
 	}
 
 	public void addMenuItem(JMenuItem item) {
@@ -772,16 +780,42 @@ public class SequenceViewWidgetPanel extends JPanel {
 						* yBasescale) / yBasescale)
 						* xBaseCols + x / xBasescale - 5);
 			}
-		} else {
-			if (!singleSequenceView) {
-				mouseSelected = getSeqId(y);
-				mouseMovePoint = getSeqDx(x);
+		} else if (!singleSequenceView) {
+			mouseSelected = getSeqId(y);
+			mouseMovePoint = getSeqDx(x);
+		} else { // single line view
 
-			} else {
-
-				mouseMovePoint = (int) ((int) ((y - yOff - 1) / yBasescale)
-						* xBaseCols + x / xBasescale - 5);
+			Font f = new Font("Courier New", Font.PLAIN, 11);
+			Graphics g = getGraphics();
+			((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+					RenderingHints.VALUE_ANTIALIAS_ON);
+			FontMetrics fm = g.getFontMetrics(f);
+			if (sequenceDB.getSequence(selected) == null
+					|| sequenceDB.getSequence(selected).getSequence() == null) {
+				return;
 			}
+			DSSequence sequence = sequenceDB.getSequence(selected);
+			String asc = sequence.getSequence();
+
+			Rectangle2D r2d = fm.getStringBounds(asc, g);
+			double xscale = (r2d.getWidth() + 3) / (double) (asc.length());
+			double yscale = 1.3 * r2d.getHeight();
+			int width = getWidth();
+			int cols = (int) (width / xscale) - 8;
+			int dis = (int) ((int) ((y - yOff - 1) / yscale) * cols + x
+					/ xscale - 5);
+			if (sequenceDB.getSequence(selected) != null) {
+				if (x >= 6 * xscale && x <= (cols + 6) * xscale
+						&& ((y - yOff - 1) / yscale > 0) && (dis > 0)
+						&& (dis <= sequenceDB.getSequence(selected).length())) {
+
+					String texttip = getTipInfo(sequence, dis);
+					setToolTipText(texttip);
+				}
+			}
+
+			mouseMovePoint = (int) ((int) ((y - yOff - 1) / yBasescale)
+					* xBaseCols + x / xBasescale - 5);
 		}
 		if (sequenceDB != null && selected < sequenceDB.size()) {
 			mouseSelectedSequence = sequenceDB.getSequence(mouseSelected);
@@ -793,10 +827,6 @@ public class SequenceViewWidgetPanel extends JPanel {
 					&& (mouseMovePoint > 0)) {
 				this.setToolTipText("" + mouseMovePoint);
 		}
-		{
-			this.setToolTipText(null);
-		}
-
 	}
 
 	/**
@@ -866,103 +896,6 @@ public class SequenceViewWidgetPanel extends JPanel {
 	private int getSeqId(int y) {
 		int seqId = (y - yOff + 5) / yStep;
 		return seqId;
-	}
-
-	public void this_mouseMoved(MouseEvent e) {
-		setMouseMoveParameters(e);
-		if (!lineView) {
-			mouseOverFullView(e);
-		} else {
-			mouseOverLineView(e);
-		}
-	}
-
-	private void mouseOverFullView(MouseEvent e)
-			throws ArrayIndexOutOfBoundsException {
-		if (sequenceDB == null) {
-			return;
-		}
-		int x1 = e.getX();
-		int y1 = e.getY();
-
-		Font f = new Font("Courier New", Font.PLAIN, 11);
-		Graphics g = this.getGraphics();
-		((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-				RenderingHints.VALUE_ANTIALIAS_ON);
-		FontMetrics fm = g.getFontMetrics(f);
-		if (sequenceDB.getSequence(selected) == null
-				|| sequenceDB.getSequence(selected).getSequence() == null) {
-			return;
-		}
-		String asc = sequenceDB.getSequence(selected).getSequence();
-		Rectangle2D r2d = fm.getStringBounds(asc, g);
-		double xscale = (r2d.getWidth() + 3) / (double) (asc.length());
-		double yscale = 1.3 * r2d.getHeight();
-		int width = this.getWidth();
-		int cols = (int) (width / xscale) - 8;
-		int dis = (int) ((int) ((y1 - yOff - 1) / yscale) * cols + x1 / xscale - 5);
-		if (sequenceDB.getSequence(selected) != null) {
-			if (((y1 - yOff - 1) / yscale > 0) && (dis > 0)
-					&& (dis <= sequenceDB.getSequence(selected).length())) {
-				this.setToolTipText("" + dis);
-			}
-		}
-	}
-
-	private void mouseOverLineView(MouseEvent e)
-			throws ArrayIndexOutOfBoundsException {
-		int y = e.getY();
-		int x = e.getX();
-		// displayInfo = "";
-		if (!singleSequenceView) {
-			int seqid = getSeqId(y);
-
-			if (sequenceDB == null) {
-				return;
-			}
-			int off = this.getSeqDx(x);
-			DSSequence sequence = sequenceDB.getSequence(seqid);
-			if (sequence != null) {
-				if ((off <= sequenceDB.getSequence(seqid).length())
-						&& (off > 0)) {
-
-					String texttip = getTipInfo(sequence, off);
-					this.setToolTipText(texttip);
-				}
-			}
-		} else {
-
-			Font f = new Font("Courier New", Font.PLAIN, 11);
-			Graphics g = this.getGraphics();
-			((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-					RenderingHints.VALUE_ANTIALIAS_ON);
-			FontMetrics fm = g.getFontMetrics(f);
-			if (sequenceDB.getSequence(selected) == null
-					|| sequenceDB.getSequence(selected).getSequence() == null) {
-				return;
-			}
-			DSSequence sequence = sequenceDB.getSequence(selected);
-			String asc = sequence.getSequence();
-
-			Rectangle2D r2d = fm.getStringBounds(asc, g);
-			double xscale = (r2d.getWidth() + 3) / (double) (asc.length());
-			double yscale = 1.3 * r2d.getHeight();
-			int width = this.getWidth();
-			int cols = (int) (width / xscale) - 8;
-			int dis = (int) ((int) ((y - yOff - 1) / yscale) * cols + x
-					/ xscale - 5);
-			if (sequenceDB.getSequence(selected) != null) {
-				if (x >= 6 * xscale && x <= (cols + 6) * xscale
-						&& ((y - yOff - 1) / yscale > 0) && (dis > 0)
-						&& (dis <= sequenceDB.getSequence(selected).length())) {
-
-					String texttip = getTipInfo(sequence, dis);
-					this.setToolTipText(texttip);
-
-					// this.setToolTipText("" + dis);
-				}
-			}
-		}
 	}
 
 	/**

@@ -12,7 +12,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputMethodEvent;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
@@ -154,11 +153,6 @@ public class SequenceViewWidget extends JPanel {
 		});
 		jViewLabel.setText("View: ");
 
-		seqViewWPanel.addMouseMotionListener(new MouseMotionAdapter() {
-			public void mouseMoved(MouseEvent e) {
-				seqViewWPanel.this_mouseMoved(e);
-			}
-		});
 		jViewComboBox.addItem(LINEVIEW);
 		jViewComboBox.addItem(FULLVIEW);
 		jViewComboBox.addActionListener(new ActionListener() {
