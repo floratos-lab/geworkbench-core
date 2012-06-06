@@ -50,6 +50,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.analysis.AbstractGridAnalysis;
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
+import org.geworkbench.bison.datastructure.biocollections.CSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
@@ -969,6 +970,18 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				dataSetMenu.show(projectTree, e.getX(), e.getY());
 			} else if (mNode instanceof DataSetSubNode) {
 				refreshDataSetMenu(null);
+				DSDataSet<? extends DSBioObject> ds = ((DataSetSubNode) mNode)._aDataSet;
+				Class fromClass = null;
+				try{
+					fromClass = ds.getClass().getMethod("writeToFile", String.class).getDeclaringClass();
+					log.info("writeToFile from class : "+ fromClass);
+				}catch(Exception ex){
+					ex.printStackTrace();
+				}
+				if (fromClass.equals(CSDataSet.class))
+					jSaveMenuItem.setEnabled(false);
+				else jSaveMenuItem.setEnabled(true);
+				if (ds instanceof CSTTestResultSet) jSaveMenuItem.setEnabled(true);
 				dataSetMenu.show(projectTree, e.getX(), e.getY());
 			} else if (mNode instanceof PendingTreeNode) {
 				pendingMenu.show(projectTree, e.getX(), e.getY());
