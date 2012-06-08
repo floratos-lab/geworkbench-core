@@ -81,9 +81,11 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
 	@SuppressWarnings("unchecked")
 	@Override
 	public DSItemList<T> getUniqueMarkers() {
-		if (useMarkerPanel && markerPanel.size() > 0) {
+		int s = markerPanel.size();
+		if (useMarkerPanel && s > 0) {
 			ListOrderedSet<T> orderedSet = new ListOrderedSet<T>();
-			for (T t : markerPanel) {
+			for (int i=0; i<s; i++) {
+				T t = markerPanel.get(i);
 				orderedSet.add(t);
 			}
 
