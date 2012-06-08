@@ -10,8 +10,15 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.DSRangeMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMarkerValue;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMutableMarkerValue;
+import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.util.Range;
 
+/**
+ * 'Relative' color preference.
+ * 
+ * @author zji
+ *
+ */
 public class ExpressionPValueColorContext implements ColorContext, Serializable {
 
 	private static final long serialVersionUID = 7733639267835219074L;
@@ -91,7 +98,9 @@ public class ExpressionPValueColorContext implements ColorContext, Serializable 
 						}
 					} else {
 						for (DSGeneMarker marker : microarraySet.getMarkers()) {
-							for (DSMicroarray ma : view.items()) {
+							DSItemList<DSMicroarray> items = view.items();
+							for (int i=0; i<items.size(); i++) {
+								DSMicroarray ma = items.get(i);
 								DSMutableMarkerValue mValue = (DSMutableMarkerValue) ma
 										.getMarkerValue(marker.getSerial());
 								((DSRangeMarker) marker).updateRange(mValue);
