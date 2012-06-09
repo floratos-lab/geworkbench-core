@@ -10,6 +10,7 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.InterruptedIOException;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.Box;
@@ -32,6 +33,7 @@ import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarr
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 import org.geworkbench.bison.datastructure.complex.pattern.PatternResult;
 import org.geworkbench.bison.util.colorcontext.ColorContext;
@@ -433,6 +435,15 @@ public class FileOpenHandler {
 							JOptionPane.INFORMATION_MESSAGE);
 			return null;
 		}
+		if (microarraySetsIntersect(sets)) {
+			JOptionPane
+					.showMessageDialog(
+							null,
+							"Can't merge datasets.  Only datasets without microarray intersection can be merged.",
+							"Operation failed while merging",
+							JOptionPane.INFORMATION_MESSAGE);
+			return null;
+		}
 		if (sets == null)
 			return null;
 		
@@ -526,5 +537,19 @@ public class FileOpenHandler {
 				return false;
 		}
 		return true; // all marker sets are identical
+	}
+
+	private static boolean microarraySetsIntersect(DSMicroarraySet[] sets) {
+		Set<String> set = new HashSet<String>();
+		for (DSMicroarraySet s : sets) {
+			for (DSMicroarray array : s) {
+				String label = array.getLabel();
+				if (set.contains(label))
+					return true;
+				else
+					set.add(label);
+			}
+		}
+		return false;
 	}
 }
