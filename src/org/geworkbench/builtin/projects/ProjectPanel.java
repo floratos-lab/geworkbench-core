@@ -581,7 +581,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 
 		jFileChooser1.setFileFilter(filter);
-
+		
 		if (JFileChooser.APPROVE_OPTION == jFileChooser1
 				.showSaveDialog((Component) event.getSource())) {
 			String newFileName = jFileChooser1.getSelectedFile()
@@ -611,7 +611,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 						&& ds instanceof DSMicroarraySet)
 					((DSMicroarraySet) ds).writeToTabDelimFile(newFileName);
 				else
-					ds.writeToFile(newFileName);
+					ds.writeToFile(newFileName + "." + filter.getExtension());
 			} catch (RuntimeException e) {
 				JOptionPane.showMessageDialog(null, e.getMessage() + " "
 						+ ds.getClass().getName(), "Save Error",
@@ -971,6 +971,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			} else if (mNode instanceof DataSetSubNode) {
 				refreshDataSetMenu(null);
 				DSDataSet<? extends DSBioObject> ds = ((DataSetSubNode) mNode)._aDataSet;
+				@SuppressWarnings("rawtypes")
 				Class fromClass = null;
 				try{
 					fromClass = ds.getClass().getMethod("writeToFile", String.class).getDeclaringClass();
