@@ -191,7 +191,7 @@ public class PatternTableView extends JPanel {
 
         patternTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(MouseEvent e) {
-                if (e.isMetaDown()) {
+                if (e.getButton() == MouseEvent.BUTTON3) {
                     patternMenu.show(patternTable, e.getX(), e.getY());
                 }
             }
@@ -354,7 +354,7 @@ public class PatternTableView extends JPanel {
     private void addMouseListenerToHeaderInTable() {
         MouseAdapter listMouseListener = new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
-                if (e.isMetaDown()) {
+                if (e.getButton() == MouseEvent.BUTTON3) {
                     patternMenu.show(patternTable, e.getX(), e.getY());
                 } else {
                     TableColumnModel columnModel = patternTable.getColumnModel();

@@ -586,7 +586,7 @@ public class CaARRAYPanel extends JPanel implements Observer, VisualPlugin {
 					.getLastPathComponent());
 			Object nodeObj = selectedNode.getUserObject();
 			
-			if (e.isMetaDown() && nodeObj instanceof CaArray2Experiment) {
+			if (e.getButton() == MouseEvent.BUTTON3 && nodeObj instanceof CaArray2Experiment) {
 				jRemoteDataPopup.show(remoteFileTree, e.getX(), e.getY());
 				if (selectedNode.getChildCount() > 0) {
 					jGetRemoteDataMenu.setEnabled(false);

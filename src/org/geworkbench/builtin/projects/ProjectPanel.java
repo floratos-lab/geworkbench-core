@@ -915,7 +915,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 		ProjectTreeNode mNode = (ProjectTreeNode) path.getLastPathComponent();
 
-		if (e.isMetaDown() || e.getClickCount() >= 2) {
+		if ( e.getButton() == MouseEvent.BUTTON3 || e.getClickCount() >= 2) {
 
 			if (!isPathSelected(path)) {
 				// Force selection of this path
