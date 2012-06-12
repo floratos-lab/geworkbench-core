@@ -439,7 +439,7 @@ public class FileOpenHandler {
 			JOptionPane
 					.showMessageDialog(
 							null,
-							"Can't merge datasets.  Only datasets without microarray intersection can be merged.",
+							"Can't merge datasets.  One or more array names are repeated.\nOnly datasets using different array names can be merged.",
 							"Operation failed while merging",
 							JOptionPane.INFORMATION_MESSAGE);
 			return null;
