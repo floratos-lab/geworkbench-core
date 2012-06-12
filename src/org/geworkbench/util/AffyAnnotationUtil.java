@@ -6,6 +6,7 @@ package org.geworkbench.util;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Frame;
+import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,15 +16,21 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
+import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.Affy3ExpressionAnnotationParser;
+import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AffyAnnotationParser;
+import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AffyGeneExonStAnnotationParser;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.engine.preferences.PreferencesManager;
 import org.geworkbench.engine.properties.PropertiesManager;
@@ -34,6 +41,7 @@ import com.jgoodies.forms.builder.ButtonBarBuilder;
  * @author zji
  *
  */
+// TODO rename this class. there is a dangerous case of same name in other package
 public class AffyAnnotationUtil {
 
 	public static String matchAffyAnnotationFile(final DSMicroarraySet dataset) {
@@ -68,6 +76,7 @@ public class AffyAnnotationUtil {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				public void run() {
 					userFile = selectAnnotationFile();
+					parser = selectAnnotationParser();
 				}
 			});
 		} catch (InterruptedException e) {
@@ -77,14 +86,16 @@ public class AffyAnnotationUtil {
 		}
 
 		if (userFile != null) {
-			AnnotationParser.loadAnnotationFile(dataset, userFile);
+			AnnotationParser.loadAnnotationFile(dataset, userFile, parser);
 			return userFile.getName();
 		} else {
 			return "Other";
 		}
 	}
 
+	// TODO these may be avoided by re-organize the EDT/non-EDT code
 	private volatile static File userFile = null;
+	private volatile static AffyAnnotationParser parser = null;
 
 	public static boolean showAnnotationsMessage() {
 		String message = "To process Affymetrix files many geWorkbench components require information from the associated chip annotation files. Annotation files can be downloaded from the Affymetrix web site, <a href='http://www.affymetrix.com/support/technical/byproduct.affx?cat=arrays' target='_blank'>http://www.affymetrix.com/support/technical/byproduct.affx?cat=arrays</a> (due to the Affymetrix license we are precluded from shipping these files with geWorkbench). Place downloaded files to a directory of your choice; when prompted by geWorkbench point to the appropriate annotation file to be associated with the microarray data you are about to load into the application. Your data will load even if you do not associate them with an annotation file; in that case, some geWorkbench components will not be fully functional.<br>\n"
@@ -134,6 +145,70 @@ public class AffyAnnotationUtil {
 		window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		return dontShow.isSelected();
+	}
+
+	private static AffyAnnotationParser selectAnnotationParser() {
+		final String AFFYMETRIX_3_EXPRESSION  = "Affymetrix 3' Expression";
+		final String AFFY_GENE_EXON_10_ST = "Affymetrix Gene/Exon 1.0 ST";
+
+		final JDialog dialog = new JDialog();
+		dialog.setTitle("Select Annotation File Type");
+
+		JPanel panel = new JPanel();
+		panel.setLayout(new BorderLayout());
+
+		JPanel panel1 = new JPanel();
+		panel1.add(new JLabel("Annotation file type:   "));
+
+		final JComboBox annotationFileTypeJcb = new JComboBox();
+		annotationFileTypeJcb.addItem("Please Select");
+		annotationFileTypeJcb.addItem(AFFYMETRIX_3_EXPRESSION);
+		annotationFileTypeJcb.addItem(AFFY_GENE_EXON_10_ST);
+
+		panel1.add(annotationFileTypeJcb);
+
+		JPanel panel3 = new JPanel(new GridLayout(0, 3));
+
+		JButton continueButton = new JButton("Continue");
+		JButton cancelButton = new JButton("Cancel");
+
+		continueButton.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				String parserType = annotationFileTypeJcb.getSelectedItem()
+						.toString();
+				if (parserType.equals(AFFYMETRIX_3_EXPRESSION)) {
+					parser = new Affy3ExpressionAnnotationParser();
+				} else if (parserType
+						.equals(AFFY_GENE_EXON_10_ST)) {
+					parser = new AffyGeneExonStAnnotationParser();
+				} else {
+					parser = null;
+				}
+				dialog.dispose();
+			}
+		});
+		cancelButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dialog.dispose();
+				parser = null;
+			}
+		});
+
+		panel3.add(continueButton);
+		panel3.add(new JLabel("  "));
+		panel3.add(cancelButton);
+
+		panel.add(panel1, BorderLayout.NORTH);
+		panel.add(panel3, BorderLayout.SOUTH);
+
+		dialog.add(panel);
+		dialog.setModal(true);
+		dialog.pack();
+		dialog.setLocationRelativeTo(null);
+		dialog.setVisible(true);
+
+		return parser;
 	}
 
 	private static File selectAnnotationFile() {

@@ -2,31 +2,23 @@
  * 
  */
 package org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser;
-
  
 import java.util.List;
 import java.util.ArrayList;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory; 
-
  
 /**
- * Actual parser of affy annotation.
- * 
- * This used to be in class AnnotationParser, whose main role is no longer
- * parsing but the name stuck.
  * 
  * @author zji
- * @version $Id: AffyAnnotationParser.java 9425 2012-05-04 18:22:56Z zji $
+ * @version $Id$
  * 
  */
 public class AffyGeneExonStAnnotationParser extends AffyAnnotationParser {
 
 	static Log log = LogFactory.getLog(AffyGeneExonStAnnotationParser.class);
 	
-	// at this time, the field names in AnnotationParser are those actually used
-	// the field names here are to be used in the future
 	private static final String PROBESET_ID = "probeset_id";
 	private static final String UNIGENE = "unigene"; // subfield a or b.
 
@@ -60,11 +52,7 @@ public class AffyGeneExonStAnnotationParser extends AffyAnnotationParser {
 			UNIGENE, GENE_ASSIGNMENT, MRNA_ASSIGNMENT, SWISSPROT, PATHWAY,
 			GO_BIOLOGICAL_PROCESS, GO_CELLULAR_COMPONENT, GO_MOLECULAR_FUNCTION };
 
-	AffyGeneExonStAnnotationParser() {
-		this.annotationFileType = AnnotationParser.AFFY_GENE_EXON_10_ST;
-
-	}
- 
+	@Override
 	AnnotationFields parseOneLine() {
 		 
 		affyId = parser.getValueByLabel(labels[0]);
@@ -100,8 +88,6 @@ public class AffyGeneExonStAnnotationParser extends AffyAnnotationParser {
 
 		return fields;
 	}   
-	
-	
 
 	private String rebuildGoString(String goString) {
 		StringBuilder sb = new StringBuilder();
@@ -239,6 +225,5 @@ public class AffyGeneExonStAnnotationParser extends AffyAnnotationParser {
 
 		return fields;
 	}
-	 
 
 }

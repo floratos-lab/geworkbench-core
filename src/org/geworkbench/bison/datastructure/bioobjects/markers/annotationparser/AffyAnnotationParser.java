@@ -27,20 +27,8 @@ import com.Ostermiller.util.LabeledCSVParser;
  */
 public abstract class AffyAnnotationParser {
 
-	protected String annotationFileType = null;
-	
-	  /**
-     * @return The format name.
-     */
-    public String getAnnotationFileType() {
-    	 
-        return annotationFileType;
-    }
-    
-    
- // this supports the complete unfinished parsing
-	transient LabeledCSVParser parser;
-	//private transient  CSVParser parser;
+	// this supports the complete unfinished parsing
+	protected transient LabeledCSVParser parser;
 	
 	transient String affyId;
 
@@ -112,9 +100,7 @@ public abstract class AffyAnnotationParser {
 		}
 		return markerAnnotation;
 	}
-
 	 
     abstract AnnotationFields parseOneLine(); 
-   
     
 }

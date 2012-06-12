@@ -5,12 +5,9 @@ package org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser;
 
  
 /**
- * Actual parser of affy annotation.
- * 
- * This used to be in class AnnotationParser, whose main role is no longer parsing but the name stuck.
  * 
  * @author zji
- * @version $Id: AffyAnnotationParser.java 9425 2012-05-04 18:22:56Z zji $
+ * @version $Id$
  *
  */
 public class Affy3ExpressionAnnotationParser extends AffyAnnotationParser{
@@ -39,12 +36,8 @@ public class Affy3ExpressionAnnotationParser extends AffyAnnotationParser{
 			AnnotationParser.GENE_ONTOLOGY_CELLULAR_COMPONENT,
 			AnnotationParser.GENE_ONTOLOGY_MOLECULAR_FUNCTION, PATHWAY,
 			TRANSCRIPT };
- 
-	Affy3ExpressionAnnotationParser() {
-		this.annotationFileType = AnnotationParser.AFFYMETRIX_3_EXPRESSION;	 
-		 
-	}	
- 
+
+	@Override
 	 AnnotationFields parseOneLine() {
 		affyId = parser.getValueByLabel(labels[0]);
 		if(affyId==null)
