@@ -76,7 +76,8 @@ public class AffyAnnotationUtil {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				public void run() {
 					userFile = selectAnnotationFile();
-					parser = selectAnnotationParser();
+					if(userFile!=null)
+						parser = selectAnnotationParser();
 				}
 			});
 		} catch (InterruptedException e) {
