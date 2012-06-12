@@ -11,6 +11,8 @@ import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
+import org.geworkbench.util.AnnotationInformationManager;
+import org.geworkbench.util.AnnotationInformationManager.AnnotationType;
 
 /**
  *
@@ -147,6 +149,13 @@ public class AnnotationParser implements Serializable {
 		if(markerAnnotation!=null) {
 			datasetToAnnotation.put(dataset, markerAnnotation);
 			datasetToChipTypes.put(dataset, chipType);
+			
+			AnnotationInformationManager.AnnotationType annotationType = AnnotationType.OTHERS;
+			if (parser instanceof Affy3ExpressionAnnotationParser) {
+				annotationType = AnnotationType.THREE_PRIME;
+			}
+			AnnotationInformationManager.getInstance().add(dataset,
+					annotationType);
 		}
 		
 		currentDataSet = dataset;
