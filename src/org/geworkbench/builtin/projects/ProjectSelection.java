@@ -6,6 +6,7 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.A
 import org.geworkbench.bison.datastructure.bioobjects.structure.CSProteinStructure;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.events.ProjectEvent;
+import org.geworkbench.events.ProjectEvent.Message;
 
 /**
  * <p>Title: Sequence and Pattern Plugin</p>
@@ -40,8 +41,6 @@ public class ProjectSelection {
         selectedDataSetNode = null;
         selectedDataSetSubNode = null;
         selectedNode = null;
-
-        throwEvent(ProjectEvent.CLEARED);
     }
 
 
@@ -105,7 +104,8 @@ public class ProjectSelection {
      * @param pNode
      * @param node
      */
-    public void setNodeSelection(ProjectTreeNode node) {
+    @SuppressWarnings("unchecked")
+	public void setNodeSelection(ProjectTreeNode node) {
         if (selectedNode != node) {
             selectedNode = node;
 
@@ -117,28 +117,34 @@ public class ProjectSelection {
                 GeawConfigObject.getGuiWindow().setVisualizationType(selectedDataSetNode.getDataset());
                 checkProjectNode();
                 if(selectedDataSetNode.getDataset() instanceof CSProteinStructure){
-                	throwEvent(ProjectEvent.CLEARED);
+                	throwEvent(ProjectEvent.Message.CLEAR);
                 }
-                else throwEvent(ProjectEvent.SELECTED);
+                else throwEvent(ProjectEvent.Message.SELECT);
             } else if (node instanceof DataSetSubNode) {
                 selectedDataSetSubNode = (DataSetSubNode) node;
                 selectedDataSetNode = (DataSetNode) getNodeOfClass(node, DataSetNode.class);
                 AnnotationParser.setCurrentDataSet(selectedDataSetNode.getDataset());//Fix bug 1471
                 GeawConfigObject.getGuiWindow().setVisualizationType(selectedDataSetSubNode._aDataSet);
                 checkProjectNode();
-                throwSubNodeEvent("receiveProjectSelection");
+				if (selectedDataSetSubNode._aDataSet != null) {
+					ProjectPanel.getInstance().publishProjectEvent(
+							new ProjectEvent(Message.SELECT,
+									selectedDataSetSubNode._aDataSet,
+									selectedDataSetSubNode));
+				}
             } else if (node instanceof PendingTreeNode) {
                 selectedDataSetNode = (DataSetNode) getNodeOfClass(node, DataSetNode.class);
                 AnnotationParser.setCurrentDataSet(selectedDataSetNode.getDataset());
                 GeawConfigObject.getGuiWindow().setVisualizationType(null);
                 checkProjectNode();
-                throwEvent(ProjectEvent.SELECTED);
+                throwEvent(ProjectEvent.Message.SELECT);
             } else  {
                 selectedDataSetNode = null;
                 selectedDataSetSubNode = null;
                 GeawConfigObject.getGuiWindow().setVisualizationType(null);                
                 checkProjectNode();
-                ProjectPanel.getInstance().publishProjectEvent(new ProjectEvent(ProjectEvent.CLEARED, null, null));                
+				ProjectPanel.getInstance().publishProjectEvent(
+						new ProjectEvent(Message.CLEAR, null, null));
             }            
         }
     }
@@ -182,26 +188,12 @@ public class ProjectSelection {
         }
     }
 
-    /**
-     * Throws the corresponding message event
-     *
-     * @param message
-     */
-	private void throwEvent(String message) {
-		if (selectedDataSetNode != null) {
-			ProjectPanel.getInstance().publishProjectEvent(
-					new ProjectEvent(message, selectedDataSetNode.getDataset(),
-							selectedDataSetNode));
-		}
-	}
+	private void throwEvent(Message value) {
+		if (selectedDataSetNode == null)
+			return; // this should not happen
 
-	@SuppressWarnings("unchecked")
-	private void throwSubNodeEvent(String message) {
-		if ((selectedDataSetSubNode != null)
-				&& (selectedDataSetSubNode._aDataSet != null)) {
-			ProjectPanel.getInstance().publishProjectEvent(
-					new ProjectEvent(message, selectedDataSetSubNode._aDataSet,
-							selectedDataSetSubNode));
-		}
+		ProjectPanel.getInstance().publishProjectEvent(
+				new ProjectEvent(value, selectedDataSetNode.getDataset(),
+						selectedDataSetNode));
 	}
 }

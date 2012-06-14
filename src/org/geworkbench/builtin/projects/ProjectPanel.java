@@ -87,6 +87,7 @@ import org.geworkbench.events.ImageSnapshotEvent;
 import org.geworkbench.events.PendingNodeCancelledEvent;
 import org.geworkbench.events.PendingNodeLoadedFromWorkspaceEvent;
 import org.geworkbench.events.ProjectEvent;
+import org.geworkbench.events.ProjectEvent.Message;
 import org.geworkbench.events.ProjectNodePostCompletedEvent;
 import org.geworkbench.events.ProjectNodeRemovedEvent;
 import org.geworkbench.events.ProjectNodeRenamedEvent;
@@ -979,7 +980,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				}catch(Exception ex){
 					ex.printStackTrace();
 				}
-				if (fromClass.equals(CSDataSet.class))
+				if (fromClass!=null && fromClass.equals(CSDataSet.class))
 					jSaveMenuItem.setEnabled(false);
 				else jSaveMenuItem.setEnabled(true);
 				if (ds instanceof CSTTestResultSet) jSaveMenuItem.setEnabled(true);
@@ -1287,7 +1288,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		if (selectedDataSetNode != null) {
 			DSDataSet<?> dataset = selectedDataSetNode.getDataset();
 			GeawConfigObject.getGuiWindow().setVisualizationType(dataset);
-			publishProjectEvent(new ProjectEvent("CCM update", dataset,
+			publishProjectEvent(new ProjectEvent(Message.CCM_UPDATE, dataset,
 					selectedDataSetNode));
 			clearMenuItems();
 			setMenuItems();
@@ -1383,7 +1384,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		} else if (parentNode.getChildCount() == 0
 				&& parentNode instanceof ProjectNode) {
 			setNodeSelection(parentNode);
-			publishProjectEvent(new ProjectEvent(ProjectEvent.CLEARED, null,
+			publishProjectEvent(new ProjectEvent(Message.CLEAR, null,
 					parentNode));
 			return;
 		} else if (parentNode.getChildCount() > 0
@@ -1487,7 +1488,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			dsNode = selection.getSelectedDataSetSubNode();
 			ds = selection.getDataSubSet();
 		}
-		String oldName = ds.getLabel();
+
 		if (ds != null && dsNode != null) {
 			String inputValue = JOptionPane.showInputDialog("Dataset Name:",
 					dsNode.toString());
@@ -1496,7 +1497,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				ds.setLabel(inputValue);
 				projectTreeModel.nodeChanged(dsNode);
 				publishNodeRenamedEvent(new ProjectNodeRenamedEvent("rename",
-						selection.getDataSubSet(), oldName, inputValue));
+						selection.getDataSubSet(), ds.getLabel(), inputValue));
 			}
 		}
 	}
@@ -1677,7 +1678,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				.getDataSet() : null);
 		if (currentDS != null && currentDS instanceof DSMicroarraySet
 				&& (DSMicroarraySet) currentDS == sourceMA) {
-			publishProjectEvent(new ProjectEvent(ProjectEvent.SELECTED,
+			publishProjectEvent(new ProjectEvent(Message.SELECT,
 					sourceMA, selection.getSelectedNode()));
 		}
 	}
@@ -1713,7 +1714,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 		if (currentDS != null && currentDS instanceof DSMicroarraySet
 				&& (DSMicroarraySet) currentDS == sourceMA) {
-			publishProjectEvent(new ProjectEvent(ProjectEvent.SELECTED,
+			publishProjectEvent(new ProjectEvent(Message.SELECT,
 					sourceMA, selection.getSelectedNode()));
 		}
 	}
@@ -1728,7 +1729,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			projectTreeModel.reload(root);
 		}
 
-		publishProjectEvent(new ProjectEvent(ProjectEvent.CLEARED, null, null));
+		publishProjectEvent(new ProjectEvent(Message.CLEAR, null, null));
 		selection.clearNodeSelections();
 	}
 
