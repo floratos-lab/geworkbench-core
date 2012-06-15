@@ -129,13 +129,4 @@ public class CSAlignmentResultSet extends CSAncillaryDataSet<DSBioObject>
 		return totalHitCount;
 	}
 
-	/**
-	 * writeToFile
-	 * 
-	 * @param fileName
-	 *            String
-	 */
-	public void writeToFile(String fileName) {
-	}
-
 }

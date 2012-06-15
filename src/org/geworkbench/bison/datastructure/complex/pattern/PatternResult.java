@@ -195,18 +195,6 @@ public class PatternResult extends CSAncillaryDataSet<DSSequence> implements
 		return 0;
 	}
 
-    /**
-     * writeToFile
-     *
-     * @param fileName String
-     */
-    @Override
-    public void writeToFile(String fileName) {
-    	throw new RuntimeException(
-    			"Please right click on the result table and click on" +
-    			"\n" + "\"Save All Patterns\" to save the result dataset");
-    }
-    
     public DSSequenceSet<? extends DSSequence> getParentSequenceSet() {
     	return this.sequenceDB;
     }

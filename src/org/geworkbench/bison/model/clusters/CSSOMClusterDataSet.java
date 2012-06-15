@@ -30,10 +30,6 @@ public class CSSOMClusterDataSet extends CSAncillaryDataSet implements DSSOMClus
         return clusters;
     }
 
-    public void writeToFile(String fileName) {
-        // No-op
-    }
-
     public DSDataSetView getDataSetView() {
         return parentSet;
     }
