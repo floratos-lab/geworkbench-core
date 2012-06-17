@@ -21,7 +21,6 @@ import org.geworkbench.engine.config.PluginDescriptor;
 import org.geworkbench.engine.config.PluginRegistry;
 import org.geworkbench.engine.config.VisualPlugin;
 import org.geworkbench.engine.management.ComponentRegistry;
-import org.geworkbench.util.Debug;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -161,7 +160,6 @@ public class PluginObject {
     	PluginRegistry.setNameMap(className, name); // mark's fix bug 1963
         compDes = new PluginDescriptor(className, id, name, resourceName, loadOrderTracker);
         loadOrderTracker++;
-        Debug.debug("PluginObject::createPlugIn --> Creating id = " + id + " name = " + name + " className = " + className + " resourceName = " + resourceName);
         PluginRegistry.addPlugin(compDes);
         // Digest component descriptor
         try {
@@ -179,9 +177,8 @@ public class PluginObject {
      * @param extPoint Name of the extesion point
      */
     public void addExtensionPoint(String extPoint) {
-        // @todo - watkin - Can probably be phased out and replaced with @Module-annotated interfaces.
+        // TODO - watkin - Can probably be phased out and replaced with @Module-annotated interfaces.
         PluginRegistry.addPlugInAtExtension(compDes, extPoint);
-        org.geworkbench.util.Debug.debug("PluginObject::addExtensionPoint --> Adding plugin id = " + compDes.getID() + " to extension point " + extPoint);
     }
 
     /**

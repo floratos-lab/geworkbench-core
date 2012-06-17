@@ -6,6 +6,7 @@ import java.io.InputStream;
 
 import javax.swing.JOptionPane;
 import javax.swing.ToolTipManager;
+import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -164,21 +165,30 @@ public class UILauncher {
                 }
             } else {
 	            for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-	                if ("Nimbus".equals(info.getName())) {
-	                    UIManager.setLookAndFeel(info.getClassName());
-	                    UIManager.getLookAndFeel().getDefaults().put(
-	                    		"ToolBar:Button[Disabled].textForeground",
-	                    		UIManager.getColor("nimbusDisabledText"));
-	                    UIManager.getLookAndFeel().getDefaults().put(
-	                    		"ToolBar:ToggleButton[Disabled].textForeground",
-	                    		UIManager.getColor("nimbusDisabledText"));
-	                    UIManager.getLookAndFeel().getDefaults().put("ToolBar:Button[Enabled].backgroundPainter", 
-	                    		UIManager.get("Button[Enabled].backgroundPainter"));
-	                    UIManager.getLookAndFeel().getDefaults().put("ToolBar:Button.contentMargins", 
-	                    		UIManager.get("Button.contentMargins"));
-	                    break;
-	                }
-	            }
+					if ("Nimbus".equals(info.getName())) {
+						// if nimbus is available, use nimbus
+						UIManager.setLookAndFeel(info.getClassName());
+						// customize nimbus
+						UIDefaults defaults = UIManager.getLookAndFeel()
+								.getDefaults();
+						defaults.put("ToolBar:Button[Disabled].textForeground",
+								UIManager.getColor("nimbusDisabledText"));
+						defaults.put(
+								"ToolBar:ToggleButton[Disabled].textForeground",
+								UIManager.getColor("nimbusDisabledText"));
+						defaults.put(
+								"ToolBar:Button[Enabled].backgroundPainter",
+								UIManager
+										.get("Button[Enabled].backgroundPainter"));
+						defaults.put("ToolBar:Button.contentMargins",
+								UIManager.get("Button.contentMargins"));
+						defaults.put(
+								"ProgressBar[Enabled+Indeterminate].foregroundPainter",
+								UIManager
+										.get("ProgressBar[Enabled].backgroundPainter"));
+						break;
+					}
+				}
             }
         } catch (UnsupportedLookAndFeelException e) {
             // handle exception
@@ -207,7 +217,6 @@ public class UILauncher {
         
         Digester digester = createDigester();
 
-        org.geworkbench.util.Debug.debugStatus = false; // debugging toggle
         // Locate and open the application configuration file.
         String configFileName = null;
         if (configFileArg != null) {
@@ -236,8 +245,6 @@ public class UILauncher {
         ccm.removeOutVersionedFoldersFromCwbFileList();
 		ccm.loadSelectedComponents();
         
-        PluginRegistry.debugPrint();
-
 		splash.hideSplash();
         GUIFramework guiWindow = GeawConfigObject.getGuiWindow();
 		Skin skin = (Skin)guiWindow;

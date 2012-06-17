@@ -107,44 +107,7 @@ public class PluginRegistry {
 
     public static void addVisualAreaInfo(String visualAreaName, VisualPlugin comp) {
         visualAreaMap.put(comp, visualAreaName);
-    }
-
-    /**
-     * For debugging purposes only. Prints the contents of the registry.
-     */
-    public static void debugPrint() {
-
-        if (org.geworkbench.util.Debug.debugStatus) {
-            log.debug("\n\nContents of PluginRegistry");
-            log.debug("--------------------------");
-            // Set things up and list all application plugins.
-            log.debug("********** List of application plugins");
-            int size = componentVector.size();
-            for (int i = 0; i < size; ++i) {
-                componentVector.get(i).debugPrint();
-            }
-
-            // List the application plugins under each extension point.
-            for (String key : extensionPointsMap.keySet()) {
-                log.debug(">>>>>>>>" + key);
-                size = extensionPointsMap.get(key).size();
-                for (int i = 0; i < size; ++i) {
-                    extensionPointsMap.get(key).get(i).debugPrint();
-                }
-
-            }
-
-            // List the registered listeners for each plugin
-            log.debug("********** List of registered listeners per event source");
-            size = componentVector.size();
-            // Go over each application plugin
-            for (int i = 0; i < size; ++i) {
-            	PluginDescriptor compDes = componentVector.get(i);
-                log.debug(">>>>> Working with component with ID = " + compDes.getID());
-            }
-
-        }
-
+        log.debug("add visual area "+visualAreaName);
     }
 
 	// FIXME: this is needed by CCM to remove plugin. It should be implemented as needed,

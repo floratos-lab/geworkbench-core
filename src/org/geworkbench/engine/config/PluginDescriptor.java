@@ -22,7 +22,6 @@ import org.geworkbench.engine.config.rules.NotVisualPluginException;
 import org.geworkbench.engine.config.rules.PluginObject;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.engine.management.ComponentResource;
-import org.geworkbench.util.Debug;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
@@ -179,7 +178,8 @@ public class PluginDescriptor extends IdentifiableImpl implements Comparable<Plu
      * @return
      */
     public boolean equals(Object obj) {
-        return (this.id == ((PluginDescriptor) obj).id);
+    	if(!(obj instanceof PluginDescriptor)) return false;
+        return this.id.equals( ((PluginDescriptor) obj).id );
     }
     
     public int hashCode() {
@@ -349,15 +349,6 @@ public class PluginDescriptor extends IdentifiableImpl implements Comparable<Plu
      */
     public ArrayList<HashMap<String, String>> getMenuItemInfos() {
         return menuItemInfos;
-    }
-
-    /**
-     * For debuging purposes only.
-     */
-    public void debugPrint() {
-        if (Debug.debugStatus) {
-            log.debug("PluginDescriptor -> id = " + id + ", name = " + name + ", Class = " + plugin.getClass().toString());
-        }
     }
 
     public String getVisualLocation() {
