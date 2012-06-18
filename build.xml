@@ -564,7 +564,8 @@
 				<include name="${components}/aracne-java/**/*" />
 				<include name="${components}/caarray/**/*" />
 				<include name="${components}/celprocessing/**/*" />
-
+				<include name="${components}/cupid/**/*" />
+				
 				<include name="${components}/somclustering/**/*" />
 				<include name="${components}/colormosaic/**/*" />
 				<include name="${components}/cytoscape/**/*" />
