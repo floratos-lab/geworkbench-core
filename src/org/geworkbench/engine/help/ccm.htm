@@ -1,24 +1,22 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html dir="ltr" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" 
-lang="en"><head>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html dir="ltr" lang="en"><head>
+<title>Component Configuration Manager - Workbench</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="generator" content="MediaWiki 1.16.0">
+<meta name="robots" content="noindex,follow">
 
-  
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="KEYWORDS" content="Component Configuration Manager">
-<meta name="robots" content="index,follow">
-    <title>Component Configuration Manager - Workbench</title>
-    <style type="text/css" media="screen,projection">/*<![CDATA[*/ @import "/workbench/skins/monobook/main.css"; /*]]>*/</style>
-    <link rel="stylesheet" type="text/css" 
-href="ccm_files/commonPrint.css">
- 
-    <style type="text/css">/*<![CDATA[*/
-@import "/workbench/index.php?title=MediaWiki:Monobook.css&action=raw&ctype=text/css&smaxage=18000";
-@import "/workbench/index.php?title=-&action=raw&gen=css&maxage=18000";
-/*]]>*/</style>              </head><body class="ns-0">
- 
-	    	    	    <!-- start content -->
-	    
-<a name="Overview"></a><h2>Overview</h2>
+</head>
+<body class="mediawiki ltr ns-0 ns-subject page-Component_Configuration_Manager skin-monobook">
+<div id="globalWrapper">
+<div id="column-content"><div id="content">
+	<a id="top"></a>
+	
+	<h1 id="firstHeading" class="firstHeading">Component Configuration Manager</h1>
+	<div id="bodyContent">
+		<!-- start content -->
+<p><br>
+</p>
+<a name="Overview"></a><h2> <span class="mw-headline" id="Overview">Overview</span></h2>
 <p>geWorkbench supports the dynamic loading and unloading of individual 
 components for analysis and visualization.  The Component Configuartion 
 Manager (CCM) lists each available component, provides descriptive and 
@@ -35,54 +33,63 @@ the same way, by unchecking their box and applying the change.
 </p><p>As shipped, the CCM may appear as in the figure below, with only 
 basic components configured.  Individual components can be added by 
 clicking on their check boxes.
-</p><p><img 
-src="ccm_files/CCM_Main.png" alt="Image:CCM_Main.png" 
-longdesc="/workbench/index.php/Image:CCM_Main.png" width="794" 
-height="590">
+</p><p><img alt="CCM Main.png" src="ccm_files/CCM_Main.png" height="590" width="794">
 </p>
-<a name="Available_Component_List"></a><h2>Available Component List</h2>
+<a name="Available_Component_List"></a><h2> <span class="mw-headline" id="Available_Component_List">Available Component List</span></h2>
 <p>The list of components includes the following column headings:
 </p>
-<ul><li> <b>On/Off</b> - checking will select the component for loading.
-  Unchecking the box will lead to the component being unloaded.
+<ul><li> <b>On/Off</b> - checking will select the component for loading.  Unchecking the box will lead to the component being unloaded.
 </li><li> <b>Name</b>: Component name
-</li><li> <b>Author</b> - Component author or source of primary 
-calculation code.
+</li><li> <b>Author</b> - Component author or source of primary calculation code.
 </li><li> <b>Version</b> - Component version
-</li><li> <b>Tutorial</b> - Link to web-based tutorial/manual if 
-available.
+</li><li> <b>Tutorial</b> - Link to web-based tutorial/manual if available.
 </li><li> <b>Tool URL</b> - Link to tool home page if available. 
 </li></ul>
 <p><br>
 </p>
-<a name="Component_Dependencies"></a><h2>Component Dependencies</h2>
-<p>geWorkbench tracks component dependencies.  Adding a particular 
-component may also require that components it depends on be added, e.g. 
-adding a particular analysis component may also require adding a 
-particular viewer.  These dependencies are all handled in the CCM.  An 
-example is shown in the following figure, where adding the Gene Ontology
- Analysis component also requires adding the Gene Ontology Viewer 
-component.
-</p><p><img 
-src="ccm_files/CCM_adding_GO_dependency_check.png" 
-alt="Image:CCM_adding_GO_dependency_check.png" 
-longdesc="/workbench/index.php/Image:CCM_adding_GO_dependency_check.png"
- width="606" height="272">
+<a name="Component_Dependencies"></a><h2> <span class="mw-headline" id="Component_Dependencies">Component Dependencies</span></h2>
+<p>geWorkbench tracks component dependencies, for example between an 
+analysis component and its viewer.  These dependencies are all handled 
+in the CCM. 
+</p><p>There are two types of dependency:
+</p>
+<ul><li> <b>Required</b> - If component A requires component B, then if A
+ is selected for loading in the CCM, B will also be selected.  The 
+relationship is reciprocal - if A requires B, then B requires A. 
+</li><li> <b>Recommended</b> - If component B is recommended for use 
+with component A, then if A is selected, the user will be notified that B
+ is recommended. However, component B will not be automatically selected
+ for addition when component A is loaded.  The user must select B 
+manually.
+</li></ul>
+<p>An example of a required relationship is shown in the following 
+figure, where adding the Gene Ontology Analysis component also requires 
+adding the Gene Ontology Viewer component.
+</p><p><img alt="CCM adding GO dependency check.png" src="ccm_files/CCM_adding_GO_dependency_check.png" height="272" width="606">
 </p><p><br>
-</p><p>After clicking "Proceed", all needed components are selected to 
-be added.
+</p><p>After clicking "Proceed", all needed components are selected to be added.
 </p><p><br>
-<img 
-src="ccm_files/CCM_GO_added.png" alt="Image:CCM_GO_added.png" 
-longdesc="/workbench/index.php/Image:CCM_GO_added.png" width="597" 
-height="43">
+<img alt="CCM GO added.png" src="ccm_files/CCM_GO_added.png" height="43" width="597">
 </p><p><br>
 </p><p>If a component requires agreeing to a license, the license will 
 also be displayed at this time, with the option to accept or reject it.
+</p><p>An example of a recommended relationship, between ARACNe and Cytoscape, is illustrated below.
+</p><p><br>
+<img alt="CCM Recommended relationship.png" src="ccm_files/CCM_Recommended_relationship.png" height="431" width="577">
 </p>
-<a name="Controlling_display_of_components"></a><h2>Controlling display 
-of components</h2>
-<a name="Display"></a><h3>Display</h3>
+<a name="Technical_Note"></a><h3> <span class="mw-headline" id="Technical_Note">Technical Note</span></h3>
+<p>Although the "Continue" button may appear to have focus, hitting 
+Enter may not activate it.  However, using the space-bar may work.  This
+ is due to cross-platform differences.
+</p>
+<a name="Framework_Component_Dependencies"></a><h2> <span class="mw-headline" id="Framework_Component_Dependencies">Framework Component Dependencies</span></h2>
+<p>The Filtering and Normalization framework components have been made 
+dependent on all filter and normalization method components, 
+respectively.  Thus these framework components can only be removed if 
+first all filters or normalizers are removed in the CCM.
+</p>
+<a name="Controlling_display_of_components"></a><h2> <span class="mw-headline" id="Controlling_display_of_components">Controlling display of components</span></h2>
+<a name="Display"></a><h3> <span class="mw-headline" id="Display">Display</span></h3>
 <p>Displayed components can be limited by the following menu choices:
 </p>
 <ul><li> <b>All</b> 
@@ -91,43 +98,66 @@ of components</h2>
 </li></ul>
 <p><br>
 </p>
-<a name="Show_by_type"></a><h3>Show by type</h3>
+<a name="Show_by_type"></a><h3> <span class="mw-headline" id="Show_by_type">Show by type</span></h3>
 <p>In addition, a pulldown menu allows only particular categories of 
-components to be viewed:
+components to be viewed.  The categories are not exclusive, a component 
+can belong to multiple relevant categories.
 </p><p><br>
-<img 
-src="ccm_files/CCM_by_type.png" alt="Image:CCM_by_type.png" 
-longdesc="/workbench/index.php/Image:CCM_by_type.png" width="290" 
-height="174">
+<img alt="CCM by type.png" src="ccm_files/CCM_by_type.png" height="252" width="222">
+</p><p><br>
+Categories for components include:
 </p>
-<ul><li> <b>Analysis</b>
-</li><li> <b>Filters</b>
-</li><li> <b>Normalizers</b>
-</li><li> <b>Visualizers</b>
-</li><li> <b>Others</b> - any components that fall in none of the above 
-categories.
+<ul><li> <b>Analysis</b> - data analysis of any kind.
+</li><li> <b>Filter</b> - microarray data filtering.
+</li><li> <b>Microarray</b> - microarray data analysis or visualization (does not include filters or normalizers).
+</li><li> <b>Network</b> - creates, uses or visualizes networks.
+</li><li> <b>Normalizer</b> - microarray data normalization.
+</li><li> <b>Others</b> - any components that fall in none of the above categories.
+</li><li> <b>Remote access</b> - retrieves information from a remote source, e.g. BLAST, sequence retriever etc.
+</li><li> <b>Sequence</b> - operates on biological sequences.
+</li><li> <b>Structure</b> - operates on molecular structures (PDB files).
+</li><li> <b>Visualizer</b> - can visualize data or analysis results.
 </li></ul>
 <p><br>
+(Technical Note - The categories are defined dynamically by entries in 
+each component's .cwb file. This file can be edited to add new 
+categories).
 </p>
-<a name="Keyword_Search"></a><h3>Keyword Search</h3>
-<p>The list of components can be searched by typing in a word here.  
-Displayed choices will be progressively narrowed as typing occurs.
-</p><p><br>
+<a name="Keyword_Search"></a><h3> <span class="mw-headline" id="Keyword_Search">Keyword Search</span></h3>
+<p>The names of listed components can be searched by typing in a word 
+here.  Displayed choices will be progressively narrowed as typing 
+occurs.
 </p>
-<a name="Controls"></a><h2>Controls</h2>
-<p>Once the desired changes to the list of components has been made, the
- changes are put into effect by pushing the <b>Apply</b> button.
+<a name="Controls"></a><h2> <span class="mw-headline" id="Controls">Controls</span></h2>
+<p>Once the desired changes to the list of components has been made, the changes are put into effect by pushing the <b>Apply</b> button.
 </p><p><br>
 </p>
 <ul><li> <b>Apply</b> - if any changes have been made to the check-boxes
  indicating which components are to be loaded, pushing "Apply" causes 
 the changes to actually be be made. 
-</li><li> <b>Reset</b> - If changes have been made but "Apply" has not 
-been pushed, set all checkboxes  back to their previous state.
+</li><li> <b>Reset</b> - If changes have been made but "Apply" has not been pushed, set all checkboxes  back to their previous state.
 </li><li> <b>Close</b> - Close the CCM window.
 </li></ul>
 <ul><li> <b>View license</b> - If a license is required for a component,
  it can be displayed by highlighting the component in the list and 
 pressing this button.
 </li></ul>
- </body></html>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 42/1000000
+Post-expand include size: 1847/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key workbench:pcache:idhash:1882-0!1!0!!en!2!printable=1 and timestamp 20120709213115 -->
+<div class="visualClear"></div>
+<div id="footer">
+	<div id="f-poweredbyico"><img src="ccm_files/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" height="31" width="88"></div>
+	<ul id="f-list">
+		<li id="lastmod"> This page was last modified on 9 July 2012, at 16:29.</li>
+	</ul>
+</div>
+</div>
+
