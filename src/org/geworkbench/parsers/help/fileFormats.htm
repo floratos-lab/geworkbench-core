@@ -73,7 +73,6 @@ default thresholds used for the same purpose by the MAS software (see
 the manual "GeneChip Expression Analysis: Data Analysis Fundamentals" 
 from Affymetrix, <a href="http://www.affymetrix.com/support/downloads/manuals/data_analysis_fundamentals_manual.pdf" class="external free" rel="nofollow">http://www.affymetrix.com/support/downloads/manuals/data_analysis_fundamentals_manual.pdf</a>).
 </p><p>The marker data follow the column names. Each row correspond to one marker. Values within a row are tab-separated.
-</p><p><br>
 </p>
 <a name="Affymetrix_File_Matrix_Format_.28geWorkbench_.22.exp.22_format.29"></a><h2> <span class="mw-headline" id="Affymetrix_File_Matrix_Format_.28geWorkbench_.22.exp.22_format.29">Affymetrix File Matrix Format (geWorkbench ".exp" format)</span></h2>
 <p>The "EXP" format file is the geWorkbench native format for saving 
@@ -101,7 +100,7 @@ be used as a microarray label as long as it does not contain tab
 characters.
 </p><p>There can then follow zero or more "Description" lines. 
 Description lines can be used to group microarrays into array sets - see
- the tutorial <a href="http://wiki.c2b2.columbia.edu/workbench/index.php/Data_Subsets_-_Arrays" title="Data Subsets - Arrays"> Data Subsets - Arrays</a>".
+ the tutorial <a href="http://wiki.c2b2.columbia.edu/workbench/index.php/Data_Subsets_-_Arrays" title="Data Subsets - Arrays" class="mw-redirect"> Data Subsets - Arrays</a>".
  Each line describes one list of array sets and comprises N+2 tab 
 separated entries. The first entry must be the word "Description". The 
 second entry is the label that will be used in the application to 
@@ -223,10 +222,13 @@ Filters).
 <p><br>
 </p>
 <a name="Annotation_Files"></a><h2> <span class="mw-headline" id="Annotation_Files">Annotation Files</span></h2>
-<p>Currently geWorkbench only supports the Affymetrix annotation file 
-format.  This is a CSV (comma separated value) format.  Rows are 
-individual probesets, and each column contains a different annotation 
-type.
+<p>As of geWorkbench 2.4.0, geWorkbench supports two Affymetrix annotation file types, in CSV (comma separated value) format:
+</p>
+<ul><li> Affymetrix 3' Expression
+</li><li> Affymetrix Gene/Exon 1.0 ST
+</li></ul>
+<p>Prior to geWorkbench 2.4.0, geWorkbench supported only the Affymetrix 3' Expression annotation file format.
+</p><p>In these annotation files, rows represent individual probesets, and each column contains a different annotation type.
 </p><p>Affymetrix annotation files for their platforms can be obtained 
 directly from the Affymetrix support website (registration required).  
 These files are updated quarterly.
@@ -250,13 +252,15 @@ These files are updated quarterly.
 <a name="Creating_a_custom_annotation_file"></a><h3> <span class="mw-headline" id="Creating_a_custom_annotation_file">Creating a custom annotation file</span></h3>
 <p>For a non-Affymetrix platform, you can create your own custom 
 annotation file using only the annotation columns needed for the 
-analyses you intend to perform in geWorkbench.
+analyses you intend to perform in geWorkbench.  It is easiest to use the
+ Affymetrix 3' Expression file format.  Note that for working with Gene 
+Ontology analysis, GO term annotation for each marker must be provided.
 </p><p>The geWorkbench annotation file parser recognizes the column 
 headers shown in the next section.  All columns are optional, however, 
 if "probeset id" is not present, none of the annotation records will 
 link to the expression file.  
 </p>
-<a name="Recognized_Column_Headers"></a><h3> <span class="mw-headline" id="Recognized_Column_Headers">Recognized Column Headers</span></h3>
+<a name="Recognized_Column_Headers_for_Affymetrix_3.27_Expression"></a><h3> <span class="mw-headline" id="Recognized_Column_Headers_for_Affymetrix_3.27_Expression">Recognized Column Headers for Affymetrix 3' Expression</span></h3>
 <ul><li> "Probe Set ID"
 </li><li> "Species Scientific Name"
 </li><li> "Archival UniGene Cluster"
@@ -287,7 +291,12 @@ link to the expression file.
 </li></ul>
 <p>This dialog is shown in the following image:
 </p><p><img alt="Annotation Parser Handle Duplicates.png" src="fileFormats_files/Annotation_Parser_Handle_Duplicates.png" height="185" width="388">
-</p><p><br>
+</p>
+<a name="Technical_Information"></a><h3> <span class="mw-headline" id="Technical_Information">Technical Information</span></h3>
+<p>Addition of support for the Affymetrix Gene/Exon 1.0 ST file type was
+ described in Mantis issue #3006 and #3027.  In particular, to create a 
+custom version using that format, the 5 sub-fields of the 
+gene_assignment column must be populated.
 </p>
 <a name="Network_Formats"></a><h2> <span class="mw-headline" id="Network_Formats">Network Formats</span></h2>
 <p>Tools such as ARACNe, the CNKB, and Master Regulator Analysis (MRA) 
@@ -384,24 +393,18 @@ File:C:\Users\ksmith\Desktop\geWB_data\fasta\H1H5_HistoneDB_NHGRI.fasta
 </pre>
 <!-- 
 NewPP limit report
-Preprocessor node count: 70/1000000
-Post-expand include size: 1925/2097152 bytes
+Preprocessor node count: 74/1000000
+Post-expand include size: 1847/2097152 bytes
 Template argument size: 0/2097152 bytes
 Expensive parser function count: 0/100
 -->
 
-<!-- Saved in parser cache with key workbench:pcache:idhash:2177-0!1!0!!en!2!printable=1 and timestamp 20120312205915 -->
-<div class="printfooter">
-Retrieved from "<a href="http://wiki.c2b2.columbia.edu/workbench/index.php/File_Formats">http://wiki.c2b2.columbia.edu/workbench/index.php/File_Formats</a>"</div>
-		<div id="catlinks" class="catlinks catlinks-allhidden"></div>		<!-- end content -->
-				<div class="visualClear"></div>
-	</div>
-</div></div>
+<!-- Saved in parser cache with key workbench:pcache:idhash:2177-0!1!0!!en!2!printable=1 and timestamp 20120710173442 -->
 <div class="visualClear"></div>
 <div id="footer">
 	<div id="f-poweredbyico"><img src="fileFormats_files/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" height="31" width="88"></div>
 	<ul id="f-list">
-		<li id="lastmod"> This page was last modified on 28 February 2012, at 11:29.</li>
+		<li id="lastmod"> This page was last modified on 10 July 2012, at 11:23.</li>
 	</ul>
 </div>
 </div>
