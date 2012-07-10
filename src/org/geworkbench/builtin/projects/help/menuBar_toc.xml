@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<toc version="1.0">
+
+	<tocitem text="Menu Bar">
+
+		<tocitem target="Introduction" text="Introduction"/>
+		<tocitem target="Background_on_the_Project_Folders_component" text="Background on the Project Folders component"/>
+		<tocitem target="File" text="File"/>
+		<tocitem target="Edit" text="Edit"/>
+		<tocitem target="Commands" text="Commands"/>
+		<tocitem target="Tools" text="Tools"/>
+		<tocitem target="Help" text="Help"/>
+		
+	</tocitem>
+
+</toc>
+
