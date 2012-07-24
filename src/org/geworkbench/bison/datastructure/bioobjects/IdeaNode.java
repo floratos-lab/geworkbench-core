@@ -53,10 +53,6 @@ public class IdeaNode implements Serializable, Comparable<IdeaNode>{
 		return nes;
 	}
 	
-	public void setConn(int conn) {
-		this.conn = conn;
-	}
-
 	public int getConn() {
 		return conn;
 	}	

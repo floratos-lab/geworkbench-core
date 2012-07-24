@@ -34,10 +34,6 @@ public class CSHierClusterDataSet extends CSAncillaryDataSet implements DSHierCl
         this.selectionEnabled = selected;
     }
 
-    public void writeToFile(String fileName) {
-        // No-op
-    }
-
     public DSDataSetView getDataSetView() {
         return parentSet;
     }

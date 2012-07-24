@@ -149,7 +149,24 @@ import org.geworkbench.engine.management.Subscribe;
 				: (String) prevHistory[0]));
 	}
 	
+	public static String getHistory(DSExtendable objectWithHistory) {
+
+		Object[] prevHistory = objectWithHistory.getValuesForName(HISTORY);
+		 if (prevHistory != null)
+			  return (String) prevHistory[0];
+		 else
+			 return null;
+				 
+	}
 	
+	public static boolean hasHistory(DSExtendable objectWithHistory)
+	{
+		String historyString = getHistory(objectWithHistory);
+		if (historyString == null || historyString.trim().equals(""))
+			return false;
+		else
+		    return true;
+	}
 	
 }
 

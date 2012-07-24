@@ -38,6 +38,8 @@ public class RegularExpressionVerifier extends InputVerifier {
         input.setInputVerifier(null);
         // Pop up the message dialog.
         String message = "Data input is not valid, please check and input correct data ";
+        if (p.pattern().equals("(\\d){1,9}"))
+        	message = "Please enter a non-negative integer value.";
         JOptionPane.showMessageDialog(null, message, "Invalid value", JOptionPane.WARNING_MESSAGE);
 
         // Reinstall the input verifier.

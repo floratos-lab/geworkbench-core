@@ -253,7 +253,7 @@ public class LoadDataDialog extends JDialog {
 
 		JPanel jPanel7 = new JPanel();
 		jPanel1.add(jPanel7, null);
-		remoteRadioButton.setText("Remote");
+		remoteRadioButton.setText("caArray 2.5");
 		jPanel7.add(remoteRadioButton, null);
 
 		this.getContentPane().add(jPanel4, BorderLayout.CENTER);

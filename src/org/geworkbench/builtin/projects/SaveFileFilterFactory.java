@@ -67,6 +67,11 @@ public class SaveFileFilterFactory {
 		return new SifFileFilter();
 	}
 	
+	static public CsvFileFilter createCsvFileFilter() {
+		return new CsvFileFilter();
+	}
+	
+	
 	static ImageFileFilter createImageFileFilter(ImageType imageType) {
 		switch (imageType) {
 		case Bitmap:
@@ -178,6 +183,29 @@ public class SaveFileFilterFactory {
 
 	}
 	
+	static public class CsvFileFilter extends CustomFileFilter {
+		public String getDescription() {
+			return "CSV files (*.csv)";
+		}
+
+		public boolean accept(File f) {
+			String name = f.getName();
+			boolean tabFile = name.endsWith("csv") || name.endsWith("CSV");
+			if (f.isDirectory() || tabFile) {
+				return true;
+			}
+
+			return false;
+		}
+
+		public String getExtension() {
+			return "csv";
+		}
+
+	}
+	
+	
+	
 
 	static private class SequenceFileFilter extends CustomFileFilter {
 		public String getDescription() {
@@ -239,7 +267,7 @@ public class SaveFileFilterFactory {
 		}
 	}
 	
-	
+	 
 
 	/**
 	 * ImageFileFilter is for saving image file.

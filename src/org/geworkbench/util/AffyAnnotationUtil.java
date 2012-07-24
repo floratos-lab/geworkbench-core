@@ -184,7 +184,7 @@ public class AffyAnnotationUtil {
 						.equals(AFFY_GENE_EXON_10_ST)) {
 					parser = new AffyGeneExonStAnnotationParser();
 				} else {
-					parser = null;
+					return;
 				}
 				dialog.dispose();
 			}

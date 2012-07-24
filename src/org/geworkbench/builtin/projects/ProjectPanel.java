@@ -596,6 +596,11 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 					ioe.printStackTrace();
 				}
 			}
+			
+			if (!filter.accept(new File(newFileName))) {
+				newFileName += "." + filter.getExtension();
+			}
+		
 
 			if (new File(newFileName).exists()) {
 				int o = JOptionPane.showConfirmDialog(null, 
@@ -606,13 +611,13 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 					return;
 				}
 			}
-
+			
 			try {
 				if ((event.getSource() == this.jExportToTabDelimMenuItem)
 						&& ds instanceof DSMicroarraySet)
 					((DSMicroarraySet) ds).writeToTabDelimFile(newFileName);
 				else
-					ds.writeToFile(newFileName + "." + filter.getExtension());
+					ds.writeToFile(newFileName);
 			} catch (RuntimeException e) {
 				JOptionPane.showMessageDialog(null, e.getMessage() + " "
 						+ ds.getClass().getName(), "Save Error",
@@ -651,8 +656,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		projectTreeModel.insertNodeInto(node, pNode, pNode.getChildCount());
 		HistoryEvent event = new HistoryEvent(_dataSet);
 
-		// add to history
-		if (_dataSet instanceof CSMicroarraySet) {
+		// add to history, if a dataset node already has history, we assume that we
+		//read this node from a saved workspace file.
+		if (_dataSet instanceof CSMicroarraySet && !HistoryPanel.hasHistory(_dataSet)) {
 			CSMicroarraySet microarraySet = (CSMicroarraySet) _dataSet;
 			String annotationFileName = microarraySet.getAnnotationFileName();
 
@@ -679,11 +685,14 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 						+ g.getDate() + "\n";
 			}
 
+			
 			String setName = _dataSet.getDataSetName();
 			String dataSetString = "Data file:  " + setName + "\n";
 
 			String datasetHistory = dataSetString + annotationFileNameString
 					+ oboInfo + "_____________________" + "\n";
+			
+			
 			HistoryPanel.addToHistory(_dataSet, datasetHistory);
 		}
 		publishHistoryEvent(event);
@@ -693,6 +702,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		projectTree.setSelectionPath(new TreePath(node.getPath()));
 		selection.setNodeSelection(node);
 	}
+		
 
 	/**
 	 * This method is used to trigger HistoryPanel to refresh.
@@ -1613,6 +1623,10 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 							node.getChildCount());
 				}
 			}
+			
+			// Make sure the user can see the lovely new node.			 
+			projectTree.expandPath(new TreePath(node.getPath()));
+		 
 		}
 	}
 

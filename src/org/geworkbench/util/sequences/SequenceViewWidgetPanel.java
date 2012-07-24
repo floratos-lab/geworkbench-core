@@ -825,7 +825,7 @@ public class SequenceViewWidgetPanel extends JPanel {
 		if (mouseSelectedSequence != null &&
 			(mouseMovePoint <= mouseSelectedSequence.length())
 					&& (mouseMovePoint > 0)) {
-				this.setToolTipText("" + mouseMovePoint);
+				this.setToolTipText( getTipInfo(mouseSelectedSequence, mouseMovePoint) );
 		}
 	}
 
