@@ -19,9 +19,6 @@
 	<plugin id="menuBarHelp" name="for top-level Menu Bar Help"
 		class="org.geworkbench.builtin.projects.menuBarHelp" />	
 
-	<!-- menuBarHelp is a dummy class used only to load the help file-->	
-	<plugin id="menuBarHelp" name="for top-level Menu Bar Help"
-		class="org.geworkbench.builtin.projects.menuBarHelp" />	
 
 	<plugin id="SoftFileFilter" name="soft. Format"
 		class="org.geworkbench.parsers.SOFTFileFormat" />
