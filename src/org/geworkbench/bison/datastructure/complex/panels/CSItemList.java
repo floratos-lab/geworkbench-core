@@ -96,22 +96,6 @@ public class CSItemList <T extends DSNamed> extends ArrayList<T> implements DSIt
     }
 
     /**
-     * Gets an item by item template. Only the {@link org.geworkbench.bison.datastructure.properties.DSNamed#getLabel()} method
-     * is called.
-     *
-     * @param item the template item.
-     * @return the full item, or <code>null</code> if it was not found.
-     */
-    public T get(T item) {
-        String label = item.getLabel();
-        if (label == null) {
-            return null;
-        } else {
-            return objectMap.get(label);
-        }
-    }
-
-    /**
      * Removes the object from the item list.
      *
      * @param item the item to remove

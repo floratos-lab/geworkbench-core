@@ -162,7 +162,7 @@ public class CSMarkerVector extends CSSequentialItemList<DSGeneMarker> {
 
 	/* return the fist matching item */
 	public DSGeneMarker get(DSGeneMarker item) {
-		DSGeneMarker marker = super.get(item);
+		DSGeneMarker marker = super.get(item.getLabel());
 		if (marker == null) {
 			Vector<DSGeneMarker> matchingMarkers = getMatchingMarkers(item);
 			if (matchingMarkers != null && matchingMarkers.size() > 0) {
@@ -195,17 +195,11 @@ public class CSMarkerVector extends CSSequentialItemList<DSGeneMarker> {
 	/* check if this object contains the given item */
 	public boolean contains(Object item) {
 		if (item instanceof DSGeneMarker) {
-			// contains method in the super class CSItemList is not public, so
-			// we need to use get instead contains to do this
-			DSGeneMarker marker = super.get((DSGeneMarker) item);
-			if (marker != null) {
+			if (super.get(((DSGeneMarker) item).getLabel()) != null) {
 				return true;
-			} else {
-				return false;
 			}
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	/* remove an item from this object */
