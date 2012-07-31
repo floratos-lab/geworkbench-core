@@ -34,10 +34,14 @@ public abstract class CommandBase implements MenuListener, VisualPlugin {
 	private static Log log = LogFactory.getLog(CommandBase.class);
 			
 	private static final String topMenuItem = "Commands";
-	protected String popMenuItem = "";
+	final private String popMenuItem;
 	final protected HashMap<String, ActionListener> listeners = new HashMap<String, ActionListener>();
 	
 	private JDialog dialog = null;
+
+	protected CommandBase(String string) {
+		popMenuItem = string;
+	}
 
 	final protected void hideDialog() {
 		if (dialog == null) { // this should not happen because this method should not be called before showDialog
