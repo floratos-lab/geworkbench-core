@@ -3,18 +3,30 @@ package org.geworkbench.bison.datastructure.complex.panels;
 import org.geworkbench.bison.datastructure.properties.DSNamed;
 
 /**
- * Default implementation of FinalPanel.
+ * This class has a really odd design. Until we could get rid of it in the
+ * future, this just describes as it is now:
+ * 
+ * 1. It is basically a CSItemList<T>; 
+ * 2. It contains a DSItemList<DSPanel> called subPanels; 
+ * 3. There are in fact two different kinds of CSPanel: 
+ * 		(a) the special one (called 'selection panel'): its label is "Selection" and its subPanels are empty 
+ * 		(b) the 'regular' ones: its subPanel always contains one special CSPanel (the 'selection panel') besides other DSPanel's 
+ * 
+ * activeSubset() creates another even more special kind of CSPanel. See mode detail in activeSubset's comments.
+ * 
+ * CSItemList is already convolved and dangerous; CSPanel makes it worse. 
+ * Whenever possible, use CSItemList instead of CSPanel; java.util.ArrayList instead of CSItemList.
+ * 
+ * $Id$
  */
 public class CSPanel <T extends DSNamed> extends CSItemList<T> implements DSPanel<T> {
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 8634609117930075231L;
-	protected String label = "";
-    protected String subLabel = "";
-    protected boolean active = false;
-    protected int serial = 0;
+	
+	private String label = "";
+    private String subLabel = "";
+    private boolean active = false;
+    private int serial = 0;
 
     /**
      * Used in the implementation of the <code>Identifiable</code> interface.
@@ -24,9 +36,6 @@ public class CSPanel <T extends DSNamed> extends CSItemList<T> implements DSPane
      * Used in the implementation of the <code>Describable</code> interface.
      */
     private String description = null;
-    /**
-     * <code>PanelEntry</code> comprising this <code>Panel</code>
-     */
 
     /**
      * The subPanels
@@ -38,7 +47,7 @@ public class CSPanel <T extends DSNamed> extends CSItemList<T> implements DSPane
      */
     protected DSPanel<T> selection;// selected markerset
 
-    // @todo - watkin - revisit the concept of the "selection" panel
+    // TODO - watkin - revisit the concept of the "selection" panel
     private CSPanel(boolean selection) {
         label = "Selection";
     }
@@ -61,13 +70,6 @@ public class CSPanel <T extends DSNamed> extends CSItemList<T> implements DSPane
         selection = new CSPanel<T>(true);
         subPanels.add(selection);
     }
-
-    public CSPanel(String label, boolean temp) {
-        this.label = label;
-        //        selection = new CSPanel<T>(true);
-        //        subPanels.add(selection);
-    }
-
 
     /**
      * Constructs a new CSPanel with the specified label and sublabel.
@@ -179,7 +181,6 @@ public class CSPanel <T extends DSNamed> extends CSItemList<T> implements DSPane
                 }
             }
             return false;
-            //            throw new IndexOutOfBoundsException("Index out of bounds: " + index);
         }
     }
 
@@ -216,16 +217,6 @@ public class CSPanel <T extends DSNamed> extends CSItemList<T> implements DSPane
      */
     public DSItemList<DSPanel<T>> panels() {
         return subPanels;
-    }
-
-    /**
-     * Set sub-panel by index.
-     *
-     * @param index the index at which to place this sub-panel.
-     * @param panel the sub-panel itself.
-     */
-    public void setPanel(int index, DSPanel<T> panel) {
-        subPanels.add(index, panel);
     }
 
     /**
@@ -376,16 +367,33 @@ public class CSPanel <T extends DSNamed> extends CSItemList<T> implements DSPane
      * @return the active panels contained by this panel.
      */
     public DSPanel<T> activeSubset() {
-        CSPanel<T> activePanels = new CSPanel<T>(getLabel());
+		/*
+		 * I simplified the code based on the existing behavior, which may not
+		 * be completely intentional in the first place: activePanels returned
+		 * from this method is really different from those constructed
+		 * otherwise, summarized in the class comment I wrote. It has subPanels,
+		 * but the subPanels does not contains selection panel. However, I have
+		 * to leave the behavior as it is because other code, e.g. ANOVA
+		 * analysis, depends on the current behavior to work correctly.
+		 */
+        CSPanel<T> activePanels = new CSPanel<T>(label);
         // Include selection if it is activated
         if (selection.isActive()) {
             activePanels.selection = selection;
         }
+		/*
+		 * The original 'selection panel' is removed. It seems obvious that we
+		 * should use the constructor that does not create 'selection panel',
+		 * CSPanel(true). Unfortunately, some other code, at least
+		 * AnnotationPanel2.java depends (incorrectly) on that fact that
+		 * 'selection' has been initialized for this CSPanel (not the new
+		 * activePanels we are constructing here).
+		 */
+        activePanels.panels().remove(0);
         activePanels.setActive(true);
-        int i = 0;
-        for (DSPanel<T> panel : panels()) {
+        for (DSPanel<T> panel : subPanels) {
             if (panel.isActive())
-                activePanels.setPanel(i++, panel);
+                activePanels.panels().add(panel);
         }
         return activePanels;
     }
