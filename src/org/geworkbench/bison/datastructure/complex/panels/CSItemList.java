@@ -14,17 +14,11 @@ import org.geworkbench.bison.util.RandomNumberGenerator;
  */
 public class CSItemList <T extends DSNamed> extends ArrayList<T> implements DSItemList<T> {
     
-    /**
-     * 
-     */
     private static final long serialVersionUID = -8885836819661037974L;
     
-    String id = RandomNumberGenerator.getID();
+    private String id = RandomNumberGenerator.getID();
     //use Hashtable to not allow null keys
-    protected Hashtable<String, T> objectMap = new Hashtable<String, T>();
-
-    public CSItemList() {
-    }
+    private Hashtable<String, T> objectMap = new Hashtable<String, T>();
 
     /**
      * Gets an item by label, using the HashMap.
@@ -32,18 +26,14 @@ public class CSItemList <T extends DSNamed> extends ArrayList<T> implements DSIt
      * @param label the label of the item.
      * @return the item found or <code>null</code> if not found.
      */
-    public T get(String label) {
-        if (label == null) {
-            return null;
-        }
-
-        T object = objectMap.get(label);
-        if (object != null) {
-            return object;
-        } else {
-            return null;
-        }
-    }
+    @Override
+	public T get(String label) {
+		if (label == null) {
+			return null;
+		} else {
+			return objectMap.get(label);
+		}
+	}
 
     /**
      * Adds a new item to the item list, if it does not already exist.
@@ -79,6 +69,7 @@ public class CSItemList <T extends DSNamed> extends ArrayList<T> implements DSIt
     /**
      * Inserts the item at the specified index.
      * watkin - note: this violates the contract for List-- it does not add if index < size(), but replaces!
+     * FIXME any use of this evil method should be avoided.
      *
      * @param index the index at which to insert the item.
      * @param item  the item to insert.
@@ -108,6 +99,35 @@ public class CSItemList <T extends DSNamed> extends ArrayList<T> implements DSIt
         return result;
     }
 
+	@Override
+	public T set(int index, T element) {
+		T old = super.set(index, element);
+		if (element.getLabel() != null) {
+			objectMap.put(element.getLabel(), element);
+		}
+		return old;
+	}
+	
+	/*
+	 * There are several reason that we don't like this method to be here: it is
+	 * only used by CSMarkerVevtor; it has limited used in CSMarkerVevtor in the
+	 * first place; it is not part of DSItemList interface; it is a bad idea to
+	 * make whatever T mutable. It is still preferable to have it here than
+	 * exposing objectMap.
+	 */
+	public void setLabel(int index, String label) {
+		T item = get(index);
+		if (item == null)
+			return;
+
+		String oldLabel = item.getLabel();
+		if (oldLabel != null) {
+			objectMap.remove(oldLabel);
+		}
+		item.setLabel(label);
+		objectMap.put(label, item);
+	}
+	
     /**
      * Gets the ID for this object.
      *
