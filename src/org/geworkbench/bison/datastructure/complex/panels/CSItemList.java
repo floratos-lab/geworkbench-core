@@ -10,6 +10,7 @@ import org.geworkbench.bison.util.RandomNumberGenerator;
 
 /**
  * A default {@link DSItemList} implementation that is backed by an ArrayList and a HashMap.
+ * $Id$
  */
 public class CSItemList <T extends DSNamed> extends ArrayList<T> implements DSItemList<T> {
     
@@ -50,21 +51,20 @@ public class CSItemList <T extends DSNamed> extends ArrayList<T> implements DSIt
      * @param item the item to add.
      * @return <code>true</code> always.
      */
-    @Override public boolean add(T item) {
-        boolean result = false;
-        if (item != null) {
-            if (!this.contains(item)) {
-                result = super.add(item);
-                if (result) {
-                    String label = item.getLabel();
-                    if (label != null) {
-                        objectMap.put(label, item);
-                    }
-                }
-            }
-        }
-        return result;
-    }
+	@Override
+	public boolean add(T item) {
+		if (item == null)
+			return false;
+		String label = item.getLabel();
+		if (label != null && objectMap.containsKey(label))
+			return false;
+
+		boolean result = super.add(item);
+		if (result && label != null) {
+			objectMap.put(label, item);
+		}
+		return result;
+	}
 
     @Override public boolean addAll(Collection<? extends T> ts) {
         boolean success = true;
@@ -112,21 +112,6 @@ public class CSItemList <T extends DSNamed> extends ArrayList<T> implements DSIt
     }
 
     /**
-     * Determines if T is a member of this item list.
-     *
-     * @param item the item to check for membership.
-     * @return <code>true</code> if the item is in the item list, <code>false</code> otherwise.
-     */
-    boolean contains(T item) {
-        String label = item.getLabel();
-        if (label == null) {
-            return false;
-        } else {
-            return objectMap.containsKey(label);
-        }
-    }
-
-    /**
      * Removes the object from the item list.
      *
      * @param item the item to remove
@@ -163,16 +148,6 @@ public class CSItemList <T extends DSNamed> extends ArrayList<T> implements DSIt
     @Override public void clear() {
         super.clear();
         objectMap.clear();
-    }
-
-    public void rename(T t, String label) {
-        T other = objectMap.get(t.getLabel());
-        if (t != other) {
-            throw new RuntimeException("Item not found: " + t);
-        }
-        objectMap.remove(t.getLabel());
-        t.setLabel(label);
-        objectMap.put(label, t);
     }
 
     public boolean equals(Object o) {
