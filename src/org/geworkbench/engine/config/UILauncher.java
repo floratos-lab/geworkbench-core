@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import javax.swing.JOptionPane;
+import javax.swing.RepaintManager;
 import javax.swing.ToolTipManager;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
@@ -22,6 +23,7 @@ import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.config.rules.GeawConfigRule;
 import org.geworkbench.engine.config.rules.PluginRule;
 import org.geworkbench.engine.skin.Skin;
+import org.geworkbench.util.CheckThreadViolationRepaintManager;
 import org.geworkbench.util.SplashBitmap;
 import org.xml.sax.SAXException;
 
@@ -139,6 +141,11 @@ public class UILauncher {
      * @param args
      */
     public static void main(String[] args) {
+		if (log.isDebugEnabled()) {
+			RepaintManager
+					.setCurrentManager(new CheckThreadViolationRepaintManager());
+		}
+    	
         String configFileArg = null;
         String lookAndFeelArg = null;       
         
