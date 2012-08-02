@@ -11,13 +11,6 @@ public class CellularNetworkPreference implements java.io.Serializable {
 		this.title = title;
 	}
 	
-	public CellularNetworkPreference(String title, String context, String version)
-	{
-		this.title = title;
-		this.context = context;
-		this.version = version;
-	}
-	
 	public void setTitle(String title)
 	{
 		this.title = title;
