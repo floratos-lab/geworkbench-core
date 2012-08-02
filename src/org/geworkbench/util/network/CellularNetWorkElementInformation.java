@@ -36,7 +36,7 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 
 	private static Set<String> allInteractionTypes = new HashSet<String>();
 
-	private DSGeneMarker dSGeneMarker;
+	final private DSGeneMarker dSGeneMarker;
 	private String goInfoStr;
 	private String geneType;
 	private InteractionDetail[] interactionDetails;
@@ -44,24 +44,12 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 	private boolean isDirty;
 	
 	private static double smallestIncrement = 0.01; 
-	private static int binNumber = 101;	 
-	private static long maxX = 1;
+	final private static int binNumber = 101;
 	
 	private static Short usedConfidenceType = 0;
 	private static List<Short> confidenceTypeList = new ArrayList<Short>();
 	private static Map<Short, Double> maxConfidenceValueMap = new HashMap<Short, Double>();
 	
-
-	public CellularNetWorkElementInformation(
-		    HashMap<String, Integer> interactionNumMap,
-			DSGeneMarker dSGeneMarker, String goInfoStr, String geneType) {
-		this.interactionNumMap = interactionNumMap;
-		this.dSGeneMarker = dSGeneMarker;
-		this.goInfoStr = goInfoStr;
-		this.geneType = geneType;
-
-	}
-
 	public CellularNetWorkElementInformation(DSGeneMarker dSGeneMarker) {
 		this.dSGeneMarker = dSGeneMarker;	 
 		isDirty = true;
@@ -148,8 +136,6 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 				interactionNumMap.put(interactionType, 0);
 			}
 		}
-		binNumber = getBinNumber();
-
 	}	 
 
 	public ArrayList<InteractionDetail> getSelectedInteractions(
@@ -203,12 +189,6 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 	static public void setSmallestIncrement(double smallestIncrementNumber) {
 		smallestIncrement = smallestIncrementNumber;
 	}
-
- 
-	
-	static public void setMaxX(long maxValue) {
-		maxX = maxValue;
-	}
 	
 	static public short getUsedConfidenceType()
 	{
@@ -260,11 +240,6 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 		return binNumber;
 	}
 	
-	public static long getMaxX() { 
-		 
-		return maxX;
-	}
-	
 	public static double getMaxConfidenceValue() { 
 		 
 		if (maxConfidenceValueMap.get(usedConfidenceType) != null)
@@ -289,28 +264,11 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 		isDirty = dirty;		 
 	}
 
-	public static void setBinNumber(int binNumber) {
-		CellularNetWorkElementInformation.binNumber = binNumber;
-	}
-	
-	 
-
-	public CellularNetWorkElementInformation(
-			HashMap<String, Integer> interactionNumMap,
-			DSGeneMarker dSGeneMarker) {
-		this.interactionNumMap = interactionNumMap;
-		this.dSGeneMarker = dSGeneMarker;
-	}
-
 	public Integer getInteractionNum(String interactionType) {
 		if (interactionNumMap.containsKey(interactionType))
 			return interactionNumMap.get(interactionType);
 		else
 			return null;
-	}
-
-	public HashMap<String, Integer> getInteractionNumMap() {
-		return this.interactionNumMap;
 	}
 
 	public double getThreshold() {
@@ -323,10 +281,6 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 
 		}
 		update();
-	}
-
-	public InteractionDetail[] getInteractionDetails() {
-		return interactionDetails;
 	}
 
 	/**
@@ -437,16 +391,8 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 		return interactionDistribution;
 	}
 
-	public void setInteractionNum(String interactionType, int interactionNum) {
-		this.interactionNumMap.put(interactionType, interactionNum);
-	}
-
 	public DSGeneMarker getdSGeneMarker() {
 		return dSGeneMarker;
-	}
-
-	public void setdSGeneMarker(DSGeneMarker dSGeneMarker) {
-		this.dSGeneMarker = dSGeneMarker;
 	}
 
 	public String getGoInfoStr() {
@@ -458,10 +404,6 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 		return goInfoStr;
 	}
 
-	public void setGoInfoStr(String goInfoStr) {
-		this.goInfoStr = goInfoStr;
-	}
-
 	public String getGeneType() {
 		if(!geneType.equals("pending") || GeneOntologyTree.getInstance()==null)
 			return geneType;
@@ -471,10 +413,7 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 		return geneType;
 	}
 
-	public void setGeneType(String geneType) {
-		this.geneType = geneType;
-	}
-
+	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof CellularNetWorkElementInformation) {
 			return dSGeneMarker.getGeneName().equals(
