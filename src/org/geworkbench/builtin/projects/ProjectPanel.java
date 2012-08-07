@@ -130,13 +130,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 */
 	private JPopupMenu dataSetMenu = new JPopupMenu();
 
-	private JPopupMenu dataSetSubMenu = new JPopupMenu();
-
 	private JPopupMenu pendingMenu = new JPopupMenu();
 
 	private JProgressBar progressBar = new JProgressBar();
-
-	private JMenuItem jRenameSubItem = new JMenuItem("Rename");
 
 	private JMenuItem jEditItem = new JMenuItem("View in Editor");
 
@@ -274,21 +270,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		dataSetMenu.add(jRemoveDatasetItem);
 		dataSetMenu.add(jEditItem);
 		dataSetMenu.add(jViewAnnotations);
-
-		// dataset sub menu
-		jRenameSubItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				jRenameDataset_actionPerformed(e);
-			}
-		});
-		JMenuItem jRemoveSubItem = new JMenuItem("Remove");
-		jRemoveSubItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				remove_actionPerformed();
-			}
-		});
-		dataSetSubMenu.add(jRenameSubItem);
-		dataSetSubMenu.add(jRemoveSubItem);
 
 		// pending menu
 		JMenuItem jRemovePendingItem = new JMenuItem("Remove");
@@ -944,7 +925,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				this.jLoadMArrayItem.setEnabled(false);
 				this.jRenameMenuItem.setEnabled(false);
 				this.jRenameProjectItem.setEnabled(false);
-				this.jRenameSubItem.setEnabled(false);
 				this.jEditItem.setEnabled(false);
 				this.jViewAnnotations.setEnabled(false);
 			} else {
@@ -954,7 +934,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				this.jLoadMArrayItem.setEnabled(true);
 				this.jRenameMenuItem.setEnabled(true);
 				this.jRenameProjectItem.setEnabled(true);
-				this.jRenameSubItem.setEnabled(true);
 				this.jEditItem.setEnabled(true);
 				this.jViewAnnotations.setEnabled(true);
 				if ((mNode instanceof DataSetNode && getSelection()
