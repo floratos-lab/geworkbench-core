@@ -389,7 +389,7 @@ public class CSPanel <T extends DSNamed> extends CSItemList<T> implements DSPane
 		 * 'selection' has been initialized for this CSPanel (not the new
 		 * activePanels we are constructing here).
 		 */
-        activePanels.panels().remove(0);
+        activePanels.panels().remove(selection);
         activePanels.setActive(true);
         for (DSPanel<T> panel : subPanels) {
             if (panel.isActive())
