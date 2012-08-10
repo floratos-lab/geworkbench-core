@@ -9,11 +9,8 @@ package org.geworkbench.util.microarrayutils;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
@@ -49,8 +46,6 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 	protected DSMicroarraySet refMASet = null;
 	protected DSMicroarraySetView<DSGeneMarker, DSMicroarray> maSetView = null;
 
-	protected JCheckBox chkAllMarkers = new JCheckBox("All Markers", false);
-	protected JCheckBox chkAllArrays = new JCheckBox("All Arrays", false);
 	protected JButton plotButton = new JButton("Plot");
 	private final String markerLabelPrefix = "  Markers: ";
 	protected JLabel numMarkersSelectedLabel = new JLabel(markerLabelPrefix);
@@ -66,12 +61,14 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 	 *
 	 */
 	public MicroarrayViewEventBase() {
-		try {
-			jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		mainPanel = new JPanel();
 
+		jToolBar3 = new JToolBar();
+
+		BorderLayout borderLayout2 = new BorderLayout();
+		mainPanel.setLayout(borderLayout2);
+
+		mainPanel.add(jToolBar3, java.awt.BorderLayout.SOUTH);
 	}
 
 	/**
@@ -95,7 +92,7 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 
 		log.debug("Source object " + source);
 
-		if (e.getMessage().equals(org.geworkbench.events.ProjectEvent.CLEARED)) {
+		if (e.getValue()==org.geworkbench.events.ProjectEvent.Message.CLEAR) {
 			if(beingRefreshed) {
 				return;
 			}
@@ -190,8 +187,8 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 			maSetView.setMarkerPanel(activatedMarkers);
 		if (activatedArrays != null && activatedArrays.panels().size() > 0 && activatedArrays.size() > 0)
 			maSetView.setItemPanel(activatedArrays);
-		maSetView.useMarkerPanel(!chkAllMarkers.isSelected());
-		maSetView.useItemPanel(!chkAllArrays.isSelected());
+		maSetView.useMarkerPanel(true);
+		maSetView.useItemPanel(true);
 
 		uniqueMarkers = maSetView.getUniqueMarkers();
 
@@ -204,42 +201,6 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 	 */
 	protected synchronized void fireModelChangedEvent() {
 		// no-op
-	}
-
-	/**
-	 * @throws Exception
-	 */
-	private void jbInit() throws Exception {
-		mainPanel = new JPanel();
-
-		jToolBar3 = new JToolBar();
-
-		BorderLayout borderLayout2 = new BorderLayout();
-		mainPanel.setLayout(borderLayout2);
-
-		chkAllMarkers.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				refreshMaSetView();
-				mainPanel.repaint();
-			}
-
-		});
-		chkAllArrays.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				refreshMaSetView();
-				mainPanel.repaint();
-			}
-
-		});
-
-		jToolBar3.add(chkAllArrays, null);
-		jToolBar3.add(chkAllMarkers, null);
-
-		mainPanel.add(jToolBar3, java.awt.BorderLayout.SOUTH);
 	}
 
 }
