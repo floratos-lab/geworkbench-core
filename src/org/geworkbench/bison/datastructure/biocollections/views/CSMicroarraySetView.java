@@ -40,21 +40,9 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
 	private DSPanel<DSMicroarray> itemPanel = new CSPanel<DSMicroarray>("");
 
 	/**
-	 * Designates if the microarray subselection imposed by the activated
-	 * phenotypic categories is imposed on the this microarray set view.
-	 */
-	private boolean useItemPanel = false;
-
-	/**
 	 * Contains the active markers, organized as a DSPanel.
 	 */
 	private DSPanel<T> markerPanel = new CSPanel<T>("");
-
-	/**
-	 * Designates if the marker subselection imposed by the activated panels is
-	 * imposed on the this microarray set view.
-	 */
-	private boolean useMarkerPanel = false;
 
 	public CSMicroarraySetView(DSMicroarraySet dataSet) {
 		this.dataSet = dataSet;
@@ -66,9 +54,9 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
 		if(dataSet==null)
 			return markerPanel;
 		
-		// todo Why is this size > 0 requirement here? Should probably be
+		// TODO Why is this size > 0 requirement here? Should probably be
 		// changed to return markerPanel if boolean is set no matter what
-		if (markerPanel != null && useMarkerPanel && markerPanel.size() > 0) {
+		if (markerPanel != null && markerPanel.size() > 0) {
 			return markerPanel;
 		} else {
 			// please note that in fact T is only allowed to be DSGeneMarker
@@ -82,7 +70,7 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
 	@Override
 	public DSItemList<T> getUniqueMarkers() {
 		int s = markerPanel.size();
-		if (useMarkerPanel && s > 0) {
+		if (s > 0) {
 			ListOrderedSet<T> orderedSet = new ListOrderedSet<T>();
 			for (int i=0; i<s; i++) {
 				T t = markerPanel.get(i);
@@ -172,7 +160,7 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
 	@SuppressWarnings("unchecked")
 	@Override
 	public DSItemList<Q> items() {
-		if ((useItemPanel && (itemPanel != null) && (itemPanel.size() > 0))
+		if ( (itemPanel != null) && (itemPanel.size() > 0 )
 				|| dataSet == null) {
 			return (DSItemList<Q>) itemPanel;
 		} else {
