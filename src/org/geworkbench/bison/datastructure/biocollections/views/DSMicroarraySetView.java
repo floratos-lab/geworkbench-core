@@ -67,13 +67,6 @@ public interface DSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroar
 	public DSItemList<T> markers();
 
 	/**
-	 * Set/resets marker subselection based on activated panels.
-	 * 
-	 * @param status
-	 */
-	public void useMarkerPanel(boolean status);
-
-	/**
 	 * Allows to assign a specific microarray panel selection
 	 * 
 	 * @param markerPanel

@@ -187,7 +187,6 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 			maSetView.setMarkerPanel(activatedMarkers);
 		if (activatedArrays != null && activatedArrays.panels().size() > 0 && activatedArrays.size() > 0)
 			maSetView.setItemPanel(activatedArrays);
-		maSetView.useMarkerPanel(true);
 
 		uniqueMarkers = maSetView.getUniqueMarkers();
 

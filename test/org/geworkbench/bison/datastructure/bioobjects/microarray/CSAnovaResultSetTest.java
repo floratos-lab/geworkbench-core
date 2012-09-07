@@ -99,7 +99,6 @@ public class CSAnovaResultSetTest extends TestCase {
 
 		/* order here is important for marker labels */
 		view = new CSMicroarraySetView<DSGeneMarker, DSMicroarray>(microarraySet);
-		view.useMarkerPanel(true);
 		view.setMarkerPanel(markerPanel);
 
 		// groupNames will be G1, G2, G3,...

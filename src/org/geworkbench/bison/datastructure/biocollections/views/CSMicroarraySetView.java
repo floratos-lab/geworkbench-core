@@ -104,16 +104,6 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
 		}
 	}
 
-	/**
-	 * Set/resets marker subselection based on activated panels.
-	 * 
-	 * @param status
-	 */
-	@Override
-	public void useMarkerPanel(boolean status) {
-		useMarkerPanel = status;
-	}
-
 	@Override
 	public void setMarkerPanel(DSPanel<T> markerPanel) {
 		this.markerPanel = markerPanel;
