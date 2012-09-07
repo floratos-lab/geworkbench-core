@@ -202,17 +202,6 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
 		}
 	}
 
-	/**
-	 * Gets the statuc of Phenotype Activation
-	 * 
-	 * @return
-	 */
-	@Deprecated // TODO to be removed
-	@Override
-	public boolean useItemPanel() {
-		return true;
-	}
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public void setItemPanel(DSPanel<Q> mArrayPanel) {

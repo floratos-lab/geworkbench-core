@@ -38,12 +38,6 @@ public interface DSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroar
 	public DSItemList<Q> items();
 	
 	/**
-	 * Gets the status of item activation.
-	 * 
-	 */
-	public boolean useItemPanel();
-
-	/**
 	 * Assigns a specific item panel selection.
 	 */
 	public void setItemPanel(DSPanel<Q> mArrayPanel);
