@@ -74,13 +74,6 @@ public interface DSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroar
 	public void useMarkerPanel(boolean status);
 
 	/**
-	 * Gets the status of marker activation
-	 * 
-	 * @return the status of marker activation
-	 */
-	public boolean useMarkerPanel();
-
-	/**
 	 * Allows to assign a specific microarray panel selection
 	 * 
 	 * @param markerPanel

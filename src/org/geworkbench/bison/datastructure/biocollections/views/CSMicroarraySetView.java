@@ -114,17 +114,6 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
 		useMarkerPanel = status;
 	}
 
-	/**
-	 * Gets the status of marker activation
-	 * 
-	 * @return the status of marker activation
-	 */
-	@Deprecated // TODO to be removed
-	@Override
-	public boolean useMarkerPanel() {
-		return true;
-	}
-
 	@Override
 	public void setMarkerPanel(DSPanel<T> markerPanel) {
 		this.markerPanel = markerPanel;

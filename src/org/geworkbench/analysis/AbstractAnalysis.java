@@ -730,34 +730,25 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 
 			if (useMarkersFromSelector) {
 				DSPanel<DSGeneMarker> paneltest = maSetView.getMarkerPanel();
-				if (maSetView.useMarkerPanel()) {
-					if ((paneltest!=null) && (paneltest.size()>0)){
-						log.debug("situation 3: markers selected");
 
-						ans .append( "==Used Markers [" ).append( paneltest.size() ).append( "]==\n" );
-						for (Object obj : paneltest) {
-							CSExpressionMarker temp = (CSExpressionMarker) obj;
-							ans .append( "\t" ).append( temp.getLabel() ).append( "\n" );
-						}
-					}else{
-						log.debug("situation 4: no markers selected.");
-						DSItemList<DSGeneMarker> markers = maSetView.markers();
-						ans .append( "==Used Markers [" ).append( markers.size() ).append( "]==\n" );
-						for (DSGeneMarker marker : markers) {
-							ans .append( "\t" ).append( marker.getLabel() ).append( "\n" );
-						}
+				if ((paneltest != null) && (paneltest.size() > 0)) {
+					log.debug("situation 3: markers selected");
+
+					ans.append("==Used Markers [").append(paneltest.size())
+							.append("]==\n");
+					for (Object obj : paneltest) {
+						CSExpressionMarker temp = (CSExpressionMarker) obj;
+						ans.append("\t").append(temp.getLabel()).append("\n");
 					}
 				} else {
-					log.debug("situation 5: All Markers selected.");
-					DSItemList<DSGeneMarker> markers = maSetView.allMarkers();
-					ans .append( "==Used Markers [" ).append( markers.size() ).append( "]==" )
-							.append( NEWLINE );
+					log.debug("situation 4: no markers selected.");
+					DSItemList<DSGeneMarker> markers = maSetView.markers();
+					ans.append("==Used Markers [").append(markers.size())
+							.append("]==\n");
 					for (DSGeneMarker marker : markers) {
-						ans .append( TAB ).append( marker.getLabel()
-						).append( NEWLINE );
+						ans.append("\t").append(marker.getLabel()).append("\n");
 					}
 				}
-
 
 				ans.append("==End of Used Markers==").append(NEWLINE);
 			}
