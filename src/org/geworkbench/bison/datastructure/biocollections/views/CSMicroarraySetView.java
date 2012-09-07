@@ -119,9 +119,10 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
 	 * 
 	 * @return the status of marker activation
 	 */
+	@Deprecated // TODO to be removed
 	@Override
 	public boolean useMarkerPanel() {
-		return useMarkerPanel;
+		return true;
 	}
 
 	@Override
@@ -216,9 +217,10 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
 	 * 
 	 * @return
 	 */
+	@Deprecated // TODO to be removed
 	@Override
 	public boolean useItemPanel() {
-		return useItemPanel;
+		return true;
 	}
 
 	@SuppressWarnings("unchecked")
