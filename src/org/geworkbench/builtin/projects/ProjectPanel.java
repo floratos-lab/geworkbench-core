@@ -1624,7 +1624,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		if (colorContext != null) {
 			CSMicroarraySetView<DSGeneMarker, DSMicroarray> view = new CSMicroarraySetView<DSGeneMarker, DSMicroarray>(
 					microarraySet);
-			view.useItemPanel(true);
 			if (e.getTaggedItemSetTree() != null
 					&& e.getTaggedItemSetTree().size() > 0) {
 				DSPanel<DSMicroarray> activatedArrays = e

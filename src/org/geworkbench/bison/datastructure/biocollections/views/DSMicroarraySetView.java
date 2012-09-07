@@ -38,10 +38,6 @@ public interface DSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroar
 	public DSItemList<Q> items();
 	
 	/**
-	 * Set/reset item subselection based on activated panels.
-	 */
-	public void useItemPanel(boolean status);
-	/**
 	 * Gets the status of item activation.
 	 * 
 	 */

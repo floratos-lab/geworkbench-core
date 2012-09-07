@@ -203,16 +203,6 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
 	}
 
 	/**
-	 * Set/reset microarray subselection based on activated phenotypes.
-	 * 
-	 * @param status
-	 */
-	@Override
-	public void useItemPanel(boolean status) {
-		useItemPanel = status;
-	}
-
-	/**
 	 * Gets the statuc of Phenotype Activation
 	 * 
 	 * @return
