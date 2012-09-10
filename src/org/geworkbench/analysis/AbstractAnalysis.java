@@ -152,9 +152,6 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	 */
 	protected AbstractSaveableParameterPanel aspp = null;
 	
-	private boolean useMarkersFromSelector = true;
-
-
 	/**
 	 * Contains indices that are used in order to recover the set of named
 	 * parameter settings that have been saved for a particular analysis. The
@@ -269,18 +266,6 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 		// parameter set from this launch.
 		return lastParameterSetName;
 	}
-	
-	
-	 
-	public void useMarkersFromSelector(boolean status) {
-		useMarkersFromSelector = status;
-	}
-
-	 
-	public boolean useMarkersFromSelector() {
-		return useMarkersFromSelector;
-	}
-	
 
 	/*
 	 * Translate filename back to set name
@@ -689,7 +674,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	 * @return
 	 */
 	public String generateHistoryForMaSetView(
-			DSMicroarraySetView<DSGeneMarker, DSMicroarray> maSetView, boolean useMarkersFromSelector) {
+			DSMicroarraySetView<DSGeneMarker, DSMicroarray> maSetView) {
 		StringBuilder ans = new StringBuilder(
 				"=The MicroarraySetView used for analysis: ");
 		/* Generate text for microarrays/groups */
@@ -728,30 +713,28 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 			ans.append("==End of Microarray Sets==").append(NEWLINE);
 			/* Generate text for markers */
 
-			if (useMarkersFromSelector) {
-				DSPanel<DSGeneMarker> paneltest = maSetView.getMarkerPanel();
+			DSPanel<DSGeneMarker> paneltest = maSetView.getMarkerPanel();
 
-				if ((paneltest != null) && (paneltest.size() > 0)) {
-					log.debug("situation 3: markers selected");
+			if ((paneltest != null) && (paneltest.size() > 0)) {
+				log.debug("situation 3: markers selected");
 
-					ans.append("==Used Markers [").append(paneltest.size())
-							.append("]==\n");
-					for (Object obj : paneltest) {
-						CSExpressionMarker temp = (CSExpressionMarker) obj;
-						ans.append("\t").append(temp.getLabel()).append("\n");
-					}
-				} else {
-					log.debug("situation 4: no markers selected.");
-					DSItemList<DSGeneMarker> markers = maSetView.markers();
-					ans.append("==Used Markers [").append(markers.size())
-							.append("]==\n");
-					for (DSGeneMarker marker : markers) {
-						ans.append("\t").append(marker.getLabel()).append("\n");
-					}
+				ans.append("==Used Markers [").append(paneltest.size())
+						.append("]==\n");
+				for (Object obj : paneltest) {
+					CSExpressionMarker temp = (CSExpressionMarker) obj;
+					ans.append("\t").append(temp.getLabel()).append("\n");
 				}
-
-				ans.append("==End of Used Markers==").append(NEWLINE);
+			} else {
+				log.debug("situation 4: no markers selected.");
+				DSItemList<DSGeneMarker> markers = maSetView.markers();
+				ans.append("==Used Markers [").append(markers.size())
+						.append("]==\n");
+				for (DSGeneMarker marker : markers) {
+					ans.append("\t").append(marker.getLabel()).append("\n");
+				}
 			}
+
+			ans.append("==End of Used Markers==").append(NEWLINE);
 		} catch (ClassCastException cce) {
 			/* it's not a DSPanel, we generate nothing for panel part */
 			log.error(cce);
