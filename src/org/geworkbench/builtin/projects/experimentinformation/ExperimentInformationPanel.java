@@ -74,7 +74,7 @@ public class ExperimentInformationPanel implements VisualPlugin {
         DSDataSet<?> dataSet = e.getDataSet();
         if (dataSet != null) {
         	String experimentInfo = DEFAULT_MESSAGE;
-            if (!e.getMessage().equals(ProjectEvent.CLEARED)) {
+            if (e.getValue()!=ProjectEvent.Message.CLEAR) {
                 String description = dataSet.getDescription();
                 if (description != null && description.length() > 0)
                     experimentInfo += description + "\n";

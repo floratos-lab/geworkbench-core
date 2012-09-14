@@ -74,7 +74,7 @@ import org.geworkbench.engine.management.Subscribe;
     	DSDataSet<?>  maSet = e.getDataSet();
         if (maSet != null) {
             datasetHistory = DEFAULT_MESSAGE;
-            if (e.getMessage().equals(org.geworkbench.events.ProjectEvent.CLEARED))
+            if (e.getValue()==org.geworkbench.events.ProjectEvent.Message.CLEAR)
                 maSet = null;
             else if (maSet != null) {
                 Object[] values = maSet.getValuesForName(HISTORY);
