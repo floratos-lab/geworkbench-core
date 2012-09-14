@@ -190,6 +190,7 @@ public class ComponentConfigurationManager2 {
 									+ ", please delete directory try again.",
 							"Remote Component Update",
 							JOptionPane.ERROR_MESSAGE);
+					zipInputStream.close();
 					return;
 				}
 				componentFolder.mkdir();
@@ -359,6 +360,7 @@ public class ComponentConfigurationManager2 {
 									+ ", please restart geWorkbench",
 							"Remote Component Update",
 							JOptionPane.ERROR_MESSAGE);
+					zipInputStream.close();
 					return;
 				}
 				componentFolder.mkdir();
