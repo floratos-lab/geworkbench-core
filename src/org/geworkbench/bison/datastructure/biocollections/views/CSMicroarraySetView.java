@@ -3,6 +3,8 @@ package org.geworkbench.bison.datastructure.biocollections.views;
 import java.io.Serializable;
 
 import org.apache.commons.collections15.set.ListOrderedSet;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
@@ -31,6 +33,8 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
 		implements DSMicroarraySetView<T, Q>, Serializable {
 
 	private static final long serialVersionUID = 1452815738190971373L;
+	
+	private static Log log = LogFactory.getLog(CSMicroarraySetView.class);
 
 	final private DSMicroarraySet dataSet;
 
@@ -99,6 +103,9 @@ public class CSMicroarraySetView<T extends DSGeneMarker, Q extends DSMicroarray>
 
 	@Override
 	public DSPanel<T> getMarkerPanel() {
+		if(markerPanel==null) {
+			log.error("marker panel is null");
+		}
 		return markerPanel;
 	}
 
