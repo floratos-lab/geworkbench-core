@@ -14,5 +14,19 @@ import javax.swing.JPanel;
  */
 public class ParameterPanel extends JPanel {
 	private static final long serialVersionUID = 510957897262336390L;
+   
+	private boolean hasParametersToSave = true;
+	
+	
+	public boolean hasParametersToSave()
+	{
+		return hasParametersToSave;
+	}
+	
+	public void hasParametersToSave(boolean flag)
+	{
+		hasParametersToSave = flag;
+	}
+	
 
 }
