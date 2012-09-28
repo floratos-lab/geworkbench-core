@@ -30,6 +30,8 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMutableMarker
 import org.geworkbench.bison.util.Range;
 import org.geworkbench.util.AffyAnnotationUtil;
 
+import org.geworkbench.parsers.InputFileFormatException;
+
 /**
  * 
  * Parser of .exp file.
@@ -59,11 +61,11 @@ public class MicroarraySetParser {
 	}
 	
 	/** Parse when invoked from ExpressionFileFormat. */
-	DSMicroarraySet parseCSMicroarraySet(File file, String compatibilityLabel) {
+	DSMicroarraySet parseCSMicroarraySet(File file, String compatibilityLabel) throws InputFileFormatException {
 		DSMicroarraySet microarraySet = new CSMicroarraySet();
 		if (compatibilityLabel != null) {
 			microarraySet.setCompatibilityLabel(compatibilityLabel);
-		} else {
+		} else {			 
 			String chiptype = AffyAnnotationUtil
 					.matchAffyAnnotationFile(microarraySet);
 			if (chiptype == null) { // this is never null

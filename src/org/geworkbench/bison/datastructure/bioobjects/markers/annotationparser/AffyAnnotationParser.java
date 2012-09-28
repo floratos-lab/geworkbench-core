@@ -13,6 +13,9 @@ import java.util.Map;
 
 import javax.swing.JOptionPane;
 
+import org.geworkbench.parsers.InputFileFormatException; 
+import org.geworkbench.util.AnnotationInformationManager.AnnotationType;
+ 
 import com.Ostermiller.util.CSVParser;
 import com.Ostermiller.util.LabeledCSVParser;
 
@@ -31,8 +34,8 @@ public abstract class AffyAnnotationParser {
 	protected transient LabeledCSVParser parser;
 	
 	transient String affyId;
-
-	Map<String, AnnotationFields> parse(final File file, boolean ignoreDuplicate) {
+	 
+	Map<String, AnnotationFields> parse(final File file, boolean ignoreDuplicate) throws InputFileFormatException {
 
 		Map<String, AnnotationFields> markerAnnotation = new HashMap<String, AnnotationFields>();
 
@@ -51,8 +54,10 @@ public abstract class AffyAnnotationParser {
 				AnnotationFields fields = parseOneLine();
 				if (affyId == null)
 				{
-					JOptionPane.showMessageDialog(null, "Your annotation file does not have correct format. \nPlease make sure you select correct annotation file type.", "Error", JOptionPane.ERROR_MESSAGE); 
-				    return null;
+					//JOptionPane.showMessageDialog(null, "Your annotation file does not have correct format. \nPlease make sure you select correct annotation file type.", "Error", JOptionPane.ERROR_MESSAGE); 
+					throw new InputFileFormatException(
+							"your annotation file does not have correct format. ");
+									 
 				}
 				if (!ignoreDuplicate && markerAnnotation.containsKey(affyId)) {
 					String[] options = { "Skip duplicate",
@@ -84,12 +89,11 @@ public abstract class AffyAnnotationParser {
 				 
 			}
 			// all fine.
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			return null;
+		} catch (FileNotFoundException e) {			 
+			throw new InputFileFormatException("your annotation file does not exist");
+		 
 		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
+			throw new InputFileFormatException("your annotation file does not have correct format.");
 		} finally {
 			try {
 				bis.close();
@@ -102,5 +106,5 @@ public abstract class AffyAnnotationParser {
 	}
 	 
     abstract AnnotationFields parseOneLine(); 
-    
+    abstract AnnotationType getAnnotationType();
 }

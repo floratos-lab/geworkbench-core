@@ -8,6 +8,9 @@ import java.util.ArrayList;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory; 
+
+import org.geworkbench.util.AnnotationInformationManager.AnnotationType;
+ 
  
 /**
  * 
@@ -42,8 +45,8 @@ public class AffyGeneExonStAnnotationParser extends AffyAnnotationParser {
 	private static final String MAIN_DELIMITER = "///";
 
 	private static final String SUB_DELIMITER = "//";
-
-	// columns read into geWorkbench
+ 
+    // columns read into geWorkbench
 	// probe id must be first column read in, and the rest of the columns must
 	// follow the same order
 	// as the columns in the annotation file.
@@ -51,8 +54,8 @@ public class AffyGeneExonStAnnotationParser extends AffyAnnotationParser {
 			PROBESET_ID, // probe id must be the first item in this list
 			UNIGENE, GENE_ASSIGNMENT, MRNA_ASSIGNMENT, SWISSPROT, PATHWAY,
 			GO_BIOLOGICAL_PROCESS, GO_CELLULAR_COMPONENT, GO_MOLECULAR_FUNCTION };
-
-	@Override
+	 
+	 @Override
 	AnnotationFields parseOneLine() {
 		 
 		affyId = parser.getValueByLabel(labels[0]);
@@ -225,5 +228,10 @@ public class AffyGeneExonStAnnotationParser extends AffyAnnotationParser {
 
 		return fields;
 	}
-
+	
+	public AnnotationType getAnnotationType()
+	{
+		return AnnotationType.AFFY_GENE_EXON_10_ST;
+	} 
+	 
 }

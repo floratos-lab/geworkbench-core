@@ -34,6 +34,8 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.A
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.engine.preferences.PreferencesManager;
 import org.geworkbench.engine.properties.PropertiesManager;
+import org.geworkbench.parsers.InputFileFormatException;
+import org.geworkbench.util.AnnotationInformationManager.AnnotationType;
 
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 
@@ -44,7 +46,7 @@ import com.jgoodies.forms.builder.ButtonBarBuilder;
 // TODO rename this class. there is a dangerous case of same name in other package
 public class AffyAnnotationUtil {
 
-	public static String matchAffyAnnotationFile(final DSMicroarraySet dataset) {
+	public static String matchAffyAnnotationFile(final DSMicroarraySet dataset)  throws InputFileFormatException {
 		PreferencesManager preferencesManager = PreferencesManager
 				.getPreferencesManager();
 		File prefDir = preferencesManager.getPrefDir();
@@ -148,9 +150,7 @@ public class AffyAnnotationUtil {
 		return dontShow.isSelected();
 	}
 
-	private static AffyAnnotationParser selectAnnotationParser() {
-		final String AFFYMETRIX_3_EXPRESSION  = "Affymetrix 3' Expression";
-		final String AFFY_GENE_EXON_10_ST = "Affymetrix Gene/Exon 1.0 ST";
+	private static AffyAnnotationParser selectAnnotationParser() {		
 
 		final JDialog dialog = new JDialog();
 		dialog.setTitle("Select Annotation File Type");
@@ -163,8 +163,9 @@ public class AffyAnnotationUtil {
 
 		final JComboBox annotationFileTypeJcb = new JComboBox();
 		annotationFileTypeJcb.addItem("Please Select");
-		annotationFileTypeJcb.addItem(AFFYMETRIX_3_EXPRESSION);
-		annotationFileTypeJcb.addItem(AFFY_GENE_EXON_10_ST);
+		annotationFileTypeJcb.addItem(AnnotationType.AFFYMETRIX_3_EXPRESSION);
+		 
+		annotationFileTypeJcb.addItem(AnnotationType.AFFY_GENE_EXON_10_ST);
 
 		panel1.add(annotationFileTypeJcb);
 
@@ -176,12 +177,12 @@ public class AffyAnnotationUtil {
 		continueButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				String parserType = annotationFileTypeJcb.getSelectedItem()
-						.toString();
-				if (parserType.equals(AFFYMETRIX_3_EXPRESSION)) {
+				AnnotationType parserType = (AnnotationType)annotationFileTypeJcb.getSelectedItem();
+						 
+				if (parserType.equals(AnnotationType.AFFYMETRIX_3_EXPRESSION)) {
 					parser = new Affy3ExpressionAnnotationParser();
 				} else if (parserType
-						.equals(AFFY_GENE_EXON_10_ST)) {
+						.equals(AnnotationType.AFFY_GENE_EXON_10_ST)) {
 					parser = new AffyGeneExonStAnnotationParser();
 				} else {
 					return;

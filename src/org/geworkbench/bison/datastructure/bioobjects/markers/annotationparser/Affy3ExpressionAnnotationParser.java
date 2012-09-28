@@ -3,6 +3,8 @@
  */
 package org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser;
 
+ import org.geworkbench.util.AnnotationInformationManager.AnnotationType; 
+ 
  
 /**
  * 
@@ -21,7 +23,7 @@ public class Affy3ExpressionAnnotationParser extends AffyAnnotationParser{
 	private static final String ALIGNMENT = "Alignments";
 	private static final String PATHWAY = "Pathway"; // pathway
 	private static final String TRANSCRIPT = "Transcript Assignments";
-	 
+ 
 	// columns read into geWorkbench
 	// probe id must be first column read in, and the rest of the columns must
 	// follow the same order
@@ -70,5 +72,11 @@ public class Affy3ExpressionAnnotationParser extends AffyAnnotationParser{
 
 		return fields;
 	}
-
+	
+	public AnnotationType getAnnotationType()
+	{
+		return AnnotationType.AFFYMETRIX_3_EXPRESSION;
+	}
+	
+	 
 }

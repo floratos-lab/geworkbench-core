@@ -10,11 +10,27 @@ import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarr
 // 3) annotation type (3' or not)
 // For now, it is used for annotation type only because it is not covered by workspace mechanism
 public class AnnotationInformationManager {
-
+ 
 	public enum AnnotationType {
-		THREE_PRIME, OTHERS
+		
+		AFFYMETRIX_3_EXPRESSION ("Affymetrix 3' Expression"), 
+		AFFY_GENE_EXON_10_ST ("Affymetrix Gene/Exon 1.0 ST"),		
+		OTHERS("others");
+	
+		private String name;    
+		AnnotationType(String name) {
+		        this.name = name;		       
+	    }
+		
+		@Override
+		public String toString()
+		{
+			return name;
+		}	
+	 
 	};
-
+	
+	
 	private static class Info {
 		AnnotationType annotationType;
 
@@ -43,9 +59,11 @@ public class AnnotationInformationManager {
 
 	public boolean is3Prime(DSMicroarraySet dataset) {
 		Info info = infoMap.get(dataset);
-		if (info != null && info.annotationType == AnnotationType.THREE_PRIME)
+		if (info != null && info.annotationType == AnnotationType.AFFYMETRIX_3_EXPRESSION)
 			return true;
 		else
 			return false;
 	}
 }
+
+ 
