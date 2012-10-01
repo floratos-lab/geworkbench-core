@@ -33,7 +33,11 @@ public class BlastObj implements Serializable{
 	/**
 	 * The Database ID of the protein sequence hit in this BlastObj.
 	 */
-	String databaseID;
+	private String databaseID;
+	public void setDatabaseID(String databaseID) {
+		this.databaseID = databaseID;
+	}
+
 	/**
 	 * Set up the upper boundary of whole sequence size.
 	 */
