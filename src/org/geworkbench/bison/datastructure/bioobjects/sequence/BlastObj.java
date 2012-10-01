@@ -71,12 +71,6 @@ public class BlastObj implements Serializable{
 	int percentPos;
 
 	/**
-	 * The score of the alignment of query and hit in this BlastObj; initialized
-	 * to -1.
-	 */
-	int score = -1;
-
-	/**
 	 * The score of the alignment of query and hit in this BlastObj.
 	 */
 	String evalue;
@@ -118,10 +112,6 @@ public class BlastObj implements Serializable{
 	boolean retriveWholeSeq = false;
 
 	/**
-	 * the URL of hit info
-	 */
-	URL infoURL;
-	/**
 	 * URL of seq.
 	 */
 	URL seqURL;
@@ -131,19 +121,12 @@ public class BlastObj implements Serializable{
 	private int alignmentLength;
 	private int endPoint;
 
-	public BlastObj(boolean retriveWholeSeq, String databaseID, String name, String description,
-			String score, String evalue) {
+	public BlastObj(boolean retriveWholeSeq, String databaseID, String name,
+			String description, String evalue) {
 		this.retriveWholeSeq = retriveWholeSeq;
 		this.databaseID = databaseID;
 		this.description = description;
 		this.name = name;
-
-		try {
-			this.score = Integer.parseInt(score);
-		} catch (NumberFormatException e) {
-			// ignored
-		}
-
 		this.evalue = evalue;
 	}
 
@@ -210,16 +193,6 @@ public class BlastObj implements Serializable{
 	 */
 	public int getPercentPos() {
 		return percentPos;
-	}
-
-	/**
-	 * Returns the score of the alignment of query and protein sequence hit in
-	 * this BlastObj.
-	 * 
-	 * @return score as an int.
-	 */
-	public int getScore() {
-		return score;
 	}
 
 	/**
@@ -348,14 +321,6 @@ public class BlastObj implements Serializable{
 		include = b;
 	}
 
-	public URL getInfoURL() {
-		return infoURL;
-	}
-
-	public void setInfoURL(URL infoURL) {
-		this.infoURL = infoURL;
-	}
-
 	public URL getSeqURL() {
 		return seqURL;
 	}
@@ -386,10 +351,6 @@ public class BlastObj implements Serializable{
 
 	public void setDetailedAlignment(String detailedAlignment) {
 		this.detailedAlignment = detailedAlignment;
-	}
-
-	public String toString() {
-		return databaseID + detailedAlignment + score + evalue;
 	}
 
 	public CSSequence getAlignedSeq() {
