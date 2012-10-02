@@ -34,9 +34,6 @@ public class BlastObj implements Serializable{
 	 * The Database ID of the protein sequence hit in this BlastObj.
 	 */
 	private String databaseID;
-	public void setDatabaseID(String databaseID) {
-		this.databaseID = databaseID;
-	}
 
 	/**
 	 * Set up the upper boundary of whole sequence size.
@@ -106,10 +103,6 @@ public class BlastObj implements Serializable{
 	 * whether this BlastObj is included in the MSA analysis
 	 */
 	boolean include = false;
-	/**
-	 * check whether the whole sequece can be retrived.
-	 */
-	boolean retriveWholeSeq = false;
 
 	/**
 	 * URL of seq.
@@ -121,9 +114,8 @@ public class BlastObj implements Serializable{
 	private int alignmentLength;
 	private int endPoint;
 
-	public BlastObj(boolean retriveWholeSeq, String databaseID, String name,
+	public BlastObj(String databaseID, String name,
 			String description, String evalue) {
-		this.retriveWholeSeq = retriveWholeSeq;
 		this.databaseID = databaseID;
 		this.description = description;
 		this.name = name;
@@ -329,10 +321,6 @@ public class BlastObj implements Serializable{
 		this.seqURL = seqURL;
 	}
 
-	public boolean isRetriveWholeSeq() {
-		return retriveWholeSeq;
-	}
-
 	public String getName() {
 		return name;
 	}
@@ -399,11 +387,6 @@ public class BlastObj implements Serializable{
 	 */
 	public CSSequence getWholeSeq() {
 
-		if (!retriveWholeSeq ) {
-			// this field is kept for now, but never set false
-			log.error("retriveWholeSeq is false");
-			return null;
-		}
 		if (seqURL == null)
 			return null;
 
