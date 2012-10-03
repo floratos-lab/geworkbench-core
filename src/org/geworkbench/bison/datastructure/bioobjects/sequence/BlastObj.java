@@ -18,8 +18,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * BlastObj.java A class to hold information about each individual hit of a
- * Blast database search on a protein sequence. <br>
+ * A class to hold information about each individual hit of a Blast database
+ * search.
  * 
  * @author zji
  * @version $Id$
@@ -36,90 +36,54 @@ public class BlastObj implements Serializable{
 	private String databaseID;
 
 	/**
-	 * Set up the upper boundary of whole sequence size.
-	 */
-	static final int MAXSEQUENCESIZE = 100000;
-	int maxSize = MAXSEQUENCESIZE;
-
-	/**
 	 * The accession number of the protein sequence hit in this BlastObj.
 	 */
-	String name;
+	private String name;
 	/**
 	 * The description of the protein sequence hit in this BlastObj.
 	 */
-	String description;
+	private String description;
 	/**
 	 * The percentage of the query that's aligned with protein sequence hit in
 	 * this BlastObj.
 	 */
-	int percentAligned;
-
-	/**
-	 * The percentage of the alignment of query and hit in this BlastObj that's
-	 * gapped.
-	 */
-	int percentGapped = 0;
-
-	/**
-	 * The percentage of the alignment of query and hit in this BlastObj that's
-	 * "positive"/conserved.
-	 */
-	int percentPos;
+	private int percentAligned;
 
 	/**
 	 * The score of the alignment of query and hit in this BlastObj.
 	 */
-	String evalue;
-	/**
-	 * The length of the alignment of query and hit in this BlastObj.
-	 */
-	int length;
-	String seqID;
-	int[] subject_align = new int[2];
+	private String evalue;
 
-	/**
-	 * The 2 element array containing the position in query sequence where the
-	 * alignment start and stop. change to public for temp.
-	 * 
-	 * @todo add getter method later.
-	 */
-	public int[] query_align = new int[2];
-	/**
-	 * The String of query sequence in alignment with hit in this BlastObj.
-	 */
-	String query;
 	/**
 	 * The String of hit sequence in this BlastObj in alignment with query
 	 * sequence.
 	 */
-	String subject;
-	/**
-	 * The String of alignment sequence between query sequence and hit in this
-	 * BlastObj.
-	 */
-	String align;
+	private String subject;
+
 	/**
 	 * whether this BlastObj is included in the MSA analysis
 	 */
-	boolean include = false;
+	private boolean include = false;
 
 	/**
 	 * URL of seq.
 	 */
-	URL seqURL;
+	private URL seqURL;
 	private String detailedAlignment = "";
 	private String identity;
 	private int startPoint;
 	private int alignmentLength;
-	private int endPoint;
 
 	public BlastObj(String databaseID, String name,
-			String description, String evalue) {
+			String description, String evalue, int startPoint, int alignmentLength, String subject, int percentage) {
 		this.databaseID = databaseID;
 		this.description = description;
 		this.name = name;
 		this.evalue = evalue;
+		this.startPoint = startPoint;
+		this.alignmentLength = alignmentLength;
+		this.subject = subject;
+		this.percentAligned = percentage;
 	}
 
 	/* Get methods for class variables. */
@@ -150,41 +114,13 @@ public class BlastObj implements Serializable{
 	}
 
 	/**
-	 * Returns the length of the alignment of query and hit seq stored in this
-	 * BlastObj.
-	 * 
-	 * @return the length as an int.
-	 */
-
-	/**
 	 * Returns the percentage of the query that's aligned with protein sequence
 	 * hit in this BlastObj.
 	 * 
 	 * @return percentAligned as an int.
 	 */
-
 	public int getPercentAligned() {
 		return percentAligned;
-	}
-
-	/**
-	 * Returns the percentage of the alignment that's gapped with protein
-	 * sequence hit in this BlastObj.
-	 * 
-	 * @return percentGapped as an int.
-	 */
-	public int getPercentGapped() {
-		return percentGapped;
-	}
-
-	/**
-	 * Returns the percentage of the query that's conserved with protein
-	 * sequence hit in this BlastObj.
-	 * 
-	 * @return percentPos as an int.
-	 */
-	public int getPercentPos() {
-		return percentPos;
 	}
 
 	/**
@@ -198,36 +134,7 @@ public class BlastObj implements Serializable{
 	}
 
 	/**
-	 * Returns the query in alignment with protein sequence hit in this
-	 * BlastObj.
-	 * 
-	 * @return query as a String.
-	 */
-	public String getQuery() {
-		return query;
-	}
-
-	/**
-	 * Returns the protein sequence hit in this BlastObj in alignment with the
-	 * query.
-	 * 
-	 * @return subject as a String.
-	 */
-	public String getSubject() {
-		return subject;
-	}
-
-	/**
-	 * Returns the alignment of query and protein sequence hit in this BlastObj.
-	 * 
-	 * @return align as an String.
-	 */
-	public String getAlign() {
-		return align;
-	}
-
-	/**
-	 * Returns whether this BlastObj is included in MSA analysis.
+	 * Returns whether this BlastObj is included to add to the project.
 	 * 
 	 * @return include as a Boolean.
 	 */
@@ -235,76 +142,8 @@ public class BlastObj implements Serializable{
 		return include;
 	}
 
-	/* Set methods for class variables */
-	
 	/**
-	 * Sets the percentage of the query that's aligned with protein sequence hit
-	 * in this BlastObj.
-	 * 
-	 * @param i,
-	 *            the new alignment percentage of this BlastObj.
-	 */
-	public void setPercentAligned(int i) {
-		percentAligned = i;
-	}
-
-	/**
-	 * Sets the percentage of the alignment that's gapped of query and hit
-	 * protein sequence hit in this BlastObj.
-	 * 
-	 * @param i,
-	 *            the new gapped percentage of this BlastObj.
-	 */
-	public void setPercentGapped(int i) {
-		percentGapped = i;
-	}
-
-	/**
-	 * Sets the percentage of the query that's conserved with protein sequence
-	 * hit in this BlastObj.
-	 * 
-	 * @param i,
-	 *            the new conserved percentage of this BlastObj.
-	 */
-
-	public void setPercentPos(int i) {
-		percentPos = i;
-	}
-
-	/**
-	 * Sets the query sequence of the alignment with protein sequence hit in
-	 * this BlastObj.
-	 * 
-	 * @param s,
-	 *            the new query seq of this BlastObj.
-	 */
-	public void setQuery(String s) {
-		query = s;
-	}
-
-	/**
-	 * Sets hit protein sequence hit in this BlastObj in alignment w/ the query.
-	 * 
-	 * @param s,
-	 *            the new subject seq of this BlastObj.
-	 */
-	public void setSubject(String s) {
-		subject = s;
-	}
-
-	/**
-	 * Sets the alignment sequence of the query with protein sequence hit in
-	 * this BlastObj.
-	 * 
-	 * @param s,
-	 *            the new align seq of this BlastObj.
-	 */
-	public void setAlign(String s) {
-		align = s;
-	}
-
-	/**
-	 * Sets whether this BlastObj is included in MSA analysis.
+	 * Sets whether this BlastObj is included to add to the project.
 	 * 
 	 * @param b,
 	 *            the new include Boolean of this BlastObj.
@@ -323,14 +162,6 @@ public class BlastObj implements Serializable{
 
 	public String getName() {
 		return name;
-	}
-
-	public int getLength() {
-		return length;
-	}
-
-	public void setLength(int length) {
-		this.length = length;
 	}
 
 	public String getDetailedAlignment() {
@@ -436,14 +267,6 @@ public class BlastObj implements Serializable{
 		return new CSSequence(sequenceLabel, sequence);
 	}
 
-	public String getSeqID() {
-		return seqID;
-	}
-
-	public void setSeqID(String seqID) {
-		this.seqID = seqID;
-	}
-
 	public String getIdentity() {
 		return identity;
 	}
@@ -456,34 +279,5 @@ public class BlastObj implements Serializable{
 	public int getAlignmentLength() {
 		return alignmentLength;
 	}
-
-	public int getEndPoint() {
-		return endPoint;
-	}
-
-	public int getMaxSize() {
-		return maxSize;
-	}
-
-	public void setIdentity(String identity) {
-		this.identity = identity;
-	}
-
-	public void setStartPoint(int startPoint) {
-
-		this.startPoint = startPoint;
-	}
-
-	public void setAlignmentLength(int alignmentLength) {
-		this.alignmentLength = alignmentLength;
-	}
-
-	public void setEndPoint(int endPoint) {
-		this.endPoint = endPoint;
-	}
-
-	public void setMaxSize(int maxSize) {
-		this.maxSize = maxSize;
-	}
-
+	
 }
