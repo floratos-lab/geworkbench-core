@@ -1,7 +1,7 @@
 package org.geworkbench.bison.datastructure.bioobjects.sequence;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
@@ -18,9 +18,9 @@ public class CSAlignmentResultSet extends CSAncillaryDataSet<DSBioObject>
 	private File fastaFile = null;
 	private File resultFile = null;
 
-	private ArrayList<Vector<BlastObj>> blastDataSet = null;
-	private String summary = null;
-	private int totalHitCount;
+	final private List<Vector<BlastObj>> blastDataSet;
+	final private String summary;
+	final private int totalHitCount;
 
 	/**
 	 * @param fileName
@@ -29,14 +29,19 @@ public class CSAlignmentResultSet extends CSAncillaryDataSet<DSBioObject>
 	 */
 	@SuppressWarnings( { "unchecked", "rawtypes" })
 	public CSAlignmentResultSet(String resultFile,
-			ArrayList<Vector<BlastObj>> blastDataSet, String summary,
-			int totalHitCount, String fastaFile,
+			List<Vector<BlastObj>> blastDataSet, String fastaFile,
 			DSSequenceSet<? extends DSSequence> blastedParentdataSet,
 			DSSequenceSet<? extends DSSequence> parentDataSet) {
 		super((DSDataSet) parentDataSet, "BLAST Result");
 		this.resultFile = new File(resultFile);
 		this.blastDataSet = blastDataSet;
-		this.summary = summary;
+
+		int totalHitCount = 0;
+		for (Vector<BlastObj> v : blastDataSet) {
+			totalHitCount += v.size();
+		}
+		
+		this.summary = "Total hits for all sequences: " + totalHitCount + ".";
 		this.totalHitCount = totalHitCount;
 		this.fastaFile = new File(fastaFile);
 		this.blastedParentDataSet = blastedParentdataSet;
@@ -84,7 +89,8 @@ public class CSAlignmentResultSet extends CSAncillaryDataSet<DSBioObject>
 		return resultFile.getName();
 	}
 
-	public ArrayList<Vector<BlastObj>> getBlastDataSet() {
+	@Override
+	public List<Vector<BlastObj>> getBlastDataSet() {
 		return blastDataSet;
 	}
 
@@ -105,8 +111,8 @@ public class CSAlignmentResultSet extends CSAncillaryDataSet<DSBioObject>
 	@SuppressWarnings("unchecked")
 	public boolean equals(Object ads) {
 		if (ads instanceof DSAncillaryDataSet) {
-			return getDataSetName() == ((DSAncillaryDataSet<DSBioObject>) ads)
-					.getDataSetName();
+			return getDataSetName().equals(
+					((DSAncillaryDataSet<DSBioObject>) ads).getDataSetName());
 		} else {
 			return false;
 		}
