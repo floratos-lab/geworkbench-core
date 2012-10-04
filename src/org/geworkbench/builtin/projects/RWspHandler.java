@@ -176,7 +176,7 @@ public class RWspHandler {
 	public void listWsp(boolean listOnly) {
 		if (userInfo == null || !listOnly) getUserInfo();
 		if (userInfo == null) return;
-		if (userInfo == "") {
+		if (userInfo.trim().length()==0) {
 			JOptionPane
 					.showMessageDialog(
 							null,
@@ -285,7 +285,7 @@ public class RWspHandler {
 		try{
 			getUserInfo();
 			if (userInfo == null) return;
-			if (userInfo == "") {
+			if (userInfo.trim().length()==0) {
 				JOptionPane
 						.showMessageDialog(
 								null,
@@ -317,7 +317,7 @@ public class RWspHandler {
 		try{
 			getUserInfo();
 			if (userInfo == null) return;
-			if (userInfo == "") {
+			if (userInfo.trim().length()==0) {
 				JOptionPane
 						.showMessageDialog(
 								null,
@@ -719,7 +719,7 @@ public class RWspHandler {
 		try{
 			getUserInfo();
 			if (userInfo == null) return;
-			if (userInfo == "") {
+			if (userInfo.trim().length()==0) {
 				JOptionPane
 						.showMessageDialog(
 								null,
@@ -750,7 +750,7 @@ public class RWspHandler {
 		try{
 			getUserInfo();
 			if (userInfo == null) return;
-			if (userInfo == "") {
+			if (userInfo.trim().length()==0) {
 				JOptionPane
 						.showMessageDialog(
 								null,
@@ -781,7 +781,7 @@ public class RWspHandler {
 		try{
 			getUserInfo();
 			if (userInfo == null) return;
-			if (userInfo == "") {
+			if (userInfo.trim().length()==0) {
 				JOptionPane
 						.showMessageDialog(
 								null,
@@ -812,7 +812,7 @@ public class RWspHandler {
 		try{
 			getUserInfo();
 			if (userInfo == null) return;
-			if (userInfo == "") {
+			if (userInfo.trim().length()==0) {
 				JOptionPane
 						.showMessageDialog(
 								null,
@@ -844,7 +844,7 @@ public class RWspHandler {
 		try{
 			getUserInfo();
 			if (userInfo == null) return;
-			if (userInfo == "") {
+			if (userInfo.trim().length()==0) {
 				JOptionPane
 						.showMessageDialog(
 								null,
@@ -967,7 +967,7 @@ public class RWspHandler {
 	private void uploadWsp(String wsFilename, String desc, boolean terminating) {
 		getUserInfo();
 		if (userInfo == null) return;
-		if (userInfo == "") {
+		if (userInfo.trim().length()==0) {
 			JOptionPane
 					.showMessageDialog(
 							null,
@@ -989,7 +989,7 @@ public class RWspHandler {
 		else{
 			getUserInfo();
 			if (userInfo == null) return;
-			if (userInfo == "") {
+			if (userInfo.trim().length()==0) {
 				JOptionPane
 						.showMessageDialog(
 								null,
@@ -1016,7 +1016,7 @@ public class RWspHandler {
 
 		getUserInfo();
 		if (userInfo == null) return;
-		if (userInfo == "") {
+		if (userInfo.trim().length()==0) {
 			JOptionPane
 					.showMessageDialog(
 							null,
