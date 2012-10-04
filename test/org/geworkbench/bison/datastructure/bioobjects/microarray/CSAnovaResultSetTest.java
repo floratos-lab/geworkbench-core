@@ -271,7 +271,7 @@ public class CSAnovaResultSetTest extends TestCase {
 		anovaResultSet.setSignificance(view.getMarkerPanel().get(0), 0.01);
 		// make sure it returns back significance value as double
 		assertEquals(double.class, anovaResultSet.getSignificance(view
-				.getMarkerPanel().get(0)));
+				.getMarkerPanel().get(0)).getClass());
 		// make sure it returns back significance value as we specified (0.01).
 		assertEquals(0.01, anovaResultSet.getSignificance(view.getMarkerPanel()
 				.get(0)));
