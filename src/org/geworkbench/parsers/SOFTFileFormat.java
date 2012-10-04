@@ -133,7 +133,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 			return false;
 		} finally {
 			try {
-				br.close();
+				if(br!=null)br.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -156,39 +156,45 @@ public class SOFTFileFormat extends DataSetFileFormat {
 			readIn = new BufferedReader(new FileReader(file));
 			try {
 				lineCh = readIn.readLine();
-				if(lineCh.subSequence(0, 7).equals("!Series")){
+				if(lineCh!=null && lineCh.subSequence(0, 7).equals("!Series")){
 					GeoSeriesMatrixParser parser = new GeoSeriesMatrixParser();
 					maSet1 = parser.getMArraySet(file);
 					maSet1.setFile(file);
+					readIn.close();
 					return maSet1;
 				}
-				if(lineCh.subSequence(0, 7).equals("^SAMPLE")){
+				if(lineCh!=null && lineCh.subSequence(0, 7).equals("^SAMPLE")){
 					SampleFileParser parser = new SampleFileParser();
 					maSet1 = parser.getMArraySet(file);
 					maSet1.setFile(file);
+					readIn.close();
 					return maSet1;
 				}
-				if(lineCh.subSequence(0, 9).equals("^DATABASE")){
+				if(lineCh!=null && lineCh.subSequence(0, 9).equals("^DATABASE")){
 					
 					lineCh = readIn.readLine();
 					lineCh = readIn.readLine();
 					lineCh = readIn.readLine();
 					lineCh = readIn.readLine();
 					lineCh = readIn.readLine();
-					if(lineCh.subSequence(0, 7).equals("^SERIES")){
+					if(lineCh!=null && lineCh.subSequence(0, 7).equals("^SERIES")){
 						SOFTSeriesParser parser = new SOFTSeriesParser();
 						readIn.close();
 						maSet1 = parser.parseSOFTSeriesFile(file);
 						maSet1.setFile(file);
 						return maSet1;
 					}
-					if(!lineCh.subSequence(0, 7).equals("^SERIES")){
+					if(lineCh!=null && !lineCh.subSequence(0, 7).equals("^SERIES")){
 						maSet1 = parseFile(file);
 						maSet1.setFile(file);
+						readIn.close();
 						return  maSet1;
 					}
 				}
-				if(!lineCh.subSequence(0, 7).equals("!Series") && !lineCh.subSequence(0, 7).equals("^SAMPLE") && !lineCh.subSequence(0, 9).equals("^DATABASE")){
+				if (lineCh != null
+						&& !lineCh.subSequence(0, 7).equals("!Series")
+						&& !lineCh.subSequence(0, 7).equals("^SAMPLE")
+						&& !lineCh.subSequence(0, 9).equals("^DATABASE")) {
 					SwingUtilities.invokeLater(new Runnable() {
 						public void run() {	
 						}
@@ -201,6 +207,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 							+ "4. GEO Sample Files",
 							"Error",
 							JOptionPane.INFORMATION_MESSAGE);
+					readIn.close();
 					return null;	
 				}
 			} catch (IOException e) {
@@ -241,16 +248,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 					int m = 0;
 					String header = in.readLine();
 					while (header != null) {
-						/*
-					 	* Adding comments to Experiment Information tab.
-					 	*We will ignore the line which start with '!dataset_table_begin' and '!dataset_table_end'
-					 	*/
-						if (header.startsWith(commentSign1) || header.startsWith(commentSign2)) {
-							if(!header.equalsIgnoreCase("!dataset_table_begin") && !header.equalsIgnoreCase("!dataset_table_end")) {
-								// to be consistent, this detailed information should be used else where instead of as "description" field
-								//maSet.setDescription(header.substring(1));
-							}
-						}	
+
 						String[] tokens = null;
 						if(!header.startsWith(commentSign1) && !header.startsWith(commentSign2) && !header.startsWith(commentSign3)){
 							if(header.subSequence(0, 6).equals("ID_REF")){
@@ -440,12 +438,13 @@ public class SOFTFileFormat extends DataSetFileFormat {
 			}
 			
 		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 		} catch (IndexOutOfBoundsException e) {
+			e.printStackTrace();
 		} finally {
 			try {
-				read.close();
+				if(read!=null)read.close();
 			} catch (IOException e) {
-				e.printStackTrace();
 			}
 		}
 			
