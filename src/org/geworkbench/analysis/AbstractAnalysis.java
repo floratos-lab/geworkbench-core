@@ -234,22 +234,19 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 						ParameterKey key = new ParameterKey(getIndex(), setName);
 						log.debug("Try loading saved parameter file " + files);
 						log.debug("We are looking for " + key.toString());
-						log.debug("This one looks like it's for "
-								+ parameters.get(ParameterKey.class
-										.getSimpleName()));
 						/*
 						 * Since one package can contain multiple components
 						 * which have different panels, we need to make sure we
 						 * got the right one.
 						 */
-						if (parameters != null)
-							if (parameters.get(
-									ParameterKey.class.getSimpleName()).equals(
-									key.toString())) {
-								log.debug("put it in to parameterHash");
-								parameterHash.put(key, parameters);
-								lastParameterSetName = setName;
-							}
+						if (parameters != null
+								&& parameters.get(
+										ParameterKey.class.getSimpleName())
+										.equals(key.toString())) {
+							log.debug("put it in to parameterHash");
+							parameterHash.put(key, parameters);
+							lastParameterSetName = setName;
+						}
 					}
 				}
 			}
