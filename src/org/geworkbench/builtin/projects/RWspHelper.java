@@ -721,7 +721,7 @@ public class RWspHelper {
 										//synchronize means upload local wsp, not download remote wsp
 										new RWspHandler().getUserInfo();
 										if (RWspHandler.userInfo == null) return;
-										if (RWspHandler.userInfo == "") {
+										if (RWspHandler.userInfo.trim().length()==0) {
 											JOptionPane.showMessageDialog(null,
 															"Please make sure you entered valid username and password",
 															"Invalid User Account", JOptionPane.ERROR_MESSAGE);
