@@ -137,7 +137,7 @@ public class CSAnovaResultSetTest extends TestCase {
 	 */
 	public final void testSaveToFile() {
 		DSAnovaResultSet<DSGeneMarker> anovaResultSet = new CSAnovaResultSet<DSGeneMarker>(
-				view, "Anova Analysis Result Set", groupNames, markerNames,
+				view, "Anova Analysis Result Set", groupNames, 0.05, markerNames,
 				result2DArray);
 		anovaResultSet.setSignificance(view.getMarkerPanel().get(0), 0.01);
 		anovaResultSet.setSignificance(view.getMarkerPanel().get(1), 0.02);
@@ -179,7 +179,7 @@ public class CSAnovaResultSetTest extends TestCase {
 	 */
 	public final void testGetSignificantMarkers() {
 		DSAnovaResultSet<DSGeneMarker> anovaResultSet = new CSAnovaResultSet<DSGeneMarker>(
-				view, "Anova Analysis Result Set", groupNames, markerNames,
+				view, "Anova Analysis Result Set", groupNames, 0.05, markerNames,
 				result2DArray);
 		// we'll put three markers, two significant, one not.
 		anovaResultSet.setSignificance(view.getMarkerPanel().get(0), 0.01);
@@ -205,7 +205,7 @@ public class CSAnovaResultSetTest extends TestCase {
 	public final void testGetCriticalPValue() {
 		// test constructor for local
 		DSAnovaResultSet<DSGeneMarker> anovaResultSet = new CSAnovaResultSet<DSGeneMarker>(
-				view, "Anova Analysis Result Set", groupNames, markerNames,
+				view, "Anova Analysis Result Set", groupNames, 0.05, markerNames,
 				result2DArray);
 		assertEquals(0.05, anovaResultSet.getCriticalPValue());
 		// FIXME: 0.05 is hard coded in CSAnovaResultSet.java, we should have a
@@ -218,7 +218,7 @@ public class CSAnovaResultSetTest extends TestCase {
 	public final void testGetLabels() {
 		// we'll put three group names and then get it out
 		DSAnovaResultSet<DSGeneMarker> anovaResultSet = new CSAnovaResultSet<DSGeneMarker>(
-				view, "Anova Analysis Result Set", groupNames, markerNames,
+				view, "Anova Analysis Result Set", groupNames, 0.05, markerNames,
 				result2DArray);
 		// in this version of implementation, the index is not important, I put
 		// 0 here.
@@ -252,7 +252,7 @@ public class CSAnovaResultSetTest extends TestCase {
 	public final void testCSAnovaResultSetDSMicroarraySetViewStringStringArrayStringArrayDoubleArrayArray() {
 		// test constructor for local
 		DSAnovaResultSet<DSGeneMarker> anovaResultSet = new CSAnovaResultSet<DSGeneMarker>(
-				view, "Anova Analysis Result Set", groupNames, markerNames,
+				view, "Anova Analysis Result Set", groupNames, 0.05, markerNames,
 				result2DArray);
 		assertSame(null, anovaResultSet.getFile());
 		assertEquals("Anova Analysis Result Set", anovaResultSet.getLabel());
@@ -266,7 +266,7 @@ public class CSAnovaResultSetTest extends TestCase {
 	 */
 	public final void testGetSignificanceDSGeneMarker() {
 		DSAnovaResultSet<DSGeneMarker> anovaResultSet = new CSAnovaResultSet<DSGeneMarker>(
-				view, "Anova Analysis Result Set", groupNames, markerNames,
+				view, "Anova Analysis Result Set", groupNames, 0.05, markerNames,
 				result2DArray);
 		anovaResultSet.setSignificance(view.getMarkerPanel().get(0), 0.01);
 		// make sure it returns back significance value as double
@@ -287,7 +287,7 @@ public class CSAnovaResultSetTest extends TestCase {
 	public final void testSetSignificanceDSGeneMarkerDouble() {
 		// test constructor for local
 		DSAnovaResultSet<DSGeneMarker> anovaResultSet = new CSAnovaResultSet<DSGeneMarker>(
-				view, "Anova Analysis Result Set", groupNames, markerNames,
+				view, "Anova Analysis Result Set", groupNames, 0.05, markerNames,
 				result2DArray);
 		anovaResultSet.setSignificance(view.getMarkerPanel().get(0), 0.01);
 		assertEquals(0.01, anovaResultSet.getSignificance(view.getMarkerPanel()
@@ -304,7 +304,7 @@ public class CSAnovaResultSetTest extends TestCase {
 		// we'll put in a result2DArray and get it out.
 		// put it in
 		DSAnovaResultSet<DSGeneMarker> anovaResultSet = new CSAnovaResultSet<DSGeneMarker>(
-				view, "Anova Analysis Result Set", groupNames, markerNames,
+				view, "Anova Analysis Result Set", groupNames, 0.05, markerNames,
 				result2DArray);
 		// get it out
 		assertSame(result2DArray, anovaResultSet.getResult2DArray());
@@ -317,7 +317,7 @@ public class CSAnovaResultSetTest extends TestCase {
 		// we'll put in a result2DArray and get the pvalue out.
 		// put result2DArray in
 		DSAnovaResultSet<DSGeneMarker> anovaResultSet = new CSAnovaResultSet<DSGeneMarker>(
-				view, "Anova Analysis Result Set", groupNames, markerNames,
+				view, "Anova Analysis Result Set", groupNames, 0.05, markerNames,
 				result2DArray);
 		// get p-value out
 		assertEquals(result2DArray[0][0], anovaResultSet.getPValue(view
@@ -334,7 +334,7 @@ public class CSAnovaResultSetTest extends TestCase {
 		// we'll put in a result2DArray and get the pvalue out.
 		// put result2DArray in
 		DSAnovaResultSet<DSGeneMarker> anovaResultSet = new CSAnovaResultSet<DSGeneMarker>(
-				view, "Anova Analysis Result Set", groupNames, markerNames,
+				view, "Anova Analysis Result Set", groupNames, 0.05, markerNames,
 				result2DArray);
 		// get p-value out
 		assertEquals(result2DArray[1][0], anovaResultSet.getAdjPValue(view
@@ -351,7 +351,7 @@ public class CSAnovaResultSetTest extends TestCase {
 		// we'll put in a result2DArray and get the fvalue out.
 		// put result2DArray in
 		DSAnovaResultSet<DSGeneMarker> anovaResultSet = new CSAnovaResultSet<DSGeneMarker>(
-				view, "Anova Analysis Result Set", groupNames, markerNames,
+				view, "Anova Analysis Result Set", groupNames, 0.05, markerNames,
 				result2DArray);
 		// get f-value out
 		assertEquals(result2DArray[2][0], anovaResultSet.getFStatistic(view
@@ -368,7 +368,7 @@ public class CSAnovaResultSetTest extends TestCase {
 		// we'll put in a result2DArray and get the mean out.
 		// put result2DArray in
 		DSAnovaResultSet<DSGeneMarker> anovaResultSet = new CSAnovaResultSet<DSGeneMarker>(
-				view, "Anova Analysis Result Set", groupNames, markerNames,
+				view, "Anova Analysis Result Set", groupNames, 0.05, markerNames,
 				result2DArray);
 		// get mean-value out
 		assertEquals(result2DArray[3][0], anovaResultSet.getMean(view
@@ -400,7 +400,7 @@ public class CSAnovaResultSetTest extends TestCase {
 	 */
 	public final void testSignificantMarkerNamesGetter() {
 		DSAnovaResultSet<DSGeneMarker> anovaResultSet = new CSAnovaResultSet<DSGeneMarker>(
-				view, "Anova Analysis Result Set", groupNames, markerNames,
+				view, "Anova Analysis Result Set", groupNames, 0.05,  markerNames,
 				result2DArray);
 		// make sure it returns back correct number of marker names
 		assertEquals(numMarkers,

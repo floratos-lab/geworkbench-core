@@ -48,13 +48,14 @@ public class CSAnovaResultSet<T extends DSGeneMarker> extends
 
 	// constructor for local
 	public CSAnovaResultSet(DSMicroarraySetView<? extends DSGeneMarker, ? extends DSMicroarray> microarraySetView,
-			String label, String[] groupNames, String[] significantMarkerNames,
+			String label, String[] groupNames, double alpha, String[] significantMarkerNames,
 			double[][] result2DArray) {
 		super(microarraySetView.getMicroarraySet(), label, groupNames,
-				new String[0], 0.05);
+				new String[0], alpha);
 		this.result2DArray = result2DArray;
 		this.microarraySetView = microarraySetView;
 		this.groupNames = groupNames;
+		this.alpha = alpha;
 		this.significantMarkerNames = significantMarkerNames;
 		panel = new CSPanel<T>(label);
 		// list.addAll(Arrays.asList(significantMarkerNames));
@@ -97,16 +98,16 @@ public class CSAnovaResultSet<T extends DSGeneMarker> extends
 	@Override
 	public void setSignificance(T marker, double value) {
 		super.setSignificance(marker, value);
-		ArrayList<String> list = new ArrayList<String>();
-		list.addAll(Arrays.asList(significantMarkerNames));
-		int index = list.indexOf(marker.getLabel());
-		result2DArray[0][index] = value;
-		// result2DArray[0][microarraySetView.getMicroarraySet().getMarkers().indexOf(marker)]=value;
-		// significance.put(marker, value);
-		if (value < alpha) {
-			panel.add((T) marker);
-		}
-		// shouldn't we check value>alpha and remove marker?
+		
+		//remove the following unnecessary code
+		//ArrayList<String> list = new ArrayList<String>();
+		//list.addAll(Arrays.asList(significantMarkerNames));
+		//int index = list.indexOf(marker.getLabel());
+		//result2DArray[0][index] = value;
+		 
+		panel.add((T) marker);
+		 
+		 
 	}
 
 	public void saveToFile(String filename) {
