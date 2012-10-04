@@ -78,9 +78,9 @@ public class SOFTSeriesParser {
 			return null;
 		} finally {
 			try {
-				br.close();
+				if (br != null)
+					br.close();
 			} catch (IOException e) {
-				e.printStackTrace();
 			}
 		}
 		if (p == null) {
@@ -165,22 +165,6 @@ public class SOFTSeriesParser {
 			boolean insideSampleTable = false;
 
 			while (line != null) {
-				/*
-				 * Adding comments to Experiment Information tab.We will ignore
-				 * the line which start with '!platform_table_end',
-				 * '!platform_table_begin', '!sample_table_begin'and
-				 * '!sample_table_end'
-				 */
-				if (line.startsWith(commentSign1)
-						|| line.startsWith(commentSign2)) {
-					if (!line.equalsIgnoreCase("!platform_table_end")
-							&& !line.equalsIgnoreCase("!platform_table_begin")
-							&& !line.equalsIgnoreCase("!sample_table_begin")
-							&& !line.equalsIgnoreCase("!sample_table_end")) {
-						// to be consistent, this detailed information should be used else where instead of as "description" field
-						// maSet.setDescription(line.substring(1));
-					}
-				}
 
 				final String sampleTag = "^SAMPLE = ";
 				if (line.startsWith(sampleTag)) {
@@ -327,7 +311,7 @@ public class SOFTSeriesParser {
 			return null;
 		} finally {
 			try {
-				in.close();
+				if(in!=null) in.close();
 			} catch (IOException e) {
 			}
 		}
