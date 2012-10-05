@@ -1,10 +1,13 @@
 package org.geworkbench.events;
 
-import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.builtin.projects.remoteresources.carraydata.CaArray2Experiment;
 import org.geworkbench.engine.config.events.Event;
 
+/**
+ * 
+ * @author zji
+ * @version $Id$
+ */
 public class CaArrayEvent extends Event {
 	public static final String EXPERIMENT = "EXP";
 	public static final String BIOASSAY = "BIOASSAY";
@@ -12,11 +15,8 @@ public class CaArrayEvent extends Event {
 	private boolean populated = false;
 	private boolean succeed = true;
 	private String infoType;
-	private DSDataSet<? extends DSBioObject> dataSet = null;
-	private String url;
-	private int port;
-	private String username;
-	private String password;
+	final private String url;
+	final private int port;
 	private String errorMessage;
 	
 	private CaArray2Experiment[] experiments;
@@ -48,14 +48,6 @@ public class CaArrayEvent extends Event {
 		this.infoType = infoType;
 	}
 
-	public String getUsername() {
-		return username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
 	public String getUrl() {
 		return url;
 	}
@@ -66,10 +58,6 @@ public class CaArrayEvent extends Event {
 
 	public void setSucceed(boolean succeed) {
 		this.succeed = succeed;
-	}
-
-	public DSDataSet<? extends DSBioObject> getDataSet() {
-		return dataSet;
 	}
 
 	public CaArray2Experiment[] getExperiments() {
