@@ -468,14 +468,6 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
         }
     }
 
-    public boolean removeClass(String clazz) {
-        boolean result = (classes.remove(clazz) != null);
-        if (defaultClass == clazz) {
-            defaultClass = null;
-        }
-        return result;
-    }
-
     public int getNumberOfClasses() {
         return classes.size();
     }
@@ -610,12 +602,14 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
         // If this is the default class, then also include unlabeled items
         if (clazz.equals(defaultClass)) {
             DSItemList<T> allItems = itemListReference.get();
-            for (int i = 0; i < allItems.size(); i++) {
-                T item = allItems.get(i);
-                if (getLabelsForItem(item).length == 0) {
-                    panel.add(item);
-                }
-            }
+			if (allItems != null) {
+				for (int i = 0; i < allItems.size(); i++) {
+					T item = allItems.get(i);
+					if (getLabelsForItem(item).length == 0) {
+						panel.add(item);
+					}
+				}
+			}
         }
         return panel;
     }
@@ -637,11 +631,13 @@ public class CSAnnotationContext<T extends DSNamed> implements DSAnnotationConte
         // If this is the default class, then also include unlabeled items, but only if no activated labels of this type
         if (clazz.equals(defaultClass) && panel.size() == 0) {
             DSItemList<T> allItems = itemListReference.get();
-            for (int i = 0; i < allItems.size(); i++) {
-                T item = allItems.get(i);
-                if (getLabelsForItem(item).length == 0) {
-                    panel.add(item);
-                }
+			if (allItems != null) {
+				for (int i = 0; i < allItems.size(); i++) {
+					T item = allItems.get(i);
+					if (getLabelsForItem(item).length == 0) {
+						panel.add(item);
+					}
+				}
             }
         }
         return panel;

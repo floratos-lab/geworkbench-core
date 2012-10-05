@@ -211,21 +211,6 @@ public interface DSAnnotationContext<T extends DSNamed> extends Cloneable {
     public boolean addClass(String clazz);
 
     /**
-     * Removes a class from this context. All items that were under this class
-     * shift to the next highest priority class that can be applied to them. If there is no next
-     * highest priority class, then the item will be assigned to the default class.
-     * <p>
-     * If the class to be removed is the current default class, then the lowest priority
-     * class will become the new default class.
-     * <p>
-     * If the class to be removed is the only class, then there will no longer be default
-     * class.
-     * @param clazz the class to remove.
-     * @return <tt>true</tt> if the class existed before removal, false otherwise.
-     */
-    public boolean removeClass(String clazz);
-
-    /**
      * Retrieves the number of classes in this context.
      */
     public int getNumberOfClasses();
