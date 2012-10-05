@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import org.apache.commons.lang.StringUtils;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
@@ -151,7 +152,7 @@ public abstract class AbstractSaveableParameterPanel extends ParameterPanel {
 	 */
 	public void notifyAnalysisPanel() {
 		if ((callbackThread != null) && (stopNotifyTemporaryFlag == false))
-			callbackThread.run();
+			SwingUtilities.invokeLater(callbackThread);
 	}
 
 	public void stopNotifyAnalysisPanelTemporary(boolean b) {
