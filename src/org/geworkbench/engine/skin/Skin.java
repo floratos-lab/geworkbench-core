@@ -207,6 +207,7 @@ public class Skin extends GUIFramework {
                 guiHeight = Integer.parseInt(in.readLine());
                 int guiX = Integer.parseInt(in.readLine());
                 int guiY = Integer.parseInt(in.readLine());
+                in.close();
                 setLocation(guiX, guiY);
                 foundSize = true;
             } catch (Exception ex) {
