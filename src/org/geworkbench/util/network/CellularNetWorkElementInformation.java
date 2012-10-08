@@ -26,6 +26,7 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.goterms.GeneOntolo
  * It is used to save all celllualr Network information related to a specific
  * marker.
  * 
+ * @version $Id$
  */
 public class CellularNetWorkElementInformation implements java.io.Serializable {
 
@@ -425,5 +426,13 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 		} else {
 			return false;
 		}
+	}
+	
+	@Override
+	public int hashCode() {
+		int hash = 17;
+		hash = hash * 31 + dSGeneMarker.getGeneName().hashCode();
+		hash = hash * 31 + dSGeneMarker.getLabel().hashCode();
+		return hash;
 	}
 }

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 /**
  * The deatil of one interaction.
+ * @version $Id$
  */
 public class InteractionDetail implements Serializable {
 
@@ -110,7 +111,7 @@ public class InteractionDetail implements Serializable {
 		return this.evidenceId;
 	}
 	
- 
+	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof InteractionDetail) {
 			InteractionDetail mInfo = (InteractionDetail) obj;
@@ -118,7 +119,12 @@ public class InteractionDetail implements Serializable {
 					.equals(mInfo.dSGeneId.toString());
 		}
 		return false;
-	}	
+	}
+	
+	@Override
+	public int hashCode() {
+		return dSGeneId.hashCode();
+	}
 	
 	private class Confidence implements Serializable
 	{
