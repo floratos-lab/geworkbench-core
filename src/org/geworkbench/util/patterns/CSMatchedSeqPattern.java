@@ -47,7 +47,6 @@ public final class CSMatchedSeqPattern extends
 	private byte[] locus = null;
 	private ArrayList<PatternOfflet> offset = new ArrayList<PatternOfflet>();
 	private String ascii = null;
-	private int rand_hash;
 
 	public void setLocus(byte[] locus) {
 		this.locus = locus;
@@ -59,7 +58,6 @@ public final class CSMatchedSeqPattern extends
 
 	public CSMatchedSeqPattern(final DSSequenceSet<DSSequence> seqDB) {
 		this.seqDB = seqDB;
-		rand_hash = new java.util.Random().nextInt();
 	}
 
 	public String toString() {
@@ -97,7 +95,7 @@ public final class CSMatchedSeqPattern extends
 
 	public CSMatchedSeqPattern(String s) {
 		Matcher m0 = CSMatchedSeqPattern.headerPattern.matcher(s);
-		rand_hash = new java.util.Random().nextInt();
+
 		if (m0.find()) {
 			Matcher m1 = CSMatchedSeqPattern.locusPattern.matcher(s);
 			String pat = m0.group(1);
@@ -243,10 +241,6 @@ public final class CSMatchedSeqPattern extends
 			}
 		}
 		return matches;
-	}
-
-	public int hashCode() {
-		return rand_hash;
 	}
 
     private DSSequence getObject(int i)  {
