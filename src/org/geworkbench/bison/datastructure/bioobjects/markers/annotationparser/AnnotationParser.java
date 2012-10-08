@@ -146,7 +146,7 @@ public class AnnotationParser implements Serializable {
 				}
 				else			  
 					throw new InputFileFormatException(
-							"You may select incorrect parser.\n The right parser for this annotation file is "
+							"You may have selected an incorrect parser.\n The right parser for this annotation file is "
 							+ annotationFileToType.get(chipType) + ".");
 					
 			}
