@@ -177,9 +177,9 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet<DSMicroarray> {
 		AdjacencyMatrix matrix = new AdjacencyMatrix(fileName,
 				interactionTypeSifMap);
 		 
+		BufferedReader br = null;
 		try {
-
-			BufferedReader br = new BufferedReader(new FileReader(fileName));
+			br = new BufferedReader(new FileReader(fileName));
 
 			String line = null;
 
@@ -226,6 +226,13 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet<DSMicroarray> {
 			throw new InputFileFormatException(ex.getMessage());
 		} catch (Exception e) {
 			throw new InputFileFormatException(e.getMessage());
+		} finally {
+			if(br!=null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+				}
+			}
 		}
 
 		return matrix;
