@@ -110,15 +110,6 @@ public class CSGeneMarker implements DSGeneMarker, Serializable {
 		markerId = id;
 	}
 
-	protected void writeObject(ObjectOutputStream oos) throws IOException {
-		oos.defaultWriteObject();
-	}
-
-	protected void readObject(ObjectInputStream ois)
-			throws ClassNotFoundException, IOException {
-		ois.defaultReadObject();
-	}
-
 	public boolean equals(Object marker) {
 		if (marker instanceof CSGeneMarker) {
 			CSGeneMarker mInfo = (CSGeneMarker) marker;
@@ -183,6 +174,7 @@ public class CSGeneMarker implements DSGeneMarker, Serializable {
 		return geneName;
 	}
 
+	@Override
 	public DSGeneMarker deepCopy() {
 		CSGeneMarker copy = null;
 		try {
@@ -193,12 +185,14 @@ public class CSGeneMarker implements DSGeneMarker, Serializable {
 			ie.printStackTrace();
 		}
 
-		copy.setLabel(getLabel());
-		copy.setSerial(markerId);
-		copy.setDescription(description);
-		copy.abrev = abrev;
-		copy.geneId = geneId;
-		copy.unigene = unigene;
+		if (copy != null) {
+			copy.setLabel(getLabel());
+			copy.setSerial(markerId);
+			copy.setDescription(description);
+			copy.abrev = abrev;
+			copy.geneId = geneId;
+			copy.unigene = unigene;
+		}
 		return copy;
 	}
 

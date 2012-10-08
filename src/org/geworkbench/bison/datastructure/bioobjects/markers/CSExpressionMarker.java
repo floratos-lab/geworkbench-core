@@ -2,7 +2,6 @@ package org.geworkbench.bison.datastructure.bioobjects.markers;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.Serializable;
 
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
@@ -105,12 +104,6 @@ public class CSExpressionMarker extends CSGeneMarker implements
 		// contains on markers that
 		// represent equivalent genes. May need a separate class for this.
 		return super.equals(o);
-	}
-
-	protected void readObject(ObjectInputStream ois)
-			throws ClassNotFoundException, IOException {
-		super.readObject(ois);
-		range = new org.geworkbench.bison.util.Range();
 	}
 
 	public DSGeneMarker deepCopy() {
