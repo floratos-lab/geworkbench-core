@@ -27,25 +27,27 @@ import javax.crypto.spec.PBEParameterSpec;
 public class RemoteResource {
     private static final String PBE_WITH_MD5_AND_DES = "PBEWithMD5AndDES";
 	private boolean isDirty = true;
-    private String username;
-    private String password;
-    private String connectProtocol;
-    private String shortname;
-    private String uri;
-    private int portnumber = 80;
+    final private String username;
+    private String password; // cannot be declared final due to the exceptional case
+    final private String connectProtocol;
+    final private String shortname;
+    final private String uri;
+    private int portnumber = 80; // cannot be declared final due to the exceptional case
     private boolean editable = true;
 
-    public RemoteResource(String url, String protocal, String user,
+    public RemoteResource(String shortname, String url, String protocal, String user,
                           String passwd) {
-        uri = url;
+    	uri = url;
         connectProtocol = protocal;
         username = user;
         try {
 			password = encrypt(passwd);
 		} catch (GeneralSecurityException e) {
 			e.printStackTrace();
+			if(password==null)
+			password = "";
 		}
-        this.shortname = "Default";
+    	this.shortname = shortname.trim();
     }
 
     public RemoteResource(String shortname, String url, String port,
@@ -134,22 +136,6 @@ public class RemoteResource {
         this.editable = new Boolean(editableStr.trim()).booleanValue();
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setConnectProtocal(String connectProtocol) {
-        this.connectProtocol = connectProtocol;
-    }
-
-    public void setShortname(String shortname) {
-        this.shortname = shortname;
-    }
-
-    public void setUri(String uri) {
-        this.uri = uri;
-    }
-
     public boolean isDirty() {
         return isDirty;
     }
@@ -226,33 +212,38 @@ public class RemoteResource {
     }
 
     /**
-     * update
-     *
-     * @param rResource RemoteResource
-     */
-    public void update(RemoteResource rResource) {
-        shortname = rResource.shortname;
-        uri = rResource.uri;
-        username = rResource.username;
-        password = rResource.password;
-        connectProtocol = rResource.connectProtocol;
-        editable = rResource.editable;
-    }
-
-    /**
      * Use shortname as the Key for every object.
      *
      * @param obj Object
      * @return boolean
      */
-    public boolean equals(Object obj) {
-        if (obj instanceof RemoteResource) {
-            return shortname.equals(((RemoteResource) obj).shortname)&& portnumber==(((RemoteResource) obj).portnumber)
-					&& uri.equals(((RemoteResource) obj).uri) && username.equals(((RemoteResource) obj).username) && password.equals(((RemoteResource) obj).password) && connectProtocol.equals(((RemoteResource) obj).connectProtocol);
-        } else {
-            return false;
-        }
-    }
+    @Override
+	public boolean equals(Object obj) {
+		if (obj instanceof RemoteResource) {
+			return shortname.equals(((RemoteResource) obj).shortname)
+					&& portnumber == (((RemoteResource) obj).portnumber)
+					&& uri.equals(((RemoteResource) obj).uri)
+					&& username.equals(((RemoteResource) obj).username)
+					&& password.equals(((RemoteResource) obj).password)
+					&& connectProtocol
+							.equals(((RemoteResource) obj).connectProtocol);
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = 17;
+		hash = 31 * hash + shortname.hashCode();
+		hash = 31 * hash + portnumber;
+		hash = 31 * hash + uri.hashCode();
+		hash = 31 * hash + username.hashCode();
+		hash = 31 * hash + password.hashCode();
+		hash = 31 * hash + connectProtocol.hashCode();
+
+		return hash;
+	}
 
     public int compareTo(Object o) throws ClassCastException {
     	 if(o instanceof RemoteResource){

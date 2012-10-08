@@ -43,7 +43,7 @@ public class RemoteResourceDialog extends JDialog {
     public static final int ADD = 0;
     public static final int DELETE = 1;
     public static final int EDIT = 2;
-    public static int currentOption = 0;
+
     private boolean isSourceDirty = true;
     private static String currentResourceName;
     private String currentURL;
@@ -51,7 +51,7 @@ public class RemoteResourceDialog extends JDialog {
     private String currentUser;
     private String currentPassword;
     private static String previousResourceName;
-    private static boolean dirty = false;
+
     public RemoteResourceDialog() {
         try {
             jbInit();
@@ -69,7 +69,7 @@ public class RemoteResourceDialog extends JDialog {
                                  int option,
                                  String initialName) {
         super(frame, title, true);
-        currentOption = option;
+
         currentResourceName = initialName;
 
         try {
@@ -208,14 +208,6 @@ public class RemoteResourceDialog extends JDialog {
     JPanel jPanel8 = new JPanel();
     JPanel jPanel9 = new JPanel();
     BoxLayout boxLayout22;
-    /**
-     * setOption
-     *
-     * @param option int
-     */
-    public void setOption(int option) {
-        currentOption = option;
-    }
 
     public void setCurrentResourceName(String name) {
         RemoteResource rr = remoteResourceManager.getSelectedResouceByName(name);
@@ -234,10 +226,6 @@ public class RemoteResourceDialog extends JDialog {
 
     public void setCurrentPassword(String currentPassword) {
         this.currentPassword = currentPassword;
-    }
-
-    public void setDirty(boolean dirty) {
-    	RemoteResourceDialog.dirty = dirty;
     }
 
     public void setUser(String user) {
@@ -274,6 +262,7 @@ public class RemoteResourceDialog extends JDialog {
         }
        
        RemoteResource rr = new RemoteResource(
+    		   shortname,
     		   url,
     		   jComboBox1.getSelectedItem().toString().trim(),
     		   jTextField1.getText().trim(),
@@ -293,7 +282,6 @@ public class RemoteResourceDialog extends JDialog {
             rr.setPortnumber(80);
         }
 
-        rr.setShortname(shortname);
         currentResourceName = shortname;
         rr.setDirty(true);
         return rr;
@@ -355,7 +343,7 @@ public class RemoteResourceDialog extends JDialog {
             }
             remoteResourceManager.addRemoteResource(rr);
             remoteResourceManager.saveToFile();
-            dirty = true;
+
             dispose();
         }
 
@@ -407,10 +395,6 @@ public class RemoteResourceDialog extends JDialog {
 
     public String getCurrentUser() {
         return currentUser;
-    }
-
-    public boolean isDirty() {
-        return dirty;
     }
 
     public void updateCurrentResourceStatus(String resourceName, boolean status){

@@ -131,14 +131,6 @@ public class RemoteResourceManager {
 	}
 
 	/**
-	 * Edit the properties of a romoteResource
-	 */
-	public void editRemoteResource(int i, RemoteResource rResource) {
-		RemoteResource rr = existedResources.get(i);
-		rr.update(rResource);
-	}
-
-	/**
 	 * Delete one resource object
 	 * 
 	 * @param rResource
@@ -201,13 +193,12 @@ public class RemoteResourceManager {
 	 */
 	public void saveToFile() {
 		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
-					filename)));
 			if (existedResources.size() == 0) {
-
 				return;
 			}
 
+			BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
+					filename)));
 			for (RemoteResource s : existedResources) {
 
 				writer.write(s.getShortname() + cloumnseparator + s.getUri()
