@@ -2,7 +2,7 @@ package org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser;
  
 import java.io.File;
 import java.io.Serializable;
-import java.util.Map;
+import java.util.Map; 
 import java.util.WeakHashMap;
  
 import org.apache.commons.logging.Log;
@@ -65,7 +65,7 @@ public class AnnotationParser implements Serializable {
 	/* The reason that we need APSerializable is that the status fields are designed as static. */
 	public static APSerializable getSerializable() {
 		return new APSerializable(currentDataSet, datasetToChipTypes,
-				datasetToAnnotation);
+				datasetToAnnotation, annotationFileToType);
 	}
 
 	public static void setFromSerializable(APSerializable aps) {
@@ -78,6 +78,12 @@ public class AnnotationParser implements Serializable {
 			Map<String, AnnotationFields> m = aps.datasetToAnnotation.get(dataset);
 			datasetToAnnotation.put(dataset, m);
 		}
+		
+		for(String  annotationFileName : aps.annotationFileToType.keySet()) {
+			AnnotationType annotationType = aps.annotationFileToType.get(annotationFileName);
+			annotationFileToType.put(annotationFileName, annotationType);
+		}
+		 
 	}
 
 	public static void setCurrentDataSet(DSDataSet<?> currentDataSet) {
@@ -138,8 +144,10 @@ public class AnnotationParser implements Serializable {
 		
 		for(DSMicroarraySet d: datasetToChipTypes.keySet()) {
 			if(chipType.equals(datasetToChipTypes.get(d))) { // existing annotation
-				if ( annotationFileToType.get(chipType).equals(parser.getAnnotationType()))
+				if ( annotationFileToType.get(chipType) == null ||annotationFileToType.get(chipType).equals(parser.getAnnotationType()))
 				{
+					if ( annotationFileToType.get(chipType) == null )
+						log.warn(chipType + " have null value for AnnotationType. This may happen when you load workspace from 2.4 or earlier release.");
 					datasetToAnnotation.put(dataset, datasetToAnnotation.get(d));
 				    datasetToChipTypes.put(dataset, chipType);
 				    return;
