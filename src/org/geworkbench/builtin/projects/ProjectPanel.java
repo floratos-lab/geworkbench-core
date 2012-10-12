@@ -62,6 +62,7 @@ import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.A
 import org.geworkbench.bison.datastructure.bioobjects.markers.goterms.GeneOntologyTree;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.CSTTestResultSet;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
+import org.geworkbench.bison.datastructure.bioobjects.microarray.DSSignificanceResultSet;
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.bison.util.colorcontext.ColorContext;
@@ -1616,6 +1617,14 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 		if (!(e.getDataSet() instanceof DSMicroarraySet)) {
 			return;
+		}
+		//Ignore phenotype selection for significance resultset
+		ProjectTreeNode selectedNode = selection.getSelectedNode();
+		if (selectedNode != null && selectedNode instanceof DataSetSubNode){
+			DSAncillaryDataSet selectedSubset = ((DataSetSubNode)selectedNode)._aDataSet;
+			if (selectedSubset != null && selectedSubset instanceof DSSignificanceResultSet){
+				return;
+			}
 		}
 
 		DSMicroarraySet microarraySet = (DSMicroarraySet) e.getDataSet();
