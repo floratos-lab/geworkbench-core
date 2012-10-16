@@ -1621,7 +1621,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		//Ignore phenotype selection for significance resultset
 		ProjectTreeNode selectedNode = selection.getSelectedNode();
 		if (selectedNode != null && selectedNode instanceof DataSetSubNode){
-			DSAncillaryDataSet selectedSubset = ((DataSetSubNode)selectedNode)._aDataSet;
+			DSAncillaryDataSet<?> selectedSubset = ((DataSetSubNode)selectedNode)._aDataSet;
 			if (selectedSubset != null && selectedSubset instanceof DSSignificanceResultSet){
 				return;
 			}
