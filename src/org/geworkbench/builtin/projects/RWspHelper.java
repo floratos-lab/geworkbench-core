@@ -797,6 +797,7 @@ public class RWspHelper {
 				saveTree = (SaveTree) s.readObject();
 				APSerializable aps = (APSerializable) s.readObject();
 				AnnotationParser.setFromSerializable(aps);
+				s.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 				return null;

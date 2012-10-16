@@ -356,6 +356,7 @@ public class WorkspaceHandler {
 				saveTree = (SaveTree) s.readObject();
 				APSerializable aps = (APSerializable) s.readObject();
 				AnnotationParser.setFromSerializable(aps);
+				s.close();
 			} catch (Exception e) {
 				// no-op here. user will see error from done();
 				e.printStackTrace();

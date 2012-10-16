@@ -109,6 +109,7 @@ public class PatternResult extends CSAncillaryDataSet<DSSequence> implements
 					JOptionPane.showMessageDialog(null,
 							"The sequence dataset selected and the sequence filename in the pattern file do not match.",
 							"Pattern Discovery", JOptionPane.WARNING_MESSAGE);
+					reader.close();
 					return false;
 				}
 				s = reader.readLine();
@@ -120,6 +121,7 @@ public class PatternResult extends CSAncillaryDataSet<DSSequence> implements
 				patterns.add(pattern);
 				s = reader.readLine();
 			}
+			reader.close();
 		} catch (IOException ex) {
 			log.error("IOException: " + ex);
 			return false;

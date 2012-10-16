@@ -87,6 +87,7 @@ public class CSProteinStructure extends CSAncillaryDataSet<DSBioObject> implemen
 			DataInputStream dataIn = new DataInputStream(fileIn);
 			fileBytes = new byte[dataIn.available()];
 			dataIn.readFully(fileBytes);
+			dataIn.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			return null;

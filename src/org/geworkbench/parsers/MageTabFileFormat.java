@@ -235,179 +235,224 @@ public class MageTabFileFormat extends DataSetFileFormat {
 		int j = 0;
 		try {
 			out = new BufferedReader(new FileReader(file));
-			try {
-				String line = out.readLine();
-				while (line != null) {	
-					String[] tokens = line.split("\t");
-					/*
-					 * This loop is activated if the data file has multiple columns for each array
-					 *i.e., each array has 'value', 'detection P value', 'abs call'. If not it goes to the else part.
-					 *
-					 */
-					if(n != 0){
-						if(!tokens[0].contentEquals("Scan REF") && !tokens[0].contentEquals("Reporter REF") && !tokens[0].contentEquals("Composite Element REF")){
-							String[] values1 = line.split("\t");
-							List<String> values = new ArrayList<String>();
-							for(int s=0; s<values1.length; s++){
-								if(s!= 0){
-									values.add(values1[s]);
-								}
+
+			String line = out.readLine();
+			while (line != null) {
+				String[] tokens = line.split("\t");
+				/*
+				 * This loop is activated if the data file has multiple columns
+				 * for each arrayi.e., each array has 'value', 'detection P
+				 * value', 'abs call'. If not it goes to the else part.
+				 */
+				if (n != 0) {
+					if (!tokens[0].contentEquals("Scan REF")
+							&& !tokens[0].contentEquals("Reporter REF")
+							&& !tokens[0]
+									.contentEquals("Composite Element REF")) {
+						String[] values1 = line.split("\t");
+						List<String> values = new ArrayList<String>();
+						for (int s = 0; s < values1.length; s++) {
+							if (s != 0) {
+								values.add(values1[s]);
 							}
-							String valString = null; 
-							int loopCount;
-							loopCount = arrayNames.size()*(n+1);
-							int count = 0;
-							int counter = 0;
-							String ca = null;
-							for(int k = 1; k < (loopCount-n+1); k++){
-								count++;
-								if(count%(n+1) == 0 || k == 1){
-									valString = values.get(k+(valueNumber-2)).trim();
-									if(valString == null){
-										Float v = Float.NaN;
-										CSExpressionMarkerValue markerValue = new CSExpressionMarkerValue(v);
-										DSMicroarray microarray = (DSMicroarray)maSet.get(counter);
-										microarray.setMarkerValue(maSet.getNewMarkerOrder()[j], markerValue);
-										if (v.isNaN()) {
-											markerValue.setMissing(true);
-										} else {
-											markerValue.setPresent();
-										}
-										counter++;
-									}else { 
-										float value = Float.NaN;
-										try {
-											value = Float.parseFloat(valString);
-										} catch (NumberFormatException nfe) {
-										}
-										// put values directly into CSMicroarray inside of
-										// maSet
-										Float v = value;
-										CSExpressionMarkerValue markerValue = new CSExpressionMarkerValue(
-												v);
-										DSMicroarray microarray = (DSMicroarray)maSet.get(counter);
-										microarray.setMarkerValue(maSet.getNewMarkerOrder()[j], markerValue);
-										if (v.isNaN()) {
-											SwingUtilities.invokeLater(new Runnable() {
-												public void run() {	
-												}
-											});
-											JOptionPane.showMessageDialog(null,
-													"The selected column has Strings rather than numbers" ,
-													"Error",
-													JOptionPane.INFORMATION_MESSAGE);
-											return null;	
-										} else {
-											markerValue.setPresent();
-										}
-										/*
-										 * Only used for Affymetrix MAGE-TAB files
-										 * This loop if only activated if the data file with multiple coloumns for each array either has
-										 * detection value or abs call
-										 * else no Affy detection value is set
-										 * 
-										 */
-										if(detection !=0 || call != 0){
-											if(detection != 0){	
-												String token = null;
-												token = values.get(k+(detection-2)).trim();
-												Object value1 = null;
-												value1 = Double.valueOf(token);
-												markerValue.setConfidence(( (Double) value1).doubleValue());
-												pValueFound = true;
-											}
-											if(call != 0){
-												ca = values.get(k+(call-2)).trim();
-												char C = ' ';
-												if(ca.equalsIgnoreCase("A") || ca.equalsIgnoreCase("P")||ca.equalsIgnoreCase("M") ){
-													C = ca.charAt(0);
-												}else{
-													/*
-													 * This handles if the abs_call is not a character.
-													 * for example: 'PRESENT', 'Present'
-													 */
-													if(ca.equalsIgnoreCase("ABSENT")){
-														C = 'A';
-													}
-													if(ca.equalsIgnoreCase("PRESENT")){
-														C = 'P';
-													}
-													if(ca.equalsIgnoreCase("MARGINAL")){
-														C = 'M';
-													}
-												}
-												char Call = Character.toUpperCase(C);
-												if (Call == PRESENT || Call == ABSENT || Call == MARGINAL){
-													this.detectionStatus = Call;
-													if (!pValueFound){
-														switch (Call){
-															case PRESENT: 
-																markerValue.setPresent();
-																break;
-															case ABSENT:
-																markerValue.setAbsent();
-																break;
-															case MARGINAL:
-																markerValue.setMarginal();
-																break;
-														}
-													}
-												}
-											}
-										}
-										counter++;
-									}
-									count = 0;
-								}
-							}
-							j++;
 						}
-					}else {
-						if(!tokens[0].contentEquals("Scan REF") && !tokens[0].contentEquals("Reporter REF") && !tokens[0].contentEquals("Composite Element REF")){
-							String[] values = line.split("\t");
-							String valString = null; 
-							for(int k = 0; k < arrayNames.size(); k++){
-								valString = values[k+1].trim();
-								if(valString == null){
+						String valString = null;
+						int loopCount;
+						loopCount = arrayNames.size() * (n + 1);
+						int count = 0;
+						int counter = 0;
+						String ca = null;
+						for (int k = 1; k < (loopCount - n + 1); k++) {
+							count++;
+							if (count % (n + 1) == 0 || k == 1) {
+								valString = values.get(k + (valueNumber - 2))
+										.trim();
+								if (valString == null) {
 									Float v = Float.NaN;
-									CSExpressionMarkerValue markerValue = new CSExpressionMarkerValue(v);
-									DSMicroarray microarray = (DSMicroarray)maSet.get(k);
-									microarray.setMarkerValue(maSet.getNewMarkerOrder()[j], markerValue);
+									CSExpressionMarkerValue markerValue = new CSExpressionMarkerValue(
+											v);
+									DSMicroarray microarray = (DSMicroarray) maSet
+											.get(counter);
+									microarray.setMarkerValue(
+											maSet.getNewMarkerOrder()[j],
+											markerValue);
 									if (v.isNaN()) {
 										markerValue.setMissing(true);
 									} else {
 										markerValue.setPresent();
 									}
-								}else { 
+									counter++;
+								} else {
 									float value = Float.NaN;
 									try {
 										value = Float.parseFloat(valString);
 									} catch (NumberFormatException nfe) {
 									}
-									// put values directly into CSMicroarray inside of
+									// put values directly into CSMicroarray
+									// inside of
 									// maSet
 									Float v = value;
 									CSExpressionMarkerValue markerValue = new CSExpressionMarkerValue(
 											v);
-									DSMicroarray microarray = (DSMicroarray)maSet.get(k);
-									microarray.setMarkerValue(maSet.getNewMarkerOrder()[j], markerValue);
+									DSMicroarray microarray = (DSMicroarray) maSet
+											.get(counter);
+									microarray.setMarkerValue(
+											maSet.getNewMarkerOrder()[j],
+											markerValue);
 									if (v.isNaN()) {
-										markerValue.setMissing(true);
+										SwingUtilities
+												.invokeLater(new Runnable() {
+													public void run() {
+													}
+												});
+										JOptionPane
+												.showMessageDialog(
+														null,
+														"The selected column has Strings rather than numbers",
+														"Error",
+														JOptionPane.INFORMATION_MESSAGE);
+										return null;
 									} else {
 										markerValue.setPresent();
 									}
-								}		
+									/*
+									 * Only used for Affymetrix MAGE-TAB files
+									 * This loop if only activated if the data
+									 * file with multiple coloumns for each
+									 * array either has detection value or abs
+									 * call else no Affy detection value is set
+									 */
+									if (detection != 0 || call != 0) {
+										if (detection != 0) {
+											String token = null;
+											token = values.get(
+													k + (detection - 2)).trim();
+											Object value1 = null;
+											value1 = Double.valueOf(token);
+											markerValue
+													.setConfidence(((Double) value1)
+															.doubleValue());
+											pValueFound = true;
+										}
+										if (call != 0) {
+											ca = values.get(k + (call - 2))
+													.trim();
+											char C = ' ';
+											if (ca.equalsIgnoreCase("A")
+													|| ca.equalsIgnoreCase("P")
+													|| ca.equalsIgnoreCase("M")) {
+												C = ca.charAt(0);
+											} else {
+												/*
+												 * This handles if the abs_call
+												 * is not a character. for
+												 * example: 'PRESENT', 'Present'
+												 */
+												if (ca.equalsIgnoreCase("ABSENT")) {
+													C = 'A';
+												}
+												if (ca.equalsIgnoreCase("PRESENT")) {
+													C = 'P';
+												}
+												if (ca.equalsIgnoreCase("MARGINAL")) {
+													C = 'M';
+												}
+											}
+											char Call = Character
+													.toUpperCase(C);
+											if (Call == PRESENT
+													|| Call == ABSENT
+													|| Call == MARGINAL) {
+												this.detectionStatus = Call;
+												if (!pValueFound) {
+													switch (Call) {
+													case PRESENT:
+														markerValue
+																.setPresent();
+														break;
+													case ABSENT:
+														markerValue.setAbsent();
+														break;
+													case MARGINAL:
+														markerValue
+																.setMarginal();
+														break;
+													}
+												}
+											}
+										}
+									}
+									counter++;
+								}
+								count = 0;
 							}
-							j++;
 						}
+						j++;
 					}
-					line = out.readLine();
+				} else {
+					if (!tokens[0].contentEquals("Scan REF")
+							&& !tokens[0].contentEquals("Reporter REF")
+							&& !tokens[0]
+									.contentEquals("Composite Element REF")) {
+						String[] values = line.split("\t");
+						String valString = null;
+						for (int k = 0; k < arrayNames.size(); k++) {
+							valString = values[k + 1].trim();
+							if (valString == null) {
+								Float v = Float.NaN;
+								CSExpressionMarkerValue markerValue = new CSExpressionMarkerValue(
+										v);
+								DSMicroarray microarray = (DSMicroarray) maSet
+										.get(k);
+								microarray.setMarkerValue(
+										maSet.getNewMarkerOrder()[j],
+										markerValue);
+								if (v.isNaN()) {
+									markerValue.setMissing(true);
+								} else {
+									markerValue.setPresent();
+								}
+							} else {
+								float value = Float.NaN;
+								try {
+									value = Float.parseFloat(valString);
+								} catch (NumberFormatException nfe) {
+								}
+								// put values directly into CSMicroarray inside
+								// of
+								// maSet
+								Float v = value;
+								CSExpressionMarkerValue markerValue = new CSExpressionMarkerValue(
+										v);
+								DSMicroarray microarray = (DSMicroarray) maSet
+										.get(k);
+								microarray.setMarkerValue(
+										maSet.getNewMarkerOrder()[j],
+										markerValue);
+								if (v.isNaN()) {
+									markerValue.setMissing(true);
+								} else {
+									markerValue.setPresent();
+								}
+							}
+						}
+						j++;
+					}
 				}
+				line = out.readLine();
+			} // end of while loop
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(out!=null)
+					out.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 		}
 		return maSet;
 	}
