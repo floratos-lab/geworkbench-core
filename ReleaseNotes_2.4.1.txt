@@ -120,8 +120,9 @@
 
     3. Linux
        Note - Regardless of which geWorkbench installer described below is 
-            selected, the installer itself requires that Java already be
-            installed on your machine before the installation can be run.
+            selected, the installer itself requires that Java 1.6 or later 
+            already be installed on your machine before the installation
+            can be run.
        
        File: geWorkbench_v2.4.1_Linux_installer_with_JRE6.bin.
 
