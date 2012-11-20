@@ -165,7 +165,7 @@ public class AffyAnnotationUtil {
 		annotationFileTypeJcb.addItem("Please Select");
 		annotationFileTypeJcb.addItem(AnnotationType.AFFYMETRIX_3_EXPRESSION);
 		 
-		annotationFileTypeJcb.addItem(AnnotationType.AFFY_GENE_EXON_10_ST);
+		annotationFileTypeJcb.addItem(AnnotationType.AFFY_GENE_EXON_ST);
 
 		panel1.add(annotationFileTypeJcb);
 
@@ -182,7 +182,7 @@ public class AffyAnnotationUtil {
 				if (parserType.equals(AnnotationType.AFFYMETRIX_3_EXPRESSION)) {
 					parser = new Affy3ExpressionAnnotationParser();
 				} else if (parserType
-						.equals(AnnotationType.AFFY_GENE_EXON_10_ST)) {
+						.equals(AnnotationType.AFFY_GENE_EXON_ST)) {
 					parser = new AffyGeneExonStAnnotationParser();
 				} else {
 					return;

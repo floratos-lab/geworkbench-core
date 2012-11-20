@@ -231,7 +231,7 @@ public class AffyGeneExonStAnnotationParser extends AffyAnnotationParser {
 	
 	public AnnotationType getAnnotationType()
 	{
-		return AnnotationType.AFFY_GENE_EXON_10_ST;
+		return AnnotationType.AFFY_GENE_EXON_ST;
 	} 
 	 
 }

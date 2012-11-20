@@ -14,7 +14,7 @@ public class AnnotationInformationManager {
 	public enum AnnotationType {
 		
 		AFFYMETRIX_3_EXPRESSION ("Affymetrix 3' Expression"), 
-		AFFY_GENE_EXON_10_ST ("Affymetrix Gene/Exon 1.0 ST"),		
+		AFFY_GENE_EXON_ST ("Affymetrix WT Gene/Exon ST, transcript-level"),		
 		OTHERS("others");
 	
 		private String name;    
