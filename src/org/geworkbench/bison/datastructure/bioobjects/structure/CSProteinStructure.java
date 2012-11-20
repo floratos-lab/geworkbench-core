@@ -46,6 +46,11 @@ public class CSProteinStructure extends CSAncillaryDataSet<DSBioObject> implemen
 		dataFile = file;
         content = getContent(file);
 	}
+	
+	public String getDescription()
+	{
+		return "# of chains: " + getChains().size();
+	}
 
 	public HashMap<String, Integer> getChains() {
 		// /get chains from pdb file

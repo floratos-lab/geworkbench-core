@@ -172,9 +172,14 @@ public class CSSequenceSet<T extends DSSequence> extends CSDataSet<T> implements
 		}
 		parseMarkers();
 		databases.put(file.getPath(), this);
-		setDescription("# of sequences: " + size());
+		//setDescription("# of sequences: " + size());
 	}
 
+	public String getDescription()
+	{
+		return "# of sequences: " + size();
+	}
+	
 	public void parseMarkers() {
 		markerList = new CSSequentialItemList<SequenceMarker>();
 		for (int markerId = 0; markerId < size(); markerId++) {
