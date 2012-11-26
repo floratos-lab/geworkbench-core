@@ -222,7 +222,7 @@ public class SOFTFileFormat extends DataSetFileFormat {
 		return null;
 	}
 	 
-	private DSMicroarraySet parseFile(File file)
+	public DSMicroarraySet parseFile(File file)
 		throws InputFileFormatException, InterruptedIOException {
 		
 		if (!checkFormat(file)) {
