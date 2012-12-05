@@ -39,7 +39,7 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet<DSMicroarray> {
 
 	static Log log = LogFactory.getLog(AdjacencyMatrixDataSet.class);
 
-	private AdjacencyMatrix matrix;
+	protected final AdjacencyMatrix matrix;
 
 	private final double threshold;
 	private String networkName;
@@ -297,6 +297,7 @@ public class AdjacencyMatrixDataSet extends CSAncillaryDataSet<DSMicroarray> {
 		return matrix;
 	}
 
+	// TODO this should be avoided, or the field matrix does not need to be protected in the first place
 	public AdjacencyMatrix getMatrix() {
 		return matrix;
 	}
