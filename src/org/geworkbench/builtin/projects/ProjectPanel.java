@@ -126,10 +126,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	private HashMap<GridEndpointReferenceType, PendingTreeNode> eprPendingNodeMap = new HashMap<GridEndpointReferenceType, PendingTreeNode>();
 
-	/**
-	 * XQ uses dataSetMenu to save/modify the new generated/old Fasta file
-	 * dataSetSubMenu to save sequence alignment result.
-	 */
 	private JPopupMenu dataSetMenu = new JPopupMenu();
 
 	private JPopupMenu pendingMenu = new JPopupMenu();
@@ -410,11 +406,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		Map<GridEndpointReferenceType, AbstractGridAnalysis> pendingGridEprs = new HashMap<GridEndpointReferenceType, AbstractGridAnalysis>();
 		for (DataSetSaveNode dataNode : dataSetNodes) {
 			setComponents(dataNode);
-			// TODO clean up
-			System.out.println("dataNode="+dataNode);
 			DSDataSet<? extends DSBioObject> dataSet = dataNode.getDataSet();
-			System.out.println("dataSet="+dataSet);
-			System.out.println("description="+dataNode.getDescription());
 			dataSet.setExperimentInformation(dataNode.getDescription());
 			/* pending node */
 			if (dataSet instanceof PendingTreeNode.PendingNode) {
@@ -1607,10 +1599,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * components that have registered to receive workspace clearing events.
 	 */
 	void clear() {
-		if (root != null) {
-			root.removeAllChildren();
-			projectTreeModel.reload(root);
-		}
+		root.removeAllChildren();
+		projectTreeModel.reload(root);
 
 		publishProjectEvent(new ProjectEvent(Message.CLEAR, null, null));
 		selection.clearNodeSelections();
@@ -1652,9 +1642,11 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	private JScrollPane jDataSetScrollPane = new JScrollPane();
 
-	private ProjectTreeNode root = new ProjectTreeNode("Workspace");
+	final private ProjectTreeNode root = new ProjectTreeNode("Workspace");
 
 	final private DefaultTreeModel projectTreeModel = new DefaultTreeModel(root);
+	
+	/* This is a dangerous hack to support genomeSpace component. Be advised not to use it. */
 	public DefaultTreeModel getTreeModel(){
 		return projectTreeModel;
 	}
@@ -1680,15 +1672,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		return list;
 	}
 	
-	// remove this, replace with boolean isEmpty();
-	public int countProjectTree() {
-		return projectTree.getRowCount();
-	}
-	
 	// used only on WorkspaceHandler
 	boolean isEmpty() {
-		// return root.getChildCount()==0; // this is probably the more proper way to check
-		return projectTree.getRowCount()<=1; // TODO not the best way to check emptiness
+		return root.getChildCount()==0; // this is probably the more proper way to check than projectTree.getRowCount()
 	}
 
 	/**

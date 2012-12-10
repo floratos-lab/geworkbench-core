@@ -175,7 +175,7 @@ public class WorkspaceHandler {
 		
 	protected boolean confirmLoading(String wspDir, String wspFname) {
 		// current workspace is not empty
-		if (enclosingProjectPanel.countProjectTree() > 1) {
+		if (!enclosingProjectPanel.isEmpty()) {
 			// inform user this will overwrite the current workspace
 			// give user a chance to continue or cancel workspace loading
 			String info = "Opening this";
