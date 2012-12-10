@@ -19,34 +19,18 @@ import org.geworkbench.events.ProjectEvent.Message;
  */
 
 public class ProjectSelection {
-    private ProjectNode selectedProjectNode = null;
+
     private DataSetNode selectedDataSetNode = null;
     private DataSetSubNode selectedDataSetSubNode = null;
     private ProjectTreeNode selectedNode = null;
 
     /**
-     * Returns whether the selections have all been cleared
-     *
-     * @return
-     */
-    public boolean areNodeSelectionsCleared() {
-        return (selectedProjectNode == null);
-    }
-
-    /**
      * Clears the selections and broadcasts the event
      */
     public void clearNodeSelections() {
-        selectedProjectNode = null;
         selectedDataSetNode = null;
         selectedDataSetSubNode = null;
         selectedNode = null;
-    }
-
-
-    // Access to various selection variables
-    public ProjectNode getSelectedProjectNode() {
-        return selectedProjectNode;
     }
 
     public DataSetNode getSelectedDataSetNode() {
@@ -109,13 +93,11 @@ public class ProjectSelection {
         if (selectedNode != node) {
             selectedNode = node;
 
-            selectedProjectNode = (ProjectNode) getNodeOfClass(node, ProjectNode.class);
-           
             if (node instanceof DataSetNode) {
                 selectedDataSetNode = (DataSetNode) node;
                 AnnotationParser.setCurrentDataSet(selectedDataSetNode.getDataset());
                 GeawConfigObject.getGuiWindow().setVisualizationType(selectedDataSetNode.getDataset());
-                checkProjectNode();
+                checkDataSetNode();
                 if(selectedDataSetNode.getDataset() instanceof CSProteinStructure){
                 	throwEvent(ProjectEvent.Message.CLEAR);
                 }
@@ -125,7 +107,7 @@ public class ProjectSelection {
                 selectedDataSetNode = (DataSetNode) getNodeOfClass(node, DataSetNode.class);
                 AnnotationParser.setCurrentDataSet(selectedDataSetNode.getDataset());//Fix bug 1471
                 GeawConfigObject.getGuiWindow().setVisualizationType(selectedDataSetSubNode._aDataSet);
-                checkProjectNode();
+                checkDataSetNode();
 				if (selectedDataSetSubNode._aDataSet != null) {
 					ProjectPanel.getInstance().publishProjectEvent(
 							new ProjectEvent(Message.SELECT,
@@ -136,28 +118,16 @@ public class ProjectSelection {
                 selectedDataSetNode = (DataSetNode) getNodeOfClass(node, DataSetNode.class);
                 AnnotationParser.setCurrentDataSet(selectedDataSetNode.getDataset());
                 GeawConfigObject.getGuiWindow().setVisualizationType(null);
-                checkProjectNode();
+                checkDataSetNode();
                 throwEvent(ProjectEvent.Message.SELECT);
             } else  {
                 selectedDataSetNode = null;
                 selectedDataSetSubNode = null;
                 GeawConfigObject.getGuiWindow().setVisualizationType(null);                
-                checkProjectNode();
+                checkDataSetNode();
 				ProjectPanel.getInstance().publishProjectEvent(
 						new ProjectEvent(Message.CLEAR, null, null));
             }            
-        }
-    }
-
-    /**
-     * Checks that the selections are correctly assigned at the project level
-     */
-    private void checkProjectNode() {
-        if (selectedProjectNode == null) {
-            selectedDataSetNode = null;
-            selectedDataSetSubNode = null;
-        } else {
-            checkDataSetNode();
         }
     }
 
@@ -168,12 +138,7 @@ public class ProjectSelection {
         if (selectedDataSetNode == null) {
             selectedDataSetSubNode = null;
         } else {
-            if (selectedDataSetNode.getParent() != selectedProjectNode) {
-                selectedDataSetNode = null;
-                selectedDataSetSubNode = null;
-            } else {
-                checkDataSetSubNode();
-            }
+            checkDataSetSubNode();
         }
     }
 

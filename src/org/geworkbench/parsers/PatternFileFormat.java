@@ -12,7 +12,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -22,15 +21,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
-import org.geworkbench.bison.datastructure.biocollections.DSDataSet; 
+import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import org.geworkbench.bison.datastructure.complex.pattern.PatternResult;
 import org.geworkbench.bison.parsers.resources.Resource;
 import org.geworkbench.builtin.projects.DataSetNode;
-import org.geworkbench.builtin.projects.ProjectNode;
-import org.geworkbench.builtin.projects.ProjectTreeNode;
+import org.geworkbench.builtin.projects.ProjectPanel;
 import org.geworkbench.parsers.sequences.SequenceResource;
 import org.geworkbench.util.Util;
 
@@ -39,7 +37,7 @@ public class PatternFileFormat extends DataSetFileFormat {
 	private static final String[] patExtensions = { "pat"};
 
 	private PatternResult patternResult = null;
-	private ProjectNode projectNode;
+
 	private boolean isCancel = false;
 	private DataSetNode selectedDataSetNode;
 	
@@ -69,10 +67,6 @@ public class PatternFileFormat extends DataSetFileFormat {
 		return resource;
 	}
 	
-	public void setProjectNode(ProjectNode projectNode) {
-		this.projectNode = projectNode;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -103,9 +97,8 @@ public class PatternFileFormat extends DataSetFileFormat {
 			// get list of data sets that a selected adjacency matrix could be
 			// attached to
 			ArrayList<DataSetNode> dataSetstmp = new ArrayList<DataSetNode>();
-			for (Enumeration<?> en = projectNode.children(); en.hasMoreElements();) {
-				ProjectTreeNode node = (ProjectTreeNode) en.nextElement();
-				if (node instanceof DataSetNode && (((DataSetNode)node).getDataset() instanceof DSSequenceSet)) {
+			for (DataSetNode node : ProjectPanel.getInstance().getTopLevelDataSetNodes()) {
+				if ( ((DataSetNode)node).getDataset() instanceof DSSequenceSet ) {
 					dataSetstmp.add((DataSetNode) node);
 				}
 			}

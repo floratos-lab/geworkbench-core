@@ -1,8 +1,6 @@
 package org.geworkbench.builtin.projects;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
@@ -21,31 +19,27 @@ public class SaveTree implements Serializable {
 	 */
 	private static final long serialVersionUID = 2534917305724421302L;
 
-	List<DataSetSaveNode> nodes;
 	private DSDataSet<? extends DSBioObject> selected;
 	private int wspId=0;
 	private boolean dirty = false;
 	private String checkout = null;
 	private String lastchange = null;
 
+	final DataSetSaveNode rootNode;
+	
 	public SaveTree(ProjectPanel panel, DSDataSet<? extends DSBioObject> selected, int rid, boolean d, String co, String lc) {
 		this.selected = selected;
 		this.wspId = rid;
 		this.dirty = d;
 		this.checkout = co;
 		this.lastchange = lc;
-		nodes = new ArrayList<DataSetSaveNode>();
+
 		selected = panel.getDataSet();
 		ProjectTreeNode root = panel.getRoot();
-		int n = root.getChildCount();
-		for (int i = 0; i < n; i++) {
-			ProjectTreeNode project = (ProjectTreeNode) root.getChildAt(i);
-			DataSetSaveNode saveProject = new DataSetSaveNode(project
-					.toString());
-			saveProject.setDescription(project.getDescription());
-			nodes.add(saveProject);
-			addChildren(project, saveProject);
-		}
+		rootNode = new DataSetSaveNode(root
+				.toString());
+		rootNode.setDescription(root.getDescription());
+		addChildren(root, rootNode);
 	}
 
 	static DSDataSet<?> getDSDataSet(ProjectTreeNode treeNode) {
@@ -87,10 +81,6 @@ public class SaveTree implements Serializable {
 			saveNode.addChild(childSave);
 			addChildren(treeNode, childSave);
 		}
-	}
-
-	public List<DataSetSaveNode> getNodes() {
-		return nodes;
 	}
 
 	public DSDataSet<? extends DSBioObject> getSelected() {

@@ -46,9 +46,6 @@ public class TreeNodeRenderer extends DefaultTreeCellRenderer {
         if (value == tree.getModel().getRoot()) {
             setIcon(Icons.WORKSPACE_ICON);
             setToolTipText("This is the workspace.");
-        } else if (value.getClass() == ProjectNode.class) {
-            setIcon(Icons.PROJECT_ICON);
-            setToolTipText("This is a project folder.");
         } else if(value.getClass() == PendingTreeNode.class){
         	setIcon(Icons.BUSY_STATIC_ICON);
         	setToolTipText(null);

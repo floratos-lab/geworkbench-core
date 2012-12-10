@@ -42,7 +42,6 @@ import org.geworkbench.parsers.AdjacencyMatrixFileFormat;
 import org.geworkbench.parsers.DataSetFileFormat;
 import org.geworkbench.parsers.FileFormat;
 import org.geworkbench.parsers.InputFileFormatException;
-import org.geworkbench.parsers.PatternFileFormat;
 import org.geworkbench.util.AffyAnnotationUtil;
 
 /**
@@ -322,31 +321,6 @@ public class FileOpenHandler {
 			DataSetFileFormat dataSetFileFormat = (DataSetFileFormat) inputFormat;
 			if (dataSetFiles.length == 1) {
 				try {
-					// adjacency matrix need access to project node
-					if (dataSetFileFormat instanceof AdjacencyMatrixFileFormat) {
-						ProjectTreeNode selectedNode = ProjectPanel.getInstance()
-								.getSelection().getSelectedNode();
-						// it has to be a project node
-						if (selectedNode instanceof ProjectNode) {
-							ProjectNode projectNode = (ProjectNode) selectedNode;
-							((AdjacencyMatrixFileFormat) dataSetFileFormat)
-									.setProjectNode(projectNode);
-						}
-					}
-
-					// pattern file format need access to project node
-					if (dataSetFileFormat instanceof PatternFileFormat) {
-			
-						ProjectTreeNode selectedNode = ProjectPanel.getInstance()
-								.getSelection().getSelectedNode();
-						// it has to be a project node
-						if (selectedNode instanceof ProjectNode) {
-							ProjectNode projectNode = (ProjectNode) selectedNode;
-							((PatternFileFormat) dataSetFileFormat)
-									.setProjectNode(projectNode);
-						}
-					}
-					
 					dataSets[0] = dataSetFileFormat.getDataFile(dataSetFiles[0]);
 				} catch (OutOfMemoryError er) {
 					log.warn("Loading a single file memory error: " + er);

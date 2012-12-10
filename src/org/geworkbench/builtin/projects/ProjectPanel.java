@@ -12,6 +12,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -280,17 +281,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			}
 		});
 		pendingMenu.add(jRemovePendingItem);
-
-		// project menu
-		JMenuItem jRemoveProjectItem = new JMenuItem("Remove Project");
-		jRemoveProjectItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				remove_actionPerformed();
-			}
-		});
-
-		jProjectMenu.addSeparator();
-		jProjectMenu.add(jRemoveProjectItem);
 	}
 
 	private void viewInExternalEditor() {
@@ -415,66 +405,61 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	}
 
 	void populateFromSaveTree(SaveTree saveTree) {
-		java.util.List<DataSetSaveNode> projects = saveTree.getNodes();
+		java.util.List<DataSetSaveNode> dataSetNodes = saveTree.rootNode.getChildren();
 		ProjectTreeNode selectedNode = null;
 		Map<GridEndpointReferenceType, AbstractGridAnalysis> pendingGridEprs = new HashMap<GridEndpointReferenceType, AbstractGridAnalysis>();
-		for (DataSetSaveNode project : projects) {
-			ProjectNode projectNode = new ProjectNode(project.getName());
-			projectNode.setDescription(project.getDescription());
-			addToProject(projectNode, true);
-			selection.setNodeSelection(projectNode);
-			/* add data sets next */
-			java.util.List<DataSetSaveNode> dataSets = project.getChildren();
-			for (DataSetSaveNode dataNode : dataSets) {
-				setComponents(dataNode);
-				DSDataSet<? extends DSBioObject> dataSet = dataNode
-						.getDataSet();
-				dataSet.setExperimentInformation(dataNode.getDescription());
-				/* pending node */
-				if (dataSet instanceof PendingTreeNode.PendingNode) {
-					restorePendingNode((PendingTreeNode.PendingNode)dataSet, pendingGridEprs);
-				} else { /* real node */
-					addDataSetNode(dataSet);
-				}
-				if (dataSet == saveTree.getSelected()) {
-					selectedNode = selection.getSelectedNode();
-				}
-				/* add ancillary data sets */
-				java.util.List<DataSetSaveNode> ancSets = dataNode
-						.getChildren();
-				for (DataSetSaveNode ancNode : ancSets) {
-					setComponents(ancNode);
-
-					/* pending node */
-					if (ancNode.getDataSet() instanceof PendingTreeNode.PendingNode) {
-						restorePendingNode((PendingTreeNode.PendingNode)ancNode.getDataSet(),
-								pendingGridEprs);
-					} else {
-						DSAncillaryDataSet<? extends DSBioObject> ancSet = null;
-
-						if (ancNode.getDataSet() instanceof ImageData) {
-							ancSet = (ImageData) ancNode.getDataSet();
-						} else {
-							ancSet = (DSAncillaryDataSet<? extends DSBioObject>) ancNode
-									.getDataSet();
-						}
-
-						ancSet.setExperimentInformation(ancNode
-								.getDescription());
-						addDataSetSubNode(ancSet);
-						if (ancSet == saveTree.getSelected()) {
-							selectedNode = selection.getSelectedNode();
-						}
-						selection.setNodeSelection((ProjectTreeNode) selection
-								.getSelectedDataSetSubNode().getParent());
-					}
-				}
-				selection.setNodeSelection((ProjectTreeNode) selection
-						.getSelectedDataSetNode().getParent());
+		for (DataSetSaveNode dataNode : dataSetNodes) {
+			setComponents(dataNode);
+			// TODO clean up
+			System.out.println("dataNode="+dataNode);
+			DSDataSet<? extends DSBioObject> dataSet = dataNode.getDataSet();
+			System.out.println("dataSet="+dataSet);
+			System.out.println("description="+dataNode.getDescription());
+			dataSet.setExperimentInformation(dataNode.getDescription());
+			/* pending node */
+			if (dataSet instanceof PendingTreeNode.PendingNode) {
+				restorePendingNode((PendingTreeNode.PendingNode) dataSet,
+						pendingGridEprs);
+			} else { /* real node */
+				addDataSetNode(dataSet);
 			}
-			publishPendingNodeLoadedFromWorkspaceEvent(new PendingNodeLoadedFromWorkspaceEvent(
-					pendingGridEprs));
+			if (dataSet == saveTree.getSelected()) {
+				selectedNode = selection.getSelectedNode();
+			}
+			/* add ancillary data sets */
+			java.util.List<DataSetSaveNode> ancSets = dataNode.getChildren();
+			for (DataSetSaveNode ancNode : ancSets) {
+				setComponents(ancNode);
+
+				/* pending node */
+				if (ancNode.getDataSet() instanceof PendingTreeNode.PendingNode) {
+					restorePendingNode(
+							(PendingTreeNode.PendingNode) ancNode.getDataSet(),
+							pendingGridEprs);
+				} else {
+					DSAncillaryDataSet<? extends DSBioObject> ancSet = null;
+
+					if (ancNode.getDataSet() instanceof ImageData) {
+						ancSet = (ImageData) ancNode.getDataSet();
+					} else {
+						ancSet = (DSAncillaryDataSet<? extends DSBioObject>) ancNode
+								.getDataSet();
+					}
+
+					ancSet.setExperimentInformation(ancNode.getDescription());
+					addDataSetSubNode(ancSet);
+					if (ancSet == saveTree.getSelected()) {
+						selectedNode = selection.getSelectedNode();
+					}
+					selection.setNodeSelection((ProjectTreeNode) selection
+							.getSelectedDataSetSubNode().getParent());
+				}
+			}
+			selection.setNodeSelection((ProjectTreeNode) selection
+					.getSelectedDataSetNode().getParent());
 		}
+		publishPendingNodeLoadedFromWorkspaceEvent(new PendingNodeLoadedFromWorkspaceEvent(
+					pendingGridEprs));
 		// Set final selection
 		if (selectedNode != null) {
 			projectTree.scrollPathToVisible(new TreePath(selectedNode));
@@ -618,24 +603,17 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	}
 
 	/**
-	 * Inserts a new data set as a new node in the project tree. The node is a
-	 * child of the currently selected project
+	 * Inserts a new data set as a total level new node in the project tree.
 	 * 
 	 * @param _dataSet
 	 */
 	public void addDataSetNode(DSDataSet<? extends DSBioObject> _dataSet) {
-		// Retrieve the project node for this node
-		ProjectNode pNode = selection.getSelectedProjectNode();
-
-		if (pNode == null) {
-			return;
-		}
 
 		// Inserts the new node and sets the menuNode and other variables to
 		// point to it
 		DataSetNode node = new DataSetNode(_dataSet);
 		node.setDescription(_dataSet.getExperimentInformation());
-		projectTreeModel.insertNodeInto(node, pNode, pNode.getChildCount());
+		projectTreeModel.insertNodeInto(node, root, root.getChildCount());
 		HistoryEvent event = new HistoryEvent(_dataSet);
 
 		// add to history, if a dataset node already has history, we assume that we
@@ -919,22 +897,18 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			// Make the jPopupMenu visible relative to the current mouse
 			// position in the container.
 			if (paths != null && paths.length > 1) {
-				this.jNewProjectItem.setEnabled(false);
 				this.jSaveMenuItem.setEnabled(false);
 				this.jExportToTabDelimMenuItem.setVisible(false);
 				this.jOpenRemotePDBItem.setEnabled(false);
 				this.jLoadMArrayItem.setEnabled(false);
 				this.jRenameMenuItem.setEnabled(false);
-				this.jRenameProjectItem.setEnabled(false);
 				this.jEditItem.setEnabled(false);
 				this.jViewAnnotations.setEnabled(false);
 			} else {
-				this.jNewProjectItem.setEnabled(true);
 				this.jSaveMenuItem.setEnabled(true);
 				this.jOpenRemotePDBItem.setEnabled(true);
 				this.jLoadMArrayItem.setEnabled(true);
 				this.jRenameMenuItem.setEnabled(true);
-				this.jRenameProjectItem.setEnabled(true);
 				this.jEditItem.setEnabled(true);
 				this.jViewAnnotations.setEnabled(true);
 				if ((mNode instanceof DataSetNode && getSelection()
@@ -953,8 +927,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 			if ((mNode == null) || (mNode == root)) {
 				jRootMenu.show(projectTree, e.getX(), e.getY());
-			} else if (mNode instanceof ProjectNode) {
-				jProjectMenu.show(projectTree, e.getX(), e.getY());
 			} else if (mNode instanceof DataSetNode) {
 				refreshDataSetMenu(((DataSetNode) mNode).getDataset()
 						.getClass());
@@ -1000,7 +972,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	/*
 	 * Publishers of ProjectNodeAddedEvent are recommended to directly call
-	 * addProjectNode(...)
+	 * addProjectNode(...), or addDataSetSubNode, or addDSMicroarraySet
 	 */
 	@Subscribe
 	public void receive(org.geworkbench.events.ProjectNodeAddedEvent pnae,
@@ -1008,21 +980,21 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		DSDataSet<? extends DSBioObject> dataSet = pnae.getDataSet();
 		DSAncillaryDataSet<? extends DSBioObject> ancillaryDataSet = pnae
 				.getAncillaryDataSet();
-		addProjectNode(dataSet, ancillaryDataSet);
-	}
-
-	public void addProjectNode(DSDataSet<? extends DSBioObject> dataSet,
-			DSAncillaryDataSet<? extends DSBioObject> ancillaryDataSet) {
 		if (dataSet instanceof DSMicroarraySet) {
-			addColorContext((DSMicroarraySet) dataSet);
-		}
-		if (dataSet != null) {
+			addDSMicroarraySet((DSMicroarraySet) dataSet);
+		} else if (dataSet != null) {
 			addDataSetNode(dataSet);
 		} else if (ancillaryDataSet != null) {
 			addDataSetSubNode(ancillaryDataSet);
 		}
 	}
 
+	/* Only used by CaArray2Component */
+	public void addDSMicroarraySet(DSMicroarraySet microarraySet) {
+		addColorContext(microarraySet);
+		addDataSetNode(microarraySet);
+	}
+	
 	public void processNodeCompleted(GridEndpointReferenceType gridEpr,
 			DSAncillaryDataSet<? extends DSBioObject> ancillaryDataSet) {
 		if (ancillaryDataSet == null) {
@@ -1112,14 +1084,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * @param e
 	 */
 	private void jLoadMArrayItem_actionPerformed(ActionEvent e) {
-		// Proceed only if there is a single node selected and that node
-		// is a project node.
-		if (projectTree.getSelectionCount() != 1
-				|| !(projectTree.getSelectionPath().getLastPathComponent() instanceof ProjectNode)) {
-			JOptionPane.showMessageDialog(null, "Select a project node.",
-					"Open File Error", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
+		// we used to check to make sure a project node is selected before continuing. not necessary anymore.
 
 		String dir = LoadDataDialog.getLastDataDirectory();
 		String format = LoadDataDialog.getLastDataFormat();
@@ -1142,14 +1107,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * @param e
 	 */
 	private void jOpenRemotePDBItem_actionPerformed(ActionEvent e) {
-		// Proceed only if there is a single node selected and that node
-		// is a project node.
-		if (projectTree.getSelectionCount() != 1
-				|| !(projectTree.getSelectionPath().getLastPathComponent() instanceof ProjectNode)) {
-			JOptionPane.showMessageDialog(null, "Select a project node.",
-					"Open File Error", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
+		// we used to check to make sure a project node is selected before continuing. not necessary anymore.
 
 		PDBDialog pd = new PDBDialog();
 		pd.create();
@@ -1249,29 +1207,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 	}
 
-	/**
-	 * Action listener handling user requests for renaming a project.
-	 * 
-	 * @param e
-	 */
-	private void jRenameProjectItem_actionPerformed(ActionEvent e) {
-		if (projectTree == null || selection == null
-				|| (selection.areNodeSelectionsCleared())
-				|| selection.getSelectedProjectNode() == null) {
-			JOptionPane.showMessageDialog(null, "Select a project node.",
-					"Rename Error", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-
-		ProjectNode project = selection.getSelectedProjectNode();
-		String inputValue = JOptionPane.showInputDialog("Project Name:",
-				project.toString());
-		if (inputValue != null) {
-			project.setUserObject(inputValue);
-			projectTreeModel.nodeChanged(project);
-		}
-	}
-
 	/** Force refreshing the visible components. */
 	public void ccmUpdate() {
 		DataSetNode selectedDataSetNode = selection.getSelectedDataSetNode();
@@ -1350,9 +1285,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 			parentNode = (ProjectTreeNode) node.getParent();
 
-			if (node instanceof ProjectNode)
-				projectRemove_actionPerformed((ProjectNode) node);
-			else if (node instanceof ImageNode)
+			if (node instanceof ImageNode)
 				projectTreeModel.removeNodeFromParent(node);
 			else
 				fileRemove_actionPerformed(node);
@@ -1372,13 +1305,13 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				setNodeSelection((DataSetNode) pNode.getChildAt(0));
 			}
 		} else if (parentNode.getChildCount() == 0
-				&& parentNode instanceof ProjectNode) {
+				&& parentNode == root) {
 			setNodeSelection(parentNode);
 			publishProjectEvent(new ProjectEvent(Message.CLEAR, null,
 					parentNode));
 			return;
 		} else if (parentNode.getChildCount() > 0
-				&& parentNode instanceof ProjectNode) {
+				&& parentNode == root) {
 			setNodeSelection((DataSetNode) parentNode.getChildAt(0));
 		} else if (parentNode.getChildCount() > 0
 				&& parentNode instanceof DataSetNode) {
@@ -1438,30 +1371,12 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	}
 
 	/**
-	 * Action listener handling user requests for removing a project.
-	 * 
-	 * @param e
-	 */
-	private void projectRemove_actionPerformed(ProjectNode node) {
-		if (node.getChildCount() > 0) {
-			for (Enumeration<?> en = node.children(); en.hasMoreElements();) {
-				ProjectTreeNode childNode = (ProjectTreeNode) en.nextElement();
-				if (childNode instanceof DataSetNode)
-					fileRemove_actionPerformed(childNode);
-			}
-		}
-		projectTreeModel.removeNodeFromParent(node);
-		GeawConfigObject.getGuiWindow().setVisualizationType(null);
-	}
-
-	/**
 	 * Action listener handling user requests for renaming a dataset.
 	 * 
 	 * @param e
 	 */
 	private void jRenameDataset_actionPerformed(ActionEvent e) {
-		if (projectTree == null || selection == null
-				|| (selection.areNodeSelectionsCleared())) {
+		if (projectTree == null || selection == null) {
 			JOptionPane.showMessageDialog(null,
 					"Select a dataset or ancillary dataset.", "Rename Error",
 					JOptionPane.ERROR_MESSAGE);
@@ -1490,39 +1405,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 						selection.getDataSubSet(), ds.getLabel(), inputValue));
 			}
 		}
-	}
-
-	/**
-	 * Action listener handling user requests for the creation of new projects
-	 * in the workspace.
-	 * 
-	 * @param e
-	 */
-	private void jNewProjectItem_actionPerformed(ActionEvent e) {
-		ProjectNode childNode = new ProjectNode("Project");
-		addToProject(childNode, true);
-	}
-
-	/**
-	 * Used to add a new node to a project tree
-	 * 
-	 * @param child
-	 *            The node to be added
-	 * @param shouldBeVisible
-	 *            whether it should be visible or not
-	 * @return
-	 */
-	private ProjectNode addToProject(ProjectNode child, boolean shouldBeVisible) {
-		// ProjectNodeOld childNode = new ProjectNodeOld(child);
-		projectTreeModel.insertNodeInto(child, root, root.getChildCount());
-		// Make sure the user can see the lovely new node.
-		if (shouldBeVisible) {
-			projectTree.scrollPathToVisible(new TreePath(child.getPath()));
-			projectTree.setSelectionPath(new TreePath(child.getPath()));
-			selection.setNodeSelection(child);
-		}
-		// serialize("default.wsp");
-		return child;
 	}
 
 	/**
@@ -1772,30 +1654,41 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	private ProjectTreeNode root = new ProjectTreeNode("Workspace");
 
-	private DefaultTreeModel projectTreeModel = new DefaultTreeModel(root);
+	final private DefaultTreeModel projectTreeModel = new DefaultTreeModel(root);
 	public DefaultTreeModel getTreeModel(){
 		return projectTreeModel;
 	}
 
-	private JTree projectTree = new JTree(projectTreeModel);
+	final private JTree projectTree = new JTree(projectTreeModel);
 
 	private JPopupMenu jRootMenu = new JPopupMenu();
 
-	private JPopupMenu jProjectMenu = new JPopupMenu();
-
 	private JMenuItem jUploadWspItem = new JMenuItem("Upload to server");
-
-	private JMenuItem jNewProjectItem = new JMenuItem("New Project");
 
 	private JMenuItem jLoadMArrayItem = new JMenuItem("Open File(s)");
 
 	private JMenuItem jOpenRemotePDBItem = new JMenuItem(
 			"Open PDB File from RCSB Protein Data Bank");
 
-	private JMenuItem jRenameProjectItem = new JMenuItem("Rename Project");
-
+	// required by AdjacencyMatrixFileFormat
+	public List<DataSetNode> getTopLevelDataSetNodes() {
+		List<DataSetNode> list = new ArrayList<DataSetNode>();
+		for (Enumeration<?> en = root.children(); en.hasMoreElements();) {
+			// checking is not assuming it must be DataSetNode; otherwise it is a bug somewhere else
+			list.add( (DataSetNode) en.nextElement() );
+		}
+		return list;
+	}
+	
+	// remove this, replace with boolean isEmpty();
 	public int countProjectTree() {
 		return projectTree.getRowCount();
+	}
+	
+	// used only on WorkspaceHandler
+	boolean isEmpty() {
+		// return root.getChildCount()==0; // this is probably the more proper way to check
+		return projectTree.getRowCount()<=1; // TODO not the best way to check emptiness
 	}
 
 	/**
@@ -1825,13 +1718,11 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		projectTree.setBorder(new EmptyBorder(1, 1, 0, 0));
 		jDataSetScrollPane.getViewport().add(projectTree, null);
 
-		jRootMenu.add(jNewProjectItem);
+		jRootMenu.add(jLoadMArrayItem);
+		jRootMenu.addSeparator();
+		jRootMenu.add(jOpenRemotePDBItem);
+		jRootMenu.addSeparator();
 		jRootMenu.add(jUploadWspItem);
-		jProjectMenu.add(jLoadMArrayItem);
-		jProjectMenu.addSeparator();
-		jProjectMenu.add(jOpenRemotePDBItem);
-		jProjectMenu.addSeparator();
-		jProjectMenu.add(jRenameProjectItem);
 
 		projectTree.addMouseListener(new java.awt.event.MouseAdapter() {
 
@@ -1856,24 +1747,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		// the following section is those invoked by both main frame menus AND
 		// the context menu (right-clicked invoked)
 		ActionListener listener = null; // reused just for simplicity
-
-		listener = new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				jRenameProjectItem_actionPerformed(e);
-			}
-
-		};
-		listeners.put("Edit.Rename.Project", listener);
-		jRenameProjectItem.addActionListener(listener);
-
-		listener = new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				jNewProjectItem_actionPerformed(e);
-			}
-
-		};
-		listeners.put("File.New.Project", listener);
-		jNewProjectItem.addActionListener(listener);
 
 		listener = new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {

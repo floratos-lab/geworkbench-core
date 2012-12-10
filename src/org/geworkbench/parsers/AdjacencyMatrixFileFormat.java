@@ -16,7 +16,6 @@ import java.io.InterruptedIOException;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -36,10 +35,10 @@ import org.geworkbench.bison.datastructure.biocollections.AdjacencyMatrix;
 import org.geworkbench.bison.datastructure.biocollections.AdjacencyMatrixDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 import org.geworkbench.builtin.projects.DataSetNode;
-import org.geworkbench.builtin.projects.ProjectNode;
-import org.geworkbench.builtin.projects.ProjectTreeNode;
+import org.geworkbench.builtin.projects.ProjectPanel;
 import org.geworkbench.engine.properties.PropertiesManager;
 import org.geworkbench.util.ResultSetlUtil;
 import org.geworkbench.util.Util;
@@ -63,7 +62,6 @@ public class AdjacencyMatrixFileFormat extends DataSetFileFormat {
 	String[] representedByList;
 	AdjacencyMatrixFileFilter adjMatrixFilter = null;
 
-	private ProjectNode projectNode;
 	private String selectedFormart;
 	private String selectedRepresentedBy;
 	private DataSetNode selectedDataSetNode;
@@ -71,15 +69,10 @@ public class AdjacencyMatrixFileFormat extends DataSetFileFormat {
 	private boolean isCancel = false;
 	private String fileName = null;
 
-	public void setProjectNode(ProjectNode projectNode) {
-		this.projectNode = projectNode;
-	}
-
 	public AdjacencyMatrixFileFormat() {
 		formatName = "Networks"; // Setup the display name for the
 		// format.
 		adjMatrixFilter = new AdjacencyMatrixFileFilter();
-
 	}
 
 	@Override
@@ -103,10 +96,8 @@ public class AdjacencyMatrixFileFormat extends DataSetFileFormat {
 		// attached to
 		this.fileName = file.getName();
 		ArrayList<DataSetNode> dataSetstmp = new ArrayList<DataSetNode>();
-		for (Enumeration<?> en = projectNode.children(); en.hasMoreElements();) {
-			ProjectTreeNode node = (ProjectTreeNode) en.nextElement();
-			if (node instanceof DataSetNode
-					&& (((DataSetNode) node).getDataset() instanceof CSMicroarraySet)) {
+		for (DataSetNode node : ProjectPanel.getInstance().getTopLevelDataSetNodes()) {
+			if ( ((DataSetNode) node).getDataset() instanceof DSMicroarraySet ) {
 				dataSetstmp.add((DataSetNode) node);
 			}
 		}
