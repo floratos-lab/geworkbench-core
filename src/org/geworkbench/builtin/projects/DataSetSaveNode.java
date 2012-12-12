@@ -18,11 +18,8 @@ import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
  */
 public class DataSetSaveNode implements Serializable {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 2094279433020194290L;
-    private String name;
+
     private String description = "";
     private DSDataSet<? extends DSBioObject> dataSet;
     private String visualSelected;
@@ -56,20 +53,14 @@ public class DataSetSaveNode implements Serializable {
         }
     }
 
-    public DataSetSaveNode(String name) {
-        this.name = name;
+    public DataSetSaveNode() {
         dataSet = null;
         children = new ArrayList<DataSetSaveNode>();
     }
 
     public DataSetSaveNode(DSDataSet<? extends DSBioObject> dataSet) {
         this.dataSet = dataSet;
-        this.name = dataSet.getLabel();
         children = new ArrayList<DataSetSaveNode>();
-    }
-
-    public String getName() {
-        return name;
     }
 
     public DSDataSet<? extends DSBioObject> getDataSet() {

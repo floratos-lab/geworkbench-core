@@ -24,7 +24,6 @@ import java.util.TreeMap;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -34,7 +33,6 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.MenuElement;
-import javax.swing.SwingConstants;
 import javax.swing.ToolTipManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.TreeModelEvent;
@@ -120,28 +118,28 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	private static final String WORKSPACE_DIR = "workspaceDir";
 
-	private LoadDataDialog loadData = new LoadDataDialog();
+	final private LoadDataDialog loadData = new LoadDataDialog();
 
-	private ProjectSelection selection = new ProjectSelection();
+	final private ProjectSelection selection = new ProjectSelection();
 
-	private HashMap<GridEndpointReferenceType, PendingTreeNode> eprPendingNodeMap = new HashMap<GridEndpointReferenceType, PendingTreeNode>();
+	final private HashMap<GridEndpointReferenceType, PendingTreeNode> eprPendingNodeMap = new HashMap<GridEndpointReferenceType, PendingTreeNode>();
 
-	private JPopupMenu dataSetMenu = new JPopupMenu();
+	final private JPopupMenu dataSetMenu = new JPopupMenu();
 
-	private JPopupMenu pendingMenu = new JPopupMenu();
+	final private JPopupMenu pendingMenu = new JPopupMenu();
 
-	private JProgressBar progressBar = new JProgressBar();
+	final private JProgressBar progressBar = new JProgressBar();
 
-	private JMenuItem jEditItem = new JMenuItem("View in Editor");
+	final private JMenuItem jEditItem = new JMenuItem("View in Editor");
 
-	private JMenuItem jViewAnnotations = new JMenuItem("View Annotations");
+	final private JMenuItem jViewAnnotations = new JMenuItem("View Annotations");
 
-	private JMenuItem jSaveMenuItem = new JMenuItem("Save");
+	final private JMenuItem jSaveMenuItem = new JMenuItem("Save");
 
-	private JMenuItem jExportToTabDelimMenuItem = new JMenuItem(
+	final private JMenuItem jExportToTabDelimMenuItem = new JMenuItem(
 			"Export to tab-delim");
 
-	private JMenuItem jRenameMenuItem = new JMenuItem("Rename");
+	final private JMenuItem jRenameMenuItem = new JMenuItem("Rename");
 
 	/*
 	 * enforce ProjectPanel to be singleton: 'regular' method of making
@@ -1636,11 +1634,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * <code>JComponent</code> types that constitute the
 	 * <code>ProjectPanel</code>
 	 */
-	private JPanel jProjectPanel = new JPanel();
-
-	private JLabel projectPanelTitleLabel = new JLabel("Project Folders");
-
-	private JScrollPane jDataSetScrollPane = new JScrollPane();
+	final private JPanel jProjectPanel = new JPanel();
 
 	final private ProjectTreeNode root = new ProjectTreeNode("Workspace");
 
@@ -1685,9 +1679,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	private HashMap<String, ActionListener> listeners = new HashMap<String, ActionListener>();
 
 	private void initializeMainPanel() {
-		projectPanelTitleLabel.setBorder(BorderFactory.createEtchedBorder());
-		projectPanelTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
+		JScrollPane jDataSetScrollPane = new JScrollPane();
 		jDataSetScrollPane.setBorder(BorderFactory.createLoweredBevelBorder());
 		jDataSetScrollPane.setMinimumSize(new Dimension(122, 80));
 
@@ -1697,7 +1690,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
 
 		jProjectPanel.setLayout(new BorderLayout());
-		jProjectPanel.add(projectPanelTitleLabel, BorderLayout.NORTH);
 		jProjectPanel.add(jDataSetScrollPane, BorderLayout.CENTER);
 		jProjectPanel.add(progressBar, BorderLayout.SOUTH);
 
@@ -1943,11 +1935,12 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		return event;
 	}
 
-	public ProjectTreeNode getRoot() {
-		return (ProjectTreeNode) projectTreeModel.getRoot();
+	// this is to support SaveTree. do not change this to public
+	ProjectTreeNode getRoot() {
+		return root;
 	}
 
-	JProgressBar getProgressBar() {
+	JProgressBar getProgressBar() { // TODO this is to support FileOpenHandler. need a better design.
 		return progressBar;
 	}
 

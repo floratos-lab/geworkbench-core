@@ -35,11 +35,8 @@ public class SaveTree implements Serializable {
 		this.lastchange = lc;
 
 		selected = panel.getDataSet();
-		ProjectTreeNode root = panel.getRoot();
-		rootNode = new DataSetSaveNode(root
-				.toString());
-		rootNode.setDescription(root.getDescription());
-		addChildren(root, rootNode);
+		rootNode = new DataSetSaveNode();
+		addChildren(panel.getRoot(), rootNode);
 	}
 
 	static DSDataSet<?> getDSDataSet(ProjectTreeNode treeNode) {
