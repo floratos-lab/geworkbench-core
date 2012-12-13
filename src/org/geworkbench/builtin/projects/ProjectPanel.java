@@ -49,7 +49,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.analysis.AbstractGridAnalysis;
 import org.geworkbench.bison.datastructure.biocollections.CSAncillaryDataSet;
-import org.geworkbench.bison.datastructure.biocollections.CSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
@@ -91,6 +90,7 @@ import org.geworkbench.events.ProjectEvent.Message;
 import org.geworkbench.events.ProjectNodePostCompletedEvent;
 import org.geworkbench.events.ProjectNodeRemovedEvent;
 import org.geworkbench.events.ProjectNodeRenamedEvent;
+import org.geworkbench.util.DataTypeUtils;
 import org.geworkbench.util.FilePathnameUtils;
 import org.geworkbench.util.ProgressDialog;
 import org.geworkbench.util.ProgressItem;
@@ -924,17 +924,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			} else if (mNode instanceof DataSetSubNode) {
 				refreshDataSetMenu(null);
 				DSDataSet<? extends DSBioObject> ds = ((DataSetSubNode) mNode)._aDataSet;
-				@SuppressWarnings("rawtypes")
-				Class fromClass = null;
-				try{
-					fromClass = ds.getClass().getMethod("writeToFile", String.class).getDeclaringClass();
-					log.info("writeToFile from class : "+ fromClass);
-				}catch(Exception ex){
-					ex.printStackTrace();
-				}
-				if (fromClass!=null && fromClass.equals(CSDataSet.class))
-					jSaveMenuItem.setEnabled(false);
-				else jSaveMenuItem.setEnabled(true);
+				boolean supportWriteToFile = DataTypeUtils.supportWriteToFile(ds.getClass()); 
+				jSaveMenuItem.setEnabled(supportWriteToFile);
 				if (ds instanceof CSTTestResultSet) jSaveMenuItem.setEnabled(true);
 				dataSetMenu.show(projectTree, e.getX(), e.getY());
 			} else if (mNode instanceof PendingTreeNode) {
