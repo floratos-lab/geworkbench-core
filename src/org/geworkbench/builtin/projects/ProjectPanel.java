@@ -173,9 +173,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		// Initializes Random number generator to generate unique ID's
 		RandomNumberGenerator.setSeed(System.currentTimeMillis());
 
-		initializeMenuListeners();
-		initializeMainPanel();
-		initializePopupMenuItems();
+		init();
 
 		// Checks if a default workspace exists and loads it
 		File defaultWS = new File("./default.wsp");
@@ -204,77 +202,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		initializeWorkspaceBehavior();
 
 		INSTANCE = this;
-	}
-
-	private void initializePopupMenuItems() {
-		// root menu
-		jUploadWspItem.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				RWspHandler ws = new RWspHandler();
-				ws.uploadWsp();
-			}
-
-		});
-
-		// dataset menu
-		jSaveMenuItem.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				saveNodeAsFile(e);
-			}
-		});
-
-		jExportToTabDelimMenuItem
-				.addActionListener(new java.awt.event.ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						saveNodeAsFile(e);
-					}
-				});
-		jExportToTabDelimMenuItem.setVisible(false);
-
-		jRenameMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				jRenameDataset_actionPerformed(e);
-			}
-		});
-
-		JMenuItem jRemoveDatasetItem = new JMenuItem("Remove");
-		jRemoveDatasetItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				remove_actionPerformed();
-			}
-		});
-
-		jEditItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (selection.getSelectedNode() instanceof DataSetNode) {
-					viewInExternalEditor();
-				}
-			}
-		});
-		jViewAnnotations.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (selection.getSelectedNode() instanceof DataSetNode) {
-					viewAnnotationInExternalEditor();
-				}
-			}
-		});
-
-		dataSetMenu.add(jSaveMenuItem);
-		dataSetMenu.addSeparator();
-		dataSetMenu.add(jExportToTabDelimMenuItem);
-		dataSetMenu.add(jRenameMenuItem);
-		dataSetMenu.add(jRemoveDatasetItem);
-		dataSetMenu.add(jEditItem);
-		dataSetMenu.add(jViewAnnotations);
-
-		// pending menu
-		JMenuItem jRemovePendingItem = new JMenuItem("Remove");
-		jRemovePendingItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				remove_actionPerformed();
-			}
-		});
-		pendingMenu.add(jRemovePendingItem);
 	}
 
 	private void viewInExternalEditor() {
@@ -890,14 +817,14 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				this.jSaveMenuItem.setEnabled(false);
 				this.jExportToTabDelimMenuItem.setVisible(false);
 				this.jOpenRemotePDBItem.setEnabled(false);
-				this.jLoadMArrayItem.setEnabled(false);
+				this.openFileItem.setEnabled(false);
 				this.jRenameMenuItem.setEnabled(false);
 				this.jEditItem.setEnabled(false);
 				this.jViewAnnotations.setEnabled(false);
 			} else {
 				this.jSaveMenuItem.setEnabled(true);
 				this.jOpenRemotePDBItem.setEnabled(true);
-				this.jLoadMArrayItem.setEnabled(true);
+				this.openFileItem.setEnabled(true);
 				this.jRenameMenuItem.setEnabled(true);
 				this.jEditItem.setEnabled(true);
 				this.jViewAnnotations.setEnabled(true);
@@ -1058,13 +985,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				parent));
 	}
 
-	/**
-	 * Action listener handling user requests for opening a file containing
-	 * microarray set data.
-	 * 
-	 * @param e
-	 */
-	private void jLoadMArrayItem_actionPerformed(ActionEvent e) {
+	private void openFile() {
 		// we used to check to make sure a project node is selected before continuing. not necessary anymore.
 
 		String dir = LoadDataDialog.getLastDataDirectory();
@@ -1082,26 +1003,10 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	}
 
 	/**
-	 * Action listener handling user requests for opening a pdb file from RCSB
-	 * Protein Data Bank.
+	 * merge 2 or more microarray sets into 1.
 	 * 
-	 * @param e
 	 */
-	private void jOpenRemotePDBItem_actionPerformed(ActionEvent e) {
-		// we used to check to make sure a project node is selected before continuing. not necessary anymore.
-
-		PDBDialog pd = new PDBDialog();
-		pd.create();
-	}
-
-	/**
-	 * Action listener handling user requests to merge 2 or more microarray sets
-	 * into 1.
-	 * 
-	 * @param e
-	 *            <code>ActionEvent</code>
-	 */
-	private void jMergeDatasets_actionPerformed(ActionEvent e) {
+	private void mergeDataSets() {
 		TreePath[] selections;
 
 		MutableTreeNode node = null;
@@ -1227,7 +1132,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 	}
 
-	private void remove_actionPerformed() {
+	private void removeNode() {
 		if (projectTree == null || selection == null) {
 			JOptionPane.showMessageDialog(null, "Please make a selection.",
 					"Delete Error", JOptionPane.ERROR_MESSAGE);
@@ -1351,12 +1256,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		return event;
 	}
 
-	/**
-	 * Action listener handling user requests for renaming a dataset.
-	 * 
-	 * @param e
-	 */
-	private void jRenameDataset_actionPerformed(ActionEvent e) {
+	private void renameDataset() {
 		if (projectTree == null || selection == null) {
 			JOptionPane.showMessageDialog(null,
 					"Select a dataset or ancillary dataset.", "Rename Error",
@@ -1638,13 +1538,13 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	final private JTree projectTree = new JTree(projectTreeModel);
 
-	private JPopupMenu jRootMenu = new JPopupMenu();
+	final private JPopupMenu jRootMenu = new JPopupMenu();
 
-	private JMenuItem jUploadWspItem = new JMenuItem("Upload to server");
+	final private JMenuItem jUploadWspItem = new JMenuItem("Upload to server");
 
-	private JMenuItem jLoadMArrayItem = new JMenuItem("Open File(s)");
+	final private JMenuItem openFileItem = new JMenuItem("Open File(s)");
 
-	private JMenuItem jOpenRemotePDBItem = new JMenuItem(
+	final private JMenuItem jOpenRemotePDBItem = new JMenuItem(
 			"Open PDB File from RCSB Protein Data Bank");
 
 	// required by AdjacencyMatrixFileFormat
@@ -1669,8 +1569,10 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 */
 	private HashMap<String, ActionListener> listeners = new HashMap<String, ActionListener>();
 
-	private void initializeMainPanel() {
-
+	// initialize visual elements and listeners
+	private void init() {
+		
+		// part 1: visual elements
 		JScrollPane jDataSetScrollPane = new JScrollPane();
 		jDataSetScrollPane.setBorder(BorderFactory.createLoweredBevelBorder());
 		jDataSetScrollPane.setMinimumSize(new Dimension(122, 80));
@@ -1687,12 +1589,25 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		projectTree.setBorder(new EmptyBorder(1, 1, 0, 0));
 		jDataSetScrollPane.getViewport().add(projectTree, null);
 
-		jRootMenu.add(jLoadMArrayItem);
+		jRootMenu.add(openFileItem);
 		jRootMenu.addSeparator();
 		jRootMenu.add(jOpenRemotePDBItem);
 		jRootMenu.addSeparator();
 		jRootMenu.add(jUploadWspItem);
 
+		jExportToTabDelimMenuItem.setVisible(false);
+		
+		JMenuItem jRemoveDatasetItem = new JMenuItem("Remove");
+
+		dataSetMenu.add(jSaveMenuItem);
+		dataSetMenu.addSeparator();
+		dataSetMenu.add(jExportToTabDelimMenuItem);
+		dataSetMenu.add(jRenameMenuItem);
+		dataSetMenu.add(jRemoveDatasetItem);
+		dataSetMenu.add(jEditItem);
+		dataSetMenu.add(jViewAnnotations);
+
+		// part 2: the listeners
 		projectTree.addMouseListener(new java.awt.event.MouseAdapter() {
 
 			public void mouseReleased(MouseEvent e) {
@@ -1706,63 +1621,82 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				jProjectTree_keyReleased(e);
 			}
 		});
-	}
-
-	/**
-	 * Add the action listeners that respond to the various menu selections and
-	 * popup selections.
-	 */
-	private void initializeMenuListeners() {
-		// the following section is those invoked by both main frame menus AND
+		
+		// three groups of menu item listeners
+		
+		// GROUP 1: invoke by both main frame menus AND
 		// the context menu (right-clicked invoked)
-		ActionListener listener = null; // reused just for simplicity
 
-		listener = new java.awt.event.ActionListener() {
+		ActionListener openFileListener = new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
-				jLoadMArrayItem_actionPerformed(e);
+				openFile();
 			}
 
 		};
-		listeners.put("File.Open.File", listener);
-		jLoadMArrayItem.addActionListener(listener);
+		listeners.put("File.Open.File", openFileListener);
+		openFileItem.addActionListener(openFileListener);
 
-		listener = new ActionListener() {
+		ActionListener openRemotePDBListener = new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
-				jOpenRemotePDBItem_actionPerformed(e);
+				new PDBDialog().create();
 			}
 		};
-		listeners.put("File.OpenRemotePDB.File", listener);
-		jOpenRemotePDBItem.addActionListener(listener);
+		listeners.put("File.OpenRemotePDB.File", openRemotePDBListener);
+		jOpenRemotePDBItem.addActionListener(openRemotePDBListener);
 
-		// the following section is those only invoked by main frame menus
-		listeners.put("Edit.Rename.File", new ActionListener() {
+		ActionListener renameDataSetListener = new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
-				jRenameDataset_actionPerformed(e);
+				renameDataset();
 			}
-		});
+			
+		};
+		listeners.put("Edit.Rename.File", renameDataSetListener);
+		jRenameMenuItem.addActionListener(renameDataSetListener);
+
+		ActionListener saveFileListener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				saveNodeAsFile(e);
+			}
+		};
+		listeners.put("File.Save.Dataset", saveFileListener);
+		jSaveMenuItem.addActionListener(saveFileListener);
+		jExportToTabDelimMenuItem.addActionListener(saveFileListener);
+		
+		ActionListener removeNodeListener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				removeNode();
+			}
+		};
+		listeners.put("File.Remove", removeNodeListener);
+		jRemoveDatasetItem.addActionListener(removeNodeListener);
+		// pending menu
+		JMenuItem jRemovePendingItem = new JMenuItem("Remove");
+		jRemovePendingItem.addActionListener(removeNodeListener);
+		pendingMenu.add(jRemovePendingItem);
+		
+		// GROUP 2: only invoked by main frame menus
 
 		listeners.put("File.Merge Datasets", new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				jMergeDatasets_actionPerformed(e);
+				mergeDataSets();
 			}
 		});
 
 		listeners.put("File.Save.Workspace", new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				saveWorkspace_actionPerformed(false);
+				saveWorkspace();
 			}
 		});
 
-		listeners.put("File.Save.Dataset", new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				saveNodeAsFile(e);
-			}
-
-		});
 
 		listeners.put("File.Open.Workspace", new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				openWorkspace_actionPerformed();
+				openWorkspace();
 			}
 		});
 
@@ -1797,9 +1731,29 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			}
 		});
 
-		listeners.put("File.Remove", new ActionListener() {
+		// GROUP 3: only invoke from right-click
+		// root menu
+		jUploadWspItem.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				remove_actionPerformed();
+				RWspHandler ws = new RWspHandler();
+				ws.uploadWsp();
+			}
+
+		});
+
+		jEditItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (selection.getSelectedNode() instanceof DataSetNode) {
+					viewInExternalEditor();
+				}
+			}
+		});
+		
+		jViewAnnotations.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (selection.getSelectedNode() instanceof DataSetNode) {
+					viewAnnotationInExternalEditor();
+				}
 			}
 		});
 
@@ -1821,7 +1775,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 					return;
 
 				if (n == JOptionPane.YES_OPTION) {
-					saveWorkspace_actionPerformed(true);
+					saveWorkspaceAndExit();
 				} else { // if choosing No
 					GeawConfigObject.getGuiWindow().dispose();
 					UILauncher.printTimeStamp("geWorkbench exited.");
@@ -1849,12 +1803,12 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		});
 	}
 
-	private void saveWorkspace_actionPerformed(boolean terminating) {
+	static private void saveWorkspace() {
 		if (RWspHandler.wspId > 0)
-			RWspHandler.saveLocalwsp(terminating);
+			RWspHandler.saveLocalwsp(false);
 		else {
 			WorkspaceHandler ws = new WorkspaceHandler();
-			ws.save(WORKSPACE_DIR, terminating);
+			ws.save(WORKSPACE_DIR, false);
 			if (!StringUtils.isEmpty(ws.getWorkspacePath()))
 				GUIFramework.getFrame().setTitle(
 						((Skin) GeawConfigObject.getGuiWindow())
@@ -1864,7 +1818,25 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 	}
 
-	private void openWorkspace_actionPerformed() {
+	// notice this is almost the same as saveWorkspace()
+	// I believe this is better than using switch to create two flavors of actual behavior
+	// TODO: the relationship between RWspHandler and WorkspaceHandler is what should be better designed.
+	static private void saveWorkspaceAndExit() {
+		if (RWspHandler.wspId > 0)
+			RWspHandler.saveLocalwsp(true);
+		else {
+			WorkspaceHandler ws = new WorkspaceHandler();
+			ws.save(WORKSPACE_DIR, true);
+			if (!StringUtils.isEmpty(ws.getWorkspacePath()))
+				GUIFramework.getFrame().setTitle(
+						((Skin) GeawConfigObject.getGuiWindow())
+								.getApplicationTitle()
+								+ " ["
+								+ ws.getWorkspacePath() + "]");
+		}
+	}
+
+	private void openWorkspace() {
 		if (RWspHandler.wspId > 0) {
 			RWspHandler.saveLocalwsp(false);
 			clear();
