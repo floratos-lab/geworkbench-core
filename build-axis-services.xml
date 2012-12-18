@@ -24,7 +24,10 @@
 		</exec>
 		<exec executable="svn" >
 		  <arg line="checkout ${svn.root}/components/aracne-java ${checkout.dir}/aracne"/>
-		</exec>		 
+		</exec>	
+		<exec executable="svn" >
+		  <arg line="checkout ${svn.root}/components/ttest ${checkout.dir}/ttest"/>
+		</exec>	
 	</target>	 
 
 	<target name="deploy" depends="deployinit">
