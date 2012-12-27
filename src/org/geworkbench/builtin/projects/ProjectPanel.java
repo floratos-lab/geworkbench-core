@@ -1110,6 +1110,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * This method will remove an added subnode. If the current selected node is
 	 * not the added subNode, then do nothing.
 	 */
+	/* This method is used only by CytoscapeWidget. This is the kind of stuff that breaks the conceptual integrity of a design. Do not use it whenever possible. */
 	public void removeAddedSubNode(
 			DSAncillaryDataSet<? extends DSBioObject> aDataSet) {
 
@@ -1133,41 +1134,27 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	}
 
 	private void removeNode() {
-		if (projectTree == null || selection == null) {
-			JOptionPane.showMessageDialog(null, "Please make a selection.",
-					"Delete Error", JOptionPane.ERROR_MESSAGE);
-			return;
-		} else if (selection.getSelectedNode().isRoot()) {
+		if (selection.getSelectedNode().isRoot()) {
 			JOptionPane.showMessageDialog(null,
 					"Please don't select a ROOT node.", "Delete Error",
 					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
+		// multiple selection is allowed
 		TreePath[] paths = projectTree.getSelectionPaths();
 
-		if (paths.length <= 0)
+		if (paths==null || paths.length <= 0)
 			return;
 
-		ProjectTreeNode node = new ProjectTreeNode();
 		ProjectTreeNode parentNode = null;
 
 		for (TreePath path : paths) {
-			node = (ProjectTreeNode) path.getLastPathComponent();
+			ProjectTreeNode node = (ProjectTreeNode) path.getLastPathComponent();
 
-			if (paths == null || node.isRoot())
-				continue;
-
-			boolean isExist = false;
-			for (int i = 0; i < paths.length; i++) {
-				if (paths[i].equals(path)) {
-					isExist = true;
-					break;
-				}
-
+			if (node.isRoot()) {
+				return;
 			}
-			if (!isExist)
-				continue;
 
 			parentNode = (ProjectTreeNode) node.getParent();
 
@@ -1175,32 +1162,12 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				projectTreeModel.removeNodeFromParent(node);
 			else
 				fileRemove_actionPerformed(node);
-			paths = projectTree.getSelectionPaths();
 		}
+
 		// If there are any remaining projects, select the first of them to
 		// be the next one to get the focus.
-
-		// TODO the cases here should be reviewed. some of them may not be needed.
-		if (parentNode == null)
-			return;
-		else if (parentNode.isRoot() && parentNode.getChildCount() <= 0) {
-			clear();
-			setNodeSelection(parentNode);
-		} else if (parentNode.isRoot() && parentNode.getChildCount() > 0) {
-			ProjectTreeNode pNode = (ProjectTreeNode) parentNode.getChildAt(0);
-			if (pNode.getChildCount() > 0) {
-				setNodeSelection((DataSetNode) pNode.getChildAt(0));
-			}
-		} else if (parentNode.getChildCount() == 0
-				&& parentNode == root) {
-			setNodeSelection(parentNode);
-			return;
-		} else if (parentNode.getChildCount() > 0
-				&& parentNode == root) {
-			setNodeSelection((DataSetNode) parentNode.getChildAt(0));
-		} else if (parentNode.getChildCount() > 0
-				&& parentNode instanceof DataSetNode) {
-			setNodeSelection((DataSetSubNode) parentNode.getChildAt(0));
+		if (parentNode.getChildCount() > 0) {
+			setNodeSelection((ProjectTreeNode) parentNode.getChildAt(0));
 		} else {
 			setNodeSelection(parentNode);
 		}
