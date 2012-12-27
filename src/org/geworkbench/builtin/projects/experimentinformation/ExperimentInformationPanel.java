@@ -7,6 +7,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.engine.config.VisualPlugin;
 import org.geworkbench.engine.management.AcceptTypes;
@@ -27,6 +29,8 @@ import org.geworkbench.events.ProjectEvent;
 @AcceptTypes({DSDataSet.class}) 
 public class ExperimentInformationPanel implements VisualPlugin {
 
+	static private Log log = LogFactory.getLog(ExperimentInformationPanel.class);
+	
     /**
      * Text to display when there are no user comments entered.
      */
@@ -71,18 +75,20 @@ public class ExperimentInformationPanel implements VisualPlugin {
      * @param e
      */
     @Subscribe public void receive(ProjectEvent e, Object source) {
-        DSDataSet<?> dataSet = e.getDataSet();
-        if (dataSet != null) {
-        	String experimentInfo = DEFAULT_MESSAGE;
-            if (e.getValue()!=ProjectEvent.Message.CLEAR) {
-                String description = dataSet.getDescription();
-                if (description != null && description.length() > 0)
-                    experimentInfo += description + "\n";
-                else
-                    experimentInfo = DEFAULT_MESSAGE;
-            }
-            experimentTextArea.setText(experimentInfo);
-            experimentTextArea.setCaretPosition(0); // For long text.
-        }
+		DSDataSet<?> dataSet = e.getDataSet();
+		if (dataSet != null) {
+			String experimentInfo = DEFAULT_MESSAGE;
+
+			String description = dataSet.getDescription();
+			if (description != null && description.length() > 0)
+				experimentInfo += description + "\n";
+			else
+				experimentInfo = DEFAULT_MESSAGE;
+
+			experimentTextArea.setText(experimentInfo);
+			experimentTextArea.setCaretPosition(0); // For long text.
+		} else {
+			log.warn("dataSet is null");
+		}
     }
 }

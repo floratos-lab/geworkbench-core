@@ -90,26 +90,13 @@ public abstract class MicroarrayViewEventBase implements VisualPlugin {
 	@Subscribe(Asynchronous.class)
 	public void receive(org.geworkbench.events.ProjectEvent e, Object source) {
 
-		log.debug("Source object " + source);
-
-		if (e.getValue()==org.geworkbench.events.ProjectEvent.Message.CLEAR) {
-			if(beingRefreshed) {
-				return;
+		DSDataSet<?> dataSet = e.getDataSet();
+		if (dataSet instanceof DSMicroarraySet) {
+			if (refMASet != dataSet) {
+				this.refMASet = (DSMicroarraySet) dataSet;
 			}
-
-			beingRefreshed = true;
-			refMASet = null;
-			fireModelChangedEvent();
-			beingRefreshed = false;
-		} else {
-			DSDataSet<?> dataSet = e.getDataSet();
-			if (dataSet instanceof DSMicroarraySet) {
-				if (refMASet != dataSet) {
-					this.refMASet = (DSMicroarraySet) dataSet;					
-				}
-			}
-			refreshMaSetView();
 		}
+		refreshMaSetView();
 	}
 
 	/**

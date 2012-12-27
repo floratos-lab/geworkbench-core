@@ -98,10 +98,9 @@ public class ProjectSelection {
                 AnnotationParser.setCurrentDataSet(selectedDataSetNode.getDataset());
                 GeawConfigObject.getGuiWindow().setVisualizationType(selectedDataSetNode.getDataset());
                 checkDataSetNode();
-                if(selectedDataSetNode.getDataset() instanceof CSProteinStructure){
-                	throwEvent(ProjectEvent.Message.CLEAR);
-                }
-                else throwEvent(ProjectEvent.Message.SELECT);
+				if (! (selectedDataSetNode.getDataset() instanceof CSProteinStructure)) {
+					throwEvent(ProjectEvent.Message.SELECT);
+				}
             } else if (node instanceof DataSetSubNode) {
                 selectedDataSetSubNode = (DataSetSubNode) node;
                 selectedDataSetNode = (DataSetNode) getNodeOfClass(node, DataSetNode.class);
@@ -125,8 +124,6 @@ public class ProjectSelection {
                 selectedDataSetSubNode = null;
                 GeawConfigObject.getGuiWindow().setVisualizationType(null);                
                 checkDataSetNode();
-				ProjectPanel.getInstance().publishProjectEvent(
-						new ProjectEvent(Message.CLEAR, null, null));
             }            
         }
     }

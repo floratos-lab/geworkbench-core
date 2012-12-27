@@ -21,7 +21,7 @@ public class ProjectEvent {
     private final DSDataSet<? extends DSBioObject> dataSet;
     private final ProjectTreeNode node;
 
-    public enum Message {CLEAR, SELECT, CCM_UPDATE};
+    public enum Message {SELECT, CCM_UPDATE};
 
     public ProjectEvent(final Message value, final DSDataSet<? extends DSBioObject> dataSet, final ProjectTreeNode node) {
         this.value = value;

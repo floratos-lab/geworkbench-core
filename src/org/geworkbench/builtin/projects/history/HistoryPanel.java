@@ -7,11 +7,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.properties.DSExtendable;
 import org.geworkbench.engine.config.VisualPlugin;
 import org.geworkbench.engine.management.AcceptTypes;
 import org.geworkbench.engine.management.Subscribe;
+
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
@@ -26,6 +29,7 @@ import org.geworkbench.engine.management.Subscribe;
  * set has undergone.
  */
 @AcceptTypes({DSDataSet.class}) public class HistoryPanel implements VisualPlugin {
+	static private Log log = LogFactory.getLog(HistoryPanel.class);
     /**
      * Text to display when there are no user comments entered.
      */
@@ -70,24 +74,25 @@ import org.geworkbench.engine.management.Subscribe;
      *
      * @param e
      */
-    @Subscribe public void receive(org.geworkbench.events.ProjectEvent e, Object source) {
-    	DSDataSet<?>  maSet = e.getDataSet();
-        if (maSet != null) {
-            datasetHistory = DEFAULT_MESSAGE;
-            if (e.getValue()==org.geworkbench.events.ProjectEvent.Message.CLEAR)
-                maSet = null;
-            else if (maSet != null) {
-                Object[] values = maSet.getValuesForName(HISTORY);
-                if (values != null && values.length > 0) {
-                    datasetHistory = (String) values[0];
-                    if (datasetHistory.trim().equals(""))
-                        datasetHistory = DEFAULT_MESSAGE;
-                }
-            }
-            historyTextArea.setText(datasetHistory);
-            historyTextArea.setCaretPosition(0); // For long text.
-        }
-    }
+	@Subscribe
+	public void receive(org.geworkbench.events.ProjectEvent e, Object source) {
+		DSDataSet<?> maSet = e.getDataSet();
+		if (maSet != null) {
+			datasetHistory = DEFAULT_MESSAGE;
+
+			Object[] values = maSet.getValuesForName(HISTORY);
+			if (values != null && values.length > 0) {
+				datasetHistory = (String) values[0];
+				if (datasetHistory.trim().equals(""))
+					datasetHistory = DEFAULT_MESSAGE;
+			}
+
+			historyTextArea.setText(datasetHistory);
+			historyTextArea.setCaretPosition(0); // For long text.
+		} else {
+			log.warn("dataSet is null");
+		}
+	}
 
     /**
      * UPdate data history for pattern discovery.

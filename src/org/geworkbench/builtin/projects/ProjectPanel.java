@@ -1180,6 +1180,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		// If there are any remaining projects, select the first of them to
 		// be the next one to get the focus.
 
+		// TODO the cases here should be reviewed. some of them may not be needed.
 		if (parentNode == null)
 			return;
 		else if (parentNode.isRoot() && parentNode.getChildCount() <= 0) {
@@ -1193,8 +1194,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		} else if (parentNode.getChildCount() == 0
 				&& parentNode == root) {
 			setNodeSelection(parentNode);
-			publishProjectEvent(new ProjectEvent(Message.CLEAR, null,
-					parentNode));
 			return;
 		} else if (parentNode.getChildCount() > 0
 				&& parentNode == root) {
@@ -1484,14 +1483,11 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	}
 
 	/**
-	 * Clears the current workspace from the project window and notifies all
-	 * components that have registered to receive workspace clearing events.
+	 * Clears the current workspace from the project panel.
 	 */
 	void clear() {
 		root.removeAllChildren();
 		projectTreeModel.reload(root);
-
-		publishProjectEvent(new ProjectEvent(Message.CLEAR, null, null));
 		selection.clearNodeSelections();
 	}
 
