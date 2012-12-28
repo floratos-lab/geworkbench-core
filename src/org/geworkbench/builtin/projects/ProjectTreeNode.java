@@ -28,19 +28,17 @@ public class ProjectTreeNode extends DefaultMutableTreeNode implements
 	protected String description = "";
 
 	/**
-	 * Default Constructor
+	 * Default Constructor, required by its sub-class's constructor
 	 */
-	public ProjectTreeNode() {
+	protected ProjectTreeNode() {
 	}
 
 	/**
 	 * Constructor
 	 * 
-	 * @param nodeName
-	 *            <code>Object</code> to be set as User Object
-	 */
-	public ProjectTreeNode(Object nodeName) {
-		setUserObject(nodeName);
+	 * The only time you construct an instance of this class, instead of its sub-class, is the root node. */
+	public ProjectTreeNode(String rootLabel) {
+		setUserObject(rootLabel);
 	}
 
 	public String getDescription() {

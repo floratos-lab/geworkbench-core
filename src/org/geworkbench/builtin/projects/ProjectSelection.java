@@ -3,18 +3,13 @@ package org.geworkbench.builtin.projects;
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
 import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
-import org.geworkbench.bison.datastructure.bioobjects.structure.CSProteinStructure;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.events.ProjectEvent;
 import org.geworkbench.events.ProjectEvent.Message;
 
 /**
- * <p>Title: Sequence and Pattern Plugin</p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2003</p>
- * <p>Company: </p>
+ * What is selected in project panel.
  *
- * @author not attributable
  * @version $Id$
  */
 
@@ -64,29 +59,24 @@ public class ProjectSelection {
     }
 
     /**
-     * Finds the project node associated with this node of the given class
-     *
-     * @param parentPath
-     * @return
+     * This is useful only because the original design used to support complex tree. Such support is in fact dropped for now. 
      */
-    private ProjectTreeNode getNodeOfClass(ProjectTreeNode node, Class<?> aClass) {
+    private DataSetNode getParentDataSet(ProjectTreeNode node) {
         if (node == null) {
             return null;
         }
-        while (!(aClass.isInstance(node))) {
+        while (!(node instanceof DataSetNode)) {
             node = (ProjectTreeNode) node.getParent();
             if (node == null) {
                 return null;
             }
         }
-        return (ProjectTreeNode) node;
+        return (DataSetNode) node;
     }
 
     /**
-     * Assigns a new selection node
+     * Assigns a new selection node.
      *
-     * @param pNode
-     * @param node
      */
     @SuppressWarnings("unchecked")
 	public void setNodeSelection(ProjectTreeNode node) {
@@ -97,65 +87,38 @@ public class ProjectSelection {
                 selectedDataSetNode = (DataSetNode) node;
                 AnnotationParser.setCurrentDataSet(selectedDataSetNode.getDataset());
                 GeawConfigObject.getGuiWindow().setVisualizationType(selectedDataSetNode.getDataset());
-                checkDataSetNode();
-				if (! (selectedDataSetNode.getDataset() instanceof CSProteinStructure)) {
-					throwEvent(ProjectEvent.Message.SELECT);
-				}
+        		if (selectedDataSetSubNode != null
+        				&& selectedDataSetSubNode.getParent() != selectedDataSetNode) {
+        			selectedDataSetSubNode = null;
+        		}
+				ProjectPanel.getInstance().publishProjectEvent(
+						new ProjectEvent(ProjectEvent.Message.SELECT,
+								selectedDataSetNode.getDataset(),
+								selectedDataSetNode));
             } else if (node instanceof DataSetSubNode) {
                 selectedDataSetSubNode = (DataSetSubNode) node;
-                selectedDataSetNode = (DataSetNode) getNodeOfClass(node, DataSetNode.class);
+                selectedDataSetNode = getParentDataSet(selectedDataSetSubNode);
                 AnnotationParser.setCurrentDataSet(selectedDataSetNode.getDataset());//Fix bug 1471
                 GeawConfigObject.getGuiWindow().setVisualizationType(selectedDataSetSubNode._aDataSet);
-                checkDataSetNode();
-				if (selectedDataSetSubNode._aDataSet != null) {
-					ProjectPanel.getInstance().publishProjectEvent(
-							new ProjectEvent(Message.SELECT,
-									selectedDataSetSubNode._aDataSet,
-									selectedDataSetSubNode));
-				}
+				ProjectPanel.getInstance().publishProjectEvent(
+						new ProjectEvent(Message.SELECT,
+								selectedDataSetSubNode._aDataSet,
+								selectedDataSetSubNode));
             } else if (node instanceof PendingTreeNode) {
-                selectedDataSetNode = (DataSetNode) getNodeOfClass(node, DataSetNode.class);
+                selectedDataSetNode = getParentDataSet(node);
                 AnnotationParser.setCurrentDataSet(selectedDataSetNode.getDataset());
                 GeawConfigObject.getGuiWindow().setVisualizationType(null);
-                checkDataSetNode();
-                throwEvent(ProjectEvent.Message.SELECT);
-            } else  {
+                selectedDataSetSubNode = null;
+				ProjectPanel.getInstance().publishProjectEvent(
+						new ProjectEvent(ProjectEvent.Message.SELECT,
+								selectedDataSetNode.getDataset(),
+								selectedDataSetNode));
+            } else { // the case of root node
                 selectedDataSetNode = null;
                 selectedDataSetSubNode = null;
                 GeawConfigObject.getGuiWindow().setVisualizationType(null);                
-                checkDataSetNode();
             }            
         }
     }
 
-    /**
-     * Checks that the selections are correctly assigned at the DataSet level
-     */
-    private void checkDataSetNode() {
-        if (selectedDataSetNode == null) {
-            selectedDataSetSubNode = null;
-        } else {
-            checkDataSetSubNode();
-        }
-    }
-
-    /**
-     * Checks that the selections are correctly assigned at the DataSetSub level
-     */
-    private void checkDataSetSubNode() {
-        if (selectedDataSetSubNode != null) {
-            if (selectedDataSetSubNode.getParent() != selectedDataSetNode) {
-                selectedDataSetSubNode = null;
-            }
-        }
-    }
-
-	private void throwEvent(Message value) {
-		if (selectedDataSetNode == null)
-			return; // this should not happen
-
-		ProjectPanel.getInstance().publishProjectEvent(
-				new ProjectEvent(value, selectedDataSetNode.getDataset(),
-						selectedDataSetNode));
-	}
 }

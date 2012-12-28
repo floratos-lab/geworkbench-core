@@ -1,6 +1,6 @@
 package org.geworkbench.builtin.projects;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
@@ -28,16 +28,11 @@ public class ImageNode extends  DataSetSubNode {
      *
      * @param im <code>ImageIcon</code> that this <code>ImageNode</code> refers to
      */
-    public ImageNode(ImageIcon im) {
-        super(null);
-                image = im;
+    public ImageNode(ImageData node) {
+    	super(node);
+    	image = node.getImageIcon();
         super.setUserObject(image.getDescription());
-        ImageData node = new ImageData(null);
-        node.setImageIcon(image);
         node.setDescription(image.getDescription());
-        _aDataSet = node;
-
-
     }
 
 }

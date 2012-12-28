@@ -719,7 +719,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 		DataSetSubNode node = null;
 		if (_ancDataSet instanceof ImageData) {
-			node = new ImageNode(((ImageData) _ancDataSet).getImageIcon());
+			node = new ImageNode(((ImageData) _ancDataSet));
 		} else {
 			node = new DataSetSubNode(_ancDataSet);
 		}
@@ -1318,7 +1318,10 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	public void addImageNode(ImageIcon imageIcon) {
 		TreePath path = projectTree.getSelectionPath();
 		if (path != null) {
-			ImageNode imageNode = new ImageNode(imageIcon);
+			ImageData imageData = new ImageData(null);
+			imageData.setImageIcon(imageIcon);
+			imageData.setDescription(imageIcon.getDescription());
+			ImageNode imageNode = new ImageNode(imageData);
 			ProjectTreeNode node = (ProjectTreeNode) path
 					.getLastPathComponent();
 			if (node instanceof DataSetNode) {
