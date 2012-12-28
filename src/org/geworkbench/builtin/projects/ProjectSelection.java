@@ -5,7 +5,6 @@ import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.annotationparser.AnnotationParser;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.events.ProjectEvent;
-import org.geworkbench.events.ProjectEvent.Message;
 
 /**
  * What is selected in project panel.
@@ -92,8 +91,7 @@ public class ProjectSelection {
         			selectedDataSetSubNode = null;
         		}
 				ProjectPanel.getInstance().publishProjectEvent(
-						new ProjectEvent(ProjectEvent.Message.SELECT,
-								selectedDataSetNode.getDataset(),
+						new ProjectEvent(selectedDataSetNode.getDataset(),
 								selectedDataSetNode));
             } else if (node instanceof DataSetSubNode) {
                 selectedDataSetSubNode = (DataSetSubNode) node;
@@ -101,8 +99,7 @@ public class ProjectSelection {
                 AnnotationParser.setCurrentDataSet(selectedDataSetNode.getDataset());//Fix bug 1471
                 GeawConfigObject.getGuiWindow().setVisualizationType(selectedDataSetSubNode._aDataSet);
 				ProjectPanel.getInstance().publishProjectEvent(
-						new ProjectEvent(Message.SELECT,
-								selectedDataSetSubNode._aDataSet,
+						new ProjectEvent(selectedDataSetSubNode._aDataSet,
 								selectedDataSetSubNode));
             } else if (node instanceof PendingTreeNode) {
                 selectedDataSetNode = getParentDataSet(node);
@@ -110,8 +107,7 @@ public class ProjectSelection {
                 GeawConfigObject.getGuiWindow().setVisualizationType(null);
                 selectedDataSetSubNode = null;
 				ProjectPanel.getInstance().publishProjectEvent(
-						new ProjectEvent(ProjectEvent.Message.SELECT,
-								selectedDataSetNode.getDataset(),
+						new ProjectEvent(selectedDataSetNode.getDataset(),
 								selectedDataSetNode));
             } else { // the case of root node
                 selectedDataSetNode = null;

@@ -86,7 +86,6 @@ import org.geworkbench.events.ImageSnapshotEvent;
 import org.geworkbench.events.PendingNodeCancelledEvent;
 import org.geworkbench.events.PendingNodeLoadedFromWorkspaceEvent;
 import org.geworkbench.events.ProjectEvent;
-import org.geworkbench.events.ProjectEvent.Message;
 import org.geworkbench.events.ProjectNodePostCompletedEvent;
 import org.geworkbench.events.ProjectNodeRemovedEvent;
 import org.geworkbench.events.ProjectNodeRenamedEvent;
@@ -1093,19 +1092,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 	}
 
-	/** Force refreshing the visible components. */
-	public void ccmUpdate() {
-		DataSetNode selectedDataSetNode = selection.getSelectedDataSetNode();
-		if (selectedDataSetNode != null) {
-			DSDataSet<?> dataset = selectedDataSetNode.getDataset();
-			GeawConfigObject.getGuiWindow().setVisualizationType(dataset);
-			publishProjectEvent(new ProjectEvent(Message.CCM_UPDATE, dataset,
-					selectedDataSetNode));
-			clearMenuItems();
-			setMenuItems();
-		}
-	}
-
 	/*
 	 * This method will remove an added subnode. If the current selected node is
 	 * not the added subNode, then do nothing.
@@ -1411,8 +1397,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				.getDataSet() : null);
 		if (currentDS != null && currentDS instanceof DSMicroarraySet
 				&& (DSMicroarraySet) currentDS == sourceMA) {
-			publishProjectEvent(new ProjectEvent(Message.SELECT,
-					sourceMA, selection.getSelectedNode()));
+			publishProjectEvent(new ProjectEvent(sourceMA,
+					selection.getSelectedNode()));
 		}
 	}
 
@@ -1447,8 +1433,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 		if (currentDS != null && currentDS instanceof DSMicroarraySet
 				&& (DSMicroarraySet) currentDS == sourceMA) {
-			publishProjectEvent(new ProjectEvent(Message.SELECT,
-					sourceMA, selection.getSelectedNode()));
+			publishProjectEvent(new ProjectEvent(sourceMA,
+					selection.getSelectedNode()));
 		}
 	}
 

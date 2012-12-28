@@ -17,20 +17,12 @@ public class ProjectEvent {
 
 	static Log log = LogFactory.getLog(ProjectEvent.class);
 	
-    private final Message value;
     private final DSDataSet<? extends DSBioObject> dataSet;
     private final ProjectTreeNode node;
 
-    public enum Message {SELECT, CCM_UPDATE};
-
-    public ProjectEvent(final Message value, final DSDataSet<? extends DSBioObject> dataSet, final ProjectTreeNode node) {
-        this.value = value;
+    public ProjectEvent(final DSDataSet<? extends DSBioObject> dataSet, final ProjectTreeNode node) {
         this.dataSet = dataSet;
         this.node = node;
-    }
-
-    public Message getValue() {
-    	return value;
     }
 
 	public DSDataSet<? extends DSBioObject> getDataSet() {
