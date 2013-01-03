@@ -47,8 +47,6 @@ import javax.swing.table.TableRowSorter;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.geworkbench.bison.datastructure.biocollections.DSDataSet;
-import org.geworkbench.builtin.projects.DataSetNode;
 import org.geworkbench.builtin.projects.ProjectPanel;
 import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.management.ComponentRegistry;
@@ -628,12 +626,7 @@ public class ComponentConfigurationManagerWindow {
 		}
 		GeawConfigObject.recreateHelpSets();
 
-		DataSetNode selectedDataSetNode = ProjectPanel.getInstance()
-				.getSelection().getSelectedDataSetNode();
-		if (selectedDataSetNode != null) {
-			DSDataSet<?> dataset = selectedDataSetNode.getDataset();
-			GeawConfigObject.getGuiWindow().setVisualizationType(dataset);
-		}
+		ProjectPanel.getInstance().ccmUpdate();
 
 		setOriginalChoices();
 

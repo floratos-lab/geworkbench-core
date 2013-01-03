@@ -79,6 +79,7 @@ import org.geworkbench.engine.management.Subscribe;
 import org.geworkbench.engine.preferences.GlobalPreferences;
 import org.geworkbench.engine.properties.PropertiesManager;
 import org.geworkbench.engine.skin.Skin;
+import org.geworkbench.events.CCMUpdateEvent;
 import org.geworkbench.events.CaArrayQueryEvent;
 import org.geworkbench.events.CaArrayRequestEvent;
 import org.geworkbench.events.HistoryEvent;
@@ -1092,6 +1093,23 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 	}
 
+	/** Force refreshing the visible components. */
+	public void ccmUpdate() {
+		DataSetNode selectedDataSetNode = selection.getSelectedDataSetNode();
+		if (selectedDataSetNode != null) {
+			DSDataSet<?> dataset = selectedDataSetNode.getDataset();
+			GeawConfigObject.getGuiWindow().setVisualizationType(dataset);
+			publishCCMUpdateEvent(new CCMUpdateEvent(dataset.getClass()));
+			clearMenuItems();
+			setMenuItems();
+		}
+	}
+
+	@Publish
+	public CCMUpdateEvent publishCCMUpdateEvent(CCMUpdateEvent ccmUpdateEvent) {
+		return ccmUpdateEvent;
+	}
+
 	/*
 	 * This method will remove an added subnode. If the current selected node is
 	 * not the added subNode, then do nothing.
@@ -1859,7 +1877,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		return progressBar;
 	}
 
-	private Class<?> lastDataType = null;
+	@SuppressWarnings("rawtypes")
+	private Class<? extends DSDataSet> lastDataType = null;
 	private static final String commandMenu = "Commands";
 	private static final String analysisMenu = "Analysis";
 	private static final String filteringMenu = "Filtering";
@@ -1920,7 +1939,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 	}
 
-	private void refreshDataSetMenu(Class<?> currentDataType) {
+	@SuppressWarnings("rawtypes") 
+	private void refreshDataSetMenu(Class<? extends DSDataSet> currentDataType) {
 		if (currentDataType != lastDataType) {
 			clearMenuItems();
 			if (currentDataType != null)
