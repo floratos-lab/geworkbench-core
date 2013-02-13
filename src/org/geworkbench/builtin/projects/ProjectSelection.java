@@ -112,6 +112,8 @@ public class ProjectSelection {
             } else { // the case of root node
                 selectedDataSetNode = null;
                 selectedDataSetSubNode = null;
+				ProjectPanel.getInstance().publishProjectEvent(
+						new ProjectEvent(null, null));
                 GeawConfigObject.getGuiWindow().setVisualizationType(null);                
             }            
         }
