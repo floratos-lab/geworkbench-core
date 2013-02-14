@@ -903,6 +903,15 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		addDataSetNode(microarraySet);
 	}
 	
+	public void addProcessedMaSet(DSMicroarraySet microarraySet){
+		//assign default color context to processed maset
+		ColorContext context = new org.geworkbench.bison.util.colorcontext.DefaultColorContext();
+		microarraySet.addObject(ColorContext.class, context);
+		updateColorContext(microarraySet);
+		
+		addDataSetNode(microarraySet);
+	}
+	
 	public void processNodeCompleted(GridEndpointReferenceType gridEpr,
 			DSAncillaryDataSet<? extends DSBioObject> ancillaryDataSet) {
 		if (ancillaryDataSet == null) {
