@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.InterruptedIOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -30,6 +31,7 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.CSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.parsers.resources.Resource;
 import org.geworkbench.util.AffyAnnotationUtil;
+import org.geworkbench.util.Util;
 
 /**
  * Sequence and Pattern Plugin
@@ -286,8 +288,13 @@ public class TabDelimitedDataMatrixFileFormat extends DataSetFileFormat {
 				/* Skip first token */
 				headerTokenizer.nextToken();
 
+				HashSet<String> arrayNames = new HashSet<String>();
 				for (int i = 0; i < n; i++) {
 					String arrayName = headerTokenizer.nextToken();
+					//assign unique names for duplicated array labels
+					arrayName = Util.getUniqueName(arrayName, arrayNames);
+					arrayNames.add(arrayName);
+
 					CSMicroarray array = new CSMicroarray(i, possibleMarkers,
 							arrayName,
 							DSMicroarraySet.affyTxtType);
