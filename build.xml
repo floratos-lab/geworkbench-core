@@ -146,6 +146,7 @@
 				<include name="ttest" />
 				<include name="versioninfo" />
 				<include name="viewers" />
+				<include name="viper" />
 			</dirset>
 		</subant>
 		<chmod file="./bin/matrixreduce/FitModelMac" perm="700"/>
