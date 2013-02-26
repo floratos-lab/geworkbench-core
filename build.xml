@@ -112,6 +112,7 @@
 				<include name="evidenceintegration" />
 				<include name="filtering" />
 				<include name="foldchange" />
+				<include name="lincs" />
 				<include name="geneontology2" />
 				<include name="genomespace" />
 				<include name="genspace" />
