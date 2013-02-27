@@ -108,6 +108,7 @@
 				<include name="colormosaic" />
 				<include name="cupid" />
 				<include name="cytoscape" />
+				<include name="demand" />
 				<include name="discovery" />
 				<include name="evidenceintegration" />
 				<include name="filtering" />
