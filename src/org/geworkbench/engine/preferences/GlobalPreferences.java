@@ -20,6 +20,7 @@ public class GlobalPreferences {
     public static final String RWSP_URL = "Remote Workspaces URL";
     public static final String MAX_NETWORK_OBJECT_NUMBER = "Soft Limit on Cytoscape Network Objects (nodes+edges)";
     public static final String R_LOCATION = "R Location (Rscript.exe and it's folder)";
+    public static final String R_LIBPATH = "R package directory (leave it blank for default path)";
     
     public static final String[] VISUALIZATION_VALUES = new String[]{"Absolute", "Relative"};
     @SuppressWarnings("unchecked")
@@ -42,6 +43,7 @@ public class GlobalPreferences {
     public static final int ORIGINAL = 0, SORTED_GENE = 1, SORTED_PROBE = 2, MAX_INTERACTION_NUM = 5000;
     
     public static final String DEFAULT_R_LOCATION = "";
+    public static final String DEFAULT_R_LIBPATH = "";
 
     public static final String DEFAULT_RWSP_URL = "http://genspace.cs.columbia.edu:8080/axis2/services";
 
@@ -98,6 +100,10 @@ public class GlobalPreferences {
         TextField field8 = new TextField(R_LOCATION);
         field8.setValue(GlobalPreferences.DEFAULT_R_LOCATION );
 
+        // R package installation directory 
+        TextField field9 = new TextField(R_LIBPATH);
+        field9.setValue(GlobalPreferences.DEFAULT_R_LIBPATH );
+
         prefs.addField(field1);
         prefs.addField(field2);
         prefs.addField(field3);
@@ -106,6 +112,7 @@ public class GlobalPreferences {
         prefs.addField(field6);
         prefs.addField(field7);
         prefs.addField(field8);
+        prefs.addField(field9);
 
         // Load stored values
         PreferencesManager manager = PreferencesManager.getPreferencesManager();
@@ -150,4 +157,7 @@ public class GlobalPreferences {
         return prefs.getField(R_LOCATION).toString();
     }
     
+    public String getRLibPath() {
+        return prefs.getField(R_LIBPATH).toString();
+    }
 }
