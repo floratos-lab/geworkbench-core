@@ -230,6 +230,52 @@ public class TabDelimitedDataMatrixFileFormat extends DataSetFileFormat {
 	private CSMicroarraySet getMArraySet(File file, String compatibilityLabel)
 			throws InputFileFormatException, InterruptedIOException {
 
+		CSMicroarraySet maSet = new CSMicroarraySet();
+		try
+		{
+			maSet = getMArraySetBase(file, compatibilityLabel, true);
+		} catch (InputFileFormatException e) {
+			throw e;
+		} catch (InterruptedIOException ie) {
+			throw ie;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return maSet;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * get DataSet from file without asking for annotation
+	 */
+	public DSDataSet<? extends DSBioObject> getDataFileSkipAnnotation(File file) throws InputFileFormatException, InterruptedIOException{
+	
+		CSMicroarraySet maSet = new CSMicroarraySet();
+		try
+		{
+			maSet = getMArraySetBase(file, null, false);
+		} catch (InputFileFormatException e) {
+			throw e;
+		} catch (InterruptedIOException ie) {
+			throw ie;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return maSet;	    
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.geworkbench.components.parsers.FileFormat#getMArraySet(java.io.File)
+	 * ask for annotation if annotation is true
+	 * skip annotation if annotation is false
+	 */
+	private CSMicroarraySet getMArraySetBase(File file, String compatibilityLabel, boolean annotation)
+			throws InputFileFormatException, InterruptedIOException {
+
 		try
 		{
 		 if (!checkFormat(file)) {
@@ -397,7 +443,8 @@ public class TabDelimitedDataMatrixFileFormat extends DataSetFileFormat {
 				}
 				// Set chip-type
 				if (compatibilityLabel == null) {
-					AffyAnnotationUtil.matchAffyAnnotationFile(maSet);
+					if (annotation)
+						AffyAnnotationUtil.matchAffyAnnotationFile(maSet);
 				} else {
 					maSet.setCompatibilityLabel(compatibilityLabel);
 				}
