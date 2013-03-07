@@ -1111,6 +1111,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			publishCCMUpdateEvent(new CCMUpdateEvent(dataset.getClass()));
 			clearMenuItems();
 			setMenuItems();
+		} else {
+			GeawConfigObject.getGuiWindow().setVisualizationType(null);
 		}
 	}
 
