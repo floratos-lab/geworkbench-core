@@ -12,6 +12,8 @@ import java.net.URL;
 import java.util.Properties;
 import java.util.TreeMap;
 
+import sun.misc.BASE64Encoder;
+
 /**
  * @author oleg shteynbuk
  * 
@@ -164,12 +166,25 @@ public class ResultSetlUtil {
 		aConnection.setConnectTimeout(urlConnectionTimeout);
 		return aConnection;
 	}
-
+	
 	public static ResultSetlUtil executeQuery(String methodAndParams,
 			String urlStr) throws IOException, UnAuthenticatedException {
+	
+		    return executeQueryWithUserInfo(methodAndParams, urlStr, null);
+	}
+
+	public static ResultSetlUtil executeQueryWithUserInfo(String methodAndParams,
+			String urlStr, String userInfo) throws IOException, UnAuthenticatedException {
 
 		HttpURLConnection aConnection = getConnection(urlStr);
 
+		if (userInfo != null && userInfo.trim().length() != 0)
+		{
+			BASE64Encoder encoder = new BASE64Encoder();
+			aConnection.setRequestProperty("Authorization",
+			                            "Basic " + encoder.encode( userInfo.getBytes()));			
+		 
+		}
 		OutputStreamWriter out = new OutputStreamWriter(
 				aConnection.getOutputStream());
 
@@ -197,6 +212,10 @@ public class ResultSetlUtil {
 
 		return rs;
 	}
+	
+	
+	
+	
 
 	// test
 	public static void main(String[] args) {
@@ -208,15 +227,16 @@ public class ResultSetlUtil {
 					"conf/application.properties"));
 			String interactionsServletUrl = iteractionsProp
 					.getProperty("interactions_servlet_url");
+			interactionsServletUrl = "http://localhost:8080/InteractionsServlet/InteractionsServlet";
 			ResultSetlUtil.setUrl(interactionsServletUrl);
 			// java.net.URLConnection.setDefaultAllowUserInteraction(true);
 			Authenticator.setDefault(new BasicAuthenticator());
 
-			String aSQL = "getPairWiseInteraction" + DEL + "165" + DEL + "BCi"
+			String aSQL = "getInteractionsByEntrezIdOrGeneSymbol" + DEL + "165" + DEL + "BCi"
 					+ DEL + "1.0";
 			int i = 165;
 
-			aSQL = "getPairWiseInteraction" + DEL + i + DEL + "BCi" + DEL
+			aSQL = "getInteractionsByEntrezIdOrGeneSymbol" + DEL + i + DEL +"geneName"+ DEL +  "HGi_Sun" + DEL
 					+ "1.0";
 
 			rs = ResultSetlUtil.executeQuery(aSQL, INTERACTIONS_SERVLET_URL);
