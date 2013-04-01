@@ -25,6 +25,9 @@
 		<exec executable="svn" >
 		  <arg line="checkout ${svn.root}/components/aracne-java ${checkout.dir}/aracne"/>
 		</exec>	
+		<exec executable="svn" >		 
+		  <arg line="checkout ${svn.root}/lincs-ws ${checkout.dir}/lincs-ws"/>		    
+		</exec>	
 		<exec executable="svn" >
 		  <arg line="checkout ${svn.root}/components/ttest ${checkout.dir}/ttest"/>
 		</exec>	
