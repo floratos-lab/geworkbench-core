@@ -1,7 +1,6 @@
 package org.geworkbench.util.network;
 
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.ArrayList; 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List; 
@@ -44,13 +43,8 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 	private double threshold;
 	private boolean isDirty;
 	
-	private static double smallestIncrement = 0.01; 
-	final private static int binNumber = 101;
-	
-	private static Short usedConfidenceType = 0;
-	private static List<Short> confidenceTypeList = new ArrayList<Short>();
-	private static Map<Short, Double> maxConfidenceValueMap = new HashMap<Short, Double>();
-	
+	final private static int binNumber = 101; 
+ 
 	public CellularNetWorkElementInformation(DSGeneMarker dSGeneMarker) {
 		this.dSGeneMarker = dSGeneMarker;	 
 		isDirty = true;
@@ -140,13 +134,13 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 	}	 
 
 	public ArrayList<InteractionDetail> getSelectedInteractions(
-			List<String> interactionIncludedList) {
+			List<String> interactionIncludedList, short selectedConfidenceType) {
 		ArrayList<InteractionDetail> arrayList = new ArrayList<InteractionDetail>();
 		if (interactionDetails != null && interactionDetails.length > 0) {
 			for (int i = 0; i < interactionDetails.length; i++) {
 				InteractionDetail interactionDetail = interactionDetails[i];
 				if (interactionDetail != null
-						&& interactionDetail.getConfidenceValue(usedConfidenceType) >= threshold) {
+						&& interactionDetail.getConfidenceValue(selectedConfidenceType) >= threshold) {
 					if (interactionIncludedList.contains(interactionDetail
 							.getInteractionType())) {
 						arrayList.add(interactionDetail);
@@ -159,13 +153,13 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 	}
 
 	public ArrayList<InteractionDetail> getSelectedInteractions(
-			String interactionType) {
+			String interactionType, short selectedConfidenceType) {
 		ArrayList<InteractionDetail> arrayList = new ArrayList<InteractionDetail>();
 		if (interactionDetails != null && interactionDetails.length > 0) {
 			for (int i = 0; i < interactionDetails.length; i++) {
 				InteractionDetail interactionDetail = interactionDetails[i];
 				if (interactionDetail != null
-						&& interactionDetail.getConfidenceValue(usedConfidenceType) >= threshold) {
+						&& interactionDetail.getConfidenceValue(selectedConfidenceType) >= threshold) {
 					if (interactionType.equals(interactionDetail
 							.getInteractionType())) {
 						arrayList.add(interactionDetail);
@@ -177,40 +171,9 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 		return arrayList;
 	}
 
-	public static double getSmallestIncrement() {		 
-		return smallestIncrement;
-	}
 	
 	
-	public static List<Short> getConfidenceTypeList()
-	{
-		return confidenceTypeList;
-	}
-
-	static public void setSmallestIncrement(double smallestIncrementNumber) {
-		smallestIncrement = smallestIncrementNumber;
-	}
-	
-	static public short getUsedConfidenceType()
-	{
-		return usedConfidenceType;
-	}
-	
-	
-	static public void clearConfidenceTypes()
-	{
-		usedConfidenceType = 0;
-		if (confidenceTypeList != null)
-			confidenceTypeList.clear();
-		maxConfidenceValueMap.clear();
-	}
-	
-	static public void setUsedConfidenceType(Short type )
-	{
-		usedConfidenceType = type;
-	}
-	
-	public int[] getDistribution(List<String> displaySelectedInteractionTypes) {
+	public int[] getDistribution(List<String> displaySelectedInteractionTypes, short selectedConfidenceType, double smallestIncrement) {
 		 
 		int[] distribution = new int[binNumber];
 		for (int i = 0; i < binNumber; i++)
@@ -221,7 +184,7 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 			if (interactionDetail != null
 					&& displaySelectedInteractionTypes
 							.contains(interactionDetail.getInteractionType())) {
-				int confidence = (int) (interactionDetail.getConfidenceValue(usedConfidenceType) / smallestIncrement);
+				int confidence = (int) (interactionDetail.getConfidenceValue(selectedConfidenceType) / smallestIncrement);
 				if (confidence >= 0) {
 					if (confidence >= distribution.length)
 						confidence = distribution.length-1;
@@ -241,14 +204,6 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 		return binNumber;
 	}
 	
-	public static double getMaxConfidenceValue() { 
-		 
-		if (maxConfidenceValueMap.get(usedConfidenceType) != null)
-			return maxConfidenceValueMap.get(usedConfidenceType);
-		else
-			return 0;
-		
-	}
  
 	public boolean isDirty() {
 		return isDirty;
@@ -276,12 +231,10 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 		return threshold;
 	}
 
-	public void setThreshold(double _threshold) {
-		if (threshold != _threshold) {
-			threshold = _threshold;
-
-		}
-		update();
+	public void setThreshold(double threshold, short selectedConfidenceType) {
+		 
+			this.threshold = threshold; 
+		    update(selectedConfidenceType);
 	}
 
 	/**
@@ -289,11 +242,8 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 	 * 
 	 * @param arrayList
 	 */
-	public void setInteractionDetails(List<InteractionDetail> arrayList) {
-
-		if (confidenceTypeList == null)			 
-			confidenceTypeList = new ArrayList<Short>();
-		
+	public void setInteractionDetails(List<InteractionDetail> arrayList, CellularNetworkPreference pref) {
+		 
 		if (arrayList != null && arrayList.size() > 0) {
 			interactionDetails = new InteractionDetail[arrayList.size()];
 			
@@ -304,19 +254,19 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 				for (int j=0; j<typeIdList.size(); j++)
 				{  
 					Short typeId = typeIdList.get(j);
-					Double maxConfidenceValue = maxConfidenceValueMap.get(typeId);
+					Double maxConfidenceValue = pref.getMaxConfidenceValue(typeId);
 					double confidenceValue = interactionDetails[i].getConfidenceValue(typeId);
-					if (maxConfidenceValue == null)
-						maxConfidenceValueMap.put(typeId, new Double(confidenceValue));
+					if (maxConfidenceValue == null )
+						pref.getMaxConfidenceValueMap().put(typeId, new Double(confidenceValue));
 					else
 					{
 						if (maxConfidenceValue < confidenceValue)
 						{	 
-						    maxConfidenceValueMap.put(typeId, new Double(confidenceValue));
+							pref.getMaxConfidenceValueMap().put(typeId, new Double(confidenceValue));
 						}
 					}
-					if (!confidenceTypeList.contains(typeId))
-					  confidenceTypeList.add(typeId);
+					if (!pref.getConfidenceTypeList().contains(typeId))
+						pref.getConfidenceTypeList().add(typeId);
 				}
 				 
 			}
@@ -326,9 +276,9 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 		}
 
 		if (interactionDetails != null) {
-			if (usedConfidenceType == null)
-			   usedConfidenceType = confidenceTypeList.get(0); //use first one as default value.
-			update();
+			if (pref.getSelectedConfidenceType() == null || pref.getSelectedConfidenceType().shortValue() == 0)
+			   pref.setSelectedConfidenceType(pref.getConfidenceTypeList().get(0)); //use first one as default value.
+			update(pref.getSelectedConfidenceType());
 		}
 
 	}
@@ -337,7 +287,7 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 	 * Update the number of interaction based on the new threshold or new
 	 * InteractionDetails.
 	 */
-	private void update() {		 
+	private void update(short selectedConfidenceType) {		 
 			
 		reset();
 		
@@ -347,7 +297,7 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 
 		for (InteractionDetail interactionDetail : interactionDetails) {
 			if (interactionDetail != null) {
-				double confidence = interactionDetail.getConfidenceValue(usedConfidenceType);
+				double confidence = interactionDetail.getConfidenceValue(selectedConfidenceType);
 				String interactionType = interactionDetail.getInteractionType();
 				if (confidence >= threshold) {
 					if (this.interactionNumMap.containsKey(interactionType)) {
@@ -365,7 +315,7 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 
 	}
 
-	public int[] getInteractionDistribution(String interactionType) {	
+	public int[] getInteractionDistribution(String interactionType, short selectedConfidenceType, double smallestIncrement) {	
 	 
 		int[] interactionDistribution = new int[binNumber];
 		for (int i = 0; i < binNumber; i++)
@@ -374,7 +324,7 @@ public class CellularNetWorkElementInformation implements java.io.Serializable {
 			return interactionDistribution;
 
 		for (InteractionDetail interactionDetail : interactionDetails) {
-			int confidence = (int) (interactionDetail.getConfidenceValue(usedConfidenceType) / smallestIncrement);
+			int confidence = (int) (interactionDetail.getConfidenceValue(selectedConfidenceType) / smallestIncrement);
 			if (confidence >= 0) {
 
 				if (interactionDetail.getInteractionType().equals(
