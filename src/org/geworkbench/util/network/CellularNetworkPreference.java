@@ -56,7 +56,7 @@ public class CellularNetworkPreference implements java.io.Serializable {
 		return this.displaySelectedInteractionTypes;
 	}
 	
-	public  void getDisplaySelectedInteractionTypes(List<String> displaySelectedInteractionTypes) {
+	public  void setDisplaySelectedInteractionTypes(List<String> displaySelectedInteractionTypes) {
 		 this.displaySelectedInteractionTypes = displaySelectedInteractionTypes;
 	}
 
