@@ -9,8 +9,15 @@ public class CSDemandResultSet extends CSAncillaryDataSet<DSMicroarray> implemen
 	private Object[][] edge   = new Object[0][0];
 	private Object[][] module = new Object[0][0];
 
-	public CSDemandResultSet(DSDataSet<DSMicroarray> parent, String label) {
+	public CSDemandResultSet(DSDataSet<DSMicroarray> parent, String label,
+			Object[][] result, Object[][] edge, Object[][] module) {
 		super(parent, label);
+
+		this.result = result;
+		if (result != null)
+			setDescription("# of DMAND results: " + result.length);
+		this.edge = edge;
+		this.module = module;
 	}
 
 	@Override
@@ -26,22 +33,5 @@ public class CSDemandResultSet extends CSAncillaryDataSet<DSMicroarray> implemen
 	@Override
 	public Object[][] getResult() {
 		return result;
-	}
-
-	@Override
-	public void setEdge(Object[][] edge) {
-		this.edge = edge;
-	}
-
-	@Override
-	public void setResult(Object[][] result) {
-		this.result = result;
-		if (result != null)
-			setDescription("# of DMAND results: " + result.length);
-	}
-
-	@Override
-	public void setModule(Object[][] module) {
-		this.module = module;
 	}
 }
