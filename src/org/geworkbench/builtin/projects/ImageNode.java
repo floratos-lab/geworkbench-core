@@ -1,6 +1,10 @@
 package org.geworkbench.builtin.projects;
 
+import java.awt.Component;
+
 import javax.swing.ImageIcon;
+
+import org.geworkbench.util.SaveImage;
 
 /**
  * <p>Copyright: Copyright (c) 2003</p>
@@ -33,6 +37,11 @@ public class ImageNode extends  DataSetSubNode {
     	image = node.getImageIcon();
         super.setUserObject(image.getDescription());
         node.setDescription(image.getDescription());
+    }
+    
+    @Override
+    protected void writeToFile(final boolean tabDelimited, final Component dialogParent) {
+		new SaveImage(image.getImage()).save();
     }
 
 }

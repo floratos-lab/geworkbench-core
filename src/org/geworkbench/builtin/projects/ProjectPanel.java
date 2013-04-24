@@ -3,7 +3,6 @@ package org.geworkbench.builtin.projects;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -23,7 +22,6 @@ import java.util.TreeMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -64,7 +62,6 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.DSSignificanceR
 import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.bison.util.colorcontext.ColorContext;
-import org.geworkbench.builtin.projects.SaveFileFilterFactory.CustomFileFilter;
 import org.geworkbench.builtin.projects.WorkspaceHandler.OpenTask;
 import org.geworkbench.builtin.projects.history.HistoryPanel;
 import org.geworkbench.engine.config.GUIFramework;
@@ -77,7 +74,6 @@ import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.engine.management.Publish;
 import org.geworkbench.engine.management.Subscribe;
 import org.geworkbench.engine.preferences.GlobalPreferences;
-import org.geworkbench.engine.properties.PropertiesManager;
 import org.geworkbench.engine.skin.Skin;
 import org.geworkbench.events.CCMUpdateEvent;
 import org.geworkbench.events.CaArrayQueryEvent;
@@ -94,7 +90,6 @@ import org.geworkbench.util.DataTypeUtils;
 import org.geworkbench.util.FilePathnameUtils;
 import org.geworkbench.util.ProgressDialog;
 import org.geworkbench.util.ProgressItem;
-import org.geworkbench.util.SaveImage;
 import org.geworkbench.util.Util;
 import org.ginkgo.labs.ws.GridEndpointReferenceType;
 
@@ -399,115 +394,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		if (selectedNode == null) {
 			return;
 		}
-
-		// case 1: ImageNode
-		if (selectedNode instanceof ImageNode) {
-			Image currentImage = ((ImageNode) selectedNode).image.getImage();
-			SaveImage si = new SaveImage(currentImage);
-			si.save();
-			return;
-		}
-
-		// case 2: CSTTestResultSet
-		if (selectedNode instanceof DataSetSubNode) {
-			DataSetSubNode dataSetSubNode = (DataSetSubNode) selectedNode;
-			if (dataSetSubNode._aDataSet instanceof CSTTestResultSet) {
-				CSTTestResultSet<? extends DSGeneMarker> tTestResultSet = (CSTTestResultSet<? extends DSGeneMarker>) dataSetSubNode._aDataSet;
-				tTestResultSet.saveDataToCSVFile();
-				return;
-			}
-
-		}
-
-		// other cases
-		String dirPropertyKey = "";
-		DSDataSet<? extends DSBioObject> ds = null;
-		if (selectedNode instanceof DataSetNode) {
-			ds = ((DataSetNode) selectedNode).getDataset();
-			dirPropertyKey = "datanodeDir";
-		} else if (selectedNode instanceof DataSetSubNode) {
-			ds = ((DataSetSubNode) selectedNode)._aDataSet;
-			dirPropertyKey = "subnodeDir";
-		} else {
-			JOptionPane.showMessageDialog(null,
-					"This node contains no Dataset.", "Save Error",
-					JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-
-		// at this point ds is not null
-		File f = ds.getFile();
-		JFileChooser jFileChooser1 = new JFileChooser(f);
-		jFileChooser1.setSelectedFile(f);
-
-		PropertiesManager properties = PropertiesManager.getInstance();
-		if (f == null) {
-			try {
-				String dir = properties.getProperty(this.getClass(),
-						dirPropertyKey, jFileChooser1.getCurrentDirectory()
-								.getPath());
-				jFileChooser1.setCurrentDirectory(new File(dir));
-			} catch (IOException ioe) {
-				ioe.printStackTrace();
-			}
-		}
-
-		CustomFileFilter filter = null;
-		if (event.getSource() == this.jExportToTabDelimMenuItem)
-			filter = SaveFileFilterFactory.getTabDelimitedFileFilter();
-		else
-			filter = SaveFileFilterFactory.createFilter(ds);
-
-		if (f != null && !filter.accept(f)){
-			String newFileName = f.getAbsolutePath();
-			newFileName = newFileName.substring(0, newFileName.lastIndexOf("."));
-			newFileName += "." + filter.getExtension();
-			jFileChooser1.setSelectedFile(new File(newFileName));
-		}
-
-		jFileChooser1.setFileFilter(filter);
-		
-		if (JFileChooser.APPROVE_OPTION == jFileChooser1
-				.showSaveDialog((Component) event.getSource())) {
-			String newFileName = jFileChooser1.getSelectedFile()
-					.getAbsolutePath();
-
-			if (f == null) {
-				try {
-					properties.setProperty(this.getClass(), dirPropertyKey,
-							jFileChooser1.getSelectedFile().getParent());
-				} catch (IOException ioe) {
-					ioe.printStackTrace();
-				}
-			}
-			
-			if (!filter.accept(new File(newFileName))) {
-				newFileName += "." + filter.getExtension();
-			}
-		
-
-			if (new File(newFileName).exists()) {
-				int o = JOptionPane.showConfirmDialog(null, 
-						"The file already exists. Do you wish to overwrite it?",
-						"Replace the existing file?",
-						JOptionPane.YES_NO_OPTION);
-				if (o != JOptionPane.YES_OPTION) {
-					return;
-				}
-			}
-			
-			try {
-				if ((event.getSource() == this.jExportToTabDelimMenuItem)
-						&& ds instanceof DSMicroarraySet)
-					((DSMicroarraySet) ds).writeToTabDelimFile(newFileName);
-				else
-					ds.writeToFile(newFileName);
-			} catch (RuntimeException e) {
-				JOptionPane.showMessageDialog(null, e.getMessage() + " "
-						+ ds.getClass().getName(), "Save Error",
-						JOptionPane.ERROR_MESSAGE);
-			}
-		}
+		selectedNode.writeToFile(event.getSource()==jExportToTabDelimMenuItem,
+				(Component)event.getSource());
 	}
 
 	/**
