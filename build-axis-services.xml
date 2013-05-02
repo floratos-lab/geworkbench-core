@@ -2,7 +2,7 @@
 <project name="Axis2Services" basedir=".">
 
 	<target name="init" depends="deployinit">		 		 
-		<property name="svn.root" value="https://ncisvn.nci.nih.gov/svn/geworkbench/trunk/geworkbench" />
+		<property name="svn.root" value="https://ncisvn.nci.nih.gov/svn/geworkbench/trunk" />
 	</target>
 
 	<target name="deployinit">
@@ -20,16 +20,19 @@
 
 	<target name="geworkbench" depends="init">
 		<exec executable="svn" >
-		  <arg line="checkout ${svn.root}/components/anova ${checkout.dir}/anova"/>
+		  <arg line="checkout ${svn.root}/geworkbench/components/anova ${checkout.dir}/anova"/>
 		</exec>
 		<exec executable="svn" >
-		  <arg line="checkout ${svn.root}/components/aracne-java ${checkout.dir}/aracne"/>
+		  <arg line="checkout ${svn.root}/geworkbench/components/aracne-java ${checkout.dir}/aracne"/>
 		</exec>	
+		<exec executable="svn" >
+				  <arg line="checkout ${svn.root}/geworkbench/components/hierarchicalclustering ${checkout.dir}/hierarchicalclustering"/>
+				</exec>	
 		<exec executable="svn" >		 
 		  <arg line="checkout ${svn.root}/lincs-ws ${checkout.dir}/lincs-ws"/>		    
 		</exec>	
 		<exec executable="svn" >
-		  <arg line="checkout ${svn.root}/components/ttest ${checkout.dir}/ttest"/>
+		  <arg line="checkout ${svn.root}/geworkbench/components/ttest ${checkout.dir}/ttest"/>
 		</exec>	
 	</target>	 
 
