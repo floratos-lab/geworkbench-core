@@ -7,6 +7,6 @@ import java.io.Serializable;
 /**
  * Implementing classes store biological data (such as a sequence or a microarray).
  */
-public interface DSBioObject extends DSExtendable, DSDescribable, DSIdentifiable, DSSequential, DSNamed, DSHasActivation, Serializable {
+public interface DSBioObject extends DSExtendable, DSDescribable, DSIdentifiable, DSSequential, DSNamed, Serializable {
 
 }

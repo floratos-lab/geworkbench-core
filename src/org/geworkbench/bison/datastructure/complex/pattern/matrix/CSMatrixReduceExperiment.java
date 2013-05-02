@@ -111,11 +111,4 @@ public class CSMatrixReduceExperiment implements DSMatrixReduceExperiment {
 	public void setSerial(int serial) {
 	}
 
-	public boolean enabled() {
-		return false;
-	}
-
-	public void enable(boolean status) {
-	}
-
 }

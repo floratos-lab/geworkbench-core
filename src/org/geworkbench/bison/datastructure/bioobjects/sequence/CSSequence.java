@@ -26,7 +26,6 @@ public class CSSequence implements DSSequence, Serializable {
 
     private String id = "";
     private int serial = -1;
-    private boolean isEnabled = true;
     private String sequence = new String();
     private String label = new String();
     /**
@@ -102,14 +101,6 @@ public class CSSequence implements DSSequence, Serializable {
 
     public int getSerial() {
         return serial;
-    }
-
-    public boolean enabled() {
-        return isEnabled;
-    }
-
-    public void enable(boolean status) {
-        isEnabled = status;
     }
 
     public void clearName(String name) {

@@ -45,11 +45,6 @@ public class CSMicroarray implements DSMicroarray, Serializable {
      */
     private CSMarkerValue[] markerArray = null;
 
-    /**
-     * A microarray that is not Enabled will be ignored
-     */
-    private boolean enabled = true;
-
     public CSMicroarray(int markerNo) {
         markerArray = new CSMarkerValue[markerNo];
     }
@@ -104,14 +99,6 @@ public class CSMicroarray implements DSMicroarray, Serializable {
 
     public String getLabel() {
         return label;
-    }
-
-    public boolean enabled() {
-        return enabled;
-    }
-
-    public void enable(boolean state) {
-        enabled = state;
     }
 
     public int getSerial() {

@@ -141,13 +141,6 @@ public class CSPositionSpecificAffinityMatrix implements DSPositionSpecificAffin
         consensusSequence = label;
     }
 
-    public boolean enabled() {
-        return false;
-    }
-
-    public void enable(boolean status) {
-    }
-
     public double getPValue() {
         return pValue;
     }
