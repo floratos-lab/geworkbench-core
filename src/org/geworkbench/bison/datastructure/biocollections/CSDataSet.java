@@ -296,14 +296,4 @@ public class CSDataSet <T extends DSBioObject> extends CSSequentialItemList<T> i
 	public void setColumnOrder(ArrayList<Integer> columnOrder) {
 		this.columnOrder = columnOrder;
 	}
-
-	/* Default implement of no-op is OK as long as activate and deactivate match */
-	/* isActive should match this too, but it is also not used by anybody yet */
-	public void deactivate() {
-		// no-op
-	}
-
-	public void activate() {
-		// no-op
-	}
 }

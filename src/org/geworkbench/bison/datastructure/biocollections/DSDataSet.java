@@ -94,7 +94,4 @@ public interface DSDataSet <T extends DSBioObject> extends DSDescribable, DSName
 	public ArrayList<Integer> getColumnOrder();
 	public void setColumnOrder(ArrayList<Integer> columnOrder);
 
-	public void deactivate();
-
-	public void activate();
 }
