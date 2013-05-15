@@ -12,12 +12,9 @@ import org.geworkbench.bison.datastructure.properties.CSExtendable;
  * An abstract implementation of {@link DSDataSet}.
  */
 public class CSDataSet <T extends DSBioObject> extends CSSequentialItemList<T> implements DSDataSet<T> {
-    /**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 229744827492977524L;
 	
-	protected boolean dirty = true;
     protected File file = null;
     protected String label = new String("Unnamed Data Set");
     protected String compatibilityLabel = null; //default
@@ -151,24 +148,6 @@ public class CSDataSet <T extends DSBioObject> extends CSSequentialItemList<T> i
      */
     public String getDataSetName() {
         return label;
-    }
-
-    /**
-     * Return the dirty flag.
-     *
-     * @return <code>true</code> if dirty, <code>false</code> otherwise.
-     */
-    public boolean isDirty() {
-        return dirty;
-    }
-
-    /**
-     * Set the underlying object's dirty flag to the designated value.
-     *
-     * @param flag
-     */
-    public void setDirty(boolean flag) {
-        dirty = flag;
     }
 
     public String getID() {
