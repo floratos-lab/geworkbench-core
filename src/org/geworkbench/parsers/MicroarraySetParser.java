@@ -60,6 +60,21 @@ public class MicroarraySetParser {
 		return microarraySet;
 	}
 	
+	/** Parse existing microarraySet without associate to annotation file. */
+	public void parseExistingCSMicroarraySet(File file, DSMicroarraySet microarraySet) {
+		if(microarraySet == null) return;
+
+		microarraySet.setFile( file ); // this seems only used by "View in Editor"
+		microarraySet.setLabel(file.getName());
+
+		AnnotationParser.setCurrentDataSet(microarraySet);
+
+		if (!readFile(file))
+			return;
+
+		populateDataset(microarraySet);
+	}
+
 	/** Parse when invoked from ExpressionFileFormat. */
 	DSMicroarraySet parseCSMicroarraySet(File file, String compatibilityLabel) throws InputFileFormatException {
 		DSMicroarraySet microarraySet = new CSMicroarraySet();
