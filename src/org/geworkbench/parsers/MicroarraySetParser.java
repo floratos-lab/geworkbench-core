@@ -286,6 +286,12 @@ public class MicroarraySetParser {
 				marker.setGeneName(geneNames[0].trim());
 			}
 
+			String[] annotations = AnnotationParser.getInfo(firstField,
+					AnnotationParser.DESCRIPTION);
+			if (annotations != null) {
+				marker.setAnnotation(annotations[0].trim());
+			}
+
 			markers.add(marker);
 
 			markerValues.add(parseValue(tokenizer));

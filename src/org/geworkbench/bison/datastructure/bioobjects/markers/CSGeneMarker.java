@@ -39,6 +39,7 @@ public class CSGeneMarker implements DSGeneMarker, Serializable {
 	protected DSUnigene unigene = new CSUnigene();
 
 	private String geneName = null;
+	private String annotation = null;
 
 	public Object clone() {
 		try {
@@ -255,4 +256,13 @@ public class CSGeneMarker implements DSGeneMarker, Serializable {
 
 		return names;
 	}
+	
+	public void setAnnotation(String annot){
+		annotation = annot;
+	}
+	
+	public String getAnnotation(){
+		return annotation;
+	}
+
 }

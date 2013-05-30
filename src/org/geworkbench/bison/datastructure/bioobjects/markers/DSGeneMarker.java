@@ -76,4 +76,7 @@ public interface DSGeneMarker extends Comparable<DSGeneMarker>, DSSequential,
 
 	public Object clone();
 
+	public void setAnnotation(String annot);
+	
+	public String getAnnotation();
 }
