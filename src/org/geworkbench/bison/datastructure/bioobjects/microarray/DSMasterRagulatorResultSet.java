@@ -39,4 +39,9 @@ public interface DSMasterRagulatorResultSet <T extends DSGeneMarker> extends DSA
 	public double getMaxValue();
 	public int getRank(DSGeneMarker marker);
 	public void setRanks(Map<DSGeneMarker, Integer> ranks);
+	
+	public void setOddRatio(DSGeneMarker TF, Object odd);
+	public Object getOddRatio(DSGeneMarker TF);
+	public void setNES(DSGeneMarker TF, Object nes);
+	public Object getNES(DSGeneMarker TF);
 }

@@ -16,6 +16,8 @@ public class CSMasterRegulatorResultSet <T extends DSGeneMarker> extends CSAncil
 	private HashMap<DSGeneMarker,DSItemList<DSGeneMarker>> TF2GenesInTargetList = new HashMap<DSGeneMarker,DSItemList<DSGeneMarker>>();
 	private HashMap<DSGeneMarker,Double> TF2PValue = new HashMap<DSGeneMarker,Double>();
 	private HashMap<DSGeneMarker, Character> TF2Mode = new HashMap<DSGeneMarker, Character>();
+	private HashMap<DSGeneMarker,Object> TF2OddRatio = new HashMap<DSGeneMarker,Object>();
+	private HashMap<DSGeneMarker,Object> TF2Nes = new HashMap<DSGeneMarker,Object>();
 
 	private final DSMicroarraySet maSet;
 	private int markerCount = 0;
@@ -127,4 +129,19 @@ public class CSMasterRegulatorResultSet <T extends DSGeneMarker> extends CSAncil
 		this.ranks = ranks;
 	}
 	
+	public void setOddRatio(DSGeneMarker TF, Object odd){
+		TF2OddRatio.put(TF, odd);
+	}
+	
+	public Object getOddRatio(DSGeneMarker TF){
+		return TF2OddRatio.get(TF);
+	}
+	
+	public void setNES(DSGeneMarker TF, Object nes){
+		TF2Nes.put(TF, nes);
+	}
+	
+	public Object getNES(DSGeneMarker TF){
+		return TF2Nes.get(TF);
+	}
 }
