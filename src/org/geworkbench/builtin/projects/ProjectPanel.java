@@ -1194,7 +1194,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		return event;
 	}
 
-	private static void updateColorContext(DSMicroarraySet maSet) {
+	public static void updateColorContext(DSMicroarraySet maSet) {
 		ColorContext colorContext = (ColorContext) maSet
 				.getObject(ColorContext.class);
 		if (colorContext != null) {
