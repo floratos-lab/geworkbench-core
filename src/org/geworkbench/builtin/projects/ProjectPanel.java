@@ -321,7 +321,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	}
 
 	void populateFromSaveTree(SaveTree saveTree) {
-		java.util.List<DataSetSaveNode> dataSetNodes = saveTree.rootNode.getChildren();
+		java.util.List<DataSetSaveNode> dataSetNodes = saveTree.rootNode
+				.getChildren();
 		ProjectTreeNode selectedNode = null;
 		Map<GridEndpointReferenceType, AbstractGridAnalysis> pendingGridEprs = new HashMap<GridEndpointReferenceType, AbstractGridAnalysis>();
 		for (DataSetSaveNode dataNode : dataSetNodes) {
@@ -371,7 +372,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 					.getSelectedDataSetNode().getParent());
 		}
 		publishPendingNodeLoadedFromWorkspaceEvent(new PendingNodeLoadedFromWorkspaceEvent(
-					pendingGridEprs));
+				pendingGridEprs));
 		// Set final selection
 		if (selectedNode != null) {
 			projectTree.scrollPathToVisible(new TreePath(selectedNode));
@@ -394,8 +395,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		if (selectedNode == null) {
 			return;
 		}
-		selectedNode.writeToFile(event.getSource()==jExportToTabDelimMenuItem,
-				(Component)event.getSource());
+		selectedNode.writeToFile(
+				event.getSource() == jExportToTabDelimMenuItem,
+				(Component) event.getSource());
 	}
 
 	/**
@@ -421,9 +423,11 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		projectTreeModel.insertNodeInto(node, root, root.getChildCount());
 		HistoryEvent event = new HistoryEvent(_dataSet);
 
-		// add to history, if a dataset node already has history, we assume that we
-		//read this node from a saved workspace file.
-		if (_dataSet instanceof CSMicroarraySet && !HistoryPanel.hasHistory(_dataSet)) {
+		// add to history, if a dataset node already has history, we assume that
+		// we
+		// read this node from a saved workspace file.
+		if (_dataSet instanceof CSMicroarraySet
+				&& !HistoryPanel.hasHistory(_dataSet)) {
 			CSMicroarraySet microarraySet = (CSMicroarraySet) _dataSet;
 			String annotationFileName = microarraySet.getAnnotationFileName();
 
@@ -450,14 +454,12 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 						+ g.getDate() + "\n";
 			}
 
-			
 			String setName = _dataSet.getDataSetName();
 			String dataSetString = "Data file:  " + setName + "\n";
 
 			String datasetHistory = dataSetString + annotationFileNameString
 					+ oboInfo + "_____________________" + "\n";
-			
-			
+
 			HistoryPanel.addToHistory(_dataSet, datasetHistory);
 		}
 		publishHistoryEvent(event);
@@ -467,7 +469,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		projectTree.setSelectionPath(new TreePath(node.getPath()));
 		selection.setNodeSelection(node);
 	}
-		
 
 	/**
 	 * This method is used to trigger HistoryPanel to refresh.
@@ -483,12 +484,14 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	/**
 	 * Inserts a new pending node in the project tree. The node is a child of
 	 * the currently selected project
-	 * @param selectedGridAnalysis 
+	 * 
+	 * @param selectedGridAnalysis
 	 * 
 	 * @param _dataSet
 	 */
 	public void addPendingNode(GridEndpointReferenceType gridEpr, String label,
-			String history, boolean startNewThread, AbstractGridAnalysis selectedGridAnalysis) {
+			String history, boolean startNewThread,
+			AbstractGridAnalysis selectedGridAnalysis) {
 		// get the parent node for this node
 		ProjectTreeNode pNode = selection.getSelectedNode();
 		if (pNode == null) {
@@ -507,7 +510,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			analysisClassName = analysisClassName.substring(0, i);
 		}
 
-		PendingTreeNode node = new PendingTreeNode(label, history, gridEpr, analysisClassName);
+		PendingTreeNode node = new PendingTreeNode(label, history, gridEpr,
+				analysisClassName);
 		projectTreeModel.insertNodeInto(node, pNode, pNode.getChildCount());
 		// Make sure the user can see the lovely new node.
 		projectTree.scrollPathToVisible(new TreePath(node));
@@ -587,23 +591,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		if (matchedDNode != null) {
 			dNode = matchedDNode;
 		}
-		if (dNode == null) {
-			log.info("There is no node at project panel!");
-			return;
-		}
-
-		// Makes sure that we do not already have an exact instance of this
-		// ancillary file
-		Enumeration<?> children = dNode.children();
-		while (children.hasMoreElements()) {
-			Object obj = children.nextElement();
-			if (obj instanceof DataSetSubNode) {
-				DSAncillaryDataSet<? extends DSBioObject> ads = ((DataSetSubNode) obj)._aDataSet;
-				if (_ancDataSet.equals(ads)) {
-					return;
-				}
-			}
-		}
 
 		DataSetSubNode node = null;
 		if (_ancDataSet instanceof ImageData) {
@@ -611,38 +598,57 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		} else {
 			node = new DataSetSubNode(_ancDataSet);
 		}
+		// Makes sure that we do not already have an exact instance of this
+		// ancillary file
 
-		String originalLabel = _ancDataSet.getLabel();
-		String newLabel = originalLabel;
-		String existingLabel = "";
-		boolean foundOne = false;
-		int count = 1;
-		while (true) {
-			foundOne = false;
-			children = dNode.children();
+		if (dNode != null) {
+			Enumeration<?> children = dNode.children();
 			while (children.hasMoreElements()) {
 				Object obj = children.nextElement();
 				if (obj instanceof DataSetSubNode) {
-					existingLabel = ((DataSetSubNode) obj)._aDataSet.getLabel();
-					if (newLabel.equals(existingLabel)) {
-						foundOne = true;
-						break;
+					DSAncillaryDataSet<? extends DSBioObject> ads = ((DataSetSubNode) obj)._aDataSet;
+					if (_ancDataSet.equals(ads)) {
+						return;
 					}
 				}
 			}
 
-			if (foundOne) {
-				newLabel = originalLabel + " (" + count++ + ")";
-			} else {
-				_ancDataSet.setLabel(newLabel);
-				break;
-			}
-		}
+			String originalLabel = _ancDataSet.getLabel();
+			String newLabel = originalLabel;
+			String existingLabel = "";
+			boolean foundOne = false;
+			int count = 1;
+			while (true) {
+				foundOne = false;
+				children = dNode.children();
+				while (children.hasMoreElements()) {
+					Object obj = children.nextElement();
+					if (obj instanceof DataSetSubNode) {
+						existingLabel = ((DataSetSubNode) obj)._aDataSet
+								.getLabel();
+						if (newLabel.equals(existingLabel)) {
+							foundOne = true;
+							break;
+						}
+					}
+				}
 
+				if (foundOne) {
+					newLabel = originalLabel + " (" + count++ + ")";
+				} else {
+					_ancDataSet.setLabel(newLabel);
+					break;
+				}
+			}
+
+		}
 		// Inserts the new node and sets the menuNode and other variables to
 		// point to it
 		node.setDescription(_ancDataSet.getExperimentInformation());
-		projectTreeModel.insertNodeInto(node, dNode, dNode.getChildCount());
+		if (dNode != null)
+			projectTreeModel.insertNodeInto(node, dNode, dNode.getChildCount());
+		else
+			projectTreeModel.insertNodeInto(node, root, root.getChildCount());
 		// Make sure the user can see the lovely new node.
 		projectTree.scrollPathToVisible(new TreePath(node));
 		// serialize("default.ws");
@@ -691,7 +697,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 		ProjectTreeNode mNode = (ProjectTreeNode) path.getLastPathComponent();
 
-		if ( e.getButton() == MouseEvent.BUTTON3 ) {
+		if (e.getButton() == MouseEvent.BUTTON3) {
 
 			if (!isPathSelected(path)) {
 				// Force selection of this path
@@ -739,9 +745,11 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			} else if (mNode instanceof DataSetSubNode) {
 				refreshDataSetMenu(null);
 				DSDataSet<? extends DSBioObject> ds = ((DataSetSubNode) mNode)._aDataSet;
-				boolean supportWriteToFile = DataTypeUtils.supportWriteToFile(ds.getClass()); 
+				boolean supportWriteToFile = DataTypeUtils
+						.supportWriteToFile(ds.getClass());
 				jSaveMenuItem.setEnabled(supportWriteToFile);
-				if (ds instanceof CSTTestResultSet) jSaveMenuItem.setEnabled(true);
+				if (ds instanceof CSTTestResultSet)
+					jSaveMenuItem.setEnabled(true);
 				dataSetMenu.show(projectTree, e.getX(), e.getY());
 			} else if (mNode instanceof PendingTreeNode) {
 				pendingMenu.show(projectTree, e.getX(), e.getY());
@@ -790,16 +798,16 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		addColorContext(microarraySet);
 		addDataSetNode(microarraySet);
 	}
-	
-	public void addProcessedMaSet(DSMicroarraySet microarraySet){
-		//assign default color context to processed maset
+
+	public void addProcessedMaSet(DSMicroarraySet microarraySet) {
+		// assign default color context to processed maset
 		ColorContext context = new org.geworkbench.bison.util.colorcontext.DefaultColorContext();
 		microarraySet.addObject(ColorContext.class, context);
 		updateColorContext(microarraySet);
-		
+
 		addDataSetNode(microarraySet);
 	}
-	
+
 	public void processNodeCompleted(GridEndpointReferenceType gridEpr,
 			DSAncillaryDataSet<? extends DSBioObject> ancillaryDataSet) {
 		if (ancillaryDataSet == null) {
@@ -820,18 +828,17 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			Date endDate = new Date();
 			long endTime = endDate.getTime();
 			history += "\nGrid service finished at: "
-					+ Util.formatDateStandard(endDate)+ "\n";
+					+ Util.formatDateStandard(endDate) + "\n";
 			String firstLine = history.split("\n")[0];
 			String startTime = firstLine.split("=")[1].trim();
 			long elapsedTime = endTime - (new Long(startTime));
 			history += "\nTotal elapsed time: "
 					+ DurationFormatUtils.formatDurationHMS(elapsedTime);
-		} catch(NumberFormatException ne)
-		{
+		} catch (NumberFormatException ne) {
 			history += "\nError processing elapsed time: " + ne.getMessage();
 		} catch (Exception e) {
 			history += "\nError processing elapsed tim: " + e.getMessage();
-			log.error("Error processing elapsed time: " + e.getMessage());			 
+			log.error("Error processing elapsed time: " + e.getMessage());
 		}
 
 		boolean pendingNodeFocused = false;
@@ -883,7 +890,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	}
 
 	private void openFile() {
-		// we used to check to make sure a project node is selected before continuing. not necessary anymore.
+		// we used to check to make sure a project node is selected before
+		// continuing. not necessary anymore.
 
 		String dir = LoadDataDialog.getLastDataDirectory();
 		String format = LoadDataDialog.getLastDataFormat();
@@ -1013,7 +1021,11 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * This method will remove an added subnode. If the current selected node is
 	 * not the added subNode, then do nothing.
 	 */
-	/* This method is used only by CytoscapeWidget. This is the kind of stuff that breaks the conceptual integrity of a design. Do not use it whenever possible. */
+	/*
+	 * This method is used only by CytoscapeWidget. This is the kind of stuff
+	 * that breaks the conceptual integrity of a design. Do not use it whenever
+	 * possible.
+	 */
 	public void removeAddedSubNode(
 			DSAncillaryDataSet<? extends DSBioObject> aDataSet) {
 
@@ -1047,13 +1059,14 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		// multiple selection is allowed
 		TreePath[] paths = projectTree.getSelectionPaths();
 
-		if (paths==null || paths.length <= 0)
+		if (paths == null || paths.length <= 0)
 			return;
 
 		ProjectTreeNode parentNode = null;
 
 		for (TreePath path : paths) {
-			ProjectTreeNode node = (ProjectTreeNode) path.getLastPathComponent();
+			ProjectTreeNode node = (ProjectTreeNode) path
+					.getLastPathComponent();
 
 			if (node.isRoot()) {
 				return;
@@ -1082,6 +1095,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * 
 	 * @param e
 	 */
+	@SuppressWarnings("rawtypes")
 	private void fileRemove_actionPerformed(ProjectTreeNode node) {
 		// clear out unused mark annotation from memory
 		if (node instanceof DataSetNode) {
@@ -1113,7 +1127,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 		if (node instanceof DataSetSubNode)
 			publishNodeRemovedEvent(new ProjectNodeRemovedEvent(
-					((DataSetSubNode) (node))._aDataSet));
+					((DataSetSubNode) (node))._aDataSet)); 
 
 		projectTreeModel.removeNodeFromParent(node);
 
@@ -1238,10 +1252,10 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 							node.getChildCount());
 				}
 			}
-			
-			// Make sure the user can see the lovely new node.			 
+
+			// Make sure the user can see the lovely new node.
 			projectTree.expandPath(new TreePath(node.getPath()));
-		 
+
 		}
 	}
 
@@ -1253,11 +1267,12 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		if (!(e.getDataSet() instanceof DSMicroarraySet)) {
 			return;
 		}
-		//Ignore phenotype selection for significance resultset
+		// Ignore phenotype selection for significance resultset
 		ProjectTreeNode selectedNode = selection.getSelectedNode();
-		if (selectedNode != null && selectedNode instanceof DataSetSubNode){
-			DSAncillaryDataSet<?> selectedSubset = ((DataSetSubNode)selectedNode)._aDataSet;
-			if (selectedSubset != null && selectedSubset instanceof DSSignificanceResultSet){
+		if (selectedNode != null && selectedNode instanceof DataSetSubNode) {
+			DSAncillaryDataSet<?> selectedSubset = ((DataSetSubNode) selectedNode)._aDataSet;
+			if (selectedSubset != null
+					&& selectedSubset instanceof DSSignificanceResultSet) {
 				return;
 			}
 		}
@@ -1399,9 +1414,12 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	final private ProjectTreeNode root = new ProjectTreeNode("Workspace");
 
 	final private DefaultTreeModel projectTreeModel = new DefaultTreeModel(root);
-	
-	/* This is a dangerous hack to support genomeSpace component. Be advised not to use it. */
-	public DefaultTreeModel getTreeModel(){
+
+	/*
+	 * This is a dangerous hack to support genomeSpace component. Be advised not
+	 * to use it.
+	 */
+	public DefaultTreeModel getTreeModel() {
 		return projectTreeModel;
 	}
 
@@ -1420,15 +1438,18 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	public List<DataSetNode> getTopLevelDataSetNodes() {
 		List<DataSetNode> list = new ArrayList<DataSetNode>();
 		for (Enumeration<?> en = root.children(); en.hasMoreElements();) {
-			// checking is not assuming it must be DataSetNode; otherwise it is a bug somewhere else
-			list.add( (DataSetNode) en.nextElement() );
+			// checking is not assuming it must be DataSetNode; otherwise it is
+			// a bug somewhere else
+			list.add((DataSetNode) en.nextElement());
 		}
 		return list;
 	}
-	
+
 	// used only on WorkspaceHandler
 	boolean isEmpty() {
-		return root.getChildCount()==0; // this is probably the more proper way to check than projectTree.getRowCount()
+		return root.getChildCount() == 0; // this is probably the more proper
+											// way to check than
+											// projectTree.getRowCount()
 	}
 
 	/**
@@ -1440,7 +1461,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 
 	// initialize visual elements and listeners
 	private void init() {
-		
+
 		// part 1: visual elements
 		JScrollPane jDataSetScrollPane = new JScrollPane();
 		jDataSetScrollPane.setBorder(BorderFactory.createLoweredBevelBorder());
@@ -1465,7 +1486,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		jRootMenu.add(jUploadWspItem);
 
 		jExportToTabDelimMenuItem.setVisible(false);
-		
+
 		JMenuItem jRemoveDatasetItem = new JMenuItem("Remove");
 
 		dataSetMenu.add(jSaveMenuItem);
@@ -1490,9 +1511,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				jProjectTree_keyReleased(e);
 			}
 		});
-		
+
 		// three groups of menu item listeners
-		
+
 		// GROUP 1: invoke by both main frame menus AND
 		// the context menu (right-clicked invoked)
 
@@ -1520,7 +1541,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 			public void actionPerformed(ActionEvent e) {
 				renameDataset();
 			}
-			
+
 		};
 		listeners.put("Edit.Rename.File", renameDataSetListener);
 		jRenameMenuItem.addActionListener(renameDataSetListener);
@@ -1534,7 +1555,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		listeners.put("File.Save.Dataset", saveFileListener);
 		jSaveMenuItem.addActionListener(saveFileListener);
 		jExportToTabDelimMenuItem.addActionListener(saveFileListener);
-		
+
 		ActionListener removeNodeListener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -1547,7 +1568,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		JMenuItem jRemovePendingItem = new JMenuItem("Remove");
 		jRemovePendingItem.addActionListener(removeNodeListener);
 		pendingMenu.add(jRemovePendingItem);
-		
+
 		// GROUP 2: only invoked by main frame menus
 
 		listeners.put("File.Merge Datasets", new ActionListener() {
@@ -1561,7 +1582,6 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				saveWorkspace();
 			}
 		});
-
 
 		listeners.put("File.Open.Workspace", new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -1617,7 +1637,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 				}
 			}
 		});
-		
+
 		jViewAnnotations.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (selection.getSelectedNode() instanceof DataSetNode) {
@@ -1688,8 +1708,10 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	}
 
 	// notice this is almost the same as saveWorkspace()
-	// I believe this is better than using switch to create two flavors of actual behavior
-	// TODO: the relationship between RWspHandler and WorkspaceHandler is what should be better designed.
+	// I believe this is better than using switch to create two flavors of
+	// actual behavior
+	// TODO: the relationship between RWspHandler and WorkspaceHandler is what
+	// should be better designed.
 	static private void saveWorkspaceAndExit() {
 		if (RWspHandler.wspId > 0)
 			RWspHandler.saveLocalwsp(true);
@@ -1772,7 +1794,8 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		return root;
 	}
 
-	JProgressBar getProgressBar() { // TODO this is to support FileOpenHandler. need a better design.
+	JProgressBar getProgressBar() { // TODO this is to support FileOpenHandler.
+									// need a better design.
 		return progressBar;
 	}
 
@@ -1838,7 +1861,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		}
 	}
 
-	@SuppressWarnings("rawtypes") 
+	@SuppressWarnings("rawtypes")
 	private void refreshDataSetMenu(Class<? extends DSDataSet> currentDataType) {
 		if (currentDataType != lastDataType) {
 			clearMenuItems();

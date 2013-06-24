@@ -96,7 +96,8 @@ public class ProjectSelection {
             } else if (node instanceof DataSetSubNode) {
                 selectedDataSetSubNode = (DataSetSubNode) node;
                 selectedDataSetNode = getParentDataSet(selectedDataSetSubNode);
-                AnnotationParser.setCurrentDataSet(selectedDataSetNode.getDataset());//Fix bug 1471
+                if ( selectedDataSetNode != null)
+                   AnnotationParser.setCurrentDataSet(selectedDataSetNode.getDataset());//Fix bug 1471
                 GeawConfigObject.getGuiWindow().setVisualizationType(selectedDataSetSubNode._aDataSet);
 				ProjectPanel.getInstance().publishProjectEvent(
 						new ProjectEvent(selectedDataSetSubNode._aDataSet,
