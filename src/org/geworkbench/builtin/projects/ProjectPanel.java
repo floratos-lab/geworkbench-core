@@ -1094,8 +1094,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 	 * Action listener handling user requests for removing a dataset.
 	 * 
 	 * @param e
-	 */
-	@SuppressWarnings("rawtypes")
+	 */ 
 	private void fileRemove_actionPerformed(ProjectTreeNode node) {
 		// clear out unused mark annotation from memory
 		if (node instanceof DataSetNode) {
