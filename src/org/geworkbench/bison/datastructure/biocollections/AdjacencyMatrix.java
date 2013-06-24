@@ -169,14 +169,16 @@ public class AdjacencyMatrix implements Serializable {
 
 	private final Map<String, String> interactionTypeSifMap; // TODO check ?
 	private final Map<String, String> interactionEvidenceMap; 
-
+	
+	private Map<String, Integer> geneRankingMap = null;
+	 
     private Set<Node> nodeSet = new HashSet<Node>();
     
 
 	public AdjacencyMatrix(String name) {
 		this.name = name;
 		interactionTypeSifMap = null;
-		interactionEvidenceMap = null;
+		interactionEvidenceMap = null;	 
 		log.debug("AdjacencyMatrix created with label " + name);
 	}
 
@@ -389,5 +391,17 @@ public class AdjacencyMatrix implements Serializable {
 	public List<Node> getNodes() {
 		return new ArrayList<Node>(geneRows.keySet());
 	}
+	
+	public void setGeneRankingMap(Map<String, Integer> geneRankingMap)
+	{
+		this.geneRankingMap = geneRankingMap;
+	}
+	
+	public Map<String, Integer> getGeneRankingMap()
+	{
+		return this.geneRankingMap;
+	}
+	
+	
 
 }
