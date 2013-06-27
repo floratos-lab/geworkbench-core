@@ -1245,11 +1245,10 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 						node.getChildCount());
 			} else if (node instanceof DataSetSubNode) {
 				DataSetSubNode subNode = (DataSetSubNode) node;
-				node = (ProjectTreeNode) subNode.getParent();
-				if (node instanceof DataSetNode) {
-					projectTreeModel.insertNodeInto(imageNode, node,
+				node = (ProjectTreeNode) subNode.getParent();				 
+				projectTreeModel.insertNodeInto(imageNode, node,
 							node.getChildCount());
-				}
+				 
 			}
 
 			// Make sure the user can see the lovely new node.
