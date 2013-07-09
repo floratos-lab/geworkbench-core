@@ -45,11 +45,6 @@ public class ComponentResource {
     private URLClassLoader classLoader;
 
     /**
-     * Used to search for classes of a certain type within this resource.
-     */
-    private ClassSearcher classSearcher;
-
-    /**
      * Indicates whether this resource was originally loaded from a gear file or not
      */
     private boolean isFromGear = false;
@@ -149,19 +144,6 @@ public class ComponentResource {
 
     public String getName() {
         return name;
-    }
-
-    /**
-     * Gets the class searcher for the component resource.
-     */
-    public ClassSearcher getClassSearcher() {
-        if (classSearcher == null) {
-            if (baseURL != null) {
-                log.debug("Building class searcher for '" + getName() + "'...");
-                classSearcher = new ClassSearcher(new URL[]{baseURL});
-            }
-        }
-        return classSearcher;
     }
 
 }

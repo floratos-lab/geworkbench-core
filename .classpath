@@ -11,7 +11,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/AffxFusion.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ant.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ant-launcher.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/bcel-5.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/cglib-nodep-2.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/collections-generic-4.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-beanutils.jar"/>
