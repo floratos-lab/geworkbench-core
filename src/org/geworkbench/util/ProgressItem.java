@@ -9,8 +9,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoundedRangeModel;
-import javax.swing.DefaultBoundedRangeModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -39,18 +37,14 @@ public class ProgressItem extends JPanel implements PropertyChangeListener {
     /**
      * Instance type
      */
-    private int type = BOUNDED_TYPE;
+    final private int type;
     /**
      * Visual widget
      */
     private JProgressBar jProgressBar;
-    /**
-     * Visual widget
-     */
-    private JButton cancelButton;
+
     private JLabel jLabel1;
-    private JPanel jp1 = new JPanel();
-    private JPanel jp2 = new JPanel();
+
     private ProgressTask<?,?> task;
     
     /**
@@ -64,13 +58,12 @@ public class ProgressItem extends JPanel implements PropertyChangeListener {
         if (t == BOUNDED_TYPE) {
             type = t;
             jProgressBar.setIndeterminate(false);
-            //jProgressBar.setStringPainted(true);
-        }
-
-        else if (t == INDETERMINATE_TYPE) {
+        } else if (t == INDETERMINATE_TYPE) {
             type = t;
             jProgressBar.setIndeterminate(true);
             jProgressBar.setStringPainted(false);
+        } else { // this should not happen
+        	type = BOUNDED_TYPE;
         }
 
         try {
@@ -93,7 +86,7 @@ public class ProgressItem extends JPanel implements PropertyChangeListener {
         jProgressBar.setRequestFocusEnabled(true);
         jProgressBar.setBorderPainted(true);
 
-        cancelButton = new JButton(new ImageIcon("classes/images/ButtonClose.png"));
+        JButton cancelButton = new JButton(new ImageIcon("classes/images/ButtonClose.png"));
         cancelButton.setToolTipText("Cancel");
         cancelButton.setContentAreaFilled(false);
         cancelButton.setRequestFocusEnabled(true);
@@ -104,6 +97,8 @@ public class ProgressItem extends JPanel implements PropertyChangeListener {
         jLabel1.setText("Message");
         jLabel1.setVerticalTextPosition(SwingConstants.CENTER);
 
+        JPanel jp1 = new JPanel();
+        JPanel jp2 = new JPanel();
         jp1.add(jProgressBar);
         jp1.add(cancelButton);
         jp2.add(jLabel1);
@@ -121,52 +116,16 @@ public class ProgressItem extends JPanel implements PropertyChangeListener {
     }
 
     /**
-     * Sets the bounds if type == BOUNDED_TYPE
-     * @param brm <code>BoundedRangeModel</code> encapsulating range and extent
-     * of values to be used for animation
-     */
-    public void setBounds(BoundedRangeModel brm) {
-        if (type == BOUNDED_TYPE) {
-            jProgressBar.setModel(brm);
-        }
-    }
-
-    /**
-     * Updates the ProgressBar by an amount specified in the <code>
-     * BoundedRangeModel</code>
-     * @return status of updation
-     */
-    public boolean update() {
-        if (type == BOUNDED_TYPE) {
-            int inc = ( (IncrementModel) jProgressBar.getModel()).getIncrement();
-            int value = jProgressBar.getValue();
-            int nv = value + inc;
-            if (nv <= jProgressBar.getMaximum()) {
-                jProgressBar.setValue(value + inc);
-                jProgressBar.setString(Integer.toString(value + inc));
-
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * Updates the ProgressBar to an amount specified
      * @param value value that the <code>ProgressBar</code> has to be set to
-     * @return status of updation if <code>value</code> is
-     * outside the range in the <code> BoundedRangeModel</code>
      */
-    public boolean updateTo(float value) {
+    private void updateTo(float value) {
         if (type == BOUNDED_TYPE) {
             if ((int) value <= jProgressBar.getMaximum()) {
                 jProgressBar.setValue((int) value);
                 jProgressBar.setString(Integer.toString((int) value));
-                return true;
             }
         }
-        return false;
     }
 
     /**
@@ -182,46 +141,6 @@ public class ProgressItem extends JPanel implements PropertyChangeListener {
     }
 
     /**
-     * Stops animation
-     */
-    public void stop() {
-    	/*
-    	JButton done = new JButton(new ImageIcon("classes/images/ButtonDone.png"));
-    	done.setContentAreaFilled(false);
-    	jp2.add(done);
-    	jp2.revalidate();
-    	this.remove(jp1);
-    	*/
-    	dispose();
-    }
-    public String getMessage(){
-    	return jLabel1.getText();
-    }
-
-    /**
-     * Resets the animation
-     */
-    public void reset() {
-        updateTo(jProgressBar.getMinimum());
-    }
-
-    /**
-     * Gets time period of animation
-     * @return time period of animation in milli seconds
-     */
-    public double getDuration() {
-        return 0d;
-    }
-
-    /**
-     * Hides the <code>ProgressBar</code>
-     */
-    public void dispose() {
-        this.setMessage("");
-        this.setVisible(false);
-    }
-
-    /**
      * Sets the message
      * @param message to be shown on the <code>ProgressBar</code>
      */
@@ -230,39 +149,6 @@ public class ProgressItem extends JPanel implements PropertyChangeListener {
         jLabel1.setText(message);
     }
 
-    /**
-     * Bit to specify if the current value of the <code>ProgressBar</code> has
-     * to be printed on the widget. Default is true.
-     * @param show if current value and bounds have to printed
-     */
-    public void showValues(boolean show) {
-        if (type == BOUNDED_TYPE) {
-            jProgressBar.setStringPainted(show);
-        }
-    }
-
-    /**
-     * Utility class that encapsulates a step size for the
-     * <code>ProgressBar</code> display
-     */
-    public static class IncrementModel
-        extends DefaultBoundedRangeModel {
-		private static final long serialVersionUID = 1L;
-		private int increment = 0;
-        public IncrementModel(int value, int extent, int min, int max, int inc) {
-            super(value, extent, min, max);
-            increment = inc;
-        }
-
-        public int getIncrement() {
-            return increment;
-        }
-
-        public void setIncrement(int inc) {
-            increment = inc;
-        }
-    }
-    
     @Override
     public void propertyChange(PropertyChangeEvent evt){
 		if("progress" == evt.getPropertyName()) {
