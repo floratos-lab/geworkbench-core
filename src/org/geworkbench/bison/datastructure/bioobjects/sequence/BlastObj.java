@@ -33,32 +33,28 @@ public class BlastObj implements Serializable{
 	/**
 	 * The Database ID of the protein sequence hit in this BlastObj.
 	 */
-	private String databaseID;
+	final private String databaseID;
 
 	/**
 	 * The accession number of the protein sequence hit in this BlastObj.
 	 */
-	private String name;
+	final private String name;
 	/**
 	 * The description of the protein sequence hit in this BlastObj.
 	 */
-	private String description;
+	final private String description;
 	/**
 	 * The percentage of the query that's aligned with protein sequence hit in
 	 * this BlastObj.
 	 */
-	private int percentAligned;
+	final private int percentAligned;
 
 	/**
 	 * The score of the alignment of query and hit in this BlastObj.
 	 */
-	private String evalue;
+	final private String evalue;
 
-	/**
-	 * The String of hit sequence in this BlastObj in alignment with query
-	 * sequence.
-	 */
-	private String subject;
+	final private String[] subject;
 
 	/**
 	 * whether this BlastObj is included in the MSA analysis
@@ -70,12 +66,12 @@ public class BlastObj implements Serializable{
 	 */
 	private URL seqURL;
 	private String detailedAlignment = "";
-	private String identity;
-	private int startPoint;
-	private int alignmentLength;
+
+	final private int startPoint;
+	final private int alignmentLength;
 
 	public BlastObj(String databaseID, String name,
-			String description, String evalue, int startPoint, int alignmentLength, String subject, int percentage) {
+			String description, String evalue, int startPoint, int alignmentLength, String[] subject, int percentage) {
 		this.databaseID = databaseID;
 		this.description = description;
 		this.name = name;
@@ -152,11 +148,15 @@ public class BlastObj implements Serializable{
 		include = b;
 	}
 
+	@Deprecated /* it is not necessary to call this method. */
 	public URL getSeqURL() {
 		return seqURL;
 	}
 
 	public void setSeqURL(URL seqURL) {
+		if(this.seqURL==null) {
+			log.warn("trying to set seqURL again for "+name);
+		}
 		this.seqURL = seqURL;
 	}
 
@@ -168,16 +168,27 @@ public class BlastObj implements Serializable{
 		return detailedAlignment;
 	}
 
+	// TODO this should be set only once. maybe this should be in constructor as final. also maybe this should be multiple instead of single one? 
 	public void setDetailedAlignment(String detailedAlignment) {
 		this.detailedAlignment = detailedAlignment;
 	}
 
-	public CSSequence getAlignedSeq() {
-		CSSequence seq = new CSSequence(">" + databaseID + "|" + name
-				+ "---PARTIALLY INCLUDED", subject);
+	public CSSequence[] getAlignedSeq() {
+		if(subject.length<=0) { // this should never happen
+			log.error("incorrect alignment number "+subject.length);
+			return null;
+		}
+		CSSequence[] seq = new CSSequence[subject.length];
+		String a = "";
+		for(int i=0; i<subject.length; i++) {
+			if(i>0) {
+				a = "("+i+")";
+			}
+			seq[i] = new CSSequence(">" + databaseID + "|" + name + a
+				+ "---PARTIALLY INCLUDED", subject[i].replaceAll("-", ""));
+		}
 
 		return seq;
-
 	}
 
 	/**
@@ -265,10 +276,6 @@ public class BlastObj implements Serializable{
 		log.debug("label\n" + sequenceLabel);
 		log.debug("sequence\n" + sequence);
 		return new CSSequence(sequenceLabel, sequence);
-	}
-
-	public String getIdentity() {
-		return identity;
 	}
 
 	public int getStartPoint() {
