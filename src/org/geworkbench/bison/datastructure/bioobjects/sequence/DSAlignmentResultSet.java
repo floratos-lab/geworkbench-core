@@ -6,7 +6,6 @@ import java.util.RandomAccess;
 import java.util.Vector;
 
 import org.geworkbench.bison.datastructure.biocollections.DSAncillaryDataSet;
-import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 
 /**
@@ -16,10 +15,7 @@ import org.geworkbench.bison.datastructure.bioobjects.DSBioObject;
 public interface DSAlignmentResultSet extends RandomAccess, Cloneable,
 		DSAncillaryDataSet<DSBioObject>, Serializable {
 	
-	public DSSequenceSet<? extends DSSequence> getBlastedParentDataSet();
 	public List<Vector<BlastObj>> getBlastDataSet(); 
 	public String getSummary(); 
 	public int getHitCount();
-
-	 
 }
