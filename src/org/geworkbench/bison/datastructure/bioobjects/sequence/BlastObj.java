@@ -54,8 +54,6 @@ public class BlastObj implements Serializable{
 	 */
 	final private String evalue;
 
-	final private String[] subject;
-
 	/**
 	 * whether this BlastObj is included in the MSA analysis
 	 */
@@ -69,17 +67,19 @@ public class BlastObj implements Serializable{
 
 	final private int startPoint;
 	final private int alignmentLength;
+	final private String alignedParts;
 
 	public BlastObj(String databaseID, String name,
-			String description, String evalue, int startPoint, int alignmentLength, String[] subject, int percentage) {
+			String description, String evalue, int startPoint, int alignmentLength, int percentage, String alignedParts) {
 		this.databaseID = databaseID;
 		this.description = description;
 		this.name = name;
 		this.evalue = evalue;
 		this.startPoint = startPoint;
 		this.alignmentLength = alignmentLength;
-		this.subject = subject;
 		this.percentAligned = percentage;
+
+		this.alignedParts = alignedParts;
 	}
 
 	/* Get methods for class variables. */
@@ -148,14 +148,10 @@ public class BlastObj implements Serializable{
 		include = b;
 	}
 
-	@Deprecated /* it is not necessary to call this method. */
-	public URL getSeqURL() {
-		return seqURL;
-	}
-
 	public void setSeqURL(URL seqURL) {
-		if(this.seqURL==null) {
+		if(this.seqURL!=null) {
 			log.warn("trying to set seqURL again for "+name);
+			return;
 		}
 		this.seqURL = seqURL;
 	}
@@ -173,22 +169,8 @@ public class BlastObj implements Serializable{
 		this.detailedAlignment = detailedAlignment;
 	}
 
-	public CSSequence[] getAlignedSeq() {
-		if(subject.length<=0) { // this should never happen
-			log.error("incorrect alignment number "+subject.length);
-			return null;
-		}
-		CSSequence[] seq = new CSSequence[subject.length];
-		String a = "";
-		for(int i=0; i<subject.length; i++) {
-			if(i>0) {
-				a = "("+i+")";
-			}
-			seq[i] = new CSSequence(">" + databaseID + "|" + name + a
-				+ "---PARTIALLY INCLUDED", subject[i].replaceAll("-", ""));
-		}
-
-		return seq;
+	public String getAlignedSeq() {
+		return alignedParts;
 	}
 
 	/**
@@ -227,7 +209,7 @@ public class BlastObj implements Serializable{
 	 * 
 	 * @return Object
 	 */
-	public CSSequence getWholeSeq() {
+	public String getWholeSeq() {
 
 		if (seqURL == null)
 			return null;
@@ -275,7 +257,7 @@ public class BlastObj implements Serializable{
 
 		log.debug("label\n" + sequenceLabel);
 		log.debug("sequence\n" + sequence);
-		return new CSSequence(sequenceLabel, sequence);
+		return sequenceLabel+"\n"+sequence;
 	}
 
 	public int getStartPoint() {
