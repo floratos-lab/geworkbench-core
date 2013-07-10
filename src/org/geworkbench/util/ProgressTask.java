@@ -1,5 +1,6 @@
 package org.geworkbench.util;
 
+import javax.swing.JPanel;
 import javax.swing.SwingWorker;
 
 /**
@@ -14,7 +15,8 @@ import javax.swing.SwingWorker;
  */
 
 public abstract class ProgressTask<T, V> extends SwingWorker<T, V> {
-	protected ProgressItem pb = null;
+	
+	final private ProgressItem pb;
 	
 	/**
 	 * Create and show ProgressItem 
@@ -30,8 +32,16 @@ public abstract class ProgressTask<T, V> extends SwingWorker<T, V> {
 		if (pbtype == ProgressItem.BOUNDED_TYPE)
 			addPropertyChangeListener( pb );
 	}
+
+	public void setMessage(String message) {
+		pb.setMessage(message);
+	}
 	
-	public ProgressItem getProgressItem(){
-		return pb;
+	public void addToPanel(final JPanel container) {
+		container.add(pb);
+	}
+
+	public void removeFromPanel(final JPanel container) {
+		container.remove(pb);
 	}
 }

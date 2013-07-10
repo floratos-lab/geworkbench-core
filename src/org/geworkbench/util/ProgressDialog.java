@@ -23,39 +23,46 @@ import javax.swing.JScrollPane;
 
 public class ProgressDialog extends JDialog {
 	
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -1702567559426660298L;
+	
 	public static final int MODAL_TYPE = 0;
 	public static final int NONMODAL_TYPE = 1;
 	private static Vector<ProgressTask<?,?>> modaltasks = new Vector<ProgressTask<?,?>>();
 	private static Vector<ProgressTask<?,?>> nonmodaltasks = new Vector<ProgressTask<?,?>>();
-	private Vector<ProgressTask<?,?>> tasks = new Vector<ProgressTask<?,?>>();
-	private static ProgressDialog modalProgressDialog = new ProgressDialog(MODAL_TYPE);
-	private static ProgressDialog nonmodalProgressDialog = new ProgressDialog(NONMODAL_TYPE);
-    private JPanel jp = null;
-    private GridLayout gl = null;
-    private JScrollPane jsp = null;
 
+	private static ProgressDialog modalProgressDialog = new ProgressDialog(true);
+	private static ProgressDialog nonmodalProgressDialog = new ProgressDialog(false);
+    
+	final private Vector<ProgressTask<?,?>> tasks;
+	final private JPanel jp;
+
+	@Deprecated /* both the name and the argument type are bad ideas. getInstance(boolean) should be used. */
     public static ProgressDialog create(int type) {
         if (type == MODAL_TYPE)         return modalProgressDialog;
         else if (type == NONMODAL_TYPE) return nonmodalProgressDialog;
         return null;
     }
+    
+	public static ProgressDialog getInstance(boolean modal) {
+		if (modal) {
+			return modalProgressDialog;
+		} else {
+			return nonmodalProgressDialog;
+		}
+	}
 
-    private ProgressDialog(int type){
-        if (type == MODAL_TYPE) {
+    private ProgressDialog(boolean modal){
+        if (modal) {
             setModal(true);
             tasks = modaltasks;
-        }
-        else if (type == NONMODAL_TYPE) {
+        } else {
             setModal(false);
             tasks = nonmodaltasks;
         }
 
         this.setTitle("Progress");
-    	gl = new GridLayout(0, 1); 
-        jp = new JPanel(gl);
-    	jsp = new JScrollPane(jp);
-        this.add(jsp);
+        jp = new JPanel(new GridLayout(0, 1));
+        this.add(new JScrollPane(jp));
 
         this.addWindowListener(new WindowAdapter(){
         	public void windowClosing(WindowEvent e){
@@ -87,10 +94,7 @@ public class ProgressDialog extends JDialog {
     		pack();
     	}
     }
-    public void resetWidth(){
-    	maxWidth = 0;
-    	pack();
-    }
+
 	/*
 	 * add progress bar to progress dialog
 	 * execute SwingWorker task
@@ -100,14 +104,20 @@ public class ProgressDialog extends JDialog {
 	public void executeTask(ProgressTask<?,?> task){
 		if (task == null) return;
 
-		ProgressItem pb = task.getProgressItem();
-		jp.add(pb);
+		task.addToPanel(jp);
 		this.pack();
 
 		task.execute();
 		
 		tasks.add(task);
-        if (!isActive()||!isVisible())  start();
+        if (!isActive()||!isVisible())  {
+            Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+            this.setLocation(
+                (dim.width - this.getWidth()) / 2,
+                (dim.height - this.getHeight()) / 2);
+            this.setVisible(true);
+            this.setTitle("Progress");
+        }
 	}
 
 	/*
@@ -118,39 +128,24 @@ public class ProgressDialog extends JDialog {
 	public void removeTask(ProgressTask<?,?> task){
 		if (task == null) return;
 
-		ProgressItem pb = task.getProgressItem();
-		jp.remove(pb);
+		task.removeFromPanel(jp);
 		repaint();
 
 		if (tasks.contains(task)) tasks.remove(task);
-		if (tasks.size() == 0) stop();
-		resetWidth();
+		if (tasks.size() == 0) {
+			dispose();
+		}
+    	maxWidth = 0;
+    	pack();
 	}
-
-    public void setTitle(String title) {
-        super.setTitle(title);
-    }
 
     /**
      * Hides the <code>ProgressDialog</code>
      */
+	@Override
     public void dispose() {
         this.setTitle("");
         this.setVisible(false);
-    }
-    
-    public void start() {
-        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        this.setLocation(
-            (dim.width - this.getWidth()) / 2,
-            (dim.height - this.getHeight()) / 2);
-        this.setVisible(true);
-        this.setTitle("Progress");
-        //updateTo(jProgressBar.getMinimum());
-    }
-
-    public void stop() {
-    	dispose();
     }
 
 }
