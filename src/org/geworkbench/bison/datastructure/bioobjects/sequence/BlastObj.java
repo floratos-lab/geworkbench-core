@@ -166,6 +166,9 @@ public class BlastObj implements Serializable{
 	/**
 	 * Get the whole sequence from NIH's E-utilities.
 	 * 
+	 * Document about E-utilities and EFetch particular can be found at
+	 * http://www.ncbi.nlm.nih.gov/books/NBK25499/#chapter4.EFetch
+	 * 
 	 * @return String
 	 */
 	public String getWholeSeq() {
