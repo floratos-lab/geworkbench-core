@@ -63,14 +63,15 @@ public class BlastObj implements Serializable{
 	 * URL of seq.
 	 */
 	private URL seqURL;
-	private String detailedAlignment = "";
 
+	final private String detailedAlignment;
 	final private int startPoint;
 	final private int alignmentLength;
 	final private String alignedParts;
 
-	public BlastObj(String databaseID, String name,
-			String description, String evalue, int startPoint, int alignmentLength, int percentage, String alignedParts) {
+	public BlastObj(String databaseID, String name, String description,
+			String evalue, int startPoint, int alignmentLength, int percentage,
+			String alignedParts, String detailedAlignment) {
 		this.databaseID = databaseID;
 		this.description = description;
 		this.name = name;
@@ -80,6 +81,7 @@ public class BlastObj implements Serializable{
 		this.percentAligned = percentage;
 
 		this.alignedParts = alignedParts;
+		this.detailedAlignment = detailedAlignment;
 	}
 
 	/* Get methods for class variables. */
@@ -162,11 +164,6 @@ public class BlastObj implements Serializable{
 
 	public String getDetailedAlignment() {
 		return detailedAlignment;
-	}
-
-	// TODO this should be set only once. maybe this should be in constructor as final. also maybe this should be multiple instead of single one? 
-	public void setDetailedAlignment(String detailedAlignment) {
-		this.detailedAlignment = detailedAlignment;
 	}
 
 	public String getAlignedSeq() {
