@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
-import java.net.URL;
 
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpClient;
@@ -59,19 +58,18 @@ public class BlastObj implements Serializable{
 	 */
 	private boolean include = false;
 
-	/**
-	 * URL of seq.
-	 */
-	private URL seqURL;
+	final private String gi;
 
 	final private String detailedAlignment;
 	final private int startPoint;
 	final private int alignmentLength;
 	final private String alignedParts;
+	
+	final private String efetchDb;
 
 	public BlastObj(String databaseID, String name, String description,
 			String evalue, int startPoint, int alignmentLength, int percentage,
-			String alignedParts, String detailedAlignment) {
+			String alignedParts, String detailedAlignment, String gi, String efetchDb) {
 		this.databaseID = databaseID;
 		this.description = description;
 		this.name = name;
@@ -82,6 +80,9 @@ public class BlastObj implements Serializable{
 
 		this.alignedParts = alignedParts;
 		this.detailedAlignment = detailedAlignment;
+		
+		this.gi = gi;
+		this.efetchDb = efetchDb;
 	}
 
 	/* Get methods for class variables. */
@@ -150,14 +151,6 @@ public class BlastObj implements Serializable{
 		include = b;
 	}
 
-	public void setSeqURL(URL seqURL) {
-		if(this.seqURL!=null) {
-			log.warn("trying to set seqURL again for "+name);
-			return;
-		}
-		this.seqURL = seqURL;
-	}
-
 	public String getName() {
 		return name;
 	}
@@ -169,49 +162,14 @@ public class BlastObj implements Serializable{
 	public String getAlignedSeq() {
 		return alignedParts;
 	}
-
-	/**
-	 * Create Entrez Programming Utilities query URL from web query URL.
-	 * 
-	 * @param queryUrl
-	 * @return
-	 */
-	private static String EUtilsUrl(String queryUrl) {
-		// parse GI from the url
-		final String proteinUrl = "http://www.ncbi.nlm.nih.gov/protein/";
-		final String nucleotideUrl = "http://www.ncbi.nlm.nih.gov/nucleotide/";
-		int indexQ = queryUrl.indexOf("?");
-		String GI = null; 
-		String databaseName = null;
-		if(indexQ==-1) {
-			log.error("unexpected query URL format :"+queryUrl);
-			return null;
-		} else if(queryUrl.startsWith(proteinUrl)) {
-			GI = queryUrl.substring(proteinUrl.length(), indexQ);
-			databaseName = "protein";
-		} else if(queryUrl.startsWith(nucleotideUrl)) {
-			GI = queryUrl.substring(nucleotideUrl.length(), indexQ);
-			databaseName = "nucleotide";
-		} else {
-			log.error("unexpected query URL format :"+queryUrl);
-			return null;
-		}
-
-		return "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db="+databaseName+"&id="
-				+ GI + "&rettype=fasta";
-	}
 	
 	/**
-	 * getWholeSeq
+	 * Get the whole sequence from NIH's E-utilities.
 	 * 
-	 * @return Object
+	 * @return String
 	 */
 	public String getWholeSeq() {
 
-		if (seqURL == null)
-			return null;
-
-		log.debug("URL" + seqURL);
 		HttpClient client = new HttpClient();
 		DefaultHttpMethodRetryHandler retryhandler = new DefaultHttpMethodRetryHandler(
 				10, true);
@@ -219,7 +177,14 @@ public class BlastObj implements Serializable{
 				retryhandler);
 		client.getParams().setCookiePolicy(CookiePolicy.IGNORE_COOKIES);
 
-		GetMethod getMethod = new GetMethod(EUtilsUrl(seqURL.toString()));
+		/* In the older code, efetchDb is either protein or nucleotide, but it seems have not effect in my tests:
+		 * either one works for both protein sequence or nucleotide sequence, but other value does not work. */
+		// Create Entrez Programming Utilities query URL.
+		String url = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db="
+				+ efetchDb + "&id=" + gi + "&rettype=fasta";
+		System.out.println(url);
+		
+		GetMethod getMethod = new GetMethod(url);
 		String sequenceLabel = null, sequence = null;
 		try {
 			int statusCode = client.executeMethod(getMethod);
@@ -238,7 +203,7 @@ public class BlastObj implements Serializable{
 				stream.close();
 				sequence = sb.toString();
 			} else {
-				log.error("E Utilties failed for " + seqURL);
+				log.error("E Utilties failed for " + url);
 				log.error("status code=" + statusCode);
 				return null;
 			}
