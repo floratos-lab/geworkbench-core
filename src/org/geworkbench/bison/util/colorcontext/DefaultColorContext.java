@@ -24,7 +24,7 @@ public class DefaultColorContext implements ColorContext {
 
 	private static final long serialVersionUID = -8105939139046926331L;
 
-	private final Color MISSING_VALUE_COLOR = Color.GRAY;
+	protected final Color MISSING_VALUE_COLOR = Color.GRAY;
 
     private double magnitude;
 

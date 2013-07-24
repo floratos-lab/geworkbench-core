@@ -799,9 +799,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		addDataSetNode(microarraySet);
 	}
 
-	public void addProcessedMaSet(DSMicroarraySet microarraySet) {
-		// assign default color context to processed maset
-		ColorContext context = new org.geworkbench.bison.util.colorcontext.DefaultColorContext();
+	public void addProcessedMaSet(DSMicroarraySet microarraySet, ColorContext context) {
 		microarraySet.addObject(ColorContext.class, context);
 		updateColorContext(microarraySet);
 

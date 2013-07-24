@@ -1,5 +1,6 @@
 package org.geworkbench.engine.preferences;
 
+import org.geworkbench.bison.util.colorcontext.AbsoluteWhiteColorContext;
 import org.geworkbench.bison.util.colorcontext.ColorContext;
 import org.geworkbench.bison.util.colorcontext.DefaultColorContext;
 import org.geworkbench.bison.util.colorcontext.ExpressionPValueColorContext;
@@ -22,9 +23,9 @@ public class GlobalPreferences {
     public static final String R_LOCATION = "R Location (Rscript.exe and it's folder)";
     public static final String R_LIBPATH = "R package directory (leave it blank for default path)";
     
-    public static final String[] VISUALIZATION_VALUES = new String[]{"Absolute", "Relative"};
+    public static final String[] VISUALIZATION_VALUES = new String[]{"Absolute(zero=black)", "Relative", "Absolute(zero=white)"};
     @SuppressWarnings("unchecked")
-	public static final Class<? extends ColorContext>[] VISUALIZATON_COLOR_CONTEXTS = new Class[]{DefaultColorContext.class, ExpressionPValueColorContext.class};
+	public static final Class<? extends ColorContext>[] VISUALIZATON_COLOR_CONTEXTS = new Class[]{DefaultColorContext.class, ExpressionPValueColorContext.class, AbsoluteWhiteColorContext.class};
 
     public static final String[] GENEPIX_VALUES = new String[]
             {
