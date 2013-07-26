@@ -10,7 +10,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+/* ONLINE_HELP
 import javax.help.HelpSet;
+*/ //ONLINE_HELP
+
 import javax.swing.JMenuItem;
 
 import org.apache.commons.logging.Log;
@@ -370,6 +373,7 @@ public class PluginDescriptor extends IdentifiableImpl implements Comparable<Plu
     public void setComponentMetadata(ComponentMetadata metadata) throws NotMenuListenerException, MalformedMenuItemException, NotVisualPluginException {
 
         //// Set up help set
+/* ONLINE_HELP
         if (metadata.getHelpSet() != null) {
             String pluginHelpSet = metadata.getHelpSet();
             if (pluginHelpSet == null)
@@ -387,6 +391,7 @@ public class PluginDescriptor extends IdentifiableImpl implements Comparable<Plu
             // Add the helpset for the new component to the master set.
             GeawConfigObject.addHelpSet(pginHS);
         }
+*/ // ONLINE_HELP
         //// Set up menu items
         List<MenuItemInfo> menuItems = metadata.getMenuInfoList();
         for (int i = 0; i < menuItems.size(); i++) {

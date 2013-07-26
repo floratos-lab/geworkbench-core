@@ -8,9 +8,11 @@ import java.net.URL;
 import java.util.Map;
 import java.util.TreeMap;
 
+/* ONLINE_HELP
 import javax.help.CSH;
 import javax.help.HelpBroker;
 import javax.help.HelpSet;
+*/ //ONLINE_HELP
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -66,8 +68,11 @@ public class GeawConfigObject {
      * componenents will be appended to the master help in the order in which
      * they are encountered within the configuration file.
      */
+
+/* ONLINE_HELP
     private static HelpSet masterHelp = null;
     private static TreeMap<String, HelpSet> sortedHelpSets = new TreeMap<String, HelpSet>();
+*/ // ONLINE_HELP
     // ---------------------------------------------------------------------------
     // --------------- Properties
     // ---------------------------------------------------------------------------
@@ -138,11 +143,13 @@ public class GeawConfigObject {
      *
      * @param hs
      */
+/* ONLINE_HELP
     public static void addHelpSet(HelpSet hs) {
         if (hs == null)
             return;
         sortedHelpSets.put(hs.getTitle().toLowerCase(), hs);
     }
+*/ //ONLINE_HELP
 
     /**
      * Remove the designated helpset, if it is in use.
@@ -150,12 +157,14 @@ public class GeawConfigObject {
      * @param hs
      * @return
      */
+/* ONLINE_HELP
     public static boolean removeHelpSet(HelpSet hs) {
         if (hs == null || masterHelp == null)
             return false;
         else
             return masterHelp.remove(hs);
     }
+*/ //ONLINE_HELP
 
     private static JMenuItem showWelcomeScreen = new JMenuItem("Show Welcome Screen");
     public static void enableWelcomeScreenMenu(boolean enabled) {
@@ -167,15 +176,17 @@ public class GeawConfigObject {
 	 * window visible.
 	 */
 	public static void finish() {
+/* ONLINE_HELP
 		JMenuItem menu_help = new JMenuItem("Help Topics");
 		if (masterHelp != null) {
 			HelpBroker masterHelpBroker = masterHelp.createHelpBroker();
 			menu_help.addActionListener(new CSH.DisplayHelpFromSource(
 					masterHelpBroker));
 		}
-		helpMenu.add(menu_help);
-
+		helpMenu.add(menu_help);  // remove button for Online Help 
+*/ //ONLINE_HELP
 		addToHelpMenu("geworkbench.org", "http://www.geworkbench.org");
+		addToHelpMenu("geWorkbench Tutorials", "http://wiki.c2b2.columbia.edu/workbench/index.php/Tutorials");
 		addToHelpMenu("Knowledge Center", "https://cabig-kc.nci.nih.gov/Molecular/KC/index.php/GeWorkbench#Tool_Overview");
 
 		JMenuItem about = new JMenuItem("About");
@@ -258,6 +269,7 @@ public class GeawConfigObject {
 	// components-loading happens
 	// help set needs to be recreated to maintain the alphabetical order of the
 	// help sets
+/* ONLINE_HELP
 	public static void recreateHelpSets() {
 		// Enable online help.
 		String masterHSFileName = System.getProperty(MASTER_HS_PROPERTY_NAME);
@@ -297,7 +309,7 @@ public class GeawConfigObject {
 					masterHelpBroker));
 		}
 	}
-
+*/ //ONLINE_HELP
     /**
      * Initializes the menubar for the application main GUI window.
      */
