@@ -71,6 +71,11 @@ public class SaveFileFilterFactory {
 		return new CsvFileFilter();
 	}
 	
+	static public DefaultFileFilter createTxtFileFilter() {
+		return new DefaultFileFilter();
+	}
+	
+	
 	
 	static ImageFileFilter createImageFileFilter(ImageType imageType) {
 		switch (imageType) {
