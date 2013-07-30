@@ -226,6 +226,35 @@ public class AdjacencyMatrix implements Serializable {
 		}
 		return set;
 	}
+	
+	
+	/**
+	 * Returns a map with all the edges to geneId. This is only used by
+	 * master regulator analysis.
+	 * 
+	 */
+	public Map<DSGeneMarker, Set<EdgeInfo>> getEdgeInfoMap(DSGeneMarker marker, DSMicroarraySet microarraySet) {
+		 Map<DSGeneMarker, Set<EdgeInfo>> map = new HashMap<DSGeneMarker, Set<EdgeInfo>>();
+		HashMap<Node, Set<EdgeInfo>> row = geneRows.get(new Node(marker));
+		if (row == null) {
+			row = geneRows.get(new Node(NodeType.GENE_SYMBOL, marker
+					.getGeneName()));
+		}
+		if (row == null)
+			return null;
+		for (Node id : row.keySet()) {
+			if (id.type == NodeType.MARKER)
+				map.put(id.marker, row.get(id));
+			else if (id.type == NodeType.GENE_SYMBOL) {
+				DSGeneMarker m = microarraySet.getMarkers().get(id.stringId);
+				if (m != null)
+					map.put(m, row.get(id));
+			}
+		}
+		return map;
+	}
+	
+	
 
 	/**
 	 * Add a node only. This is useful only when there is no edged from this
