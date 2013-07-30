@@ -104,6 +104,7 @@
 				<include name="aracne-java" />
 				<include name="caarray" />
 				<include name="celprocessing" />
+				<include name="cerna" />
 				<include name="cgems" />
 				<include name="colormosaic" />
 				<include name="cupid" />
