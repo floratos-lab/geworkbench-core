@@ -31,6 +31,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.MenuElement;
+import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.TreeModelEvent;
@@ -799,11 +800,19 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		addDataSetNode(microarraySet);
 	}
 
-	public void addProcessedMaSet(DSMicroarraySet microarraySet, ColorContext context) {
+	public void addProcessedMaSet(final DSMicroarraySet microarraySet, ColorContext context) {
 		microarraySet.addObject(ColorContext.class, context);
 		updateColorContext(microarraySet);
 
-		addDataSetNode(microarraySet);
+		if(SwingUtilities.isEventDispatchThread()){
+			addDataSetNode(microarraySet);
+		}else{
+			SwingUtilities.invokeLater(new Runnable(){
+				public void run() {
+					addDataSetNode(microarraySet);
+				}		
+			});
+		}
 	}
 
 	public void processNodeCompleted(GridEndpointReferenceType gridEpr,
