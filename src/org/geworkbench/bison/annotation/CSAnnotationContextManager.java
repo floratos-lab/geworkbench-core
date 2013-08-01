@@ -19,7 +19,7 @@ public class CSAnnotationContextManager implements DSAnnotationContextManager {
         return instance;
     }
 
-    public static final String DEFAULT_CONTEXT_NAME = "Default";
+    public static final String DEFAULT_CONTEXT_NAME = "Default Context";
 
     private WeakHashMap<DSItemList<? extends DSNamed>, ListOrderedSet<DSAnnotationContext<?>>> contextMap;
     private WeakHashMap<DSItemList<? extends DSNamed>, String> currentContextMap;
