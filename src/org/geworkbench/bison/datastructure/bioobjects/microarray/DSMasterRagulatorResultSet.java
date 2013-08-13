@@ -44,4 +44,6 @@ public interface DSMasterRagulatorResultSet <T extends DSGeneMarker> extends DSA
 	public Object getOddRatio(DSGeneMarker TF);
 	public void setNES(DSGeneMarker TF, Object nes);
 	public Object getNES(DSGeneMarker TF);
+	public void setAbsNES(DSGeneMarker TF, Object nes);
+	public Object getAbsNES(DSGeneMarker TF);
 }
