@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.analysis.AbstractAnalysis;
+import org.geworkbench.bison.datastructure.biocollections.microarrays.CSMicroarraySet;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMarkerValue;
@@ -110,6 +111,7 @@ public abstract class FilteringAnalysis extends AbstractAnalysis {
 			}
 		}
 
+		((CSMicroarraySet)maSet).getMarkers().correctMaps();
 	}
 
 	public List<Integer> getMarkersToBeRemoved(DSMicroarraySet input) {
