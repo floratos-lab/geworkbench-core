@@ -162,7 +162,6 @@ public class AffyAnnotationUtil {
 		panel1.add(new JLabel("Annotation file type:   "));
 
 		final JComboBox annotationFileTypeJcb = new JComboBox();
-		annotationFileTypeJcb.addItem("Please Select");
 		annotationFileTypeJcb.addItem(AnnotationType.AFFYMETRIX_3_EXPRESSION);
 		 
 		annotationFileTypeJcb.addItem(AnnotationType.AFFY_GENE_EXON_ST);
