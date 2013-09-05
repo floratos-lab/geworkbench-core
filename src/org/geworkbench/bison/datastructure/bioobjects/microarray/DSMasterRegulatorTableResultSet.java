@@ -16,4 +16,9 @@ public interface DSMasterRegulatorTableResultSet extends DSAncillaryDataSet<DSMi
     public void setRegulon(Map<String, Set<String>> regulon);
     public Set<String> getRegulon(String tf);
 
+    public void setCases(String[] cases);
+    public String[] getCases();
+    
+    public void setControls(String[] controls);
+    public String[] getControls();
 }

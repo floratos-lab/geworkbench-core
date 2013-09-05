@@ -13,6 +13,8 @@ public class CSMasterRegulatorTableResultSet extends CSAncillaryDataSet<DSMicroa
 	private Object[][] data = null;
 	private Map<String, Set<String>> leadingEdge = new HashMap<String, Set<String>>();
 	private Map<String, Set<String>> regulon = new HashMap<String, Set<String>>();
+	private String[] cases = new String[0];
+	private String[] controls = new String[0];
 
 	public CSMasterRegulatorTableResultSet(DSMicroarraySet parent, String label) {
 		super(parent, label);
@@ -43,4 +45,21 @@ public class CSMasterRegulatorTableResultSet extends CSAncillaryDataSet<DSMicroa
 	public Set<String> getRegulon(String tf){
 		return regulon.get(tf);
 	}
+
+	public void setCases(String[] cases){
+		this.cases = cases;
+	}
+
+	public String[] getCases() {
+		return cases;
+	}
+
+	public void setControls(String[] controls){
+		this.controls = controls;
+	}
+
+	public String[] getControls() {
+		return controls;
+	}
+
 }
