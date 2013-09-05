@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -29,8 +28,6 @@ import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMicroarray;
 import org.geworkbench.bison.datastructure.bioobjects.microarray.DSMutableMarkerValue;
 import org.geworkbench.bison.util.Range;
 import org.geworkbench.util.AffyAnnotationUtil;
-
-import org.geworkbench.parsers.InputFileFormatException;
 
 /**
  * 
@@ -197,20 +194,21 @@ public class MicroarraySetParser {
 	private transient List<DSGeneMarker> markers = new ArrayList<DSGeneMarker>();
 	private transient List<DSMarkerValue[]> markerValues = null;
 
-	// this method is called after the first two fields are taken
-	private DSMarkerValue[] parseValue(StringTokenizer tokenizer) {
+	private DSMarkerValue[] parseValue(String[] fields) {
 
 		// This handles individual gene lines with (value, pvalue) pairs
 		// separated by tabs
-		boolean pValueExists = (tokenizer.countTokens() > arrayNames.size());
+		boolean pValueExists = (fields.length-2 > arrayNames.size());
 		DSMarkerValue[] values = new DSMarkerValue[arrayNames.size()];
 		int arrayIndex = 0;
-		while (tokenizer.hasMoreTokens()) {
+		int step = 1;
+		if(pValueExists) step = 2;
+		for(int i=2; i<fields.length; i += step) {
 
-			String value = tokenizer.nextToken();
+			String value = fields[i];
 			String status; // p-value or letter status
 			if (pValueExists) {
-				status = tokenizer.nextToken();
+				status = fields[i+1];
 			} else {
 				// If no p-value is present, assume that the detection
 				// call is "Present"
@@ -226,11 +224,6 @@ public class MicroarraySetParser {
 		return values;
 	}
 
-	/*
-	 * StringTokenizer instead of String.split() is used because of the
-	 * assumption that we need to support the file that has redundant delimiters
-	 * (tabs).
-	 */
 	/**
 	 * initialize microarrays; initializer markers (probe sets); prompt for affy
 	 * annotation.
@@ -245,13 +238,11 @@ public class MicroarraySetParser {
 		if (startindx <= 0)
 			return;
 
-		StringTokenizer tokenizer = new StringTokenizer(line, "\t", false);
-		String firstField = tokenizer.nextToken();
-		String secondField = tokenizer.nextToken();
+		String[] fields = line.split( "\t" );
 
 		if (line.substring(0, 6).equalsIgnoreCase("AffyID")) {
-			while (tokenizer.hasMoreTokens()) {
-				arrayNames.add(tokenizer.nextToken());
+			for(int i=2; i<fields.length; i++) {
+				arrayNames.add(fields[i]);
 			}
 		} else if (line.substring(0, 11).equalsIgnoreCase("Description")) {
 			// This handles all the phenotype definition lines
@@ -265,12 +256,12 @@ public class MicroarraySetParser {
 		} else if (line.charAt(0) != '\t') {
 
 			CSExpressionMarker marker = new CSExpressionMarker(markerNumber);
-			marker.setLabel(firstField);
+			marker.setLabel(fields[0]);
 			// set the annotation field of current marker
-			marker.setDescription(secondField);
-			marker.getUnigene().set(firstField);
+			marker.setDescription(fields[1]);
+			marker.getUnigene().set(fields[0]);
 
-			String[] entrezIds = AnnotationParser.getInfo(firstField,
+			String[] entrezIds = AnnotationParser.getInfo(fields[0],
 					AnnotationParser.LOCUSLINK);
 			if ((entrezIds != null) && (!entrezIds[0].trim().equals(""))) {
 				try {
@@ -280,13 +271,13 @@ public class MicroarraySetParser {
 				}
 			}
 
-			String[] geneNames = AnnotationParser.getInfo(firstField,
+			String[] geneNames = AnnotationParser.getInfo(fields[0],
 					AnnotationParser.ABREV);
 			if (geneNames != null) {
 				marker.setGeneName(geneNames[0].trim());
 			}
 
-			String[] annotations = AnnotationParser.getInfo(firstField,
+			String[] annotations = AnnotationParser.getInfo(fields[0],
 					AnnotationParser.DESCRIPTION);
 			if (annotations != null) {
 				marker.setAnnotation(annotations[0].trim());
@@ -294,7 +285,7 @@ public class MicroarraySetParser {
 
 			markers.add(marker);
 
-			markerValues.add(parseValue(tokenizer));
+			markerValues.add(parseValue(fields));
 
 			markerNumber++;
 		}
