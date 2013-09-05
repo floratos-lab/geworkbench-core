@@ -243,9 +243,8 @@ public class ComponentConfigurationManager {
 				log.info(file + "turned off");
 			}
 		}
-/* ONLINE_HELP
+
 		GeawConfigObject.recreateHelpSets();
-*/ // ONLINE_HELP
 	}
 		
 	// this eventually should not be necessary if the cwb/resource is managed properly

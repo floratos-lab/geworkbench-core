@@ -624,9 +624,8 @@ public class ComponentConfigurationManagerWindow {
             	textPane.setCaretPosition(1);        	
             }
 		}
-/* ONLINE_HELP
 		GeawConfigObject.recreateHelpSets();
-*/ // ONLINE_HELP
+
 		ProjectPanel.getInstance().ccmUpdate();
 
 		setOriginalChoices();
