@@ -34,12 +34,15 @@ import org.geworkbench.util.AffyAnnotationUtil;
  * Parser of .exp file.
  * 
  * @author zji
+ * @version $Id$
  * 
  */
+// TODO The exceptional cases are not handled very well by this parser. Returning null does not provide much information.
 public class MicroarraySetParser {
 	private static Log log = LogFactory.getLog(MicroarraySetParser.class);
 
 	/** Parse without associate to annotation file. */
+	// FIXME this method is only used by ConsensusClustering, which does not handle either InputFileFormatException or returned null.
 	public DSMicroarraySet parseCSMicroarraySet(File file) {
 
 		DSMicroarraySet microarraySet = new CSMicroarraySet();
@@ -49,16 +52,22 @@ public class MicroarraySetParser {
 
 		AnnotationParser.setCurrentDataSet(microarraySet);
 
-		if (!readFile(file))
+		try {
+			if (!readFile(file))
+				return null;
+		} catch (InputFileFormatException e) {
+			e.printStackTrace();
 			return null;
+		}
 
 		populateDataset(microarraySet);
 
 		return microarraySet;
 	}
 	
-	/** Parse existing microarraySet without associate to annotation file. */
-	public void parseExistingCSMicroarraySet(File file, DSMicroarraySet microarraySet) {
+	/** Parse existing microarraySet without associate to annotation file. 
+	 * @throws InputFileFormatException */
+	public void parseExistingCSMicroarraySet(File file, DSMicroarraySet microarraySet) throws InputFileFormatException {
 		if(microarraySet == null) return;
 
 		microarraySet.setFile( file ); // this seems only used by "View in Editor"
@@ -91,16 +100,20 @@ public class MicroarraySetParser {
 
 		AnnotationParser.setCurrentDataSet(microarraySet);
 
-		if (!readFile(file))
-			return null;
+		if (!readFile(file)) {
+			throw new InputFileFormatException();
+		}
 
 		populateDataset(microarraySet);
 
 		return microarraySet;
 	}
 
-	private boolean readFile(File file) {
+	transient boolean pValueExists = false;
+	private boolean readFile(File file) throws InputFileFormatException {
 		markerNumber = 0;
+		
+		pValueExists = false;
 
 		String line = null;
 		BufferedReader reader = null;
@@ -194,10 +207,29 @@ public class MicroarraySetParser {
 	private transient List<DSGeneMarker> markers = new ArrayList<DSGeneMarker>();
 	private transient List<DSMarkerValue[]> markerValues = null;
 
-	private DSMarkerValue[] parseValue(String[] fields) {
+	private DSMarkerValue[] parseValue(String[] fields) throws InputFileFormatException {
 
 		// This handles individual gene lines with (value, pvalue) pairs
 		// separated by tabs
+		if(markerNumber==0) { // only do this for the first line
+			if(fields.length-2 == arrayNames.size()) {
+				pValueExists = false;
+			} else if(fields.length-2 == arrayNames.size()*2) {
+				pValueExists = true;
+			} else {
+				throw new InputFileFormatException("Field number (first line) is incorrect.");
+			}
+		} else {
+			if(fields.length-2 == arrayNames.size() ) {
+				if(pValueExists)
+					throw new InputFileFormatException("Value field number is not double the header field number for the case of p-value existing.");
+			} else if(fields.length-2 == arrayNames.size()*2 ) {
+				if(!pValueExists)
+					throw new InputFileFormatException("Value field number is double the header field number for the case of no p-value.");
+			} else {
+				throw new InputFileFormatException("Field number is incorrect.");
+			}
+		}
 		boolean pValueExists = (fields.length-2 > arrayNames.size());
 		DSMarkerValue[] values = new DSMarkerValue[arrayNames.size()];
 		int arrayIndex = 0;
@@ -227,8 +259,9 @@ public class MicroarraySetParser {
 	/**
 	 * initialize microarrays; initializer markers (probe sets); prompt for affy
 	 * annotation.
+	 * @throws InputFileFormatException 
 	 */
-	private void parseLine(String line) {
+	private void parseLine(String line) throws InputFileFormatException {
 
 		if (line.charAt(0) == '#') {
 			return;
