@@ -123,7 +123,7 @@ public class MicroarraySetParser {
 			while ((line = reader.readLine()) != null) {
 				if (!line.trim().equalsIgnoreCase("")) {
 
-					parseLine(line.trim());
+					parseLine(line);
 
 				}
 			}
@@ -271,7 +271,7 @@ public class MicroarraySetParser {
 		if (startindx <= 0)
 			return;
 
-		String[] fields = line.split( "\t" );
+		String[] fields = line.split( "\t", -1 );
 
 		if (line.substring(0, 6).equalsIgnoreCase("AffyID")) {
 			for(int i=2; i<fields.length; i++) {
