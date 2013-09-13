@@ -293,6 +293,11 @@ public class MicroarraySetParser {
 			// set the annotation field of current marker
 			marker.setDescription(fields[1]);
 			marker.getUnigene().set(fields[0]);
+			
+			/* this is correct because CSExpressionMarker equal is based on label only */
+			if(markers.contains(marker)) {
+				throw new InputFileFormatException("duplicate probeset names");
+			}
 
 			String[] entrezIds = AnnotationParser.getInfo(fields[0],
 					AnnotationParser.LOCUSLINK);
