@@ -275,6 +275,7 @@ public class MicroarraySetParser {
 
 		if (line.substring(0, 6).equalsIgnoreCase("AffyID")) {
 			for(int i=2; i<fields.length; i++) {
+				if(fields[i].trim().length()==0) break;
 				arrayNames.add(fields[i]);
 			}
 		} else if (line.substring(0, 11).equalsIgnoreCase("Description")) {
