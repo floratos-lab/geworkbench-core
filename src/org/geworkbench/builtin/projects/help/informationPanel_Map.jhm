@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE map PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 1.0//EN"
+
+         "http://java.sun.com/products/javahelp/map_1_0.dtd">
+
+<map version="1.0">
+
+	<mapID target="information.panel" url="informationPanel.htm#Dataset_History.2C_Dataset_Annotation_and_Experiment_Information"/>
+	<mapID target="Dataset_History" url="informationPanel.htm#Dataset_History"/>
+	<mapID target="Dataset_Annotation" url="informationPanel.htm#Dataset_Annotation_.28User_Comments.29"/>
+	<mapID target="Experiment_Info" url="informationPanel.htm#Experiment_Info"/>
+
+</map>
+

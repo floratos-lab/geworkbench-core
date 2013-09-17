@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE map PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 1.0//EN"
+
+         "http://java.sun.com/products/javahelp/map_1_0.dtd">
+
+<map version="1.0">
+
+	<mapID target="Introduction" url="preferences.htm#Introduction"/>
+	<mapID target="When do changes take effect" url="preferences.htm#When_do_changes_take_effect.3F"/>
+	<mapID target="Text_Editor" url="preferences.htm#Text_Editor"/>
+	<mapID target="Visualization" url="preferences.htm#Visualization"/>
+	<mapID target="GenePix_Value_Computation" url="preferences.htm#GenePix_Value_Computation"/>
+	<mapID target="Remote_Components_URL" url="preferences.htm#Remote_Components_URL"/>
+	<mapID target="Marker_Load_Options" url="preferences.htm#Marker_Load_Options"/>
+	<mapID target="Remote_Workspaces_URL" url="preferences.htm#Remote_Workspaces_URL"/>
+	<mapID target="Soft_Limit_on_Cytoscape_Networks_Objects" url="preferences.htm#Soft_Limit_on_Cytoscape_Networks_Objects"/>
+
+
+</map>
+

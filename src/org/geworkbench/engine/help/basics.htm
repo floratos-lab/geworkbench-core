@@ -1,0 +1,180 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html dir="ltr" lang="en"><head>
+<title>Basics - Workbench</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="generator" content="MediaWiki 1.16.0">
+<meta name="robots" content="noindex,follow">
+
+</head>
+<body class="mediawiki ltr ns-0 ns-subject page-Basics skin-monobook">
+<div id="globalWrapper">
+<div id="column-content"><div id="content">
+	<a id="top"></a>
+	
+	<h1 id="firstHeading" class="firstHeading">Introduction</h1>
+	<div id="bodyContent">
+		<!-- start content -->
+<p>&nbsp;</p>
+<a name="Introduction_to_geWorkbench"></a><h2> <span class="mw-headline" id="Introduction_to_geWorkbench">Introduction to geWorkbench</span></h2>
+<p>geWorkbench (genomics Workbench) is a Java-based open-source platform
+ for integrated genomics. Using a component architecture it allows 
+individually developed plug-ins to be configured into complex 
+bioinformatic applications. At present there are more than 70 available 
+plug-ins supporting the visualization and analysis of gene expression 
+and sequence data. Example use cases include:
+</p>
+<ul><li> loading data from local or remote data sources.
+</li><li> visualizing gene expression, molecular interaction networks, protein sequence and protein structure data in a variety of ways.
+</li><li> providing access to client- and server-side computational 
+analysis tools such as t-test analysis, hierarchical clustering, self 
+organizing maps, regulatory neworks reconstruction, BLAST searches, 
+pattern/motif discovery, etc.
+</li><li> validating computational hypothesis through the integration of
+ gene and pathway annotation information from curated sources as well as
+ through Gene Ontology enrichment analysis. 
+</li></ul>
+<p><br>
+</p>
+<a name="Layout_of_the_Graphical_User_Interface"></a><h2> <span class="mw-headline" id="Layout_of_the_Graphical_User_Interface">Layout of the Graphical User Interface</span></h2>
+
+<p>The graphical user interface for geWorkbench is divided into three major sections, for
+</p>
+<ol><li> Data management - Workspace and Projects (upper left)
+</li><li> Visualization tools (right)
+</li><li> Marker and Array/Phenotype set selection and management  (lower left)
+</li></ol>
+<p>Commands for analysis, filtering and normalization are now available 
+in a menu activated by right-clicking on any loaded data node.  They can
+ also be found in the top level menu-bar under "Commands".  They will 
+act on the currently selected data node.
+</p>
+<p><br>
+<img alt="GeWorkbench 2.3.0 Main GUI MicroarrayViewer.png" src="basics_files/GeWorkbench_2.png" height="700" width="1000"></p>
+<p><br>
+</p>
+<a name="Window_Decorations"></a><h2> <span class="mw-headline" id="Window_Decorations">Window Decorations</span></h2>
+<p>Each component within an area is resizable and detachable. 
+</p><p><b>Undock</b>
+</p>
+<ul><li> The Undock button is an arrow pointing up and to the right. 
+</li><li> Clicking on the Undock icon detaches the component.  It can then be expanded and positioned at will on the screen. 
+</li><li> In the detached component, the Dock icon is a left-downward 
+arrow. Clicking on the Dock icon reattaches the panel within its GUI 
+area.
+</li></ul>
+<p><br>
+<b>Sizing Arrows</b>
+</p>
+<ul><li> To resize an area discretely (maximize/minimize), click on the 
+triangular-shaped wedges located within the separators between panels. 
+Maximizing a panel fills the entire window vertically or horizontally, 
+and minimizes the adjacent panel. 
+</li></ul>
+<p><br>
+<img alt="Window decorations.png" src="basics_files/Window_decorations.png" height="108" width="305">
+</p><p><br>
+<b>Sizing Handle</b>
+</p>
+<ul><li> Any separator between two panes that has a sizing handle can be
+ moved by right- or left-clicking anywhere on the separator and dragging
+ the edge.  
+</li></ul>
+<p><br>
+<img alt="Window separator handle.png" src="basics_files/Window_separator_handle.png" height="80" width="336">
+</p>
+<a name="Command_Popup"></a><h2> <span class="mw-headline" id="Command_Popup">Command Popup</span></h2>
+<p>Hitting F12 on the keyboard will pop-up a shortcut menu to the geWorkbench commands available for the current dataset.
+</p><p><img alt="F12-Popup.png" src="basics_files/F12-Popup.png" height="300" width="217">
+</p>
+<a name="Data_management_area"></a><h2> <span class="mw-headline" id="Data_management_area">Data management area</span></h2>
+<p>Working with geWorkbench involves creating a project within the 
+top-level workspace.  Open data files and the results of data 
+transformation or analysis are stored within a project.  A workspace can
+ contain more than one project at a time, allowing data to be organized 
+as desired.  A workspace and all the projects and data within it can be 
+saved and later reloaded.  These operations will be described in detail 
+in further sections of the tutorials.
+</p><p>The GUI provides a menu bar at top with a standard choice of 
+commands.  Many commands that are available in the menu bar are also 
+available by right-clicking on data objects.
+</p><p><br>
+</p>
+<a name="Set_selection_and_management"></a><h2> <span class="mw-headline" id="Set_selection_and_management">Set selection and management</span></h2>
+<p>A key feature of geWorkbench is the ability to work with defined sets
+ of markers or arrays.  This allows subsets of data to be analyzed, and 
+allows for passing of selected subsets of data between different 
+components. For example, the t-test produces a list of markers showing a
+ significant difference in expression between two states, and this list 
+can then be used to retrieve relevant sequences or annotations.
+</p>
+<a name="Visualization_and_Analysis_tools"></a><h2> <span class="mw-headline" id="Visualization_and_Analysis_tools">Visualization  and Analysis tools</span></h2>
+<p>geWorkbench works such that only the visualization and analysis 
+components relevant to the type of dataset currently selected in the 
+Project Folders area (1) are displayed through tabs in their respective 
+areas (2 and 4).  Thus choosing a microarray dataset will result in a 
+different set of tabs being displayed as compared with those seen when a
+ nucleotide sequence file is selected.   When a new data file is loaded,
+ or an analysis produces a new data set, not only is it added to the 
+Project area (1), but an appropriate viewer in the Visualization area 
+(2) is automatically selected.
+</p>
+<a name="Component_Interoperability"></a><h2> <span class="mw-headline" id="Component_Interoperability">Component Interoperability</span></h2>
+<p>The features described above underly the most important design goal 
+of geWorkbench, which is to allow the different components to 
+interoperate easily.  The user is freed of the need to write programs to
+ convert data from one format to another for different programs.  Both 
+the Project component (1) and the Set Selection component(3) can hold 
+shared data.  Typically each run of an analysis places either a new 
+dataset into the active project, or a new set of markers or arrays into 
+the Set Selection component.  These are then available to any other 
+appropriate component for reuse.
+</p><p><br>
+</p>
+<a name="Data_representation"></a><h2> <span class="mw-headline" id="Data_representation">Data representation</span></h2>
+<p>geWorkbench works on a single dataset at one time, as selected in the
+ Project Folders.  For working with data from multiple microarrays 
+simultaneously, for example for statistical analysis or clustering, all 
+of the data must be represented as a single two-dimensional array of 
+experiments and markers.   Such a representation can be created 
+externally, for example in Excel, or geWorkbench can read in expression 
+results from single arrays and merge them into a combined dataset.  The 
+merging process is described in detail in the section <a href="http://wiki.c2b2.columbia.edu/workbench/index.php/Tutorial_-_Projects_and_Data_Files" title="Tutorial - Projects and Data Files" class="mw-redirect">Projects and Data Files</a>. 
+</p><p>An option at the time of file read-in allows multiple files to be
+ opened and merged simultaneously, either from disk or from remote data 
+sources such as caArray.  Alternatively, single datasets that have 
+already been read-in can also be merged at a later time.  Either route 
+creates a single data object in the project folder representing all of 
+the arrays.  This object can be viewed, for example, using the color 
+mosaic component.  The merged representation can be saved to the 
+geWorkbench *.exp file type.
+</p><p>The results of any data analysis are stored in the Project Folders as a child of the dataset from which they were created.
+</p>
+<a name="Limitations"></a><h2> <span class="mw-headline" id="Limitations">Limitations</span></h2>
+<p>As currently implemented, operations such as filtering and 
+normalization directly alter the loaded dataset.  However, the original 
+data file is not changed.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 50/1000000
+Post-expand include size: 1847/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key workbench:pcache:idhash:1504-0!1!0!!en!2!printable=1 and timestamp 20120313224830 -->
+<div class="printfooter">
+Retrieved from "<a href="http://wiki.c2b2.columbia.edu/workbench/index.php/Basics">http://wiki.c2b2.columbia.edu/workbench/index.php/Basics</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden"></div>		<!-- end content -->
+				<div class="visualClear"></div>
+	</div>
+</div></div>
+<div class="visualClear"></div>
+<div id="footer">
+	<div id="f-poweredbyico"><img src="basics_files/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" height="31" width="88"></div>
+	<ul id="f-list">
+		<li id="lastmod"> This page was last modified on 13 March 2012, at 17:48.</li>
+	</ul>
+</div>
+</div>
+

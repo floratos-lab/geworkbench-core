@@ -1,0 +1,12 @@
+AffyID	Annotation	CB26-2	CB511	CB512			
+Description	Source type short	Cord	Cord	Cord			
+Description	Source type long	Cord blood	Cord blood	Cord blood			
+Description	Cell type long	non-GC B-cell	non-GC B-cell	non-GC B-cell			
+Description	Cell type short	non-GC	non-GC	non-GC			
+AFFX-MurIL2_at	"M16762 Mouse interleukin 2 (IL-2) gene, exon 4"	34.7	0.672921	na	0	10.6	0.737173
+AFFX-MurIL10_at	"M37897 Mouse interleukin 10 mRNA, complete cds"	-44.4	0.455413	19	0.749204	11.4	0.760937
+AFFX-MurIL4_at	"M25892 Mus musculus interleukin 4 (Il-4) mRNA, complete cds"	-20.3	0.131361	28.7	0.205732	4.4	0.699394
+AFFX-MurFAS_at	"M83649 Mus musculus Fas antigen mRNA, complete cds"	-7.8	0.51489	16.3	0.39692	68.8	0.046482
+AFFX-BioB-5_at	"J04423 E coli bioB gene biotin synthetase  (-5, -M, -3 represent transcript regions 5 prime, Middle, and 3 prime respectively)"	-314.3	0.003595	102.7	0.250796	158.3	0.108979
+AFFX-BioB-M_at	"J04423 E coli bioB gene biotin synthetase  (-5, -M, -3 represent transcript regions 5 prime, Middle, and 3 prime respectively)"	-752.3	0.00034	136.4	0.054213	192.1	0.020022
+AFFX-BioB-3_at	"J04423 E coli bioB gene biotin synthetase  (-5, -M, -3 represent transcript regions 5 prime, Middle, and 3 prime respectively)"	371.6	0.002867	43.2	0.368438	26.9	0.631562

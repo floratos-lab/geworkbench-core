@@ -1,0 +1,5 @@
+<component-descriptor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Descriptor Schema.xsd">
+    <component class="org.geworkbench.engine.skin.ShortCutMenu">
+        <menu-item path="Commands.Navigate - (F12)" mode="always" var="Commands.Navigate - (F12)"/>
+    </component>
+</component-descriptor>

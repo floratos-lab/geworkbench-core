@@ -1,0 +1,221 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html dir="ltr" lang="en"><head>
+<title>Project Folders - Workbench</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="generator" content="MediaWiki 1.16.0">
+<meta name="robots" content="noindex,follow">
+
+</head>
+<body class="mediawiki ltr ns-0 ns-subject page-Project_Folders skin-monobook">
+<div id="globalWrapper">
+<div id="column-content"><div id="content">
+	<a id="top"></a>
+	
+	<h1 id="firstHeading" class="firstHeading">Project Folders</h1>
+	<div id="bodyContent">
+		<!-- start content -->
+<p><br>
+</p><p><br>
+</p>
+<a name="Project_Folders_Area"></a><h2> <span class="mw-headline" id="Project_Folders_Area">Project Folders Area</span></h2>
+<p>The Project Folders Area is located in the upper-left-hand corner of 
+the application. This centralized workspace is used to manage projects, 
+open data files and store intermediate analysis results during a 
+geWorkbench session. When geWorkbench is launched, an empty Workspace 
+folder is displayed.
+</p><p><br>
+<img alt="Project Folders Workspace.png" src="projectFolders_files/Project_Folders_Workspace.png" height="90" width="262">
+</p><p><br>
+</p>
+<a name="Workspace"></a><h2> <span class="mw-headline" id="Workspace">Workspace</span></h2>
+<p>The workspace can contain one or more separate projects, and each 
+project can contain opened data files and analysis results. An analogy 
+might be that a workspace is like a drawer in a filing cabinet, and 
+projects are individual folders in that drawer. Projects allow data to 
+be grouped, for example by experiment.  A project can contain many 
+different types of data, for example microarray data, FASTA sequence 
+files and graphical images. 
+</p><p>The workspace as a whole, with all its projects and data nodes, 
+can be saved and restored.  However, only one workspace can be open at 
+one time.  Creating a new workspace or loading a saved workspace will 
+overwrite the current workspace.
+</p><p><br>
+</p>
+<ul><li> To view the next level down in the hierarchy, click on the “+” icon to expand the branch.
+</li></ul>
+<ul><li> To collapse a branch, click on the “-” icon.
+</li></ul>
+<p><br>
+</p>
+<a name="Projects"></a><h2> <span class="mw-headline" id="Projects">Projects</span></h2>
+<p>Project folders appear as child nodes immediately under the workspace
+ node, and are represented by folder icons. Each project may contain 
+several heterologous datasets. These datasets can include input (source)
+ data and derived data (results) associated with an experiment as well 
+as image files. Source data can be loaded from the user’s local storage 
+or from remote servers. The grouping of datasets in project folders 
+within geWorkbench does not change their physical storage locations.
+</p><p>The figure below is a Project Tree in the Project Area consisting
+ of 2 projects: NCI Project and Columbia Project. All of the folders are
+ open. The selected project is highlighted blue and bolded. The 
+mouse-over displays information about the node to which it points.
+</p><p><br>
+</p><p><img alt="Project Folders Overview.gif" src="projectFolders_files/Project_Folders_Overview.gif" height="179" width="459">
+</p>
+<a name="Creating_a_New_Project"></a><h2> <span class="mw-headline" id="Creating_a_New_Project">Creating a New Project</span></h2>
+<p>There are two ways to create a new project.  First, select the Workspace node in the Project Folders component. Then, either
+</p><p>(1) In the top-level Menu, select <b>File-&gt;New-&gt;Project</b>.
+</p><p><img alt="File New Project.png" src="projectFolders_files/File_New_Project.png" height="150" width="241">
+</p><p>or,
+</p><p>(2) In the Project Folders component, right-click on the <b>Workspace</b> and select "<b>New Project</b>".
+</p><p><br>
+<img alt="Project Folders Workspace New Project.png" src="projectFolders_files/Project_Folders_Workspace_New_Project.png" height="69" width="240">
+</p><p><br>
+Either way, the new Project is placed into the workspace:
+</p><p><br>
+<img alt="Project Folders Project.png" src="projectFolders_files/Project_Folders_Project.png" height="110" width="257">
+</p><p><br>
+</p>
+<a name="Project_Menu_Options"></a><h2> <span class="mw-headline" id="Project_Menu_Options">Project Menu Options</span></h2>
+<p>Right-clicking on a Project node gives a menu with the following options
+</p><p><br>
+<img alt="Project Folders Project Options.png" src="projectFolders_files/Project_Folders_Project_Options.png" height="163" width="382">
+</p><p><br>
+</p>
+<a name="Open_Files"></a><h3> <span class="mw-headline" id="Open_Files">Open Files</span></h3>
+<ul><li> Loading data from local files is covered in the chapter <a href="http://wiki.c2b2.columbia.edu/workbench/index.php/Local_Data_Files" title="Local Data Files"> Local Data Files</a>
+</li><li> Retrieving data from remote sources (caArray) is covered in <a href="http://wiki.c2b2.columbia.edu/workbench/index.php/Remote_Data_Sources" title="Remote Data Sources"> Remote Data Sources</a>
+</li></ul>
+<p><br>
+</p>
+<a name="Open_PDB_File_from_RCSB_Protein_Data_Bank"></a><h3> <span class="mw-headline" id="Open_PDB_File_from_RCSB_Protein_Data_Bank">Open PDB File from RCSB Protein Data Bank</span></h3>
+<p>If <b>Open PDB File from RCSB Protein Data Bank</b> is chosen, a dialog box appears.
+</p><p><br>
+<img alt="Project Folders Project Open RCSB PDB.png" src="projectFolders_files/Project_Folders_Project_Open_RCSB_PDB.png" height="76" width="305">
+</p><p><br>
+Type in the name of a PDB structure entry and it will be retrieved from the RCSB Protein Data Bank and loaded into geWorkbench.
+</p><p><br>
+</p>
+<a name="Rename"></a><h3> <span class="mw-headline" id="Rename">Rename</span></h3>
+<p>A dialog box will appear in which to enter a new name for the project.
+</p>
+<a name="Remove"></a><h3> <span class="mw-headline" id="Remove">Remove</span></h3>
+<p>Selecting <b>Remove</b> will remove the project and all of its data nodes.
+</p><p><br>
+</p>
+<a name="Project_Data_Node_Menu_Options"></a><h2> <span class="mw-headline" id="Project_Data_Node_Menu_Options">Project Data Node Menu Options</span></h2>
+<p>Right-clicking on a project data node will produce a popup menu with the following options:
+</p><p><br>
+<img alt="Project Folders Data Node Right-Click Menu.png" src="projectFolders_files/Project_Folders_Data_Node_Right-Click_Menu.png" height="253" width="236">
+</p><p><br>
+</p>
+<a name="Save"></a><h3> <span class="mw-headline" id="Save">Save</span></h3>
+<p>Save the currently selected data node.  This is implemented for the following data types:
+</p>
+<ul><li> Microarray gene expression -  data is saved using the 
+geWorkbench ".exp" format, regardless of the original format. This 
+allows saving e.g. a merged dataset, and/or any array and marker sets 
+that may have been created.
+</li><li> FASTA - saved in FASTA format (.fasta).
+</li><li> PDB - saved in PDB format (.pdb).
+</li><li> Network - saved using the Adjacency Matrix "ADJ" format (.adj).
+</li></ul>
+<p><br>
+</p>
+<a name="Export_to_tab-delim"></a><h3> <span class="mw-headline" id="Export_to_tab-delim">Export to tab-delim</span></h3>
+<p>This option will only appear for microarray gene expression datasets.
+  It allows the microarray dataset to be exported in a spreadsheet 
+format, as a tab-delimited text file.  The first row contains array 
+names and the first column contains the marker names.
+</p><p>This export format does not preserve array or marker sets that 
+may have been defined in geWorkbench for the dataset.  However, it can 
+be used to save a copy of e.g. merged, filtered, and/or normalized data 
+in a format easily used by other programs.
+</p>
+<a name="Rename_2"></a><h3> <span class="mw-headline" id="Rename_2">Rename</span></h3>
+<p>A dialog box will appear in which a new name can be entered.
+</p><p><br>
+<img alt="Project Folders Rename Project.png" src="projectFolders_files/Project_Folders_Rename_Project.png" height="159" width="341">
+</p>
+<a name="Remove_2"></a><h3> <span class="mw-headline" id="Remove_2">Remove</span></h3>
+<p>The selected data node and any child data nodes it may have will be removed.
+</p><p><br>
+</p>
+<a name="Project_Data_Node_Hover-text_Information"></a><h2> <span class="mw-headline" id="Project_Data_Node_Hover-text_Information">Project Data Node Hover-text Information</span></h2>
+<p>For microarray datasets, adjacency matrices (network nodes), sequence
+ and pattern nodes, moving the mouse cursor over the data nodes will 
+display additional details about a dataset.
+</p><p>Microarray datasets: hover text displays number of markers and arrays.
+</p><p><br>
+<img alt="Dataset hover microarray.png" src="projectFolders_files/Dataset_hover_microarray.png" height="136" width="324">
+</p><p><br>
+Adjacency Matrix: hover text displays number of nodes and edges in the network.
+</p><p><br>
+<img alt="Dataset hover network.png" src="projectFolders_files/Dataset_hover_network.png" height="135" width="289">
+</p><p><br>
+Sequence node: 
+</p><p><br>
+<img alt="Dataset hover sequences.png" src="projectFolders_files/Dataset_hover_sequences.png" height="118" width="230">
+</p><p><br>
+Pattern node:
+</p><p><br>
+<img alt="Project Folders Pattern Hover.png" src="projectFolders_files/Project_Folders_Pattern_Hover.png" height="145" width="231">
+</p>
+<a name="Workspaces"></a><h2> <span class="mw-headline" id="Workspaces">Workspaces</span></h2>
+<a name="Saving_a_Workspace"></a><h3> <span class="mw-headline" id="Saving_a_Workspace">Saving a Workspace</span></h3>
+<p>Saving a workspace saves all of projects and data belonging to that 
+workspace to a file on disk.  The workspace can later be reloaded to 
+resume work.  However, workspaces in general may not be compatible 
+across different versions of geWorkbench.
+</p><p><br>
+<img alt="File Save Workspace.png" src="projectFolders_files/File_Save_Workspace.png" height="150" width="240">
+</p><p><br>
+</p>
+<a name="Opening_a_Saved_Workspace"></a><h3> <span class="mw-headline" id="Opening_a_Saved_Workspace">Opening a Saved Workspace</span></h3>
+<p>File-&gt;Open-Workspace.
+</p><p>Only one workspace at a time can be loaded in geWorkbench.  
+Opening a saved workspace will destroy the existing workspace.  For this
+ reason, if you opt to open a workspace, you will be prompted as to 
+whether to save the existing workspace first.
+</p><p><br>
+<img alt="File Open Workspace.png" src="projectFolders_files/File_Open_Workspace.png" height="146" width="239">
+</p><p><br>
+A dialog box will appear in which the location and file name to which to save the workspace can be chosen.
+</p><p><br>
+<img alt="File Save Workspace Dialog.png" src="projectFolders_files/File_Save_Workspace_Dialog.png" height="347" width="639">
+</p>
+<a name="Creating_a_New_Workspace"></a><h3> <span class="mw-headline" id="Creating_a_New_Workspace">Creating a New Workspace</span></h3>
+<p>Only one workspace at a time can be loaded in geWorkbench.  Creating a
+ new workspace will destroy the existing workspace.  For this reason, if
+ you opt to create a new workspace, you will be prompted as to whether 
+to save the existing workspace first.
+</p><p>A new workspace can only be created from the top level menu bar.
+</p><p><br>
+<img alt="File New Workspace.png" src="projectFolders_files/File_New_Workspace.png" height="147" width="239">
+</p><p><br>
+Select <b>File-&gt;New-&gt;Workspace</b>.
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 78/1000000
+Post-expand include size: 1925/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key workbench:pcache:idhash:1505-0!1!0!!en!2!printable=1 and timestamp 20120312205657 -->
+<div class="printfooter">
+Retrieved from "<a href="http://wiki.c2b2.columbia.edu/workbench/index.php/Project_Folders">http://wiki.c2b2.columbia.edu/workbench/index.php/Project_Folders</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden"></div>		<!-- end content -->
+				<div class="visualClear"></div>
+	</div>
+</div></div>
+<div class="visualClear"></div>
+<div id="footer">
+	<div id="f-poweredbyico"><img src="projectFolders_files/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" height="31" width="88"></div>
+	<ul id="f-list">
+		<li id="lastmod"> This page was last modified on 12 March 2012, at 15:45.</li>
+	</ul>
+</div>
+</div>
+

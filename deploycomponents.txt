@@ -1,0 +1,5 @@
+alignment,2.0,BlastAppComponent.cwb.xml,BlastViewComponent.cwb.xml
+caarray,7.0,CaArray2Component.cwb.xml
+filtering,3.1,AffyDetectionCallFilter.cwb.xml,DeviationBasedFilter.cwb.xml,ExpressionThresholdFilter.cwb.xml,FilteringPanel.cwb.xml,GenepixExpressionThresholdFilter.cwb.xml,GenepixFlagsFilter.cwb.xml,MissingValuesFilter.cwb.xml
+hierarchicalclustering,6.0,FastHierClustAnalysis.cwb.xml,HierClusterViewAppComponent.cwb.xml
+plots,5.5,ScatterPlot.cwb.xml,VolcanoPlot.cwb.xml

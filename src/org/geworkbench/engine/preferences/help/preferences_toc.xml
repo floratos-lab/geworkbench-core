@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<toc version="1.0">
+
+	<tocitem text="Preferences">
+		<tocitem target="Introduction" text="Introduction"/>
+		<tocitem target="When do changes take effect" text="When do changes take effect?"/>
+		<tocitem target="Text_Editor" text="Text Editor"/>
+		<tocitem target="Visualization" text="Visualization"/>
+		<tocitem target="GenePix_Value_Computation" text="GenePix Value Computation"/>
+		<tocitem target="Remote_Components_URL" text="Remote Components URL"/>
+		<tocitem target="Marker_Load_Options" text="Marker Load Options"/>
+		<tocitem target="Remote_Workspaces_URL" text="Remote Workspaces URL"/>
+		<tocitem target="Soft_Limit_on_Cytoscape_Networks_Objects" text="Soft Limit on Cytoscape Networks Objects"/>
+	</tocitem>
+
+</toc>
+

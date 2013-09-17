@@ -1,0 +1,143 @@
+
+                          Release Notes
+    
+                          caWorkbench
+                          Version 3.0
+                        November 11, 2005
+
+       Joint Centers for Systems Biology, Columbia University
+
+
+
+================================================================
+                            Contents
+================================================================
+    
+    1.0 caWorkbench Introduction and History
+    2.0 New Features and Updates
+    3.0 Known Issues/Defects
+    4.0 Bug Reports and Support
+    5.0 Documentation and Files
+    6.0 caWorkbench Web Pages 
+
+
+
+================================================================
+    1.0 - caWorkbench Introduction and History
+================================================================
+ 
+
+    caWorkBench3.0, an open source bioinformatics platform 
+    written in Java, makes sophisticated  tools for data management, 
+    analysis and visualization available to the community in a 
+    convenient fashion. 
+    It evolved from a project which was originally sponsored by 
+    the National Cancer Institute Center for Bioinformatics (NCICB). 
+    Some of the most fully developed capabilities of the platform
+    include microarray data analysis, pathway analysis and 
+    reverse engineering, sequence analysis, transcription factor 
+    binding site analysis, and pattern discovery. 
+ 
+
+
+
+================================================================
+    2.0 New Features and Updates
+================================================================ 
+
+  New features added in caWorkbench3.0:
+ 
+    --  Improvements to the application user interface (UI):
+        * Addition of a new UI flavor, displaying components in a 
+	drop down menu rather than in tabbed format. To use the 
+	new flavor, start the application with "ant runNewFlavor". 
+        * Addition of F12 navigation function in the tabbed skin.
+	By clicking the "F12" key, a popup window will show a list of
+	all available panels. The user can select any panel which 
+	will then be automatically displayed.
+    --  Improvements to the user interface of specific components such
+	as Gene Panel, Marker annotations, GO Terms Panel, Synteny, 
+	Reverse Engineering, Promoter Panel.
+    --	Support for multiple-microarray loading.
+    --  Support for data access from multiple caArray repositories.
+    --	Scatter plot visualization for pair of markers and microarrays.
+    --  New, faster and memory-efficient implementation of 
+	hierarchical clustering.
+    --	Expression value distribution plot. 
+    --	Support for additional normalizers:
+        * House-keeping gene normalization. 
+        * Quantile normalization.
+    --	Filtering of Genepix data using the "Flags" column.
+    --	Editor-based viewing of input files corresponding to dataset nodes.     
+    --	Preferences specification for:
+        * Editor to use for viewing original data files.
+        * Coloring scheme for mosaic gene expression representation.
+        * Calculation of signal for 2-channel Genepix data.
+    --	Support for user annotation on all nodes within the Project Folders. 
+    --	Support for sorting by pathway within the Marker Annotation component. 
+
+
+
+
+================================================================
+    3.0 Known Issues/Defects
+================================================================
+ Reverse Engineering and the Association panel are not fully
+ fuctional when the application runs on a Macintosh.  This  is due
+ to an issue with code to load libraries.
+ 
+ The SequenceRetriever Panel only works with markers found on the 
+	Affymetrix HG-U95 chip.
+
+ Remote execuation of ARACNE in Reverse Engineering Panel is temprory disabled.
+
+ 
+
+
+================================================================
+    4.0 Bug Reports and Support
+================================================================
+    
+    Send email to caworkbench@cu-genome.org to request support or
+    report a bug.
+
+    
+
+
+
+================================================================
+    5.0 Documentation and Files
+================================================================
+
+    
+   The documents and support files include:
+
+
+	caWorkbench Readme file:
+		caWorkbench_Readme_V_3_0.txt
+		 
+  
+   	caWorkbnech License: 
+		caWorkbenchLicense.txt
+
+   Within caWorkbench, users can access "Help Topics" by clicking the
+	top menu. It has detailed information about each module.
+
+
+   For the majority of new features,detailed requirements 
+   specification documents are available at the caBIG CVS site:
+        http://cabigcvs.nci.nih.gov/viewcvs/viewcvs.cgi/caworkbenchcabig
+
+================================================================
+    6.0 caWorkbench Web Pages
+================================================================
+     
+    caWorkbench 3.0
+    --  http://amdec-bioinfo.cu-genome.org/html/caWorkBench3.htm
+    
+    At present, the user manual and video tutorial available 
+    at the page is for caWorkbench 2.0. 
+ 
+   Updated versions of the manual and tutorial are forthcoming.
+    
+ 

@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<project name="geWorkBench" default="all">
+
+    <target name="all" description="Updates from CVS and runs junit.">
+        <cvspass cvsroot=":ext:watkinson@cbiocvs2.nci.nih.gov:/share/content/cabig/cvsroot" password="dragons"/>
+        <cvs command="update -d -A"/>
+        <ant target="junit-run"/>
+    </target>
+
+</project>

@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<project name="Axis2Services" basedir=".">
+
+	<target name="init" depends="deployinit">		 		 
+		<property name="svn.root" value="https://ncisvn.nci.nih.gov/svn/geworkbench/trunk" />
+	</target>
+
+	<target name="deployinit">
+		<property name="checkout.dir" value="." />		 
+		<property environment="env" />
+		<property name="tomcat.dir" value="${env.CATALINA_HOME}" />
+	</target>
+
+	<target name="install" depends="checkout, deploy" />
+
+	<target name="checkout" depends="init">		 
+		<antcall target="geworkbench" />
+	</target>
+	 
+
+	<target name="geworkbench" depends="init">
+		<exec executable="svn" >
+		  <arg line="checkout ${svn.root}/geworkbench/components/anova ${checkout.dir}/anova"/>
+		</exec>
+		<exec executable="svn" >
+		  <arg line="checkout ${svn.root}/geworkbench/components/aracne-java ${checkout.dir}/aracne"/>
+		</exec>	
+		<exec executable="svn" >
+				  <arg line="checkout ${svn.root}/geworkbench/components/hierarchicalclustering ${checkout.dir}/hierarchicalclustering"/>
+				</exec>	
+		<exec executable="svn" >		 
+		  <arg line="checkout ${svn.root}/lincs-ws ${checkout.dir}/lincs-ws"/>		    
+		</exec>	
+		<exec executable="svn" >
+		  <arg line="checkout ${svn.root}/geworkbench/components/ttest ${checkout.dir}/ttest"/>
+		</exec>	
+	</target>	 
+
+	<target name="deploy" depends="deployinit">
+		<subant target="generate.service">
+			<fileset dir="${checkout.dir}"
+				includes="*/build.xml" />
+		</subant>	 
+   </target>	 
+  
+</project>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<toc version="1.0">
+
+	<tocitem text="Information Panel">
+
+		<tocitem target="information.panel" text="Overview"/>
+		<tocitem target="Dataset_History" text="Dataset History"/>
+		<tocitem target="Dataset_Annotation" text="Dataset Annotation (User_Comments)"/>
+		<tocitem target="Experiment_Info" text="Experiment Info"/>
+
+	</tocitem>
+
+</toc>
+
