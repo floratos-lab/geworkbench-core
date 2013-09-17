@@ -40,8 +40,8 @@ public class WorkspaceHandler {
 
 	private final ProjectPanel enclosingProjectPanel = ProjectPanel.getInstance();
 
-	private ProgressDialog pdmodal = ProgressDialog.create(ProgressDialog.MODAL_TYPE);
-	private ProgressDialog pdnonmodal = ProgressDialog.create(ProgressDialog.NONMODAL_TYPE);
+	private ProgressDialog pdmodal = ProgressDialog.getInstance(true);
+	private ProgressDialog pdnonmodal = ProgressDialog.getInstance(false);
 	
 	private String wsFilePath = "";
 

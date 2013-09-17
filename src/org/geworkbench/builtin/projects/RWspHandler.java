@@ -61,8 +61,8 @@ public class RWspHandler {
 			.getTemporaryFilesDirectoryPath()
 			+ "wsp" + FilePathnameUtils.FILE_SEPARATOR;
 	protected static String wspdir = wsproot;
-	private static ProgressDialog pdmodal = ProgressDialog.create(ProgressDialog.MODAL_TYPE);
-	private static ProgressDialog pdnonmodal = ProgressDialog.create(ProgressDialog.NONMODAL_TYPE);
+	private static ProgressDialog pdmodal = ProgressDialog.getInstance(true);
+	private static ProgressDialog pdnonmodal = ProgressDialog.getInstance(false);
 	private WorkspaceHandler ws = new WorkspaceHandler();
 
 	private JTextArea jtaDesc = new JTextArea();

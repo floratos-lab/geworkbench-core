@@ -176,7 +176,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		if (defaultWS.exists()) {
 			WorkspaceHandler ws = new WorkspaceHandler();
 			ProgressDialog pdnonmodal = ProgressDialog
-					.create(ProgressDialog.NONMODAL_TYPE);
+					.getInstance(false);
 			OpenTask openTask = ws.new OpenTask(
 					ProgressItem.INDETERMINATE_TYPE,
 					"Workspace is being loaded.", defaultWS.getName());

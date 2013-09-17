@@ -31,7 +31,7 @@ import org.geworkbench.util.ProgressTask;
  */
 public class RegPanel extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 7446637434069686093L;
-	private ProgressDialog pdnonmodal = ProgressDialog.create(ProgressDialog.NONMODAL_TYPE);
+	private ProgressDialog pdnonmodal = ProgressDialog.getInstance(false);
 	private JFrame jframe;
 	private JTextField userId;
 	private JPasswordField password;

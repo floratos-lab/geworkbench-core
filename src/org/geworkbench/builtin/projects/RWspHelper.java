@@ -40,8 +40,8 @@ import org.geworkbench.util.ProgressTask;
  * $Id$
  */
 public class RWspHelper {
-	private static ProgressDialog pdmodal = ProgressDialog.create(ProgressDialog.MODAL_TYPE);
-	private static ProgressDialog pdnonmodal = ProgressDialog.create(ProgressDialog.NONMODAL_TYPE);
+	private static ProgressDialog pdmodal = ProgressDialog.getInstance(true);
+	private static ProgressDialog pdnonmodal = ProgressDialog.getInstance(false);
 	private static final String USER_INFO_DELIMIETER = RWspHandler.USER_INFO_DELIMIETER;
 	private static WorkspaceHandler ws = new WorkspaceHandler();
 	
