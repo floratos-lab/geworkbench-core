@@ -36,13 +36,6 @@ public class ProgressDialog extends JDialog {
 	final private Vector<ProgressTask<?,?>> tasks;
 	final private JPanel jp;
 
-	@Deprecated /* both the name and the argument type are bad ideas. getInstance(boolean) should be used. */
-    public static ProgressDialog create(int type) {
-        if (type == MODAL_TYPE)         return modalProgressDialog;
-        else if (type == NONMODAL_TYPE) return nonmodalProgressDialog;
-        return null;
-    }
-    
 	public static ProgressDialog getInstance(boolean modal) {
 		if (modal) {
 			return modalProgressDialog;
