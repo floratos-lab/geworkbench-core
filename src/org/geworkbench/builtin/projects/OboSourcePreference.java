@@ -45,8 +45,8 @@ public class OboSourcePreference {
 		textField.setValue(location);
 	}
 
-	public final static String DEFAULT_REMOTE_LOCATION = "http://www.geneontology.org/ontology/obo_format_1_2/gene_ontology.1_2.obo";
-	public final static String DEFAULT_OBO_FILE = "data/gene_ontology.1_2.obo";
+	public final static String DEFAULT_REMOTE_LOCATION = "http://purl.obolibrary.org/obo/go/go-basic.obo";
+	public final static String DEFAULT_OBO_FILE = "data/go-basic.obo";
 	final static String DEFAULT_LOCAL_LOCATION = System.getProperty("user.dir")+"/"+DEFAULT_OBO_FILE;
 	
 	private Preferences prefs;
