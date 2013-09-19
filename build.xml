@@ -611,6 +611,7 @@
 				<include name="${components}/skybaseview/**/*" />
 
 				<include name="${components}/ttest/**/*" />
+				<include name="${components}/viper/**/*" />
 
 				<!-- Leave out the following components for release -->
 				<exclude name="**/synteny/*" />
