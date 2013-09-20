@@ -573,6 +573,7 @@
 				<include name="${components}/somclustering/**/*" />
 				<include name="${components}/colormosaic/**/*" />
 				<include name="${components}/cytoscape/**/*" />
+				<include name="${components}/demand/**/*" />
 				<include name="${components}/discovery/**/*" />
 				<include name="${components}/filtering/**/*" />
 				<include name="${components}/foldchange/**/*" />
