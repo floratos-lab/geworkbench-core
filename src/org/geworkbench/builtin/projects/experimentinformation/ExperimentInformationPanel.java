@@ -88,7 +88,7 @@ public class ExperimentInformationPanel implements VisualPlugin {
 			experimentTextArea.setText(experimentInfo);
 			experimentTextArea.setCaretPosition(0); // For long text.
 		} else {
-			log.warn("dataSet is null");
+			log.debug("dataSet is null (root node)");
 		}
     }
 }

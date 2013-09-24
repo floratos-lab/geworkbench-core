@@ -90,7 +90,7 @@ import org.geworkbench.engine.management.Subscribe;
 			historyTextArea.setText(datasetHistory);
 			historyTextArea.setCaretPosition(0); // For long text.
 		} else {
-			log.warn("dataSet is null");
+			log.debug("dataSet is null (root node)");
 		}
 	}
 
