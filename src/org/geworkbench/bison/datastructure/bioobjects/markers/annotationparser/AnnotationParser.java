@@ -150,6 +150,9 @@ public class AnnotationParser implements Serializable {
 						log.warn(chipType + " have null value for AnnotationType. This may happen when you load workspace from 2.4 or earlier release.");
 					datasetToAnnotation.put(dataset, datasetToAnnotation.get(d));
 				    datasetToChipTypes.put(dataset, chipType);
+					annotationFileToType.put(chipType, parser.getAnnotationType());
+					AnnotationInformationManager.getInstance().add(dataset,
+							parser.getAnnotationType());
 				    return;
 				}
 				else			  
