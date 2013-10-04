@@ -231,17 +231,20 @@ geWorkbench 2.5.0 (2013-10-04)
    ==============================
     --- Summary ---
     geWorkbench 2.5.0 is a major release.  It includes a simplification of the
-    Workspace, a complete rewrite of the Marker Annotations component to use
-    the bioDBNet data service rather than the discontinued caBIO service, and a
-    major revision of the BLAST component to parse and reconstruct all
-    alignment information from the XML-format output file.  This removes the
-    dependency on specifics of the BLAST server HTML output.  
+    Workspace, removing the "Project" level of data organization.  The Marker
+    Annotations component was completely reimplemented to use the bioDBNet data
+    service rather than the discontinued caBIO service.  New parsing and
+    display code was written so that all NCBI BLAST sequence alignments are now
+    generated in geWorkbench from the BLAST results XML output file. This
+    removes the dependency on specifics of the BLAST server HTML output.
 
     Several new components are added:  Consensus Clustering (GenePattern),
-    LINCS_Query, VIPER, DeMAND and ceRNA.  The MARINa component has been
-    separated from the MRA-FET version of Master Regulator Analysis. The
-    "bar-code" graph first implemented in the MRA-FET Results Viewer component
-    has now been adapted and added to the MARINa Results Viewer.  
+    LINCS_Query, VIPER, DeMAND and ceRNA.  
+
+    The MARINa component has been separated from the MRA-FET version of Master
+    Regulator Analysis. The "bar-code" graph first implemented in the MRA-FET
+    Results Viewer component has now been adapted and added to the MARINa
+    Results Viewer.  
 
     The Gene Ontology file (go-basic.obo) is now downloaded from the
     geneontology.org site using the new permanent URL and filename.
