@@ -2,7 +2,7 @@
     
                               geWorkbench V2.5.0
                
-                               September 17th, 2013
+                               October 4th, 2013
    
 
             Department of Systems Biology, Columbia University
@@ -87,11 +87,11 @@
         login name, rather than to e.g. C:\Program Files\geWorkbench_2.5.0.
         
 
-        File: geWorkbench_v2.4.1_Windows_installer_with_JRE6.exe
+        File: geWorkbench_v2.5.0_Windows_installer_with_JRE6.exe
 
             Includes the 32-bit Sun Java 6 JRE.
              
-        File: geWorkbench_v2.4.1_Windows_installer_noJRE.exe
+        File: geWorkbench_v2.5.0_Windows_installer_noJRE.exe
         
             No JRE is included, you must make sure that an appropriate Java 6
             JRE is installed on your system before installing geWorkbench.
@@ -105,12 +105,12 @@
        e.g. /Users/username/geWorkbench_2.5.0, where "username" is your
        login name, rather than to the Mac /Applications folder.  
     
-       File: geWorkbench_v2.4.1_MacOSX_installer.zip.
+       File: geWorkbench_v2.5.0_MacOSX_installer.zip.
 
        This version uses the Java 6 JRE included with recent releases of the
        MacOSX operating system.
 
-       Double-click geWorkbench_v2.4.1_MacOSX_installer.zip to begin
+       Double-click geWorkbench_v2.5.0_MacOSX_installer.zip to begin
        installation.  This will unpack a file called "install".  (Note it may
        appear on top of the Zip file). Double-click on the "install" file to
        start the installation process.
@@ -125,11 +125,11 @@
             already be installed on your machine before the installation
             can be run.
        
-       File: geWorkbench_v2.4.1_Linux_installer_with_JRE6.bin.
+       File: geWorkbench_v2.5.0_Linux_installer_with_JRE6.bin.
 
             Includes the 32-bit Sun Java 6 JRE.
        
-       File: geWorkbench_v2.4.1_Linux_installer_noJRE.bin
+       File: geWorkbench_v2.5.0_Linux_installer_noJRE.bin
             No JRE is included, you must make sure that an appropriate Java 6
             JRE is installed on your system before installing geWorkbench.
             You may need to configure the JRE. See the "Java_Environment
@@ -150,7 +150,7 @@
 
        To begin the installation, type the command: 
 
-              sh ./geWorkbench_v2.4.1_Linux_installer_with_JRE6.bin 
+              sh ./geWorkbench_v2.5.0_Linux_installer_with_JRE6.bin 
 
           This will extract geWorkbench into a new directory called
           geWorkbench_2.5.0. 
@@ -160,7 +160,7 @@
   
           Note - if you made changes to the default installation directory
           name, the shortcut link may just be called "geWorkbench_2.5.0"
-          rather than "rungeWorkbench_2.4.1".
+          rather than "rungeWorkbench_2.5.0".
 
        To run geWorkbench, and assuming you are using the Linux bash shell,
           and that you created a shortcut link during installation,
@@ -239,7 +239,15 @@ geWorkbench 2.5.0 (2013-10-04)
     removes the dependency on specifics of the BLAST server HTML output.
 
     Several new components are added:  Consensus Clustering (GenePattern),
-    LINCS_Query, VIPER, DeMAND and ceRNA.  
+    LINCS_Query, VIPER, DeMAND and ceRNA.  Consensus Clustering uses multiple
+    clustering runs to find consensus clusters and assess their stability.
+    The LINCS Query component provides for query and display of computational
+    and experimental results from the Columbia LINCS center, which performs
+    high-throughput drug candidate prediction and screening.  VIPER summarizes
+    drug activity on gene expression profiles at the level of the transcription
+    factors.  DeMAND is used to compute drug mechanism of action.  The ceRNA
+    component provides query access to a database of precomputed competitive
+    endogenous RNA (miRNA-mRNA) interactions for four different cancer types.
 
     The MARINa component has been separated from the MRA-FET version of Master
     Regulator Analysis. The "bar-code" graph first implemented in the MRA-FET
@@ -256,10 +264,10 @@ geWorkbench 2.5.0 (2013-10-04)
 
 
     --- New features and important changes in release 2.5.0 ---
-    See online version of this file.
+      - See online version of these release notes.
 
     --- Enhancements and selected bug fixes ---
-    See online version of this file.
+      - See online version of these release notes.
 
    --- Versions of external files/components included in release 2.5.0 ---
       - caArray client external v1.0 (caArray 2.5.0 client, no change).
@@ -1617,11 +1625,6 @@ geWorkbench 2.4.1 (2012-10-26)
 
         See https://cabig-kc.nci.nih.gov/Molecular/forums/
 
-    FAQs and other articles are also available at
-
-
-        https://cabig-kc.nci.nih.gov/Molecular/KC/index.php/Main_Page#geWorkbench
-
 
     Finally, please see the geWorkbench project page for additional known issues and FAQs.
 
@@ -1642,11 +1645,6 @@ geWorkbench 2.4.1 (2012-10-26)
   
     geWorkbench License: 
         geWorkbenchLicense.txt
-
-
-    Online Help:
-        Within geWorkbench, users can access "Help Topics" by clicking the
-    top menu. It has detailed information about each module.
 
        
     For other documentation not directly included as part of the
