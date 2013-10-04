@@ -235,18 +235,26 @@ geWorkbench 2.5.0 (2013-10-04)
     the bioDBNet data service rather than the discontinued caBIO service, and a
     major revision of the BLAST component to parse and reconstruct all
     alignment information from the XML-format output file.  This removes the
-    dependency on specifics of the BLAST server HTML output.  Several new
-    components are added:  Consensus Clustering (GenePattern), LINCS_Query,
-    VIPER, DeMAND and ceRNA.  The MARINa component has been separated from the
-    MRA-FET version of Master Regulator Analysis. The bar-code graph was also
-    added to the MARINa Results Viewer.  The Gene Ontology file is now
-    downloaded using the new permanent URL.
+    dependency on specifics of the BLAST server HTML output.  
+
+    Several new components are added:  Consensus Clustering (GenePattern),
+    LINCS_Query, VIPER, DeMAND and ceRNA.  The MARINa component has been
+    separated from the MRA-FET version of Master Regulator Analysis. MRA-FET
+    bar-code graph was also added to the MARINa Results Viewer.  The Gene
+    Ontology file is now downloaded from the geneontology.org site using the
+    new permanent URL and new filename.
+
+    The "Online Help" feature has been removed.  This material was identical
+    to the geWorkbench tutorials, which are available at the geWorkbench.org
+    website.
+    
 
 
     --- New features and important changes in release 2.5.0 ---
     See online version of this file.
 
     --- Enhancements and selected bug fixes ---
+    See online version of this file.
 
    --- Versions of external files/components included in release 2.5.0 ---
       - caArray client external v1.0 (caArray 2.5.0 client, no change).
