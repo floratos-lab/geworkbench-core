@@ -227,7 +227,7 @@
 ===============================================================================
     3.0 Release History: New Features and Updates
 =============================================================================== 
-geWorkbench 2.5.0 (2013-09-17)
+geWorkbench 2.5.0 (2013-10-04)
    ==============================
     --- Summary ---
     geWorkbench 2.5.0 is a major release.  It includes a simplification of the
