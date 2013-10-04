@@ -230,14 +230,34 @@
 geWorkbench 2.5.0 (2013-09-17)
    ==============================
     --- Summary ---
+    geWorkbench 2.5.0 is a major release.  It includes a simplification of the
+    Workspace, a complete rewrite of the Marker Annotations component to use
+    the bioDBNet data service rather than the discontinued caBIO service, and a
+    major revision of the BLAST component to parse and reconstruct all
+    alignment information from the XML-format output file.  This removes the
+    dependency on specifics of the BLAST server HTML output.  Several new
+    components are added:  Consensus Clustering (GenePattern), LINCS_Query,
+    VIPER, DeMAND and ceRNA.  The MARINa component has been separated from the
+    MRA-FET version of Master Regulator Analysis. The bar-code graph was also
+    added to the MARINa Results Viewer.  The Gene Ontology file is now
+    downloaded using the new permanent URL.
 
 
     --- New features and important changes in release 2.5.0 ---
-
+    See online version of this file.
 
     --- Enhancements and selected bug fixes ---
 
-
+   --- Versions of external files/components included in release 2.5.0 ---
+      - caArray client external v1.0 (caArray 2.5.0 client, no change).
+      - caBIO client 4.3 (removed).
+      - caGrid - caGrid version 1.4 (no change)
+      - Cytoscape 2.8.2 (no change).
+      - go-basic.obo downloaded 2013-09-13 from geneontology.org.
+      - Jaspar_CORE (http://jaspar.genereg.net/) SQL files last updated on
+            server 2009-10. (no change).
+      - JMOL 13.0.18 (UPDATED). 
+      - Ontologizer.jar version 2.0, file released 2010-03-10 (no change).
 
 geWorkbench 2.4.1 (2012-10-26)
    ==============================
