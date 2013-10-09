@@ -264,12 +264,14 @@ geWorkbench 2.5.0 (2013-10-09)
 
     --- New features and important changes in release 2.5.0 ---  
     Analysis
-      - 3146 - Removal of “All Markers / All Arrays” checkboxes from analysis controls.
+      - 3146 - Removal of “All Markers / All Arrays” checkboxes from analysis
+               controls.
     BLAST 
-      - 3404, 3505, 3508, 3526, 3527, 3529 - Full parsing and display of results from XML
+      - 3404, 3505, 3508, 3526, 3527, 3529 - Full parsing and display of
+               results from XML
     ARACNe
       - 3098 - Write out adjacency matrix using hub-targets convention per line
-    ceRNA/Hermes
+               ceRNA/Hermes
       - 3503 - Implement data query browser for HERMES/ceRNA data
     Consensus Clustering
       - 3502 - Implement interface to GenePattern 3.0 Consensus Clustering
@@ -278,12 +280,14 @@ geWorkbench 2.5.0 (2013-10-09)
     LINCS Query
       - 3382, 3389, 3495 - Implement LINCS Query and Display component
     MARINa/MRA
-      - 3086, 3511 - separate MRA and MARINa components, add bar code display for MARINa
+      - 3086, 3511 - separate MRA and MARINa components, add bar code display
+               for MARINa
       - 3020, 3212 - implement save image of bar code graph
     Online Help
       - 3498 - Remove from geWorkbench
     Skybase
-      - 2619 - Implement saving of image of histogram, and export of results to CSV file.
+      - 2619 - Implement saving of image of histogram, and export of results to
+               CSV file.
     Workspace
       - 3310, 3379 - Remove “Project” level from Workspace data hierarchy
  
@@ -307,7 +311,8 @@ geWorkbench 2.5.0 (2013-10-09)
     CCM
       - 3545 - remove state dependence from CCM links
     Cytoscape
-      - 3184 - disable Cytoscape control panel floating windows (incompatible with geWorkbench)
+      - 3184 - disable Cytoscape control panel floating windows (incompatible
+               with geWorkbench)
     File Parsers
       - 3006 - problem in parsing Affymetrix 1.0 ST files.
       - 3203 - exception can occur when reloading workspace file
@@ -316,9 +321,11 @@ geWorkbench 2.5.0 (2013-10-09)
       - 3492 - Simplify annotation type selection to avoid exception
     Filtering 
       - 1847 - improve labels for filtering criteria
-      - 3484 - filtering introduces discrepancy in data views involving Cytoscape (looking up marker names from gene names).
+      - 3484 - filtering introduces discrepancy in data views involving
+               Cytoscape (looking up marker names from gene names).
     GenomeSpace
-      - 3273 - Implement large file data upload from geWorkbench for GenomeSpace
+      - 3273 - Implement large file data upload from geWorkbench for
+               GenomeSpace
     genSpace
       - 2999 - Registration issue
     Jmol
@@ -327,12 +334,14 @@ geWorkbench 2.5.0 (2013-10-09)
       - 3185 - exception on unselecting all sets (is this related to 3146?)
       - 3486 - clarify labeling of set context pulldown lists
     MARINa/MRA
-      - 3291, 3157 - remove unsupported computational options, make consistent response to set activation (MARINa)
+      - 3291, 3157 - remove unsupported computational options, make consistent
+               response to set activation (MARINa)
       - 3159 - parameter validation (MARINa).
       - 3292 - Change default setting (min number of samples)
       - 3501, 3536 - network file pulldown not populated (CCM loading order)
       - 3512 - Add absNES column to main MARINa results table
-      - 3517 - MARINa Viewer - remember the array sets that were activated, and the case/control status for each run
+      - 3517 - MARINa Viewer - remember the array sets that were activated, and
+               the case/control status for each run
     MINDy
       - 3287 - dataset history falsely indicates only activated marker set used
     Normalization
@@ -345,7 +354,8 @@ geWorkbench 2.5.0 (2013-10-09)
     Skybase
       - 3564 - correctly handle unexpected (null/invalid) data
     SVM
-      - 3163 - fixed problem with saving workspace with SVM results; Test tab should reflect any changes in workspace
+      - 3163 - fixed problem with saving workspace with SVM results; Test tab
+               should reflect any changes in workspace
       - 3164 - exception if no “Test” array selected
       - 3523 - improve consistency of threshold filter action
       - 3562 - save info on markers/arrays used to dataset history.
