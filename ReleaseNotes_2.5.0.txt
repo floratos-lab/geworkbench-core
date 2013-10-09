@@ -599,8 +599,8 @@ geWorkbench 2.4.1 (2012-10-26)
       - 3108 - Skybase error
     T-test
       - 2982 - Number presentation for plot and hover box not in sync
-      - 3048 - "data is log2 transformed" check box not hooked up to parameter saving
-               mechanism 
+      - 3048 - "data is log2 transformed" check box not hooked up to parameter
+               saving mechanism 
       - 3126 - t-test result export CSV writer does not check if for
                existing extension.
     
