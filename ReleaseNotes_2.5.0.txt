@@ -2,7 +2,7 @@
     
                               geWorkbench V2.5.0
                
-                               October 4th, 2013
+                               October 9th, 2013
    
 
             Department of Systems Biology, Columbia University
@@ -227,7 +227,7 @@
 ===============================================================================
     3.0 Release History: New Features and Updates
 =============================================================================== 
-geWorkbench 2.5.0 (2013-10-04)
+geWorkbench 2.5.0 (2013-10-09)
    ==============================
     --- Summary ---
     geWorkbench 2.5.0 is a major release.  It includes a simplification of the
@@ -262,14 +262,100 @@ geWorkbench 2.5.0 (2013-10-04)
     website.
     
 
-
-    --- New features and important changes in release 2.5.0 ---
-      - See online version of these release notes.
+    --- New features and important changes in release 2.5.0 ---  
+    Analysis
+      - 3146 - Removal of “All Markers / All Arrays” checkboxes from analysis controls.
+    BLAST 
+      - 3404, 3505, 3508, 3526, 3527, 3529 - Full parsing and display of results from XML
+    ARACNe
+      - 3098 - Write out adjacency matrix using hub-targets convention per line
+    ceRNA/Hermes
+      - 3503 - Implement data query browser for HERMES/ceRNA data
+    Consensus Clustering
+      - 3502 - Implement interface to GenePattern 3.0 Consensus Clustering
+    Gene Ontology
+      - 3540 - new PURL and file name for gene ontology file download
+    LINCS Query
+      - 3382, 3389, 3495 - Implement LINCS Query and Display component
+    MARINa/MRA
+      - 3086, 3511 - separate MRA and MARINa components, add bar code display for MARINa
+      - 3020, 3212 - implement save image of bar code graph
+    Online Help
+      - 3498 - Remove from geWorkbench
+    Skybase
+      - 2619 - Implement saving of image of histogram, and export of results to CSV file.
+    Workspace
+      - 3310, 3379 - Remove “Project” level from Workspace data hierarchy
+ 
 
     --- Enhancements and selected bug fixes ---
-      - See online version of these release notes.
+    Analysis
+      - 2062 - cyclic events in parameter saving mechanism
+    BLAST 
+      - 3180 - when no result returned, previous result displayed
+    ARACNe
+      - 3037 - Preprocessing repeated if complete mode chosen with boostrapping
+      - 3040 - resampling during bootstrapping not allowing "with replacement".
+      - 3265 - Change DPI default value to zero
+      - 3535 - ARACNe hub markers pulldown not populated (CCM loading order)
+      - 3566 - bootstrap count is not printed to Dataset History
+      - 3568 - unique names for grid result nodes
+    CNKB
+      - 3499 - improper handling of affy “///” separator
+    Color Mosaic
+      - 3200 - Changes to activated sets changing displayed heatmap.
+    CCM
+      - 3545 - remove state dependence from CCM links
+    Cytoscape
+      - 3184 - disable Cytoscape control panel floating windows (incompatible with geWorkbench)
+    File Parsers
+      - 3006 - problem in parsing Affymetrix 1.0 ST files.
+      - 3203 - exception can occur when reloading workspace file
+      - 3288 - update parser menu label to reflect Gene 2.0 ST also supported
+      - 3364 - "exp" format reader skips empty cells
+      - 3492 - Simplify annotation type selection to avoid exception
+    Filtering 
+      - 1847 - improve labels for filtering criteria
+      - 3484 - filtering introduces discrepancy in data views involving Cytoscape (looking up marker names from gene names).
+    GenomeSpace
+      - 3273 - Implement large file data upload from geWorkbench for GenomeSpace
+    genSpace
+      - 2999 - Registration issue
+    Jmol
+      - 3284 - update to Jmol 13.0.18
+    Marker Sets/Array sets
+      - 3185 - exception on unselecting all sets (is this related to 3146?)
+      - 3486 - clarify labeling of set context pulldown lists
+    MARINa/MRA
+      - 3291, 3157 - remove unsupported computational options, make consistent response to set activation (MARINa)
+      - 3159 - parameter validation (MARINa).
+      - 3292 - Change default setting (min number of samples)
+      - 3501, 3536 - network file pulldown not populated (CCM loading order)
+      - 3512 - Add absNES column to main MARINa results table
+      - 3517 - MARINa Viewer - remember the array sets that were activated, and the case/control status for each run
+    MINDy
+      - 3287 - dataset history falsely indicates only activated marker set used
+    Normalization
+      - 3214 - Change "Cancel" action on warning to return to panel
+      - 3483 - cyclic event on parameter saving
+    Promoter
+      - 3474 - 13K sequence set not downloading; added to source
+    SAM
+      - 3383 - Incorrect path handling on Mac
+    Skybase
+      - 3564 - correctly handle unexpected (null/invalid) data
+    SVM
+      - 3163 - fixed problem with saving workspace with SVM results; Test tab should reflect any changes in workspace
+      - 3164 - exception if no “Test” array selected
+      - 3523 - improve consistency of threshold filter action
+      - 3562 - save info on markers/arrays used to dataset history.
+      - 3570 Exception based on order of component loading (CCM).
+    WV
+      - 877 - fix range checking on inputs
+      - 1061 - add dataset history  
 
-   --- Versions of external files/components included in release 2.5.0 ---
+  
+    --- Versions of external files/components included in release 2.5.0 ---
       - caArray client external v1.0 (caArray 2.5.0 client, no change).
       - caBIO client 4.3 (removed).
       - caGrid - caGrid version 1.4 (no change)
