@@ -323,7 +323,10 @@ geWorkbench 2.5.0 (2013-10-09)
       - 1847 - improve labels for filtering criteria
       - 3484 - filtering introduces discrepancy in data views involving
                Cytoscape (looking up marker names from gene names).
-    GenomeSpace
+   Gene Ontology Analysis
+      - 3563 - fixed problem with saving parameters involving "changed gene"
+               marker set.
+   GenomeSpace
       - 3273 - Implement large file data upload from geWorkbench for
                GenomeSpace
     genSpace
