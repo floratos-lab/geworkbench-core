@@ -2,7 +2,7 @@
     
                               geWorkbench V2.5.0
                
-                               October 9th, 2013
+                               October 10th, 2013
    
 
             Department of Systems Biology, Columbia University
@@ -227,7 +227,7 @@
 ===============================================================================
     3.0 Release History: New Features and Updates
 =============================================================================== 
-geWorkbench 2.5.0 (2013-10-09)
+geWorkbench 2.5.0 (2013-10-10)
    ==============================
     --- Summary ---
     geWorkbench 2.5.0 is a major release.  It includes a simplification of the
@@ -271,7 +271,7 @@ geWorkbench 2.5.0 (2013-10-09)
                results from XML
     ARACNe
       - 3098 - Write out adjacency matrix using hub-targets convention per line
-               ceRNA/Hermes
+    ceRNA/Hermes
       - 3503 - Implement data query browser for HERMES/ceRNA data
     Consensus Clustering
       - 3502 - Implement interface to GenePattern 3.0 Consensus Clustering
