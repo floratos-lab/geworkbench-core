@@ -311,19 +311,6 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	}
 
 	/**
-	 * Similar to getNamedParameterSetPanel, but instead of return the panel, it
-	 * directly set (reuse) the current panel.
-	 * 
-	 * @param name
-	 */
-	public void setNamedParameterSetPanel(String name) {
-		Map<Serializable, Serializable> returnedParams = parameterHash
-				.get(new ParameterKey(getIndex(), name));
-		aspp.fillDefaultValues(returnedParams);
-		aspp.setParameters(returnedParams);
-	}
-
-	/**
 	 * Returns the parameter values that were stored (in parameterHash in
 	 * memory) under the designated name.
 	 * 
@@ -338,34 +325,7 @@ public abstract class AbstractAnalysis implements Analysis, Serializable,
 	}
 
 	/**
-	 * Returns the parameters panel populated with the parameter values that
-	 * where stored under the designated 'name'.
-	 * 
-	 * @param name
-	 * @return
-	 */
-	public ParameterPanel deserializeNamedParameterSetPanel(String name) {
-		try {
-			FileInputStream fis = new FileInputStream(new File(
-					scrubFilename(name)));
-			XMLDecoder ois = new XMLDecoder(fis);
-			Thread.currentThread().setContextClassLoader(
-					this.getClass().getClassLoader()); // to avoid java bug
-			// #6329581
-			// newaspp = (AbstractSaveableParameterPanel) ois.readObject();
-			HashMap<Serializable, Serializable> parameters = (HashMap<Serializable, Serializable>) ois
-					.readObject();
-			this.setParameters(parameters);
-		} catch (Exception e) {
-			log.error(e, e);
-		}
-
-		return this.getParameterPanel();
-	}
-
-	/**
-	 * Returns the parameters panel populated with the parameter values that
-	 * where stored under the designated 'name'.
+	 * Returns the parameters map.
 	 * 
 	 * @param name
 	 * @return

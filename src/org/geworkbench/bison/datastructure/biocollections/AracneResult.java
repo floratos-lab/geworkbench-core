@@ -8,8 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.geworkbench.bison.datastructure.biocollections.AdjacencyMatrix.Edge;
+import org.geworkbench.bison.datastructure.biocollections.AdjacencyMatrix.Node;
 import org.geworkbench.bison.datastructure.biocollections.AdjacencyMatrix.NodeType;
 import org.geworkbench.bison.datastructure.biocollections.microarrays.DSMicroarraySet;
+import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
+import org.geworkbench.bison.datastructure.complex.panels.DSItemList;
 
 /* This design is to some extent tentative. See mantis issue #3098, note 13121. */
 final public class AracneResult extends AdjacencyMatrixDataSet {
@@ -21,7 +24,23 @@ final public class AracneResult extends AdjacencyMatrixDataSet {
 	public AracneResult(AdjacencyMatrix matrix, double threshold, String name,
 			String networkName, DSMicroarraySet parent, List<String> hubList) {
 		super(matrix, threshold, name, networkName, parent);
-		this.hubList = hubList;
+		
+		/* XXX not really a clean design, but have to do this to fix bug 3569 */
+		NodeType nodeType = NodeType.MARKER;
+		List<Node> nodes = matrix.getNodes();
+		if(nodes!=null && nodes.size()>0) {
+			Node node = nodes.get(0);
+			nodeType = node.type;
+		}
+		if(nodeType == NodeType.GENE_SYMBOL) {
+			this.hubList = new ArrayList<String>();
+			DSItemList<DSGeneMarker> markers = parent.getMarkers();
+			for(String probeset : hubList) {
+				this.hubList.add( markers.get(probeset).getGeneName() );
+			}
+		} else {
+			this.hubList = hubList;
+		}
 	}
 
 	@Override
@@ -42,10 +61,10 @@ final public class AracneResult extends AdjacencyMatrixDataSet {
 				if (secondNodeList.size() == 0)
 					continue;
 
-				writer.write(node1 + "\t");
+				writer.write(node1);
 
 				for (SecondNode node : secondNodeList) {
-					writer.write(node.text + "\t" + node.value + "\t");
+					writer.write("\t" + node.text + "\t" + node.value);
 				}
 				writer.write("\n");
 			}

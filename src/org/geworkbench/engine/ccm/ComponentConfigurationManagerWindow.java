@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.font.TextAttribute;
@@ -89,9 +90,6 @@ public class ComponentConfigurationManagerWindow {
 	private JButton resetButton = new JButton("Reset");
 	private JButton closeButton = new JButton("Close");
 
-	private static int launchedRow = -1;
-	private static int launchedColumn = -1;
-	
 	private final static String DISPLAY_FILTER_ALL = "All";
 	private final static String DISPLAY_ONLY_LOADED = "Only loaded";
 	private final static String DISPLAY_ONLY_UNLOADED = "Only unloaded";
@@ -326,9 +324,14 @@ public class ComponentConfigurationManagerWindow {
 						            	textPane.setCaretPosition(1);        	
 						            }
 						        }
-
-						        if(table.getSelectedRow()>=0)
-						        	launchBrowser();
+							}
+						});
+						
+						table.addMouseListener(new MouseAdapter() {
+							
+							@Override
+							public void mouseClicked(java.awt.event.MouseEvent event) {
+								launchBrowser();
 							}
 						});
 						
@@ -510,14 +513,7 @@ public class ComponentConfigurationManagerWindow {
 	private void launchBrowser(){
         int modelRow = table.convertRowIndexToModel(table.getSelectedRow());
         int modeColumn = table.convertColumnIndexToModel(table.getSelectedColumn());
-        
-   		if (launchedRow == modelRow && launchedColumn == modeColumn){
-    			return;
-   		}
-   		
-   		launchedRow = modelRow;
-   		launchedColumn = modeColumn;
-    		
+
    		String url = null;
    		Object obj = ccmTableModel.getModelValueAt(modelRow, modeColumn);
    		if(obj==null) return;

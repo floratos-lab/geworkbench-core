@@ -2,7 +2,7 @@
     
                               geWorkbench V2.5.0
                
-                               September 17th, 2013
+                               October 10th, 2013
    
 
             Department of Systems Biology, Columbia University
@@ -87,11 +87,11 @@
         login name, rather than to e.g. C:\Program Files\geWorkbench_2.5.0.
         
 
-        File: geWorkbench_v2.4.1_Windows_installer_with_JRE6.exe
+        File: geWorkbench_v2.5.0_Windows_installer_with_JRE6.exe
 
             Includes the 32-bit Sun Java 6 JRE.
              
-        File: geWorkbench_v2.4.1_Windows_installer_noJRE.exe
+        File: geWorkbench_v2.5.0_Windows_installer_noJRE.exe
         
             No JRE is included, you must make sure that an appropriate Java 6
             JRE is installed on your system before installing geWorkbench.
@@ -105,12 +105,12 @@
        e.g. /Users/username/geWorkbench_2.5.0, where "username" is your
        login name, rather than to the Mac /Applications folder.  
     
-       File: geWorkbench_v2.4.1_MacOSX_installer.zip.
+       File: geWorkbench_v2.5.0_MacOSX_installer.zip.
 
        This version uses the Java 6 JRE included with recent releases of the
        MacOSX operating system.
 
-       Double-click geWorkbench_v2.4.1_MacOSX_installer.zip to begin
+       Double-click geWorkbench_v2.5.0_MacOSX_installer.zip to begin
        installation.  This will unpack a file called "install".  (Note it may
        appear on top of the Zip file). Double-click on the "install" file to
        start the installation process.
@@ -125,11 +125,11 @@
             already be installed on your machine before the installation
             can be run.
        
-       File: geWorkbench_v2.4.1_Linux_installer_with_JRE6.bin.
+       File: geWorkbench_v2.5.0_Linux_installer_with_JRE6.bin.
 
             Includes the 32-bit Sun Java 6 JRE.
        
-       File: geWorkbench_v2.4.1_Linux_installer_noJRE.bin
+       File: geWorkbench_v2.5.0_Linux_installer_noJRE.bin
             No JRE is included, you must make sure that an appropriate Java 6
             JRE is installed on your system before installing geWorkbench.
             You may need to configure the JRE. See the "Java_Environment
@@ -150,7 +150,7 @@
 
        To begin the installation, type the command: 
 
-              sh ./geWorkbench_v2.4.1_Linux_installer_with_JRE6.bin 
+              sh ./geWorkbench_v2.5.0_Linux_installer_with_JRE6.bin 
 
           This will extract geWorkbench into a new directory called
           geWorkbench_2.5.0. 
@@ -160,7 +160,7 @@
   
           Note - if you made changes to the default installation directory
           name, the shortcut link may just be called "geWorkbench_2.5.0"
-          rather than "rungeWorkbench_2.4.1".
+          rather than "rungeWorkbench_2.5.0".
 
        To run geWorkbench, and assuming you are using the Linux bash shell,
           and that you created a shortcut link during installation,
@@ -227,17 +227,157 @@
 ===============================================================================
     3.0 Release History: New Features and Updates
 =============================================================================== 
-geWorkbench 2.5.0 (2013-09-17)
+geWorkbench 2.5.0 (2013-10-10)
    ==============================
     --- Summary ---
+    geWorkbench 2.5.0 is a major release.  It includes a simplification of the
+    Workspace, removing the "Project" level of data organization.  The Marker
+    Annotations component was completely reimplemented to use the bioDBNet data
+    service rather than the discontinued caBIO service.  New parsing and
+    display code was written so that all NCBI BLAST sequence alignments are now
+    generated in geWorkbench from the BLAST results XML output file. This
+    removes the dependency on specifics of the BLAST server HTML output.
 
+    Several new components are added:  Consensus Clustering (GenePattern),
+    LINCS_Query, VIPER, DeMAND and ceRNA.  Consensus Clustering uses multiple
+    clustering runs to find consensus clusters and assess their stability.
+    The LINCS Query component provides for query and display of computational
+    and experimental results from the Columbia LINCS center, which performs
+    high-throughput drug candidate prediction and screening.  VIPER summarizes
+    drug activity on gene expression profiles at the level of the transcription
+    factors.  DeMAND is used to compute drug mechanism of action.  The ceRNA
+    component provides query access to a database of precomputed competitive
+    endogenous RNA (miRNA-mRNA) interactions for four different cancer types.
 
-    --- New features and important changes in release 2.5.0 ---
+    The MARINa component has been separated from the MRA-FET version of Master
+    Regulator Analysis. The "bar-code" graph first implemented in the MRA-FET
+    Results Viewer component has now been adapted and added to the MARINa
+    Results Viewer.  
 
+    The Gene Ontology file (go-basic.obo) is now downloaded from the
+    geneontology.org site using the new permanent URL and filename.
+
+    The "Online Help" feature has been removed.  This material was identical
+    to the geWorkbench tutorials, which are available at the geWorkbench.org
+    website.
+    
+
+    --- New features and important changes in release 2.5.0 ---  
+    Analysis
+      - 3146 - Removal of “All Markers / All Arrays” checkboxes from analysis
+               controls.
+    BLAST 
+      - 3404, 3505, 3508, 3526, 3527, 3529 - Full parsing and display of
+               results from XML
+    ARACNe
+      - 3098 - Write out adjacency matrix using hub-targets convention per line
+    ceRNA/Hermes
+      - 3503 - Implement data query browser for HERMES/ceRNA data
+    Consensus Clustering
+      - 3502 - Implement interface to GenePattern 3.0 Consensus Clustering
+    Gene Ontology
+      - 3540 - new PURL and file name for gene ontology file download
+    LINCS Query
+      - 3382, 3389, 3495 - Implement LINCS Query and Display component
+    MARINa/MRA
+      - 3086, 3511 - separate MRA and MARINa components, add bar code display
+               for MARINa
+      - 3020, 3212 - implement save image of bar code graph
+    Online Help
+      - 3498 - Remove from geWorkbench
+    Skybase
+      - 2619 - Implement saving of image of histogram, and export of results to
+               CSV file.
+    Workspace
+      - 3310, 3379 - Remove “Project” level from Workspace data hierarchy
+ 
 
     --- Enhancements and selected bug fixes ---
+    Analysis
+      - 2062 - cyclic events in parameter saving mechanism
+    BLAST 
+      - 3180 - when no result returned, previous result displayed
+    ARACNe
+      - 3037 - Preprocessing repeated if complete mode chosen with boostrapping
+      - 3040 - resampling during bootstrapping not allowing "with replacement".
+      - 3265 - Change DPI default value to zero
+      - 3535 - ARACNe hub markers pulldown not populated (CCM loading order)
+      - 3566 - bootstrap count is not printed to Dataset History
+      - 3568 - unique names for grid result nodes
+    CNKB
+      - 3499 - improper handling of affy “///” separator
+    Color Mosaic
+      - 3200 - Changes to activated sets changing displayed heatmap.
+    CCM
+      - 3545 - remove state dependence from CCM links
+    Cytoscape
+      - 3184 - disable Cytoscape control panel floating windows (incompatible
+               with geWorkbench)
+    File Parsers
+      - 3006 - problem in parsing Affymetrix 1.0 ST files.
+      - 3203 - exception can occur when reloading workspace file
+      - 3288 - update parser menu label to reflect Gene 2.0 ST also supported
+      - 3364 - "exp" format reader skips empty cells
+      - 3492 - Simplify annotation type selection to avoid exception
+    Filtering 
+      - 1847 - improve labels for filtering criteria
+      - 3484 - filtering introduces discrepancy in data views involving
+               Cytoscape (looking up marker names from gene names).
+   Gene Ontology Analysis
+      - 3563 - fixed problem with saving parameters involving "changed gene"
+               marker set.
+   GenomeSpace
+      - 3273 - Implement large file data upload from geWorkbench for
+               GenomeSpace
+    genSpace
+      - 2999 - Registration issue
+    Jmol
+      - 3284 - update to Jmol 13.0.18
+    Marker Sets/Array sets
+      - 3185 - exception on unselecting all sets (is this related to 3146?)
+      - 3486 - clarify labeling of set context pulldown lists
+    MARINa/MRA
+      - 3291, 3157 - remove unsupported computational options, make consistent
+               response to set activation (MARINa)
+      - 3159 - parameter validation (MARINa).
+      - 3292 - Change default setting (min number of samples)
+      - 3501, 3536 - network file pulldown not populated (CCM loading order)
+      - 3512 - Add absNES column to main MARINa results table
+      - 3517 - MARINa Viewer - remember the array sets that were activated, and
+               the case/control status for each run
+    MINDy
+      - 3287 - dataset history falsely indicates only activated marker set used
+    Normalization
+      - 3214 - Change "Cancel" action on warning to return to panel
+      - 3483 - cyclic event on parameter saving
+    Promoter
+      - 3474 - 13K sequence set not downloading; added to source
+    SAM
+      - 3383 - Incorrect path handling on Mac
+    Skybase
+      - 3564 - correctly handle unexpected (null/invalid) data
+    SVM
+      - 3163 - fixed problem with saving workspace with SVM results; Test tab
+               should reflect any changes in workspace
+      - 3164 - exception if no “Test” array selected
+      - 3523 - improve consistency of threshold filter action
+      - 3562 - save info on markers/arrays used to dataset history.
+      - 3570 Exception based on order of component loading (CCM).
+    WV
+      - 877 - fix range checking on inputs
+      - 1061 - add dataset history  
 
-
+  
+    --- Versions of external files/components included in release 2.5.0 ---
+      - caArray client external v1.0 (caArray 2.5.0 client, no change).
+      - caBIO client 4.3 (removed).
+      - caGrid - caGrid version 1.4 (no change)
+      - Cytoscape 2.8.2 (no change).
+      - go-basic.obo downloaded 2013-09-13 from geneontology.org.
+      - Jaspar_CORE (http://jaspar.genereg.net/) SQL files last updated on
+            server 2009-10. (no change).
+      - JMOL 13.0.18 (UPDATED). 
+      - Ontologizer.jar version 2.0, file released 2010-03-10 (no change).
 
 geWorkbench 2.4.1 (2012-10-26)
    ==============================
@@ -462,8 +602,8 @@ geWorkbench 2.4.1 (2012-10-26)
       - 3108 - Skybase error
     T-test
       - 2982 - Number presentation for plot and hover box not in sync
-      - 3048 - "data is log2 transformed" check box not hooked up to parameter saving
-               mechanism 
+      - 3048 - "data is log2 transformed" check box not hooked up to parameter
+               saving mechanism 
       - 3126 - t-test result export CSV writer does not check if for
                existing extension.
     
@@ -1584,11 +1724,6 @@ geWorkbench 2.4.1 (2012-10-26)
 
         See https://cabig-kc.nci.nih.gov/Molecular/forums/
 
-    FAQs and other articles are also available at
-
-
-        https://cabig-kc.nci.nih.gov/Molecular/KC/index.php/Main_Page#geWorkbench
-
 
     Finally, please see the geWorkbench project page for additional known issues and FAQs.
 
@@ -1609,11 +1744,6 @@ geWorkbench 2.4.1 (2012-10-26)
   
     geWorkbench License: 
         geWorkbenchLicense.txt
-
-
-    Online Help:
-        Within geWorkbench, users can access "Help Topics" by clicking the
-    top menu. It has detailed information about each module.
 
        
     For other documentation not directly included as part of the

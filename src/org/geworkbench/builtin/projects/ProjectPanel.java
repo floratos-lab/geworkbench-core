@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -865,6 +866,9 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 																// happen
 		}
 
+		String uniqueName = getUniqueSubnodeName(parent, ancillaryDataSet.getLabel());
+		ancillaryDataSet.setLabel(uniqueName);
+
 		@SuppressWarnings("rawtypes")
 		DSDataSet dataset = ((DataSetNode) parent).getDataset();
 		((CSAncillaryDataSet<? extends DSBioObject>) ancillaryDataSet)
@@ -894,6 +898,17 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		publishPostProcessingEvent(new ProjectNodePostCompletedEvent(
 				ancillaryDataSet.getDataSetName(), gridEpr, ancillaryDataSet,
 				parent));
+	}
+
+	private String getUniqueSubnodeName(ProjectTreeNode parent, String originalName){
+		Set<String> subnodeNames = new HashSet<String>();
+		for(int i = 0; i < parent.getChildCount(); i++){
+			TreeNode subnode = parent.getChildAt(i);
+			if (subnode instanceof DataSetSubNode){
+				subnodeNames.add(((DataSetSubNode)subnode)._aDataSet.getLabel());
+			}
+		}
+		return Util.getUniqueName(originalName, subnodeNames);
 	}
 
 	private void openFile() {
