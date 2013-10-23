@@ -50,8 +50,7 @@ further open source licensing issues pertaining to Apache Software Foundation, v
 
 This product includes software developed by NCI Center for Bioinformatics (NCICB).
 caArrary is cancer array informatics project. For more information, visit:
-http://ncicb.nci.nih.gov/download/cabiolicenseagreement.jsp
-http://ncicb.nci.nih.gov/download/caarraylicense.jsp 
+https://github.com/NCIP/caarray/blob/master/LICENSE
 
 
 This product may include the following software: 
