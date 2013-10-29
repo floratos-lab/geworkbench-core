@@ -623,7 +623,7 @@
 				<include name="${lib}/**/*" />
 				<include name="${lib64}/**/*" />
 				<include name="geWorkbenchLicense.txt" />
-				<include name="ReleaseNotes_2.5.0.txt" />
+				<include name="ReleaseNotes_2.5.1.txt" />
 				<include name="welcometext.html" />
 				<include name="java.policy" />
 
