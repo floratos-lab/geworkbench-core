@@ -24,13 +24,6 @@ import org.geworkbench.util.BrowserLauncher;
 import org.geworkbench.util.SplashBitmap;
 
 /**
- * <p>Copyright: Copyright (c) 2003</p>
- * <p>Company: First Genetic Trust, Inc.</p>
- * @author First Genetic Trust, Inc.
- * @version $Id$
- */
-
-/**
  * Describes the object that is pushed on the <code>UILauncher</code> stack
  * when processing the top-most tag, namely the pattern "geaw-config". This
  * object creates and maintains the "global" variables of the application.
@@ -182,7 +175,6 @@ public class GeawConfigObject {
 
 		addToHelpMenu("geworkbench.org", "http://www.geworkbench.org");
 		addToHelpMenu("geWorkbench Tutorials", "http://wiki.c2b2.columbia.edu/workbench/index.php/Tutorials");
-		addToHelpMenu("Knowledge Center", "https://cabig-kc.nci.nih.gov/Molecular/KC/index.php/GeWorkbench#Tool_Overview");
 
 		JMenuItem about = new JMenuItem("About");
 		about.addActionListener(new ActionListener() {
