@@ -964,11 +964,12 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 					}
 					if (parentProject == null) {
 						parentProject = selections[i].getPath()[1];
-					} else if (parentProject != selections[i].getPath()[1]) {
-						JOptionPane.showMessageDialog(null,
-								"Select nodes from 1 project only.",
-								"Merge Error", JOptionPane.ERROR_MESSAGE);
-						return;
+					/* FIXME further cleaning-up is needed */	
+//					} else if (parentProject != selections[i].getPath()[1]) {
+//						JOptionPane.showMessageDialog(null,
+//								"Select nodes from 1 project only.",
+//								"Merge Error", JOptionPane.ERROR_MESSAGE);
+//						return;
 					}
 				} catch (ClassCastException ex) {
 					JOptionPane.showMessageDialog(null,
