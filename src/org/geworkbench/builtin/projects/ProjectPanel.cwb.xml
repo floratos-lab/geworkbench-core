@@ -11,10 +11,8 @@
         <menu-item path="File.Save.Dataset" mode="always" var="File.Save.Dataset"/>
         <menu-item path="File.Open.Workspace" mode="always" var="File.Open.Workspace"/>
         <menu-item path="File.New.Workspace" mode="always" var="File.New.Workspace"/>
-        <menu-item path="File.New.Project" mode="always" var="File.New.Project"/>       
         <menu-item path="File.Merge Datasets" mode="always" var="File.Merge Datasets"/>  
         <menu-item path="File.Remove" mode="always" var="File.Remove"/>
-        <menu-item path="Edit.Rename.Project" mode="always" var="Edit.Rename.Project"/>
         <menu-item path="Edit.Rename.File" mode="always" var="Edit.Rename.File"/>
         <menu-item path="Tools.Choose OBO Source" mode="always" var="Tools.Choose OBO Source"/>
         The Project Panel is responsible for organizing and displaying data sets.
