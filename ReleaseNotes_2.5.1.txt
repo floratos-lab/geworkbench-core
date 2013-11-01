@@ -237,6 +237,8 @@ geWorkbench 2.5.1 (2013-10-31)
     important bug fixes and all users should update to this release.
 
     --- Changes in release 2.5.1 ---
+    ARACNe
+      - 3587 - Exception on cancel fixed.
     DeMAND and VIPER components
       - 3584 - Add licenses for DeMAND and VIPER (in the Component
                Configuration Manager).
