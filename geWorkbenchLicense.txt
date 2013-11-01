@@ -1,4 +1,4 @@
-geWorkbench v2.5.0
+geWorkbench v2.5.1
  
  
 SOFTWARE LICENSE AGREEMENT
@@ -72,7 +72,7 @@ http://www.gnu.org/copyleft/lesser.html
 
 This product may include the following software: 
 Bayesian Network tools in Java by Kansas State University.
-Java Hidden Markov Models (JAHMM) by Jean-Marc FranÁois.
+Java Hidden Markov Models (JAHMM) by Jean-Marc Franï¿½ois.
 JFreeChart by David Gilbert.
 the Ostermiller utils by Stephen Ostermiller.
 Weak by the University of Waikato
@@ -86,7 +86,7 @@ Ogsa from Globus Alliance.
 JDOM by Jason Hunter and Brett McLaughlin.
 Looks by Karsten Lentzsch.
 PureTLS by Eric Rescorla.
-SkinLF by FrÈdÈric Lavigne.
+SkinLF by Frï¿½dï¿½ric Lavigne.
 Jaxen by The Werken Company.
 Dom4J by MetaStuff, Ltd.
 Piccolo by the University of Maryland. 
@@ -124,10 +124,11 @@ visit:  http://www.savarese.org/oro/downloads/NetComponentsLicense.html
 
 
 This product may include the following software: 
-ARACNe by Andrea Califano's lab at Columbia University 
+ARACNe, VIPER and DeMAND by Andrea Califano's lab at Columbia University 
 http://wiki.c2b2.columbia.edu/califanolab/index.php/Software/ARACNE? 
-This software has its own license, provided below in this document. geWorkbench users should use
+The ARACNe license is provided below in this document. geWorkbench users should use
 ARACNe in agreement with the terms of this license.
+The VIPER and DeMAND licenses are similar and are included in geWorkbench.
 
 
 This product may include any of the following software:
@@ -154,8 +155,8 @@ of their respective owners.
         Non-Commercial License Agreement
 =========================================================================================
 
-This software evaluation license agreement (“License”) is between The Trustees of Columbia 
-University in the City of New York, (“University”) and You (as defined below). 
+This software evaluation license agreement (ï¿½Licenseï¿½) is between The Trustees of Columbia 
+University in the City of New York, (ï¿½Universityï¿½) and You (as defined below). 
 
 1. Definitions
 
@@ -209,9 +210,9 @@ specified in Section 6 below.
 f.	Prior to any commercial use, lease, distribution, transfer, sublicense or sale of any 
 product utilizing, derived from, or incorporating, in whole or any part, the Module and/or 
 Documentation hereunder, You must obtain a license permitting commercial use of the 
-Module and Documentation from University or if applicable, the University’s exclusive 
+Module and Documentation from University or if applicable, the Universityï¿½s exclusive 
 licensee. Any such use, lease, distribution, transfer, sublicense or sale without a written 
-license from University or Universityís exclusive licensee permitting such commercial 
+license from University or Universityï¿½s exclusive licensee permitting such commercial 
 use, distribution, sublicense or sale shall be VOID AND EXPRESSLY PROHIBITED. 
 
 To negotiate such license agreement, contact:
