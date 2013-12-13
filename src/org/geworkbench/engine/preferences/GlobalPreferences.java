@@ -20,7 +20,7 @@ public class GlobalPreferences {
     public static final String PREF_MARKER_LOAD = "Marker Load Options";
     public static final String RWSP_URL = "Remote Workspaces URL";
     public static final String MAX_NETWORK_OBJECT_NUMBER = "Soft Limit on Cytoscape Network Objects (nodes+edges)";
-    public static final String R_LOCATION = "R Location (Rscript.exe and it's folder)";
+    public static final String R_LOCATION = "R Location (Rscript.exe and its folder)";
     public static final String R_LIBPATH = "R package directory (leave it blank for default path)";
     
     public static final String[] VISUALIZATION_VALUES = new String[]{"Absolute(zero=black)", "Relative", "Absolute(zero=white)"};
