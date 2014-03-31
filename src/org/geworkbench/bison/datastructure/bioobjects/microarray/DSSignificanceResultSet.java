@@ -38,8 +38,6 @@ public interface DSSignificanceResultSet <T extends DSGeneMarker> extends DSAnci
     public DSMicroarraySet getParentDataSet();
 
     public void sortMarkersBySignificance();
-  
-    public void setMarker(T marker, double significance);
     
     public void addSigGenToPanel(T marker);   
 

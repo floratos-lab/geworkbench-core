@@ -110,13 +110,6 @@ public class CSSignificanceResultSet <T extends DSGeneMarker> extends CSAncillar
         	 return 1d;
     }
 
-  
-    
-    
-    public void setMarker(T marker, double value) {
-        significance.put(marker, value);        
-    }
-    
     public void addSigGenToPanel(T marker) {
     	panel.add(marker);
     }     
