@@ -3,6 +3,7 @@
                               geWorkbench V2.5.0
                
                                October 10th, 2013
+							   updated 4/23/2014
    
 
             Department of Systems Biology, Columbia University
@@ -271,6 +272,7 @@ geWorkbench 2.5.0 (2013-10-10)
                results from XML
     ARACNe
       - 3098 - Write out adjacency matrix using hub-targets convention per line
+      - 3392 - Change name of multiple testing correction.
     ceRNA/Hermes
       - 3503 - Implement data query browser for HERMES/ceRNA data
     Consensus Clustering
