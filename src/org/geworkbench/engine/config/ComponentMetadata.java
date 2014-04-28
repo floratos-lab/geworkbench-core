@@ -20,7 +20,6 @@ public class ComponentMetadata {
     private String version;
     private String description;
     private ImageIcon icon;
-    private String helpSet;
 
     private List<MenuItemInfo> menuInfoList;
 
@@ -68,14 +67,6 @@ public class ComponentMetadata {
 
     public void setIcon(ImageIcon icon) {
         this.icon = icon;
-    }
-
-    public String getHelpSet() {
-        return helpSet;
-    }
-
-    public void setHelpSet(String helpSet) {
-        this.helpSet = helpSet;
     }
 
     public List<MenuItemInfo> getMenuInfoList() {

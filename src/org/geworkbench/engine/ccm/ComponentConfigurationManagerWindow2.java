@@ -55,7 +55,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.builtin.projects.ProjectPanel;
-import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.engine.preferences.GlobalPreferences;
 import org.geworkbench.util.BrowserLauncher;
@@ -680,7 +679,6 @@ public class ComponentConfigurationManagerWindow2 {
             	textPane.setCaretPosition(1);        	
             }
 		}
-		GeawConfigObject.recreateHelpSets();
 
 		ProjectPanel.getInstance().ccmUpdate();
 

@@ -26,7 +26,6 @@ import org.apache.commons.logging.LogFactory;
 import org.geworkbench.engine.config.PluginDescriptor;
 import org.geworkbench.engine.config.PluginRegistry;
 import org.geworkbench.engine.config.UILauncher;
-import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.config.rules.PluginRule;
 import org.geworkbench.engine.management.ComponentRegistry;
 import org.geworkbench.engine.management.ComponentResource;
@@ -243,8 +242,6 @@ public class ComponentConfigurationManager {
 				log.info(file + "turned off");
 			}
 		}
-
-		GeawConfigObject.recreateHelpSets();
 	}
 		
 	// this eventually should not be necessary if the cwb/resource is managed properly

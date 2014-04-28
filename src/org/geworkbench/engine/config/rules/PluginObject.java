@@ -131,8 +131,6 @@ public class PluginObject {
                                     element.getAttributeValue("icon"),
                                     element.getAttributeValue("accelerator")
                             );
-                        } else if (element.getName().equals("online-help")) {
-                            metadata.setHelpSet(element.getAttributeValue("helpSet"));
                         }
                     }
                     if (metadata.getName() == null) {

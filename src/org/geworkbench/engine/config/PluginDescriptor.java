@@ -1,7 +1,6 @@
 package org.geworkbench.engine.config;
 
 import java.awt.event.ActionListener;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,12 +9,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
-import javax.help.HelpSet;
 import javax.swing.JMenuItem;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.geworkbench.engine.config.rules.GeawConfigObject;
 import org.geworkbench.engine.config.rules.MalformedMenuItemException;
 import org.geworkbench.engine.config.rules.NotMenuListenerException;
 import org.geworkbench.engine.config.rules.NotVisualPluginException;
@@ -369,24 +366,6 @@ public class PluginDescriptor extends IdentifiableImpl implements Comparable<Plu
 
     public void setComponentMetadata(ComponentMetadata metadata) throws NotMenuListenerException, MalformedMenuItemException, NotVisualPluginException {
 
-        //// Set up help set
-        if (metadata.getHelpSet() != null) {
-            String pluginHelpSet = metadata.getHelpSet();
-            if (pluginHelpSet == null)
-                return;
-            HelpSet pginHS = null;
-            // Attempt to open the help set file and create a helpset object.
-            try {
-                ClassLoader cl = getPlugin().getClass().getClassLoader();
-                URL url = HelpSet.findHelpSet(cl, pluginHelpSet);
-                pginHS = new HelpSet(cl, url);
-            } catch (Exception ee) {
-                System.err.println("Help Set " + pluginHelpSet + " for component " + getLabel() + " not found.");
-                return;
-            }
-            // Add the helpset for the new component to the master set.
-            GeawConfigObject.addHelpSet(pginHS);
-        }
         //// Set up menu items
         List<MenuItemInfo> menuItems = metadata.getMenuInfoList();
         for (int i = 0; i < menuItems.size(); i++) {
