@@ -126,14 +126,18 @@ public class ComponentConfigurationManager {
     		log.error("component directory is not a directory");
     	}
 
-        for (File componentDir: componentDirectory.listFiles()) {
+        File[] componentDirectories = componentDirectory.listFiles();
+        if(componentDirectories==null) {
+        	log.warn("no component found");
+        	return;
+        }
+		for (File componentDir: componentDirectories) {
         	log.info("searching resource "+componentDir);
 
         	File resourceDir = new File(componentDir+"/classes");
         	try {
         		searchCwb(resourceDir);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
         }
