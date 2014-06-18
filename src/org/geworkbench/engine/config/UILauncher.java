@@ -116,9 +116,6 @@ public class UILauncher {
         try {
             reader = Class.forName(UILauncher.class.getName()).getResourceAsStream("/application.properties");
             System.getProperties().load(reader);
-            if (System.getSecurityManager() == null) {
-                System.setSecurityManager(new SecurityManager());
-            }
             reader.close();
         } catch (ClassNotFoundException cnfe) {
             cnfe.printStackTrace();

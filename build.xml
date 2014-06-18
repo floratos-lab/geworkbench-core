@@ -168,7 +168,6 @@
 				<include name="annotation/**/*" />
 				<include name="${lib}/**/*" />
 				<include name="caWorkbenchLicense.txt" />
-				<include name="java.policy" />
 				<include name="*annot.csv" />
 			</fileset>
 			<fileset dir="bin">
@@ -227,7 +226,6 @@
 		<copy file="devReadme.txt" tofile="${dev}/readme.txt" />
 		<copy file="devSource.txt" tofile="${dev}/src/readme.txt" />
 		<copy file="devLib.txt" tofile="${dev}/lib/readme.txt" />
-		<copy todir="${dev}" file="java.policy" />
 		<mkdir dir="${dev}/src" />
 		<mkdir dir="${dev}/lib" />
 		<jar destfile="${dev}/core/geworkbench-core.jar">
@@ -265,7 +263,6 @@
 				<include name="annotation/**/*" />
 				<include name="${lib}/**/*" />
 				<include name="caWorkbenchLicense.txt" />
-				<include name="java.policy" />
 				<!-- <include name="*annot.csv"/> -->
 			</fileset>
 			<fileset dir="bin">
@@ -625,7 +622,6 @@
 				<include name="geWorkbenchLicense.txt" />
 				<include name="ReleaseNotes_2.5.0.txt" />
 				<include name="welcometext.html" />
-				<include name="java.policy" />
 
 				<include name="Bcell-100.exp_ARACNe_AP_threshold.txt" />
 				<include name="Bcell-100.exp_ARACNe_FBW_kernel.txt" />
