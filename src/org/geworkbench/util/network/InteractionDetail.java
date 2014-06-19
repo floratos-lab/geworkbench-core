@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.ArrayList;
 
-
 /**
  * Created by IntelliJ IDEA.
  * User: xiaoqing
@@ -15,6 +14,7 @@ import java.util.ArrayList;
 
 /**
  * The deatil of one interaction.
+ * 
  * @version $Id$
  */
 public class InteractionDetail implements Serializable {
@@ -22,77 +22,46 @@ public class InteractionDetail implements Serializable {
 	private static final long serialVersionUID = -4163326138016520667L;
 	public static final String ENTREZ_GENE = "Entrez Gene";
 
-	private String dSGeneId;
-	private String dSGeneName;
-	private String dbSource;	 
+	private List<InteractionParticipant> participantList;
 	private String interactionType;
 	private Short evidenceId;
 	private List<Confidence> confidenceList;
-	
 
-	public InteractionDetail(String dSGeneId, String dSGeneName,
-			String dbSource, String interactionType,
-			String interactionId, Short evidenceId) {
+	public InteractionDetail(InteractionParticipant participant,
+			String interactionType, Short evidenceId) {
 
-		this.dSGeneId = dSGeneId;
-		this.dSGeneName = dSGeneName;
-		this.dbSource = dbSource;		 
+		participantList = new ArrayList<InteractionParticipant>();
+		participantList.add(participant);
 		this.interactionType = interactionType;
 		this.evidenceId = evidenceId;
+
 	}
 
-	public String getdSGeneId() {
-		return dSGeneId;
+	public void addParticipant(InteractionParticipant participant) {
+		if (participantList == null)
+			participantList = new ArrayList<InteractionParticipant>();
+		participantList.add(participant);
 	}
 
-	public String getInteractionGene() {
-		 
-		if (dbSource.equalsIgnoreCase(ENTREZ_GENE))
-			return dSGeneId;
-		else
-		    return dSGeneName;
-	}
-
-	public void setdSGeneId(String dSGeneId) {
-		this.dSGeneId = dSGeneId;
-	}
-
-	public String getdSGeneName() {
-		return dSGeneName;
-	}
-
-	public void setdSGeneName(String dSGeneName) {
-		this.dSGeneName = dSGeneName;
-	}
-
-	public String getDbSource() {
-		return this.dbSource;
-	}
-
-	public void setDbSource(String dbSource) {
-		this.dbSource = dbSource;
-	}
-
-	public boolean isGeneEntrezId() {
-		return this.dbSource.equalsIgnoreCase(ENTREZ_GENE);
+	public List<InteractionParticipant> getParticipantList() {
+		return participantList;
 	}
 
 	public double getConfidenceValue(int usedConfidenceType) {
-		for (int i=0; i<confidenceList.size(); i++)
+		for (int i = 0; i < confidenceList.size(); i++)
 			if (confidenceList.get(i).getType() == usedConfidenceType)
 				return confidenceList.get(i).getScore();
-		//if usedConfidenceType is not found, return 0.
+		// if usedConfidenceType is not found, return 0.
 		return 0;
 	}
-	
-	
+
 	public List<Short> getConfidenceTypes() {
 		List<Short> types = new ArrayList<Short>();
-		for (int i=0; i<confidenceList.size(); i++)
+		for (int i = 0; i < confidenceList.size(); i++)
 			types.add(confidenceList.get(i).getType());
 		return types;
 	}
-	 
+
 	public void addConfidence(double score, short type) {
 		if (confidenceList == null)
 			confidenceList = new ArrayList<Confidence>();
@@ -110,46 +79,26 @@ public class InteractionDetail implements Serializable {
 	public Short getEvidenceId() {
 		return this.evidenceId;
 	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof InteractionDetail) {
-			InteractionDetail mInfo = (InteractionDetail) obj;
-			return dSGeneId.toString()
-					.equals(mInfo.dSGeneId.toString());
-		}
-		return false;
-	}
-	
-	@Override
-	public int hashCode() {
-		return dSGeneId.hashCode();
-	}
-	
-	private class Confidence implements Serializable
-	{
-		 
+
+	private class Confidence implements Serializable {
+
 		private static final long serialVersionUID = 4151510293677929250L;
 		private double score;
 		private short type;
-		
-		Confidence(double score, short type)
-		{
+
+		Confidence(double score, short type) {
 			this.score = score;
 			this.type = type;
 		}
-		
-		public double getScore()
-		{
+
+		public double getScore() {
 			return score;
 		}
-		
-		public short getType()
-		{
+
+		public short getType() {
 			return type;
 		}
-		
-	}
 
+	}
 
 }
