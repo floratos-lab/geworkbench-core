@@ -118,8 +118,9 @@ public class GeawConfigObject {
 
 		addToHelpMenu("geworkbench.org", "http://www.geworkbench.org");
 		addToHelpMenu("geWorkbench Tutorials", "http://wiki.c2b2.columbia.edu/workbench/index.php/Tutorials");
+		addToHelpMenu("How to Cite geWorkbench", "http://wiki.c2b2.columbia.edu/workbench/index.php/Cite");
 
-		JMenuItem about = new JMenuItem("About");
+		JMenuItem about = new JMenuItem("Show Splash Screen");
 		about.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				SplashBitmap splash = new SplashBitmap(SplashBitmap.class
@@ -130,6 +131,7 @@ public class GeawConfigObject {
 			}
 		});
 		helpMenu.add(about);
+
 		showWelcomeScreen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Skin skin = (Skin)GUIFramework.getFrame();
