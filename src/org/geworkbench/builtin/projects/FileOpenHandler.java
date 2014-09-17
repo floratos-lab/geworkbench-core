@@ -475,9 +475,8 @@ public class FileOpenHandler {
 		}
 
 		if (mergedSet != null) {
-			mergedSet.setLabel("Merged array set");
-			mergedSet.setLabel(desc);
-			mergedSet.setDescription(mergedSet.getDescription());
+			mergedSet.setLabel("Merged_array_set");
+			mergedSet.setDescription(desc);
 			((CSMicroarraySet) mergedSet)
 					.setAnnotationFileName(((CSMicroarraySet) sets[0])
 							.getAnnotationFileName());
