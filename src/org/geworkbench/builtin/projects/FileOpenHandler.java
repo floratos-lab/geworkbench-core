@@ -423,9 +423,6 @@ public class FileOpenHandler {
 		
 		DSMicroarraySet mergedSet = null;
 
-		String desc = "";
-		if(sets.length>1)desc = "Merged DataSet: ";
-		
 		for (int i = 0; i < sets.length; i++) {
 			DSMicroarraySet set = (DSMicroarraySet) sets[i];
 			if (mergedSet == null) {
@@ -449,7 +446,7 @@ public class FileOpenHandler {
 					for (int k = 0; k < set.size(); k++) {
 						mergedSet.add(set.get(k).deepCopy());
 					}
-					desc += set.getLabel() + " ";
+
 					// XQ fix bug 1539, add annotation information to the
 					// merged dataset.
 					String chipType = AnnotationParser.getChipType(set);
@@ -460,7 +457,6 @@ public class FileOpenHandler {
 					iae.printStackTrace();
 				}
 			} else {
-				desc += set.getLabel() + " ";
 				try {
 					mergedSet.mergeMicroarraySet(set);
 				} catch (Exception ex) {
@@ -476,7 +472,6 @@ public class FileOpenHandler {
 
 		if (mergedSet != null) {
 			mergedSet.setLabel("Merged_array_set");
-			mergedSet.setDescription(desc);
 			((CSMicroarraySet) mergedSet)
 					.setAnnotationFileName(((CSMicroarraySet) sets[0])
 							.getAnnotationFileName());
