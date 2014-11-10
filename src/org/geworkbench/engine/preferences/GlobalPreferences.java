@@ -159,6 +159,10 @@ public class GlobalPreferences {
     }
     
     public String getRLibPath() {
-        return prefs.getField(R_LIBPATH).toString();
+        String rLibPath = prefs.getField(R_LIBPATH).toString().trim();
+        if(rLibPath.endsWith("\\") || rLibPath.endsWith("/")) {
+        	rLibPath = rLibPath.substring(0, rLibPath.length()-1);
+        }
+        return rLibPath;
     }
 }
