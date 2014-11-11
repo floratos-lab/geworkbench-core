@@ -30,6 +30,7 @@ import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geworkbench.builtin.projects.OboSourcePreference;
+import org.geworkbench.util.FilePathnameUtils;
 
 /**
  * Represents the Gene Ontology Tree and provides methods to access it.
@@ -417,6 +418,7 @@ public class GeneOntologyTree {
 	
 	// file for the updated version retrieved remotely
 	public final static String OBO_FILENAME = "go-basic.obo";
+	private String downloadedOboFile = null;
 
 	/**
 	 * Read ontology file from remote URL
@@ -431,6 +433,10 @@ public class GeneOntologyTree {
 		client.getParams().setCookiePolicy(CookiePolicy.IGNORE_COOKIES);
 
 		GetMethod method = new GetMethod(url);
+		
+		String tempFolder = FilePathnameUtils
+						.getSystemDataFilesDirectoryPath();
+		downloadedOboFile = tempFolder + "/" + OBO_FILENAME;
 
 		try {
 			int statusCode = client.executeMethod(method);
@@ -439,15 +445,15 @@ public class GeneOntologyTree {
 				InputStream stream = method.getResponseBodyAsStream();
 				BufferedReader in = new BufferedReader(new InputStreamReader(
 						stream));
-				// this file is put under default current directory meant to be user transparent
-				PrintWriter pw = new PrintWriter(new FileWriter(OBO_FILENAME));
+				// this file is put under system data directory meant to be user transparent
+				PrintWriter pw = new PrintWriter(new FileWriter(downloadedOboFile));
 				String line = in.readLine();
 				while(line!=null) {
 					pw.println(line);
 					line = in.readLine();
 				}
 				pw.close();
-				BufferedReader in2 = new BufferedReader(new FileReader(OBO_FILENAME));
+				BufferedReader in2 = new BufferedReader(new FileReader(downloadedOboFile));
 				parseOBOFile(in2);
 				actualUsedOboSource = null;
 			} else {
@@ -463,7 +469,7 @@ public class GeneOntologyTree {
 			method.releaseConnection();
 		}
 		long time1 = System.currentTimeMillis();
-		log.info("Time taken to update OBO file: "+(time1-time0)+" milliseconds");
+		log.info("Time to update OBO file: "+(time1-time0)+" milliseconds");
 	}
 	
 	private void handleRemoteException(final Exception e) {
@@ -472,7 +478,7 @@ public class GeneOntologyTree {
 
 				public void run() {
 					JOptionPane.showMessageDialog(null,
-						    "Remote obo file was not loaded succesfully due to connection problem:\n>> "+e.getMessage()
+						    "Remote obo file was not loaded successfully due to connection problem:\n>> "+e.getMessage()
 						    +"\nAttempting to load local copy.",
 						    "Obo file warning",
 						    JOptionPane.WARNING_MESSAGE);
@@ -514,10 +520,12 @@ public class GeneOntologyTree {
 	}
 
 	public String getActualFile() {
+		
 		OboSourcePreference pref = OboSourcePreference.getInstance();
 		if (pref.getSourceType() == OboSourcePreference.Source.REMOTE) {
 			if(actualUsedOboSource==null) {
-				return GeneOntologyTree.OBO_FILENAME;
+				return downloadedOboFile;
+				
 			} else {
 				return actualUsedOboSource;
 			}
