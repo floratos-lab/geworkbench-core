@@ -67,6 +67,8 @@ public class FilePathnameUtils {
 	
 	private static final String TEMP_FILE_DIR = System
 			.getProperty("temporary.files.directory");
+	private static final String SYSTEM_DATA_DIR = System
+			.getProperty("system.data.directory");
 	private static final String HOUSEKEEPINGNORMALIZERSETTINGS_FILE = System
 			.getProperty("housekeepingnormalizerSettings");
 	private static final String IDEASETTINGS_FILE = System
@@ -83,6 +85,7 @@ public class FilePathnameUtils {
 	// absolute path
 	private static String userSettingDirectoryPath = null;
 	private static String temporaryFilesDirectoryPath = null;
+	private static String sysDataFilesDirectoryPath = null;
 	private static String housekeepingnormalizersettingsFilePath = null;
 	private static String ideasettingsFilePath = null;
 	private static String dataFilesDirPath = null;
@@ -139,7 +142,7 @@ public class FilePathnameUtils {
 
 	/**
 	 * will create absolute path starting with home directory as a root for
-	 * temporary files directory if "temporary.files.directory" property is not
+	 * temporary files directory. if "temporary.files.directory" property is not
 	 * set will use DEFAULT_TEMP_FILE_DIR
 	 *
 	 * @return user settings directory as an absolute path
@@ -159,6 +162,30 @@ public class FilePathnameUtils {
 
 		checkDirExist(temporaryFilesDirectoryPath);
 		return temporaryFilesDirectoryPath;
+	}
+	
+		/**
+	 * will create absolute path starting with home directory as a root for
+	 * system data files directory. if "system.data.directory" property is not
+	 * set will use DEFAULT_TEMP_FILE_DIR
+	 *
+	 * @return user settings directory as an absolute path
+	 *
+	 */
+	public static String getSystemDataFilesDirectoryPath() {
+		if (sysDataFilesDirectoryPath == null) {
+			String sysDataFolder = SYSTEM_DATA_DIR;
+			if (sysDataFolder == null) {
+				sysDataFolder = DEFAULT_TEMP_FILE_DIR;
+			}
+
+			// keep temporary files directory under user setting directory
+			sysDataFilesDirectoryPath = getUserSettingDirectoryPath()
+					+ sysDataFolder + FILE_SEPARATOR;
+		}
+
+		checkDirExist(sysDataFilesDirectoryPath);
+		return sysDataFilesDirectoryPath;
 	}
 
 	/**
