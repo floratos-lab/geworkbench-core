@@ -5,6 +5,9 @@
 	<!-- ===================================================================== -->
 	<target name="init" description="Initializes the build environment.">
 		<!-- Project-wide properties -->
+		<presetdef name="javac">
+			<javac includeantruntime="false" />
+		</presetdef>
 		<!-- App name -->
 		<property name="app" value="geWorkbench" />
 		<property name="version" value="development" />
@@ -96,7 +99,7 @@
 		</copy>
 		<!-- Compile components -->
 		<subant target="compile" genericantfile="build-component.xml">
-			<dirset dir="components" >
+			<dirset dir="${components}" >
 				<include name="alignment" />
 				<include name="analysis" />
 				<include name="annotations" />
@@ -541,11 +544,11 @@
 		</java>
 
 		<mkdir dir="${cleanFolder}" />
-		<mkdir dir="${cleanFolder}/log" />
+		<!-- <mkdir dir="${cleanFolder}/log" /> -->
 		<echo>Begin to create a new source, which is located at ${cleanFolder}, please wait...</echo>
 		<move todir="${cleanFolder}" >
 			<fileset dir=".">
-				<!-- geworkbenh core jars -->
+				<!-- geworkbench core jars -->
 				<include name="*.jar" />
 			</fileset>
 		</move>
@@ -565,10 +568,9 @@
 				<include name="${components}/caarray/**/*" />
 				<include name="${components}/celprocessing/**/*" />
 				<include name="${components}/cerna/**/*" />
-				<include name="${components}/cupid/**/*" />
-				
-				<include name="${components}/somclustering/**/*" />
 				<include name="${components}/colormosaic/**/*" />
+				<include name="${components}/cupid/**/*" />
+	
 				<include name="${components}/cytoscape/**/*" />
 				<include name="${components}/demand/**/*" />
 				<include name="${components}/discovery/**/*" />
@@ -579,63 +581,74 @@
 				<include name="${components}/genspace/**/*" />
 				<include name="${components}/gpmodule_v3_0/**/*" />
 				<include name="${components}/hierarchicalclustering/**/*" />
+
 				<include name="${components}/idea/**/*" />
-				<include name="${components}/sam/**/*" />
 				<include name="${components}/interactions/**/*" />
 				<include name="${components}/jmol/**/*" />
 				<include name="${components}/lincs/**/*" />
+				<include name="${components}/markus/**/*" />
 				<include name="${components}/masterregulator/**/*" />
 				<include name="${components}/matrixreduce/**/*" />
 				<include name="${components}/microarrays/**/*" />
 				<include name="${components}/mindy/**/*" />
-
 				<include name="${components}/normalization/**/*" />
 
 				<include name="${components}/plots/**/*" />
 				<include name="${components}/poshistogram/**/*" />
 				<include name="${components}/promoter/**/*" />
-				<include name="${components}/pudge/**/*" />
+
+				<include name="${components}/sam/**/*" />
 				<include name="${components}/selectors/**/*" />
 				<include name="${components}/sequenceretriever/**/*" />
 				<include name="${components}/sequences/**/*" />
-
-				<include name="${components}/versioninfo/**/*" />
-				<include name="${components}/viewers/**/*" />
-				<include name="${components}/markus/**/*" />
 
 				<include name="${components}/skyline/**/*" />
 				<include name="${components}/skylineview/**/*" />
 				<include name="${components}/skybase/**/*" />
 				<include name="${components}/skybaseview/**/*" />
-
+				
+				<include name="${components}/somclustering/**/*" />
 				<include name="${components}/ttest/**/*" />
+				<include name="${components}/versioninfo/**/*" />
+				<include name="${components}/viewers/**/*" />
 				<include name="${components}/viper/**/*" />
 
-				<!-- Leave out the following components for release -->
-				<exclude name="**/synteny/*" />
-				<exclude name="**/src/**" />
-				<exclude name="**/test/**" />
-
+				<!-- Include the following files for distribution -->
 				<include name="annotation/**/*" />
 				<include name="${lib}/**/*" />
 				<include name="${lib64}/**/*" />
 				<include name="geWorkbenchLicense.txt" />
-				<include name="ReleaseNotes_2.5.0.txt" />
+				<include name="ReleaseNotes_2.6.0.txt" />
 				<include name="welcometext.html" />
 
-				<include name="Bcell-100.exp_ARACNe_AP_threshold.txt" />
-				<include name="Bcell-100.exp_ARACNe_FBW_kernel.txt" />
-				<include name="Bcell-100.exp_ARACNe_FBW_threshold.txt" />
-
+				<include name="data/aracne/Bcell-100.exp_ARACNe_AP_threshold.txt" />
+				<include name="data/aracne/Bcell-100.exp_ARACNe_FBW_kernel.txt" />
+				<include name="data/aracne/Bcell-100.exp_ARACNe_FBW_threshold.txt" />
+				<include name="data/cardiogenomics.med.harvard.edu/**" />
+				<include name="data/go-basic.obo"/>
+				<include name="data/jaspar_CORE/**" />
+				<include name="data/public_data/**" />
+				
 				<include name="launch_geworkbench.bat" />
 				<include name="launch_geworkbench.sh" />
+
+				<include name="launch_geworkbench_winpc_1G.bat"/>
+				<include name="launch_geworkbench_winpc_2G.bat"/>
+				<include name="launch_geworkbench_winpc_4G.bat"/>
+				<include name="launch_geworkbench_winpc_8G.bat"/>
+				<include name="launch_geworkbench_macosx_1G.command"/>
+				<include name="launch_geworkbench_macosx_2G.command"/>
+				<include name="launch_geworkbench_macosx_4G.command"/>
+				<include name="launch_geworkbench_macosx_8G.command"/>
+				
+				<!-- Leave out the following components and files from release -->
+				<exclude name="${components}/pudge/**/*" />
+				<exclude name="**/synteny/*" />
+				<exclude name="**/src/**" />
+				<exclude name="**/test/**" />
 				<exclude name="**/*.cvsignore" />
 				<exclude name="data" />
 				<exclude name="nbproject" />
-				<include name="data/cardiogenomics.med.harvard.edu/**" />
-				<include name="data/public_data/**" />
-				<include name="data/jaspar_CORE/**" />
-				<include name="data/go-basic.obo"/>
 			</fileset>
 		</copy>
 		<copy todir="${cleanFolder}/conf" includeEmptyDirs="NO">

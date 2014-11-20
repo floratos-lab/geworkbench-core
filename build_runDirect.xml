@@ -5,6 +5,9 @@
 	<!-- ===================================================================== -->
 	<target name="init" description="Initializes the build environment.">
 		<!-- Project-wide properties -->
+		<presetdef name="javac">
+			<javac includeantruntime="false" />
+		</presetdef>
 		<!-- App name -->
 		<property name="app" value="geWorkbench"/>
 		<!-- Paths -->
@@ -42,7 +45,6 @@
 	<!-- PREPARE  -->
 	<!-- ===================================================================== -->
 	<target name="prepare" depends="init, classpath.32, classpath.64" description="Prepares for compilation.">
-		<mkdir dir="${classes}"/>
 		<path id="classpath">
 			<fileset dir="${lib}">
 				<include name="**/*.jar" />
@@ -75,6 +77,66 @@
 		<java fork="true" classname="org.geworkbench.engine.config.UILauncher">
 			<jvmarg value="-Xss1024k"/>
 			<jvmarg value="-Xmx1024M"/>
+			<jvmarg value="-XX:MaxPermSize=128m" />
+			<jvmarg value="-Djava.library.path=${Dlib}"/>
+			<jvmarg value="-Xbootclasspath/p:${bootclasspath}" />
+			<arg value="all.xml"/>
+			<classpath refid="run.classpath"/>
+		</java>
+	</target>
+	
+	<target name="run1G" depends="prepare" description="Runs geWorkbench with max 1G Java heap memory.">
+		<java fork="true" classname="org.geworkbench.engine.config.UILauncher">
+			<jvmarg value="-Xss1024k"/>
+			<jvmarg value="-Xmx1024M"/>
+			<jvmarg value="-XX:MaxPermSize=128m" />
+			<jvmarg value="-Djava.library.path=${Dlib}"/>
+			<jvmarg value="-Xbootclasspath/p:${bootclasspath}" />
+			<arg value="all.xml"/>
+			<classpath refid="run.classpath"/>
+		</java>
+	</target>
+	
+	<target name="run2G" depends="prepare" description="Runs geWorkbench with max 2G Java heap memory.">
+		<java fork="true" classname="org.geworkbench.engine.config.UILauncher">
+			<jvmarg value="-Xss1024k"/>
+			<jvmarg value="-Xmx2048M"/>
+			<jvmarg value="-XX:MaxPermSize=128m" />
+			<jvmarg value="-Djava.library.path=${Dlib}"/>
+			<jvmarg value="-Xbootclasspath/p:${bootclasspath}" />
+			<arg value="all.xml"/>
+			<classpath refid="run.classpath"/>
+		</java>
+	</target>
+	
+	<target name="run4G" depends="prepare" description="Runs geWorkbench with max 4G Java heap memory.">
+		<java fork="true" classname="org.geworkbench.engine.config.UILauncher">
+			<jvmarg value="-Xss1024k"/>
+			<jvmarg value="-Xmx4096M"/>
+			<jvmarg value="-XX:MaxPermSize=128m" />
+			<jvmarg value="-Djava.library.path=${Dlib}"/>
+			<jvmarg value="-Xbootclasspath/p:${bootclasspath}" />
+			<arg value="all.xml"/>
+			<classpath refid="run.classpath"/>
+		</java>
+	</target>
+	
+	<target name="run8G" depends="prepare" description="Runs geWorkbench with max 8G Java heap memory.">
+		<java fork="true" classname="org.geworkbench.engine.config.UILauncher">
+			<jvmarg value="-Xss1024k"/>
+			<jvmarg value="-Xmx8192M"/>
+			<jvmarg value="-XX:MaxPermSize=128m" />
+			<jvmarg value="-Djava.library.path=${Dlib}"/>
+			<jvmarg value="-Xbootclasspath/p:${bootclasspath}" />
+			<arg value="all.xml"/>
+			<classpath refid="run.classpath"/>
+		</java>
+	</target>
+	
+	<target name="run16G" depends="prepare" description="Runs geWorkbench with max 16G Java heap memory.">
+		<java fork="true" classname="org.geworkbench.engine.config.UILauncher">
+			<jvmarg value="-Xss1024k"/>
+			<jvmarg value="-Xmx16384M"/>
 			<jvmarg value="-XX:MaxPermSize=128m" />
 			<jvmarg value="-Djava.library.path=${Dlib}"/>
 			<jvmarg value="-Xbootclasspath/p:${bootclasspath}" />
