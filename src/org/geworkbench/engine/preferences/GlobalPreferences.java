@@ -110,7 +110,7 @@ public class GlobalPreferences {
         prefs.addField(field3);
         prefs.addField(field4);
         prefs.addField(field5);
-        prefs.addField(field6);
+//        prefs.addField(field6);
         prefs.addField(field7);
         prefs.addField(field8);
         prefs.addField(field9);

@@ -1504,7 +1504,7 @@ public class ProjectPanel implements VisualPlugin, MenuListener {
 		jRootMenu.addSeparator();
 		jRootMenu.add(jOpenRemotePDBItem);
 		jRootMenu.addSeparator();
-		jRootMenu.add(jUploadWspItem);
+	//	jRootMenu.add(jUploadWspItem);
 
 		jExportToTabDelimMenuItem.setVisible(false);
 
