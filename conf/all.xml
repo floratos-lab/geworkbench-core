@@ -6,19 +6,6 @@
 	<!-- Preferences is only loaded here so that its help file appears -->
 	<plugin id="Preferences" name="for Preferences Help"
 		class="org.geworkbench.engine.preferences.Preferences" />	
-	
-	<!-- FileFormatHelp is a dummy class used only to load the help file. -->
-	<plugin id="fileFormatHelp" name="for File Format Help"
-		class="org.geworkbench.parsers.FileFormatHelp" />
-
-	<!-- LocalDataFilesHelp is a dummy class used only to load the help file-->	
-	<plugin id="localDataFilesHelp" name="for Local Data File Help"
-		class="org.geworkbench.builtin.projects.LocalDataFilesHelp" />	
-		
-	<!-- menuBarHelp is a dummy class used only to load the help file-->	
-	<plugin id="menuBarHelp" name="for top-level Menu Bar Help"
-		class="org.geworkbench.builtin.projects.menuBarHelp" />	
-
 
 	<plugin id="SoftFileFilter" name="soft. Format"
 		class="org.geworkbench.parsers.SOFTFileFormat" />
