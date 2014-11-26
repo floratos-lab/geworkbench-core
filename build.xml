@@ -596,6 +596,7 @@
 				<include name="${components}/plots/**/*" />
 				<include name="${components}/poshistogram/**/*" />
 				<include name="${components}/promoter/**/*" />
+				<include name="${components}/pudge/**/*" />
 
 				<include name="${components}/sam/**/*" />
 				<include name="${components}/selectors/**/*" />
@@ -642,7 +643,6 @@
 				<include name="launch_geworkbench_macosx_8G.command"/>
 				
 				<!-- Leave out the following components and files from release -->
-				<exclude name="${components}/pudge/**/*" />
 				<exclude name="**/synteny/*" />
 				<exclude name="**/src/**" />
 				<exclude name="**/test/**" />
