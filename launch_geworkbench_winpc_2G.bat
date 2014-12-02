@@ -1,8 +1,7 @@
-SET logfile=geworkbench.log
+SET logfile=geWorkbench_2.6.0
 
 IF EXIST jre (
-	.\jre\bin\java -cp lib\ant.jar;lib\ant-launcher.jar org.apache.tools.ant.launch.Launcher run2G >> %UserProfile%\%logfile% 2>&1
+	.\jre\bin\java -cp lib\ant.jar;lib\ant-launcher.jar org.apache.tools.ant.launch.Launcher run2G >> %UserProfile%\%logfile%.stdout.log 2>> %UserProfile%\%logfile%.stderr.log
 ) ELSE (
-	java -cp lib\ant.jar;lib\ant-launcher.jar org.apache.tools.ant.launch.Launcher run2G >> %UserProfile%\%logfile% 2>&1
+	java -cp lib\ant.jar;lib\ant-launcher.jar org.apache.tools.ant.launch.Launcher run2G >> %UserProfile%\%logfile%.stdout.log 2>> %UserProfile%\%logfile%.stderr.log
 )
-
