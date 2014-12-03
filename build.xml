@@ -637,10 +637,12 @@
 				<include name="launch_geworkbench_winpc_2G.bat"/>
 				<include name="launch_geworkbench_winpc_4G.bat"/>
 				<include name="launch_geworkbench_winpc_8G.bat"/>
+				<include name="launch_geworkbench_winpc_16G.bat"/>
 				<include name="launch_geworkbench_macosx_1G.command"/>
 				<include name="launch_geworkbench_macosx_2G.command"/>
 				<include name="launch_geworkbench_macosx_4G.command"/>
 				<include name="launch_geworkbench_macosx_8G.command"/>
+				<include name="launch_geworkbench_macosx_16G.command"/>
 				
 				<!-- Leave out the following components and files from release -->
 				<exclude name="**/synteny/*" />
