@@ -267,6 +267,8 @@ geWorkbench 2.6.0 (December, 2014)
 	
 	GenomeSpace - integration with GenomeSpace is greatly improved.  GenomeSpace
     allows geWorkbench to exchange data with a number of other tools.  See fixes below.
+	
+	CART - The GenePattern 3.0 CART component is added.
    
 --- Enhancements and bug fixes ---
     Analysis
