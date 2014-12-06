@@ -2,7 +2,7 @@
     
                               geWorkbench V2.6.0
                
-                               XXXXXX, 2014
+                               December, 2014
    
 
             Department of Systems Biology, Columbia University
@@ -41,7 +41,8 @@
             See http://www.oracle.com/technetwork/java/javase/downloads.
             
             geWorkbench will run using Java 8, but has not been tested
-            extensively in that environment.  
+            extensively in that environment.  There are no known issues
+            with using Java 8.
             
         Memory:  
              At least 2 GB is recommended.  geWorkbench by
@@ -65,7 +66,7 @@
     (generated using InstallAnywhere).
     
     A generic version of geWorkbench, which does not use any installer, is also
-    available, and should run on any machine which supports Java 6. 
+    available, and should run on any machine which supports Java 7. 
 
     Additional installation details are provided below, and at
     www.geworkbench.org.  All user documentation is maintained 
@@ -79,18 +80,17 @@
 
     1. Windows (XP/Vista/7/8)
     
-        geWorkbench will by default install to your user home directory,
-        e.g. c:\Users\username\geWorkbench_2.6.0, where "username" is your
-        login name, rather than to e.g. C:\Program Files\geWorkbench_2.6.0.
-        
+        New with release 2.6.0, geWorkbench will now by default install to
+        "C:\Program Files" system directory, e.g. to 
+        C:\Program Files\geWorkbench_2.6.0.     
 
         File: geWorkbench_v2.6.0_Windows_installer_with_JRE7.exe
 
-            Includes the 32-bit Sun Java 7 JRE.
+            Includes the 64-bit Oracle Java 7 JRE.
              
         File: geWorkbench_v2.6.0_Windows_installer_noJRE.exe
         
-            No JRE is included, you must make sure that an appropriate Java 7
+            No JRE is included, you must make sure that an appropriate Java 7+
             JRE is installed on your system before installing geWorkbench.
 
        Download and double-click the installer file to begin installation.
@@ -121,10 +121,10 @@
        
        File: geWorkbench_v2.6.0_Linux_installer_with_JRE7.bin.
 
-            Includes the 32-bit Sun Java 7 JRE.
+            Includes the 64-bit Oracle Java 7 JRE.
        
        File: geWorkbench_v2.6.0_Linux_installer_noJRE.bin
-            No JRE is included, you must make sure that an appropriate Java 7
+            No JRE is included, you must make sure that an appropriate Java 7+
             JRE is installed on your system before installing geWorkbench.
             You may need to configure the JRE. See the "Java_Environment
             Configuration" section of the geWorkbench Download and Installation
@@ -144,7 +144,7 @@
 
        To begin the installation, type the command: 
 
-              sh ./geWorkbench_v2.6.0_Linux_installer_with_JRE6.bin 
+              sh ./geWorkbench_v2.6.0_Linux_installer_with_JRE7.bin 
 
           This will extract geWorkbench into a new directory called
           geWorkbench_2.6.0. 
@@ -162,9 +162,9 @@
           (check the actual link name that was generated):  
           
               ./rungeWorkbench_2.6.0 
-              or
+                or
               sh rungeWorkbench_2.6.0.
-              or
+                or
               sh geWorkbench_2.6.0
           
           Alternatively, in the directory in which geWorkbench was installed,
@@ -187,7 +187,7 @@
 
           Running geWorkbench (generic):
 
-            You must have the Java 7 JRE installed and the
+            You must have the Java 7+ JRE installed and the
                JRE must be in the path for geWorkbench.
 
             Windows: you can double click on the file
@@ -221,15 +221,194 @@
 ===============================================================================
     3.0 Release History: New Features and Updates
 =============================================================================== 
-geWorkbench 2.6.0 (2014)
+geWorkbench 2.6.0 (December, 2014)
    ==============================
+ --- Summary ---
+    geWorkbench 2.6.0 is a major maintenance release, including 63 bug fixes and
+	other improvements to usability.  All users should immediately upgrade to
+    2.6.0.  
+	
+	Java 7 - With release 2.6.0, geWorkbench moves to requiring the Java 7 Runtime
+	Environment (JRE).  Although no Java 7-specific code has yet been included,
+    all testing is now done on Java 7 and the code is compiled to Java 7 bytecode.
+    For versions of geWorkbench including the Java JRE 7, the 64-bit JRE is now
+    included rather than the 32-bit.  This change is to support the larger
+    Java max heap size launchers described further below.  
+	
+    Installation Directory - All file writes by geWorkbench to its own installation
+    directory have been removed, all files are now written to temp areas in the
+    user's directory space.  This allows geWorkbench to be installed in normal
+    System directories, e.g. "Program Files" on Windows.
+	
+	Java Heap Memory - previous releases were mostly limited to a Java Heap size of
+    about 1.5 GB, with the default set to 1 GB.  This was a limitation imposed by
+    the InstallAnywhere installer.  However, geWorkbench can handle much larger
+    datasets if more Java Heap is available.  On machines with larger amounts of
+    RAM, users can now easily start geWorkbench with higher Java Heap memory simply
+    by clicking on specific command files available in the geWorkbench installation
+    root directory.  These files allow geWorkbench to be started with 2, 4, 8 or
+    16 GB specified as the maximum size of the Java Heap memory.  The user should
+    take care not to request more heap memory than there is physical RAM memory
+    available, and also to allow 1-2 GB for the operating system.  All of these
+    larger heap sizes require use of a 64-bit JRE, which is included with
+    certain geWorkbench installers.
+	
+	BLAST - Among the more important fixes is a change to the BLAST component
+    to comply with a new specification from NCBI (Mantis #3799) for BLAST job
+    submissions.  After 12/1/2014 BLAST submissions will not work in previous
+    releases of geWorkbench.
+	
+	R - Several problems are fixed in how R is used from geWorkbench.  Previous
+    workarounds are no longer needed.  See details in bug reports below, especially
+    with respect to SAM.  The user library setting for R packages in the geWorkbench
+    Preferences component is now fully implemented and overrides any setting of
+    the environment variable R_LIBS_USER.  This allows geWorkbench to use separate
+    versions of a package (e.g. geWorkbench downloads a special version of Viper).
+	
+	GenomeSpace - integration with GenomeSpace is greatly improved.  GenomeSpace
+    allows geWorkbench to exchange data with a number of other tools.  See fixes below.
    
+--- Enhancements and bug fixes ---
+    Analysis
+      - 3077 - Document special behavior of components that ignore marker or array set activation
 
+    ARACNe
+      - 3590 - Add true Bonferroni correction
+      - 3622 - Make using DPI the default
+      - 3869 - Move preprocessing files from system to temp folder     
+
+    BLAST (Alignment results )
+      - 3799 - Add client name and email contact to all BLAST queries (new NCBI req't).
+      - 3198 - Update BLAST DB names to match changes at NCBI
+	  - 3760 - Clarify BLAST result sequence buttons and code	  
+	  
+    CaArray
+      - 3874 - Filtering on "PI" produces casting error (Java 7)
+
+    CNKB
+      - 3588 - Change "export to project" to "export to workspace"
+
+    ceRNA
+      - 3901 - Change button label in Export dialog from "Open" to "Save"
+
+    Color mosaic
+      - 3626 - Update "sort" button hover text
+
+    Component Configuration Manager
+      - 3614 - Updates to CCM entries
+      - 3770 - Update all Broad Institute author URLS in CCM
+
+    Cupid
+      - 3902 - Change button label in Export dialog from "Open" to "Save"
+
+    Cytoscape
+      - 3763 - Networks did not draw if displayed on second video screen under Java 7
+
+    DeMAND
+      - 3718 - DeMAND web service shows local R install message
+      - 3632 - Change labels to use "DeMAND"
+
+    Expression profiles
+      - 3896 - If component loaded after data, failure to plot
+      - 3767 - Require a marker set to be activated to draw plot
+
+    Expression Value Distribution
+      - 3546 - EVD range incorrect when an array set is activated (Java 7)
+
+    GenomeSpace
+      - 3703 - Allow user to see shared and public GenomeSpace folders
+      - 3651 - Local file conversion in GenomeSpace is destructive
+      - 3698 - Change right-click option to "Download to geWorkbench"
+      - 3699 - Correct GenomeSpace spelling in CCM
+      - 3700 - Increase size of GenomeSpace login window
+      - 3652 - Change "Project Folders" to "Workspace", update description
+
+    GenSpace
+      - 3818 - genSpace-related exception on LINCS query (Java 8)
+      - 3654 - Exception when run GSEA without array sets
+
+    Help files
+      - 3909 - Remove unused help files
+
+    Installation / Release Files
+      - 3903 - Add clickable command files for various Java heap memory sizes
+      - 3904 - Changes to build.xml and build_runDirect.xml for #3903
+
+    LINCS
+      - 3802 - Sort score from highest to lowest value
+      - 3766 - Do not show FMOA network nodes which have no differential expression data
+      - 3690 - Add concentration units to the titration curves
+      - 3863 - "Add to Set" in Cytoscape throws exception for LINCS data
+
+    Marker sets/arrays phenotypes
+      - 3490 - Only first gene name on marker set read in from file is matched to annotation list
+
+    MarkUs
+      - 3721 - fix MarkUs local service URL and update tutorial for stricter Java applet req'ts.
+
+    MARINa (Master Regulator Analysis)
+      - 3719 - One-sample analysis leads to exception on bar-code graphing
+      - 3610 - Restore paired-sample analysis mode
+	  
+    MRA-FET (Master Regulator Analysis)
+      - 2793, 3077 - For safety, prevent MRA-FET from running if any marker sets are activated.
+
+    MatrixReduce
+      - 3910 - Move file writes out of install directory
+      - 3661 - Exception on running MatrixReduce (EDT)
+
+    Menu items
+      - 3601 - Add "How to Cite"
+
+    MINDy
+      - 3882 - Cannot load marker files if data loaded before component
+
+    Other
+      - 3748 - Remove all file writes to installation directory
+      - 3907 - Remove unused lib files
+      - 3908 - Update to jfreechart-1.0.19.jar and jcommon-1.0.23.jar files
+
+    PCA
+      - 3619 - Make "Experiments" the default
+
+    Position histogram
+      - 2344 - Correct binning of values
+
+    Preferences
+      - 3894 - Removing trailing slash from R package path
+      - 3589 - Spelling correction
+
+    Project Folders
+      - 3866 - Do not include file names in dataset name after merge
+
+    Pudge
+      - 3796 - Pudge does not run, error with getParameters()
+
+    SAM
+      - 3593 - SAM (R) does not run on Java 6 update 45: Runtime.exec command string decoding error
+      - 3388 - Table sorting compares digits, not numbers
+      - 3875 - Update SAM analysis to use geWorkbench Preference "R package directory"
+
+    Scatter plot
+      - 3870 - Array plot list throws exception
+      - 3762 - Array and Marker lists not populated if no sets activated
+
+    SkyBase
+      - 3664 - Rename ATP button to ATW (due to previous dropping old "Project Folders" in Workspace)
+
+    T-test
+      - 3544 - Sorting removed the whole heat map
+
+    Viper
+      - 3723 - VIPER notifies that it needs an R installation even for the remote web version
+      - 3547 - Update web service
+      - 3603 - Remove warning label
 
 
 geWorkbench 2.5.2 (Not released)
    ==============================
    This was an internal development branch, not released.
+   All changes reported under 2.6.0.
 
 
 
