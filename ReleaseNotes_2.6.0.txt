@@ -226,7 +226,7 @@ geWorkbench 2.6.0 (December, 2014)
  --- Summary ---
     geWorkbench 2.6.0 is a major maintenance release, including 63 bug fixes and
 	other improvements to usability.  All users should immediately upgrade to
-    2.6.0.  
+    2.6.0.  Previous versions are no longer supported.
 	
 	Java 7 - With release 2.6.0, geWorkbench moves to requiring the Java 7 Runtime
 	Environment (JRE).  Although no Java 7-specific code has yet been included,
@@ -369,9 +369,6 @@ geWorkbench 2.6.0 (December, 2014)
       - 3748 - Remove all file writes to installation directory
       - 3907 - Remove unused lib files
       - 3908 - Update to jfreechart-1.0.19.jar and jcommon-1.0.23.jar files
-
-    PCA
-      - 3619 - Make "Experiments" the default
 
     Position histogram
       - 2344 - Correct binning of values
