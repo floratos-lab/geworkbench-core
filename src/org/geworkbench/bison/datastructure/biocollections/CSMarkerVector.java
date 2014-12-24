@@ -6,9 +6,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.geworkbench.bison.datastructure.bioobjects.markers.DSGeneMarker;
 import org.geworkbench.bison.datastructure.complex.panels.CSSequentialItemList;
-import org.jfree.util.Log;
 
 /**
  * <p>
@@ -19,11 +20,11 @@ import org.jfree.util.Log;
  * </p>
  * 
  * @author Adam Margolin
- * @version $Id$
  */
 public class CSMarkerVector extends CSSequentialItemList<DSGeneMarker> {
 
 	private static final long serialVersionUID = -7674561735987333555L;
+	private Log log = LogFactory.getLog(CSMarkerVector.class);
 
 	private Hashtable<Integer, Set<DSGeneMarker>> geneIdMap = new Hashtable<Integer, Set<DSGeneMarker>>();
 	private Hashtable<String, Set<DSGeneMarker>> geneNameMap = new Hashtable<String, Set<DSGeneMarker>>();
@@ -77,7 +78,7 @@ public class CSMarkerVector extends CSSequentialItemList<DSGeneMarker> {
 			}
 		} catch (NumberFormatException e) {
 			// this is not a good idea. leave this way for now.
-			Log.error(e);
+			log.error(e);
 		}
 
 		return matchingMarkers;
