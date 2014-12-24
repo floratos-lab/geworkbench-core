@@ -24,7 +24,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/jai_core.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jaxb-rt-1.0-ea.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jaxrpc.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jcommon-1.0.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jcommon-1.0.23.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jdom.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jhall.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jsr173_api.jar"/>
@@ -55,6 +55,6 @@
 	<classpathentry kind="lib" path="lib/axis2-transport-http-1.5.3.jar"/>
 	<classpathentry kind="lib" path="lib/httpcore-4.0.jar"/>
 	<classpathentry kind="lib" path="lib/axis2-upload-client.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jfreechart-1.0.13.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jfreechart-1.0.19.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
