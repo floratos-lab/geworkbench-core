@@ -21,12 +21,6 @@ import org.geworkbench.bison.datastructure.complex.panels.DSPanel;
 import org.geworkbench.bison.util.RandomNumberGenerator;
 import org.geworkbench.bison.util.SequenceUtils;
 
-/**
- * 
- * @author not attributable
- * @version $Id$
- */
-
 public class CSSequenceSet<T extends DSSequence> extends CSDataSet<T> implements
 		DSSequenceSet<T> {
 	private static final long serialVersionUID = -2426885649247874087L;
@@ -100,8 +94,8 @@ public class CSSequenceSet<T extends DSSequence> extends CSDataSet<T> implements
 			DSPanel<? extends DSGeneMarker> markerPanel) {
 		CSSequenceSet<DSSequence> sequenceDB = new CSSequenceSet<DSSequence>();
 		if (markerPanel != null && markerPanel.size() > 0) {
-			for (DSGeneMarker marker : markerPanel) {
-
+			for (int index=0; index<markerPanel.size(); index++) {
+				DSGeneMarker marker = markerPanel.get(index);
 				T newSequence = this.getSequence(marker);
 				if (newSequence != null) {
 					sequenceDB.addASequence(newSequence);
