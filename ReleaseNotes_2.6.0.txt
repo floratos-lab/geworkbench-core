@@ -2,7 +2,7 @@
     
                               geWorkbench V2.6.0
                
-                               December, 2014
+                               December 25, 2014
    
 
             Department of Systems Biology, Columbia University
@@ -277,12 +277,14 @@ geWorkbench 2.6.0 (December, 2014)
     ARACNe
       - 3590 - Add true Bonferroni correction
       - 3622 - Make using DPI the default
-      - 3869 - Move preprocessing files from system to temp folder     
+      - 3869 - Move preprocessing files from system to temp folder
+      - 3914 - only one array seen if array set activated (Java 7)	  
 
     BLAST (Alignment results )
       - 3799 - Add client name and email contact to all BLAST queries (new NCBI req't).
       - 3198 - Update BLAST DB names to match changes at NCBI
-	  - 3760 - Clarify BLAST result sequence buttons and code	  
+	  - 3760 - Clarify BLAST result sequence buttons and code
+      - 3915 - No hit found if sequence is in an activated set (Java 7)	  
 	  
     CaArray
       - 3874 - Filtering on "PI" produces casting error (Java 7)
@@ -370,7 +372,10 @@ geWorkbench 2.6.0 (December, 2014)
       - 3907 - Remove unused lib files
       - 3908 - Update to jfreechart-1.0.19.jar and jcommon-1.0.23.jar files
 
-    Position histogram
+    Pattern Discovery
+      - 3918 - no patterns uploaded if a marker set (sequences) is activated (Java 7)
+	
+	Position histogram
       - 2344 - Correct binning of values
 
     Preferences
@@ -391,8 +396,12 @@ geWorkbench 2.6.0 (December, 2014)
     Scatter plot
       - 3870 - Array plot list throws exception
       - 3762 - Array and Marker lists not populated if no sets activated
+      - 3923 - Remove feature to reassign x-axis marker/array
 
-    SkyBase
+    Sequence Panel
+      - 3919 - no sequences displayed if marker set activated (Java 7)
+	
+	SkyBase
       - 3664 - Rename ATP button to ATW (due to previous dropping old "Project Folders" in Workspace)
 
     T-test
