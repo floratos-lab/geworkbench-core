@@ -645,6 +645,7 @@
 				<include name="launch_geworkbench_macosx_16G.command"/>
 				
 				<!-- Leave out the following components and files from release -->
+				<exclude name="${components}/medusa/**/*" />
 				<exclude name="**/synteny/*" />
 				<exclude name="**/src/**" />
 				<exclude name="**/test/**" />
