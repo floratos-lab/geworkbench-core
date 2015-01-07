@@ -77,8 +77,7 @@ public class CSMarkerVector extends CSSequentialItemList<DSGeneMarker> {
 				}
 			}
 		} catch (NumberFormatException e) {
-			// this is not a good idea. leave this way for now.
-			log.error(e);
+			log.debug("aString is not an integer");
 		}
 
 		return matchingMarkers;
