@@ -44,10 +44,10 @@ public class RemoteResourceManager {
 	 * A default setup when no property file is found. init
 	 */
 	protected void init() {
-		RemoteResource rr1 = new RemoteResource("caARRAY", "array.nci.nih.gov",
+		RemoteResource rr1 = new RemoteResource("NCI caARRAY (to be discontinued on/after 2/9/2015)", "array.nci.nih.gov",
 				"8080", "http:", "", "");
 		existedResources.add(rr1);
-		RemoteResource rr2 = new RemoteResource("caARRAYStage",
+		RemoteResource rr2 = new RemoteResource("NCI caARRAYStage (to be discontinued on/after 2/9/2015)",
 				"array-stage.nci.nih.gov", "8080", "http:", "", "");
 		existedResources.add(rr2);
 	}
