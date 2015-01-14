@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 
+import org.apache.commons.lang.StringUtils;
 import org.geworkbench.bison.datastructure.biocollections.sequences.DSSequenceSet;
 import org.geworkbench.bison.datastructure.bioobjects.sequence.DSSequence;
 import org.geworkbench.bison.datastructure.complex.pattern.CSMatchedPattern;
@@ -226,7 +227,7 @@ public final class CSMatchedSeqPattern extends
 				CSSeqPatternMatch match = new CSSeqPatternMatch(object);
 				CSSeqRegistration reg = match.getRegistration();
 				reg.x1 = getOffset(i);
-				reg.x2 = reg.x1 + getLength();
+				reg.x2 = reg.x1 + getLength() + StringUtils.countMatches(ascii, ".");
 
 				return match;
 			}
@@ -259,6 +260,6 @@ public final class CSMatchedSeqPattern extends
 
 	public void setSeqNo(int value) {
 		seqNo = value;
-	}
+	}	 
 
 }
