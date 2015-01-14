@@ -82,6 +82,9 @@ public class CSSequenceSet<T extends DSSequence> extends CSDataSet<T> implements
 		if ((this.size() == 0) && (file != null)) {
 			readFASTAFile(file);
 		}
+		if(markerList==null) {
+			parseMarkers();
+		}
 		if (markerList != null && markerList.contains(marker)) {
 			int i = markerList.indexOf(marker);
 			return this.get(i);
