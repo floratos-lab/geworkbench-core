@@ -921,7 +921,7 @@ public class SequenceViewWidgetPanel extends JPanel {
 						CSSeqRegistration reg = pl.getRegistration();
 						if (reg != null && reg.x1 + 1 <= off && reg.x2 >= off) {
 							int x1 = reg.x1 + 1;
-							int x2 = reg.x1 + pl.getAscii().length();
+							int x2 = reg.x2;
 							if (pl.getPatternType().equals(
 									PatternLocations.DEFAULTTYPE)) {
 								tip = tip + " " + pl.getAscii() + "<" + x1
