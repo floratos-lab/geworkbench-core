@@ -1,8 +1,8 @@
                                 Release Notes
     
-                              geWorkbench V2.6.0
+                              geWorkbench v2.6.0
                
-                               December 25, 2014
+                               January 15, 2015
    
 
             Department of Systems Biology, Columbia University
@@ -22,8 +22,6 @@
     6.0 Documentation and Files
     7.0 geWorkbench Web Pages 
 
-
-
 ===============================================================================
     1.0 geWorkbench Installation Notes
 ===============================================================================
@@ -31,8 +29,8 @@
     System Requirements:
         Java:    
             The Java 7 JRE is required.  geWorkbench is distributed both with
-			installers that include Java 7, as well as versions without.  Java
-			can be downloaded from java.oracle.com. 
+            installers that include Java 7, as well as versions without.  Java
+            can be downloaded from java.oracle.com. 
 
             Please note that Java 7 is also referred to as
             Java 1.7.  32-bit and 64-bit versions of Java can be used on
@@ -41,39 +39,42 @@
             See http://www.oracle.com/technetwork/java/javase/downloads.
             
             geWorkbench will run using Java 8, but has not been tested
-            extensively in that environment.  There are no known issues
+            extensively in that environment.  There are currently no known issues
             with using Java 8.
             
         Memory:  
-             At least 2 GB is recommended.  geWorkbench by
-             default will request up to 1 GB of memory for the Java VM.
+             At least 4 GB of RAM is recommended when running with the 64-bit
+             JRE7, which by default requests up to 2 GB of Java heap memory.
+             With the 32-bit JRE7, the default maximum Java heap memory is 1 GB.
         
         Operating System:
             Windows XP/Vista/7/8 (32 or 64-bit): no special requirements.
                  
-            MacOSX:  Version 10.7.3 or higher is required to
-                install the Java 7 JRE.
+            MacOSX:  Intel-based Mac running Mac OS X version 10.7.3 (Lion) or
+            higher is required to install the Java 7 JRE.
                 
             Linux: no special requirements known.
 
         Display Driver (affects PCA component 3D graph viewer only):
             When using a 64-bit JVM, the Java 3D library requires OpenGL
             version 1.2 or higher to be supported by your display driver.
-    
-    
-    All three platform-specific versions of geWorkbench (Windows,
-    Linux, and Macintosh) provide an installation wizard
-    (generated using InstallAnywhere).
-    
-    A generic version of geWorkbench, which does not use any installer, is also
-    available, and should run on any machine which supports Java 7. 
+      
+    The Windows and Linux versions of geWorkbench provide an installation wizard
+    (generated using InstallAnywhere).  The Mac OSX and generic versions are
+    distributed as a simple zip file.  The generic release should run on any
+    machine that supports Java 7.
 
     Additional installation details are provided below, and at
     www.geworkbench.org.  All user documentation is maintained 
     in online form at www.geworkbench.org.
     
     geWorkbench, unless otherwise noted for particular components, can be
-    run on both 32 and 64-bit operating systems and JREs.
+    run on both 32 and 64-bit operating systems and JREs.  If physical memory
+    is very limited, the 32-bit versions are preferred.
+	
+	A few features of geWorkbench work only on 32-bit JREs, however, most have
+    alternate presentations on 64-bit systems.  This affects primarily embedded
+    display of web pages.  
 
 
     Platform-specific release details:
@@ -84,82 +85,91 @@
         "C:\Program Files" system directory, e.g. to 
         C:\Program Files\geWorkbench_2.6.0.     
 
-        File: geWorkbench_v2.6.0_Windows_installer_with_JRE7.exe
+        File: geWorkbench_v2.6.0_Windows_JRE7_x64.exe  (recommended for
+              64-bit versions of Windows)
+              Includes the 64-bit Oracle Java 7 JRE update 71.
 
-            Includes the 64-bit Oracle Java 7 JRE.
-             
-        File: geWorkbench_v2.6.0_Windows_installer_noJRE.exe
-        
-            No JRE is included, you must make sure that an appropriate Java 7+
-            JRE is installed on your system before installing geWorkbench.
+        File: geWorkbench_v2.6.0_Windows_JRE7_x86.exe (required for older
+              32-bit OSs (e.g. Win XP)).
+              Includes the 32-bit Oracle Java 7 JRE update 71.
 
-       Download and double-click the installer file to begin installation.
+        File: geWorkbench_v2.6.0_Windows_noJRE.exe
+              No JRE is included, you must make sure that an appropriate Java 7+
+              JRE is installed on your system before installing geWorkbench.
+              You may need to add Java to your path or set JAVA_HOME.
+
+        Download and double-click the installer file to begin installation.
 
 
     2. MacOSX
 
-       geWorkbench will by default install to your user home directory,
-       e.g. /Users/username/geWorkbench_2.6.0, where "username" is your
-       login name, rather than to the Mac /Applications folder.  
+        The MacOSX version of geWorkbench 2.6.0 is distributed as a simple zip
+        file and includes the Java 7 update 71 JRE in line with Apple policy.
+        No installer is available for this release.  Just unzip the file and
+        move the geWorkbench_2.6.0 folder to a convenient location.  This
+        could be e.g. the /Applications folder, the Desktop, or your home
+        directory.  
+   
+        The geWorkbench_2.6.0 folder contains launcher command files (ending in 
+        .command) which can be used to start geWorkbench with varying amounts
+        of Java heap memory.
+
+        You can create a shortcut to one of these command files, then move the
+        shortcut e.g. to your Desktop.  Launcher command files are available to
+        start geWorkbench with 1, 2, 4, 8, or 16 GB of maximum Java heap memory.
     
-       File: geWorkbench_v2.6.0_MacOSX_installer.zip.
+        File: geWorkbench_v2.6.0_MacOSX_JRE7.zip.
 
-       Double-click geWorkbench_v2.6.0_MacOSX_installer.zip to begin
-       installation.  This will unpack a file called "install".  (Note it may
-       appear on top of the Zip file). Double-click on the "install" file to
-       start the installation process.
-
-       Notes
+        Notes
           - Requires Mac OS X 10.7.3 or higher.
           
 
     3. Linux
-       Note - Regardless of which geWorkbench installer described below is 
-            selected, the installer itself requires that Java 1.6 or later 
-            already be installed on your machine before the installation
-            can be run.
+      
        
-       File: geWorkbench_v2.6.0_Linux_installer_with_JRE7.bin.
+        File: geWorkbench_v2.6.0_Linux_JRE7_x64.bin.
+              Includes the 64-bit Oracle Java 7 JRE update 60.
 
-            Includes the 64-bit Oracle Java 7 JRE.
-       
-       File: geWorkbench_v2.6.0_Linux_installer_noJRE.bin
-            No JRE is included, you must make sure that an appropriate Java 7+
-            JRE is installed on your system before installing geWorkbench.
-            You may need to configure the JRE. See the "Java_Environment
-            Configuration" section of the geWorkbench Download and Installation
-            page of www.geworkench.org.
+        File: geWorkbench_v2.6.0_Linux_JRE7_x86.bin.
+              Includes the 32-bit Oracle Java 7 JRE update 60.			 
+
+        File: geWorkbench_v2.6.0_Linux_noJRE.bin
+              No JRE is included, you must make sure that an appropriate Java 7+
+              JRE is installed on your system before installing geWorkbench.
+              You may need to configure the JRE. See the "Java_Environment
+              Configuration" section of the geWorkbench Download and Installation
+              page of www.geworkench.org.
    
    
-       The Linux version of geWorkbench relies on X-Windows being installed
-       and running. If you are running Linux on a server and e.g. Windows
-       on your desktop, you will also need to run an X-windows server on
-       your desktop machine. Further information can be found on the
-       Download and Installation page of www.geworkench.org.
+        The Linux version of geWorkbench relies on X-Windows being installed
+        and running. If you are running Linux on a server and e.g. Windows
+        on your desktop, you will also need to run an X-windows server on
+        your desktop machine. Further information can be found on the
+        Download and Installation page of www.geworkench.org.
 
-       After downloading, cd (if needed) to the directory to which you
-       downloaded the installer.
+        After downloading, cd (if needed) to the directory to which you
+        downloaded the installer.
 
-       The following uses the example of the installer file with the JRE7.
+        The following uses the example of the installer file with the JRE7.
 
-       To begin the installation, type the command: 
+        To begin the installation, type the command: 
 
               sh ./geWorkbench_v2.6.0_Linux_installer_with_JRE7.bin 
 
-          This will extract geWorkbench into a new directory called
-          geWorkbench_2.6.0. 
+        This will extract geWorkbench into a new directory called
+        geWorkbench_2.6.0. 
   
-          If you requested that a desktop link be created, it will be called
-          rungeWorkbench_2.6.0 or geWorkbench_2.6.0 (see note below).
+        If you requested that a desktop link be created, it will be called
+        rungeWorkbench_2.6.0 or geWorkbench_2.6.0 (see note below).
   
-          Note - if you made changes to the default installation directory
-          name, the shortcut link may just be called "geWorkbench_2.6.0"
-          rather than "rungeWorkbench_2.6.0".
+        Note - if you made changes to the default installation directory
+        name, the shortcut link may just be called "geWorkbench_2.6.0"
+        rather than "rungeWorkbench_2.6.0".
 
-       To run geWorkbench, and assuming you are using the Linux bash shell,
-          and that you created a shortcut link during installation,
-          issue one of the following commands from your home directory
-          (check the actual link name that was generated):  
+        To run geWorkbench, and assuming you are using the Linux bash shell,
+        and that you created a shortcut link during installation,
+        issue one of the following commands from your home directory
+        (check the actual link name that was generated):  
           
               ./rungeWorkbench_2.6.0 
                 or
@@ -167,32 +177,35 @@
                 or
               sh geWorkbench_2.6.0
           
-          Alternatively, in the directory in which geWorkbench was installed,
-          you can start geWorkbench with the command:
+         Alternatively, in the directory in which geWorkbench was installed,
+         you can start geWorkbench with the command:
           
               sh launch_geWorkbench.sh
 
 
     4. Generic -   A non-installer-based version of
-       geWorkbench is supplied in a Zip file which should work on
-       any platform.
+        geWorkbench is supplied in a Zip file which should work on
+        any platform.
 
-       File: geWorkbench_v2.6.0_Generic.zip
+        File: geWorkbench_v2.6.0_Generic.zip
 
-          Installation: 
+        Installation: 
     
              Unzip the file.  It will create a directory
                 geWorkbench_2.6.0.
           
 
-          Running geWorkbench (generic):
+        Running geWorkbench (generic):
 
             You must have the Java 7+ JRE installed and the
                JRE must be in the path for geWorkbench.
 
             Windows: you can double click on the file
-                "launch_geWorkbench.bat" to launch geWorkbench, or
-                run it from a command window.
+                "launch_geWorkbench.bat" to launch geWorkbench with
+                its default Java heap memory setting, or double-click
+                on one of the batch (.bat) files for specific sizes of
+                Java heap memory.  The files can also be run from the
+                command window.
             
             Linux/Unix:   Execute the script "launch_geworkbench.sh".
                           
@@ -203,7 +216,6 @@
 ===============================================================================
     2.0 - geWorkbench Introduction and History
 ===============================================================================
-
 
     geWorkBench, an open source bioinformatics platform 
     written in Java, makes sophisticated  tools for data management, 
@@ -217,60 +229,74 @@
     sequence analysis, transcription factor binding site analysis,
     and pattern discovery. 
 
-
 ===============================================================================
     3.0 Release History: New Features and Updates
 =============================================================================== 
-geWorkbench 2.6.0 (December, 2014)
-   ==============================
- --- Summary ---
-    geWorkbench 2.6.0 is a major maintenance release, including 63 bug fixes and
-	other improvements to usability.  All users should immediately upgrade to
-    2.6.0.  Previous versions are no longer supported.
-	
-	Java 7 - With release 2.6.0, geWorkbench moves to requiring the Java 7 Runtime
-	Environment (JRE).  Although no Java 7-specific code has yet been included,
-    all testing is now done on Java 7 and the code is compiled to Java 7 bytecode.
-    For versions of geWorkbench including the Java JRE 7, the 64-bit JRE is now
-    included rather than the 32-bit.  This change is to support the larger
-    Java max heap size launchers described further below.  
-	
-    Installation Directory - All file writes by geWorkbench to its own installation
-    directory have been removed, all files are now written to temp areas in the
-    user's directory space.  This allows geWorkbench to be installed in normal
-    System directories, e.g. "Program Files" on Windows.
-	
-	Java Heap Memory - previous releases were mostly limited to a Java Heap size of
-    about 1.5 GB, with the default set to 1 GB.  This was a limitation imposed by
-    the InstallAnywhere installer.  However, geWorkbench can handle much larger
-    datasets if more Java Heap is available.  On machines with larger amounts of
-    RAM, users can now easily start geWorkbench with higher Java Heap memory simply
-    by clicking on specific command files available in the geWorkbench installation
-    root directory.  These files allow geWorkbench to be started with 2, 4, 8 or
-    16 GB specified as the maximum size of the Java Heap memory.  The user should
+
+    geWorkbench 2.6.0 (January 15, 2015)
+    ====================================
+    --- Summary ---
+    geWorkbench 2.6.0 is a major release, including more than 70 bug
+    fixes and other improvements to usability.  All users should immediately
+    upgrade to 2.6.0.  Previous versions are no longer supported.
+
+    -- Java 7 - With release 2.6.0, geWorkbench requires the Java 7 Runtime
+    Environment (JRE).  Although no Java 7-specific code has yet been included,
+    all testing is now done on 64-bit Java 7 and the code is compiled to Java 7
+    bytecode. Windows and Linux versions of geWorkbench including the 64-bit
+    JRE7 will be available; previously only 32-bit JREs were included. Use of
+    the 64-bit JRE allows larger datasets to be loaded (through setting larger
+    Java max heap sizes, described further below).
+
+    Some legacy code was not compatible with Java 7 and those fixes are indicated
+    below as "(Java 7)".
+
+    -- Installation Directory - geWorkbench, while running, no longer writes any
+    files to its own installation directory; all files are now written to temp
+    areas in the user's directory space.  This allows geWorkbench to be
+    installed in normal System directories, e.g. "Program Files" on Windows.
+
+    -- Larger Java Heap Memory for larger datasets - geWorkbench is now
+    available with 64-bit JREs for all platforms, with a default size of 2 GB
+    for maximum Java heap memory.  Using the 64-bit JRE and larger Java heap
+    sizes allows geWorkbench to work with much larger datasets.  Previous
+    releases of geWorkbench used a default size of 1 GB for the maximum value
+    of Java heap memory.  
+
+    On machines with larger amounts of RAM, users can now easily start
+    geWorkbench with even higher amounts of Java Heap memory simply by clicking
+    on specific command files available in the geWorkbench installation
+    root directory (currently for Windows and MacOSX only).  These files allow
+    geWorkbench to be started with 1, 2, 4, 8 or 16 GB specified as the maximum
+    size of the Java heap memory.  The user should
     take care not to request more heap memory than there is physical RAM memory
-    available, and also to allow 1-2 GB for the operating system.  All of these
-    larger heap sizes require use of a 64-bit JRE, which is included with
-    certain geWorkbench installers.
-	
-	BLAST - Among the more important fixes is a change to the BLAST component
+    available, and also to allow at least 1-2 GB for the operating system.
+    All heap sizes larger than 1 GB require use of a 64-bit JRE.
+
+    The Windows launcher files end in .bat, while those for MacOSX end in
+    .command, e.g. "launch_geworkbench_winpc_4G.bat" and 
+    "launch_geworkbench_macosx_4G.command".  On either platform, the user can
+    create shortcuts to the launcher files and place the shortcuts e.g. on the
+    Desktop.
+
+    -- BLAST - Among the more important fixes is a change to the BLAST component
     to comply with a new specification from NCBI (Mantis #3799) for BLAST job
-    submissions.  After 12/1/2014 BLAST submissions will not work in previous
+    submissions.  After 12/1/2014 BLAST submissions may not work in previous
     releases of geWorkbench.
-	
-	R - Several problems are fixed in how R is used from geWorkbench.  Previous
+
+    -- R - Several problems are fixed in how R is used from geWorkbench.  Previous
     workarounds are no longer needed.  See details in bug reports below, especially
     with respect to SAM.  The user library setting for R packages in the geWorkbench
     Preferences component is now fully implemented and overrides any setting of
     the environment variable R_LIBS_USER.  This allows geWorkbench to use separate
     versions of a package (e.g. geWorkbench downloads a special version of Viper).
-	
-	GenomeSpace - integration with GenomeSpace is greatly improved.  GenomeSpace
+
+    -- GenomeSpace - integration with GenomeSpace is greatly improved.  GenomeSpace
     allows geWorkbench to exchange data with a number of other tools.  See fixes below.
-	
-	CART - The GenePattern 3.0 CART component is added.
+
+    -- CART - The GenePattern 3.0 CART component is added.
    
---- Enhancements and bug fixes ---
+    --- Enhancements and bug fixes ---
     Analysis
       - 3077 - Document special behavior of components that ignore marker or array set activation
 
@@ -283,9 +309,9 @@ geWorkbench 2.6.0 (December, 2014)
     BLAST (Alignment results )
       - 3799 - Add client name and email contact to all BLAST queries (new NCBI req't).
       - 3198 - Update BLAST DB names to match changes at NCBI
-	  - 3760 - Clarify BLAST result sequence buttons and code
+      - 3760 - Clarify BLAST result sequence buttons and code
       - 3915 - No hit found if sequence is in an activated set (Java 7)	  
-	  
+  
     CaArray
       - 3874 - Filtering on "PI" produces casting error (Java 7)
 
@@ -314,7 +340,7 @@ geWorkbench 2.6.0 (December, 2014)
 
     Expression profiles
       - 3896 - If component loaded after data, failure to plot
-      - 3767 - Require a marker set to be activated to draw plot
+      - 3767 - Require a marker set to be activated to draw plot (safety feature)
 
     Expression Value Distribution
       - 3546 - EVD range incorrect when an array set is activated (Java 7)
@@ -353,9 +379,9 @@ geWorkbench 2.6.0 (December, 2014)
     MARINa (Master Regulator Analysis)
       - 3719 - One-sample analysis leads to exception on bar-code graphing
       - 3610 - Restore paired-sample analysis mode
-	  
+  
     MRA-FET (Master Regulator Analysis)
-      - 2793, 3077 - For safety, prevent MRA-FET from running if any marker sets are activated.
+      - 2793, 3077 - Prevent MRA-FET from running if any marker sets are activated.
 
     MatrixReduce
       - 3910 - Move file writes out of install directory
@@ -370,12 +396,15 @@ geWorkbench 2.6.0 (December, 2014)
     Other
       - 3748 - Remove all file writes to installation directory
       - 3907 - Remove unused lib files
-      - 3908 - Update to jfreechart-1.0.19.jar and jcommon-1.0.23.jar files
+      - 3908 - Update to lib/jfreechart-1.0.19.jar and lib/jcommon-1.0.23.jar files
+      - 3918 - Update lib/xalan.jar, lib/xml-apis.jar, add lib/serializer.jar (all from xalan 2.7.2).
 
     Pattern Discovery
-      - 3918 - no patterns uploaded if a marker set (sequences) is activated (Java 7)
-	
-	Position histogram
+      - 3918 - No patterns uploaded if a marker set (sequences) is activated (Java 7)
+      - 3930 - Did not display result if searched on activated marker (sequence) set.
+      - 3952 - Correct tooltip sequence position numbers on pattern viewer display.
+
+    Position histogram
       - 2344 - Correct binning of values
 
     Preferences
@@ -389,19 +418,18 @@ geWorkbench 2.6.0 (December, 2014)
       - 3796 - Pudge does not run, error with getParameters()
 
     SAM
-      - 3593 - SAM (R) does not run on Java 6 update 45: Runtime.exec command string decoding error
+      - 3593 - SAM (R) does not run on Java 6 update 45 and above: Runtime.exec command string decoding error
       - 3388 - Table sorting compares digits, not numbers
       - 3875 - Update SAM analysis to use geWorkbench Preference "R package directory"
 
     Scatter plot
-      - 3870 - Array plot list throws exception
-      - 3762 - Array and Marker lists not populated if no sets activated
-      - 3923 - Remove feature to reassign x-axis marker/array
+      - 3762, 3870, 3931 - Fix problems with how component responds to activated Array and Marker sets.
+      - 3923, 3944 - Fix feature allowing reassignment of x-axis marker/array. 
 
     Sequence Panel
       - 3919 - no sequences displayed if marker set activated (Java 7)
-	
-	SkyBase
+
+    SkyBase
       - 3664 - Rename ATP button to ATW (due to previous dropping old "Project Folders" in Workspace)
 
     T-test
@@ -412,16 +440,18 @@ geWorkbench 2.6.0 (December, 2014)
       - 3547 - Update web service
       - 3603 - Remove warning label
 
+    --- Versions of external files/components included in release 2.5.0 ---
+      - caArray client external v1.0 (caArray 2.5.0 client, no change).
+      - caGrid - caGrid version 1.4 (no change)
+      - Cytoscape 2.8.2 (no change).
+      - go-basic.obo downloaded 2014-11-19 from geneontology.org.
+      - Jaspar_CORE (http://jaspar.genereg.net/) SQL files last updated on
+            server 2009-10. (no change).
+      - JMOL 13.0.18 (no change). 
+      - Ontologizer.jar version 2.0, file released 2010-03-10 (no change).
 
-geWorkbench 2.5.2 (Not released)
-   ==============================
-   This was an internal development branch, not released.
-   All changes reported under 2.6.0.
-
-
-
-geWorkbench 2.5.1 (2013-10-31)
-   ==============================
+    geWorkbench 2.5.1 (2013-10-31)
+    ====================================
     --- Summary ---
     geWorkbench 2.5.1 is a maintenance release.  However, it includes several
     important bug fixes and all users should update to this release.
@@ -442,9 +472,8 @@ geWorkbench 2.5.1 (2013-10-31)
     Workspace
       - 3577 - Merging expression datasets in the Workspace did not work.
 
-
-geWorkbench 2.5.0 (2013-10-10)
-   ==============================
+    geWorkbench 2.5.0 (2013-10-10)
+    ====================================
     --- Summary ---
     geWorkbench 2.5.0 is a major release.  It includes a simplification of the
     Workspace, removing the "Project" level of data organization.  The Marker
@@ -540,10 +569,10 @@ geWorkbench 2.5.0 (2013-10-10)
       - 1847 - improve labels for filtering criteria
       - 3484 - filtering introduces discrepancy in data views involving
                Cytoscape (looking up marker names from gene names).
-   Gene Ontology Analysis
+    Gene Ontology Analysis
       - 3563 - fixed problem with saving parameters involving "changed gene"
                marker set.
-   GenomeSpace
+    GenomeSpace
       - 3273 - Implement large file data upload from geWorkbench for
                GenomeSpace
     genSpace
@@ -596,8 +625,8 @@ geWorkbench 2.5.0 (2013-10-10)
       - JMOL 13.0.18 (UPDATED). 
       - Ontologizer.jar version 2.0, file released 2010-03-10 (no change).
 
-geWorkbench 2.4.1 (2012-10-26)
-   ==============================
+    geWorkbench 2.4.1 (2012-10-26)
+    ====================================
     --- Summary ---
     geWorkbench v2.4.1 is a small but important bug-fix release, dealing with
     the BLAST and ANOVA components. Due to a change in the
@@ -623,8 +652,8 @@ geWorkbench 2.4.1 (2012-10-26)
              
     
     
- geWorkbench 2.4.0 (2012-07-23)
-   ==============================
+    geWorkbench 2.4.0 (2012-07-23)
+    ====================================
     --- Summary ---
     geWorkbench v2.4.0 is a major release.  It adds one new component,
     "Significance Analysis of Microarrays(SAM)" and includes signficant
@@ -854,8 +883,8 @@ geWorkbench 2.4.1 (2012-10-26)
           - SkyBase
           - Volcano Plot
 
- geWorkbench 2.3.0 (2012-03-16)
-    ==============================
+    geWorkbench 2.3.0 (2012-03-16)
+    ====================================
     --- Summary ---
     geWorkbench v2.3.0 is a major release.  It includes significant
     improvements in responsiveness and memory usage, and a streamlining of the
@@ -1164,8 +1193,8 @@ geWorkbench 2.4.1 (2012-10-26)
     
       
 
- geWorkbench 2.2.2 (2011-08-19)
-    ==============================
+    geWorkbench 2.2.2 (2011-08-19)
+    ====================================
     ---Summary---
     geWorkbench 2.2.2 is a bug fix release.  It corrects three issues
     with the Gene Ontology Analysis and Gene Ontology Viewer components.
@@ -1195,8 +1224,8 @@ geWorkbench 2.4.1 (2012-10-26)
  
     There are no further changes included in this release.
 
- geWorkbench 2.2.1 (2011-07-29)
-    ==============================
+    geWorkbench 2.2.1 (2011-07-29)
+    ====================================
     ---Summary---
     geWorkbench 2.2.1 provides a number of improvements, especially as related
     to network import, display and export, sequence retrieval, and pattern
@@ -1360,8 +1389,8 @@ geWorkbench 2.4.1 (2012-10-26)
       - JMOL 12.0.45 (updated). 
 
 
- geWorkbench 2.2.0 (2011-05-24)
-    ==============================
+    geWorkbench 2.2.0 (2011-05-24)
+    ====================================
     ---Summary---
     geWorkbench 2.2.0 is a major release containing more than 180 new features,
     enhancements and bug fixes.  The most important of each are summarize below.
@@ -1372,7 +1401,7 @@ geWorkbench 2.4.1 (2012-10-26)
     the use of recently published procedures.  The Gene Ontology component can
     now serve as a full, standalone GO term browser.  Options for import and export
     of interaction networks (interactomes) were added.
-	
+
     --- New features and changes in release 2.2.0---
     CNKB
       - #2389 - export complete CNKB interactomes (SIF or ADJ formats). 
@@ -1487,7 +1516,7 @@ geWorkbench 2.4.1 (2012-10-26)
     - JMOL 12.0.35 (updated). 
 
     geWorkbench 2.1.0 (2010-09-10)
-    ==============================
+    ====================================
     --- New features and changes in release 2.1.0---
     - BLAST interface (Sequence Alignment component) upgraded to include all 
       parameter options offered on NCBI BLAST website (#2019, #2323).
@@ -1542,25 +1571,22 @@ geWorkbench 2.4.1 (2012-10-26)
 
 
     geWorkbench 2.0.2 (2010-07-16)
-    ==============================
-
+    ====================================
     - Fixes a problem which prevented the genSpace component from
       posting events to its server.
     - Full update of the MINDy Online Help chapter.
     - DPI options in MINDy disabled, as not needed.
 
 
-  
-
     geWorkbench 2.0.1 (2010-06-25)
-    ==============================
+    ====================================
     - Minor client-side changes to allow grid components to communicate
       with grid services behind the Columbia firewall.
     - Updates the CNKB Online Help chapter.
 
 
     geWorkbench 2.0.0 (2010-06-09)
-    ==============================	
+    ====================================	
     ---New components---
 
     - Skyline - A high-throughput comparative modeling pipeline. 
@@ -1630,10 +1656,9 @@ geWorkbench 2.4.1 (2012-10-26)
     - Jaspar_CORE (http://jaspar.genereg.net/) SQL files last updated on server 10/2009.
     - JMOL - updated to 12.0 RC10. 
 
- 
 
     geWorkbench 1.8.0 (2009-11-05)
-    ==============================
+    ====================================
 
     ---New components---
 
@@ -1671,7 +1696,6 @@ geWorkbench 2.4.1 (2012-10-26)
     - Release Notes - Added specific installation instructions.
 
 
-
     ---Online Help chapters updated---
     - ANOVA
     - ARACNe
@@ -1682,9 +1706,8 @@ geWorkbench 2.4.1 (2012-10-26)
     - Sequence Alignment (BLAST) 
 
 
-
     geWorkbench 1.7.0 (2009-07-17)
-    ==============================
+    ====================================
 
     ---New components---
 
@@ -1754,19 +1777,17 @@ geWorkbench 2.4.1 (2012-10-26)
     - Workspace saving - now works properly for all components.
 
 
-
     geWorkbench 1.6.3 (2009-01-08)
-    ==============================
+    ====================================
 	
     - geWorkbench 1.6.3 fixes several caArray related issues:
        - connection issue that may cause a time-out on some machines.
        - incorrect caching of caArray query results.
        - duplicate query process removed. 
 
-  
 
     geWorkbench 1.6.2 (2008-11-14)
-    ==============================
+    ====================================
 	
     - geWorkbench 1.6.2 provides improved proxy communication with its grid
     service dispatcher component (see Mantis bug 1631).
@@ -1774,9 +1795,8 @@ geWorkbench 2.4.1 (2012-10-26)
       hierarchical clustering (Mantis bug 1598).
 
 
-
     geWorkbench 1.6.1 (2008-11-07)
-    ==============================
+    ====================================
     - A Java servlet now provides connectivity to the Cellular Networks
       Knowledge Base database through the firewall.
     - Online help for the Sequence Retriever component was added.
@@ -1788,7 +1808,7 @@ geWorkbench 2.4.1 (2012-10-26)
 
   
     geWorkbench 1.6.0 (2008-10-24)
-    ==============================
+    ====================================
     - Adds Mindy component
     - The GO Terms component is not included in this release.  It will
            return in a future release.
@@ -1828,10 +1848,8 @@ geWorkbench 2.4.1 (2012-10-26)
             (Hierarchical Clustering, SOM, ANOVA etc). 
 
 
-
-
     geWorkbench 1.5.1 (2008-09-23)
-    ============================== 
+    ==================================== 
         -  It addresses changes in the APIs for the caArray and caBIO
            data services since geWorkbench 1.5 was released.  geWorkbench 1.5.1
            can currently connect with caArray 2.1 and caBIO 4.0/4.1.
@@ -1842,7 +1860,7 @@ geWorkbench 2.4.1 (2012-10-26)
 
 
     geWorkbench 1.5.0 (2008-07-03)
-    ==============================
+    ====================================
     ---New Modules---
           - ARACNE – gene network reverse engineering (from Andrea
               Califano's lab at Columbia University, 
@@ -1888,14 +1906,12 @@ geWorkbench 2.4.1 (2012-10-26)
                     annotation pages.
 
 
-
-
 ===============================================================================
     4.0 Known Issues/Defects
 ===============================================================================
    
     ---Running BLAST on multiple sequences---
-        The NCBI BLAST server may return an error when  multiple
+        (Not seen recently) - The NCBI BLAST server may return an error when  multiple
         sequences are searched from geWorkbench.  The queries are sent serially,
         one at a time).   This appears to depend on the load on the
         NCIB BLAST server.
@@ -1918,7 +1934,7 @@ geWorkbench 2.4.1 (2012-10-26)
 
 
         An example file from the Affymetrix site is
-        "HG_U95Av2.na33.annot.csv.zip".  This file must be
+        "HG_U95Av2.na34.annot.csv.zip".  This file must be
         unzipped before use.  You can place the file in any convenient
         directory.  When you load a new data file, you will be asked
         for the location of the annotation file and can browse to it. 
@@ -1956,7 +1972,7 @@ geWorkbench 2.4.1 (2012-10-26)
     The documents and support files in this distribution include:
 
     geWorkbench Release Notes:
-        ReleaseNotes_2.5.0.txt (this file)
+        ReleaseNotes_2.6.0.txt (this file)
          
   
     geWorkbench License: 
