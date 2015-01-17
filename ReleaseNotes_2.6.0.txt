@@ -2,7 +2,7 @@
     
                               geWorkbench v2.6.0
                
-                               January 15, 2015
+                               January 16, 2015
    
 
             Department of Systems Biology, Columbia University
@@ -103,26 +103,42 @@
 
     2. MacOSX
 
+        File: geWorkbench_v2.6.0_MacOSX_JRE7.zip.  (Requires Mac OSX 10.7.3 or
+              higher).
+
         The MacOSX version of geWorkbench 2.6.0 is distributed as a simple zip
-        file and includes the Java 7 update 71 JRE in line with Apple policy.
-        No installer is available for this release.  Just unzip the file and
-        move the geWorkbench_2.6.0 folder to a convenient location.  This
-        could be e.g. the /Applications folder, the Desktop, or your home
-        directory.  
-   
-        The geWorkbench_2.6.0 folder contains launcher command files (ending in 
-        .command) which can be used to start geWorkbench with varying amounts
-        of Java heap memory.
+        file and includes the Java 7 update 71 JRE.  No installer is available
+        for this release, instead, please follow the below steps.  
+		
+		Please carefully read and follow all of these instructions:
+		
+		1. Double-click on the downloaded file 
+           "geWorkbench_v2.6.0_MacOSX_JRE7.zip" to expand it.
 
-        You can create a shortcut to one of these command files, then move the
-        shortcut e.g. to your Desktop.  Launcher command files are available to
-        start geWorkbench with 1, 2, 4, 8, or 16 GB of maximum Java heap memory.
-    
-        File: geWorkbench_v2.6.0_MacOSX_JRE7.zip.
+		2. Drag the extracted "geWorkbench_2.6.0" folder to a convenient 
+		   location, preferably the Applications folder.    
 
-        Notes
-          - Requires Mac OS X 10.7.3 or higher.
-          
+        3. The geWorkbench_2.6.0 folder contains launcher command files (e.g. 
+           "launch_geworkbench_macosx_2G.command") which can be used to start
+           geWorkbench with varying amounts of Java heap memory (2 GB in this
+           example).  Launcher command files are available to start geWorkbench
+           with 1, 2, 4, 8, or 16 GB of maximum Java heap memory.  Choice of
+           the Java heap memory size is discussed elsewhere in this document.
+           2 GB is the recommended default value for geWorkbench 2.6.0 on
+           64-bit systems such as Mac OSX.
+
+           Right-click on the desired command file and select "Make Alias".
+
+		4. Drag the new alias file e.g. to your Desktop for easy access.
+
+		5. IMPORTANT (Gatekeeper function, MacOSX 10.7.3 and higher):
+		   The first time you attempt to start geWorkbench from one of
+           the command files or an alias file, right-click on the
+           file and select "Open".  You will be prompted as to whether you want to
+           open this file from an unidentified developer; answer yes.  After this
+           first time, on subsequent invocations you can start geWorkbench
+           just by double-clicking on the alias or command file.
+
 
     3. Linux
       
@@ -233,7 +249,7 @@
     3.0 Release History: New Features and Updates
 =============================================================================== 
 
-    geWorkbench 2.6.0 (January 15, 2015)
+    geWorkbench 2.6.0 (January 16, 2015)
     ====================================
     --- Summary ---
     geWorkbench 2.6.0 is a major release, including more than 70 bug
@@ -314,12 +330,13 @@
   
     CaArray
       - 3874 - Filtering on "PI" produces casting error (Java 7)
-
-    CNKB
-      - 3588 - Change "export to project" to "export to workspace"
+      - 3953 - Allow server-side control of which interactomes can be exported.
 
     ceRNA
       - 3901 - Change button label in Export dialog from "Open" to "Save"
+
+	CNKB
+      - 3588 - Change "export to project" to "export to workspace"
 
     Color mosaic
       - 3626 - Update "sort" button hover text
@@ -344,6 +361,7 @@
 
     Expression Value Distribution
       - 3546 - EVD range incorrect when an array set is activated (Java 7)
+      - 3947 - Fix synchronization problem that was causing exceptions.
 
     GenomeSpace
       - 3703 - Allow user to see shared and public GenomeSpace folders
