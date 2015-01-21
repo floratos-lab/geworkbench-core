@@ -2,7 +2,7 @@
     
                               geWorkbench v2.6.0
                
-                               January 16, 2015
+                               January 21, 2015
    
 
             Department of Systems Biology, Columbia University
@@ -249,7 +249,7 @@
     3.0 Release History: New Features and Updates
 =============================================================================== 
 
-    geWorkbench 2.6.0 (January 16, 2015)
+    geWorkbench 2.6.0 (January 21, 2015)
     ====================================
     --- Summary ---
     geWorkbench 2.6.0 is a major release, including more than 70 bug
@@ -337,6 +337,7 @@
 
 	CNKB
       - 3588 - Change "export to project" to "export to workspace"
+      - 3953 - Add flag to control whether individual interactomes can be exported.
 
     Color mosaic
       - 3626 - Update "sort" button hover text
