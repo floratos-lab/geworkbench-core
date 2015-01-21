@@ -314,7 +314,8 @@
    
     --- Enhancements and bug fixes ---
     Analysis
-      - 3077 - Document special behavior of components that ignore marker or array set activation
+      - 3077 - Document special behaviour of components that ignore marker or array set activation
+      - 3955 - Fix synchronization problem
 
     ARACNe
       - 3590 - Add true Bonferroni correction
@@ -506,7 +507,7 @@
     LINCS_Query, VIPER, DeMAND and ceRNA.  Consensus Clustering uses multiple
     clustering runs to find consensus clusters and assess their stability.
     The LINCS Query component provides for query and display of computational
-    and experimental results from the Columbia LINCS center, which performs
+    and experimental results from the Columbia LINCS Center, which performs
     high-throughput drug candidate prediction and screening.  VIPER summarizes
     drug activity on gene expression profiles at the level of the transcription
     factors.  DeMAND is used to compute drug mechanism of action.  The ceRNA
@@ -600,7 +601,7 @@
       - 3284 - update to Jmol 13.0.18
     Marker Sets/Array sets
       - 3185 - exception on unselecting all sets (is this related to 3146?)
-      - 3486 - clarify labeling of set context pulldown lists
+      - 3486 - clarify labelling of set context pulldown lists
     MARINa/MRA
       - 3291, 3157 - remove unsupported computational options, make consistent
                response to set activation (MARINa)
@@ -653,7 +654,7 @@
     versions of geWorkbench no longer can parse and import BLAST results.
     In geWorkbench 2.4.1, a new parser using the BLAST XML result format has
     been implemented.  This greatly reduces, but does not eliminate, the
-    dependance on the BLAST HTML format result page.  However, future changes
+    dependence on the BLAST HTML format result page.  However, future changes
     to the HTML page format should no longer affect the basic retrieval of
     results.  In addition, a problem was identified in the ANOVA component which
     caused incorrect markers to be used if a marker set was activated.
@@ -675,7 +676,7 @@
     ====================================
     --- Summary ---
     geWorkbench v2.4.0 is a major release.  It adds one new component,
-    "Significance Analysis of Microarrays(SAM)" and includes signficant
+    "Significance Analysis of Microarrays(SAM)" and includes significant
     improvements to a second, Master Regulator Analyis.  It also adds the
     ability to accept annotation files for Affymetrix chips of types 
     "Human Gene 1.0 ST whole-transcript" and "Human Exon 1.0 ST".
@@ -772,7 +773,7 @@
                process.
       - 3105 - java.lang.NoClassDefFoundError: AracneComputation
       - 3040 - resampling during bootstrapping fails
-      - 2885 - refactoring the code of lauching MINDY and ARACNE analysis
+      - 2885 - refactoring the code of launching MINDY and ARACNE analysis
     CaGrid
       - 2892 - Out-of-memory error for ARACNE service (major revisions to
                ARACNe grid service)
@@ -789,7 +790,7 @@
       - 3074 - Exception when attempt to create subnetwork
       - 3094 - Correlation cutoff of zero filters out all interactions
     Dataset history
-      - 2794 - MRA doesnt' report parameter
+      - 2794 - MRA doesn't report parameter
     Experiment info
       - 2835 - Autorefresh seems to work only under certain conditions
     Expression profiles
@@ -1125,7 +1126,7 @@
         - Fold Change Analysis
         - Gene Ontology Analysis
         - Gene Ontology Viewer
-        - Hierarchcial Clustering
+        - Hierarchical Clustering
         - Information Panel - replaced separate Comments, History and
              Experiment Information entries.
         - "Introduction" replaced with "Basics" section from tutorials.
@@ -1162,7 +1163,7 @@
     Dataset Details
       - pattern node hover text.
     EVD
-      - tutorial and existing help synched, then ported back to Help. 
+      - tutorial and existing help synced, then ported back to Help. 
     Filtering
       - dynamic search described.
     Fold Change
@@ -1171,7 +1172,7 @@
       - table sorting noted.
     genSpace
       - details of how not-yet accepted friend requests are handled were added,
-        as well as denied requests and canceling requests. 
+        as well as denied requests and cancelling requests. 
       - Noted that filtering and normalization events now captured. 
       - Added detail on depiction of repeated steps in workflows (linear vs
         loops). Limit of 150 on displayed workflows.
@@ -1252,7 +1253,7 @@
     view in Cytocape, it can now instead by viewed as a text file.  The
     new "Fold Change" analysis component is included, which was to be released
     in version 2.2.0 but was omitted.  A new feature to overlay a t-test result
-    onto a Cytoscape network, which was inadvertantly disabled in release
+    onto a Cytoscape network, which was inadvertently disabled in release
     2.2.0, now works again.  The Gene Ontology analysis component now supports
     uses of  alternate ontology files (e.g. from the GO website).  Sequence
     retrieval for DNA sequences is now done using the UCSC refGene table, and
@@ -1266,11 +1267,11 @@
         log-normalized was removed.
     ARACNe
       - #2494 - Bonferroni correction option added. 
-      - The "Choose edges with hightest MI" option was renamed to "Merge
+      - The "Choose edges with highest MI" option was renamed to "Merge
         multiple probesets".
       - #2648 - The adjacency matrix is no longer made symmetric. Each line now
         starts with a hub gene.
-      - Similarily, the adjacency matrix, when saved to file, is not made
+      - Similarly, the adjacency matrix, when saved to file, is not made
         symmetric.
       - #2679 - The "merge multiple probesets" option was not recorded in
         the dataset history.
@@ -1356,7 +1357,7 @@
         support was removed.
       - #2663 - If discovered patterns were saved to file and reloaded, they were
         not always displayed.
-      - #2593 - Problems that occurred when a run was canceled or the server 
+      - #2593 - Problems that occurred when a run was cancelled or the server 
         was unreachable were fixed. 
       - The Pattern Discovery (Splash) server URL was changed to
         splash.c2b2.columbia.edu.
@@ -1415,7 +1416,7 @@
     enhancements and bug fixes.  The most important of each are summarize below.
     New filters were added to give the user options to deal with many-to-many
     relationships between genes and markers (probesets).  New network comparison
-    and manipulation features were added to the Cytoscape component.  Signficant
+    and manipulation features were added to the Cytoscape component.  Significant
     improvements were made to the Master Regulator Analysis component to enable
     the use of recently published procedures.  The Gene Ontology component can
     now serve as a full, standalone GO term browser.  Options for import and export
@@ -1459,7 +1460,7 @@
       - analysis component added.
     GenePattern K-means Clustering
       - analysis component added.
-    Master Regulator Analyis
+    Master Regulator Analysis
       - #2523 and others.  Master Regulator Analysis component fully revised. 
         Now allow any list of markers to be used for the phenotype signature.
         Bar code graph revised to match style of published work. 
@@ -1525,7 +1526,7 @@
       - t-test - fully updated.
 
     ---Refactoring---
-      -A major refactoring occured throughout the core and many components.
+      -A major refactoring occurred throughout the core and many components.
 
     ---Versions of external files/components included in release 2.2.0---
     - Cytoscape 2.7.0 (no change).
@@ -1608,7 +1609,7 @@
     ====================================	
     ---New components---
 
-    - Skyline - A high-throughput comparative modeling pipeline. 
+    - Skyline - A high-throughput comparative modelling pipeline. 
              It creates structural homology models for protein sequences
              with similarity to a protein with an experimentally determined
              3-D structure.  The input is a PDB file.
@@ -1619,13 +1620,13 @@
                 
     - Pudge -  Interface to a protein structure prediction server which integrates
              tools used at different stages of the structural prediction process.
-             Modeling starts with a FASTA-format protein sequence file.
+             Modelling starts with a FASTA-format protein sequence file.
 
     ---Other major new features in release 2.0.0---
     - Cellular Network Knowledge Base (CNKB) - Revamped interface to allow choice
         of interactome and data types.
     - File parsers added:
-        MAGE-TAB data matix
+        MAGE-TAB data matrix
         GEO Soft format - added series (GSE) and curated matrix (GDS). 
     - Filtering - completely revamped - now works directly for all modes,
         allows specification of minimum % matching arrays before filtering occurs.
@@ -1754,7 +1755,7 @@
         determination of key parameters from actual input dataset.
 
     -  caGrid v1.3 - Upgrading of grid services to caGrid v1.3 +
-        introduction of caTransfer for large data tranfers.
+        introduction of caTransfer for large data transfers.
 
     -  Component Configuration Manager - allows individual components to
         be loaded into or unloaded from geWorkbench.
@@ -1905,14 +1906,14 @@
            - The NCBI GEO series matrix file for microarray data (tab-delimited)
 
     ---New server side architecture---
-           - Invocation of caGrid services is now delagated to an independent 
+           - Invocation of caGrid services is now delegated to an independent 
               component (the Dispatcher). This makes it possible to exit geWorkbench 
               after submitting a long-running job and then automatically pick up any 
               results next time the application starts. 
 
      ---Other changes---
           - The Marker and Array/Phenotypes components now support algebraic operations 
-              (union, intersection, xor) on marker and array groups.
+              (union, intersection, XOR) on marker and array groups.
           - Upon exiting the application, the user is prompted to store their workspace.
           - Workspace persistence problems have been resolved.
           - The Marker Annotations component has been enhanced in several ways:
@@ -1946,7 +1947,7 @@
 
         Affymetrix annotation files can be downloaded from their support site,
         at www.affymetrix.com.  Although there are frequent changes to their website,
-        the files can be found starging on the Support tab of the website:
+        the files can be found starting on the Support tab of the website:
         (1) the Technical Documentation section, e.g.:
             * Support->Affymetrix Microarray Solutions->Technical Documentation->Annotation Files 
         (2) Under "Support by Product".
