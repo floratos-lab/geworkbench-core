@@ -1,8 +1,8 @@
                                 Release Notes
     
-                              geWorkbench v2.6.0
+                            geWorkbench v2.6.0.1
                
-                               January 21, 2015
+                               January 28, 2015
    
 
             Department of Systems Biology, Columbia University
@@ -146,9 +146,6 @@
         File: geWorkbench_v2.6.0_Linux_JRE7_x64.bin.
               Includes the 64-bit Oracle Java 7 JRE update 60.
 
-        File: geWorkbench_v2.6.0_Linux_JRE7_x86.bin.
-              Includes the 32-bit Oracle Java 7 JRE update 60.			 
-
         File: geWorkbench_v2.6.0_Linux_noJRE.bin
               No JRE is included, you must make sure that an appropriate Java 7+
               JRE is installed on your system before installing geWorkbench.
@@ -170,29 +167,24 @@
 
         To begin the installation, type the command: 
 
-              sh ./geWorkbench_v2.6.0_Linux_installer_with_JRE7.bin 
+              sh geWorkbench_v2.6.0_Linux_JRE7_x64.bin
 
         This will extract geWorkbench into a new directory called
         geWorkbench_2.6.0. 
   
         If you requested that a desktop link be created, it will be called
-        rungeWorkbench_2.6.0 or geWorkbench_2.6.0 (see note below).
-  
-        Note - if you made changes to the default installation directory
-        name, the shortcut link may just be called "geWorkbench_2.6.0"
-        rather than "rungeWorkbench_2.6.0".
+        geWorkbench_2.6.0 or rungeWorkbench_2.6.0 (if you create the shortcut
+        in the same directory as the in which you extracted geWorkbench).
 
         To run geWorkbench, and assuming you are using the Linux bash shell,
         and that you created a shortcut link during installation,
         issue one of the following commands from your home directory
         (check the actual link name that was generated):  
-          
-              ./rungeWorkbench_2.6.0 
+
+              sh geWorkbench_2.6.0
                 or
               sh rungeWorkbench_2.6.0.
-                or
-              sh geWorkbench_2.6.0
-          
+
          Alternatively, in the directory in which geWorkbench was installed,
          you can start geWorkbench with the command:
           
@@ -216,14 +208,21 @@
             You must have the Java 7+ JRE installed and the
                JRE must be in the path for geWorkbench.
 
-            Windows: you can double click on the file
+            Windows: 
+                Double click on the file
                 "launch_geWorkbench.bat" to launch geWorkbench with
                 its default Java heap memory setting, or double-click
                 on one of the batch (.bat) files for specific sizes of
                 Java heap memory.  The files can also be run from the
                 command window.
+				
+            Mac OS X: 
+                Double-click on one of the command (.command)
+                files for specific sizes of Java heap memory.  The files
+                can also be run from the command window.
             
-            Linux/Unix:   Execute the script "launch_geworkbench.sh".
+            Linux/Unix:   
+                Execute the script "launch_geworkbench.sh".
                           
             Any: Alternatively, if you have Apache Ant installed,
                  you can type "ant run" in the geWorkbench directory.
@@ -248,6 +247,11 @@
 ===============================================================================
     3.0 Release History: New Features and Updates
 =============================================================================== 
+    geWorkbench 2.6.0.1 (January 28, 2015)
+    ====================================
+    GenomeSpace
+	 - 3958 - fix exception on upload
+
 
     geWorkbench 2.6.0 (January 21, 2015)
     ====================================
@@ -331,14 +335,13 @@
   
     CaArray
       - 3874 - Filtering on "PI" produces casting error (Java 7)
-      - 3953 - Allow server-side control of which interactomes can be exported.
 
     ceRNA
       - 3901 - Change button label in Export dialog from "Open" to "Save"
 
-	CNKB
+    CNKB
       - 3588 - Change "export to project" to "export to workspace"
-      - 3953 - Add flag to control whether individual interactomes can be exported.
+	  - 3953 - Allow server-side control of which interactomes can be exported.
 
     Color mosaic
       - 3626 - Update "sort" button hover text
