@@ -1,14 +1,14 @@
                                 Release Notes
     
-                            geWorkbench v2.6.0.1
+                            geWorkbench v2.6.0.2
                
-                               January 28, 2015
+                              February 20, 2015
    
 
-            Department of Systems Biology, Columbia University
+             Department of Systems Biology, Columbia University
                               New York, NY  10032
 
-                           http://www.geworkbench.org
+                         http://www.geworkbench.org
 
 ===============================================================================
     Contents
@@ -71,8 +71,8 @@
     geWorkbench, unless otherwise noted for particular components, can be
     run on both 32 and 64-bit operating systems and JREs.  If physical memory
     is very limited, the 32-bit versions are preferred.
-	
-	A few features of geWorkbench work only on 32-bit JREs, however, most have
+
+    A few features of geWorkbench work only on 32-bit JREs, however, most have
     alternate presentations on 64-bit systems.  This affects primarily embedded
     display of web pages.  
 
@@ -109,14 +109,14 @@
         The MacOSX version of geWorkbench 2.6.0 is distributed as a simple zip
         file and includes the Java 7 update 71 JRE.  No installer is available
         for this release, instead, please follow the below steps.  
-		
-		Please carefully read and follow all of these instructions:
-		
-		1. Double-click on the downloaded file 
+
+        Please carefully read and follow all of these instructions:
+
+        1. Double-click on the downloaded file 
            "geWorkbench_v2.6.0_MacOSX_JRE7.zip" to expand it.
 
-		2. Drag the extracted "geWorkbench_2.6.0" folder to a convenient 
-		   location, preferably the Applications folder.    
+        2. Drag the extracted "geWorkbench_2.6.0" folder to a convenient 
+           location, preferably the Applications folder.    
 
         3. The geWorkbench_2.6.0 folder contains launcher command files (e.g. 
            "launch_geworkbench_macosx_2G.command") which can be used to start
@@ -129,10 +129,10 @@
 
            Right-click on the desired command file and select "Make Alias".
 
-		4. Drag the new alias file e.g. to your Desktop for easy access.
+        4. Drag the new alias file e.g. to your Desktop for easy access.
 
-		5. IMPORTANT (Gatekeeper function, MacOSX 10.7.3 and higher):
-		   The first time you attempt to start geWorkbench from one of
+        5. IMPORTANT (Gatekeeper function, MacOSX 10.7.3 and higher):
+           The first time you attempt to start geWorkbench from one of
            the command files or an alias file, right-click on the
            file and select "Open".  You will be prompted as to whether you want to
            open this file from an unidentified developer; answer yes.  After this
@@ -141,7 +141,6 @@
 
 
     3. Linux
-      
        
         File: geWorkbench_v2.6.0_Linux_JRE7_x64.bin.
               Includes the 64-bit Oracle Java 7 JRE update 60.
@@ -188,7 +187,7 @@
          Alternatively, in the directory in which geWorkbench was installed,
          you can start geWorkbench with the command:
           
-              sh launch_geWorkbench.sh
+              sh geWorkbench
 
 
     4. Generic -   A non-installer-based version of
@@ -215,7 +214,7 @@
                 on one of the batch (.bat) files for specific sizes of
                 Java heap memory.  The files can also be run from the
                 command window.
-				
+
             Mac OS X: 
                 Double-click on one of the command (.command)
                 files for specific sizes of Java heap memory.  The files
@@ -247,10 +246,16 @@
 ===============================================================================
     3.0 Release History: New Features and Updates
 =============================================================================== 
+    geWorkbench 2.6.0.2 (February 20, 2015)
+    ====================================
+    BLAST
+     - 3799 - Fix tool email in BLAST job submission
+     - 3975 - Change frequency of result polling
+
     geWorkbench 2.6.0.1 (January 28, 2015)
     ====================================
     GenomeSpace
-	 - 3958 - fix exception on upload
+     - 3958 - fix exception on upload
 
 
     geWorkbench 2.6.0 (January 21, 2015)
@@ -341,7 +346,7 @@
 
     CNKB
       - 3588 - Change "export to project" to "export to workspace"
-	  - 3953 - Allow server-side control of which interactomes can be exported.
+      - 3953 - Allow server-side control of which interactomes can be exported.
 
     Color mosaic
       - 3626 - Update "sort" button hover text
@@ -1811,7 +1816,7 @@
 
     geWorkbench 1.6.2 (2008-11-14)
     ====================================
-	
+
     - geWorkbench 1.6.2 provides improved proxy communication with its grid
     service dispatcher component (see Mantis bug 1631).
     - A problem was fixed in the server-side grid implementation of
@@ -1936,7 +1941,7 @@
     ---Running BLAST on multiple sequences---
         (Not seen recently) - The NCBI BLAST server may return an error when  multiple
         sequences are searched from geWorkbench.  The queries are sent serially,
-        one at a time).   This appears to depend on the load on the
+        one at a time.   This appears to depend on the load on the
         NCIB BLAST server.
    
    
